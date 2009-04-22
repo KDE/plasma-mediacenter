@@ -3,6 +3,10 @@
   <interface name="org.kde.PlaylistEngine">
     <method name="addToPlaylist">
       <arg name="playlistName" type="s" direction="in"/>
+      <arg name="files" type="as" direction="in"/>
+    </method>
+    <method name="addToPlaylist">
+      <arg name="playlistName" type="s" direction="in"/>
       <arg name="file" type="s" direction="in"/>
     </method>
     <method name="availablePlaylists">

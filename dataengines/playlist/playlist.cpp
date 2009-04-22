@@ -20,6 +20,9 @@
 #include "playlistengineadaptor.h"
 
 #include <KDebug>
+#include <KGlobal>
+#include <KConfig>
+#include <KConfigGroup>
 
 #include <QFileInfo>
 #include <QHash>
@@ -35,6 +38,8 @@ Private(PlaylistEngine *q) : q(q)
 { playlists.clear(); }
 
 PlaylistEngine *q;
+KSharedConfigPtr config;
+
 // we allow many playlists in the dataengine.
 // Each playlist is named with a QString.
 QHash<QString, QStringList> playlists;
@@ -64,6 +69,15 @@ PlaylistEngine::~PlaylistEngine()
 void PlaylistEngine::init()
 {
     kDebug() << "engine correctly initializated";
+//     d->config = KConfig("playlistenginerc");
+
+//     kDebug() << "config at" << d->config->name();
+    // here we load the playlists from the config if previously stored
+    KConfig c("playlistenginerc");
+    KConfigGroup g(&c, "Playlists");
+    foreach (const QString &key, g.keyList()) {
+        addToPlaylist(key, g.readEntry(key, QStringList()));
+    }
 }
 
 bool PlaylistEngine::sourceRequestEvent(const QString &name)
@@ -99,14 +113,36 @@ bool PlaylistEngine::updateSourceEvent(const QString &name)
     return (edit > 0);
 }
 
-void PlaylistEngine::addToPlaylist(const QString &playlistName, const QString &file)
+void PlaylistEngine::addToPlaylist(const QString &playlistName, QStringList files)
 {
-    if (!QFileInfo(file).exists()) {
+    kDebug() << "adding to playlist";
+    // removing invalid entries
+    foreach (const QString &file, files) {
+        if (!QFileInfo(file).exists()) {
+            files.removeAll(file);
+        }
+    }
+
+    if (files.isEmpty()) {
+        kDebug() << "empty list";
         return;
     }
 
-    d->playlists[playlistName] << file;
+    // adding files to memory
+    d->playlists[playlistName] << files;
+
+    // storing files in the config
+    KConfig c("playlistenginerc");
+    KConfigGroup g(&c, "Playlists");
+    g.writeEntry(playlistName, d->playlists[playlistName]);
+
+    // setting data to the engine
     setData(SOURCE_NAME, playlistName, d->playlists.value(playlistName));
+}
+
+void PlaylistEngine::addToPlaylist(const QString &playlistName, const QString &file)
+{
+    addToPlaylist(playlistName, QStringList() << file);
 }
 
 QStringList PlaylistEngine::availablePlaylists()
