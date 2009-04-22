@@ -27,7 +27,7 @@
 #include <QFileInfo>
 #include <QHash>
 
-static const char* SOURCE_NAME = "playlist";
+static const char* KEY = "media file";
 
 class PlaylistEngine::Private
 {
@@ -38,7 +38,6 @@ Private(PlaylistEngine *q) : q(q)
 { playlists.clear(); }
 
 PlaylistEngine *q;
-KSharedConfigPtr config;
 
 // we allow many playlists in the dataengine.
 // Each playlist is named with a QString.
@@ -69,9 +68,7 @@ PlaylistEngine::~PlaylistEngine()
 void PlaylistEngine::init()
 {
     kDebug() << "engine correctly initializated";
-//     d->config = KConfig("playlistenginerc");
 
-//     kDebug() << "config at" << d->config->name();
     // here we load the playlists from the config if previously stored
     KConfig c("playlistenginerc");
     KConfigGroup g(&c, "Playlists");
@@ -82,33 +79,38 @@ void PlaylistEngine::init()
 
 bool PlaylistEngine::sourceRequestEvent(const QString &name)
 {
-    // We only offer a source
-    if (name != SOURCE_NAME) {
-        return false;
-    }
-
     return updateSourceEvent(name);
 }
 
 bool PlaylistEngine::updateSourceEvent(const QString &name)
 {
-    if (name != SOURCE_NAME) {
-        return false;
-    }
-
     int edit = 0;
 
+    kDebug() << "verifying consitence";
     // if a file in the playlist does not exist anymore
     // we remove it from the exposed data.
     QHash<QString, QStringList>::Iterator it;
     for (it = d->playlists.begin(); it != d->playlists.end(); ++it) {
+        int singleChanged = 0;
         foreach (const QString &file, it.value()) { // scanning through each file of each playlist
             if (!QFileInfo(file).exists()) {
-                removeData(SOURCE_NAME, it.key());
+                QStringList values = it.value();
+                QString key = it.key();
+                it = d->playlists.erase(it);
+                values.removeAll(file);
+                it = d->playlists.insert(key, values);
                 ++edit;
+                ++singleChanged;
             }
         }
+        KConfig c("playlistenginerc");
+        KConfigGroup g(&c, "Playlists");
+        g.writeEntry(it.key(), it.value());
+        setData(it.key(), KEY, it.value());
+        singleChanged = 0;
     }
+
+    
 
     return (edit > 0);
 }
@@ -137,7 +139,7 @@ void PlaylistEngine::addToPlaylist(const QString &playlistName, QStringList file
     g.writeEntry(playlistName, d->playlists[playlistName]);
 
     // setting data to the engine
-    setData(SOURCE_NAME, playlistName, d->playlists.value(playlistName));
+    setData(playlistName, KEY, d->playlists.value(playlistName));
 }
 
 void PlaylistEngine::addToPlaylist(const QString &playlistName, const QString &file)
@@ -148,6 +150,11 @@ void PlaylistEngine::addToPlaylist(const QString &playlistName, const QString &f
 QStringList PlaylistEngine::availablePlaylists()
 {
     return d->playlists.keys();
+}
+
+QStringList PlaylistEngine::filesInPlaylist(const QString &playlistName)
+{
+    return d->playlists[playlistName];
 }
 
 K_EXPORT_PLASMA_DATAENGINE(playlist, PlaylistEngine)

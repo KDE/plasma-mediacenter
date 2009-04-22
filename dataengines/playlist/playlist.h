@@ -35,7 +35,7 @@ public slots:
     void addToPlaylist(const QString &playlistName, QStringList files);
     void addToPlaylist(const QString &playlistName, const QString &file);
     QStringList availablePlaylists();
-//     QStringList filesInPlaylist(const QString &playlistName);
+    QStringList filesInPlaylist(const QString &playlistName);
 
 protected:
     bool sourceRequestEvent(const QString &source);
