@@ -12,5 +12,17 @@
     <method name="availablePlaylists">
       <arg type="as" direction="out"/>
     </method>
+    <method name="filesInPlaylist">
+      <arg type="as" direction="out"/>
+      <arg name="playlistName" type="s" direction="in"/>
+    </method>
+    <method name="removeFromPlaylist">
+      <arg name="playlistName" type="s" direction="in"/>
+      <arg name="files" type="as" direction="in"/>
+    </method>
+    <method name="removeFromPlaylist">
+      <arg name="playlistName" type="s" direction="in"/>
+      <arg name="file" type="s" direction="in"/>
+    </method>
   </interface>
 </node>

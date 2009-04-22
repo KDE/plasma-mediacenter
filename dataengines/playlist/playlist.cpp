@@ -42,6 +42,9 @@ PlaylistEngine *q;
 // we allow many playlists in the dataengine.
 // Each playlist is named with a QString.
 QHash<QString, QStringList> playlists;
+
+public:
+void saveToConfig(const QString &playlist, const QStringList &files);
 };
 
 PlaylistEngine::PlaylistEngine(QObject *parent, const QVariantList &args) : Plasma::DataEngine(parent, args), d(new Private(this))
@@ -103,9 +106,7 @@ bool PlaylistEngine::updateSourceEvent(const QString &name)
                 ++singleChanged;
             }
         }
-        KConfig c("playlistenginerc");
-        KConfigGroup g(&c, "Playlists");
-        g.writeEntry(it.key(), it.value());
+        d->saveToConfig(it.key(), it.value());
         setData(it.key(), KEY, it.value());
         singleChanged = 0;
     }
@@ -134,9 +135,7 @@ void PlaylistEngine::addToPlaylist(const QString &playlistName, QStringList file
     d->playlists[playlistName] << files;
 
     // storing files in the config
-    KConfig c("playlistenginerc");
-    KConfigGroup g(&c, "Playlists");
-    g.writeEntry(playlistName, d->playlists[playlistName]);
+    d->saveToConfig(playlistName, d->playlists[playlistName]);
 
     // setting data to the engine
     setData(playlistName, KEY, d->playlists.value(playlistName));
@@ -155,6 +154,66 @@ QStringList PlaylistEngine::availablePlaylists()
 QStringList PlaylistEngine::filesInPlaylist(const QString &playlistName)
 {
     return d->playlists[playlistName];
+}
+
+void PlaylistEngine::removeFromPlaylist(const QString &playlistName, QStringList files)
+{
+    // removing invalid entries
+    foreach (const QString &file, files) {
+        if (!QFileInfo(file).exists()) {
+            files.removeAll(file);
+        }
+    }
+
+    if (files.isEmpty()) {
+        kDebug() << "empty list";
+        return;
+    }
+
+    if (!d->playlists.keys().contains(playlistName)) {
+        return;
+    }
+
+    removeAllData(playlistName);
+
+    QStringList list = d->playlists[playlistName];
+    int changed = 0;
+    foreach (const QString &file, files) {
+        if (!list.removeOne(file)) {
+            continue;
+        }
+        ++changed;
+    }
+
+    if (changed == 0) {
+        return;
+    }
+
+    d->playlists.remove(playlistName);
+    if (list.isEmpty()) {
+        KConfig c("playlistenginerc");
+        KConfigGroup g(&c, "Playlists");
+        g.deleteEntry(playlistName);
+        return;
+    }
+
+    d->playlists[playlistName] = list;
+
+    setData(playlistName, KEY, d->playlists.value(playlistName));
+
+    d->saveToConfig(playlistName, d->playlists.value(playlistName));
+}
+
+void PlaylistEngine::removeFromPlaylist(const QString &playlistName, const QString &file)
+{
+    removeFromPlaylist(playlistName, QStringList() << file);
+}
+
+void PlaylistEngine::Private::saveToConfig(const QString &playlist, const QStringList &files)
+{
+    KConfig c("playlistenginerc");
+    KConfigGroup g(&c, "Playlists");
+    g.writeEntry(playlist, files);
 }
 
 K_EXPORT_PLASMA_DATAENGINE(playlist, PlaylistEngine)
