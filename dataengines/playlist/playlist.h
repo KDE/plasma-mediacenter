@@ -21,6 +21,13 @@
 
 #include <Plasma/DataEngine>
 
+/**
+ * @class PortageEngine
+ * @brief An engine that manages your playlists.
+ *
+ * The engine exports each playlist as source of the Plasma::DataEngine.
+ * @author Alessandro Diaferia
+ */
 class PlaylistEngine : public Plasma::DataEngine
 {
     Q_OBJECT

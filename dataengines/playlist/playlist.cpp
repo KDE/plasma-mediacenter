@@ -27,8 +27,6 @@
 #include <QFileInfo>
 #include <QHash>
 
-static const char* KEY = "media file";
-
 class PlaylistEngine::Private
 {
 public:
@@ -107,7 +105,7 @@ bool PlaylistEngine::updateSourceEvent(const QString &name)
             }
         }
         d->saveToConfig(it.key(), it.value());
-        setData(it.key(), KEY, it.value());
+        setData(it.key(), it.value());
         singleChanged = 0;
     }
 
@@ -134,11 +132,11 @@ void PlaylistEngine::addToPlaylist(const QString &playlistName, QStringList file
     // adding files to memory
     d->playlists[playlistName] << files;
 
+    // setting data to the engine
+    setData(playlistName, d->playlists.value(playlistName));
+
     // storing files in the config
     d->saveToConfig(playlistName, d->playlists[playlistName]);
-
-    // setting data to the engine
-    setData(playlistName, KEY, d->playlists.value(playlistName));
 }
 
 void PlaylistEngine::addToPlaylist(const QString &playlistName, const QString &file)
@@ -199,7 +197,7 @@ void PlaylistEngine::removeFromPlaylist(const QString &playlistName, QStringList
 
     d->playlists[playlistName] = list;
 
-    setData(playlistName, KEY, d->playlists.value(playlistName));
+    setData(playlistName, d->playlists.value(playlistName));
 
     d->saveToConfig(playlistName, d->playlists.value(playlistName));
 }
