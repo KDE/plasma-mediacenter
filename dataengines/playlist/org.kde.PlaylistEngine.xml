@@ -24,5 +24,8 @@
       <arg name="playlistName" type="s" direction="in"/>
       <arg name="file" type="s" direction="in"/>
     </method>
+    <method name="removePlaylist">
+      <arg name="playlistName" type="s" direction="in"/>
+    </method>
   </interface>
 </node>

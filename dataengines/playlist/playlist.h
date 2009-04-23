@@ -45,6 +45,7 @@ public slots:
     QStringList filesInPlaylist(const QString &playlistName);
     void removeFromPlaylist(const QString &playlistName, QStringList files);
     void removeFromPlaylist(const QString &playlistName, const QString &file);
+    void removePlaylist(const QString &playlistName);
 
 protected:
     bool sourceRequestEvent(const QString &source);

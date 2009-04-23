@@ -43,6 +43,7 @@ QHash<QString, QStringList> playlists;
 
 public:
 void saveToConfig(const QString &playlist, const QStringList &files);
+void removeFromConfig(const QString &playlist);
 };
 
 PlaylistEngine::PlaylistEngine(QObject *parent, const QVariantList &args) : Plasma::DataEngine(parent, args), d(new Private(this))
@@ -189,9 +190,7 @@ void PlaylistEngine::removeFromPlaylist(const QString &playlistName, QStringList
 
     d->playlists.remove(playlistName);
     if (list.isEmpty()) {
-        KConfig c("playlistenginerc");
-        KConfigGroup g(&c, "Playlists");
-        g.deleteEntry(playlistName);
+        d->removeFromConfig(playlistName);
         return;
     }
 
@@ -207,11 +206,29 @@ void PlaylistEngine::removeFromPlaylist(const QString &playlistName, const QStri
     removeFromPlaylist(playlistName, QStringList() << file);
 }
 
+void PlaylistEngine::removePlaylist(const QString &playlistName)
+{
+    if (!d->playlists.keys().contains(playlistName)) {
+        return;
+    }
+
+    removeAllData(playlistName);
+    d->playlists.remove(playlistName);
+    d->removeFromConfig(playlistName);
+}
+
 void PlaylistEngine::Private::saveToConfig(const QString &playlist, const QStringList &files)
 {
     KConfig c("playlistenginerc");
     KConfigGroup g(&c, "Playlists");
     g.writeEntry(playlist, files);
+}
+
+void PlaylistEngine::Private::removeFromConfig(const QString &playlist)
+{
+    KConfig c("playlistenginerc");
+    KConfigGroup g(&c, "Playlists");
+    g.deleteEntry(playlist);
 }
 
 K_EXPORT_PLASMA_DATAENGINE(playlist, PlaylistEngine)
