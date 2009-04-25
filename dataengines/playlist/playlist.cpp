@@ -238,6 +238,7 @@ void PlaylistEngine::setCurrentPlaylist(const QString &playlistName)
     }
 
     setData("currentPlaylist", d->playlists[playlistName]);
+    emit currentPlaylistChanged();
 }
 
 K_EXPORT_PLASMA_DATAENGINE(playlist, PlaylistEngine)

@@ -38,7 +38,7 @@ public:
 
     void init();
 
-public slots:
+public Q_SLOTS:
     void addToPlaylist(const QString &playlistName, QStringList files);
     void addToPlaylist(const QString &playlistName, const QString &file);
     QStringList availablePlaylists();
@@ -52,6 +52,12 @@ public slots:
      * in order to keep being compliant with the mpris standard.
      */
     void setCurrentPlaylist(const QString &playlistName);
+
+Q_SIGNALS:
+    /**
+     * emitted whenever the source "currentPlaylist" changes its contents.
+     */
+    void currentPlaylistChanged();
 
 protected:
     bool sourceRequestEvent(const QString &source);
