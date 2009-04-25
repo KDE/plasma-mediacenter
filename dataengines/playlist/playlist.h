@@ -47,6 +47,12 @@ public slots:
     void removeFromPlaylist(const QString &playlistName, const QString &file);
     void removePlaylist(const QString &playlistName);
 
+    /**
+     * This method export the playlist to use to the DBus interface
+     * in order to keep being compliant with the mpris standard.
+     */
+    void setCurrentPlaylist(const QString &playlistName);
+
 protected:
     bool sourceRequestEvent(const QString &source);
     bool updateSourceEvent(const QString &source);

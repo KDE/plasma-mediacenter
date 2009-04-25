@@ -231,4 +231,13 @@ void PlaylistEngine::Private::removeFromConfig(const QString &playlist)
     g.deleteEntry(playlist);
 }
 
+void PlaylistEngine::setCurrentPlaylist(const QString &playlistName)
+{
+    if (!d->playlists.keys().contains(playlistName)) {
+        return;
+    }
+
+    setData("currentPlaylist", d->playlists[playlistName]);
+}
+
 K_EXPORT_PLASMA_DATAENGINE(playlist, PlaylistEngine)

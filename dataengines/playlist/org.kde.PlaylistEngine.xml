@@ -27,5 +27,8 @@
     <method name="removePlaylist">
       <arg name="playlistName" type="s" direction="in"/>
     </method>
+    <method name="setCurrentPlaylist">
+      <arg name="playlistName" type="s" direction="in"/>
+    </method>
   </interface>
 </node>
