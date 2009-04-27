@@ -19,6 +19,8 @@
 #include "playlist.h"
 #include "playlistengineadaptor.h"
 
+#include "playlistservice.h"
+
 #include <KDebug>
 #include <KGlobal>
 #include <KConfig>
@@ -77,6 +79,19 @@ void PlaylistEngine::init()
     foreach (const QString &key, g.keyList()) {
         addToPlaylist(key, g.readEntry(key, QStringList()));
     }
+}
+
+Plasma::Service* PlaylistEngine::serviceForSource(const QString &source)
+{
+    kDebug() << "creating service";
+    if (!d->playlists.keys().contains(source)) {
+        return 0;
+    }
+
+    PlaylistService *service = new PlaylistService(this, this);
+    service->setDestination(source);
+
+    return service;
 }
 
 bool PlaylistEngine::sourceRequestEvent(const QString &name)

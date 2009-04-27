@@ -21,6 +21,10 @@
 
 #include <Plasma/DataEngine>
 
+namespace Plasma {
+    class Service;
+}
+
 /**
  * @class PortageEngine
  * @brief An engine that manages your playlists.
@@ -37,11 +41,18 @@ public:
     ~PlaylistEngine();
 
     void init();
+    Plasma::Service* serviceForSource(const QString &source);
 
 public Q_SLOTS:
     void addToPlaylist(const QString &playlistName, QStringList files);
     void addToPlaylist(const QString &playlistName, const QString &file);
+
+    /**
+     * Slightly different from sources() since this does not return the
+     * current playlist.
+     */
     QStringList availablePlaylists();
+
     QStringList filesInPlaylist(const QString &playlistName);
     void removeFromPlaylist(const QString &playlistName, QStringList files);
     void removeFromPlaylist(const QString &playlistName, const QString &file);
