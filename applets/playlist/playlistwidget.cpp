@@ -68,7 +68,8 @@ PlaylistWidget::PlaylistWidget(QGraphicsItem *parent)
     connect (comboBox->nativeWidget(), SIGNAL(currentIndexChanged(const QString &)), this, SLOT(showPlaylist(const QString &)));
     comboBox->nativeWidget()->setCurrentIndex(0);
 
-    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout;
+
+    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
     layout->addItem(comboBox);
     layout->addItem(m_treeView);
     setLayout(layout);
