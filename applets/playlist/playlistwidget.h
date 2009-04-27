@@ -35,11 +35,9 @@ public:
     PlaylistWidget(QGraphicsItem *parent = 0);
     ~PlaylistWidget();
 
-protected:
-    void showPlaylist(const QString &playlistName);
-
 protected slots:
     void jobCompleted();
+    void showPlaylist(const QString &playlistName);
 
 private:
     Plasma::TreeView *m_treeView;

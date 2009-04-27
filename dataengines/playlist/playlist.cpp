@@ -248,7 +248,9 @@ void PlaylistEngine::Private::removeFromConfig(const QString &playlist)
 
 void PlaylistEngine::setCurrentPlaylist(const QString &playlistName)
 {
+    kDebug() << "setting current playlist";
     if (!d->playlists.keys().contains(playlistName)) {
+        kDebug() << "no such" << playlistName << "found!";
         return;
     }
 

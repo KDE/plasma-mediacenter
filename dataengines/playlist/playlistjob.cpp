@@ -28,10 +28,12 @@ PlaylistJob::PlaylistJob(PlaylistEngine *engine,
 void PlaylistJob::start()
 {
     if (destination().isEmpty()) {
+        kDebug() << "destination is empty";
         return;
     }
 
     if (operationName() == "setCurrent") {
+        kDebug() << "calling setCurrentPlaylist";
         m_engine->setCurrentPlaylist(destination());
     }
 
