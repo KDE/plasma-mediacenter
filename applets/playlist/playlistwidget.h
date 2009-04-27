@@ -15,26 +15,37 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
- ***************************************************************************/ 
-#ifndef PLAYLIST_H
-#define PLAYLIST_H
+ ***************************************************************************/
+#ifndef PLAYLISTWIDGET_H
+#define PLAYLISTWIDGET_H
 
-#include <Plasma/PopupApplet>
+#include <QGraphicsWidget>
 
-class PlaylistWidget;
+namespace Plasma {
+    class TreeView;
+    class DataEngine;
+}
+class QStandardItemModel;
+class QDBusInterface;
 
-class Playlist : public Plasma::PopupApplet
+class PlaylistWidget : public QGraphicsWidget
 {
     Q_OBJECT
 public:
-    Playlist(QObject *parent, const QVariantList &args);
-    ~Playlist();
+    PlaylistWidget(QGraphicsItem *parent = 0);
+    ~PlaylistWidget();
 
-    QGraphicsWidget *graphicsWidget();
+protected:
+    void showPlaylist(const QString &playlistName);
+
+protected slots:
+    void jobCompleted();
 
 private:
-    PlaylistWidget *m_playlistWidget;
-
+    Plasma::TreeView *m_treeView;
+    Plasma::DataEngine *m_playlistEngine;
+    QStandardItemModel *m_model;
+    QDBusInterface *m_interface;
 };
 
 #endif

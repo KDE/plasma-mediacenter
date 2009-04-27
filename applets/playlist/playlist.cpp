@@ -17,8 +17,24 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 #include "playlist.h"
+#include "playlistwidget.h"
 
 Playlist::Playlist(QObject *parent, const QVariantList &args)
-    : Plasma::PopupApplet(parent, args)
+    : Plasma::PopupApplet(parent, args), m_playlistWidget(0)
 {
+    setPopupIcon("view-media-playlist");
 }
+
+Playlist::~Playlist()
+{}
+
+QGraphicsWidget* Playlist::graphicsWidget()
+{
+    if (!m_playlistWidget) {
+        m_playlistWidget = new PlaylistWidget(this);
+    }
+
+    return m_playlistWidget;
+}
+
+K_EXPORT_PLASMA_APPLET(playlist, Playlist)

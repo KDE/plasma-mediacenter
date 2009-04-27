@@ -11,4 +11,4 @@ include_directories(
 ) 
 
 add_subdirectory(dataengines)
-# add_subdirectory(applets)
+add_subdirectory(applets)

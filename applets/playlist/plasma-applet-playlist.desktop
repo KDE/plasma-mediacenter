@@ -2,12 +2,12 @@
 Name=Playlist
 Commment=Plasma Playlist Applet
 Type=Service
-ServiceTypes=Plasma/Applet
 
+X-KDE-ServiceTypes=Plasma/Applet
 X-KDE-Library=plasma_applet_playlist
 X-KDE-PluginInfo-Author=Alessandro Diaferia
 X-KDE-PluginInfo-Email=alediaferia@gmail.com
-X-KDE-PluginInfo-Name=plasma_applet_playlist
+X-KDE-PluginInfo-Name=playlist
 X-KDE-PluginInfo-Version=0.1
 X-KDE-PluginInfo-Website=http://plasma.kde.org/
 X-KDE-PluginInfo-Category=Multimedia
