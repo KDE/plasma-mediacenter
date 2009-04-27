@@ -23,6 +23,7 @@
 
 namespace Plasma {
     class TreeView;
+    class ComboBox;
     class DataEngine;
 }
 class QStandardItemModel;
@@ -36,11 +37,12 @@ public:
     ~PlaylistWidget();
 
 protected slots:
-    void jobCompleted();
+    void slotSourceAdded(const QString &source);
     void showPlaylist(const QString &playlistName);
 
 private:
     Plasma::TreeView *m_treeView;
+    Plasma::ComboBox *m_comboBox;
     Plasma::DataEngine *m_playlistEngine;
     QStandardItemModel *m_model;
     QDBusInterface *m_interface;

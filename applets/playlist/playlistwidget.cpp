@@ -57,20 +57,25 @@ PlaylistWidget::PlaylistWidget(QGraphicsItem *parent)
         }
     }
 
+    connect (m_playlistEngine, SIGNAL(sourceAdded(const QString &)), this, SLOT(slotSourceAdded(const QString &)));
+
     m_treeView->setModel(m_model);
-    m_interface = new QDBusInterface("org.kde.PlaylistEngine", "/Playlist", QString(), QDBusConnection::sessionBus(), this);
+    m_interface = new QDBusInterface("org.kde.PlaylistEngine", "/PlaylistEngine", QString(), QDBusConnection::sessionBus(), this);
 
 
-    Plasma::ComboBox *comboBox = new Plasma::ComboBox(this);
+    m_comboBox = new Plasma::ComboBox(this);
     foreach (const QString &source, m_playlistEngine->sources()) {
-        comboBox->addItem(source);
+        if (source == "currentPlaylist") {
+            continue;
+        }
+        m_comboBox->addItem(source);
     }
-    connect (comboBox->nativeWidget(), SIGNAL(currentIndexChanged(const QString &)), this, SLOT(showPlaylist(const QString &)));
-    comboBox->nativeWidget()->setCurrentIndex(0);
+    connect (m_comboBox->nativeWidget(), SIGNAL(currentIndexChanged(const QString &)), this, SLOT(showPlaylist(const QString &)));
+    m_comboBox->nativeWidget()->setCurrentIndex(0);
 
 
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
-    layout->addItem(comboBox);
+    layout->addItem(m_comboBox);
     layout->addItem(m_treeView);
     setLayout(layout);
 }
@@ -96,14 +101,18 @@ void PlaylistWidget::showPlaylist(const QString &playlistName)
     Plasma::Service *playlistService = m_playlistEngine->serviceForSource(playlistName);
     if (!playlistService) {
         kDebug() << "invalid service";
+        return;
     }
 
     KConfigGroup op = playlistService->operationDescription("setCurrent");
-    Plasma::ServiceJob *job = playlistService->startOperationCall(op);
-    connect (job, SIGNAL(finished(KJob*)), this, SLOT(jobCompleted())) ;   
+    Plasma::ServiceJob *job = playlistService->startOperationCall(op); 
 }
 
-void PlaylistWidget::jobCompleted()
+void PlaylistWidget::slotSourceAdded(const QString &source)
 {
-    kDebug() << "service completed operation";
+    if (source == "currentPlaylist") {
+        return;
+    }
+
+    m_comboBox->addItem(source);
 }

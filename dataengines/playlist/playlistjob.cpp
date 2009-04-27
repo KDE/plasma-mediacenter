@@ -32,8 +32,11 @@ void PlaylistJob::start()
         return;
     }
 
+    if (destination() == "currentPlaylist") { // no need for recursive setting
+        return;
+    }
+
     if (operationName() == "setCurrent") {
-        kDebug() << "calling setCurrentPlaylist";
         m_engine->setCurrentPlaylist(destination());
     }
 

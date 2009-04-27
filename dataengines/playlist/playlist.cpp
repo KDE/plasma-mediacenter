@@ -71,8 +71,6 @@ PlaylistEngine::~PlaylistEngine()
 
 void PlaylistEngine::init()
 {
-    kDebug() << "engine correctly initializated";
-
     // here we load the playlists from the config if previously stored
     KConfig c("playlistenginerc");
     KConfigGroup g(&c, "Playlists");
@@ -248,7 +246,6 @@ void PlaylistEngine::Private::removeFromConfig(const QString &playlist)
 
 void PlaylistEngine::setCurrentPlaylist(const QString &playlistName)
 {
-    kDebug() << "setting current playlist";
     if (!d->playlists.keys().contains(playlistName)) {
         kDebug() << "no such" << playlistName << "found!";
         return;
