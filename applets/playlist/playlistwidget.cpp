@@ -65,7 +65,9 @@ PlaylistWidget::PlaylistWidget(QGraphicsItem *parent)
     connect (m_playlistEngine, SIGNAL(sourceAdded(const QString &)), this, SLOT(slotSourceAdded(const QString &)));
 
     m_treeView->setModel(m_model);
-    m_treeView->nativeWidget()->setItemDelegate(new Plasma::Delegate(this));
+    Plasma::Delegate *delegate = new Plasma::Delegate(this);
+    delegate->setRoleMapping(Plasma::Delegate::SubTitleRole, Plasma::Delegate::SubTitleRole);
+    m_treeView->nativeWidget()->setItemDelegate(delegate);
     m_treeView->nativeWidget()->setHeaderHidden(true);
     m_treeView->nativeWidget()->setRootIsDecorated(false);
 
@@ -102,7 +104,9 @@ void PlaylistWidget::showPlaylist(const QString &playlistName)
 
     foreach (const QString &track, files) {
         TagLib::FileRef ref(track.toLatin1());
-        m_model->appendRow(new QStandardItem(ref.tag()->title().toCString(true)));
+        QStandardItem *item = new QStandardItem(ref.tag()->title().toCString(true));
+        item->setData(ref.tag()->artist().toCString(true), Plasma::Delegate::SubTitleRole);
+        m_model->appendRow(item);
     }
 
     Plasma::Service *playlistService = m_playlistEngine->serviceForSource(playlistName);
