@@ -89,6 +89,7 @@ void LastFMFetcher::coverReceived(KIO::Job *job, const QByteArray &data)
         return;
     }
 
+    kDebug() << "received cover for" << m_queries[job].artist << m_queries[job].albumName;
     QImage image = QImage::fromData(data);
     kDebug() << image.isNull();
     QPixmap cover = QPixmap::fromImage(image);

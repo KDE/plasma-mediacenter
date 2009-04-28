@@ -37,7 +37,8 @@ public:
     ~PlaylistWidget();
 
 protected slots:
-    void slotSourceAdded(const QString &source);
+    void slotPlaylistAdded(const QString &source);
+    void slotCoverAdded(const QString &source);
     void showPlaylist(const QString &playlistName);
 
 private:

@@ -36,9 +36,17 @@ void CoverFetcherEngine::init()
 
 bool CoverFetcherEngine::sourceRequestEvent(const QString &source)
 {
+    kDebug() << "initial checks";
+
     if (!source.contains("|")) {
         return false;
     }
+
+    if (sources().contains(source)) {
+        return true;
+    }
+
+    kDebug() << "fetching" << source;
 
     QStringList artistAlbum = source.split('|');
     if (artistAlbum.count() != 2) {
@@ -46,13 +54,16 @@ bool CoverFetcherEngine::sourceRequestEvent(const QString &source)
     }
 
     m_fetcher->fetchCover(artistAlbum[0], artistAlbum[1], LastFMFetcher::Small);
-    setData(source, DataEngine::Data());
     return true;
 }
 
 void CoverFetcherEngine::getCover(const QString &artist,
                                const QString &albumName, LastFMFetcher::CoverSize size, const QPixmap &cover)
 {
+    if (cover.isNull()) {
+        return;
+    }
+
     kDebug() << "setting data";
     setData(artist + "|" + albumName,
             m_fetcher->sizeToString(size), cover);

@@ -24,6 +24,7 @@
 #include <QStandardItem>
 #include <QVariant>
 #include <QTreeView>
+#include <QIcon>
 
 // QtDBus
 #include <QtDBus/QDBusConnection>
@@ -63,16 +64,19 @@ PlaylistWidget::PlaylistWidget(QGraphicsItem *parent)
         }
     }
 
+    kDebug() << m_playlistEngine;
+    connect (m_playlistEngine, SIGNAL(sourceAdded(const QString &)), this, SLOT(slotPlaylistAdded(const QString &)));
+
     // TODO: avoid this code duplication
-    m_playlistEngine = Plasma::DataEngineManager::self()->engine("coverfetcher");
-    if (!m_playlistEngine->isValid()) {
-        m_playlistEngine = Plasma::DataEngineManager::self()->loadEngine("coverfetcher");
-        if (!m_playlistEngine->isValid()) {
+    m_coverEngine = Plasma::DataEngineManager::self()->engine("coverfetcher");
+    if (!m_coverEngine->isValid()) {
+        m_coverEngine = Plasma::DataEngineManager::self()->loadEngine("coverfetcher");
+        if (!m_coverEngine->isValid()) {
             kWarning() << "unable to load coverfetcher engine";
         }
     }
 
-    connect (m_playlistEngine, SIGNAL(sourceAdded(const QString &)), this, SLOT(slotSourceAdded(const QString &)));
+    connect (m_coverEngine, SIGNAL(sourceAdded(const QString &)), this, SLOT(slotCoverAdded(const QString &)));
 
     m_treeView->setModel(m_model);
     Plasma::Delegate *delegate = new Plasma::Delegate(this);
@@ -116,10 +120,17 @@ void PlaylistWidget::showPlaylist(const QString &playlistName)
         TagLib::FileRef ref(track.toLatin1());
         QStandardItem *item = new QStandardItem(ref.tag()->title().toCString(true));
         item->setData(ref.tag()->artist().toCString(true), Plasma::Delegate::SubTitleRole);
+
+        // cover retrival
         QString coverSource = ref.tag()->artist().toCString(true);
         coverSource.append("|");
         coverSource.append(ref.tag()->album().toCString(true));
         item->setData(coverSource, CoverSourceRole);
+        Plasma::DataEngine::Data covers = m_coverEngine->query(coverSource);
+        if (!covers.isEmpty()) {
+            item->setData(QIcon(covers["small"].value<QPixmap>()), Qt::DecorationRole);
+        }
+
         m_model->appendRow(item);
     }
 
@@ -130,14 +141,29 @@ void PlaylistWidget::showPlaylist(const QString &playlistName)
     }
 
     KConfigGroup op = playlistService->operationDescription("setCurrent");
-    Plasma::ServiceJob *job = playlistService->startOperationCall(op); 
+    playlistService->startOperationCall(op); 
 }
 
-void PlaylistWidget::slotSourceAdded(const QString &source)
+void PlaylistWidget::slotPlaylistAdded(const QString &source)
 {
     if (source == "currentPlaylist") {
         return;
     }
 
     m_comboBox->addItem(source);
+}
+
+void PlaylistWidget::slotCoverAdded(const QString &source)
+{
+    for (int i = 0; i < m_model->rowCount(); i++) {
+        QStandardItem *item = m_model->item(i);
+        if (item->data(CoverSourceRole).toString() == source) {
+            Plasma::DataEngine::Data covers = m_coverEngine->query(source);
+            if (!covers.isEmpty()) {
+                kDebug() << "setting cover";
+                item->setData(QIcon(covers["small"].value<QPixmap>()), Qt::DecorationRole);
+                break;
+            }
+        }
+    }
 }
