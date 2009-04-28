@@ -1,5 +1,10 @@
 [Desktop Entry]
 Name=Playlist
+Name[et]=Esitusnimekiri
+Name[pt]=Lista de Reprodução
+Name[pt_BR]=Lista de Reprodução
+Name[sv]=Spellista
+Name[uk]=Список відтворення
 Commment=Plasma Playlist Applet
 Type=Service
 
