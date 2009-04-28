@@ -1,6 +1,7 @@
 project(MediaCenterComponents)
 
 find_package(KDE4 REQUIRED)
+find_package(Taglib REQUIRED)
 include(KDE4Defaults)
 
 add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})

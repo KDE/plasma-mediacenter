@@ -43,6 +43,10 @@
 #include <Plasma/Delegate>
 #include <Plasma/ComboBox>
 
+// Taglib
+#include <fileref.h>
+#include <tag.h>
+
 PlaylistWidget::PlaylistWidget(QGraphicsItem *parent)
     : QGraphicsWidget(parent),
       m_treeView(new Plasma::TreeView(this)),
@@ -97,7 +101,8 @@ void PlaylistWidget::showPlaylist(const QString &playlistName)
     }
 
     foreach (const QString &track, files) {
-        m_model->appendRow(new QStandardItem(track));
+        TagLib::FileRef ref(track.toLatin1());
+        m_model->appendRow(new QStandardItem(ref.tag()->title().toCString(true)));
     }
 
     Plasma::Service *playlistService = m_playlistEngine->serviceForSource(playlistName);
