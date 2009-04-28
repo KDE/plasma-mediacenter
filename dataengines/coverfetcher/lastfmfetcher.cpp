@@ -73,7 +73,7 @@ void LastFMFetcher::dataReceived(KIO::Job *job, const QByteArray &data)
                 KIO::TransferJob *coverJob = KIO::get(KUrl(coverUrl));
                 connect (coverJob, SIGNAL(data(KIO::Job*, const QByteArray&)), this, SLOT(coverReceived(KIO::Job*, const QByteArray&)));
                 m_queries[coverJob] = attributes;
-                kDebug() << reader.readElementText();
+                kDebug() << coverUrl;
                 break;
             }
         }
@@ -90,6 +90,7 @@ void LastFMFetcher::coverReceived(KIO::Job *job, const QByteArray &data)
     }
 
     QImage image = QImage::fromData(data);
+    kDebug() << image.isNull();
     QPixmap cover = QPixmap::fromImage(image);
 
     kDebug() << "emitting cover ready" << cover.rect();

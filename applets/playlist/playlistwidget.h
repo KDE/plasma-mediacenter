@@ -41,9 +41,14 @@ protected slots:
     void showPlaylist(const QString &playlistName);
 
 private:
+    enum ConvenientRoles {
+        CoverSourceRole = Qt::UserRole + 4
+    };
+
     Plasma::TreeView *m_treeView;
     Plasma::ComboBox *m_comboBox;
     Plasma::DataEngine *m_playlistEngine;
+    Plasma::DataEngine *m_coverEngine;
     QStandardItemModel *m_model;
     QDBusInterface *m_interface;
 };

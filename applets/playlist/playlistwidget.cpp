@@ -51,6 +51,7 @@ PlaylistWidget::PlaylistWidget(QGraphicsItem *parent)
     : QGraphicsWidget(parent),
       m_treeView(new Plasma::TreeView(this)),
       m_playlistEngine(0),
+      m_coverEngine(0),
       m_model(new QStandardItemModel(this))
 {
     // here we try to load the playlist engine
@@ -59,6 +60,15 @@ PlaylistWidget::PlaylistWidget(QGraphicsItem *parent)
         m_playlistEngine = Plasma::DataEngineManager::self()->loadEngine("playlist");
         if (!m_playlistEngine->isValid()) {
             kWarning() << "unable to load playlist engine";
+        }
+    }
+
+    // TODO: avoid this code duplication
+    m_playlistEngine = Plasma::DataEngineManager::self()->engine("coverfetcher");
+    if (!m_playlistEngine->isValid()) {
+        m_playlistEngine = Plasma::DataEngineManager::self()->loadEngine("coverfetcher");
+        if (!m_playlistEngine->isValid()) {
+            kWarning() << "unable to load coverfetcher engine";
         }
     }
 
@@ -106,6 +116,10 @@ void PlaylistWidget::showPlaylist(const QString &playlistName)
         TagLib::FileRef ref(track.toLatin1());
         QStandardItem *item = new QStandardItem(ref.tag()->title().toCString(true));
         item->setData(ref.tag()->artist().toCString(true), Plasma::Delegate::SubTitleRole);
+        QString coverSource = ref.tag()->artist().toCString(true);
+        coverSource.append("|");
+        coverSource.append(ref.tag()->album().toCString(true));
+        item->setData(coverSource, CoverSourceRole);
         m_model->appendRow(item);
     }
 
