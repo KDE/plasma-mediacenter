@@ -23,6 +23,7 @@
 #include <QStandardItemModel>
 #include <QStandardItem>
 #include <QVariant>
+#include <QTreeView>
 
 // QtDBus
 #include <QtDBus/QDBusConnection>
@@ -60,19 +61,20 @@ PlaylistWidget::PlaylistWidget(QGraphicsItem *parent)
     connect (m_playlistEngine, SIGNAL(sourceAdded(const QString &)), this, SLOT(slotSourceAdded(const QString &)));
 
     m_treeView->setModel(m_model);
+    m_treeView->nativeWidget()->setItemDelegate(new Plasma::Delegate(this));
+    m_treeView->nativeWidget()->setHeaderHidden(true);
+    m_treeView->nativeWidget()->setRootIsDecorated(false);
+
     m_interface = new QDBusInterface("org.kde.PlaylistEngine", "/PlaylistEngine", QString(), QDBusConnection::sessionBus(), this);
 
-
     m_comboBox = new Plasma::ComboBox(this);
+    connect (m_comboBox->nativeWidget(), SIGNAL(currentIndexChanged(const QString &)), this, SLOT(showPlaylist(const QString &)));
     foreach (const QString &source, m_playlistEngine->sources()) {
         if (source == "currentPlaylist") {
             continue;
         }
         m_comboBox->addItem(source);
     }
-    connect (m_comboBox->nativeWidget(), SIGNAL(currentIndexChanged(const QString &)), this, SLOT(showPlaylist(const QString &)));
-    m_comboBox->nativeWidget()->setCurrentIndex(0);
-
 
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
     layout->addItem(m_comboBox);

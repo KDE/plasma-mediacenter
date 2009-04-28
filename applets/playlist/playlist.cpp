@@ -23,6 +23,7 @@ Playlist::Playlist(QObject *parent, const QVariantList &args)
     : Plasma::PopupApplet(parent, args), m_playlistWidget(0)
 {
     setPopupIcon("view-media-playlist");
+    setAspectRatioMode(Plasma::IgnoreAspectRatio);
 }
 
 Playlist::~Playlist()
