@@ -105,10 +105,7 @@ PlaylistWidget::PlaylistWidget(QGraphicsItem *parent)
     setLayout(layout);
 
     setAcceptDrops(true);
-    m_treeView->setAcceptDrops(true);
-    m_treeView->nativeWidget()->setAcceptDrops(true);
-    m_treeView->nativeWidget()->viewport()->setAcceptDrops(true);
-    m_treeView->installEventFilter(this);
+    m_treeView->setAcceptDrops(false);
 }
 
 PlaylistWidget::~PlaylistWidget()
@@ -117,6 +114,8 @@ PlaylistWidget::~PlaylistWidget()
 
 void PlaylistWidget::showPlaylist(const QString &playlistName)
 {
+    m_playlistEngine->connectSource(playlistName, this);
+
     m_model->clear();
     QStringList files;
 
@@ -194,18 +193,10 @@ void PlaylistWidget::dropEvent(QGraphicsSceneDragDropEvent *event)
     }
 }
 
-bool PlaylistWidget::eventFilter(QObject *object, QEvent *event)
+void PlaylistWidget::dataUpdated(const QString &source, const Plasma::DataEngine::Data &data)
 {
-    if (object == m_treeView) {
-        if (event->type() == QEvent::GraphicsSceneDragEnter || event->type() == QEvent::GraphicsSceneDragMove) {
-            event->accept();
-            return true;
-        }
-        if (event->type() == QEvent::GraphicsSceneDrop) {
-            dropEvent(static_cast<QGraphicsSceneDragDropEvent*>(event));
-            return true;
-        }
-    }
+    Q_UNUSED(data)
 
-    return QGraphicsWidget::eventFilter(object, event);
+    kDebug() << source << "updated";
+    showPlaylist(source);
 }

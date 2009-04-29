@@ -20,12 +20,13 @@
 #define PLAYLISTWIDGET_H
 
 #include <QGraphicsWidget>
+#include <Plasma/DataEngine>
 
 namespace Plasma {
     class TreeView;
     class ComboBox;
-    class DataEngine;
 }
+
 class QStandardItemModel;
 class QDBusInterface;
 class QGraphicsSceneDragDropEvent;
@@ -38,6 +39,9 @@ public:
     PlaylistWidget(QGraphicsItem *parent = 0);
     ~PlaylistWidget();
 
+public slots:
+    void dataUpdated(const QString &, const Plasma::DataEngine::Data &);
+
 protected slots:
     void slotPlaylistAdded(const QString &source);
     void slotCoverAdded(const QString &source);
@@ -45,7 +49,6 @@ protected slots:
 
 protected:
     void dropEvent(QGraphicsSceneDragDropEvent *event);
-    bool eventFilter(QObject *, QEvent *);
 
 private:
     enum ConvenientRoles {
