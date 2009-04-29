@@ -3,4 +3,14 @@
     "http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
 <kcfg>
     <group name="setCurrent" />
+    <group name="add">
+        <entry name="path" type="String">
+            <label>The path of the media file to add to the playlist</label>
+        </entry>
+    </group>
+    <group name="remove>
+        <entry name="path" type="String>
+            <label>The path of the media to be removed from the playlist</label>
+        </entry>
+    </group>
 </kcfg>

@@ -38,6 +38,10 @@ void PlaylistJob::start()
 
     if (operationName() == "setCurrent") {
         m_engine->setCurrentPlaylist(destination());
+    } else if (operationName() == "add") {
+        m_engine->addToPlaylist(destination(), parameters()["path"].toString());
+    } else if (operationName() == "remove") {
+        m_engine->removeFromPlaylist(destination(), parameters()["path"].toString());
     }
 
     emitResult();

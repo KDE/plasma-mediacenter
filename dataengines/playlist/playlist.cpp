@@ -42,6 +42,7 @@ PlaylistEngine *q;
 // we allow many playlists in the dataengine.
 // Each playlist is named with a QString.
 QHash<QString, QStringList> playlists;
+QString current;
 
 public:
 void saveToConfig(const QString &playlist, const QStringList &files);
@@ -151,6 +152,11 @@ void PlaylistEngine::addToPlaylist(const QString &playlistName, QStringList file
 
     // storing files in the config
     d->saveToConfig(playlistName, d->playlists[playlistName]);
+
+    // update the current playlist
+    if (d->current == playlistName) {
+        setCurrentPlaylist(playlistName);
+    }
 }
 
 void PlaylistEngine::addToPlaylist(const QString &playlistName, const QString &file)
@@ -251,6 +257,7 @@ void PlaylistEngine::setCurrentPlaylist(const QString &playlistName)
         return;
     }
 
+    d->current = playlistName;
     setData("currentPlaylist", d->playlists[playlistName]);
     emit currentPlaylistChanged();
 }
