@@ -17,7 +17,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 #include "playlistwidget.h"
-#include "utils.h"
+#include "utils/utils.h"
 
 // Qt
 #include <QGraphicsLinearLayout>
@@ -48,6 +48,7 @@
 #include <Plasma/ServiceJob>
 #include <Plasma/Delegate>
 #include <Plasma/ComboBox>
+#include <Plasma/Theme>
 
 // Taglib
 #include <fileref.h>
@@ -78,7 +79,10 @@ PlaylistWidget::PlaylistWidget(QGraphicsItem *parent)
     m_treeView->nativeWidget()->setRootIsDecorated(false);
     QPalette p = m_treeView->nativeWidget()->palette();
     p.setColor(QPalette::Base, Qt::transparent);
+    p.setColor(QPalette::Text, Plasma::Theme::defaultTheme()->color(Plasma::Theme::TextColor));
     m_treeView->nativeWidget()->setPalette(p);
+
+    connect (Plasma::Theme::defaultTheme(), SIGNAL(themeChanged()), this, SLOT(updateColors()));
 
     m_interface = new QDBusInterface("org.kde.PlaylistEngine", "/PlaylistEngine", QString(), QDBusConnection::sessionBus(), this);
 
@@ -191,4 +195,11 @@ void PlaylistWidget::dataUpdated(const QString &source, const Plasma::DataEngine
 
     kDebug() << source << "updated";
     showPlaylist(source);
+}
+
+void PlaylistWidget::updateColors()
+{
+    QPalette p = m_treeView->nativeWidget()->palette();
+    p.setColor(QPalette::Text, Plasma::Theme::defaultTheme()->color(Plasma::Theme::TextColor));
+    m_treeView->nativeWidget()->setPalette(p);
 }

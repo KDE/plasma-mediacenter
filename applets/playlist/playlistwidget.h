@@ -46,6 +46,7 @@ protected slots:
     void slotPlaylistAdded(const QString &source);
     void slotCoverAdded(const QString &source);
     void showPlaylist(const QString &playlistName);
+    void updateColors();
 
 protected:
     void dropEvent(QGraphicsSceneDragDropEvent *event);
