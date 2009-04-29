@@ -2,7 +2,7 @@
 Name=Cover Fetcher Engine
 Comment=An Engine able to fetch covers from last.fm
 Type=Service
- 
+
 X-KDE-ServiceTypes=Plasma/DataEngine
 X-KDE-Library=plasma_engine_coverfetcher
 X-Plasma-EngineName=coverfetcher
