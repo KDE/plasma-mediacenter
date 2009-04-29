@@ -27,6 +27,7 @@
 #include <QTreeView>
 #include <QIcon>
 #include <QMimeData>
+#include <QPalette>
 
 // QtDBus
 #include <QtDBus/QDBusConnection>
@@ -87,6 +88,9 @@ PlaylistWidget::PlaylistWidget(QGraphicsItem *parent)
     m_treeView->nativeWidget()->setItemDelegate(delegate);
     m_treeView->nativeWidget()->setHeaderHidden(true);
     m_treeView->nativeWidget()->setRootIsDecorated(false);
+    QPalette p = m_treeView->nativeWidget()->palette();
+    p.setColor(QPalette::Base, Qt::transparent);
+    m_treeView->nativeWidget()->setPalette(p);
 
     m_interface = new QDBusInterface("org.kde.PlaylistEngine", "/PlaylistEngine", QString(), QDBusConnection::sessionBus(), this);
 
