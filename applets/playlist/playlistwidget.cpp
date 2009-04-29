@@ -17,6 +17,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 #include "playlistwidget.h"
+#include "utils.h"
 
 // Qt
 #include <QGraphicsLinearLayout>
@@ -60,25 +61,12 @@ PlaylistWidget::PlaylistWidget(QGraphicsItem *parent)
       m_model(new QStandardItemModel(this))
 {
     // here we try to load the playlist engine
-    m_playlistEngine = Plasma::DataEngineManager::self()->engine("playlist");
-    if (!m_playlistEngine->isValid()) {
-        m_playlistEngine = Plasma::DataEngineManager::self()->loadEngine("playlist");
-        if (!m_playlistEngine->isValid()) {
-            kWarning() << "unable to load playlist engine";
-        }
-    }
+    m_playlistEngine = MediaCenter::loadEngineOnce("playlist");
 
     kDebug() << m_playlistEngine;
     connect (m_playlistEngine, SIGNAL(sourceAdded(const QString &)), this, SLOT(slotPlaylistAdded(const QString &)));
 
-    // TODO: avoid this code duplication
-    m_coverEngine = Plasma::DataEngineManager::self()->engine("coverfetcher");
-    if (!m_coverEngine->isValid()) {
-        m_coverEngine = Plasma::DataEngineManager::self()->loadEngine("coverfetcher");
-        if (!m_coverEngine->isValid()) {
-            kWarning() << "unable to load coverfetcher engine";
-        }
-    }
+    m_coverEngine = MediaCenter::loadEngineOnce("coverfetcher");
 
     connect (m_coverEngine, SIGNAL(sourceAdded(const QString &)), this, SLOT(slotCoverAdded(const QString &)));
 

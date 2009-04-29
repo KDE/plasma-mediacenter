@@ -4,6 +4,7 @@ include_directories(${TAGLIB_INCLUDES})
 set(playlist_SRCS
 playlist.cpp
 playlistwidget.cpp
+../../utils/utils.h
 )
  
 # Now make sure all files get to the right place
