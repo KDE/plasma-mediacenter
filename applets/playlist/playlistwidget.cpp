@@ -20,11 +20,13 @@
 
 // Qt
 #include <QGraphicsLinearLayout>
+#include <QGraphicsSceneDragDropEvent>
 #include <QStandardItemModel>
 #include <QStandardItem>
 #include <QVariant>
 #include <QTreeView>
 #include <QIcon>
+#include <QMimeData>
 
 // QtDBus
 #include <QtDBus/QDBusConnection>
@@ -34,6 +36,7 @@
 #include <KDebug>
 #include <KConfigGroup>
 #include <KComboBox>
+#include <KMimeType>
 
 // Plasma
 #include <Plasma/TreeView>
@@ -100,6 +103,12 @@ PlaylistWidget::PlaylistWidget(QGraphicsItem *parent)
     layout->addItem(m_comboBox);
     layout->addItem(m_treeView);
     setLayout(layout);
+
+    setAcceptDrops(true);
+    m_treeView->setAcceptDrops(true);
+    m_treeView->nativeWidget()->setAcceptDrops(true);
+    m_treeView->nativeWidget()->viewport()->setAcceptDrops(true);
+    m_treeView->installEventFilter(this);
 }
 
 PlaylistWidget::~PlaylistWidget()
@@ -166,4 +175,37 @@ void PlaylistWidget::slotCoverAdded(const QString &source)
             }
         }
     }
+}
+
+void PlaylistWidget::dropEvent(QGraphicsSceneDragDropEvent *event)
+{
+    Plasma::Service *playlistService = m_playlistEngine->serviceForSource(m_comboBox->nativeWidget()->currentText());
+    if (!playlistService) {
+        return;
+    }
+
+    KConfigGroup op = playlistService->operationDescription("add");
+    foreach (const KUrl &url, event->mimeData()->urls()) {
+        KMimeType::Ptr mime = KMimeType::findByUrl(url);
+        if (mime->name().indexOf("video/") != -1 || mime->name().indexOf("audio/") != -1) {
+            op.writeEntry("path", url.path());
+            playlistService->startOperationCall(op);
+        }
+    }
+}
+
+bool PlaylistWidget::eventFilter(QObject *object, QEvent *event)
+{
+    if (object == m_treeView) {
+        if (event->type() == QEvent::GraphicsSceneDragEnter || event->type() == QEvent::GraphicsSceneDragMove) {
+            event->accept();
+            return true;
+        }
+        if (event->type() == QEvent::GraphicsSceneDrop) {
+            dropEvent(static_cast<QGraphicsSceneDragDropEvent*>(event));
+            return true;
+        }
+    }
+
+    return QGraphicsWidget::eventFilter(object, event);
 }

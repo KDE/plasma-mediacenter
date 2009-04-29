@@ -28,6 +28,8 @@ namespace Plasma {
 }
 class QStandardItemModel;
 class QDBusInterface;
+class QGraphicsSceneDragDropEvent;
+class QEvent;
 
 class PlaylistWidget : public QGraphicsWidget
 {
@@ -40,6 +42,10 @@ protected slots:
     void slotPlaylistAdded(const QString &source);
     void slotCoverAdded(const QString &source);
     void showPlaylist(const QString &playlistName);
+
+protected:
+    void dropEvent(QGraphicsSceneDragDropEvent *event);
+    bool eventFilter(QObject *, QEvent *);
 
 private:
     enum ConvenientRoles {

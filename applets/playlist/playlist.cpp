@@ -24,6 +24,7 @@ Playlist::Playlist(QObject *parent, const QVariantList &args)
 {
     setPopupIcon("view-media-playlist");
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
+    setAcceptDrops(true);
 }
 
 Playlist::~Playlist()
