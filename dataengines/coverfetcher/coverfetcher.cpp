@@ -36,8 +36,6 @@ void CoverFetcherEngine::init()
 
 bool CoverFetcherEngine::sourceRequestEvent(const QString &source)
 {
-    kDebug() << "initial checks";
-
     if (!source.contains("|")) {
         return false;
     }
