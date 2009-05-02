@@ -49,7 +49,7 @@ void LastFMFetcher::fetchCover(const QString &artist, const QString &albumName, 
     attributes.albumName = albumName;
     attributes.artist = artist;
 
-    KIO::TransferJob *job = KIO::get(KUrl(url));
+    KIO::TransferJob *job = KIO::get(KUrl(url), KIO::NoReload, KIO::HideProgressInfo);
     connect (job, SIGNAL(data(KIO::Job*, const QByteArray&)), this, SLOT(dataReceived(KIO::Job*, const QByteArray&)));
 
     m_queries[job] = attributes;
@@ -70,7 +70,7 @@ void LastFMFetcher::dataReceived(KIO::Job *job, const QByteArray &data)
         if (reader.name() == "image") {
             if (reader.attributes().value("size") == sizeToString(attributes.size)) {
                 QString coverUrl = reader.readElementText();
-                KIO::TransferJob *coverJob = KIO::get(KUrl(coverUrl));
+                KIO::TransferJob *coverJob = KIO::get(KUrl(coverUrl), KIO::NoReload, KIO::HideProgressInfo);
                 connect (coverJob, SIGNAL(data(KIO::Job*, const QByteArray&)), this, SLOT(coverReceived(KIO::Job*, const QByteArray&)));
                 m_queries[coverJob] = attributes;
                 kDebug() << coverUrl;
