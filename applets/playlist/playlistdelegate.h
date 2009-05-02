@@ -16,27 +16,28 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
+#ifndef PLAYLISTDELEGATE_H
+#define PLAYLISTDELEGATE_H
 
-#include <Plasma/DataEngine>
-#include <Plasma/DataEngineManager>
+#include <QStyledItemDelegate>
 
-#include <KDebug>
+class PlaylistDelegate : public QStyledItemDelegate
+{
+    Q_OBJECT
+public:
+    enum PlaylistRoles {
+        AuthorRole = Qt::UserRole + 1,
+        AlbumRole = Qt::UserRole + 2,
+        TrackNameRole = Qt::UserRole + 3,
+        CoverRole = Qt::DecorationRole
+        };
 
-namespace MediaCenter {
+    PlaylistDelegate(QObject *parent = 0);
+    ~PlaylistDelegate();
 
-    // prototypes
-    Plasma::DataEngine* loadEngineOnce(const QString &name);
+    void paint (QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    bool editorEvent (QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index);
+//    QSize sizeHint (const QStyleOptionViewItem &option, const QModelIndex &index) const;
+};
 
-    // implementations
-    Plasma::DataEngine *loadEngineOnce(const QString &name) {
-        Plasma::DataEngine *engine = Plasma::DataEngineManager::self()->engine(name);
-        if (!engine->isValid()) {
-            engine = Plasma::DataEngineManager::self()->loadEngine(name);
-            if (!engine->isValid()) {
-                kWarning() << "unable to load" << name << "engine";
-            }
-        }
-	return engine;
-    }
-
-}
+#endif // PLAYLISTDELEGATE_H

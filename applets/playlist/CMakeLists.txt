@@ -4,6 +4,7 @@ include_directories(${TAGLIB_INCLUDES})
 set(playlist_SRCS
 playlist.cpp
 playlistwidget.cpp
+playlistdelegate.cpp
 ../../utils/utils.h
 )
  

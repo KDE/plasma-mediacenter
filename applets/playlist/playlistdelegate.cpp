@@ -16,27 +16,27 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
+#include "playlistdelegate.h"
 
-#include <Plasma/DataEngine>
-#include <Plasma/DataEngineManager>
+// Qt
+#include <QStyleOptionViewItem>
+#include <QPainter>
+#include <QAbstractItemModel>
+#include <QModelIndex>
 
-#include <KDebug>
+PlaylistDelegate::PlaylistDelegate(QObject *parent) : QStyledItemDelegate(parent)
+{
+}
 
-namespace MediaCenter {
+PlaylistDelegate::~PlaylistDelegate()
+{
+}
 
-    // prototypes
-    Plasma::DataEngine* loadEngineOnce(const QString &name);
+void PlaylistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+}
 
-    // implementations
-    Plasma::DataEngine *loadEngineOnce(const QString &name) {
-        Plasma::DataEngine *engine = Plasma::DataEngineManager::self()->engine(name);
-        if (!engine->isValid()) {
-            engine = Plasma::DataEngineManager::self()->loadEngine(name);
-            if (!engine->isValid()) {
-                kWarning() << "unable to load" << name << "engine";
-            }
-        }
-	return engine;
-    }
-
+bool PlaylistDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index)
+{
+    return QStyledItemDelegate::editorEvent(event, model, option, index);
 }
