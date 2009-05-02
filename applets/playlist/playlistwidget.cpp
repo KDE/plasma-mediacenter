@@ -29,6 +29,7 @@
 #include <QIcon>
 #include <QMimeData>
 #include <QPalette>
+#include <QFileInfo>
 
 // QtDBus
 #include <QtDBus/QDBusConnection>
@@ -123,6 +124,9 @@ void PlaylistWidget::showPlaylist(const QString &playlistName)
     foreach (const QString &track, files) {
         TagLib::FileRef ref(track.toLatin1());
         QStandardItem *item = new QStandardItem(ref.tag()->title().toCString(true));
+        if (item->text().isEmpty()) {
+            item->setText(QFileInfo(track).baseName());
+        }
         item->setData(ref.tag()->artist().toCString(true), Plasma::Delegate::SubTitleRole);
 
         // cover retrival

@@ -18,6 +18,9 @@
  */ 
 #include "coverfetcher.h"
 
+// KDE
+#include <KPixmapCache>
+
 CoverFetcherEngine::CoverFetcherEngine(QObject *parent, const QVariantList &args)
     : Plasma::DataEngine(parent, args), m_fetcher(new LastFMFetcher(this))
 {
@@ -44,6 +47,13 @@ bool CoverFetcherEngine::sourceRequestEvent(const QString &source)
         return true;
     }
 
+    QPixmap pixmap;
+    // we arbitrary use small just for now.. we'll allow size choosing later
+    if (KPixmapCache("mccovers").find(source, pixmap)) {
+        setData(source, "small", pixmap);
+        return true;
+    }
+
     kDebug() << "fetching" << source;
 
     QStringList artistAlbum = source.split('|');
@@ -63,6 +73,7 @@ void CoverFetcherEngine::getCover(const QString &artist,
     }
 
     kDebug() << "setting data";
+    KPixmapCache("mccovers").insert(artist + "|" + albumName, cover);
     setData(artist + "|" + albumName,
             m_fetcher->sizeToString(size), cover);
 }
