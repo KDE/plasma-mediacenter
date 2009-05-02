@@ -5,6 +5,8 @@ Name[pt_BR]=Motor de Obtenção de Capas
 Name[sv]=Gränssnitt för omslagshämtning
 Name[uk]=Рушій отримання обкладинок
 Comment=An Engine able to fetch covers from last.fm.
+Comment[sv]=Ett gränssnitt som klarar av att hämta omslag från last.fm.
+Comment[uk]=Рушій, здатний отримувати обкладинки з last.fm.
 Type=Service
 
 X-KDE-ServiceTypes=Plasma/DataEngine
