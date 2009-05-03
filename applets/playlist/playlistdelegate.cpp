@@ -32,6 +32,7 @@
 
 // Plasma
 #include <Plasma/Theme>
+#include <Plasma/PaintUtils>
 
 static const int COVER_PIXMAP_SIZE = 64;
 static const int ITEM_MARGIN = 2;
@@ -47,22 +48,37 @@ PlaylistDelegate::~PlaylistDelegate()
 
 void PlaylistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    painter->drawRect(option.rect);
+//    painter->drawRect(option.rect);
 
     // here we apply the margin to the contents rect
     QRect contentsRect = option.rect;
     contentsRect.setWidth(contentsRect.width() - 2*ITEM_MARGIN);
     contentsRect.setHeight(contentsRect.height() - 2*ITEM_MARGIN);
     contentsRect.translate(ITEM_MARGIN, ITEM_MARGIN);
-    painter->fillRect(contentsRect, Qt::green);
+//    painter->fillRect(contentsRect, Qt::green);
+
+    // hover state
+    if (option.state & QStyle::State_MouseOver) {
+        painter->save();
+        painter->setOpacity(0.4);
+        painter->setBrush(Plasma::Theme::defaultTheme()->color(Plasma::Theme::HighlightColor));
+        QRect hoverRect = contentsRect;
+        hoverRect.setWidth(hoverRect.width() - ITEM_MARGIN - COVER_PIXMAP_SIZE);
+        hoverRect.translate(ITEM_MARGIN + COVER_PIXMAP_SIZE, 0);
+        painter->drawPath(Plasma::PaintUtils::roundedRectangle(hoverRect, 7));
+        painter->restore();
+    }
 
     // cover drawing
-    QPixmap cover = index.data(CoverRole).isNull() ? KIconLoader::global()->loadIcon("audio-x-generic", KIconLoader::Desktop, COVER_PIXMAP_SIZE)
+    QPixmap cover = index.data(CoverRole).isNull() ? KIconLoader::global()->loadIcon("audio-x-generic", KIconLoader::Desktop, COVER_PIXMAP_SIZE, KIconLoader::DisabledState)
                     : index.data(CoverRole).value<QPixmap>().scaled(COVER_PIXMAP_SIZE, COVER_PIXMAP_SIZE);
     painter->drawPixmap(contentsRect.x(), contentsRect.y(), cover);
 
+    painter->setBrush(Plasma::Theme::defaultTheme()->color(Plasma::Theme::TextColor));
+
     // song title
-    painter->drawText(ITEM_MARGIN + COVER_PIXMAP_SIZE + ITEM_MARGIN, contentsRect.y(), index.data(TrackNameRole).toString());
+    painter->drawText(ITEM_MARGIN + COVER_PIXMAP_SIZE + ITEM_MARGIN, contentsRect.y() + kapp->fontMetrics().height(), index.data(TrackNameRole).toString());
+
 }
 
 bool PlaylistDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index)
