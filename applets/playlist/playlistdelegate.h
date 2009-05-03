@@ -28,7 +28,7 @@ public:
     enum PlaylistRoles {
         AuthorRole = Qt::UserRole + 1,
         AlbumRole = Qt::UserRole + 2,
-        TrackNameRole = Qt::UserRole + 3,
+        TrackNameRole = Qt::DisplayRole,
         CoverRole = Qt::DecorationRole
         };
 
@@ -37,7 +37,7 @@ public:
 
     void paint (QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     bool editorEvent (QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index);
-//    QSize sizeHint (const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    QSize sizeHint (const QStyleOptionViewItem &option, const QModelIndex &index) const;
 };
 
 #endif // PLAYLISTDELEGATE_H

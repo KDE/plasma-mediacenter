@@ -18,6 +18,7 @@
  ***************************************************************************/
 #include "playlistwidget.h"
 #include "utils/utils.h"
+#include "playlistdelegate.h"
 
 // Qt
 #include <QGraphicsLinearLayout>
@@ -73,9 +74,9 @@ PlaylistWidget::PlaylistWidget(QGraphicsItem *parent)
     connect (m_coverEngine, SIGNAL(sourceAdded(const QString &)), this, SLOT(slotCoverAdded(const QString &)));
 
     m_treeView->setModel(m_model);
-    Plasma::Delegate *delegate = new Plasma::Delegate(this);
-    delegate->setRoleMapping(Plasma::Delegate::SubTitleRole, Plasma::Delegate::SubTitleRole);
-    m_treeView->nativeWidget()->setItemDelegate(delegate);
+//    Plasma::Delegate *delegate = new Plasma::Delegate(this);
+//    delegate->setRoleMapping(Plasma::Delegate::SubTitleRole, Plasma::Delegate::SubTitleRole);
+    m_treeView->nativeWidget()->setItemDelegate(new PlaylistDelegate(this));
     m_treeView->nativeWidget()->setHeaderHidden(true);
     m_treeView->nativeWidget()->setRootIsDecorated(false);
     QPalette p = m_treeView->nativeWidget()->palette();
@@ -136,7 +137,7 @@ void PlaylistWidget::showPlaylist(const QString &playlistName)
         item->setData(coverSource, CoverSourceRole);
         Plasma::DataEngine::Data covers = m_coverEngine->query(coverSource);
         if (!covers.isEmpty()) {
-            item->setData(QIcon(covers["small"].value<QPixmap>()), Qt::DecorationRole);
+            item->setData(covers["small"].value<QPixmap>(), Qt::DecorationRole);
         }
 
         m_model->appendRow(item);
@@ -169,7 +170,7 @@ void PlaylistWidget::slotCoverAdded(const QString &source)
             Plasma::DataEngine::Data covers = m_coverEngine->query(source);
             if (!covers.isEmpty()) {
                 kDebug() << "setting cover";
-                item->setData(QIcon(covers["small"].value<QPixmap>()), Qt::DecorationRole);
+                item->setData(covers["small"].value<QPixmap>(), Qt::DecorationRole);
                 break;
             }
         }
