@@ -33,13 +33,18 @@
 // Plasma
 #include <Plasma/Theme>
 #include <Plasma/PaintUtils>
+#include <Plasma/FrameSvg>
 
 static const int COVER_PIXMAP_SIZE = 64;
 static const int ITEM_MARGIN = 2;
 static const int REMOVE_BUTTON_SIZE = 16;
 
-PlaylistDelegate::PlaylistDelegate(QObject *parent) : QStyledItemDelegate(parent)
+PlaylistDelegate::PlaylistDelegate(QObject *parent) : QStyledItemDelegate(parent), m_frameSvg(new Plasma::FrameSvg(this))
 {
+    m_frameSvg->setImagePath("widgets/viewitem");
+    m_frameSvg->setEnabledBorders(Plasma::FrameSvg::AllBorders);
+    m_frameSvg->setCacheAllRenderedFrames(true);
+    m_frameSvg->setElementPrefix("hover");
 }
 
 PlaylistDelegate::~PlaylistDelegate()
@@ -57,18 +62,6 @@ void PlaylistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     contentsRect.translate(ITEM_MARGIN, ITEM_MARGIN);
 //    painter->fillRect(contentsRect, Qt::green);
 
-    // hover state
-    if (option.state & QStyle::State_MouseOver) {
-        painter->save();
-        painter->setOpacity(0.4);
-        painter->setBrush(Plasma::Theme::defaultTheme()->color(Plasma::Theme::HighlightColor));
-        QRect hoverRect = contentsRect;
-        hoverRect.setWidth(hoverRect.width() - ITEM_MARGIN - COVER_PIXMAP_SIZE);
-        hoverRect.translate(ITEM_MARGIN + COVER_PIXMAP_SIZE, 0);
-        painter->drawPath(Plasma::PaintUtils::roundedRectangle(hoverRect, 7));
-        painter->restore();
-    }
-
     // cover drawing
     QPixmap cover = index.data(CoverRole).isNull() ? KIconLoader::global()->loadIcon("audio-x-generic", KIconLoader::Desktop, COVER_PIXMAP_SIZE, KIconLoader::DisabledState)
                     : index.data(CoverRole).value<QPixmap>().scaled(COVER_PIXMAP_SIZE, COVER_PIXMAP_SIZE);
@@ -78,6 +71,14 @@ void PlaylistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 
     // song title
     painter->drawText(ITEM_MARGIN + COVER_PIXMAP_SIZE + ITEM_MARGIN, contentsRect.y() + kapp->fontMetrics().height(), index.data(TrackNameRole).toString());
+
+    // hover state
+    if (option.state & QStyle::State_MouseOver) {
+        painter->save();
+        m_frameSvg->resizeFrame(option.rect.size());
+        m_frameSvg->paintFrame(painter, option.rect.topLeft());
+        painter->restore();
+    }
 
 }
 
