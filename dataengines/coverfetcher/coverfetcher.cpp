@@ -47,21 +47,58 @@ bool CoverFetcherEngine::sourceRequestEvent(const QString &source)
         return true;
     }
 
-    QPixmap pixmap;
-    // we arbitrary use small just for now.. we'll allow size choosing later
-    if (KPixmapCache("mccovers").find(source, pixmap)) {
-        setData(source, "small", pixmap);
-        return true;
-    }
-
-    kDebug() << "fetching" << source;
-
     QStringList artistAlbum = source.split('|');
     if (artistAlbum.count() != 2) {
         return false;
     }
 
-    m_fetcher->fetchCover(artistAlbum[0], artistAlbum[1], LastFMFetcher::Small);
+    LastFMFetcher::CoverSizes readySizes = 0x0;
+    QPixmap pixmap;
+    // we check whether we have a cache copy of the cover for each
+    // size type we support
+    if (KPixmapCache("mccovers").find(source + "|small", pixmap)) {
+        kDebug() << "small in cache";
+        setData(source, "small", pixmap);
+        readySizes |= LastFMFetcher::Small;
+    }
+    if (KPixmapCache("mccovers").find(source + "|medium", pixmap)) {
+        kDebug() << "medium in cache";
+        setData(source, "medium", pixmap);
+        readySizes |= LastFMFetcher::Medium;
+    }
+    if (KPixmapCache("mccovers").find(source + "|large", pixmap)) {
+        kDebug() << "large in cache";
+        setData(source, "large", pixmap);
+        readySizes |= LastFMFetcher::Large;
+    }
+    if (KPixmapCache("mccovers").find(source +"|extralarge", pixmap)) {
+        kDebug() << "extralarge in cache";
+        setData(source, "extralarge", pixmap);
+        readySizes |= LastFMFetcher::ExtraLarge;
+    }
+    // all keys loaded
+    if (readySizes & LastFMFetcher::AllSizes) {
+        return true;
+    }
+
+    if (!(readySizes & LastFMFetcher::Small)) {
+        kDebug() << "small not present, fetching";
+        m_fetcher->fetchCover(artistAlbum[0], artistAlbum[1], LastFMFetcher::Small);
+    }
+    if (!(readySizes & LastFMFetcher::Medium)) {
+        kDebug() << "medium not present, fetching";
+        m_fetcher->fetchCover(artistAlbum[0], artistAlbum[1], LastFMFetcher::Medium);
+    }
+    if (!(readySizes & LastFMFetcher::Large)) {
+        kDebug() << "large not present, fetching";
+        m_fetcher->fetchCover(artistAlbum[0], artistAlbum[1], LastFMFetcher::Large);
+    }
+    if (!(readySizes & LastFMFetcher::ExtraLarge)) {
+        kDebug() << "extralarge not present, fetching";
+        m_fetcher->fetchCover(artistAlbum[0], artistAlbum[1], LastFMFetcher::ExtraLarge);
+    }
+
+    setData(source, Plasma::DataEngine::Data());
     return true;
 }
 
@@ -72,10 +109,12 @@ void CoverFetcherEngine::getCover(const QString &artist,
         return;
     }
 
-    kDebug() << "setting data";
-    KPixmapCache("mccovers").insert(artist + "|" + albumName, cover);
+    kDebug() << "setting cover for" << artist << albumName;
+
+    KPixmapCache("mccovers").insert(artist + "|" + albumName + "|" + LastFMFetcher::sizeToString(size), cover);
+
     setData(artist + "|" + albumName,
-            m_fetcher->sizeToString(size), cover);
+            LastFMFetcher::sizeToString(size), cover);
 }
 
 K_EXPORT_PLASMA_DATAENGINE(coverfetcher, CoverFetcherEngine)

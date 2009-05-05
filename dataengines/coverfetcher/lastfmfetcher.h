@@ -33,17 +33,20 @@ class LastFMFetcher : public QObject
     Q_OBJECT
 public:
     enum CoverSize {
-        Small,
-        Medium,
-        Large,
-        ExtraLarge
+        Invalid = 0x0,
+        Small = 0x1,
+        Medium = 0x2,
+        Large = 0x4,
+        ExtraLarge = 0x8,
+        AllSizes = Small | Medium | Large | ExtraLarge
     };
+    Q_DECLARE_FLAGS(CoverSizes, CoverSize)
 
     LastFMFetcher(QObject *parent = 0);
     ~LastFMFetcher();
 
     void fetchCover(const QString &artist, const QString &albumName, CoverSize size);
-    QString sizeToString(CoverSize size);
+    static QString sizeToString(CoverSize size);
 
 protected slots:
     void dataReceived(KIO::Job*, const QByteArray &data);
@@ -60,5 +63,6 @@ private:
     } QueryAttributes;
     QHash<KIO::Job*, QueryAttributes> m_queries;
 };
+Q_DECLARE_OPERATORS_FOR_FLAGS(LastFMFetcher::CoverSizes)
 
 #endif

@@ -32,6 +32,9 @@ class QDBusInterface;
 class QGraphicsSceneDragDropEvent;
 class QEvent;
 
+class PlaylistUpdater;
+class CoverUpdater;
+
 class PlaylistWidget : public QGraphicsWidget
 {
     Q_OBJECT
@@ -40,11 +43,12 @@ public:
     ~PlaylistWidget();
 
 public slots:
-    void dataUpdated(const QString &, const Plasma::DataEngine::Data &);
+    void playlistUpdated(const QString &, const Plasma::DataEngine::Data &);
+    void coverUpdated(const QString &, const Plasma::DataEngine::Data &);
 
 protected slots:
     void slotPlaylistAdded(const QString &source);
-    void slotCoverAdded(const QString &source);
+    void slotCoverReady(const QString &source);
     void showPlaylist(const QString &playlistName);
     void updateColors();
 
@@ -62,6 +66,41 @@ private:
     Plasma::DataEngine *m_coverEngine;
     QStandardItemModel *m_model;
     QDBusInterface *m_interface;
+
+    PlaylistUpdater *m_pupdater;
+    CoverUpdater *m_cupdater;
+};
+
+
+///// two useful helpers for source updates /////
+class PlaylistUpdater : public QObject
+{
+    Q_OBJECT
+public:
+    PlaylistUpdater(PlaylistWidget *parent) : QObject(parent), widget(parent)
+    {}
+
+private:
+    PlaylistWidget *widget;
+
+public slots:
+    void dataUpdated(const QString &source, const Plasma::DataEngine::Data &data)
+    { widget->playlistUpdated(source, data); }
+};
+
+class CoverUpdater : public QObject
+{
+    Q_OBJECT
+public:
+    CoverUpdater(PlaylistWidget *parent) : QObject(parent), widget(parent)
+    {}
+
+private:
+    PlaylistWidget *widget;
+
+public slots:
+    void dataUpdated(const QString &source, const Plasma::DataEngine::Data &data)
+    { widget->coverUpdated(source, data); }
 };
 
 #endif

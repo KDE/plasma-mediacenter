@@ -36,6 +36,13 @@ LastFMFetcher::~LastFMFetcher()
 
 void LastFMFetcher::fetchCover(const QString &artist, const QString &albumName, CoverSize size)
 {
+    // let's check whether the requested cover is being fetched already
+    foreach (const QueryAttributes value, m_queries.values()) {
+        if (value.albumName == albumName && value.size == size) {
+            return;
+        }
+    }
+
     const QString API_KEY("e805b9243041c25effb3fc3fe3f86983"); 
     const QString url = "http://ws.audioscrobbler.com/2.0/?method=album.getInfo&api_key="
                         + API_KEY

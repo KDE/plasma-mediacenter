@@ -56,12 +56,16 @@
 #include <fileref.h>
 #include <tag.h>
 
+///////////////// PlaylistWidget ///////////////////////
+
 PlaylistWidget::PlaylistWidget(QGraphicsItem *parent)
     : QGraphicsWidget(parent),
       m_treeView(new Plasma::TreeView(this)),
       m_playlistEngine(0),
       m_coverEngine(0),
-      m_model(new QStandardItemModel(this))
+      m_model(new QStandardItemModel(this)),
+      m_pupdater(new PlaylistUpdater(this)),
+      m_cupdater(new CoverUpdater(this))
 {
     // here we try to load the playlist engine
     m_playlistEngine = MediaCenter::loadEngineOnce("playlist");
@@ -108,11 +112,13 @@ PlaylistWidget::PlaylistWidget(QGraphicsItem *parent)
 
 PlaylistWidget::~PlaylistWidget()
 {
+    Plasma::DataEngineManager::self()->unloadEngine("playlist");
+    Plasma::DataEngineManager::self()->unloadEngine("coverfetcher");
 }
 
 void PlaylistWidget::showPlaylist(const QString &playlistName)
 {
-    m_playlistEngine->connectSource(playlistName, this);
+    m_playlistEngine->connectSource(playlistName, m_pupdater);
 
     m_model->clear();
     QStringList files;
@@ -136,8 +142,9 @@ void PlaylistWidget::showPlaylist(const QString &playlistName)
         coverSource.append(ref.tag()->album().toCString(true));
         item->setData(coverSource, CoverSourceRole);
         Plasma::DataEngine::Data covers = m_coverEngine->query(coverSource);
+        m_coverEngine->connectSource(coverSource, m_cupdater);
         if (!covers.isEmpty()) {
-            item->setData(covers["small"].value<QPixmap>(), Qt::DecorationRole);
+            item->setData(covers["medium"].value<QPixmap>(), Qt::DecorationRole);
         }
 
         m_model->appendRow(item);
@@ -162,15 +169,16 @@ void PlaylistWidget::slotPlaylistAdded(const QString &source)
     m_comboBox->addItem(source);
 }
 
-void PlaylistWidget::slotCoverAdded(const QString &source)
+void PlaylistWidget::slotCoverReady(const QString &source)
 {
+    kDebug() << "source cover ready" << source;
     for (int i = 0; i < m_model->rowCount(); i++) {
         QStandardItem *item = m_model->item(i);
         if (item->data(CoverSourceRole).toString() == source) {
             Plasma::DataEngine::Data covers = m_coverEngine->query(source);
             if (!covers.isEmpty()) {
                 kDebug() << "setting cover";
-                item->setData(covers["small"].value<QPixmap>(), Qt::DecorationRole);
+                item->setData(covers["medium"].value<QPixmap>(), Qt::DecorationRole);
                 break;
             }
         }
@@ -194,12 +202,24 @@ void PlaylistWidget::dropEvent(QGraphicsSceneDragDropEvent *event)
     }
 }
 
-void PlaylistWidget::dataUpdated(const QString &source, const Plasma::DataEngine::Data &data)
+void PlaylistWidget::playlistUpdated(const QString &source, const Plasma::DataEngine::Data &data)
 {
     Q_UNUSED(data)
 
-    kDebug() << source << "updated";
+    kDebug() << "data updated";
+
+    kDebug() << source << "updated for PlaylistEngine";
     showPlaylist(source);
+}
+
+void PlaylistWidget::coverUpdated(const QString &source, const Plasma::DataEngine::Data &data)
+{
+    Q_UNUSED(data)
+
+    kDebug() << "data updated";
+
+    kDebug() << "updated cover for" << source;
+    slotCoverReady(source);
 }
 
 void PlaylistWidget::updateColors()
