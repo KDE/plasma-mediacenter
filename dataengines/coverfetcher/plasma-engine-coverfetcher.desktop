@@ -1,10 +1,12 @@
 [Desktop Entry]
 Name=Cover Fetcher Engine
+Name[et]=Kaanepildi tõmbamise mootor
 Name[pt]=Motor de Obtenção de Capas
 Name[pt_BR]=Motor de Obtenção de Capas
 Name[sv]=Gränssnitt för omslagshämtning
 Name[uk]=Рушій отримання обкладинок
 Comment=An Engine able to fetch covers from last.fm.
+Comment[et]=Mootor, mis tõmbab last.fm-ist kaanepilte.
 Comment[pt]=Um motor que consegue obter capas da Last.fm.
 Comment[pt_BR]=Um motor que consegue obter capas da Last.fm.
 Comment[sv]=Ett gränssnitt som klarar av att hämta omslag från last.fm.
