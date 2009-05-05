@@ -30,7 +30,7 @@ class PlaylistDelegate : public QStyledItemDelegate
     Q_OBJECT
 public:
     enum PlaylistRoles {
-        AuthorRole = Qt::UserRole + 1,
+        ArtistRole = Qt::UserRole + 1,
         AlbumRole = Qt::UserRole + 2,
         TrackNameRole = Qt::DisplayRole,
         CoverRole = Qt::DecorationRole

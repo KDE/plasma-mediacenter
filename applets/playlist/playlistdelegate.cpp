@@ -55,6 +55,14 @@ void PlaylistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 {
 //    painter->drawRect(option.rect);
 
+        // hover state
+    if (option.state & QStyle::State_MouseOver) {
+        painter->save();
+        m_frameSvg->resizeFrame(option.rect.size());
+        m_frameSvg->paintFrame(painter, option.rect.topLeft());
+        painter->restore();
+    }
+
     // here we apply the margin to the contents rect
     QRect contentsRect = option.rect;
     contentsRect.setWidth(contentsRect.width() - 2*ITEM_MARGIN);
@@ -69,16 +77,23 @@ void PlaylistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 
     painter->setBrush(Plasma::Theme::defaultTheme()->color(Plasma::Theme::TextColor));
 
-    // song title
-    painter->drawText(ITEM_MARGIN + COVER_PIXMAP_SIZE + ITEM_MARGIN, contentsRect.y() + kapp->fontMetrics().height(), index.data(TrackNameRole).toString());
+    // the y for the text
+    int y = contentsRect.y();
 
-    // hover state
-    if (option.state & QStyle::State_MouseOver) {
-        painter->save();
-        m_frameSvg->resizeFrame(option.rect.size());
-        m_frameSvg->paintFrame(painter, option.rect.topLeft());
-        painter->restore();
+    // song title
+    if (option.state & QStyle::State_MouseOver &&
+        qGray(Plasma::Theme::defaultTheme()->color(Plasma::Theme::HighlightColor).rgb()) > 192) {
+        QPixmap title = Plasma::PaintUtils::shadowText(index.data(TrackNameRole).toString(),
+                                                       Plasma::Theme::defaultTheme()->color(Plasma::Theme::HighlightColor),
+                                                       Plasma::Theme::defaultTheme()->color(Plasma::Theme::TextColor));
+        painter->drawPixmap(contentsRect.x() + COVER_PIXMAP_SIZE + ITEM_MARGIN, y, title);
+    } else {
+        painter->drawText(contentsRect.x() + COVER_PIXMAP_SIZE + ITEM_MARGIN, y + option.fontMetrics.height(), index.data(TrackNameRole).toString());
     }
+
+//    y += option.fontMetrics.height() + ITEM_MARGIN;
+    // artist
+
 
 }
 
@@ -93,7 +108,7 @@ QSize PlaylistDelegate::sizeHint(const QStyleOptionViewItem &option, const QMode
     int height = 0;
 
     width += ITEM_MARGIN + COVER_PIXMAP_SIZE + ITEM_MARGIN;
-    QFontMetrics fm = kapp->fontMetrics();
+    const QFontMetrics &fm = option.fontMetrics;
     width += fm.width(index.data(TrackNameRole).toString());
 
     height += ITEM_MARGIN + COVER_PIXMAP_SIZE + ITEM_MARGIN;

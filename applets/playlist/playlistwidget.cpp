@@ -134,7 +134,7 @@ void PlaylistWidget::showPlaylist(const QString &playlistName)
         if (item->text().isEmpty()) {
             item->setText(QFileInfo(track).baseName());
         }
-        item->setData(ref.tag()->artist().toCString(true), Plasma::Delegate::SubTitleRole);
+        item->setData(ref.tag()->artist().toCString(true), PlaylistDelegate::ArtistRole);
 
         // cover retrival
         QString coverSource = ref.tag()->artist().toCString(true);
