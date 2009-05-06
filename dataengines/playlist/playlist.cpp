@@ -83,7 +83,7 @@ void PlaylistEngine::init()
 Plasma::Service* PlaylistEngine::serviceForSource(const QString &source)
 {
     kDebug() << "creating service";
-    if (!d->playlists.keys().contains(source)) {
+    if (!sources().contains(source)) {
         return 0;
     }
 
@@ -95,7 +95,12 @@ Plasma::Service* PlaylistEngine::serviceForSource(const QString &source)
 
 bool PlaylistEngine::sourceRequestEvent(const QString &name)
 {
-    return updateSourceEvent(name);
+    if (sources().contains(name)) {
+        return true;
+    }
+
+    setData(name, Plasma::DataEngine::Data());
+    return true;
 }
 
 bool PlaylistEngine::updateSourceEvent(const QString &name)
@@ -252,7 +257,7 @@ void PlaylistEngine::Private::removeFromConfig(const QString &playlist)
 
 void PlaylistEngine::setCurrentPlaylist(const QString &playlistName)
 {
-    if (!d->playlists.keys().contains(playlistName)) {
+    if (!sources().contains(playlistName)) {
         kDebug() << "no such" << playlistName << "found!";
         return;
     }

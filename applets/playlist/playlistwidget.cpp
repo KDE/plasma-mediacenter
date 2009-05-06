@@ -65,7 +65,8 @@ PlaylistWidget::PlaylistWidget(QGraphicsItem *parent)
       m_coverEngine(0),
       m_model(new QStandardItemModel(this)),
       m_pupdater(new PlaylistUpdater(this)),
-      m_cupdater(new CoverUpdater(this))
+      m_cupdater(new CoverUpdater(this)),
+      m_multiplePlaylists(false)
 {
     // here we try to load the playlist engine
     m_playlistEngine = MediaCenter::loadEngineOnce("playlist");
@@ -101,6 +102,10 @@ PlaylistWidget::PlaylistWidget(QGraphicsItem *parent)
         m_comboBox->addItem(source);
     }
 
+    if (!m_playlistEngine->sources().count()) {
+        m_playlistEngine->query("Playlist");
+    }
+
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
     layout->addItem(m_comboBox);
     layout->addItem(m_treeView);
@@ -118,6 +123,7 @@ PlaylistWidget::~PlaylistWidget()
 
 void PlaylistWidget::showPlaylist(const QString &playlistName)
 {
+    kDebug() << "showing playlist" << playlistName;
     m_playlistEngine->connectSource(playlistName, m_pupdater);
 
     m_model->clear();
@@ -169,6 +175,9 @@ void PlaylistWidget::slotPlaylistAdded(const QString &source)
     }
 
     m_comboBox->addItem(source);
+//    if (m_comboBox->nativeWidget()->count() == 1) {
+//        showPlaylist(source);
+//    }
 }
 
 void PlaylistWidget::slotCoverReady(const QString &source)
@@ -191,9 +200,11 @@ void PlaylistWidget::dropEvent(QGraphicsSceneDragDropEvent *event)
 {
     Plasma::Service *playlistService = m_playlistEngine->serviceForSource(m_comboBox->nativeWidget()->currentText());
     if (!playlistService) {
+        kDebug() << "invalid service";
         return;
     }
 
+    kDebug() << "adding to playlist";
     KConfigGroup op = playlistService->operationDescription("add");
     foreach (const KUrl &url, event->mimeData()->urls()) {
         KMimeType::Ptr mime = KMimeType::findByUrl(url);
@@ -242,6 +253,17 @@ void PlaylistWidget::removeFromPlaylist(const QModelIndex &index)
     KConfigGroup op = playlistService->operationDescription("remove");
     op.writeEntry("path", index.data(PlaylistDelegate::FilePathRole).toString());
     playlistService->startOperationCall(op);
+}
+
+void PlaylistWidget::setMultiplePlaylistsEnabled(bool enabled)
+{
+    m_multiplePlaylists = true;
+    m_comboBox->setVisible(enabled);
+}
+
+bool PlaylistWidget::multiplePlaylistsEnabled()
+{
+    return m_multiplePlaylists;
 }
 
 #include "playlistwidget.moc"

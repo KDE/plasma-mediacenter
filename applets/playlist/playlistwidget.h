@@ -43,9 +43,12 @@ public:
     PlaylistWidget(QGraphicsItem *parent = 0);
     ~PlaylistWidget();
 
+    bool multiplePlaylistsEnabled();
+
 public Q_SLOTS:
     void playlistUpdated(const QString &, const Plasma::DataEngine::Data &);
     void coverUpdated(const QString &, const Plasma::DataEngine::Data &);
+    void setMultiplePlaylistsEnabled(bool);
 
 protected Q_SLOTS:
     void slotPlaylistAdded(const QString &source);
@@ -71,6 +74,8 @@ private:
 
     PlaylistUpdater *m_pupdater;
     CoverUpdater *m_cupdater;
+
+    bool m_multiplePlaylists;
 };
 
 

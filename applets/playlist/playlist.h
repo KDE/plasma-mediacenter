@@ -21,6 +21,8 @@
 
 #include <Plasma/PopupApplet>
 
+#include "ui_config.h"
+
 class PlaylistWidget;
 
 class Playlist : public Plasma::PopupApplet
@@ -31,9 +33,18 @@ public:
     ~Playlist();
 
     QGraphicsWidget *graphicsWidget();
+    void init();
+    void createConfigurationInterface(KConfigDialog *parent);
+
+protected slots:
+    void loadConfiguration();
+    void configAccepted();
 
 private:
     PlaylistWidget *m_playlistWidget;
+    Ui::Config configUi;
+
+    bool m_multiplePlaylists;
 
 };
 

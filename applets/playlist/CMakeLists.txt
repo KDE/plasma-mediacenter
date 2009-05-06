@@ -9,6 +9,7 @@ playlistdelegate.cpp
 )
  
 # Now make sure all files get to the right place
+kde4_add_ui_files(playlist_SRCS config.ui)
 kde4_add_plugin(plasma_applet_playlist ${playlist_SRCS})
 target_link_libraries(plasma_applet_playlist 
                       ${KDE4_PLASMA_LIBS} ${KDE4_KDEUI_LIBS} ${TAGLIB_LIBRARIES})
