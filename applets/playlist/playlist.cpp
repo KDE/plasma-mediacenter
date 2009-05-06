@@ -40,3 +40,5 @@ QGraphicsWidget* Playlist::graphicsWidget()
 }
 
 K_EXPORT_PLASMA_APPLET(playlist, Playlist)
+
+#include "playlist.moc"

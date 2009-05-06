@@ -69,20 +69,18 @@ PlaylistWidget::PlaylistWidget(QGraphicsItem *parent)
 {
     // here we try to load the playlist engine
     m_playlistEngine = MediaCenter::loadEngineOnce("playlist");
-
     kDebug() << m_playlistEngine;
     connect (m_playlistEngine, SIGNAL(sourceAdded(const QString &)), this, SLOT(slotPlaylistAdded(const QString &)));
 
     m_coverEngine = MediaCenter::loadEngineOnce("coverfetcher");
-
     connect (m_coverEngine, SIGNAL(sourceAdded(const QString &)), this, SLOT(slotCoverReady(const QString &)));
 
     m_treeView->setModel(m_model);
 
     PlaylistDelegate *delegate = new PlaylistDelegate(this);
-    connect(delegate, SIGNAL(removeRequested(const QModelIndex&)), this, SLOT(removeFromPlaylist(const QModelIndex &)));
+    connect(delegate, SIGNAL(removeRequested(const QModelIndex &)), this, SLOT(removeFromPlaylist(const QModelIndex &)));
 
-    m_treeView->nativeWidget()->setItemDelegate(new PlaylistDelegate(this));
+    m_treeView->nativeWidget()->setItemDelegate(delegate);
     m_treeView->nativeWidget()->setHeaderHidden(true);
     m_treeView->nativeWidget()->setRootIsDecorated(false);
     QPalette p = m_treeView->nativeWidget()->palette();
@@ -204,6 +202,7 @@ void PlaylistWidget::dropEvent(QGraphicsSceneDragDropEvent *event)
             playlistService->startOperationCall(op);
         }
     }
+
 }
 
 void PlaylistWidget::playlistUpdated(const QString &source, const Plasma::DataEngine::Data &data)
@@ -235,14 +234,14 @@ void PlaylistWidget::updateColors()
 
 void PlaylistWidget::removeFromPlaylist(const QModelIndex &index)
 {
-    kDebug() << "trying to remove" << index.data().toString();
     Plasma::Service *playlistService = m_playlistEngine->serviceForSource(m_comboBox->nativeWidget()->currentText());
     if (!playlistService) {
         return;
     }
 
     KConfigGroup op = playlistService->operationDescription("remove");
-    kDebug() << "removing" << index.data(PlaylistDelegate::FilePathRole).toString();
     op.writeEntry("path", index.data(PlaylistDelegate::FilePathRole).toString());
     playlistService->startOperationCall(op);
 }
+
+#include "playlistwidget.moc"

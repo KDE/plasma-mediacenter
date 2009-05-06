@@ -49,7 +49,7 @@ private:
     QRect getContentsRect(const QRect &rect) const;
     QRect removeButtonRect(const QRect &contentsRect) const;
 
-signals:
+Q_SIGNALS:
     void removeRequested(const QModelIndex &index);
 
 };

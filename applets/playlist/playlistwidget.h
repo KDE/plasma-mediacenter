@@ -43,16 +43,16 @@ public:
     PlaylistWidget(QGraphicsItem *parent = 0);
     ~PlaylistWidget();
 
-public slots:
+public Q_SLOTS:
     void playlistUpdated(const QString &, const Plasma::DataEngine::Data &);
     void coverUpdated(const QString &, const Plasma::DataEngine::Data &);
 
-protected slots:
-    void removeFromPlaylist(const QModelIndex &index);
+protected Q_SLOTS:
     void slotPlaylistAdded(const QString &source);
     void slotCoverReady(const QString &source);
     void showPlaylist(const QString &playlistName);
     void updateColors();
+    void removeFromPlaylist(const QModelIndex &index);
 
 protected:
     void dropEvent(QGraphicsSceneDragDropEvent *event);

@@ -151,3 +151,5 @@ QSize PlaylistDelegate::sizeHint(const QStyleOptionViewItem &option, const QMode
 
     return QSize(width, height);
 }
+
+#include "playlistdelegate.moc"
