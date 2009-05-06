@@ -35,7 +35,8 @@
 #include <Plasma/PaintUtils>
 #include <Plasma/FrameSvg>
 
-static const int COVER_PIXMAP_SIZE = 64;
+static const int COVER_SIZE = 64;
+static const int COVER_SMALL_SIZE = 48;
 static const int ITEM_MARGIN = 2;
 static const int REMOVE_BUTTON_SIZE = 16;
 
@@ -71,14 +72,22 @@ void PlaylistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 //    painter->fillRect(contentsRect, Qt::green);
 
     // cover drawing
-    QPixmap cover = index.data(CoverRole).isNull() ? KIconLoader::global()->loadIcon("audio-x-generic", KIconLoader::Desktop, COVER_PIXMAP_SIZE, KIconLoader::DisabledState)
-                    : index.data(CoverRole).value<QPixmap>().scaled(COVER_PIXMAP_SIZE, COVER_PIXMAP_SIZE);
-    painter->drawPixmap(contentsRect.x(), contentsRect.y(), cover);
+    int size = option.state & QStyle::State_MouseOver ? COVER_SIZE : COVER_SMALL_SIZE;
+    QPixmap cover = index.data(CoverRole).isNull() ? KIconLoader::global()->loadIcon("audio-x-generic", KIconLoader::Desktop, size, KIconLoader::DisabledState)
+                    : index.data(CoverRole).value<QPixmap>().scaled(size, size);
+
+    if (option.state & QStyle::State_MouseOver) {
+        painter->drawPixmap(contentsRect.x(), contentsRect.y(), cover);
+    } else {
+        painter->drawPixmap(contentsRect.x() + (COVER_SIZE - COVER_SMALL_SIZE)/2, contentsRect.y() + (COVER_SIZE - COVER_SMALL_SIZE)/2, cover);
+    }
 
     painter->setBrush(Plasma::Theme::defaultTheme()->color(Plasma::Theme::TextColor));
 
     // the y for the text
     int y = contentsRect.y();
+    // the x for the text
+    int x = contentsRect.x() + COVER_SIZE + ITEM_MARGIN;
 
     // song title
     if (option.state & QStyle::State_MouseOver &&
@@ -86,13 +95,17 @@ void PlaylistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         QPixmap title = Plasma::PaintUtils::shadowText(index.data(TrackNameRole).toString(),
                                                        Plasma::Theme::defaultTheme()->color(Plasma::Theme::HighlightColor),
                                                        Plasma::Theme::defaultTheme()->color(Plasma::Theme::TextColor));
-        painter->drawPixmap(contentsRect.x() + COVER_PIXMAP_SIZE + ITEM_MARGIN, y, title);
+        painter->drawPixmap(x, y, title);
     } else {
-        painter->drawText(contentsRect.x() + COVER_PIXMAP_SIZE + ITEM_MARGIN, y + option.fontMetrics.height(), index.data(TrackNameRole).toString());
+        painter->drawText(x, y + option.fontMetrics.height(), index.data(TrackNameRole).toString());
     }
 
-//    y += option.fontMetrics.height() + ITEM_MARGIN;
+    y += option.fontMetrics.height() + ITEM_MARGIN;
     // artist
+    painter->save();
+    painter->setPen(Qt::gray);
+    painter->drawText(x, y + option.fontMetrics.height(), index.data(ArtistRole).toString());
+    painter->restore();
 
 
 }
@@ -107,11 +120,11 @@ QSize PlaylistDelegate::sizeHint(const QStyleOptionViewItem &option, const QMode
     int width = 0;
     int height = 0;
 
-    width += ITEM_MARGIN + COVER_PIXMAP_SIZE + ITEM_MARGIN;
+    width += ITEM_MARGIN + COVER_SIZE + ITEM_MARGIN;
     const QFontMetrics &fm = option.fontMetrics;
     width += fm.width(index.data(TrackNameRole).toString());
 
-    height += ITEM_MARGIN + COVER_PIXMAP_SIZE + ITEM_MARGIN;
+    height += ITEM_MARGIN + COVER_SIZE + ITEM_MARGIN;
 
     return QSize(width, height);
 }
