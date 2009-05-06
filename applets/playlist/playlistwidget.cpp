@@ -91,8 +91,6 @@ PlaylistWidget::PlaylistWidget(QGraphicsItem *parent)
 
     connect (Plasma::Theme::defaultTheme(), SIGNAL(themeChanged()), this, SLOT(updateColors()));
 
-    m_interface = new QDBusInterface("org.kde.PlaylistEngine", "/PlaylistEngine", QString(), QDBusConnection::sessionBus(), this);
-
     m_comboBox = new Plasma::ComboBox(this);
     connect (m_comboBox->nativeWidget(), SIGNAL(currentIndexChanged(const QString &)), this, SLOT(showPlaylist(const QString &)));
     foreach (const QString &source, m_playlistEngine->sources()) {
@@ -103,7 +101,7 @@ PlaylistWidget::PlaylistWidget(QGraphicsItem *parent)
     }
 
     if (!m_playlistEngine->sources().count()) {
-        m_playlistEngine->query("Playlist");
+        m_playlistEngine->query("New Playlist");
     }
 
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
@@ -123,7 +121,6 @@ PlaylistWidget::~PlaylistWidget()
 
 void PlaylistWidget::showPlaylist(const QString &playlistName)
 {
-    kDebug() << "showing playlist" << playlistName;
     m_playlistEngine->connectSource(playlistName, m_pupdater);
 
     m_model->clear();

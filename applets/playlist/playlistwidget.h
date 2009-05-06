@@ -70,7 +70,6 @@ private:
     Plasma::DataEngine *m_playlistEngine;
     Plasma::DataEngine *m_coverEngine;
     QStandardItemModel *m_model;
-    QDBusInterface *m_interface;
 
     PlaylistUpdater *m_pupdater;
     CoverUpdater *m_cupdater;
