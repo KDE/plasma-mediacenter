@@ -16,22 +16,36 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#ifndef UTILS_H
-#define UTILS_H
+#include "utils.h"
 
-class QPainter;
-class QRect;
-class QString;
+#include <Plasma/DataEngine>
+#include <Plasma/DataEngineManager>
+#include <Plasma/Theme>
+#include <Plasma/Svg>
 
-namespace Plasma {
-    class DataEngine;
-}
+#include <QPainter>
+#include <QPainterPath>
+#include <QRect>
+
+#include <KDebug>
 
 namespace MediaCenter {
+    Plasma::DataEngine *loadEngineOnce(const QString &name)
+    {
+        Plasma::DataEngine *engine = Plasma::DataEngineManager::self()->engine(name);
+        if (!engine->isValid()) {
+            engine = Plasma::DataEngineManager::self()->loadEngine(name);
+            if (!engine->isValid()) {
+                kWarning() << "unable to load" << name << "engine";
+            }
+        }
+	return engine;
+    }
 
-    // prototypes
-    Plasma::DataEngine* loadEngineOnce(const QString &name);
-    void drawCloseEmblem(QPainter *painter, const QRect &rect);
+    void drawCloseEmblem(QPainter *painter, const QRect &rect)
+    {
+        Plasma::Svg svg;
+        svg.setImagePath("widgets/configuration-icons");
+        svg.paint(painter, rect, "close");
+    }
 }
-
-#endif
