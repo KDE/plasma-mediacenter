@@ -75,11 +75,13 @@ PlaylistWidget::PlaylistWidget(QGraphicsItem *parent)
 
     m_coverEngine = MediaCenter::loadEngineOnce("coverfetcher");
 
-    connect (m_coverEngine, SIGNAL(sourceAdded(const QString &)), this, SLOT(slotCoverAdded(const QString &)));
+    connect (m_coverEngine, SIGNAL(sourceAdded(const QString &)), this, SLOT(slotCoverReady(const QString &)));
 
     m_treeView->setModel(m_model);
-//    Plasma::Delegate *delegate = new Plasma::Delegate(this);
-//    delegate->setRoleMapping(Plasma::Delegate::SubTitleRole, Plasma::Delegate::SubTitleRole);
+
+    PlaylistDelegate *delegate = new PlaylistDelegate(this);
+    connect(delegate, SIGNAL(removeRequested(const QModelIndex&)), this, SLOT(removeFromPlaylist(const QModelIndex &)));
+
     m_treeView->nativeWidget()->setItemDelegate(new PlaylistDelegate(this));
     m_treeView->nativeWidget()->setHeaderHidden(true);
     m_treeView->nativeWidget()->setRootIsDecorated(false);
@@ -131,10 +133,12 @@ void PlaylistWidget::showPlaylist(const QString &playlistName)
     foreach (const QString &track, files) {
         TagLib::FileRef ref(track.toLatin1());
         QStandardItem *item = new QStandardItem(ref.tag()->title().toCString(true));
+        item->setEditable(false);
         if (item->text().isEmpty()) {
             item->setText(QFileInfo(track).baseName());
         }
         item->setData(ref.tag()->artist().toCString(true), PlaylistDelegate::ArtistRole);
+        item->setData(track, PlaylistDelegate::FilePathRole);
 
         // cover retrival
         QString coverSource = ref.tag()->artist().toCString(true);
@@ -227,4 +231,18 @@ void PlaylistWidget::updateColors()
     QPalette p = m_treeView->nativeWidget()->palette();
     p.setColor(QPalette::Text, Plasma::Theme::defaultTheme()->color(Plasma::Theme::TextColor));
     m_treeView->nativeWidget()->setPalette(p);
+}
+
+void PlaylistWidget::removeFromPlaylist(const QModelIndex &index)
+{
+    kDebug() << "trying to remove" << index.data().toString();
+    Plasma::Service *playlistService = m_playlistEngine->serviceForSource(m_comboBox->nativeWidget()->currentText());
+    if (!playlistService) {
+        return;
+    }
+
+    KConfigGroup op = playlistService->operationDescription("remove");
+    kDebug() << "removing" << index.data(PlaylistDelegate::FilePathRole).toString();
+    op.writeEntry("path", index.data(PlaylistDelegate::FilePathRole).toString());
+    playlistService->startOperationCall(op);
 }

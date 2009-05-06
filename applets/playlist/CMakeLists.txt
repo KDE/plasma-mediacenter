@@ -5,7 +5,7 @@ set(playlist_SRCS
 playlist.cpp
 playlistwidget.cpp
 playlistdelegate.cpp
-../../utils/utils.h
+../../utils/utils.cpp
 )
  
 # Now make sure all files get to the right place

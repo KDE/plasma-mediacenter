@@ -31,6 +31,7 @@ class QStandardItemModel;
 class QDBusInterface;
 class QGraphicsSceneDragDropEvent;
 class QEvent;
+class QModelIndex;
 
 class PlaylistUpdater;
 class CoverUpdater;
@@ -47,6 +48,7 @@ public slots:
     void coverUpdated(const QString &, const Plasma::DataEngine::Data &);
 
 protected slots:
+    void removeFromPlaylist(const QModelIndex &index);
     void slotPlaylistAdded(const QString &source);
     void slotCoverReady(const QString &source);
     void showPlaylist(const QString &playlistName);

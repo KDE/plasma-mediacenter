@@ -17,8 +17,10 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 #include "playlistdelegate.h"
+#include "utils/utils.h"
 
 // Qt
+#include <QMouseEvent>
 #include <QStyleOptionViewItem>
 #include <QPainter>
 #include <QAbstractItemModel>
@@ -54,22 +56,22 @@ PlaylistDelegate::~PlaylistDelegate()
 
 void PlaylistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-//    painter->drawRect(option.rect);
-
-        // hover state
-    if (option.state & QStyle::State_MouseOver) {
-        painter->save();
-        m_frameSvg->resizeFrame(option.rect.size());
-        m_frameSvg->paintFrame(painter, option.rect.topLeft());
-        painter->restore();
-    }
+    painter->setRenderHint(QPainter::Antialiasing, true);
 
     // here we apply the margin to the contents rect
     QRect contentsRect = option.rect;
     contentsRect.setWidth(contentsRect.width() - 2*ITEM_MARGIN);
     contentsRect.setHeight(contentsRect.height() - 2*ITEM_MARGIN);
     contentsRect.translate(ITEM_MARGIN, ITEM_MARGIN);
-//    painter->fillRect(contentsRect, Qt::green);
+
+    // hover state
+    if (option.state & QStyle::State_MouseOver) {
+        painter->save();
+        m_frameSvg->resizeFrame(option.rect.size());
+        m_frameSvg->paintFrame(painter, option.rect.topLeft());
+        painter->restore();
+        MediaCenter::drawCloseEmblem(painter, removeButtonRect(contentsRect));
+    }
 
     // cover drawing
     int size = option.state & QStyle::State_MouseOver ? COVER_SIZE : COVER_SMALL_SIZE;
@@ -112,7 +114,28 @@ void PlaylistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 
 bool PlaylistDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index)
 {
+    if (event->type() == QEvent::MouseButtonPress
+        && removeButtonRect(getContentsRect(option.rect)).contains(static_cast<QMouseEvent*>(event)->pos())) {
+        kDebug() << "requesting remove for" << index.data().toString();
+        emit removeRequested(index);
+    }
+
     return QStyledItemDelegate::editorEvent(event, model, option, index);
+}
+
+QRect PlaylistDelegate::getContentsRect(const QRect &rect) const
+{
+    QRect contentsRect = rect;
+    contentsRect.setWidth(contentsRect.width() - 2*ITEM_MARGIN);
+    contentsRect.setHeight(contentsRect.height() - 2*ITEM_MARGIN);
+    contentsRect.translate(ITEM_MARGIN, ITEM_MARGIN);
+
+    return contentsRect;
+}
+
+QRect PlaylistDelegate::removeButtonRect(const QRect &contentsRect) const
+{
+    return QRect(contentsRect.right() - REMOVE_BUTTON_SIZE, contentsRect.y(), REMOVE_BUTTON_SIZE, REMOVE_BUTTON_SIZE);
 }
 
 QSize PlaylistDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const

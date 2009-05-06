@@ -33,7 +33,8 @@ public:
         ArtistRole = Qt::UserRole + 1,
         AlbumRole = Qt::UserRole + 2,
         TrackNameRole = Qt::DisplayRole,
-        CoverRole = Qt::DecorationRole
+        CoverRole = Qt::DecorationRole,
+        FilePathRole = Qt::UserRole + 3
         };
 
     PlaylistDelegate(QObject *parent = 0);
@@ -45,6 +46,12 @@ public:
 
 private:
     Plasma::FrameSvg *m_frameSvg;
+    QRect getContentsRect(const QRect &rect) const;
+    QRect removeButtonRect(const QRect &contentsRect) const;
+
+signals:
+    void removeRequested(const QModelIndex &index);
+
 };
 
 #endif // PLAYLISTDELEGATE_H

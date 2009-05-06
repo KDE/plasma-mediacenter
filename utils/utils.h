@@ -16,27 +16,22 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
+#ifndef UTILS_H
+#define UTILS_H
 
-#include <Plasma/DataEngine>
-#include <Plasma/DataEngineManager>
+class QPainter;
+class QRect;
+class QString;
 
-#include <KDebug>
+namespace Plasma {
+    class DataEngine;
+};
 
 namespace MediaCenter {
 
     // prototypes
     Plasma::DataEngine* loadEngineOnce(const QString &name);
+    void drawCloseEmblem(QPainter *painter, const QRect &rect);
+};
 
-    // implementations
-    Plasma::DataEngine *loadEngineOnce(const QString &name) {
-        Plasma::DataEngine *engine = Plasma::DataEngineManager::self()->engine(name);
-        if (!engine->isValid()) {
-            engine = Plasma::DataEngineManager::self()->loadEngine(name);
-            if (!engine->isValid()) {
-                kWarning() << "unable to load" << name << "engine";
-            }
-        }
-	return engine;
-    }
-
-}
+#endif
