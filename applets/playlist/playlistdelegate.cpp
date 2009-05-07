@@ -75,7 +75,7 @@ void PlaylistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 
     // cover drawing
     int size = option.state & QStyle::State_MouseOver ? COVER_SIZE : COVER_SMALL_SIZE;
-    QPixmap cover = index.data(CoverRole).isNull() ? KIconLoader::global()->loadIcon("audio-x-generic", KIconLoader::Desktop, size, KIconLoader::DisabledState)
+    QPixmap cover = index.data(CoverRole).isNull() ? KIconLoader::global()->loadIcon("x-media-podcast", KIconLoader::Desktop, size, KIconLoader::DisabledState)
                     : index.data(CoverRole).value<QPixmap>().scaled(size, size);
 
     if (option.state & QStyle::State_MouseOver) {

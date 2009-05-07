@@ -12,6 +12,7 @@ Comment[pt_BR]='Applet' de Lista de Reprodução do Plasma
 Comment[sv]=Plasma miniprogram med spellista
 Comment[uk]=Аплет списку відтворення Плазми
 Type=Service
+Icon=view-media-playlist
 
 X-KDE-ServiceTypes=Plasma/Applet
 X-KDE-Library=plasma_applet_playlist
