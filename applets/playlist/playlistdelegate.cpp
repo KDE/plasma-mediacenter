@@ -41,6 +41,7 @@ static const int COVER_SIZE = 64;
 static const int COVER_SMALL_SIZE = 48;
 static const int ITEM_MARGIN = 2;
 static const int REMOVE_BUTTON_SIZE = 16;
+static const int SPACING = 5;
 
 PlaylistDelegate::PlaylistDelegate(QObject *parent) : QStyledItemDelegate(parent), m_frameSvg(new Plasma::FrameSvg(this))
 {
@@ -56,6 +57,7 @@ PlaylistDelegate::~PlaylistDelegate()
 
 void PlaylistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
+    kDebug() << option.rect.size();
     painter->setRenderHint(QPainter::Antialiasing, true);
 
     // here we apply the margin to the contents rect
@@ -97,15 +99,18 @@ void PlaylistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         QPixmap title = Plasma::PaintUtils::shadowText(index.data(TrackNameRole).toString(),
                                                        Plasma::Theme::defaultTheme()->color(Plasma::Theme::HighlightColor),
                                                        Plasma::Theme::defaultTheme()->color(Plasma::Theme::TextColor));
-        painter->drawPixmap(x, y, title);
+        painter->drawPixmap(x - 2, y + 1, title);
     } else {
         painter->drawText(x, y + option.fontMetrics.height(), index.data(TrackNameRole).toString());
     }
 
     y += option.fontMetrics.height() + ITEM_MARGIN;
+
     // artist
     painter->save();
-    painter->setPen(Qt::gray);
+    painter->setPen(option.state & QStyle::State_MouseOver ?
+                    Plasma::Theme::defaultTheme()->color(Plasma::Theme::TextColor) :
+                                                         Plasma::Theme::defaultTheme()->color(Plasma::Theme::HighlightColor));
     painter->drawText(x, y + option.fontMetrics.height(), index.data(ArtistRole).toString());
     painter->restore();
 
@@ -145,10 +150,12 @@ QSize PlaylistDelegate::sizeHint(const QStyleOptionViewItem &option, const QMode
 
     width += ITEM_MARGIN + COVER_SIZE + ITEM_MARGIN;
     const QFontMetrics &fm = option.fontMetrics;
-    width += fm.width(index.data(TrackNameRole).toString());
+    width += fm.width(index.data().toString());
+    width += SPACING + REMOVE_BUTTON_SIZE;
 
     height += ITEM_MARGIN + COVER_SIZE + ITEM_MARGIN;
 
+    kDebug() << "returning QSize(" << width << "," << height << ")" << "for" << index.data().toString();
     return QSize(width, height);
 }
 
