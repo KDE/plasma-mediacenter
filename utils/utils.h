@@ -32,6 +32,7 @@ namespace MediaCenter {
     // prototypes
     Plasma::DataEngine* loadEngineOnce(const QString &name);
     void drawCloseEmblem(QPainter *painter, const QRect &rect);
+    void drawReloadEmblem(QPainter *painter, const QRect &rect);
 }
 
 #endif

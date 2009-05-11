@@ -48,4 +48,11 @@ namespace MediaCenter {
         svg.setImagePath("widgets/configuration-icons");
         svg.paint(painter, rect, "close");
     }
+
+    void drawReloadEmblem(QPainter *painter, const QRect &rect)
+    {
+        Plasma::Svg svg;
+        svg.setImagePath("widgets/configuration-icons");
+        svg.paint(painter, rect, "rotate");
+    }
 }

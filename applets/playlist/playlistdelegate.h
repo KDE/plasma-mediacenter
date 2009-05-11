@@ -48,6 +48,7 @@ private:
     Plasma::FrameSvg *m_frameSvg;
     QRect getContentsRect(const QRect &rect) const;
     QRect removeButtonRect(const QRect &contentsRect) const;
+    QRect reloadButtonRect(const QRect &contentsRect) const;
 
 Q_SIGNALS:
     void removeRequested(const QModelIndex &index);

@@ -40,7 +40,7 @@
 static const int COVER_SIZE = 64;
 static const int COVER_SMALL_SIZE = 48;
 static const int ITEM_MARGIN = 2;
-static const int REMOVE_BUTTON_SIZE = 16;
+static const int TOOL_BUTTON_SIZE = 16;
 static const int SPACING = 5;
 
 PlaylistDelegate::PlaylistDelegate(QObject *parent) : QStyledItemDelegate(parent), m_frameSvg(new Plasma::FrameSvg(this))
@@ -73,6 +73,7 @@ void PlaylistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         m_frameSvg->paintFrame(painter, option.rect.topLeft());
         painter->restore();
         MediaCenter::drawCloseEmblem(painter, removeButtonRect(contentsRect));
+        MediaCenter::drawReloadEmblem(painter, reloadButtonRect(contentsRect));
     }
 
     // cover drawing
@@ -140,7 +141,12 @@ QRect PlaylistDelegate::getContentsRect(const QRect &rect) const
 
 QRect PlaylistDelegate::removeButtonRect(const QRect &contentsRect) const
 {
-    return QRect(contentsRect.right() - REMOVE_BUTTON_SIZE, contentsRect.y(), REMOVE_BUTTON_SIZE, REMOVE_BUTTON_SIZE);
+    return QRect(contentsRect.right() - TOOL_BUTTON_SIZE, contentsRect.y(), TOOL_BUTTON_SIZE, TOOL_BUTTON_SIZE);
+}
+
+QRect PlaylistDelegate::reloadButtonRect(const QRect &contentsRect) const
+{
+    return QRect(contentsRect.right() - TOOL_BUTTON_SIZE, contentsRect.y() + TOOL_BUTTON_SIZE, TOOL_BUTTON_SIZE, TOOL_BUTTON_SIZE);
 }
 
 QSize PlaylistDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -151,7 +157,7 @@ QSize PlaylistDelegate::sizeHint(const QStyleOptionViewItem &option, const QMode
     width += ITEM_MARGIN + COVER_SIZE + ITEM_MARGIN;
     const QFontMetrics &fm = option.fontMetrics;
     width += fm.width(index.data().toString());
-    width += SPACING + REMOVE_BUTTON_SIZE;
+    width += SPACING + TOOL_BUTTON_SIZE;
 
     height += ITEM_MARGIN + COVER_SIZE + ITEM_MARGIN;
 
