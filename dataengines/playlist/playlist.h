@@ -75,8 +75,13 @@ protected:
     bool updateSourceEvent(const QString &source);
 
 private:
-    class Private;
-    Private *d;
+    // we allow many playlists in the dataengine.
+    // Each playlist is named with a QString.
+    QHash<QString, QStringList> m_playlists;
+    QString m_current;
+
+    void saveToConfig(const QString &playlist, const QStringList &files);
+    void removeFromConfig(const QString &playlist);
 
 };
 

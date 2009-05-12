@@ -29,27 +29,7 @@
 #include <QFileInfo>
 #include <QHash>
 
-class PlaylistEngine::Private
-{
-public:
-Private(PlaylistEngine *q) : q(q)
-{}
-~Private()
-{ playlists.clear(); }
-
-PlaylistEngine *q;
-
-// we allow many playlists in the dataengine.
-// Each playlist is named with a QString.
-QHash<QString, QStringList> playlists;
-QString current;
-
-public:
-void saveToConfig(const QString &playlist, const QStringList &files);
-void removeFromConfig(const QString &playlist);
-};
-
-PlaylistEngine::PlaylistEngine(QObject *parent, const QVariantList &args) : Plasma::DataEngine(parent, args), d(new Private(this))
+PlaylistEngine::PlaylistEngine(QObject *parent, const QVariantList &args) : Plasma::DataEngine(parent, args)
 {
     new PlaylistEngineAdaptor(this);
     QDBusConnection dbus = QDBusConnection::sessionBus();
@@ -66,8 +46,6 @@ PlaylistEngine::~PlaylistEngine()
 {
     QDBusConnection dbus = QDBusConnection::sessionBus();
     dbus.unregisterService("org.kde.PlaylistEngine");
-
-    delete d;
 }
 
 void PlaylistEngine::init()
@@ -111,20 +89,20 @@ bool PlaylistEngine::updateSourceEvent(const QString &name)
     // if a file in the playlist does not exist anymore
     // we remove it from the exposed data.
     QHash<QString, QStringList>::Iterator it;
-    for (it = d->playlists.begin(); it != d->playlists.end(); ++it) {
+    for (it = m_playlists.begin(); it != m_playlists.end(); ++it) {
         int singleChanged = 0;
         foreach (const QString &file, it.value()) { // scanning through each file of each playlist
             if (!QFileInfo(file).exists()) {
                 QStringList values = it.value();
                 QString key = it.key();
-                it = d->playlists.erase(it);
+                it = m_playlists.erase(it);
                 values.removeAll(file);
-                it = d->playlists.insert(key, values);
+                it = m_playlists.insert(key, values);
                 ++edit;
                 ++singleChanged;
             }
         }
-        d->saveToConfig(it.key(), it.value());
+        saveToConfig(it.key(), it.value());
         setData(it.key(), it.value());
         singleChanged = 0;
     }
@@ -150,16 +128,16 @@ void PlaylistEngine::addToPlaylist(const QString &playlistName, QStringList file
     }
 
     // adding files to memory
-    d->playlists[playlistName] << files;
+    m_playlists[playlistName] << files;
 
     // setting data to the engine
-    setData(playlistName, d->playlists.value(playlistName));
+    setData(playlistName, m_playlists.value(playlistName));
 
     // storing files in the config
-    d->saveToConfig(playlistName, d->playlists[playlistName]);
+    saveToConfig(playlistName, m_playlists[playlistName]);
 
     // update the current playlist
-    if (d->current == playlistName) {
+    if (m_current == playlistName) {
         setCurrentPlaylist(playlistName);
     }
 }
@@ -171,12 +149,12 @@ void PlaylistEngine::addToPlaylist(const QString &playlistName, const QString &f
 
 QStringList PlaylistEngine::availablePlaylists()
 {
-    return d->playlists.keys();
+    return m_playlists.keys();
 }
 
 QStringList PlaylistEngine::filesInPlaylist(const QString &playlistName)
 {
-    return d->playlists[playlistName];
+    return m_playlists[playlistName];
 }
 
 void PlaylistEngine::removeFromPlaylist(const QString &playlistName, QStringList files)
@@ -193,13 +171,13 @@ void PlaylistEngine::removeFromPlaylist(const QString &playlistName, QStringList
         return;
     }
 
-    if (!d->playlists.keys().contains(playlistName)) {
+    if (!m_playlists.keys().contains(playlistName)) {
         return;
     }
 
     removeAllData(playlistName);
 
-    QStringList list = d->playlists[playlistName];
+    QStringList list = m_playlists[playlistName];
     int changed = 0;
     foreach (const QString &file, files) {
         if (!list.removeOne(file)) {
@@ -212,17 +190,17 @@ void PlaylistEngine::removeFromPlaylist(const QString &playlistName, QStringList
         return;
     }
 
-    d->playlists.remove(playlistName);
+    m_playlists.remove(playlistName);
     if (list.isEmpty()) {
-        d->removeFromConfig(playlistName);
+        removeFromConfig(playlistName);
         return;
     }
 
-    d->playlists[playlistName] = list;
+    m_playlists[playlistName] = list;
 
-    setData(playlistName, d->playlists.value(playlistName));
+    setData(playlistName, m_playlists.value(playlistName));
 
-    d->saveToConfig(playlistName, d->playlists.value(playlistName));
+    saveToConfig(playlistName, m_playlists.value(playlistName));
 }
 
 void PlaylistEngine::removeFromPlaylist(const QString &playlistName, const QString &file)
@@ -232,27 +210,13 @@ void PlaylistEngine::removeFromPlaylist(const QString &playlistName, const QStri
 
 void PlaylistEngine::removePlaylist(const QString &playlistName)
 {
-    if (!d->playlists.keys().contains(playlistName)) {
+    if (!m_playlists.keys().contains(playlistName)) {
         return;
     }
 
     removeAllData(playlistName);
-    d->playlists.remove(playlistName);
-    d->removeFromConfig(playlistName);
-}
-
-void PlaylistEngine::Private::saveToConfig(const QString &playlist, const QStringList &files)
-{
-    KConfig c("playlistenginerc");
-    KConfigGroup g(&c, "Playlists");
-    g.writeEntry(playlist, files);
-}
-
-void PlaylistEngine::Private::removeFromConfig(const QString &playlist)
-{
-    KConfig c("playlistenginerc");
-    KConfigGroup g(&c, "Playlists");
-    g.deleteEntry(playlist);
+    m_playlists.remove(playlistName);
+    removeFromConfig(playlistName);
 }
 
 void PlaylistEngine::setCurrentPlaylist(const QString &playlistName)
@@ -262,9 +226,23 @@ void PlaylistEngine::setCurrentPlaylist(const QString &playlistName)
         return;
     }
 
-    d->current = playlistName;
-    setData("currentPlaylist", d->playlists[playlistName]);
+    m_current = playlistName;
+    setData("currentPlaylist", m_playlists[playlistName]);
     emit currentPlaylistChanged();
+}
+
+void PlaylistEngine::saveToConfig(const QString &playlist, const QStringList &files)
+{
+    KConfig c("playlistenginerc");
+    KConfigGroup g(&c, "Playlists");
+    g.writeEntry(playlist, files);
+}
+
+void PlaylistEngine::removeFromConfig(const QString &playlist)
+{
+    KConfig c("playlistenginerc");
+    KConfigGroup g(&c, "Playlists");
+    g.deleteEntry(playlist);
 }
 
 K_EXPORT_PLASMA_DATAENGINE(playlist, PlaylistEngine)
