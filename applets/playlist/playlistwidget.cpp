@@ -80,6 +80,7 @@ PlaylistWidget::PlaylistWidget(QGraphicsItem *parent)
 
     PlaylistDelegate *delegate = new PlaylistDelegate(this);
     connect(delegate, SIGNAL(removeRequested(const QModelIndex &)), this, SLOT(removeFromPlaylist(const QModelIndex &)));
+    connect(delegate, SIGNAL(reloadRequested(const QModelIndex &)), this, SLOT(reloadCover(const QModelIndex &)));
 
     m_treeView->nativeWidget()->setItemDelegate(delegate);
     m_treeView->nativeWidget()->setHeaderHidden(true);
@@ -140,6 +141,7 @@ void PlaylistWidget::showPlaylist(const QString &playlistName)
         }
         item->setData(ref.tag()->artist().toCString(true), PlaylistDelegate::ArtistRole);
         item->setData(track, PlaylistDelegate::FilePathRole);
+        item->setData(ref.tag()->album().toCString(true), PlaylistDelegate::AlbumRole);
 
         // cover retrival
         QString coverSource = ref.tag()->artist().toCString(true);
@@ -261,6 +263,20 @@ void PlaylistWidget::setMultiplePlaylistsEnabled(bool enabled)
 bool PlaylistWidget::multiplePlaylistsEnabled()
 {
     return m_multiplePlaylists;
+}
+
+void PlaylistWidget::reloadCover(const QModelIndex &index)
+{
+    const QString sourceName = index.data(PlaylistDelegate::ArtistRole).toString() +
+                               "|" + index.data(PlaylistDelegate::AlbumRole).toString();
+
+    Plasma::Service *coverService = m_coverEngine->serviceForSource(sourceName);
+    if (!coverService) {
+        return;
+    }
+
+    KConfigGroup op = coverService->operationDescription("reload");
+    coverService->startOperationCall(op);
 }
 
 #include "playlistwidget.moc"

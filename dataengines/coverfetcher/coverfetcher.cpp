@@ -17,6 +17,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */ 
 #include "coverfetcher.h"
+#include "coverservice.h"
 
 // KDE
 #include <KPixmapCache>
@@ -119,15 +120,29 @@ void CoverFetcherEngine::getCover(const QString &artist,
 
 void CoverFetcherEngine::reloadCover(const QString &source)
 {
+    kDebug() << "";
     if (!sources().contains(source)) {
         return;
     }
+    kDebug() << "reloading";
 
     const QString artist = source.split("|")[0];
     const QString album = source.split("|")[1];
 
     m_fetcher->fetchCover(artist, album, LastFMFetcher::AllSizes);
 
+}
+
+Plasma::Service* CoverFetcherEngine::serviceForSource(const QString &source)
+{
+    if (!sources().contains(source)) {
+        return 0;
+    }
+
+    Plasma::Service *service = new CoverService(this, this);
+    service->setDestination(source);
+
+    return service;
 }
 
 K_EXPORT_PLASMA_DATAENGINE(coverfetcher, CoverFetcherEngine)

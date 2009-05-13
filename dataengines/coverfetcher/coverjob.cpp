@@ -17,6 +17,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 #include "coverjob.h"
+#include "coverfetcher.h"
+
 CoverJob::CoverJob(CoverFetcherEngine *engine,
              const QString &destination, const QString &operation, const QMap<QString, QVariant> &parameters,
              QObject *parent) : Plasma::ServiceJob(destination, operation, parameters, parent), m_engine(engine)
@@ -25,5 +27,6 @@ CoverJob::CoverJob(CoverFetcherEngine *engine,
 void CoverJob::start()
 {
     if (operationName() == "reload") {
+        m_engine->reloadCover(destination());
     }
 }

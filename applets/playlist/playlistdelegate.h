@@ -52,6 +52,7 @@ private:
 
 Q_SIGNALS:
     void removeRequested(const QModelIndex &index);
+    void reloadRequested(const QModelIndex &index);
 
 };
 

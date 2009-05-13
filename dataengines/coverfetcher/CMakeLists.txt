@@ -2,6 +2,8 @@
 set(coverfetcher_SRCS
 coverfetcher.cpp
 lastfmfetcher.cpp
+coverjob.cpp
+coverservice.cpp
 )
  
 # Now make sure all files get to the right place
@@ -17,3 +19,4 @@ install(TARGETS plasma_engine_coverfetcher
  
 install(FILES plasma-engine-coverfetcher.desktop
         DESTINATION ${SERVICES_INSTALL_DIR})
+install(FILES coverfetcher.operations DESTINATION ${DATA_INSTALL_DIR}/plasma/services)

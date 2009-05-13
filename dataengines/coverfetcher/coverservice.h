@@ -16,25 +16,23 @@
  *   Free Software Foundation, Inc.,
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-#ifndef COVERJOB_H
-#define COVERJOB_H
+#ifndef COVERSERVICE_H
+#define COVERSERVICE_H
 
-#include <Plasma/ServiceJob>
+#include <Plasma/Service>
 
 class CoverFetcherEngine;
 
-class CoverJob : public Plasma::ServiceJob
+class CoverService : public Plasma::Service
 {
-    Q_OBJECT
 public:
-    CoverJob(CoverFetcherEngine *engine,
-             const QString &destination, const QString &operation, const QMap<QString, QVariant> &parameters,
-             QObject *parent = 0);
+    CoverService(CoverFetcherEngine *engine, QObject *parent = 0);
 
-    void start();
+protected:
+    Plasma::ServiceJob* createJob(const QString &operation, QMap<QString, QVariant> &parameters);
 
 private:
     CoverFetcherEngine *m_engine;
 };
 
-#endif // COVERJOB_H
+#endif // COVERSERVICE_H

@@ -57,7 +57,6 @@ PlaylistDelegate::~PlaylistDelegate()
 
 void PlaylistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    kDebug() << option.rect.size();
     painter->setRenderHint(QPainter::Antialiasing, true);
 
     // here we apply the margin to the contents rect
@@ -120,10 +119,12 @@ void PlaylistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 
 bool PlaylistDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index)
 {
-    if (event->type() == QEvent::MouseButtonPress
-        && removeButtonRect(getContentsRect(option.rect)).contains(static_cast<QMouseEvent*>(event)->pos())) {
-        kDebug() << "requesting remove for" << index.data().toString();
-        emit removeRequested(index);
+    if (event->type() == QEvent::MouseButtonPress) {
+        if (removeButtonRect(getContentsRect(option.rect)).contains(static_cast<QMouseEvent*>(event)->pos())) {
+            emit removeRequested(index);
+        } else if (reloadButtonRect(getContentsRect(option.rect)).contains(static_cast<QMouseEvent*>(event)->pos())) {
+            emit reloadRequested(index);
+        }
     }
 
     return QStyledItemDelegate::editorEvent(event, model, option, index);

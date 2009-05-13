@@ -56,6 +56,7 @@ protected Q_SLOTS:
     void showPlaylist(const QString &playlistName);
     void updateColors();
     void removeFromPlaylist(const QModelIndex &index);
+    void reloadCover(const QModelIndex &index);
 
 protected:
     void dropEvent(QGraphicsSceneDragDropEvent *event);
