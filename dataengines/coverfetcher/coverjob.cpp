@@ -16,33 +16,14 @@
  *   Free Software Foundation, Inc.,
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-#ifndef COVERFETCHER_H
-#define COVERFETCHER_H
+#include "coverjob.h"
+CoverJob::CoverJob(CoverFetcherEngine *engine,
+             const QString &destination, const QString &operation, const QMap<QString, QVariant> &parameters,
+             QObject *parent) : Plasma::ServiceJob(destination, operation, parameters, parent), m_engine(engine)
+{}
 
-#include <Plasma/DataEngine>
-
-#include "lastfmfetcher.h"
-
-class CoverFetcherEngine : public Plasma::DataEngine
+void CoverJob::start()
 {
-    Q_OBJECT
-public:
-    CoverFetcherEngine(QObject *parent, const QVariantList &args);
-    ~CoverFetcherEngine();
-
-    void init();
-
-protected:
-    bool sourceRequestEvent(const QString &source);
-
-protected slots:
-    void getCover(const QString &artist, const QString &albumName, LastFMFetcher::CoverSize size, const QPixmap &cover);
-
-public slots:
-    void reloadCover(const QString &source);
-
-private:
-    LastFMFetcher *m_fetcher;
-};
-
-#endif
+    if (operationName() == "reload") {
+    }
+}

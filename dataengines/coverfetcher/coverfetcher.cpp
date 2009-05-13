@@ -117,4 +117,17 @@ void CoverFetcherEngine::getCover(const QString &artist,
             LastFMFetcher::sizeToString(size), cover);
 }
 
+void CoverFetcherEngine::reloadCover(const QString &source)
+{
+    if (!sources().contains(source)) {
+        return;
+    }
+
+    const QString artist = source.split("|")[0];
+    const QString album = source.split("|")[1];
+
+    m_fetcher->fetchCover(artist, album, LastFMFetcher::AllSizes);
+
+}
+
 K_EXPORT_PLASMA_DATAENGINE(coverfetcher, CoverFetcherEngine)

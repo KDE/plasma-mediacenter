@@ -107,8 +107,6 @@ bool PlaylistEngine::updateSourceEvent(const QString &name)
         singleChanged = 0;
     }
 
-    
-
     return (edit > 0);
 }
 

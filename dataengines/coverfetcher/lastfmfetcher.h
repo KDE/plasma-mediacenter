@@ -45,7 +45,7 @@ public:
     LastFMFetcher(QObject *parent = 0);
     ~LastFMFetcher();
 
-    void fetchCover(const QString &artist, const QString &albumName, CoverSize size);
+    void fetchCover(const QString &artist, const QString &albumName, CoverSizes sizes);
     static QString sizeToString(CoverSize size);
 
 protected slots:
@@ -62,6 +62,9 @@ private:
         QString artist;
     } QueryAttributes;
     QHash<KIO::Job*, QueryAttributes> m_queries;
+
+    void xmlFetch(const QString &artist, const QString &album, CoverSize size);
+    bool fetchingInProgress(const QString &album, CoverSize);
 };
 Q_DECLARE_OPERATORS_FOR_FLAGS(LastFMFetcher::CoverSizes)
 

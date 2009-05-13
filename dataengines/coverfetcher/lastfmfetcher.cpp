@@ -34,26 +34,51 @@ LastFMFetcher::LastFMFetcher(QObject *parent) : QObject(parent)
 LastFMFetcher::~LastFMFetcher()
 {}
 
-void LastFMFetcher::fetchCover(const QString &artist, const QString &albumName, CoverSize size)
+void LastFMFetcher::fetchCover(const QString &artist, const QString &albumName, CoverSizes sizes)
+{
+
+    if (sizes & Small && !fetchingInProgress(albumName, Small)) {
+        xmlFetch(artist, albumName, Small);
+    }
+
+    if (sizes & Medium && !fetchingInProgress(albumName, Medium)) {
+       xmlFetch(artist, albumName, Medium);
+    }
+
+    if (sizes & Large && !fetchingInProgress(albumName, Large)) {
+        xmlFetch(artist, albumName, Large);
+    }
+
+    if (sizes & ExtraLarge && !fetchingInProgress(albumName, ExtraLarge)) {
+        xmlFetch(artist, albumName, ExtraLarge);
+    }
+}
+
+bool LastFMFetcher::fetchingInProgress(const QString &album, CoverSize size)
 {
     // let's check whether the requested cover is being fetched already
     foreach (const QueryAttributes value, m_queries.values()) {
-        if (value.albumName == albumName && value.size == size) {
-            return;
+        if (value.albumName == album && value.size == size) {
+            return true;
         }
     }
 
-    const QString API_KEY("e805b9243041c25effb3fc3fe3f86983"); 
+    return false;
+}
+
+void LastFMFetcher::xmlFetch(const QString &artist, const QString &album, CoverSize size)
+{
+    // TODO: clean albumName removing invalid characters
+    // TODO: check for errors
+    const QString API_KEY("e805b9243041c25effb3fc3fe3f86983");
     const QString url = "http://ws.audioscrobbler.com/2.0/?method=album.getInfo&api_key="
                         + API_KEY
                         + "&artist="+artist
-                        + "&album="+albumName;
-    // TODO: clean albumName removing invalid characters
-    // TODO: check for errors
+                        + "&album="+album;
 
     QueryAttributes attributes;
     attributes.size = size;
-    attributes.albumName = albumName;
+    attributes.albumName = album;
     attributes.artist = artist;
 
     KIO::TransferJob *job = KIO::get(KUrl(url), KIO::NoReload, KIO::HideProgressInfo);
@@ -77,10 +102,12 @@ void LastFMFetcher::dataReceived(KIO::Job *job, const QByteArray &data)
         if (reader.name() == "image") {
             if (reader.attributes().value("size") == sizeToString(attributes.size)) {
                 QString coverUrl = reader.readElementText();
+
                 KIO::TransferJob *coverJob = KIO::get(KUrl(coverUrl), KIO::NoReload, KIO::HideProgressInfo);
-                connect (coverJob, SIGNAL(data(KIO::Job*, const QByteArray&)), this, SLOT(coverReceived(KIO::Job*, const QByteArray&)));
+                connect (coverJob, SIGNAL(data(KIO::Job*, const QByteArray&)),
+                         this, SLOT(coverReceived(KIO::Job*, const QByteArray&)));
+
                 m_queries[coverJob] = attributes;
-                kDebug() << coverUrl;
                 break;
             }
         }
@@ -96,9 +123,8 @@ void LastFMFetcher::coverReceived(KIO::Job *job, const QByteArray &data)
         return;
     }
 
-    kDebug() << "received cover for" << m_queries[job].artist << m_queries[job].albumName;
+    // isn't this too slow??
     QImage image = QImage::fromData(data);
-    kDebug() << image.isNull();
     QPixmap cover = QPixmap::fromImage(image);
 
     kDebug() << "emitting cover ready" << cover.rect();
