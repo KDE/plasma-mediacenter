@@ -10,6 +10,7 @@ include_directories(
     ${CMAKE_BINARY_DIR}
     ${KDE4_INCLUDES}
     utils/
+    widgets/
 ) 
 
 add_subdirectory(dataengines)
