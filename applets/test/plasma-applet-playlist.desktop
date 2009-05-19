@@ -3,6 +3,7 @@ Name=MCTest
 Name[sv]=MC-test
 Comment=A test applet for Media Center.
 Comment[en_GB]=A test applet for Media Centre.
+Comment[et]=Meediakeskuse testaplett
 Comment[pt]=Uma 'applet' de testes para Centros Multimédia.
 Comment[pt_BR]=Uma 'applet' de testes para Centros Multimédia.
 Comment[sv]=Ett miniprogram för test av Media Center.
