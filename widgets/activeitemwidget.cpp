@@ -186,6 +186,8 @@ void ActiveItemWidget::next()
     }
 
     d->activeItem = d->items[current];
+    emit activeItemChanged(current);
+
     update();
 }
 
@@ -204,5 +206,55 @@ void ActiveItemWidget::previous()
     }
 
     d->activeItem = d->items[current];
+    emit activeItemChanged(current);
+
+    update();
+}
+
+void ActiveItemWidget::setActiveItem(int index)
+{
+    if (index < 0 || index >= d->items.count()) {
+        return;
+    }
+
+    d->activeItem = d->items[index];
+    emit activeItemChanged(index);
+
+    update();
+}
+
+void ActiveItemWidget::setActiveItemText(const QString &text)
+{
+    if (!d->activeItem) {
+        return;
+    }
+
+    d->activeItem->text = text;
+    emit activeItemTextChanged();
+
+    update();
+}
+
+void ActiveItemWidget::setActiveItemIcon(const QIcon &icon)
+{
+    if (!d->activeItem) {
+        return;
+    }
+
+    d->activeItem->icon = icon;
+    emit activeItemIconChanged();
+
+    update();
+}
+
+void ActiveItemWidget::setActiveItemData(const QVariant &value, int role = Qt::UserRole)
+{
+    if (!d->activeItem) {
+        return;
+    }
+
+    d->activeItem->data[role] = value;
+    emit activeItemDataChanged(role);
+
     update();
 }

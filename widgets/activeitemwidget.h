@@ -61,6 +61,12 @@ public Q_SLOTS:
     void setActiveItemIcon(const QIcon &icon);
     void setActiveItemData(const QVariant &value, int role = Qt::UserRole);
 
+signals:
+    void activeItemChanged(int index);
+    void activeItemTextChanged();
+    void activeItemIconChanged();
+    void activeItemDataChanged(int role = Qt::UserRole);
+
 private:
     class ActiveItemWidgetPrivate;
     ActiveItemWidgetPrivate *d;
