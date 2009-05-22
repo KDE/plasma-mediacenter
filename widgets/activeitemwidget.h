@@ -23,6 +23,7 @@
 
 class QIcon;
 class QVariant;
+class QStyleOptionGraphicsItem;
 
 class ActiveItemWidget : public QGraphicsWidget
 {
@@ -38,8 +39,13 @@ public:
     int count() const;
     int activeItemIndex() const;
 
-    void setIconSize(const QSize &size);
-    QSize iconSize() const;
+    /**
+      * Sets the icon size to be used.
+      * @note using standard size from @ref KIconLoader::Group is highly
+      * welcome.
+      */
+    void setIconSize(int size);
+    int iconSize() const;
 
     QIcon itemIcon(int index) const;
     QString itemText(int index) const;
@@ -52,6 +58,8 @@ public:
     void setItemIcon(int index, const QIcon &icon);
     void setItemText(int index, const QString &text);
     void setItemData(int index, const QVariant &value, int role = Qt::UserRole);
+
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
 public Q_SLOTS:
     void next();
@@ -66,6 +74,9 @@ signals:
     void activeItemTextChanged();
     void activeItemIconChanged();
     void activeItemDataChanged(int role = Qt::UserRole);
+
+protected:
+    QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
 
 private:
     class ActiveItemWidgetPrivate;

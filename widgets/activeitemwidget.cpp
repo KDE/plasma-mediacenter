@@ -22,6 +22,8 @@
 #include <QVariant>
 #include <QHash>
 #include <QList>
+#include <QStyleOptionGraphicsItem>
+
 
 class ActiveItemWidget::ActiveItemWidgetPrivate
 {
@@ -34,7 +36,8 @@ public:
     ActiveItemWidget *q;
     QList<Item*> items;
     Item *activeItem;
-    QSize iconSize;
+    int iconSize;
+
 };
 
 ActiveItemWidget::ActiveItemWidget(QGraphicsItem *parent) : QGraphicsWidget(parent), d(new ActiveItemWidgetPrivate(this))
@@ -89,12 +92,12 @@ int ActiveItemWidget::activeItemIndex() const
     return d->items.indexOf(d->activeItem);
 }
 
-void ActiveItemWidget::setIconSize(const QSize &size)
+void ActiveItemWidget::setIconSize(int size)
 {
     d->iconSize = size;
 }
 
-QSize ActiveItemWidget::iconSize() const
+int ActiveItemWidget::iconSize() const
 {
     return d->iconSize;
 }
@@ -257,4 +260,21 @@ void ActiveItemWidget::setActiveItemData(const QVariant &value, int role = Qt::U
     emit activeItemDataChanged(role);
 
     update();
+}
+
+void ActiveItemWidget::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    Q_UNUSED(widget)
+
+
+}
+
+QSizeF ActiveItemWidget::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
+{
+    Q_UNUSED(which)
+    Q_UNUSED(constraint)
+
+    return QSizeF(d->iconSize + qApp->fontMetrics().width(d->activeItem->text),
+                  qMax(d->iconSize, qApp->fontMetrics().height()));
+
 }
