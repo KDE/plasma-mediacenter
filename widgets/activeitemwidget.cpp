@@ -23,7 +23,7 @@
 #include <QHash>
 #include <QList>
 #include <QStyleOptionGraphicsItem>
-
+#include <QPainter>
 
 class ActiveItemWidget::ActiveItemWidgetPrivate
 {
@@ -266,7 +266,15 @@ void ActiveItemWidget::paint(QPainter *painter, const QStyleOptionGraphicsItem *
 {
     Q_UNUSED(widget)
 
+    if (!d->activeItem->icon.isNull()) {
+        d->activeItem->icon.paint(painter, QRect(option->rect.topLeft(), QSize(d->iconSize, d->iconSize)));
+    }
 
+    QRect textRect = option->rect;
+    textRect.setSize(QSize(textRect.width() - d->iconSize, textRect.height()));
+    textRect.translate(d->iconSize, 0);
+
+    painter->drawText(textRect, Qt::AlignCenter, d->activeItem->text);
 }
 
 QSizeF ActiveItemWidget::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const

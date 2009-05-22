@@ -16,14 +16,13 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#include "playlist.h"
-#include "playlistwidget.h"
+#include "test.h"
 
 #include <QWidget>
 #include <KConfigDialog>
 
 MCTest::MCTest(QObject *parent, const QVariantList &args)
-    : Plasma::PopupApplet(parent, args), m_playlistWidget(0)
+    : Plasma::Applet(parent, args)
 {
 
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
@@ -38,5 +37,3 @@ void MCTest::init()
 }
 
 K_EXPORT_PLASMA_APPLET(mctest, MCTest)
-
-#include "playlist.moc"

@@ -21,9 +21,6 @@
 
 #include <Plasma/Applet>
 
-
-class PlaylistWidget;
-
 class MCTest : public Plasma::Applet
 {
     Q_OBJECT
