@@ -17,16 +17,22 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 #include "test.h"
+#include "widgets/activeitemwidget.h"
 
 #include <QWidget>
-#include <KConfigDialog>
+#include <QGraphicsLinearLayout>
 
 MCTest::MCTest(QObject *parent, const QVariantList &args)
     : Plasma::Applet(parent, args)
 {
 
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
+    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout;
+    ActiveItemWidget *widget = new ActiveItemWidget;
+    widget->addItem("Test Item");
+    layout->addItem(widget);
 
+    setLayout(layout);
 }
 
 MCTest::~MCTest()

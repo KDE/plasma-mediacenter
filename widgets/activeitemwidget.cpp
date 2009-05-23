@@ -24,6 +24,9 @@
 #include <QList>
 #include <QStyleOptionGraphicsItem>
 #include <QPainter>
+#include <QApplication>
+
+#include <KDebug>
 
 class ActiveItemWidget::ActiveItemWidgetPrivate
 {
@@ -112,7 +115,7 @@ QString ActiveItemWidget::itemText(int index) const
     return d->items[index]->text;
 }
 
-QVariant ActiveItemWidget::itemData(int index, int role = Qt::UserRole) const
+QVariant ActiveItemWidget::itemData(int index, int role) const
 {
     return d->items[index]->data[role];
 }
@@ -127,7 +130,7 @@ QString ActiveItemWidget::activeItemText() const
     return d->activeItem->text;
 }
 
-QVariant ActiveItemWidget::activeItemData(int role = Qt::UserRole) const
+QVariant ActiveItemWidget::activeItemData(int role) const
 {
     return d->activeItem->data[role];
 }
@@ -160,7 +163,7 @@ void ActiveItemWidget::setItemText(int index, const QString &text)
     }
 }
 
-void ActiveItemWidget::setItemData(int index, const QVariant &value, int role = Qt::UserRole)
+void ActiveItemWidget::setItemData(int index, const QVariant &value, int role)
 {
     if (index < 0 || index >= d->items.count()) {
         return;
@@ -250,7 +253,7 @@ void ActiveItemWidget::setActiveItemIcon(const QIcon &icon)
     update();
 }
 
-void ActiveItemWidget::setActiveItemData(const QVariant &value, int role = Qt::UserRole)
+void ActiveItemWidget::setActiveItemData(const QVariant &value, int role)
 {
     if (!d->activeItem) {
         return;
@@ -265,6 +268,7 @@ void ActiveItemWidget::setActiveItemData(const QVariant &value, int role = Qt::U
 void ActiveItemWidget::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     Q_UNUSED(widget)
+    kDebug() << "";
 
     if (!d->activeItem->icon.isNull()) {
         d->activeItem->icon.paint(painter, QRect(option->rect.topLeft(), QSize(d->iconSize, d->iconSize)));
@@ -274,15 +278,20 @@ void ActiveItemWidget::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     textRect.setSize(QSize(textRect.width() - d->iconSize, textRect.height()));
     textRect.translate(d->iconSize, 0);
 
+    kDebug() << "drawing" << d->activeItem->text;
+//    painter->fillRect(textRect, Qt::green);
     painter->drawText(textRect, Qt::AlignCenter, d->activeItem->text);
 }
 
 QSizeF ActiveItemWidget::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
 {
-    Q_UNUSED(which)
-    Q_UNUSED(constraint)
+//    Q_UNUSED(which)
+//    Q_UNUSED(constraint)
+//
+    if (which == Qt::PreferredSize) {
+        return QSizeF(d->iconSize + qApp->fontMetrics().width(d->activeItem->text),
+                      qMax(d->iconSize, qApp->fontMetrics().height()));
+    }
 
-    return QSizeF(d->iconSize + qApp->fontMetrics().width(d->activeItem->text),
-                  qMax(d->iconSize, qApp->fontMetrics().height()));
-
+    return QGraphicsWidget::sizeHint(which, constraint);
 }

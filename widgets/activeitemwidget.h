@@ -20,8 +20,9 @@
 #define ACTIVEITEMWIDGET_H
 
 #include <QGraphicsWidget>
+#include <QHash>
+#include <QIcon>
 
-class QIcon;
 class QVariant;
 class QStyleOptionGraphicsItem;
 

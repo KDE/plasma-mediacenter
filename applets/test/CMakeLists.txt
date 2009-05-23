@@ -1,6 +1,7 @@
 
 set(mctest_SRCS
 test.cpp
+../../widgets/activeitemwidget.cpp
 )
  
 # Now make sure all files get to the right place
