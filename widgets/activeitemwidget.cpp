@@ -25,13 +25,14 @@
 #include <QStyleOptionGraphicsItem>
 #include <QPainter>
 #include <QApplication>
+#include <QGraphicsSceneMouseEvent>
 
 #include <KDebug>
 
 class ActiveItemWidget::ActiveItemWidgetPrivate
 {
 public:
-    ActiveItemWidgetPrivate(ActiveItemWidget *q) : q(q), activeItem(0)
+    ActiveItemWidgetPrivate(ActiveItemWidget *q) : q(q), activeItem(0), xOffset(0.0), xPress(0.0)
     {}
     ~ActiveItemWidgetPrivate()
     {}
@@ -40,6 +41,9 @@ public:
     QList<Item*> items;
     Item *activeItem;
     int iconSize;
+
+    qreal xOffset;
+    qreal xPress;
 
 };
 
@@ -268,7 +272,8 @@ void ActiveItemWidget::setActiveItemData(const QVariant &value, int role)
 void ActiveItemWidget::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     Q_UNUSED(widget)
-    kDebug() << "";
+    kDebug() << d->xOffset;
+    painter->translate(d->xOffset, 0);
 
     if (!d->activeItem->icon.isNull()) {
         d->activeItem->icon.paint(painter, QRect(option->rect.topLeft(), QSize(d->iconSize, d->iconSize)));
@@ -294,4 +299,25 @@ QSizeF ActiveItemWidget::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
     }
 
     return QGraphicsWidget::sizeHint(which, constraint);
+}
+
+void ActiveItemWidget::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    kDebug() << "";
+    d->xPress = event->pos().x();
+}
+
+void ActiveItemWidget::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    kDebug() << "";
+    d->xOffset = event->pos().x() - d->xPress;
+    update();
+}
+
+void ActiveItemWidget::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    kDebug() << "";
+    d->xOffset = 0.0;
+    d->xPress = 0.0;
+    update();
 }

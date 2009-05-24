@@ -25,6 +25,7 @@
 
 class QVariant;
 class QStyleOptionGraphicsItem;
+class QGraphicsSceneMouseEvent;
 
 class ActiveItemWidget : public QGraphicsWidget
 {
@@ -78,6 +79,10 @@ signals:
 
 protected:
     QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
+
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
 private:
     class ActiveItemWidgetPrivate;
