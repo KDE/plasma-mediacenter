@@ -26,13 +26,16 @@
 #include <QPainter>
 #include <QApplication>
 #include <QGraphicsSceneMouseEvent>
+#include <QTimeLine>
 
 #include <KDebug>
+
+static const int DURATION = 250; // ms
 
 class ActiveItemWidget::ActiveItemWidgetPrivate
 {
 public:
-    ActiveItemWidgetPrivate(ActiveItemWidget *q) : q(q), activeItem(0), xOffset(0.0), xPress(0.0)
+    ActiveItemWidgetPrivate(ActiveItemWidget *q) : q(q), activeItem(0), iconSize(0), activeIndex(-1), xOffset(0.0), xPress(0.0), timeLine(new QTimeLine(DURATION, q))
     {}
     ~ActiveItemWidgetPrivate()
     {}
@@ -41,14 +44,22 @@ public:
     QList<Item*> items;
     Item *activeItem;
     int iconSize;
+    int activeIndex;
 
     qreal xOffset;
     qreal xPress;
 
+    QTimeLine *timeLine;
+
+    void paintItem(Item *, QPainter *, const QStyleOptionGraphicsItem *);
+    void setActiveItem(Item *);
+
 };
 
 ActiveItemWidget::ActiveItemWidget(QGraphicsItem *parent) : QGraphicsWidget(parent), d(new ActiveItemWidgetPrivate(this))
-{}
+{
+    connect (d->timeLine, SIGNAL(valueChanged(qreal)), this, SLOT(animateScroll(qreal)));
+}
 
 ActiveItemWidget::~ActiveItemWidget()
 {
@@ -60,12 +71,12 @@ void ActiveItemWidget::addItem(const QString &text)
     Item *item = new Item;
     item->text = text;
 
-    if (d->items.isEmpty()) {
-        d->activeItem = item;
+    d->items.append(item);
+
+    if (d->items.count() == 1) {
+        d->setActiveItem(item);
         update();
     }
-
-    d->items.append(item);
 }
 
 void ActiveItemWidget::addItem(const QIcon &icon, const QString &text)
@@ -74,12 +85,12 @@ void ActiveItemWidget::addItem(const QIcon &icon, const QString &text)
     item->text = text;
     item->icon = icon;
 
-    if (d->items.isEmpty()) {
-        d->activeItem = item;
+    d->items.append(item);
+
+    if (d->items.count() == 1) {
+        d->setActiveItem(item);
         update();
     }
-
-    d->items.append(item);
 }
 
 void ActiveItemWidget::addItems(const QStringList &items)
@@ -195,7 +206,7 @@ void ActiveItemWidget::next()
         return;
     }
 
-    d->activeItem = d->items[current];
+    d->setActiveItem(d->items[current]);
     emit activeItemChanged(current);
 
     update();
@@ -215,7 +226,7 @@ void ActiveItemWidget::previous()
         return;
     }
 
-    d->activeItem = d->items[current];
+    d->setActiveItem(d->items[current]);
     emit activeItemChanged(current);
 
     update();
@@ -227,7 +238,7 @@ void ActiveItemWidget::setActiveItem(int index)
         return;
     }
 
-    d->activeItem = d->items[index];
+    d->setActiveItem(d->items[index]);
     emit activeItemChanged(index);
 
     update();
@@ -273,19 +284,32 @@ void ActiveItemWidget::paint(QPainter *painter, const QStyleOptionGraphicsItem *
 {
     Q_UNUSED(widget)
     kDebug() << d->xOffset;
-    painter->translate(d->xOffset, 0);
+    painter->save();
+    painter->setClipRect(option->rect);
 
-    if (!d->activeItem->icon.isNull()) {
-        d->activeItem->icon.paint(painter, QRect(option->rect.topLeft(), QSize(d->iconSize, d->iconSize)));
+    // let's move to the current item
+    kDebug() << d->activeIndex;
+    if (d->activeIndex > -1) {
+        painter->translate(d->activeIndex * option->rect.width(), 0);
     }
 
-    QRect textRect = option->rect;
-    textRect.setSize(QSize(textRect.width() - d->iconSize, textRect.height()));
-    textRect.translate(d->iconSize, 0);
+    // let's follow mouse/digit gesture
+    painter->translate(d->xOffset, 0);
 
-    kDebug() << "drawing" << d->activeItem->text;
-//    painter->fillRect(textRect, Qt::green);
-    painter->drawText(textRect, Qt::AlignCenter, d->activeItem->text);
+    qreal animatedValue = d->timeLine->currentValue();
+    if (d->timeLine->currentFrame() < 0) {
+        animatedValue = -animatedValue;
+    }
+    kDebug() << "translating" << animatedValue;
+    painter->translate(animatedValue * (option->rect.width() - d->xOffset), 0);
+
+    kDebug() << d->items.count();
+    foreach (Item *item, d->items) {
+        kDebug() << "calling paint item";
+        d->paintItem(item, painter, option);
+        painter->translate(option->rect.width(), 0);
+    }
+    painter->restore();
 }
 
 QSizeF ActiveItemWidget::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
@@ -294,6 +318,9 @@ QSizeF ActiveItemWidget::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
 //    Q_UNUSED(constraint)
 //
     if (which == Qt::PreferredSize) {
+        if (!d->activeItem) {
+            return QGraphicsWidget::sizeHint(which, constraint);
+        }
         return QSizeF(d->iconSize + qApp->fontMetrics().width(d->activeItem->text),
                       qMax(d->iconSize, qApp->fontMetrics().height()));
     }
@@ -303,21 +330,59 @@ QSizeF ActiveItemWidget::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
 
 void ActiveItemWidget::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    kDebug() << "";
     d->xPress = event->pos().x();
 }
 
 void ActiveItemWidget::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    kDebug() << "";
     d->xOffset = event->pos().x() - d->xPress;
     update();
 }
 
 void ActiveItemWidget::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    kDebug() << "";
+    if (abs(d->xOffset) > contentsRect().width() / 4) {
+        int xLeft = contentsRect().width() - abs(d->xOffset);
+        if (d->xOffset < 0) {
+            d->timeLine->setFrameRange(0, -xLeft);
+        } else {
+            d->timeLine->setFrameRange(0, xLeft);
+        }
+        d->timeLine->start();
+        return;
+    }
+
     d->xOffset = 0.0;
     d->xPress = 0.0;
     update();
+}
+
+void ActiveItemWidget::animateScroll(qreal value)
+{
+    Q_UNUSED(value)
+    update();
+}
+
+void ActiveItemWidget::ActiveItemWidgetPrivate::paintItem(Item *item, QPainter *painter, const QStyleOptionGraphicsItem *option)
+{
+    if (!item->icon.isNull()) {
+        item->icon.paint(painter, QRect(option->rect.topLeft(), QSize(iconSize, iconSize)));
+    }
+
+    QRect textRect = option->rect;
+    textRect.setSize(QSize(textRect.width() - iconSize, textRect.height()));
+    textRect.translate(iconSize, 0);
+
+    kDebug() << "drawing" << item->text;
+    painter->drawText(textRect, Qt::AlignCenter, item->text);
+}
+
+void ActiveItemWidget::ActiveItemWidgetPrivate::setActiveItem(Item *item)
+{
+    if (!items.contains(item)) {
+        return;
+    }
+
+    activeIndex = items.indexOf(item);
+    activeItem = item;
 }

@@ -16,31 +16,34 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#include "test.h"
-#include "widgets/activeitemwidget.h"
+#ifndef YOUTUBEENGINE_H
+#define YOUTUBEENGINE_H
 
-#include <QWidget>
-#include <QGraphicsLinearLayout>
+#include <Plasma/DataEngine>
 
-MCTest::MCTest(QObject *parent, const QVariantList &args)
-    : Plasma::Applet(parent, args)
-{
-
-    setAspectRatioMode(Plasma::IgnoreAspectRatio);
-    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout;
-    ActiveItemWidget *widget = new ActiveItemWidget;
-    widget->addItem("Item 1");
-    widget->addItem("Item 2");
-    layout->addItem(widget);
-
-    setLayout(layout);
+namespace Plasma {
+    class Service;
 }
-
-MCTest::~MCTest()
-{}
-
-void MCTest::init()
+class YouTubeInterface;
+/**
+ * @class YouTubeEngine
+ * @brief An engine that manages your playlists.
+ *
+ * The engine exports each playlist as source of the Plasma::DataEngine.
+ * @author Alessandro Diaferia
+ */
+class YouTubeEngine : public Plasma::DataEngine
 {
-}
+    Q_OBJECT
+public:
+    YouTubeEngine(QObject *parent, const QVariantList &args);
+    ~YouTubeEngine();
 
-K_EXPORT_PLASMA_APPLET(mctest, MCTest)
+protected:
+    bool sourceRequestEvent(const QString &source);
+
+private:
+    YouTubeInterface *m_interface;
+};
+
+#endif

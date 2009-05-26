@@ -26,7 +26,7 @@ namespace Plasma {
 }
 
 /**
- * @class PortageEngine
+ * @class PlaylistEngine
  * @brief An engine that manages your playlists.
  *
  * The engine exports each playlist as source of the Plasma::DataEngine.

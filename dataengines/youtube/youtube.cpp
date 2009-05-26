@@ -16,31 +16,33 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#include "test.h"
-#include "widgets/activeitemwidget.h"
+#include "youtube.h"
+#include "youtubeinterface.h"
 
-#include <QWidget>
-#include <QGraphicsLinearLayout>
+// KDE
+#include <kio/job.h>
 
-MCTest::MCTest(QObject *parent, const QVariantList &args)
-    : Plasma::Applet(parent, args)
-{
 
-    setAspectRatioMode(Plasma::IgnoreAspectRatio);
-    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout;
-    ActiveItemWidget *widget = new ActiveItemWidget;
-    widget->addItem("Item 1");
-    widget->addItem("Item 2");
-    layout->addItem(widget);
-
-    setLayout(layout);
-}
-
-MCTest::~MCTest()
-{}
-
-void MCTest::init()
+YouTubeEngine::YouTubeEngine(QObject *parent, const QVariantList &args) : Plasma::DataEngine(parent, args),
+m_interface(new YouTubeInterface(this))
 {
 }
 
-K_EXPORT_PLASMA_APPLET(mctest, MCTest)
+YouTubeEngine::~YouTubeEngine()
+{
+}
+
+bool YouTubeEngine::sourceRequestEvent(const QString &name)
+{
+    if (!name.startsWith("query/")) {
+        return false;
+    }
+    QString queryString = name;
+    queryString.remove("query/");
+    m_interface->query(queryString);
+
+    return true;
+
+}
+
+K_EXPORT_PLASMA_DATAENGINE(youtube, YouTubeEngine)

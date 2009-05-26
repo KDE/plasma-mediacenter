@@ -16,31 +16,38 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#include "test.h"
-#include "widgets/activeitemwidget.h"
+#ifndef YOUTUBEINTERFACE_H
+#define YOUTUBEINTERFACE_H
 
-#include <QWidget>
-#include <QGraphicsLinearLayout>
+#include <QObject>
+#include <Plasma/DataEngine>
+#include <QHash>
 
-MCTest::MCTest(QObject *parent, const QVariantList &args)
-    : Plasma::Applet(parent, args)
-{
-
-    setAspectRatioMode(Plasma::IgnoreAspectRatio);
-    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout;
-    ActiveItemWidget *widget = new ActiveItemWidget;
-    widget->addItem("Item 1");
-    widget->addItem("Item 2");
-    layout->addItem(widget);
-
-    setLayout(layout);
+namespace KIO {
+    class Job;
 }
+class QByteArray;
+class KJob;
 
-MCTest::~MCTest()
-{}
-
-void MCTest::init()
+class YouTubeInterface : public QObject
 {
-}
+    Q_OBJECT
+public:
+    YouTubeInterface(QObject *parent = 0);
+    ~YouTubeInterface();
 
-K_EXPORT_PLASMA_APPLET(mctest, MCTest)
+    void query(const QString &searchTerm);
+
+signals:
+    void result(const QString &searchTerm, const QString &id, const Plasma::DataEngine::Data &video);
+
+protected slots:
+    void ytDataReady(KIO::Job *job, const QByteArray &data);
+    void parseResults(KJob *job);
+
+private:
+    QHash<KIO::Job*, QString> m_queries;
+    QHash<KIO::Job*, QString> m_datas;
+};
+
+#endif

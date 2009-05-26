@@ -84,6 +84,9 @@ protected:
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
+protected Q_SLOTS:
+    void animateScroll(qreal value);
+
 private:
     class ActiveItemWidgetPrivate;
     ActiveItemWidgetPrivate *d;
