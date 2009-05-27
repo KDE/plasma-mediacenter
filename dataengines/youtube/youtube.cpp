@@ -26,6 +26,7 @@
 YouTubeEngine::YouTubeEngine(QObject *parent, const QVariantList &args) : Plasma::DataEngine(parent, args),
 m_interface(new YouTubeInterface(this))
 {
+    connect (m_interface, SIGNAL(result(QString,QString,Plasma::DataEngine::Data)), this, SLOT(slotSourceFromResult(QString,QString,Plasma::DataEngine::Data)));
 }
 
 YouTubeEngine::~YouTubeEngine()
@@ -42,7 +43,11 @@ bool YouTubeEngine::sourceRequestEvent(const QString &name)
     m_interface->query(queryString);
 
     return true;
+}
 
+void YouTubeEngine::slotSourceFromResult(const QString &searchTerm, const QString &id, const Plasma::DataEngine::Data &video)
+{
+    setData(searchTerm, id, video);
 }
 
 K_EXPORT_PLASMA_DATAENGINE(youtube, YouTubeEngine)

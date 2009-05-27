@@ -29,6 +29,15 @@ namespace KIO {
 class QByteArray;
 class KJob;
 
+/**
+ * @class YouTubeInterface
+ * @brief The interface that queries YouTube with search terms
+ * @author Alessandro Diaferia
+ *
+ * This class interfaces YouTube and returns result entries
+ * with the signal result.
+ */
+
 class YouTubeInterface : public QObject
 {
     Q_OBJECT
@@ -39,6 +48,17 @@ public:
     void query(const QString &searchTerm);
 
 signals:
+    /**
+     * @return the video entry as Plasma::DataEngine::Data.
+     * each value can be retrieved using the following keys:
+     * "title" for the video title
+     * "description" for the video description
+     * "keywords" for the video keywords
+     *
+     * @param searchTerm is the search term to be used as source name.
+     * @param id is the video id to be used as source key
+     * @param video is the video result entry retrieved after the search.
+     */
     void result(const QString &searchTerm, const QString &id, const Plasma::DataEngine::Data &video);
 
 protected slots:

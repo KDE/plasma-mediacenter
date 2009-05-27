@@ -62,7 +62,6 @@ void YouTubeInterface::ytDataReady(KIO::Job *job, const QByteArray &data)
     }
 
     m_datas[job].append(data);
-
 }
 
 void YouTubeInterface::parseResults(KJob *job)
@@ -71,17 +70,23 @@ void YouTubeInterface::parseResults(KJob *job)
         return;
     }
 
-    Plasma::DataEngine::Data video;
     QDomDocument document;
     document.setContent(m_datas[static_cast<KIO::Job*>(job)]);
 
     QDomNodeList entries = document.elementsByTagName("entry");
-    kDebug() << entries.count();
     for (int i = 0; i < entries.count(); i++) {
         QString id = entries.at(i).namedItem("id").toElement().text().split(":").last();
         QString title = entries.at(i).namedItem("title").toElement().text();
         QDomNode mediaNode = entries.at(i).namedItem("media:group");
         QString description = mediaNode.namedItem("media:description").toElement().text();
+        QString keywords = mediaNode.namedItem("media:keywords").toElement().text();
+        Plasma::DataEngine::Data video;
+        video["title"] = title;
+        video["description"] = description;
+        video["keywords"] = keywords;
+        emit result(m_queries[static_cast<KIO::Job*>(job)], id, video);
     }
+    m_queries.remove(static_cast<KIO::Job*>(job));
+    m_datas.remove(static_cast<KIO::Job*>(job));
 
 }

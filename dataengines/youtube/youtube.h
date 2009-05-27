@@ -27,9 +27,15 @@ namespace Plasma {
 class YouTubeInterface;
 /**
  * @class YouTubeEngine
- * @brief An engine that manages your playlists.
+ * @brief An engine that manages queries to YouTube.
  *
- * The engine exports each playlist as source of the Plasma::DataEngine.
+ * The engine returns search results as sources.
+ * each source as a number of keys equal to the number of
+ * search results from the query. The video ids correspond to the source keys.
+ * For each key a Plasma::DataEngine::Data is
+ * associated. See YouTubeInterface in order to see the keys available to retrieve
+ * single video informations.
+ *
  * @author Alessandro Diaferia
  */
 class YouTubeEngine : public Plasma::DataEngine
@@ -41,6 +47,9 @@ public:
 
 protected:
     bool sourceRequestEvent(const QString &source);
+
+protected slots:
+    void slotSourceFromResult(const QString &searchTerm, const QString &id, const Plasma::DataEngine::Data &video);
 
 private:
     YouTubeInterface *m_interface;
