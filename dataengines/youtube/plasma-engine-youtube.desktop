@@ -1,6 +1,14 @@
 [Desktop Entry]
 Name=Youtube Engine
+Name[pt]=Motor do YouTube
+Name[pt_BR]=Motor do YouTube
+Name[sv]=YouTube-gränssnitt
+Name[uk]=Рушій Youtube
 Comment=An engine that allows you to query YouTube for videos.
+Comment[pt]=Um motor que lhe permite pesquisar vídeos no YouTube.
+Comment[pt_BR]=Um motor que lhe permite pesquisar vídeos no YouTube.
+Comment[sv]=Ett gränssnitt som låter dig söka efter videor på YouTube.
+Comment[uk]=Рушій, який надасть вам змогу звантажувати відено з YouTube.
 Type=Service
 
 X-KDE-ServiceTypes=Plasma/DataEngine
