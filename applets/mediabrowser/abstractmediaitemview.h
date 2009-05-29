@@ -20,6 +20,7 @@
 #define ABSTRACTMEDIAITEMVIEW_H
 
 #include <QGraphicsWidget>
+#include <QStyleOptionViewItemV4>
 
 class QAbstractItemModel;
 class QAbstractItemDelegate;
@@ -55,12 +56,20 @@ public:
 
 protected:
     virtual void resizeEvent(QGraphicsSceneResizeEvent *event);
+    /**
+     * Reimplement this method in order to fill in m_option. Remember
+     * to always call the base implementation since it already initializes
+     * m_option with the basic stuff. All you need to do is specify things
+     * specific for the kind of view you are going to implement (icon view or list view).
+     */
+    virtual void setupOptions();
 
 protected:
     int m_iconSize;
     QAbstractItemModel *m_model;
     QAbstractItemDelegate *m_delegate;
     Plasma::ScrollBar *m_scrollBar;
+    QStyleOptionViewItemV4 m_option;
 };
 
 #endif

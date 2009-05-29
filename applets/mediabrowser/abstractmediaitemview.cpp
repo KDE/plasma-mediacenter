@@ -20,6 +20,7 @@
 
 // Plasma
 #include <Plasma/ScrollBar>
+#include <Plasma/Theme>
 
 // KDE
 #include <KIconLoader>
@@ -28,6 +29,7 @@
 // Qt
 #include <QScrollBar>
 #include <QAbstractItemModel>
+#include <QLocale>
 
 AbstractMediaItemView::AbstractMediaItemView(QGraphicsItem *parent) : QGraphicsWidget(parent),
 m_model(0),
@@ -66,7 +68,7 @@ QAbstractItemModel* AbstractMediaItemView::model()
     return m_model;
 }
 
-void AbstractMediaItemView::setItemDelegate(KFileItemDelegate *delegate)
+void AbstractMediaItemView::setItemDelegate(QAbstractItemDelegate *delegate)
 {
     if (m_delegate) {
         delete m_delegate;
@@ -75,7 +77,7 @@ void AbstractMediaItemView::setItemDelegate(KFileItemDelegate *delegate)
     m_delegate = delegate;
 }
 
-KFileItemDelegate* AbstractMediaItemView::itemDelegate()
+QAbstractItemDelegate* AbstractMediaItemView::itemDelegate()
 {
     return m_delegate;
 }
@@ -110,4 +112,15 @@ void AbstractMediaItemView::resizeEvent(QGraphicsSceneResizeEvent *event)
 {
     m_scrollBar->resize(m_scrollBar->size().width(), contentsRect().height());
     m_scrollBar->setPos(contentsRect().width() - m_scrollBar->size().width(), 0);
+}
+
+void AbstractMediaItemView::setupOptions()
+{
+    m_option.palette.setColor(QPalette::Text, Plasma::Theme::defaultTheme()->color(Plasma::Theme::TextColor));
+    m_option.font = Plasma::Theme::defaultTheme()->font(Plasma::Theme::DesktopFont);
+    m_option.fontMetrics = QFontMetrics(m_option.font);
+    m_option.decorationSize = QSize(iconSize(), iconSize());
+    m_option.locale = QLocale::system();
+    m_option.widget = 0;
+    m_option.state |= QStyle::State_Enabled;
 }
