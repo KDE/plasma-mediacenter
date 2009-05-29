@@ -23,14 +23,16 @@
 
 // KDE
 #include <KIconLoader>
+#include <KFileItemDelegate>
 
 // Qt
 #include <QScrollBar>
+#include <QAbstractItemModel>
 
 AbstractMediaItemView::AbstractMediaItemView(QGraphicsItem *parent) : QGraphicsWidget(parent),
-m_scrollBar(new Plasma::ScrollBar(this)),
 m_model(0),
-m_delegate(0)
+m_delegate(0),
+m_scrollBar(new Plasma::ScrollBar(this))
 
 {
     setIconSize(KIconLoader::global()->currentSize(KIconLoader::Desktop));
@@ -45,7 +47,7 @@ void AbstractMediaItemView::setIconSize(int size)
     update();
 }
 
-int AbstractItemView::iconSize() const
+int AbstractMediaItemView::iconSize() const
 {
     return m_iconSize;
 }
@@ -85,8 +87,27 @@ QScrollBar* AbstractMediaItemView::verticalScrollBar()
 
 QRect AbstractMediaItemView::contentsArea() const
 {
+    if (!m_scrollBar->isVisible()) {
+        return contentsRect().toRect();
+    }
     QRect contents = contentsRect().toRect();
     contents.setWidth(contents.width() - m_scrollBar->nativeWidget()->width());
 
     return contents;
+}
+
+void AbstractMediaItemView::hideVerticalScrollBar()
+{
+    m_scrollBar->hide();
+}
+
+bool AbstractMediaItemView::isVerticalScrollBarHidden()
+{
+    return !m_scrollBar->isVisible();
+}
+
+void AbstractMediaItemView::resizeEvent(QGraphicsSceneResizeEvent *event)
+{
+    m_scrollBar->resize(m_scrollBar->size().width(), contentsRect().height());
+    m_scrollBar->setPos(contentsRect().width() - m_scrollBar->size().width(), 0);
 }

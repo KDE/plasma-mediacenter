@@ -1,6 +1,7 @@
 
 set(mediabrowser_SRCS
 mediabrowser.cpp
+abstractmediaitemview.cpp
 )
  
 # Now make sure all files get to the right place

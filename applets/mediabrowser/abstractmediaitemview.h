@@ -48,10 +48,13 @@ public:
 
     QScrollBar *verticalScrollBar();
 
+    void hideVerticalScrollBar();
+    bool isVerticalScrollBarHidden();
+
     QRect contentsArea() const;
 
 protected:
-    void resizeEvent(QGraphicsSceneResizeEvent *event);
+    virtual void resizeEvent(QGraphicsSceneResizeEvent *event);
 
 protected:
     int m_iconSize;
