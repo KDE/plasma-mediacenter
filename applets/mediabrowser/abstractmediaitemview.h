@@ -22,7 +22,7 @@
 #include <QGraphicsWidget>
 
 class QAbstractItemModel;
-class KFileItemDelegate;
+class QAbstractItemDelegate;
 
 namespace Plasma {
     class ScrollBar;
@@ -43,8 +43,8 @@ public:
     virtual void setModel(QAbstractItemModel *model);
     QAbstractItemModel *model();
 
-    void setItemDelegate(KFileItemDelegate *delegate);
-    KFileItemDelegate *itemDelegate();
+    void setItemDelegate(QAbstractItemDelegate *delegate);
+    QAbstractItemDelegate *itemDelegate();
 
     QScrollBar *verticalScrollBar();
 
@@ -59,7 +59,7 @@ protected:
 protected:
     int m_iconSize;
     QAbstractItemModel *m_model;
-    KFileItemDelegate *m_delegate;
+    QAbstractItemDelegate *m_delegate;
     Plasma::ScrollBar *m_scrollBar;
 };
 
