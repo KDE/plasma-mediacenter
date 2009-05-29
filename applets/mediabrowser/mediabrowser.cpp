@@ -17,7 +17,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 #include "mediabrowser.h"
-#include "abstractmediaitemview.h"
+#include "listview.h"
 
 #include <QWidget>
 #include <QGraphicsLinearLayout>
@@ -28,7 +28,7 @@ MediaBrowser::MediaBrowser(QObject *parent, const QVariantList &args)
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
 
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout;
-    layout->addItem(new AbstractMediaItemView(this));
+    layout->addItem(new ListView(this));
     setLayout(layout);
 }
 

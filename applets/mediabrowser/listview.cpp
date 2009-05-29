@@ -21,15 +21,25 @@
 // Qt
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
+#include <QDir>
 
 // KDE
 #include <KDirModel>
+#include <KDirLister>
+#include <KUrl>
 #include <KFileItemDelegate>
+#include <KDebug>
 
 ListView::ListView(QGraphicsItem *parent) : AbstractMediaItemView(parent)
 {
-    m_model = new KDirModel(this);
+    KDirModel *model = new KDirModel(this);
+    KDirLister *lister = new KDirLister(this);
+    model->setDirLister(lister);
+    lister->openUrl(KUrl(QDir::homePath()));
+    m_model = model;
     m_delegate = new KFileItemDelegate(this);
+
+    setupOptions();
 }
 
 ListView::~ListView()
@@ -41,6 +51,15 @@ void ListView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     if (!m_delegate) {
         return;
     }
+
+    painter->setClipRect(contentsArea());
+    QRect item(contentsArea().x(), contentsArea().y(), contentsArea().width(), iconSize() * 2);
+    kDebug() << m_model->rowCount();
+    for (int i = 0; i < m_model->rowCount(); i++) {
+        m_option.rect = item;
+        m_delegate->paint(painter, m_option, m_model->index(i, 0, QModelIndex()));
+        item.translate(0, iconSize() * 2);
+    }
 }
 
 void ListView::setupOptions()
@@ -48,5 +67,5 @@ void ListView::setupOptions()
     AbstractMediaItemView::setupOptions();
     m_option.decorationPosition = QStyleOptionViewItem::Left;
     m_option.decorationAlignment = Qt::AlignCenter;
-    m_option.displayAlignment = Qt::AlignLeft;
+    m_option.displayAlignment = Qt::AlignLeft | Qt::AlignVCenter;
 }
