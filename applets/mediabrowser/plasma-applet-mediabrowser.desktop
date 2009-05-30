@@ -1,6 +1,10 @@
 [Desktop Entry]
 Name=MediaBrowser Applet
+Name[sv]=Miniprogram för mediabläddring
+Name[uk]=Аплет мультимедійного переглядача
 Comment=An applet to browse through your media files
+Comment[sv]=Ett miniprogram för att bläddra i dina mediafiler
+Comment[uk]=Аплет для навігації вашими мультимедійними файлами
 Type=Service
 
 X-KDE-ServiceTypes=Plasma/Applet
