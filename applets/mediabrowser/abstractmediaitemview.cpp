@@ -38,6 +38,7 @@ m_delegate(0),
 m_scrollBar(new Plasma::ScrollBar(this))
 
 {
+    setAcceptsHoverEvents(true);
     setIconSize(KIconLoader::global()->currentSize(KIconLoader::Desktop));
     connect (m_scrollBar, SIGNAL(valueChanged(int)), this, SIGNAL(scrollOffsetChanged(int)));
 }

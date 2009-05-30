@@ -23,6 +23,8 @@
 #include <QStyleOptionGraphicsItem>
 #include <QDir>
 #include <QScrollBar>
+#include <QGraphicsSceneResizeEvent>
+#include <QGraphicsSceneHoverEvent>
 
 // KDE
 #include <KDirModel>
@@ -31,7 +33,7 @@
 #include <KFileItemDelegate>
 #include <KDebug>
 
-ListView::ListView(QGraphicsItem *parent) : AbstractMediaItemView(parent)
+ListView::ListView(QGraphicsItem *parent) : AbstractMediaItemView(parent), m_hoveredRect(QRect())
 {
     setupOptions();
     switchToFileModel();
@@ -51,14 +53,15 @@ void ListView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     painter->setClipRect(contentsArea());
 
     // scrolling code;
-    painter->translate(0, -verticalScrollBar()->value() * iconSize() * 2);
+//    painter->translate(0, - verticalScrollBar()->value() * iconSize() * 2);
 
-    QRect item(contentsArea().x(), contentsArea().y(), contentsArea().width(), iconSize() * 2);
-    kDebug() << m_model->rowCount();
-    for (int i = 0; i < m_model->rowCount(); i++) {
-        m_option.rect = item;
-        m_delegate->paint(painter, m_option, m_model->index(i, 0, QModelIndex()));
-        item.translate(0, iconSize() * 2);
+    for (int i = 0; i < m_rects.count(); i++) {
+        m_option.rect = m_rects[i];
+        if (m_option.rect == m_hoveredRect) {
+            m_option.state |= QStyle::State_MouseOver;
+        }
+        m_delegate->paint(painter, m_option, m_model->index(i, 0, m_rootIndex));
+        m_option.state &= ~QStyle::State_MouseOver;
     }
 }
 
@@ -73,8 +76,10 @@ void ListView::setupOptions()
 void ListView::switchToFileModel()
 {
     KDirModel *model = new KDirModel(this);
+
     KDirLister *lister = new KDirLister(this);
     connect (lister, SIGNAL(completed()), this, SLOT(updateScrollBar()));
+
     model->setDirLister(lister);
     lister->openUrl(KUrl(QDir::homePath()));
     m_model = model;
@@ -87,5 +92,58 @@ void ListView::switchToFileModel()
 void ListView::scrollView(int value)
 {
     kDebug() << verticalScrollBar()->value();
+    calculateRects();
+    update();
+}
+
+void ListView::calculateRects()
+{
+    m_rects.clear();
+    const int x = contentsArea().x();
+    const int height = iconSize() * 2; // TODO check this arbitrary size
+    int y = contentsArea().y() - (verticalScrollBar()->value() * height);
+    const int width = contentsArea().width();
+
+    for (int i = 0; i < m_model->rowCount(m_rootIndex); i++) {
+        if (y > contentsArea().bottom()) {
+            return;
+        }
+        QRect rect(x, y, width, height);
+        m_rects << rect;
+        y += height;
+    }
+}
+
+void ListView::resizeEvent(QGraphicsSceneResizeEvent *event)
+{
+    AbstractMediaItemView::resizeEvent(event);
+    calculateRects();
+    update();
+}
+
+void ListView::updateHoveredItem(const QPoint &point)
+{
+    for (int i = 0; i < m_rects.count(); i++) {
+        if (m_rects[i].contains(point) && m_rects[i] != m_hoveredRect) {
+            m_hoveredRect = m_rects[i];
+            update();
+            break;
+        }
+    }
+}
+
+void ListView::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+{
+    updateHoveredItem(event->pos().toPoint());
+}
+
+void ListView::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
+{
+    updateHoveredItem(event->pos().toPoint());
+}
+
+void ListView::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
+{
+    m_hoveredRect = QRect();
     update();
 }

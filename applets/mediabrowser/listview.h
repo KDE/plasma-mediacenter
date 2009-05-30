@@ -20,9 +20,13 @@
 #define LISTVIEW_H
 
 #include "abstractmediaitemview.h"
+#include <QList>
+
 class QPainter;
 class QStyleOptionGraphicsItem;
 class QWidget;
+class QRect;
+class QPoint;
 
 class ListView : public AbstractMediaItemView
 {
@@ -37,10 +41,22 @@ public:
 
 protected:
     void setupOptions();
+    void resizeEvent(QGraphicsSceneResizeEvent *event);
+
+    void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
+    void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
 
 protected slots:
     void scrollView(int);
+    void updateHoveredItem(const QPoint&);
 
+private:
+    QList<QRect> m_rects;
+    QRect m_hoveredRect;
+
+private:
+    void calculateRects();
 };
 
 #endif
