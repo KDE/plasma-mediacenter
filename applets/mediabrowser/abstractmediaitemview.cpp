@@ -25,6 +25,7 @@
 // KDE
 #include <KIconLoader>
 #include <KFileItemDelegate>
+#include <KDebug>
 
 // Qt
 #include <QScrollBar>
@@ -38,6 +39,7 @@ m_scrollBar(new Plasma::ScrollBar(this))
 
 {
     setIconSize(KIconLoader::global()->currentSize(KIconLoader::Desktop));
+    connect (m_scrollBar, SIGNAL(valueChanged(int)), this, SIGNAL(scrollOffsetChanged(int)));
 }
 
 AbstractMediaItemView::~AbstractMediaItemView()
@@ -123,4 +125,21 @@ void AbstractMediaItemView::setupOptions()
     m_option.locale = QLocale::system();
     m_option.widget = 0;
     m_option.state |= QStyle::State_Enabled;
+}
+
+void AbstractMediaItemView::setRootIndex(const QModelIndex &index)
+{
+    m_rootIndex = index;
+}
+
+QModelIndex AbstractMediaItemView::rootIndex() const
+{
+    return m_rootIndex;
+}
+
+void AbstractMediaItemView::updateScrollBar()
+{
+    verticalScrollBar()->setRange(0, m_model->rowCount(m_rootIndex));
+    kDebug() << verticalScrollBar()->maximum();
+    verticalScrollBar()->setSingleStep(1);
 }

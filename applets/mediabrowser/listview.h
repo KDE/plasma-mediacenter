@@ -33,8 +33,14 @@ public:
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
+    void switchToFileModel();
+
 protected:
     void setupOptions();
+
+protected slots:
+    void scrollView(int);
+
 };
 
 #endif

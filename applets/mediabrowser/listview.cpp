@@ -22,6 +22,7 @@
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
 #include <QDir>
+#include <QScrollBar>
 
 // KDE
 #include <KDirModel>
@@ -32,14 +33,9 @@
 
 ListView::ListView(QGraphicsItem *parent) : AbstractMediaItemView(parent)
 {
-    KDirModel *model = new KDirModel(this);
-    KDirLister *lister = new KDirLister(this);
-    model->setDirLister(lister);
-    lister->openUrl(KUrl(QDir::homePath()));
-    m_model = model;
-    m_delegate = new KFileItemDelegate(this);
-
     setupOptions();
+    switchToFileModel();
+    connect (this, SIGNAL(scrollOffsetChanged(int)), this, SLOT(scrollView(int)));
 }
 
 ListView::~ListView()
@@ -53,6 +49,10 @@ void ListView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     }
 
     painter->setClipRect(contentsArea());
+
+    // scrolling code;
+    painter->translate(0, -verticalScrollBar()->value() * iconSize() * 2);
+
     QRect item(contentsArea().x(), contentsArea().y(), contentsArea().width(), iconSize() * 2);
     kDebug() << m_model->rowCount();
     for (int i = 0; i < m_model->rowCount(); i++) {
@@ -68,4 +68,24 @@ void ListView::setupOptions()
     m_option.decorationPosition = QStyleOptionViewItem::Left;
     m_option.decorationAlignment = Qt::AlignCenter;
     m_option.displayAlignment = Qt::AlignLeft | Qt::AlignVCenter;
+}
+
+void ListView::switchToFileModel()
+{
+    KDirModel *model = new KDirModel(this);
+    KDirLister *lister = new KDirLister(this);
+    connect (lister, SIGNAL(completed()), this, SLOT(updateScrollBar()));
+    model->setDirLister(lister);
+    lister->openUrl(KUrl(QDir::homePath()));
+    m_model = model;
+    m_delegate = new KFileItemDelegate(this);
+
+
+    update();
+}
+
+void ListView::scrollView(int value)
+{
+    kDebug() << verticalScrollBar()->value();
+    update();
 }

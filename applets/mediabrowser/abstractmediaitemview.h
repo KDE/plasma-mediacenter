@@ -47,6 +47,9 @@ public:
     void setItemDelegate(QAbstractItemDelegate *delegate);
     QAbstractItemDelegate *itemDelegate();
 
+    void setRootIndex(const QModelIndex &);
+    QModelIndex rootIndex() const;
+
     QScrollBar *verticalScrollBar();
 
     void hideVerticalScrollBar();
@@ -64,12 +67,22 @@ protected:
      */
     virtual void setupOptions();
 
+protected slots:
+    /**
+     * Use this slot in order to update scrollBar range.
+     */
+    void updateScrollBar();
+
+signals:
+    void scrollOffsetChanged(int);
+
 protected:
     int m_iconSize;
     QAbstractItemModel *m_model;
     QAbstractItemDelegate *m_delegate;
     Plasma::ScrollBar *m_scrollBar;
     QStyleOptionViewItemV4 m_option;
+    QModelIndex m_rootIndex;
 };
 
 #endif
