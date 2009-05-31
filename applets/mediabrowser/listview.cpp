@@ -91,7 +91,6 @@ void ListView::switchToFileModel()
 
 void ListView::scrollView(int value)
 {
-    kDebug() << verticalScrollBar()->value();
     calculateRects();
     update();
 }
@@ -112,13 +111,6 @@ void ListView::calculateRects()
         m_rects << rect;
         y += height;
     }
-}
-
-void ListView::resizeEvent(QGraphicsSceneResizeEvent *event)
-{
-    AbstractMediaItemView::resizeEvent(event);
-    calculateRects();
-    update();
 }
 
 void ListView::updateHoveredItem(const QPoint &point)

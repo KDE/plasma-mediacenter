@@ -115,6 +115,9 @@ void AbstractMediaItemView::resizeEvent(QGraphicsSceneResizeEvent *event)
 {
     m_scrollBar->resize(m_scrollBar->size().width(), contentsRect().height());
     m_scrollBar->setPos(contentsRect().width() - m_scrollBar->size().width(), 0);
+
+    calculateRects();
+    update();
 }
 
 void AbstractMediaItemView::setupOptions()

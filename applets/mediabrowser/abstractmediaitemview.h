@@ -67,6 +67,13 @@ protected:
      */
     virtual void setupOptions();
 
+    /**
+     * You must reimplement this method in order to give the right
+     * rects that will be used to draw the items in the view.
+     * Remember to fill m_rects with the calculated rects.
+     */
+    virtual void calculateRects() = 0;
+
 protected slots:
     /**
      * Use this slot in order to update scrollBar range.
@@ -83,6 +90,9 @@ protected:
     Plasma::ScrollBar *m_scrollBar;
     QStyleOptionViewItemV4 m_option;
     QModelIndex m_rootIndex;
+
+    QList<QRect> m_rects;
+    QRect m_hoveredRect;
 };
 
 #endif

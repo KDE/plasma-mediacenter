@@ -41,7 +41,8 @@ public:
 
 protected:
     void setupOptions();
-    void resizeEvent(QGraphicsSceneResizeEvent *event);
+    void updateHoveredItem(const QPoint&);
+    void calculateRects();
 
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
@@ -49,14 +50,11 @@ protected:
 
 protected slots:
     void scrollView(int);
-    void updateHoveredItem(const QPoint&);
 
 private:
-    QList<QRect> m_rects;
     QRect m_hoveredRect;
 
-private:
-    void calculateRects();
+
 };
 
 #endif
