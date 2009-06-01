@@ -43,14 +43,14 @@ public:
 protected:
     void setupOptions();
     void updateHoveredItem(const QPoint&);
-    void calculateRects();
+    void layoutItems();
 
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
     void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
 
 protected slots:
-    void scrollView(int);
+    void generateItems();
 
 private:
     QRect m_hoveredRect;

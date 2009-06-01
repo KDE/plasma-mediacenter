@@ -17,6 +17,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 #include "listview.h"
+#include "viewitem.h"
 
 // Qt
 #include <QPainter>
@@ -37,7 +38,6 @@ ListView::ListView(QGraphicsItem *parent) : AbstractMediaItemView(parent), m_hov
 {
     setupOptions();
     switchToFileModel();
-    connect (this, SIGNAL(scrollOffsetChanged(int)), this, SLOT(scrollView(int)));
 }
 
 ListView::~ListView()
@@ -50,19 +50,19 @@ void ListView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
         return;
     }
 
-    painter->setClipRect(contentsArea());
-
-    // scrolling code;
-//    painter->translate(0, - verticalScrollBar()->value() * iconSize() * 2);
-
-    for (int i = 0; i < m_rects.count(); i++) {
-        m_option.rect = m_rects[i];
-        if (m_option.rect == m_hoveredRect) {
-            m_option.state |= QStyle::State_MouseOver;
-        }
-        m_delegate->paint(painter, m_option, m_model->index(i, 0, m_rootIndex));
-        m_option.state &= ~QStyle::State_MouseOver;
-    }
+//    painter->setClipRect(contentsArea());
+//
+//    // scrolling code;
+////    painter->translate(0, - verticalScrollBar()->value() * iconSize() * 2);
+//
+//    for (int i = 0; i < m_rects.count(); i++) {
+//        m_option.rect = m_rects[i];
+//        if (m_option.rect == m_hoveredRect) {
+//            m_option.state |= QStyle::State_MouseOver;
+//        }
+//        m_delegate->paint(painter, m_option, m_model->index(i, 0, m_rootIndex));
+//        m_option.state &= ~QStyle::State_MouseOver;
+//    }
 }
 
 void ListView::setupOptions()
@@ -79,49 +79,44 @@ void ListView::switchToFileModel()
 
     KDirLister *lister = new KDirLister(this);
     connect (lister, SIGNAL(completed()), this, SLOT(updateScrollBar()));
+    connect (lister, SIGNAL(completed()), this, SLOT(generateItems()));
 
     model->setDirLister(lister);
     lister->openUrl(KUrl(QDir::homePath()));
-    m_model = model;
+    setModel(model);
     m_delegate = new KFileItemDelegate(this);
 
 
     update();
 }
 
-void ListView::scrollView(int value)
+void ListView::layoutItems()
 {
-    calculateRects();
-    update();
-}
-
-void ListView::calculateRects()
-{
-    m_rects.clear();
+    kDebug() << "";
     const int x = contentsArea().x();
     const int height = iconSize() * 2; // TODO check this arbitrary size
     int y = contentsArea().y() - (verticalScrollBar()->value() * height);
     const int width = contentsArea().width();
 
-    for (int i = 0; i < m_model->rowCount(m_rootIndex); i++) {
+    for (int i = 0; i < m_items.count(); i++) {
         if (y > contentsArea().bottom()) {
             return;
         }
-        QRect rect(x, y, width, height);
-        m_rects << rect;
+        m_items[i]->setPos(mapToParent(x, y));
+        m_items[i]->resize(width, height);
         y += height;
     }
 }
 
 void ListView::updateHoveredItem(const QPoint &point)
 {
-    for (int i = 0; i < m_rects.count(); i++) {
-        if (m_rects[i].contains(point) && m_rects[i] != m_hoveredRect) {
-            m_hoveredRect = m_rects[i];
-            update();
-            break;
-        }
-    }
+//    for (int i = 0; i < m_rects.count(); i++) {
+//        if (m_rects[i].contains(point) && m_rects[i] != m_hoveredRect) {
+//            m_hoveredRect = m_rects[i];
+//            update();
+//            break;
+//        }
+//    }
 }
 
 void ListView::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
@@ -138,4 +133,16 @@ void ListView::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
     m_hoveredRect = QRect();
     update();
+}
+
+void ListView::generateItems()
+{
+    kDebug() << "";
+    for (int i = 0; i < m_model->rowCount(m_rootIndex); i++) {
+        ViewItem *item = new ViewItem(this);
+        item->setModelIndex(m_model->index(i, 0, m_rootIndex));
+        item->setStyleOption(m_option);
+        item->setItemDelegate(m_delegate);
+        m_items << item;
+    }
 }

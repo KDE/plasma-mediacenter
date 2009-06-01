@@ -40,7 +40,7 @@ m_scrollBar(new Plasma::ScrollBar(this))
 {
     setAcceptsHoverEvents(true);
     setIconSize(KIconLoader::global()->currentSize(KIconLoader::Desktop));
-    connect (m_scrollBar, SIGNAL(valueChanged(int)), this, SIGNAL(scrollOffsetChanged(int)));
+    connect (m_scrollBar, SIGNAL(valueChanged(int)), this, SLOT(layoutItems()));
 }
 
 AbstractMediaItemView::~AbstractMediaItemView()
@@ -64,6 +64,7 @@ void AbstractMediaItemView::setModel(QAbstractItemModel *model)
     }
 
     m_model = model;
+//    connect (m_model, SIGNAL(modelReset()), this, SLOT(generateItems()));
 }
 
 QAbstractItemModel* AbstractMediaItemView::model()
@@ -116,8 +117,8 @@ void AbstractMediaItemView::resizeEvent(QGraphicsSceneResizeEvent *event)
     m_scrollBar->resize(m_scrollBar->size().width(), contentsRect().height());
     m_scrollBar->setPos(contentsRect().width() - m_scrollBar->size().width(), 0);
 
-    calculateRects();
-    update();
+    layoutItems();
+
 }
 
 void AbstractMediaItemView::setupOptions()
@@ -144,6 +145,5 @@ QModelIndex AbstractMediaItemView::rootIndex() const
 void AbstractMediaItemView::updateScrollBar()
 {
     verticalScrollBar()->setRange(0, m_model->rowCount(m_rootIndex));
-    kDebug() << verticalScrollBar()->maximum();
     verticalScrollBar()->setSingleStep(1);
 }

@@ -21,6 +21,7 @@
 
 #include <QGraphicsWidget>
 #include <QStyleOptionViewItemV4>
+#include "viewitem.h"
 
 class QAbstractItemModel;
 class QAbstractItemDelegate;
@@ -67,18 +68,25 @@ protected:
      */
     virtual void setupOptions();
 
-    /**
-     * You must reimplement this method in order to give the right
-     * rects that will be used to draw the items in the view.
-     * Remember to fill m_rects with the calculated rects.
-     */
-    virtual void calculateRects() = 0;
-
 protected slots:
     /**
      * Use this slot in order to update scrollBar range.
      */
     void updateScrollBar();
+
+    /**
+     * Reimplement this slot in order to put here
+     * the code for items generations. Items must be collected
+     * in the m_items list.
+     */
+    virtual void generateItems() = 0;
+
+    /**
+     * You must reimplement this method in order to always
+     * keep up to date your items' position and size. Set size and
+     * position in this method. It'll be called as needed.
+     */
+    virtual void layoutItems() = 0;
 
 signals:
     void scrollOffsetChanged(int);
@@ -91,7 +99,7 @@ protected:
     QStyleOptionViewItemV4 m_option;
     QModelIndex m_rootIndex;
 
-    QList<QRect> m_rects;
+    QList<ViewItem*> m_items;
 };
 
 #endif
