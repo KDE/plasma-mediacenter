@@ -16,46 +16,33 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#ifndef LISTVIEW_H
-#define LISTVIEW_H
 
-#include "abstractmediaitemview.h"
-#include <QList>
+#ifndef VIEWITEM_H
+#define VIEWITEM_H
 
-class QPainter;
-class QStyleOptionGraphicsItem;
-class QWidget;
-class QRect;
-class QPoint;
-class ViewItem;
+#include <QGraphicsWidget>
+#include <QStyleOptionViewItemV4>
+#include <QModelIndex>
 
-class ListView : public AbstractMediaItemView
+class QAbstractItemDelegate;
+
+class ViewItem : public QGraphicsWidget
 {
     Q_OBJECT
 public:
-    ListView(QGraphicsItem *parent = 0);
-    ~ListView();
+    ViewItem(QGraphicsItem *parent = 0);
+    ~ViewItem();
+
+    void setStyleOption(const QStyleOptionViewItemV4 &);
+    void setItemDelegate(QAbstractItemDelegate *);
+    void setModelIndex(const QModelIndex &index);
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-    void switchToFileModel();
-
-protected:
-    void setupOptions();
-    void updateHoveredItem(const QPoint&);
-    void calculateRects();
-
-    void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
-    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
-    void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
-
-protected slots:
-    void scrollView(int);
-
 private:
-    QRect m_hoveredRect;
-
-
+    QAbstractItemDelegate *m_delegate;
+    QStyleOptionViewItemV4 m_option;
+    QModelIndex m_index;
 };
 
-#endif
+#endif // VIEWITEM_H

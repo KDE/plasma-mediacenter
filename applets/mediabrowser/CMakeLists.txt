@@ -3,6 +3,7 @@ set(mediabrowser_SRCS
 mediabrowser.cpp
 abstractmediaitemview.cpp
 listview.cpp
+viewitem.cpp
 )
  
 # Now make sure all files get to the right place

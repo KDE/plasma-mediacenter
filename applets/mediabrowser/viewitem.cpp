@@ -16,46 +16,38 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#ifndef LISTVIEW_H
-#define LISTVIEW_H
+#include "viewitem.h"
 
-#include "abstractmediaitemview.h"
-#include <QList>
+#include <QAbstractItemModel>
+#include <QAbstractItemDelegate>
 
-class QPainter;
-class QStyleOptionGraphicsItem;
-class QWidget;
-class QRect;
-class QPoint;
-class ViewItem;
-
-class ListView : public AbstractMediaItemView
+ViewItem::ViewItem(QGraphicsItem *parent) : QGraphicsWidget(parent)
 {
-    Q_OBJECT
-public:
-    ListView(QGraphicsItem *parent = 0);
-    ~ListView();
+    setContentsMargins(0, 0, 0, 0);
+}
 
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+ViewItem::~ViewItem()
+{}
 
-    void switchToFileModel();
+void ViewItem::setItemDelegate(QAbstractItemDelegate *delegate)
+{
+    m_delegate = delegate;
+}
 
-protected:
-    void setupOptions();
-    void updateHoveredItem(const QPoint&);
-    void calculateRects();
+void ViewItem::setStyleOption(const QStyleOptionViewItemV4 &option)
+{
+    m_option = option;
+}
 
-    void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
-    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
-    void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
+void ViewItem::setModelIndex(const QModelIndex &index)
+{
+    m_index = index;
+}
 
-protected slots:
-    void scrollView(int);
+void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    Q_UNUSED(option)
+    Q_UNUSED(widget)
 
-private:
-    QRect m_hoveredRect;
-
-
-};
-
-#endif
+    m_delegate->paint(painter, m_option, m_index);
+}

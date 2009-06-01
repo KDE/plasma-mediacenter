@@ -92,7 +92,6 @@ protected:
     QModelIndex m_rootIndex;
 
     QList<QRect> m_rects;
-    QRect m_hoveredRect;
 };
 
 #endif
