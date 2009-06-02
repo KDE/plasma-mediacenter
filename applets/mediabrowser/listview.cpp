@@ -45,10 +45,11 @@ ListView::~ListView()
 
 void ListView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    Q_UNUSED(widget)
-    if (!m_delegate) {
-        return;
-    }
+    QGraphicsWidget::paint(painter, option, widget);
+//    Q_UNUSED(widget)
+//    if (!m_delegate) {
+//        return;
+//    }
 
 //    painter->setClipRect(contentsArea());
 //
@@ -92,17 +93,16 @@ void ListView::switchToFileModel()
 
 void ListView::layoutItems()
 {
-    kDebug() << "";
     const int x = contentsArea().x();
     const int height = iconSize() * 2; // TODO check this arbitrary size
     int y = contentsArea().y() - (verticalScrollBar()->value() * height);
     const int width = contentsArea().width();
 
     for (int i = 0; i < m_items.count(); i++) {
-        if (y > contentsArea().bottom()) {
-            return;
-        }
-        m_items[i]->setPos(mapToParent(x, y));
+//        if (y > contentsArea().bottom()) { // TODO: do not even create hidden items
+//            return;
+//        }
+        m_items[i]->setPos(x, y);
         m_items[i]->resize(width, height);
         y += height;
     }

@@ -38,9 +38,11 @@ m_delegate(0),
 m_scrollBar(new Plasma::ScrollBar(this))
 
 {
+    setFlag(QGraphicsItem::ItemClipsChildrenToShape);
     setAcceptsHoverEvents(true);
     setIconSize(KIconLoader::global()->currentSize(KIconLoader::Desktop));
     connect (m_scrollBar, SIGNAL(valueChanged(int)), this, SLOT(layoutItems()));
+    m_scrollBar->setZValue(1000);
 }
 
 AbstractMediaItemView::~AbstractMediaItemView()

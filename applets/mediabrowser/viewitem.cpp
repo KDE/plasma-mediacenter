@@ -20,6 +20,7 @@
 
 #include <QAbstractItemModel>
 #include <QAbstractItemDelegate>
+#include <QPainter>
 
 ViewItem::ViewItem(QGraphicsItem *parent) : QGraphicsWidget(parent)
 {
@@ -49,5 +50,6 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     Q_UNUSED(option)
     Q_UNUSED(widget)
 
+    m_option.rect = option->rect;
     m_delegate->paint(painter, m_option, m_index);
 }
