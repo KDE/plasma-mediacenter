@@ -2,6 +2,7 @@
 Name=Playlist
 Name[de]=Wiedergabeliste
 Name[et]=Esitusnimekiri
+Name[km]=បញ្ជី​ចាក់
 Name[pt]=Lista de Reprodução
 Name[pt_BR]=Lista de Reprodução
 Name[sv]=Spellista
@@ -9,6 +10,7 @@ Name[tr]=Parça listesi
 Name[uk]=Список відтворення
 Comment=Plasma Playlist Applet
 Comment[et]=Plasma esitusnimekirja aplett
+Comment[km]=អាប់ភ្លេត​បញ្ជីចាក់ប្លាស្មា
 Comment[pt]='Applet' de Lista de Reprodução do Plasma
 Comment[pt_BR]='Applet' de Lista de Reprodução do Plasma
 Comment[sv]=Plasma miniprogram med spellista
