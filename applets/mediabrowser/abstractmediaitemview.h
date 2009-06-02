@@ -36,12 +36,18 @@ class AbstractMediaItemView : public QGraphicsWidget
 {
     Q_OBJECT
 public:
+    enum ScrollMode { PerItem, PerPixel };
+
     AbstractMediaItemView(QGraphicsItem *parent = 0);
     virtual ~AbstractMediaItemView();
 
     void setIconSize(int size);
     int iconSize() const;
 
+    /**
+     * Always set model through this method, even if m_model is available
+     * as protected.
+     */
     virtual void setModel(QAbstractItemModel *model);
     QAbstractItemModel *model();
 
@@ -58,6 +64,9 @@ public:
 
     QRect contentsArea() const;
 
+    void setScrollMode(ScrollMode);
+    ScrollMode scrollMode();
+
 protected:
     virtual void resizeEvent(QGraphicsSceneResizeEvent *event);
     /**
@@ -69,11 +78,6 @@ protected:
     virtual void setupOptions();
 
 protected slots:
-    /**
-     * Use this slot in order to update scrollBar range.
-     */
-    void updateScrollBar();
-
     /**
      * Reimplement this slot in order to put here
      * the code for items generations. Items must be collected
@@ -98,6 +102,7 @@ protected:
     Plasma::ScrollBar *m_scrollBar;
     QStyleOptionViewItemV4 m_option;
     QModelIndex m_rootIndex;
+    ScrollMode m_scrollMode;
 
     QList<ViewItem*> m_items;
 };

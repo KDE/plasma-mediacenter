@@ -51,6 +51,7 @@ protected:
 
 protected slots:
     void generateItems();
+    void updateScrollBar();
 
 private:
     QRect m_hoveredRect;

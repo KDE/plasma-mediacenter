@@ -35,7 +35,8 @@
 AbstractMediaItemView::AbstractMediaItemView(QGraphicsItem *parent) : QGraphicsWidget(parent),
 m_model(0),
 m_delegate(0),
-m_scrollBar(new Plasma::ScrollBar(this))
+m_scrollBar(new Plasma::ScrollBar(this)),
+m_scrollMode(PerItem)
 
 {
     setFlag(QGraphicsItem::ItemClipsChildrenToShape);
@@ -144,8 +145,12 @@ QModelIndex AbstractMediaItemView::rootIndex() const
     return m_rootIndex;
 }
 
-void AbstractMediaItemView::updateScrollBar()
+void AbstractMediaItemView::setScrollMode(ScrollMode mode)
 {
-    verticalScrollBar()->setRange(0, m_model->rowCount(m_rootIndex));
-    verticalScrollBar()->setSingleStep(1);
+    m_scrollMode = mode;
+}
+
+AbstractMediaItemView::ScrollMode AbstractMediaItemView::scrollMode()
+{
+    return m_scrollMode;
 }

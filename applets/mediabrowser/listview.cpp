@@ -95,7 +95,8 @@ void ListView::layoutItems()
 {
     const int x = contentsArea().x();
     const int height = iconSize() * 2; // TODO check this arbitrary size
-    int y = contentsArea().y() - (verticalScrollBar()->value() * height);
+    int y = contentsArea().y() - (m_scrollMode == AbstractMediaItemView::PerItem ? (verticalScrollBar()->value() * height)
+                                  : verticalScrollBar()->value());
     const int width = contentsArea().width();
 
     for (int i = 0; i < m_items.count(); i++) {
@@ -144,5 +145,16 @@ void ListView::generateItems()
         item->setStyleOption(m_option);
         item->setItemDelegate(m_delegate);
         m_items << item;
+    }
+}
+
+void ListView::updateScrollBar()
+{
+    if (m_scrollMode == PerItem) {
+        verticalScrollBar()->setRange(0, m_model->rowCount(m_rootIndex));
+        verticalScrollBar()->setSingleStep(1);
+    } else {
+        verticalScrollBar()->setRange(0, m_model->rowCount(m_rootIndex) * iconSize() * 2);
+        verticalScrollBar()->setSingleStep(1);
     }
 }
