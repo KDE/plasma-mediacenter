@@ -24,7 +24,6 @@
 
 // KDE
 #include <KIconLoader>
-#include <KFileItemDelegate>
 #include <KDebug>
 
 // Qt
@@ -34,7 +33,6 @@
 
 AbstractMediaItemView::AbstractMediaItemView(QGraphicsItem *parent) : QGraphicsWidget(parent),
 m_model(0),
-m_delegate(0),
 m_scrollBar(new Plasma::ScrollBar(this)),
 m_scrollMode(PerPixel)
 
@@ -73,20 +71,6 @@ void AbstractMediaItemView::setModel(QAbstractItemModel *model)
 QAbstractItemModel* AbstractMediaItemView::model()
 {
     return m_model;
-}
-
-void AbstractMediaItemView::setItemDelegate(QAbstractItemDelegate *delegate)
-{
-    if (m_delegate) {
-        delete m_delegate;
-    }
-
-    m_delegate = delegate;
-}
-
-QAbstractItemDelegate* AbstractMediaItemView::itemDelegate()
-{
-    return m_delegate;
 }
 
 QScrollBar* AbstractMediaItemView::verticalScrollBar()

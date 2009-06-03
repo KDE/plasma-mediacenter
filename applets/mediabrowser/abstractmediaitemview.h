@@ -51,9 +51,6 @@ public:
     virtual void setModel(QAbstractItemModel *model);
     QAbstractItemModel *model();
 
-    void setItemDelegate(QAbstractItemDelegate *delegate);
-    QAbstractItemDelegate *itemDelegate();
-
     void setRootIndex(const QModelIndex &);
     QModelIndex rootIndex() const;
 

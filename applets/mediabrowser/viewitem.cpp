@@ -21,19 +21,28 @@
 #include <QAbstractItemModel>
 #include <QAbstractItemDelegate>
 #include <QPainter>
+#include <QVariant>
+#include <QIcon>
+#include <QPixmap>
 
-ViewItem::ViewItem(QGraphicsItem *parent) : QGraphicsWidget(parent)
+#include <KFileItemDelegate>
+
+#include <Plasma/FrameSvg>
+
+ViewItem::ViewItem(QGraphicsItem *parent) : QGraphicsWidget(parent),
+m_type(LocalFileItem),
+m_frameSvg(new Plasma::FrameSvg(this))
 {
     setContentsMargins(0, 0, 0, 0);
+
+    m_frameSvg->setImagePath("widgets/viewitem");
+    m_frameSvg->setEnabledBorders(Plasma::FrameSvg::AllBorders);
+    m_frameSvg->setCacheAllRenderedFrames(true);
+    m_frameSvg->setElementPrefix("hover");
 }
 
 ViewItem::~ViewItem()
 {}
-
-void ViewItem::setItemDelegate(QAbstractItemDelegate *delegate)
-{
-    m_delegate = delegate;
-}
 
 void ViewItem::setStyleOption(const QStyleOptionViewItemV4 &option)
 {
@@ -52,9 +61,43 @@ void ViewItem::setModelIndex(const QModelIndex &index)
 
 void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    Q_UNUSED(option)
     Q_UNUSED(widget)
 
-    m_option.rect = option->rect;
-    m_delegate->paint(painter, m_option, m_index);
+    if (m_option.state & QStyle::State_MouseOver) {
+        if (m_frameSvg->size() != option->rect.size()) {
+            m_frameSvg->resizeFrame(option->rect.size());
+        }
+        m_frameSvg->paintFrame(painter, option->rect.topLeft());
+    }
+
+    QRect textRect;
+    QRect decorationRect;
+    QRect reflectionRect;
+
+    const int decorationWidth = m_option.decorationSize.width();
+    const int decorationHeight = decorationWidth;
+    const int reflectionHeight = decorationHeight * 0.33;
+
+    decorationRect.setSize(QSize(decorationWidth, decorationHeight));
+    reflectionRect.setSize(QSize(decorationWidth, reflectionHeight));
+
+    if (m_option.decorationPosition == QStyleOptionViewItem::Left) {
+        const int x = (option->rect.height() - decorationHeight) / 2;
+        const int y = (option->rect.height() - decorationHeight - reflectionHeight) / 2;
+        decorationRect.moveTo(x, y);
+
+        textRect.setSize(QSize(option->rect.width() - option->rect.height(), option->rect.height()));
+        textRect.moveTo(option->rect.height(), 0);
+    } else if ( m_option.decorationPosition == QStyleOptionViewItem::Top) {
+        // TODO: fill in code for the Top mode :)
+    }
+
+    QVariant decoration = m_index.data(Qt::DecorationRole);
+    if (decoration.type() == QVariant::Icon) {
+        decoration.value<QIcon>().paint(painter, decorationRect);
+    }
+    // TODO: QPixmap possible code
+
+    painter->setFont(m_option.font);
+    painter->drawText(textRect, m_option.displayAlignment, m_index.data().toString());
 }

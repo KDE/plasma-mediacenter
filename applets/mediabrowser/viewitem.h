@@ -24,26 +24,33 @@
 #include <QStyleOptionViewItemV4>
 #include <QModelIndex>
 
-class QAbstractItemDelegate;
+namespace Plasma {
+    class FrameSvg;
+}
 
 class ViewItem : public QGraphicsWidget
 {
     Q_OBJECT
 public:
+    enum ItemType { LocalFileItem, RemoteFileItem };
+
     ViewItem(QGraphicsItem *parent = 0);
     ~ViewItem();
 
     void setStyleOption(const QStyleOptionViewItemV4 &);
     QStyleOptionViewItemV4 styleOption() const;
-    void setItemDelegate(QAbstractItemDelegate *);
+
     void setModelIndex(const QModelIndex &index);
+
+    void setItemType(ItemType);
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
 private:
-    QAbstractItemDelegate *m_delegate;
     QStyleOptionViewItemV4 m_option;
     QModelIndex m_index;
+    ItemType m_type;
+    Plasma::FrameSvg *m_frameSvg;
 };
 
 #endif // VIEWITEM_H

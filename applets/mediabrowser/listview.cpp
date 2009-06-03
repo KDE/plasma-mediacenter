@@ -67,7 +67,7 @@ void ListView::switchToFileModel()
     model->setDirLister(lister);
     lister->openUrl(KUrl(QDir::homePath()));
     setModel(model);
-    m_delegate = new KFileItemDelegate(this);
+//    m_delegate = new KFileItemDelegate(this);
 
 
     update();
@@ -136,7 +136,7 @@ void ListView::generateItems()
         ViewItem *item = new ViewItem(this);
         item->setModelIndex(m_model->index(i, 0, m_rootIndex));
         item->setStyleOption(m_option);
-        item->setItemDelegate(m_delegate);
+//        item->setItemDelegate(m_delegate);
         m_items << item;
     }
 }
@@ -147,8 +147,14 @@ void ListView::updateScrollBar()
         verticalScrollBar()->setRange(0, m_model->rowCount(m_rootIndex));
         verticalScrollBar()->setSingleStep(1);
     } else {
-        verticalScrollBar()->setRange(0, m_model->rowCount(m_rootIndex) * iconSize() * 2);
+        verticalScrollBar()->setRange(0, m_model->rowCount(m_rootIndex) * iconSize() * 2 - rect().height());
         verticalScrollBar()->setSingleStep(1);
         verticalScrollBar()->setPageStep(iconSize() * 2);
     }
+}
+
+void ListView::resizeEvent(QGraphicsSceneResizeEvent *event)
+{
+    AbstractMediaItemView::resizeEvent(event);
+    updateScrollBar();
 }

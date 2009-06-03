@@ -49,6 +49,8 @@ protected:
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
     void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
 
+    void resizeEvent(QGraphicsSceneResizeEvent *event);
+
 protected slots:
     void generateItems();
     void updateScrollBar();
