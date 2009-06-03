@@ -95,7 +95,6 @@ signals:
 protected:
     int m_iconSize;
     QAbstractItemModel *m_model;
-    QAbstractItemDelegate *m_delegate;
     Plasma::ScrollBar *m_scrollBar;
     QStyleOptionViewItemV4 m_option;
     QModelIndex m_rootIndex;

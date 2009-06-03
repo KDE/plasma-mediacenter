@@ -31,7 +31,6 @@
 #include <KDirModel>
 #include <KDirLister>
 #include <KUrl>
-#include <KFileItemDelegate>
 #include <KDebug>
 
 ListView::ListView(QGraphicsItem *parent) : AbstractMediaItemView(parent), m_hoveredItem(0)
@@ -67,7 +66,6 @@ void ListView::switchToFileModel()
     model->setDirLister(lister);
     lister->openUrl(KUrl(QDir::homePath()));
     setModel(model);
-//    m_delegate = new KFileItemDelegate(this);
 
 
     update();
@@ -136,7 +134,6 @@ void ListView::generateItems()
         ViewItem *item = new ViewItem(this);
         item->setModelIndex(m_model->index(i, 0, m_rootIndex));
         item->setStyleOption(m_option);
-//        item->setItemDelegate(m_delegate);
         m_items << item;
     }
 }
