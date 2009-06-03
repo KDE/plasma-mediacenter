@@ -36,7 +36,7 @@ AbstractMediaItemView::AbstractMediaItemView(QGraphicsItem *parent) : QGraphicsW
 m_model(0),
 m_delegate(0),
 m_scrollBar(new Plasma::ScrollBar(this)),
-m_scrollMode(PerItem)
+m_scrollMode(PerPixel)
 
 {
     setFlag(QGraphicsItem::ItemClipsChildrenToShape);

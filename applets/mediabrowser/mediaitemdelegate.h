@@ -16,47 +16,19 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#ifndef LISTVIEW_H
-#define LISTVIEW_H
+#ifndef MEDIAITEMDELEGATE_H
+#define MEDIAITEMDELEGATE_H
 
-#include "abstractmediaitemview.h"
-#include <QList>
+#include <QStyledItemDelegate>
 
-class QPainter;
-class QStyleOptionGraphicsItem;
-class QWidget;
-class QRect;
-class QPoint;
-class ViewItem;
-
-class ListView : public AbstractMediaItemView
+class MediaItemDelegate : public QStyledItemDelegate
 {
-    Q_OBJECT
 public:
-    ListView(QGraphicsItem *parent = 0);
-    ~ListView();
+    MediaItemDelegate(QObject *parent = 0);
+    ~MediaItemDelegate();
 
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-
-    void switchToFileModel();
-
-protected:
-    void setupOptions();
-    void updateHoveredItem(const QPointF&);
-    void layoutItems();
-
-    void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
-    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
-    void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
-
-protected slots:
-    void generateItems();
-    void updateScrollBar();
-
-private:
-    ViewItem *m_hoveredItem;
-
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
 };
 
-#endif
+#endif // MEDIAITEMDELEGATE_H

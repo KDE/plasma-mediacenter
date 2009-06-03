@@ -34,7 +34,7 @@
 #include <KFileItemDelegate>
 #include <KDebug>
 
-ListView::ListView(QGraphicsItem *parent) : AbstractMediaItemView(parent), m_hoveredRect(QRect())
+ListView::ListView(QGraphicsItem *parent) : AbstractMediaItemView(parent), m_hoveredItem(0)
 {
     setupOptions();
     switchToFileModel();
@@ -46,24 +46,6 @@ ListView::~ListView()
 void ListView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     QGraphicsWidget::paint(painter, option, widget);
-//    Q_UNUSED(widget)
-//    if (!m_delegate) {
-//        return;
-//    }
-
-//    painter->setClipRect(contentsArea());
-//
-//    // scrolling code;
-////    painter->translate(0, - verticalScrollBar()->value() * iconSize() * 2);
-//
-//    for (int i = 0; i < m_rects.count(); i++) {
-//        m_option.rect = m_rects[i];
-//        if (m_option.rect == m_hoveredRect) {
-//            m_option.state |= QStyle::State_MouseOver;
-//        }
-//        m_delegate->paint(painter, m_option, m_model->index(i, 0, m_rootIndex));
-//        m_option.state &= ~QStyle::State_MouseOver;
-//    }
 }
 
 void ListView::setupOptions()
@@ -109,30 +91,41 @@ void ListView::layoutItems()
     }
 }
 
-void ListView::updateHoveredItem(const QPoint &point)
+void ListView::updateHoveredItem(const QPointF &point)
 {
-//    for (int i = 0; i < m_rects.count(); i++) {
-//        if (m_rects[i].contains(point) && m_rects[i] != m_hoveredRect) {
-//            m_hoveredRect = m_rects[i];
-//            update();
-//            break;
-//        }
-//    }
+    for (int i = 0; i < m_items.count(); i++) {
+        if (m_items[i]->rect().contains(mapToItem(m_items[i], point)) && m_items[i] != m_hoveredItem) {
+            if (m_hoveredItem) {
+                m_hoveredItem->setStyleOption(m_option);
+            }
+            QStyleOptionViewItemV4 option = m_items[i]->styleOption();
+            option.state |= QStyle::State_MouseOver;
+            m_items[i]->setStyleOption(option);
+
+            m_hoveredItem = m_items[i];
+
+            update();
+            break;
+        }
+    }
 }
 
 void ListView::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
-    updateHoveredItem(event->pos().toPoint());
+    updateHoveredItem(event->pos());
 }
 
 void ListView::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
 {
-    updateHoveredItem(event->pos().toPoint());
+    updateHoveredItem(event->pos());
 }
 
 void ListView::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
-    m_hoveredRect = QRect();
+    if (m_hoveredItem) {
+        m_hoveredItem->setStyleOption(m_option);
+    }
+    m_hoveredItem = 0;
     update();
 }
 
@@ -156,5 +149,6 @@ void ListView::updateScrollBar()
     } else {
         verticalScrollBar()->setRange(0, m_model->rowCount(m_rootIndex) * iconSize() * 2);
         verticalScrollBar()->setSingleStep(1);
+        verticalScrollBar()->setPageStep(iconSize() * 2);
     }
 }

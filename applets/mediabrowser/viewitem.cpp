@@ -40,6 +40,11 @@ void ViewItem::setStyleOption(const QStyleOptionViewItemV4 &option)
     m_option = option;
 }
 
+QStyleOptionViewItemV4 ViewItem::styleOption() const
+{
+    return m_option;
+}
+
 void ViewItem::setModelIndex(const QModelIndex &index)
 {
     m_index = index;

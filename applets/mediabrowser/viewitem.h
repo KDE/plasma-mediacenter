@@ -34,6 +34,7 @@ public:
     ~ViewItem();
 
     void setStyleOption(const QStyleOptionViewItemV4 &);
+    QStyleOptionViewItemV4 styleOption() const;
     void setItemDelegate(QAbstractItemDelegate *);
     void setModelIndex(const QModelIndex &index);
 
