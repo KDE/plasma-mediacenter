@@ -99,5 +99,6 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     // TODO: QPixmap possible code
 
     painter->setFont(m_option.font);
+    painter->setPen(m_option.palette.color(QPalette::Text));
     painter->drawText(textRect, m_option.displayAlignment, m_index.data().toString());
 }
