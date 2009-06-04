@@ -71,6 +71,9 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
         m_frameSvg->paintFrame(painter, option->rect.topLeft());
     }
 
+    if (!m_index.isValid()) {
+        return;
+    }
     QRect textRect;
     QRect decorationRect;
     QRect reflectionRect;

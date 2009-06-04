@@ -33,10 +33,19 @@
 #include <KUrl>
 #include <KDebug>
 
-ListView::ListView(QGraphicsItem *parent) : AbstractMediaItemView(parent), m_hoveredItem(0)
+// Plasma
+#include <Plasma/Animator>
+
+ListView::ListView(QGraphicsItem *parent) : AbstractMediaItemView(parent), m_hoveredItem(0), m_hoverIndicator(new ViewItem(this))
 {
     setupOptions();
     switchToFileModel();
+
+    QStyleOptionViewItemV4 opt = m_option;
+    opt.state |= QStyle::State_MouseOver;
+    m_hoverIndicator->setStyleOption(opt);
+    m_hoverIndicator->setZValue(-1000);
+    m_hoverIndicator->setPos(0, -100);
 }
 
 ListView::~ListView()
@@ -87,22 +96,21 @@ void ListView::layoutItems()
         m_items[i]->resize(width, height);
         y += height;
     }
+
+    m_hoverIndicator->resize(width, height);
+    if (m_hoveredItem) {
+        m_hoverIndicator->setPos(m_hoveredItem->pos());
+    }
 }
 
 void ListView::updateHoveredItem(const QPointF &point)
 {
     for (int i = 0; i < m_items.count(); i++) {
         if (m_items[i]->rect().contains(mapToItem(m_items[i], point)) && m_items[i] != m_hoveredItem) {
-            if (m_hoveredItem) {
-                m_hoveredItem->setStyleOption(m_option);
-            }
-            QStyleOptionViewItemV4 option = m_items[i]->styleOption();
-            option.state |= QStyle::State_MouseOver;
-            m_items[i]->setStyleOption(option);
 
             m_hoveredItem = m_items[i];
+            Plasma::Animator::self()->moveItem(m_hoverIndicator, Plasma::Animator::SlideInMovement, m_hoveredItem->pos().toPoint());
 
-            update();
             break;
         }
     }
@@ -120,9 +128,7 @@ void ListView::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
 
 void ListView::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
-    if (m_hoveredItem) {
-        m_hoveredItem->setStyleOption(m_option);
-    }
+    m_hoverIndicator->setPos(0, -100);
     m_hoveredItem = 0;
     update();
 }

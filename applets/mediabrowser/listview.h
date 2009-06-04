@@ -57,6 +57,7 @@ protected slots:
 
 private:
     ViewItem *m_hoveredItem;
+    ViewItem *m_hoverIndicator;
 
 
 };
