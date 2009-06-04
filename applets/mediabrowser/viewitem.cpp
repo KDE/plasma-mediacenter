@@ -24,6 +24,7 @@
 #include <QVariant>
 #include <QIcon>
 #include <QPixmap>
+#include <QLinearGradient>
 
 #include <KFileItemDelegate>
 
@@ -86,6 +87,8 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
         const int y = (option->rect.height() - decorationHeight - reflectionHeight) / 2;
         decorationRect.moveTo(x, y);
 
+        reflectionRect.moveTo(decorationRect.bottomLeft());
+
         textRect.setSize(QSize(option->rect.width() - option->rect.height(), option->rect.height()));
         textRect.moveTo(option->rect.height(), 0);
     } else if ( m_option.decorationPosition == QStyleOptionViewItem::Top) {
@@ -95,6 +98,23 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     QVariant decoration = m_index.data(Qt::DecorationRole);
     if (decoration.type() == QVariant::Icon) {
         decoration.value<QIcon>().paint(painter, decorationRect);
+
+        QPixmap pixmap(reflectionRect.width(), reflectionRect.height());
+        pixmap.fill(Qt::transparent);
+
+        QLinearGradient grad(reflectionRect.width() / 2, 0, reflectionRect.width() / 2, reflectionRect.height());
+        grad.setColorAt(0, Qt::black);
+        grad.setColorAt(1, Qt::transparent);
+
+        QPainter p(&pixmap);
+        p.fillRect(0, 0, reflectionRect.width(), reflectionRect.height(), grad);
+        p.scale(1, -1);
+        p.setCompositionMode(QPainter::CompositionMode_SourceIn);
+
+        decoration.value<QIcon>().paint(&p, 0, -decorationHeight, decorationWidth, decorationHeight);
+        p.end();
+        painter->drawPixmap(reflectionRect, pixmap);
+
     }
     // TODO: QPixmap possible code
 
