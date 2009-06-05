@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Youtube Engine
 Name[et]=Youtube'i mootor
+Name[fr]=Moteur Youtube
 Name[km]=ម៉ាស៊ីន Youtube
 Name[pt]=Motor do YouTube
 Name[pt_BR]=Motor do YouTube
@@ -8,6 +9,7 @@ Name[sv]=YouTube-gränssnitt
 Name[uk]=Рушій Youtube
 Comment=An engine that allows you to query YouTube for videos.
 Comment[et]=Mootor Youtube'i videodele päringute esitamiseks.
+Comment[fr]=Un moteur vous permettant de quérir des vidéos depuis Youtube.
 Comment[km]=ម៉ាស៊ីន​ដែល​អនុញ្ញាត​ឲ្យ​អ្នក​សួរ YouTube រក​វីដេអូ ។
 Comment[pt]=Um motor que lhe permite pesquisar vídeos no YouTube.
 Comment[pt_BR]=Um motor que lhe permite pesquisar vídeos no YouTube.
