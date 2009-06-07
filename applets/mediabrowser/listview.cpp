@@ -36,14 +36,14 @@
 // Plasma
 #include <Plasma/Animator>
 
-ListView::ListView(QGraphicsItem *parent) : AbstractMediaItemView(parent), m_hoveredItem(0), m_hoverIndicator(new ViewItem(this))
+ListView::ListView(QGraphicsItem *parent) : AbstractMediaItemView(parent), m_hoveredItem(0)
 {
     setupOptions();
     switchToFileModel();
 
     QStyleOptionViewItemV4 opt = m_option;
     opt.state |= QStyle::State_MouseOver;
-    m_hoverIndicator->setStyleOption(opt);
+    m_hoverIndicator = new ViewItem(opt, this);
     m_hoverIndicator->setZValue(-1000);
     m_hoverIndicator->setPos(0, -100);
 }
@@ -137,9 +137,8 @@ void ListView::generateItems()
 {
     kDebug() << "";
     for (int i = 0; i < m_model->rowCount(m_rootIndex); i++) {
-        ViewItem *item = new ViewItem(this);
+        ViewItem *item = new ViewItem(m_option, this);
         item->setModelIndex(m_model->index(i, 0, m_rootIndex));
-        item->setStyleOption(m_option);
         m_items << item;
     }
 }

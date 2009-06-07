@@ -26,13 +26,19 @@
 #include <QPixmap>
 #include <QLinearGradient>
 
-#include <KFileItemDelegate>
+#include <KFileItem>
+#include <KDirModel>
+#include <kio/job.h>
+#include <kio/previewjob.h>
+#include <KUrl>
 
 #include <Plasma/FrameSvg>
 
-ViewItem::ViewItem(QGraphicsItem *parent) : QGraphicsWidget(parent),
+ViewItem::ViewItem(const QStyleOptionViewItemV4 &option, QGraphicsItem *parent) : QGraphicsWidget(parent),
+m_option(option),
 m_type(LocalFileItem),
-m_frameSvg(new Plasma::FrameSvg(this))
+m_frameSvg(new Plasma::FrameSvg(this)),
+m_preview(0)
 {
     setContentsMargins(0, 0, 0, 0);
 
@@ -48,6 +54,7 @@ ViewItem::~ViewItem()
 void ViewItem::setStyleOption(const QStyleOptionViewItemV4 &option)
 {
     m_option = option;
+    askForFilePreview();
 }
 
 QStyleOptionViewItemV4 ViewItem::styleOption() const
@@ -58,6 +65,7 @@ QStyleOptionViewItemV4 ViewItem::styleOption() const
 void ViewItem::setModelIndex(const QModelIndex &index)
 {
     m_index = index;
+    askForFilePreview();
 }
 
 void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -98,30 +106,88 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
         // TODO: fill in code for the Top mode :)
     }
 
-    QVariant decoration = m_index.data(Qt::DecorationRole);
-    if (decoration.type() == QVariant::Icon) {
-        decoration.value<QIcon>().paint(painter, decorationRect);
+    if (m_preview) {
+        painter->drawPixmap(decorationRect, *m_preview);
 
-        QPixmap pixmap(reflectionRect.width(), reflectionRect.height());
-        pixmap.fill(Qt::transparent);
+        drawReflection(painter, reflectionRect, *m_preview);
+    } else {
+        QVariant decoration = m_index.data(Qt::DecorationRole);
+        if (decoration.type() == QVariant::Icon) {
+            decoration.value<QIcon>().paint(painter, decorationRect);
 
-        QLinearGradient grad(reflectionRect.width() / 2, 0, reflectionRect.width() / 2, reflectionRect.height());
-        grad.setColorAt(0, Qt::black);
-        grad.setColorAt(1, Qt::transparent);
+            drawReflection(painter, reflectionRect, decoration.value<QIcon>());
 
-        QPainter p(&pixmap);
-        p.fillRect(0, 0, reflectionRect.width(), reflectionRect.height(), grad);
-        p.scale(1, -1);
-        p.setCompositionMode(QPainter::CompositionMode_SourceIn);
-
-        decoration.value<QIcon>().paint(&p, 0, -decorationHeight, decorationWidth, decorationHeight);
-        p.end();
-        painter->drawPixmap(reflectionRect, pixmap);
-
+        }
+        // TODO: QPixmap possible code
     }
-    // TODO: QPixmap possible code
 
     painter->setFont(m_option.font);
     painter->setPen(m_option.palette.color(QPalette::Text));
     painter->drawText(textRect, m_option.displayAlignment, m_index.data().toString());
+}
+
+void ViewItem::drawReflection(QPainter *painter, const QRect &reflectionRect, const QIcon &icon)
+{
+    const int decorationWidth = m_option.decorationSize.width();
+    const int decorationHeight = decorationWidth;
+
+    QPixmap pixmap(reflectionRect.width(), reflectionRect.height());
+    pixmap.fill(Qt::transparent);
+
+    QLinearGradient grad(reflectionRect.width() / 2, 0, reflectionRect.width() / 2, reflectionRect.height());
+    grad.setColorAt(0, Qt::black);
+    grad.setColorAt(1, Qt::transparent);
+
+    QPainter p(&pixmap);
+    p.fillRect(0, 0, reflectionRect.width(), reflectionRect.height(), grad);
+    p.scale(1, -1);
+    p.setCompositionMode(QPainter::CompositionMode_SourceIn);
+
+    icon.paint(&p, 0, -decorationHeight, decorationWidth, decorationHeight);
+    p.end();
+    painter->drawPixmap(reflectionRect, pixmap);
+}
+
+void ViewItem::drawReflection(QPainter *painter, const QRect &reflectionRect, const QPixmap &pm)
+{
+    const int decorationWidth = m_option.decorationSize.width();
+    const int decorationHeight = decorationWidth;
+
+    QPixmap pixmap(reflectionRect.width(), reflectionRect.height());
+    pixmap.fill(Qt::transparent);
+
+    QLinearGradient grad(reflectionRect.width() / 2, 0, reflectionRect.width() / 2, reflectionRect.height());
+    grad.setColorAt(0, Qt::black);
+    grad.setColorAt(1, Qt::transparent);
+
+    QPainter p(&pixmap);
+    p.fillRect(0, 0, reflectionRect.width(), reflectionRect.height(), grad);
+    p.scale(1, -1);
+    p.setCompositionMode(QPainter::CompositionMode_SourceIn);
+
+    p.drawPixmap(0, -decorationHeight, decorationWidth, decorationHeight, pm);
+    p.end();
+    painter->drawPixmap(reflectionRect, pixmap);
+}
+
+void ViewItem::askForFilePreview()
+{
+    delete m_preview;
+    m_preview = 0;
+    // if the model is a KDirModel ask for previews
+    if (!m_index.data(KDirModel::FileItemRole).isNull()) {
+        KFileItem item = m_index.data(KDirModel::FileItemRole).value<KFileItem>();
+        if (!item.mimetype().startsWith("image/")) {
+            return;
+        }
+        KIO::PreviewJob *previewJob = KIO::filePreview(item.url(), m_option.decorationSize.width());
+        connect (previewJob, SIGNAL(gotPreview(const KFileItem &, const QPixmap &)), this, SLOT(slotGotPreview(const KFileItem &, const QPixmap&)));
+    }
+}
+
+void ViewItem::slotGotPreview(const KFileItem &item, const QPixmap &preview)
+{
+    Q_UNUSED(item)
+    m_preview = new QPixmap(preview);
+    update();
 }

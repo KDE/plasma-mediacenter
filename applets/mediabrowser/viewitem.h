@@ -28,13 +28,16 @@ namespace Plasma {
     class FrameSvg;
 }
 
+class KFileItem;
+class QPixmap;
+
 class ViewItem : public QGraphicsWidget
 {
     Q_OBJECT
 public:
     enum ItemType { LocalFileItem, RemoteFileItem };
 
-    ViewItem(QGraphicsItem *parent = 0);
+    ViewItem(const QStyleOptionViewItemV4 &option, QGraphicsItem *parent = 0);
     ~ViewItem();
 
     void setStyleOption(const QStyleOptionViewItemV4 &);
@@ -51,6 +54,15 @@ private:
     QModelIndex m_index;
     ItemType m_type;
     Plasma::FrameSvg *m_frameSvg;
+    QPixmap *m_preview;
+
+private:
+    void drawReflection(QPainter *painter, const QRect &reflectionRect, const QIcon &icon);
+    void drawReflection(QPainter *painter, const QRect &reflectionRect, const QPixmap &pm);
+    void askForFilePreview();
+
+private slots:
+    void slotGotPreview(const KFileItem &item, const QPixmap &preview);
 };
 
 #endif // VIEWITEM_H
