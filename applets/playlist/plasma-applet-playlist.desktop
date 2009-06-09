@@ -9,6 +9,7 @@ Name[pt_BR]=Lista de Reprodução
 Name[sv]=Spellista
 Name[tr]=Parça listesi
 Name[uk]=Список відтворення
+Name[x-test]=xxPlaylistxx
 Comment=Plasma Playlist Applet
 Comment[et]=Plasma esitusnimekirja aplett
 Comment[fr]=Applet Plasma de liste de lecture
@@ -18,6 +19,7 @@ Comment[pt_BR]='Applet' de Lista de Reprodução do Plasma
 Comment[sv]=Plasma miniprogram med spellista
 Comment[tr]=Plasma Parça Listesi Programcığı
 Comment[uk]=Аплет списку відтворення Плазми
+Comment[x-test]=xxPlasma Playlist Appletxx
 Type=Service
 Icon=view-media-playlist
 

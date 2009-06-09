@@ -7,6 +7,7 @@ Name[pt]=Motor do YouTube
 Name[pt_BR]=Motor do YouTube
 Name[sv]=YouTube-gränssnitt
 Name[uk]=Рушій Youtube
+Name[x-test]=xxYoutube Enginexx
 Comment=An engine that allows you to query YouTube for videos.
 Comment[et]=Mootor Youtube'i videodele päringute esitamiseks.
 Comment[fr]=Un moteur vous permettant de quérir des vidéos depuis Youtube.
@@ -15,6 +16,7 @@ Comment[pt]=Um motor que lhe permite pesquisar vídeos no YouTube.
 Comment[pt_BR]=Um motor que lhe permite pesquisar vídeos no YouTube.
 Comment[sv]=Ett gränssnitt som låter dig söka efter videor på YouTube.
 Comment[uk]=Рушій, який надасть вам змогу звантажувати відено з YouTube.
+Comment[x-test]=xxAn engine that allows you to query YouTube for videos.xx
 Type=Service
 
 X-KDE-ServiceTypes=Plasma/DataEngine

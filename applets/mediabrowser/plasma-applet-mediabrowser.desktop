@@ -6,6 +6,7 @@ Name[pt]='Applet' de Leitura Multimédia
 Name[pt_BR]='Applet' de Leitura Multimédia
 Name[sv]=Miniprogram för mediabläddring
 Name[uk]=Аплет мультимедійного переглядача
+Name[x-test]=xxMediaBrowser Appletxx
 Comment=An applet to browse through your media files
 Comment[et]=Aplett meediafailide sirvimiseks
 Comment[km]=អាប់ភ្លេត​ត្រូវ​រកមើល​តាមរយៈ​ឯកសារ​មេឌៀ​របស់​អ្នក
@@ -13,6 +14,7 @@ Comment[pt]=Uma 'applet' para navegar pelos seus ficheiros multimédia
 Comment[pt_BR]=Uma 'applet' para navegar pelos seus ficheiros multimédia
 Comment[sv]=Ett miniprogram för att bläddra i dina mediafiler
 Comment[uk]=Аплет для навігації вашими мультимедійними файлами
+Comment[x-test]=xxAn applet to browse through your media filesxx
 Type=Service
 
 X-KDE-ServiceTypes=Plasma/Applet

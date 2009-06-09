@@ -8,6 +8,7 @@ Name[pt_BR]=Motor da Lista de Reprodução
 Name[sv]=Spellistegränssnitt
 Name[tr]=Parça Listesi Motoru
 Name[uk]=Рушій списків відтворення
+Name[x-test]=xxPlaylist Enginexx
 Comment=A playlist engine useful for Media Center components.
 Comment[en_GB]=A playlist engine useful for Media Centre components.
 Comment[et]=Esitusnimekirja mootor meediakeskuse komponentidele.
@@ -17,6 +18,7 @@ Comment[pt]=Um motor de listas de reprodução, útil para componentes de Centro
 Comment[pt_BR]=Um motor de listas de reprodução, útil para componentes de Centros Multimédia.
 Comment[sv]=Ett spellistegränssnitt användbart för komponenter i mediacenter.
 Comment[uk]=Рушій списків відтворення, корисний для компонентів мультимедійного центру.
+Comment[x-test]=xxA playlist engine useful for Media Center components.xx
 Type=Service
 
 X-KDE-ServiceTypes=Plasma/DataEngine

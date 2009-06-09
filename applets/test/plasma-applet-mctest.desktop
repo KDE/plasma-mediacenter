@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=MCTest
 Name[sv]=MC-test
+Name[x-test]=xxMCTestxx
 Comment=A test applet for Media Center.
 Comment[en_GB]=A test applet for Media Centre.
 Comment[et]=Meediakeskuse testaplett
@@ -10,6 +11,7 @@ Comment[pt]=Uma 'applet' de testes para Centros Multimédia.
 Comment[pt_BR]=Uma 'applet' de testes para Centros Multimédia.
 Comment[sv]=Ett miniprogram för test av Media Center.
 Comment[uk]=Тестовий аплет медіа-центру.
+Comment[x-test]=xxA test applet for Media Center.xx
 Type=Service
 
 X-KDE-ServiceTypes=Plasma/Applet
