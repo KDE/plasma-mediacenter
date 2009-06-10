@@ -38,8 +38,6 @@ public:
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-    void switchToFileModel();
-
 protected:
     void setupOptions();
     void updateHoveredItem(const QPointF&);

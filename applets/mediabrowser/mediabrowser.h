@@ -23,6 +23,8 @@
 #include "ui_localconfig.h"
 #include "abstractmediaitemview.h"
 
+class KUrl;
+
 class MediaBrowser : public Plasma::Applet
 {
     Q_OBJECT
@@ -39,9 +41,12 @@ private:
     AbstractMediaItemView *m_listView;
     Ui::LocalConfig uiLocal;
 
+    KUrl m_localUrl;
+    bool m_fromPlaces;
+
 private slots:
-//    void loadConfiguration();
-//    void configAccepted();
+    void loadConfiguration();
+    void configAccepted();
 
 };
 

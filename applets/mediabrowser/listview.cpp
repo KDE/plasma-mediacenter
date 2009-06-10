@@ -39,7 +39,6 @@
 ListView::ListView(QGraphicsItem *parent) : AbstractMediaItemView(parent), m_hoveredItem(0)
 {
     setupOptions();
-    switchToFileModel();
 
     QStyleOptionViewItemV4 opt = m_option;
     opt.state |= QStyle::State_MouseOver;
@@ -62,19 +61,6 @@ void ListView::setupOptions()
     m_option.decorationPosition = QStyleOptionViewItem::Left;
     m_option.decorationAlignment = Qt::AlignCenter;
     m_option.displayAlignment = Qt::AlignLeft | Qt::AlignVCenter;
-}
-
-void ListView::switchToFileModel()
-{
-    KDirModel *model = new KDirModel(this);
-
-    KDirLister *lister = new KDirLister(this);
-    connect (lister, SIGNAL(completed()), this, SLOT(updateScrollBar()));
-    connect (lister, SIGNAL(completed()), this, SLOT(generateItems()));
-
-    model->setDirLister(lister);
-    lister->openUrl(KUrl(QDir::homePath()));
-    setModel(model);
 }
 
 void ListView::layoutItems()
