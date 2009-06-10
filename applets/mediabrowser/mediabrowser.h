@@ -16,10 +16,12 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/ 
-#ifndef PLAYLIST_H
-#define PLAYLIST_H
+#ifndef MEDIABROWSER_H
+#define MEDIABROWSER_H
 
 #include <Plasma/Applet>
+#include "ui_localconfig.h"
+#include "abstractmediaitemview.h"
 
 class MediaBrowser : public Plasma::Applet
 {
@@ -29,6 +31,17 @@ public:
     ~MediaBrowser();
 
     void init();
+    void createConfigurationInterface(KConfigDialog *parent);
+
+    void switchToFileModel();
+
+private:
+    AbstractMediaItemView *m_listView;
+    Ui::LocalConfig uiLocal;
+
+private slots:
+//    void loadConfiguration();
+//    void configAccepted();
 
 };
 

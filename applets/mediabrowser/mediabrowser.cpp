@@ -22,13 +22,19 @@
 #include <QWidget>
 #include <QGraphicsLinearLayout>
 
+#include <KDirModel>
+#include <KDirLister>
+#include <KIcon>
+#include <KConfigDialog>
+
 MediaBrowser::MediaBrowser(QObject *parent, const QVariantList &args)
-    : Plasma::Applet(parent, args)
+    : Plasma::Applet(parent, args),
+    m_listView(new ListView(this))
 {
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
 
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout;
-    layout->addItem(new ListView(this));
+    layout->addItem(m_listView);
     setLayout(layout);
 }
 
@@ -37,6 +43,29 @@ MediaBrowser::~MediaBrowser()
 
 void MediaBrowser::init()
 {
+}
+
+void MediaBrowser::createConfigurationInterface(KConfigDialog *parent)
+{
+    QWidget *localConfig = new QWidget(parent);
+    uiLocal.setupUi(localConfig);
+
+    parent->addPage(localConfig, i18n("Local Browsing"), QString());
+//    connect (parent, SIGNAL(accepted()), this, SLOT(configAccepted()));
+}
+
+void MediaBrowser::switchToFileModel()
+{
+    KDirModel *model = new KDirModel(this);
+
+    KDirLister *lister = new KDirLister(this);
+    // TODO: always use the current view
+    connect (lister, SIGNAL(completed()), m_listView, SLOT(updateScrollBar()));
+    connect (lister, SIGNAL(completed()), m_listView, SLOT(generateItems()));
+
+    model->setDirLister(lister);
+    lister->openUrl(KUrl(QDir::homePath()));
+    m_listView->setModel(model);
 }
 
 K_EXPORT_PLASMA_APPLET(mediabrowser, MediaBrowser)

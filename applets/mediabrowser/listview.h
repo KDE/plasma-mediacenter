@@ -51,7 +51,7 @@ protected:
 
     void resizeEvent(QGraphicsSceneResizeEvent *event);
 
-protected slots:
+public slots:
     void generateItems();
     void updateScrollBar();
 

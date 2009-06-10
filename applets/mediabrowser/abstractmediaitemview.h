@@ -76,18 +76,28 @@ protected:
 
 protected slots:
     /**
-     * Reimplement this slot in order to put here
-     * the code for items generations. Items must be collected
-     * in the m_items list.
-     */
-    virtual void generateItems() = 0;
-
-    /**
      * You must reimplement this method in order to always
      * keep up to date your items' position and size. Set size and
      * position in this method. It'll be called as needed.
      */
     virtual void layoutItems() = 0;
+
+public slots:
+    /**
+     * Reimplement this slot in order to put here
+     * the code for items generations. Items must be collected
+     * in the m_items list. You just need to call this once for
+     * each rootIndex change in the model.
+     */
+    virtual void generateItems() = 0;
+
+    /**
+     * Reimplement this function in order to update
+     * ranges and steps of the vertical scroll bar. Call
+     * it whenever the row count changes in order to update
+     * the scrollbar.
+     */
+    virtual void updateScrollBar() = 0;
 
 signals:
     void scrollOffsetChanged(int);

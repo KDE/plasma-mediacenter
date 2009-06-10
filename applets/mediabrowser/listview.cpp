@@ -75,9 +75,6 @@ void ListView::switchToFileModel()
     model->setDirLister(lister);
     lister->openUrl(KUrl(QDir::homePath()));
     setModel(model);
-
-
-    update();
 }
 
 void ListView::layoutItems()
@@ -141,6 +138,7 @@ void ListView::generateItems()
         item->setModelIndex(m_model->index(i, 0, m_rootIndex));
         m_items << item;
     }
+    layoutItems();
 }
 
 void ListView::updateScrollBar()
