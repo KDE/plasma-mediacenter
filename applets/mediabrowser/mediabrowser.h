@@ -24,11 +24,13 @@
 #include "abstractmediaitemview.h"
 
 class KUrl;
+class KDirLister;
 
 class MediaBrowser : public Plasma::Applet
 {
     Q_OBJECT
 public:
+    enum BrowsingMode { LocalFiles, RemoteSearches };
      MediaBrowser(QObject *parent, const QVariantList &args);
     ~MediaBrowser();
 
@@ -43,6 +45,8 @@ private:
 
     KUrl m_localUrl;
     bool m_fromPlaces;
+    BrowsingMode m_mode;
+    KDirLister *m_lister;
 
 private slots:
     void loadConfiguration();

@@ -29,6 +29,7 @@
 #include <KConfigGroup>
 #include <KFilePlacesModel>
 #include <KUrl>
+#include <KDebug>
 
 MediaBrowser::MediaBrowser(QObject *parent, const QVariantList &args)
     : Plasma::Applet(parent, args),
@@ -78,14 +79,16 @@ void MediaBrowser::switchToFileModel()
 {
     KDirModel *model = new KDirModel(this);
 
-    KDirLister *lister = new KDirLister(this);
+    m_lister = new KDirLister(this);
     // TODO: always use the current view
-    connect (lister, SIGNAL(completed()), m_listView, SLOT(updateScrollBar()));
-    connect (lister, SIGNAL(completed()), m_listView, SLOT(generateItems()));
+    connect (m_lister, SIGNAL(completed()), m_listView, SLOT(updateScrollBar()));
+    connect (m_lister, SIGNAL(completed()), m_listView, SLOT(generateItems()));
 
-    model->setDirLister(lister);
-    lister->openUrl(m_localUrl);
+    model->setDirLister(m_lister);
+    m_lister->openUrl(m_localUrl);
     m_listView->setModel(model);
+
+    m_mode = LocalFiles;
 }
 
 void MediaBrowser::loadConfiguration()
@@ -103,9 +106,16 @@ void MediaBrowser::configAccepted()
                               : uiLocal.urlRequester->url();
 
     KConfigGroup cf = config();
+    kDebug() << cf.name();
 
     cf.writeEntry("LocalUrl", m_localUrl);
     cf.writeEntry("FromPlaces", m_fromPlaces);
+
+    // update current browsing mode according to the options
+    if (m_mode == LocalFiles) {
+        m_listView->invalidate();
+        m_lister->openUrl(m_localUrl);
+    }
 }
 
 K_EXPORT_PLASMA_APPLET(mediabrowser, MediaBrowser)

@@ -138,3 +138,9 @@ AbstractMediaItemView::ScrollMode AbstractMediaItemView::scrollMode()
 {
     return m_scrollMode;
 }
+
+void AbstractMediaItemView::invalidate()
+{
+    qDeleteAll(m_items);
+    m_items.clear();
+}

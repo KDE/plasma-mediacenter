@@ -64,6 +64,13 @@ public:
     void setScrollMode(ScrollMode);
     ScrollMode scrollMode();
 
+    /**
+     * Call this method whenever events like model resetting occur.
+     * This method destroys all the existing items so only call it whenever
+     * you are sure the current view has to be invalidated.
+     */
+    void invalidate();
+
 protected:
     virtual void resizeEvent(QGraphicsSceneResizeEvent *event);
     /**
