@@ -31,6 +31,7 @@
 #include <kio/job.h>
 #include <kio/previewjob.h>
 #include <KUrl>
+#include <KDebug>
 
 #include <Plasma/FrameSvg>
 
@@ -107,8 +108,9 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     }
 
     if (m_preview) {
-        painter->drawPixmap(decorationRect, *m_preview);
+        painter->drawPixmap(decorationRect.topLeft(), *m_preview);
 
+        reflectionRect.moveTo(decorationRect.left(), decorationRect.top() + m_preview->height() + 1);
         drawReflection(painter, reflectionRect, *m_preview);
     } else {
         QVariant decoration = m_index.data(Qt::DecorationRole);
@@ -166,6 +168,7 @@ void ViewItem::drawReflection(QPainter *painter, const QRect &reflectionRect, co
     p.setCompositionMode(QPainter::CompositionMode_SourceIn);
 
     p.drawPixmap(0, -decorationHeight, decorationWidth, decorationHeight, pm);
+
     p.end();
     painter->drawPixmap(reflectionRect, pixmap);
 }
@@ -180,7 +183,7 @@ void ViewItem::askForFilePreview()
         if (!item.mimetype().startsWith("image/")) {
             return;
         }
-        KIO::PreviewJob *previewJob = KIO::filePreview(item.url(), m_option.decorationSize.width());
+        KIO::PreviewJob *previewJob = KIO::filePreview(item.url(), m_option.decorationSize.width(), 0, 0, 0, false, true, 0);
         connect (previewJob, SIGNAL(gotPreview(const KFileItem &, const QPixmap &)), this, SLOT(slotGotPreview(const KFileItem &, const QPixmap&)));
     }
 }
