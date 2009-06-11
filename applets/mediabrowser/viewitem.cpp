@@ -111,7 +111,7 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
         reflectionRect.moveTo(decorationRect.bottomLeft());
 
         textRect.setSize(QSize(option->rect.width(), option->rect.height() - decorationRect.height() - reflectionRect.height()));
-        textRect.moveTo(reflectionRect.bottomLeft());
+        textRect.moveTo(0, reflectionRect.bottom());
     }
 
     if (m_preview) {
@@ -208,6 +208,10 @@ void ViewItem::slotGotPreview(const KFileItem &item, const QPixmap &preview)
 
 QSize ViewItem::itemSizeHint() const
 {
+    if (!m_index.isValid()) {
+        return QSize(0, 0);
+    }
+
     if (m_option.decorationPosition == QStyleOptionViewItem::Left) {
         int height = qMax(m_option.decorationSize.width() * 2, m_option.fontMetrics.height());
         int width = m_option.decorationSize.width() + m_option.fontMetrics.width(m_index.data().toString());

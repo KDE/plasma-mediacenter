@@ -26,6 +26,7 @@
 
 class KUrl;
 class KDirLister;
+class KDirModel;
 
 class MediaBrowser : public Plasma::Applet
 {
@@ -41,7 +42,7 @@ public:
     void switchToFileModel();
 
 private:
-    AbstractMediaItemView *m_listView;
+    AbstractMediaItemView *m_view;
     Ui::LocalConfig uiLocal;
     Ui::General uiGeneral;
 
@@ -49,6 +50,11 @@ private:
     bool m_fromPlaces;
     BrowsingMode m_mode;
     KDirLister *m_lister;
+    KDirModel *m_model;
+    QString m_viewType;
+
+private:
+    void createView();
 
 private slots:
     void loadConfiguration();

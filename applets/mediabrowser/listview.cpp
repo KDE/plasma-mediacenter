@@ -84,6 +84,8 @@ void ListView::layoutItems()
 
 void ListView::generateItems()
 {
+    qDeleteAll(m_items);
+    m_items.clear();
     for (int i = 0; i < m_model->rowCount(m_rootIndex); i++) {
         ViewItem *item = new ViewItem(m_option, this);
         item->setModelIndex(m_model->index(i, 0, m_rootIndex));
@@ -107,5 +109,8 @@ void ListView::updateScrollBar()
 void ListView::resizeEvent(QGraphicsSceneResizeEvent *event)
 {
     AbstractMediaItemView::resizeEvent(event);
-    updateScrollBar();
+
+    if (m_model) {
+        updateScrollBar();
+    }
 }

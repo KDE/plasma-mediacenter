@@ -52,13 +52,15 @@ void GridView::layoutItems()
         m_items[i]->setPos(x, y);
         m_items[i]->resize(m_items[i]->itemSizeHint());
 
-        if (x + m_items[i]->size().width() > contentsArea().right()) {
+        if (x + (m_items[i]->size().width() * 2) > contentsArea().right()) {
            y += m_items[i]->size().height();
+           x = 0;
            ++m_itemLines;
-       } else {
+         } else {
            x += m_items[i]->size().width();
-       }
-       m_hoverIndicator->resize(m_items[i]->size()); // TODO: no need to iterate this
+         }
+
+         m_hoverIndicator->resize(m_items[i]->size()); // TODO: no need to iterate this
     }
 
     if (m_hoveredItem) {
@@ -68,6 +70,8 @@ void GridView::layoutItems()
 
 void GridView::generateItems()
 {
+    qDeleteAll(m_items);
+    m_items.clear();
     for (int i = 0; i < m_model->rowCount(m_rootIndex); i++) {
         ViewItem *item = new ViewItem(m_option, this);
         item->setModelIndex(m_model->index(i, 0, m_rootIndex));
@@ -88,5 +92,14 @@ void GridView::updateScrollBar()
         verticalScrollBar()->setRange(0, m_itemLines * m_items[0]->size().height() - rect().height());
         verticalScrollBar()->setSingleStep(1);
         verticalScrollBar()->setPageStep(iconSize() * 2);
+    }
+}
+
+void GridView::resizeEvent(QGraphicsSceneResizeEvent *event)
+{
+    AbstractMediaItemView::resizeEvent(event);
+
+    if (m_model) {
+        updateScrollBar();
     }
 }

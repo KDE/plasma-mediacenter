@@ -38,6 +38,7 @@ public slots:
 
 protected:
     void layoutItems();
+    void resizeEvent(QGraphicsSceneResizeEvent *event);
 
 private:
     int m_itemLines;

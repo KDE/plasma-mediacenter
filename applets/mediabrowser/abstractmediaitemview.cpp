@@ -55,7 +55,10 @@ m_hoveredItem(0)
 }
 
 AbstractMediaItemView::~AbstractMediaItemView()
-{}
+{
+    qDeleteAll(m_items);
+    m_items.clear();
+}
 
 void AbstractMediaItemView::setIconSize(int size)
 {
