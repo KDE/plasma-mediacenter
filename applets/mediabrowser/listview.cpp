@@ -66,21 +66,23 @@ void ListView::setupOptions()
 void ListView::layoutItems()
 {
     const int x = contentsArea().x();
-    const int height = iconSize() * 2; // TODO check this arbitrary size
-    int y = contentsArea().y() - (m_scrollMode == AbstractMediaItemView::PerItem ? (verticalScrollBar()->value() * height)
-                                  : verticalScrollBar()->value());
+    int y = contentsArea().y();
     const int width = contentsArea().width();
 
     for (int i = 0; i < m_items.count(); i++) {
 //        if (y > contentsArea().bottom()) { // TODO: do not even create hidden items
 //            return;
 //        }
+        if (i == 0) {
+            y -= m_scrollMode == AbstractMediaItemView::PerItem ? (verticalScrollBar()->value() * m_items[i]->size().height())
+                                  : verticalScrollBar()->value();
+        }
         m_items[i]->setPos(x, y);
-        m_items[i]->resize(width, height);
-        y += height;
+        m_items[i]->resize(width, m_items[i]->itemSizeHint().height());
+        y += m_items[i]->size().height();
     }
 
-    m_hoverIndicator->resize(width, height);
+    m_hoverIndicator->resize(width, m_hoverIndicator->itemSizeHint().height());
     if (m_hoveredItem) {
         m_hoverIndicator->setPos(m_hoveredItem->pos());
     }

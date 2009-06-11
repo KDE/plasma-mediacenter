@@ -49,6 +49,8 @@ public:
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
+    QSize itemSizeHint() const;
+
 private:
     QStyleOptionViewItemV4 m_option;
     QModelIndex m_index;

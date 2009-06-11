@@ -125,7 +125,11 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 
     painter->setFont(m_option.font);
     painter->setPen(m_option.palette.color(QPalette::Text));
-    painter->drawText(textRect, m_option.displayAlignment, m_index.data().toString());
+    QString text = m_index.data().toString();
+    if (m_option.fontMetrics.width(text) > textRect.width()) {
+        text = m_option.fontMetrics.elidedText(text, Qt::ElideMiddle, textRect.width());
+    }
+    painter->drawText(textRect, m_option.displayAlignment, text);
 }
 
 void ViewItem::drawReflection(QPainter *painter, const QRect &reflectionRect, const QIcon &icon)
@@ -193,4 +197,25 @@ void ViewItem::slotGotPreview(const KFileItem &item, const QPixmap &preview)
     Q_UNUSED(item)
     m_preview = new QPixmap(preview);
     update();
+}
+
+QSize ViewItem::itemSizeHint() const
+{
+    if (m_option.decorationPosition == QStyleOptionViewItem::Left) {
+        int height = qMax(m_option.decorationSize.width() * 2, m_option.fontMetrics.height());
+        int width = m_option.decorationSize.width() + m_option.fontMetrics.width(m_index.data().toString());
+
+        return QSize(width, height);
+    } else if (m_option.decorationPosition == QStyleOptionViewItem::Top) {
+        int width = m_option.decorationSize.width() * 2;
+        int height = m_option.decorationSize.width() * 1.7;
+        QRect textRect(0, 0, width, width - height);
+        QRect bounding = m_option.fontMetrics.boundingRect(textRect, m_option.decorationAlignment, m_index.data().toString());
+
+        height += bounding.height();
+        return QSize(width, height);
+    }
+
+    return QSize(0, 0);
+
 }
