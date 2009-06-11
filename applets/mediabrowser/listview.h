@@ -40,22 +40,13 @@ public:
 
 protected:
     void setupOptions();
-    void updateHoveredItem(const QPointF&);
     void layoutItems();
-
-    void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
-    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
-    void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
 
     void resizeEvent(QGraphicsSceneResizeEvent *event);
 
 public slots:
     void generateItems();
     void updateScrollBar();
-
-private:
-    ViewItem *m_hoveredItem;
-    ViewItem *m_hoverIndicator;
 
 
 };

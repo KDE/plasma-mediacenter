@@ -55,6 +55,12 @@ void MediaBrowser::init()
 
 void MediaBrowser::createConfigurationInterface(KConfigDialog *parent)
 {
+    QWidget *generalConfig = new QWidget(parent);
+    uiGeneral.setupUi(generalConfig);
+
+    parent->addPage(generalConfig, i18n("Appearance"), "preferences-desktop-display");
+
+
     QWidget *localConfig = new QWidget(parent);
     uiLocal.setupUi(localConfig);
 
@@ -70,8 +76,8 @@ void MediaBrowser::createConfigurationInterface(KConfigDialog *parent)
     }
 
     uiLocal.urlRequester->setMode(KFile::Directory);
-
     uiLocal.placesCombo->setCurrentIndex(model->closestItem(m_localUrl).row());
+
     connect (parent, SIGNAL(accepted()), this, SLOT(configAccepted()));
 }
 

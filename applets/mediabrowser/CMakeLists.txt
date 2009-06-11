@@ -3,11 +3,12 @@ set(mediabrowser_SRCS
 mediabrowser.cpp
 abstractmediaitemview.cpp
 listview.cpp
+gridview.cpp
 viewitem.cpp
 )
  
 # Now make sure all files get to the right place
-kde4_add_ui_files(mediabrowser_SRCS localconfig.ui)
+kde4_add_ui_files(mediabrowser_SRCS localconfig.ui general.ui)
 kde4_add_plugin(plasma_applet_mediabrowser ${mediabrowser_SRCS})
 target_link_libraries(plasma_applet_mediabrowser
                       ${KDE4_PLASMA_LIBS}

@@ -16,65 +16,49 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#include "listview.h"
+#include "gridview.h"
 #include "viewitem.h"
 
-// Qt
-#include <QPainter>
-#include <QStyleOptionGraphicsItem>
-#include <QDir>
 #include <QScrollBar>
-#include <QGraphicsSceneResizeEvent>
-#include <QGraphicsSceneHoverEvent>
 
-// KDE
-#include <KDirModel>
-#include <KDirLister>
-#include <KUrl>
-#include <KDebug>
-
-// Plasma
-#include <Plasma/Animator>
-
-ListView::ListView(QGraphicsItem *parent) : AbstractMediaItemView(parent)
+GridView::GridView(QGraphicsItem *parent) : AbstractMediaItemView(parent), m_itemLines(0)
 {
     setupOptions();
 }
 
-ListView::~ListView()
+GridView::~GridView()
 {}
 
-void ListView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
-    QGraphicsWidget::paint(painter, option, widget);
-}
-
-void ListView::setupOptions()
+void GridView::setupOptions()
 {
     AbstractMediaItemView::setupOptions();
-    m_option.decorationPosition = QStyleOptionViewItem::Left;
+    m_option.decorationPosition = QStyleOptionViewItem::Top;
     m_option.decorationAlignment = Qt::AlignCenter;
-    m_option.displayAlignment = Qt::AlignLeft | Qt::AlignVCenter;
+    m_option.displayAlignment = Qt::AlignCenter;
 }
 
-void ListView::layoutItems()
+void GridView::layoutItems()
 {
-    const int x = contentsArea().x();
+    int x = contentsArea().x();
     int y = contentsArea().y();
     const int width = contentsArea().width();
+    m_itemLines = 0;
 
     for (int i = 0; i < m_items.count(); i++) {
-//        if (y > contentsArea().bottom()) { // TODO: do not even create hidden items
-//            return;
-//        }
         if (i == 0) {
             y -= m_scrollMode == AbstractMediaItemView::PerItem ? (verticalScrollBar()->value() * m_items[i]->size().height())
                                   : verticalScrollBar()->value();
         }
         m_items[i]->setPos(x, y);
-        m_items[i]->resize(width, m_items[i]->itemSizeHint().height());
-        y += m_items[i]->size().height();
-        m_hoverIndicator->resize(width, m_items[i]->itemSizeHint().height());
+        m_items[i]->resize(m_items[i]->itemSizeHint());
+
+        if (x + m_items[i]->size().width() > contentsArea().right()) {
+           y += m_items[i]->size().height();
+           ++m_itemLines;
+       } else {
+           x += m_items[i]->size().width();
+       }
+       m_hoverIndicator->resize(m_items[i]->size()); // TODO: no need to iterate this
     }
 
     if (m_hoveredItem) {
@@ -82,7 +66,7 @@ void ListView::layoutItems()
     }
 }
 
-void ListView::generateItems()
+void GridView::generateItems()
 {
     for (int i = 0; i < m_model->rowCount(m_rootIndex); i++) {
         ViewItem *item = new ViewItem(m_option, this);
@@ -92,20 +76,17 @@ void ListView::generateItems()
     layoutItems();
 }
 
-void ListView::updateScrollBar()
+void GridView::updateScrollBar()
 {
+    if (m_items.isEmpty()) {
+        return;
+    }
     if (m_scrollMode == PerItem) {
-        verticalScrollBar()->setRange(0, m_model->rowCount(m_rootIndex));
+        verticalScrollBar()->setRange(0, m_itemLines);
         verticalScrollBar()->setSingleStep(1);
     } else {
-        verticalScrollBar()->setRange(0, m_model->rowCount(m_rootIndex) * iconSize() * 2 - rect().height());
+        verticalScrollBar()->setRange(0, m_itemLines * m_items[0]->size().height() - rect().height());
         verticalScrollBar()->setSingleStep(1);
         verticalScrollBar()->setPageStep(iconSize() * 2);
     }
-}
-
-void ListView::resizeEvent(QGraphicsSceneResizeEvent *event)
-{
-    AbstractMediaItemView::resizeEvent(event);
-    updateScrollBar();
 }

@@ -17,10 +17,12 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 #include "abstractmediaitemview.h"
+#include "viewitem.h"
 
 // Plasma
 #include <Plasma/ScrollBar>
 #include <Plasma/Theme>
+#include <Plasma/Animator>
 
 // KDE
 #include <KIconLoader>
@@ -30,11 +32,13 @@
 #include <QScrollBar>
 #include <QAbstractItemModel>
 #include <QLocale>
+#include <QGraphicsSceneHoverEvent>
 
 AbstractMediaItemView::AbstractMediaItemView(QGraphicsItem *parent) : QGraphicsWidget(parent),
 m_model(0),
 m_scrollBar(new Plasma::ScrollBar(this)),
-m_scrollMode(PerPixel)
+m_scrollMode(PerPixel),
+m_hoveredItem(0)
 
 {
     setFlag(QGraphicsItem::ItemClipsChildrenToShape);
@@ -42,6 +46,12 @@ m_scrollMode(PerPixel)
     setIconSize(KIconLoader::global()->currentSize(KIconLoader::Desktop));
     connect (m_scrollBar, SIGNAL(valueChanged(int)), this, SLOT(layoutItems()));
     m_scrollBar->setZValue(1000);
+
+    QStyleOptionViewItemV4 opt = m_option;
+    opt.state |= QStyle::State_MouseOver;
+    m_hoverIndicator = new ViewItem(opt, this);
+    m_hoverIndicator->setZValue(-1000);
+    m_hoverIndicator->setPos(0, -100);
 }
 
 AbstractMediaItemView::~AbstractMediaItemView()
@@ -143,4 +153,34 @@ void AbstractMediaItemView::invalidate()
 {
     qDeleteAll(m_items);
     m_items.clear();
+}
+
+void AbstractMediaItemView::updateHoveredItem(const QPointF &point)
+{
+    for (int i = 0; i < m_items.count(); i++) {
+        if (m_items[i]->rect().contains(mapToItem(m_items[i], point)) && m_items[i] != m_hoveredItem) {
+
+            m_hoveredItem = m_items[i];
+            Plasma::Animator::self()->moveItem(m_hoverIndicator, Plasma::Animator::SlideInMovement, m_hoveredItem->pos().toPoint());
+
+            break;
+        }
+    }
+}
+
+void AbstractMediaItemView::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+{
+    updateHoveredItem(event->pos());
+}
+
+void AbstractMediaItemView::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
+{
+    updateHoveredItem(event->pos());
+}
+
+void AbstractMediaItemView::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
+{
+    m_hoverIndicator->setPos(0, -100);
+    m_hoveredItem = 0;
+    update();
 }

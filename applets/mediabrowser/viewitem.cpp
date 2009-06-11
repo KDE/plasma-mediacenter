@@ -103,8 +103,15 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 
         textRect.setSize(QSize(option->rect.width() - option->rect.height(), option->rect.height()));
         textRect.moveTo(option->rect.height(), 0);
-    } else if ( m_option.decorationPosition == QStyleOptionViewItem::Top) {
-        // TODO: fill in code for the Top mode :)
+    } else if (m_option.decorationPosition == QStyleOptionViewItem::Top) {
+        const int x = (option->rect.width() - decorationWidth) / 2;
+        const int y = 0;
+        decorationRect.moveTo(x, y);
+
+        reflectionRect.moveTo(decorationRect.bottomLeft());
+
+        textRect.setSize(QSize(option->rect.width(), option->rect.height() - decorationRect.height() - reflectionRect.height()));
+        textRect.moveTo(reflectionRect.bottomLeft());
     }
 
     if (m_preview) {

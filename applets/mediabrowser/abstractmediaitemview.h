@@ -81,6 +81,12 @@ protected:
      */
     virtual void setupOptions();
 
+    virtual void updateHoveredItem(const QPointF &);
+
+    void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
+    void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
+
 protected slots:
     /**
      * You must reimplement this method in order to always
@@ -118,6 +124,9 @@ protected:
     ScrollMode m_scrollMode;
 
     QList<ViewItem*> m_items;
+
+    ViewItem *m_hoveredItem;
+    ViewItem *m_hoverIndicator;
 };
 
 #endif

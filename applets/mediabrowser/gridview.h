@@ -15,45 +15,32 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
- ***************************************************************************/ 
-#ifndef MEDIABROWSER_H
-#define MEDIABROWSER_H
+ ***************************************************************************/
+#ifndef GRIDVIEW_H
+#define GRIDVIEW_H
 
-#include <Plasma/Applet>
-#include "ui_localconfig.h"
-#include "ui_general.h"
 #include "abstractmediaitemview.h"
 
-class KUrl;
-class KDirLister;
+class ViewItem;
 
-class MediaBrowser : public Plasma::Applet
+class GridView : public AbstractMediaItemView
 {
     Q_OBJECT
 public:
-    enum BrowsingMode { LocalFiles, RemoteSearches };
-     MediaBrowser(QObject *parent, const QVariantList &args);
-    ~MediaBrowser();
+    GridView(QGraphicsItem *parent = 0);
+    ~GridView();
 
-    void init();
-    void createConfigurationInterface(KConfigDialog *parent);
+    void setupOptions();
 
-    void switchToFileModel();
+public slots:
+    void generateItems();
+    void updateScrollBar();
+
+protected:
+    void layoutItems();
 
 private:
-    AbstractMediaItemView *m_listView;
-    Ui::LocalConfig uiLocal;
-    Ui::General uiGeneral;
-
-    KUrl m_localUrl;
-    bool m_fromPlaces;
-    BrowsingMode m_mode;
-    KDirLister *m_lister;
-
-private slots:
-    void loadConfiguration();
-    void configAccepted();
-
+    int m_itemLines;
 };
 
-#endif
+#endif // GRIDVIEW_H
