@@ -19,7 +19,8 @@
 #ifndef MEDIABROWSER_H
 #define MEDIABROWSER_H
 
-#include <Plasma/Applet>
+#include <mediacenter/browser.h>
+
 #include "ui_localconfig.h"
 #include "ui_general.h"
 #include "abstractmediaitemview.h"
@@ -28,7 +29,7 @@ class KUrl;
 class KDirLister;
 class KDirModel;
 
-class MediaBrowser : public Plasma::Applet
+class MediaBrowser : public MediaCenter::Browser
 {
     Q_OBJECT
 public:

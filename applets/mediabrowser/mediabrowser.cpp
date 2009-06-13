@@ -34,7 +34,7 @@
 #include <KDebug>
 
 MediaBrowser::MediaBrowser(QObject *parent, const QVariantList &args)
-    : Plasma::Applet(parent, args),
+    : MediaCenter::Browser(parent, args),
     m_view(0),
     m_localUrl(KUrl()),
     m_fromPlaces(true),
