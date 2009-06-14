@@ -30,6 +30,7 @@ namespace MediaCenter {
 
 class MEDIACENTER_EXPORT Browser : public Plasma::Applet
 {
+    Q_OBJECT
 public:
     Browser(QObject *parent, const QVariantList &args);
     ~Browser();

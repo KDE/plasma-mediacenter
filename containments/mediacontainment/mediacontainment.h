@@ -20,6 +20,13 @@
 #define MEDIACONTAINMENT_H
 
 #include <Plasma/Containment>
+#include <QList>
+
+class QAction;
+class QPointF;
+namespace MediaCenter {
+    class Browser;
+}
 
 class MediaContainment : public Plasma::Containment
 {
@@ -27,6 +34,18 @@ class MediaContainment : public Plasma::Containment
 public:
     MediaContainment(QObject *parent, const QVariantList &args);
     ~MediaContainment();
+
+    QList<QAction*> contextualActions();
+
+protected:
+    void constraintsEvent(Plasma::Constraints constraints);
+
+private slots:
+    void slotAppletAdded(Plasma::Applet *applet, const QPointF &pos);
+    void slotAppletRemoved(Plasma::Applet *applet);
+
+private:
+    MediaCenter::Browser *m_browser;
 };
 
 #endif // MEDIACONTAINMENT_H

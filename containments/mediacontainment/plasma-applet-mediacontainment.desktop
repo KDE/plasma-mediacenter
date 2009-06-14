@@ -11,6 +11,7 @@ Comment[sv]=Ett miniprogram för test av Media Center.
 Comment[uk]=Тестовий аплет медіа-центру.
 Comment[x-test]=xxA test applet for Media Center.xx
 Type=Service
+NoDisplay=true
 
 X-Plasma-ContainmentCategories=desktop
 X-KDE-ServiceTypes=Plasma/Applet,Plasma/Containment
