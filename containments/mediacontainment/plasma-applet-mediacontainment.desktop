@@ -14,7 +14,7 @@ Type=Service
 
 X-Plasma-ContainmentCategories=desktop
 X-KDE-ServiceTypes=Plasma/Applet,Plasma/Containment
-X-KDE-Library=plasma_applet_mctest
+X-KDE-Library=plasma_applet_mediacontainment
 X-KDE-PluginInfo-Author=Alessandro Diaferia
 X-KDE-PluginInfo-Email=alediaferia@gmail.com
 X-KDE-PluginInfo-Name=mediacontainment

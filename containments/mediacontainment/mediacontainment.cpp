@@ -18,9 +18,17 @@
  ***************************************************************************/
 #include "mediacontainment.h"
 
+#include <KDebug>
+
+K_EXPORT_PLASMA_APPLET(mediacontainment, MediaContainment)
+
 MediaContainment::MediaContainment(QObject *parent, const QVariantList &args) : Plasma::Containment(parent, args)
 {
+    setHasConfigurationInterface(true);
+    setAcceptHoverEvents(true);
+    kDebug() << immutability();
 }
 
 MediaContainment::~MediaContainment()
 {}
+

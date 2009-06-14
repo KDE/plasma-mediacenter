@@ -23,6 +23,7 @@
 
 class MediaContainment : public Plasma::Containment
 {
+    Q_OBJECT
 public:
     MediaContainment(QObject *parent, const QVariantList &args);
     ~MediaContainment();
