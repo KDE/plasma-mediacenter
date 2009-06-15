@@ -57,14 +57,22 @@ private:
     ItemType m_type;
     Plasma::FrameSvg *m_frameSvg;
     QPixmap *m_preview;
+    int m_hoverRating;
 
 private:
     void drawReflection(QPainter *painter, const QRect &reflectionRect, const QIcon &icon);
     void drawReflection(QPainter *painter, const QRect &reflectionRect, const QPixmap &pm);
     void askForFilePreview();
 
+    QRect ratingRect(const QRect &contentsRect) const;
+
 private slots:
     void slotGotPreview(const KFileItem &item, const QPixmap &preview);
+
+protected:
+    void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
+    void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
 };
 
 #endif // VIEWITEM_H

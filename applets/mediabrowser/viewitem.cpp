@@ -25,12 +25,14 @@
 #include <QIcon>
 #include <QPixmap>
 #include <QLinearGradient>
+#include <QGraphicsSceneHoverEvent>
 
 #include <KFileItem>
 #include <KDirModel>
 #include <kio/job.h>
 #include <kio/previewjob.h>
 #include <KUrl>
+#include <Nepomuk/KRatingPainter>
 #include <KDebug>
 
 #include <Plasma/FrameSvg>
@@ -39,8 +41,10 @@ ViewItem::ViewItem(const QStyleOptionViewItemV4 &option, QGraphicsItem *parent) 
 m_option(option),
 m_type(LocalFileItem),
 m_frameSvg(new Plasma::FrameSvg(this)),
-m_preview(0)
+m_preview(0),
+m_hoverRating(-1)
 {
+    setAcceptsHoverEvents(true);
     setContentsMargins(0, 0, 0, 0);
 
     m_frameSvg->setImagePath("widgets/viewitem");
@@ -103,6 +107,8 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 
         textRect.setSize(QSize(option->rect.width() - option->rect.height(), option->rect.height()));
         textRect.moveTo(option->rect.height(), 0);
+
+        KRatingPainter::paintRating(painter, ratingRect(option->rect), Qt::AlignLeft | Qt::AlignVCenter, m_hoverRating);
     } else if (m_option.decorationPosition == QStyleOptionViewItem::Top) {
         const int x = (option->rect.width() - decorationWidth) / 2;
         const int y = 0;
@@ -229,4 +235,30 @@ QSize ViewItem::itemSizeHint() const
 
     return QSize(0, 0);
 
+}
+
+QRect ViewItem::ratingRect(const QRect &contentsRect) const
+{
+    QRect ratingRect(0, 0, 72, 16);
+    ratingRect.moveTo(contentsRect.right() - ratingRect.width(), contentsRect.y() + 1);
+
+    return ratingRect;
+}
+
+void ViewItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+{
+    m_hoverRating = KRatingPainter::getRatingFromPosition(ratingRect(contentsRect().toRect()), Qt::AlignLeft | Qt::AlignVCenter, Qt::LeftToRight, event->pos().toPoint());
+    update();
+}
+
+void ViewItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
+{
+    m_hoverRating = -1;
+    update();
+}
+
+void ViewItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
+{
+    m_hoverRating = KRatingPainter::getRatingFromPosition(ratingRect(contentsRect().toRect()), Qt::AlignLeft | Qt::AlignVCenter, Qt::LeftToRight, event->pos().toPoint());
+    update();
 }
