@@ -19,7 +19,7 @@
 #ifndef MEDIABROWSER_H
 #define MEDIABROWSER_H
 
-#include <mediacenter/browser.h>
+#include <browser.h>
 
 #include "ui_localconfig.h"
 #include "ui_general.h"

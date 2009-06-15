@@ -76,6 +76,7 @@ void MediaNotificationWidget::paint(QPainter *painter, const QStyleOptionGraphic
 void MediaNotificationWidget::showNotification(Plasma::Applet *applet, const QString &text, const QString &title)
 {
     MediaNotificationWidget *notifier = new MediaNotificationWidget(applet);
+    notifier->setContentsMargins(20, 20, 20, 20);
     notifier->setNotificationText(text);
     notifier->setNotificationTitle(title);
 

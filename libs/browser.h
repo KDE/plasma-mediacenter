@@ -19,10 +19,10 @@
 #ifndef BROWSER_H
 #define BROWSER_H
 
-#include <mediacenter/mediacenter_export.h>
+#include "mediacenter_export.h"
 
 #include <Plasma/Applet>
-#include <mediacenter/mediacenter.h>
+#include "mediacenter.h"
 
 class KUrl;
 

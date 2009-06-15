@@ -1,3 +1,4 @@
+
 set (mediacenterlibs_SRCS
 browser.cpp
 )
@@ -13,4 +14,4 @@ set (mediacenterlibs_HDRS
     browser.h
 )
 
-install (FILES ${mediacenterlibs_HDRS} DESTINATION ${INCLUDE_INSTALL_DIR}/mediacenter)
+install (FILES ${mediacenterlibs_HDRS} DESTINATION ${INCLUDE_INSTALL_DIR}/mediacenter COMPONENT Devel)

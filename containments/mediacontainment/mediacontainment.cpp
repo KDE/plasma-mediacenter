@@ -18,7 +18,7 @@
  ***************************************************************************/
 #include "mediacontainment.h"
 #include "medianotificationwidget.h"
-#include <mediacenter/browser.h>
+#include <browser.h>
 
 // Qt
 #include <QAction>
@@ -67,10 +67,10 @@ void MediaContainment::slotAppletAdded(Plasma::Applet *applet, const QPointF &po
     // browser check
     MediaCenter::Browser *browser = qobject_cast<MediaCenter::Browser*>(applet);
     if (browser && m_browser) {
-        KNotification::event(KNotification::Error, i18n("A browser for the Media Center is already loaded. "
-                                                        "Remove that one before loading a new one please."));
-//        MediaNotificationWidget::showNotification(this, i18n("A browser for the Media Center is already loaded. "
+//        KNotification::event(KNotification::Error, i18n("A browser for the Media Center is already loaded. "
 //                                                        "Remove that one before loading a new one please."));
+        MediaNotificationWidget::showNotification(this, i18n("A browser for the Media Center is already loaded. "
+                                                        "Remove that one before loading a new one please."));
         applet->destroy();
     }
     m_browser = browser;
