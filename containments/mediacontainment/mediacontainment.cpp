@@ -17,6 +17,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 #include "mediacontainment.h"
+#include "medianotificationwidget.h"
 #include <mediacenter/browser.h>
 
 // Qt
@@ -26,6 +27,9 @@
 #include <KDebug>
 #include <KNotification>
 #include <KLocale>
+
+static const int BROWSER_WIDTH = 300;
+static const int BROWSER_HEIGHT = 100;
 
 K_EXPORT_PLASMA_APPLET(mediacontainment, MediaContainment)
 
@@ -63,8 +67,10 @@ void MediaContainment::slotAppletAdded(Plasma::Applet *applet, const QPointF &po
     // browser check
     MediaCenter::Browser *browser = qobject_cast<MediaCenter::Browser*>(applet);
     if (browser && m_browser) {
-        KNotification::event(KNotification::Error, i18n("A browser for the mediacenter already is loaded "
-                                                        "in this containment. Remove that one before loading a new one please."));
+        KNotification::event(KNotification::Error, i18n("A browser for the Media Center is already loaded. "
+                                                        "Remove that one before loading a new one please."));
+//        MediaNotificationWidget::showNotification(this, i18n("A browser for the Media Center is already loaded. "
+//                                                        "Remove that one before loading a new one please."));
         applet->destroy();
     }
     m_browser = browser;
