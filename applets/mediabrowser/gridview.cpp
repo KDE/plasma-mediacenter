@@ -21,7 +21,9 @@
 
 #include <QScrollBar>
 
-GridView::GridView(QGraphicsItem *parent) : AbstractMediaItemView(parent), m_itemLines(0)
+GridView::GridView(QGraphicsItem *parent) : AbstractMediaItemView(parent),
+m_itemLines(0),
+m_timer(new QTimer(this))
 {
     setupOptions();
 }

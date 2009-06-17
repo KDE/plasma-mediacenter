@@ -40,6 +40,8 @@
 
 #include <Plasma/FrameSvg>
 
+static const int ITEM_VERTICAL_MARGIN = 15;
+
 ViewItem::ViewItem(const QStyleOptionViewItemV4 &option, QGraphicsItem *parent) : QGraphicsWidget(parent),
 m_option(option),
 m_type(LocalFileItem),
@@ -125,13 +127,13 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
         textRect.moveTo(option->rect.height(), 0);
 
     } else if (m_option.decorationPosition == QStyleOptionViewItem::Top) {
+        textRect.setSize(textRectSize());
         const int x = (option->rect.width() - decorationWidth) / 2;
-        const int y = 0;
+        const int y = (option->rect.height() - decorationHeight - reflectionHeight - textRect.size().height()) / 2;
         decorationRect.moveTo(x, y);
 
         reflectionRect.moveTo(decorationRect.bottomLeft());
 
-        textRect.setSize(QSize(option->rect.width(), option->rect.height() - decorationRect.height() - reflectionRect.height()));
         textRect.moveTo(0, reflectionRect.bottom());
     }
 
@@ -234,7 +236,7 @@ QSize ViewItem::itemSizeHint() const
     }
 
     if (m_option.decorationPosition == QStyleOptionViewItem::Left) {
-        int height = qMax(m_option.decorationSize.width() * 2, m_option.fontMetrics.height());
+        int height = qMax(m_option.decorationSize.width() + 2*ITEM_VERTICAL_MARGIN, m_option.fontMetrics.height());
         int width = m_option.decorationSize.width() + m_option.fontMetrics.width(m_index.data().toString());
 
         return QSize(width, height);
@@ -250,6 +252,21 @@ QSize ViewItem::itemSizeHint() const
 
     return QSize(0, 0);
 
+}
+
+QSize ViewItem::textRectSize() const
+{
+    if (m_option.decorationPosition == QStyleOptionViewItem::Top) {
+        int width = contentsRect().width();
+        int height = m_option.decorationSize.width() * 1.7;
+        QRect textRect(0, 0, width, width - height);
+        QRect bounding = m_option.fontMetrics.boundingRect(textRect, m_option.decorationAlignment, m_index.data().toString());
+        bounding.setWidth(width);
+
+        return bounding.size();
+    }
+
+    return QSize();
 }
 
 QRect ViewItem::ratingRect(const QRect &contentsRect) const

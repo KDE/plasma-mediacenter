@@ -22,6 +22,7 @@
 #include "abstractmediaitemview.h"
 
 class ViewItem;
+class QTimer;
 
 class GridView : public AbstractMediaItemView
 {
@@ -42,6 +43,7 @@ protected:
 
 private:
     int m_itemLines;
+    QTimer *m_timer;
 };
 
 #endif // GRIDVIEW_H

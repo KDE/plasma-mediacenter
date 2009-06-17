@@ -80,6 +80,7 @@ private:
     void askForFilePreview();
 
     QRect ratingRect(const QRect &contentsRect) const;
+    QSize textRectSize() const;
 
 private slots:
     void slotGotPreview(const KFileItem &item, const QPixmap &preview);
