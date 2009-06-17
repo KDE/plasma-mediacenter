@@ -20,12 +20,21 @@
 #include "viewitem.h"
 
 #include <QScrollBar>
+#include <QTimer>
+
+#include <Plasma/Animator>
 
 GridView::GridView(QGraphicsItem *parent) : AbstractMediaItemView(parent),
 m_itemLines(0),
-m_timer(new QTimer(this))
+m_timer(new QTimer(this)),
+m_lastHoveredItem(0)
 {
     setupOptions();
+    m_timer->setInterval(2000);
+
+    connect (m_timer, SIGNAL(timeout()), this, SLOT(highlightHoveredItem()));
+//    connect (Plasma::Animator::self(), SIGNAL(animationFinished(QGraphicsItem*,Plasma::Animator::Animation)),
+//             this, SLOT(slotAnimationFinished(QGraphicsItem*,Plasma::Animator::Animation)));
 }
 
 GridView::~GridView()
@@ -104,4 +113,49 @@ void GridView::resizeEvent(QGraphicsSceneResizeEvent *event)
     if (m_model) {
         updateScrollBar();
     }
+}
+
+void GridView::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+{
+    AbstractMediaItemView::hoverEnterEvent(event);
+
+    if (m_hoveredItem) {
+        m_lastHoveredItem = m_hoveredItem;
+        m_timer->start();
+    }
+}
+
+void GridView::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
+{
+    AbstractMediaItemView::hoverMoveEvent(event);
+
+    if (m_hoveredItem && m_hoveredItem != m_lastHoveredItem) {
+        m_lastHoveredItem = m_hoveredItem;
+        m_timer->stop();
+        layoutItems();
+        m_timer->start();
+    }
+}
+
+void GridView::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
+{
+    AbstractMediaItemView::hoverLeaveEvent(event);
+
+    if (m_timer->isActive()) {
+        m_timer->stop();
+    }
+    m_lastHoveredItem = 0;
+}
+
+void GridView::highlightHoveredItem()
+{
+    Plasma::Animator::self()->customAnimation(100, 250, Plasma::Animator::EaseInCurve, this, "highlightAnimation");
+    m_hoveredItem->setZValue(1000);
+    m_timer->stop();
+}
+
+void GridView::highlightAnimation(qreal value)
+{
+    m_hoveredItem->resize( (m_hoveredItem->itemSizeHint().width() * 2) * value, (m_hoveredItem->itemSizeHint().height() * 2) * value);
+    m_hoverIndicator->resize(m_hoveredItem->size());
 }

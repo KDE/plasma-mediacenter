@@ -41,9 +41,20 @@ protected:
     void layoutItems();
     void resizeEvent(QGraphicsSceneResizeEvent *event);
 
+    void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
+    void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
+
 private:
     int m_itemLines;
     QTimer *m_timer;
+
+    ViewItem *m_lastHoveredItem;
+
+private slots:
+    void highlightHoveredItem();
+    void highlightAnimation(qreal value);
+//    void slotAnimationFinished(QGraphicsItem *item, Plasma::Animator::Animation);
 };
 
 #endif // GRIDVIEW_H
