@@ -33,6 +33,8 @@
 #include <KLineEdit>
 #include <KDebug>
 
+#include <Nepomuk/ResourceManager>
+
 MediaBrowser::MediaBrowser(QObject *parent, const QVariantList &args)
     : MediaCenter::Browser(parent, args),
     m_view(0),
@@ -42,6 +44,7 @@ MediaBrowser::MediaBrowser(QObject *parent, const QVariantList &args)
     m_model(0)
 {
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
+    Nepomuk::ResourceManager::instance()->init();
 }
 
 MediaBrowser::~MediaBrowser()

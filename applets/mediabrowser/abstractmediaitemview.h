@@ -21,7 +21,6 @@
 
 #include <QGraphicsWidget>
 #include <QStyleOptionViewItemV4>
-#include "viewitem.h"
 
 class QAbstractItemModel;
 class QAbstractItemDelegate;
@@ -29,7 +28,7 @@ class QAbstractItemDelegate;
 namespace Plasma {
     class ScrollBar;
 }
-
+class ViewItem;
 class QScrollBar;
 
 class AbstractMediaItemView : public QGraphicsWidget
@@ -111,6 +110,9 @@ public slots:
      * the scrollbar.
      */
     virtual void updateScrollBar() = 0;
+
+private slots:
+    void setRating(int);
 
 signals:
     void scrollOffsetChanged(int);

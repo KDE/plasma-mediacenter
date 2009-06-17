@@ -32,7 +32,10 @@
 #include <kio/job.h>
 #include <kio/previewjob.h>
 #include <KUrl>
+
 #include <Nepomuk/KRatingPainter>
+#include <Nepomuk/Resource>
+
 #include <KDebug>
 
 #include <Plasma/FrameSvg>
@@ -42,15 +45,18 @@ m_option(option),
 m_type(LocalFileItem),
 m_frameSvg(new Plasma::FrameSvg(this)),
 m_preview(0),
-m_hoverRating(-1)
+m_hoverRating(0),
+m_rating(0),
+m_resource(0)
 {
-    setAcceptsHoverEvents(true);
     setContentsMargins(0, 0, 0, 0);
 
     m_frameSvg->setImagePath("widgets/viewitem");
     m_frameSvg->setEnabledBorders(Plasma::FrameSvg::AllBorders);
     m_frameSvg->setCacheAllRenderedFrames(true);
     m_frameSvg->setElementPrefix("hover");
+
+    setAcceptedMouseButtons(0);
 }
 
 ViewItem::~ViewItem()
@@ -71,6 +77,13 @@ void ViewItem::setModelIndex(const QModelIndex &index)
 {
     m_index = index;
     askForFilePreview();
+
+    KFileItem item = m_index.data(KDirModel::FileItemRole).value<KFileItem>();
+    if (item.isNull()) {
+        return;
+    }
+
+    m_resource = new Nepomuk::Resource(item.url());
 }
 
 void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -82,6 +95,9 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
             m_frameSvg->resizeFrame(option->rect.size());
         }
         m_frameSvg->paintFrame(painter, option->rect.topLeft());
+        if (m_option.decorationPosition == QStyleOptionViewItem::Left) {
+            KRatingPainter::paintRating(painter, ratingRect(option->rect), Qt::AlignLeft | Qt::AlignVCenter, m_rating, m_hoverRating);
+        }
     }
 
     if (!m_index.isValid()) {
@@ -108,7 +124,6 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
         textRect.setSize(QSize(option->rect.width() - option->rect.height(), option->rect.height()));
         textRect.moveTo(option->rect.height(), 0);
 
-        KRatingPainter::paintRating(painter, ratingRect(option->rect), Qt::AlignLeft | Qt::AlignVCenter, m_hoverRating);
     } else if (m_option.decorationPosition == QStyleOptionViewItem::Top) {
         const int x = (option->rect.width() - decorationWidth) / 2;
         const int y = 0;
@@ -245,20 +260,17 @@ QRect ViewItem::ratingRect(const QRect &contentsRect) const
     return ratingRect;
 }
 
-void ViewItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+void ViewItem::updateHoverRating(const QPoint &pos)
 {
-    m_hoverRating = KRatingPainter::getRatingFromPosition(ratingRect(contentsRect().toRect()), Qt::AlignLeft | Qt::AlignVCenter, Qt::LeftToRight, event->pos().toPoint());
+    m_hoverRating = KRatingPainter::getRatingFromPosition(ratingRect(contentsRect().toRect()), Qt::AlignLeft | Qt::AlignVCenter, Qt::LeftToRight, pos);
+    if (m_hoverRating == -1) {
+        m_hoverRating = 0;
+    }
     update();
 }
 
-void ViewItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
+void ViewItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    m_hoverRating = -1;
-    update();
-}
-
-void ViewItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
-{
-    m_hoverRating = KRatingPainter::getRatingFromPosition(ratingRect(contentsRect().toRect()), Qt::AlignLeft | Qt::AlignVCenter, Qt::LeftToRight, event->pos().toPoint());
-    update();
+    emit ratingActivated(KRatingPainter::getRatingFromPosition(ratingRect(contentsRect().toRect()),
+                                                               Qt::AlignLeft | Qt::AlignVCenter, Qt::LeftToRight, event->pos().toPoint()));
 }

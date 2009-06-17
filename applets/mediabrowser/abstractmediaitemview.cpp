@@ -28,6 +28,8 @@
 #include <KIconLoader>
 #include <KDebug>
 
+#include <Nepomuk/Resource>
+
 // Qt
 #include <QScrollBar>
 #include <QAbstractItemModel>
@@ -52,6 +54,9 @@ m_hoveredItem(0)
     m_hoverIndicator = new ViewItem(opt, this);
     m_hoverIndicator->setZValue(-1000);
     m_hoverIndicator->setPos(0, -100);
+
+    m_hoverIndicator->setAcceptedMouseButtons(Qt::LeftButton);
+    connect (m_hoverIndicator, SIGNAL(ratingActivated(int)), this, SLOT(setRating(int)));
 }
 
 AbstractMediaItemView::~AbstractMediaItemView()
@@ -174,16 +179,36 @@ void AbstractMediaItemView::updateHoveredItem(const QPointF &point)
 void AbstractMediaItemView::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
     updateHoveredItem(event->pos());
+    kDebug() << (QObject*)m_hoveredItem;
+    if (m_hoveredItem) {
+        m_hoverIndicator->m_rating = m_hoveredItem->m_resource->rating();
+    }
+    m_hoverIndicator->updateHoverRating(mapToItem(m_hoverIndicator, event->pos()).toPoint());
 }
 
 void AbstractMediaItemView::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
 {
     updateHoveredItem(event->pos());
+    kDebug() << (QObject*)m_hoveredItem;
+    if (m_hoveredItem) {
+        m_hoverIndicator->m_rating = m_hoveredItem->m_resource->rating();
+    }
+    m_hoverIndicator->updateHoverRating(mapToItem(m_hoverIndicator, event->pos()).toPoint());
 }
 
 void AbstractMediaItemView::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
     m_hoverIndicator->setPos(0, -100);
     m_hoveredItem = 0;
+    m_hoverIndicator->updateHoverRating(mapToItem(m_hoverIndicator, event->pos()).toPoint());
     update();
+}
+
+void AbstractMediaItemView::setRating(int rating)
+{
+    if (!m_hoveredItem) {
+        return;
+    }
+
+    m_hoveredItem->m_resource->setRating(rating);
 }

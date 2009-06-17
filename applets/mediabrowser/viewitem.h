@@ -28,6 +28,10 @@ namespace Plasma {
     class FrameSvg;
 }
 
+namespace Nepomuk {
+    class Resource;
+}
+
 class KFileItem;
 class QPixmap;
 
@@ -51,6 +55,13 @@ public:
 
     QSize itemSizeHint() const;
 
+    void updateHoverRating(const QPoint &pos);
+
+    void setRating(int rating);
+
+protected:
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+
 private:
     QStyleOptionViewItemV4 m_option;
     QModelIndex m_index;
@@ -58,6 +69,10 @@ private:
     Plasma::FrameSvg *m_frameSvg;
     QPixmap *m_preview;
     int m_hoverRating;
+    int m_rating;
+    Nepomuk::Resource *m_resource;
+
+    friend class AbstractMediaItemView;
 
 private:
     void drawReflection(QPainter *painter, const QRect &reflectionRect, const QIcon &icon);
@@ -69,10 +84,9 @@ private:
 private slots:
     void slotGotPreview(const KFileItem &item, const QPixmap &preview);
 
-protected:
-    void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
-    void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
-    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
+signals:
+    void ratingActivated(int);
+
 };
 
 #endif // VIEWITEM_H
