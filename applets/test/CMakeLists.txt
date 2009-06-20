@@ -1,4 +1,4 @@
-
+include_directories(../../)
 set(mctest_SRCS
 test.cpp
 ../../widgets/activeitemwidget.cpp
