@@ -18,6 +18,7 @@
  ***************************************************************************/
 #include "mediacontainment.h"
 #include "medianotificationwidget.h"
+#include "medialayout.h"
 #include <browser.h>
 
 // Qt
@@ -34,8 +35,10 @@ static const int BROWSER_HEIGHT = 100;
 K_EXPORT_PLASMA_APPLET(mediacontainment, MediaContainment)
 
 MediaContainment::MediaContainment(QObject *parent, const QVariantList &args) : Plasma::Containment(parent, args),
-m_browser(0)
+m_browser(0),
+m_layout(new MediaLayout(this))
 {
+    setContainmentType(Plasma::Containment::CustomContainment);
     setHasConfigurationInterface(true);
     setAcceptHoverEvents(true);
 }
@@ -48,6 +51,10 @@ QList<QAction*> MediaContainment::contextualActions()
     QList<QAction*> actions;
 
     actions << action("add widgets");
+    QAction *separator = new QAction(this);
+    separator->setSeparator(true);
+    actions << separator;
+    actions << action("configure");
 
     return actions;
 }
@@ -66,14 +73,18 @@ void MediaContainment::slotAppletAdded(Plasma::Applet *applet, const QPointF &po
 
     // browser check
     MediaCenter::Browser *browser = qobject_cast<MediaCenter::Browser*>(applet);
-    if (browser && m_browser) {
-//        KNotification::event(KNotification::Error, i18n("A browser for the Media Center is already loaded. "
-//                                                        "Remove that one before loading a new one please."));
-        MediaNotificationWidget::showNotification(this, i18n("A browser for the Media Center is already loaded. "
-                                                        "Remove that one before loading a new one please."));
-        applet->destroy();
+    if (browser) {
+        if (m_browser) {
+            KNotification::event(KNotification::Error, i18n("A browser for the Media Center is already loaded. "
+                                                            "Remove that one before loading a new one please."));
+            kDebug() << "destroying applet";
+            applet->deleteLater();
+        } else {
+            m_browser = browser;
+            m_layout->setBrowser(m_browser);
+            m_layout->invalidate();
+        }
     }
-    m_browser = browser;
 
 }
 

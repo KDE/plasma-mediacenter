@@ -16,39 +16,55 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#ifndef MEDIACONTAINMENT_H
-#define MEDIACONTAINMENT_H
+#ifndef MEDIALAYOUT_H
+#define MEDIALAYOUT_H
 
-#include <Plasma/Containment>
-#include <QList>
+#include <QObject>
 
-class QAction;
-class QPointF;
-namespace MediaCenter {
-    class Browser;
+namespace Plasma {
+    class Containment;
+    class Applet;
 }
 
-class MediaLayout;
+/**
+ * @class MediaLayout
+ * @brief MediaLayout takes care of layouting media applets.
+ * MediaLayout takes care of layouting media applets in the containment.
+ * It also takes care of showing proper applet handles when needed.
+ * @author Alessandro Diaferia
+ */
 
-class MediaContainment : public Plasma::Containment
+class MediaLayout : public QObject
 {
     Q_OBJECT
 public:
-    MediaContainment(QObject *parent, const QVariantList &args);
-    ~MediaContainment();
+    MediaLayout(Plasma::Containment *parent);
+    ~MediaLayout();
 
-    QList<QAction*> contextualActions();
+    void setBrowser(Plasma::Applet *browser);
+    void setPlaybackControl(Plasma::Applet *control);
 
-protected:
-    void constraintsEvent(Plasma::Constraints constraints);
+    /**
+     * Calling this function make the layout relayouting
+     * applets in the containment. It is reccommended to
+     * call this function whenever setting new applets.
+     */
+    void invalidate();
 
-private slots:
-    void slotAppletAdded(Plasma::Applet *applet, const QPointF &pos);
-    void slotAppletRemoved(Plasma::Applet *applet);
+    bool eventFilter(QObject *o, QEvent *e);
 
 private:
-    MediaCenter::Browser *m_browser;
-    MediaLayout *m_layout;
+    Plasma::Containment *m_containment;
+    Plasma::Applet *m_browser;
+    Plasma::Applet *m_control;
+
+    QList<Plasma::Applet*> m_needLayouting;
+
+private:
+    void doCompleteLayout();
+
+    void layoutBrowser();
+    void layoutControl();
 };
 
-#endif // MEDIACONTAINMENT_H
+#endif // MEDIALAYOUT_H

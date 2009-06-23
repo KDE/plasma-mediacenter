@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=MediaContainment
+Name=Media Containment
 Name[et]=Meediakonteiner
 Name[km]=ការ​ផ្ទុក​មេឌៀ
 Name[pt]=Contentor Multimédia
@@ -7,7 +7,7 @@ Name[pt_BR]=Contentor Multimédia
 Name[sv]=Mediaomgivning
 Name[uk]=Контейнер мультимедійних даних
 Name[x-test]=xxMediaContainmentxx
-Comment=A test applet for Media Center.
+Comment=A dedicated containment for your media applets.
 Comment[en_GB]=A test applet for Media Centre.
 Comment[et]=Meediakeskuse testaplett
 Comment[fr]=Une applet de test pour Media Center

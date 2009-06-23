@@ -16,39 +16,70 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#ifndef MEDIACONTAINMENT_H
-#define MEDIACONTAINMENT_H
+#include "medialayout.h"
 
 #include <Plasma/Containment>
-#include <QList>
+#include <Plasma/Applet>
 
-class QAction;
-class QPointF;
-namespace MediaCenter {
-    class Browser;
+MediaLayout::MediaLayout(Plasma::Containment *parent) : QObject(parent),
+m_containment(parent),
+m_browser(0),
+m_control(0)
+{
+    m_containment->installEventFilter(this);
 }
 
-class MediaLayout;
-
-class MediaContainment : public Plasma::Containment
+MediaLayout::~MediaLayout()
 {
-    Q_OBJECT
-public:
-    MediaContainment(QObject *parent, const QVariantList &args);
-    ~MediaContainment();
+}
 
-    QList<QAction*> contextualActions();
+void MediaLayout::setBrowser(Plasma::Applet *browser)
+{
+    m_browser = browser;
+    m_needLayouting << m_browser;
+}
 
-protected:
-    void constraintsEvent(Plasma::Constraints constraints);
+void MediaLayout::setPlaybackControl(Plasma::Applet *control)
+{
+    m_control = control;
+    m_needLayouting << m_control;
+}
 
-private slots:
-    void slotAppletAdded(Plasma::Applet *applet, const QPointF &pos);
-    void slotAppletRemoved(Plasma::Applet *applet);
+void MediaLayout::invalidate()
+{
+    foreach (Plasma::Applet *applet, m_needLayouting) {
+        if (applet == m_browser) {
+            layoutBrowser();
+        } else if (applet == m_control) {
+            layoutControl();
+        }
+    }
+}
 
-private:
-    MediaCenter::Browser *m_browser;
-    MediaLayout *m_layout;
-};
+void MediaLayout::doCompleteLayout()
+{
+    if (m_browser) {
+        layoutBrowser();
+    }
+    if (m_control) {
+        layoutControl();
+    }
+}
 
-#endif // MEDIACONTAINMENT_H
+void MediaLayout::layoutBrowser()
+{
+    m_browser->resize(m_containment->size().width() / 3.0, m_containment->size().height() * 2 / 3.0);
+    m_browser->setPos(0, (m_containment->size().height() - m_browser->size().height()) / 2);
+}
+
+void MediaLayout::layoutControl()
+{}
+
+bool MediaLayout::eventFilter(QObject *o, QEvent *e)
+{
+    if (o == m_containment && e->type() == QEvent::GraphicsSceneResize) {
+        doCompleteLayout();
+    }
+
+    return false;
+}
