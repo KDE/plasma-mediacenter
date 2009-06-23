@@ -3,6 +3,7 @@ set(containment_SRCS
 mediacontainment.cpp
 medianotificationwidget.cpp
 medialayout.cpp
+mediahandler.cpp
 )
  
 # Now make sure all files get to the right place
