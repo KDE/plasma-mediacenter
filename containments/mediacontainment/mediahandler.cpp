@@ -30,6 +30,8 @@
 #include <Plasma/Svg>
 #include <Plasma/Animator>
 
+static const int WIDTH = 60;
+
 MediaHandler::MediaHandler(Plasma::Applet *applet, HandlerPosition position) : QGraphicsWidget(applet),
 m_handlerPosition(position),
 m_applet(applet),
@@ -94,8 +96,16 @@ void MediaHandler::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
 
 bool MediaHandler::eventFilter(QObject *o, QEvent *e)
 {
-    if (o == m_applet && e->type() == QEvent::GraphicsSceneMove) {
+    if (o != m_applet) {
+        return false;
+    }
+
+    if (e->type() == QEvent::GraphicsSceneMove) {
         setPos(m_applet->rect().right(), (m_applet->rect().height() - size().height()) / 2);
+    } else if (e->type() == QEvent::GraphicsSceneResize) {
+        resize(WIDTH, m_applet->size().height());
+    } else if (e->type() == QEvent::GraphicsSceneHoverLeave) {
+        emit appletHideRequest(m_applet);
     }
 
     return false;
@@ -119,11 +129,13 @@ void MediaHandler::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
     m_appearing = false;
     m_showFactor = 1;
     m_animationId = Plasma::Animator::self()->customAnimation(100, 250, Plasma::Animator::EaseInCurve, this, "animateShowHide");
+
+//    emit appletHideRequest(m_applet);
 }
 
 void MediaHandler::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
 {
-    if (event->pos().x() <= 2) {
+    if (event->pos().x() <= 10 && event->pos().x() > 0) {
         emit appletShowRequest(m_applet);
     }
 }

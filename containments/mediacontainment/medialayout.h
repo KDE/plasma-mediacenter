@@ -26,6 +26,8 @@ namespace Plasma {
     class Applet;
 }
 
+class QRectF;
+
 /**
  * @class MediaLayout
  * @brief MediaLayout takes care of layouting media applets.
@@ -52,6 +54,12 @@ public:
     void invalidate();
 
     bool eventFilter(QObject *o, QEvent *e);
+
+    QRectF browserPreferredShowingRect() const;
+
+protected slots:
+    void animateShowingApplet(Plasma::Applet *);
+    void animateHidingApplet(Plasma::Applet *);
 
 private:
     Plasma::Containment *m_containment;

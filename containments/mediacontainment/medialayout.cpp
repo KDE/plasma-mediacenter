@@ -17,9 +17,11 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 #include "medialayout.h"
+#include "mediahandler.h"
 
 #include <Plasma/Containment>
 #include <Plasma/Applet>
+#include <Plasma/Animator>
 
 MediaLayout::MediaLayout(Plasma::Containment *parent) : QObject(parent),
 m_containment(parent),
@@ -37,6 +39,10 @@ void MediaLayout::setBrowser(Plasma::Applet *browser)
 {
     m_browser = browser;
     m_needLayouting << m_browser;
+
+    MediaHandler *handler = new MediaHandler(m_browser, MediaHandler::Right);
+    connect (handler, SIGNAL(appletHideRequest(Plasma::Applet*)), this, SLOT(animateHidingApplet(Plasma::Applet*)));
+    connect (handler, SIGNAL(appletShowRequest(Plasma::Applet*)), this, SLOT(animateShowingApplet(Plasma::Applet*)));
 }
 
 void MediaLayout::setPlaybackControl(Plasma::Applet *control)
@@ -68,8 +74,9 @@ void MediaLayout::doCompleteLayout()
 
 void MediaLayout::layoutBrowser()
 {
-    m_browser->resize(m_containment->size().width() / 3.0, m_containment->size().height() * 2 / 3.0);
-    m_browser->setPos(0, (m_containment->size().height() - m_browser->size().height()) / 2);
+    m_browser->setPos(browserPreferredShowingRect().topLeft());
+    m_browser->resize(browserPreferredShowingRect().size());
+//    m_browser->setPos(m_browser->pos().x() - m_browser->size().width(), m_browser->pos().y());
 }
 
 void MediaLayout::layoutControl()
@@ -82,4 +89,25 @@ bool MediaLayout::eventFilter(QObject *o, QEvent *e)
     }
 
     return false;
+}
+
+QRectF MediaLayout::browserPreferredShowingRect() const
+{
+    return QRectF(QPointF(0, (m_containment->size().height() - m_browser->size().height()) / 2),
+                  QSizeF(m_containment->size().width() / 3.0, m_containment->size().height() * 2 / 3.0));
+}
+
+void MediaLayout::animateHidingApplet(Plasma::Applet *applet)
+{
+    if (applet == m_browser) {
+        Plasma::Animator::self()->moveItem(applet, Plasma::Animator::SlideOutMovement, QPoint(m_browser->rect().x() - m_browser->size().width(),
+                                                                                              browserPreferredShowingRect().y()));
+    }
+}
+
+void MediaLayout::animateShowingApplet(Plasma::Applet *applet)
+{
+    if (applet == m_browser) {
+        Plasma::Animator::self()->moveItem(applet, Plasma::Animator::SlideInMovement, browserPreferredShowingRect().topLeft().toPoint());
+    }
 }
