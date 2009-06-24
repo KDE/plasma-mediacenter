@@ -28,6 +28,7 @@ namespace Plasma {
 }
 
 class QGraphicsSceneResizeEvent;
+class QGraphicsSceneHoverEvent;
 
 class MediaHandler : public QGraphicsWidget
 {
@@ -52,6 +53,13 @@ public:
 protected:
     void resizeEvent(QGraphicsSceneResizeEvent *event);
 
+    void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
+    void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
+
+protected slots:
+    virtual void animateShowHide(qreal);
+
 signals:
     /**
      * emitted whenever the handler requests the applet
@@ -69,11 +77,12 @@ private:
     HandlerPosition m_handlerPosition;
     Plasma::Applet *m_applet;
     Plasma::FrameSvg *m_handlerSvg;
-    Plasma::Svg *m_arrowSvg;
+    qreal m_showFactor;
+    bool m_appearing;
+    int m_animationId;
 
 private:
     void enableBordersByPosition();
-    QString arrowPrefixByPosition();
 };
 
 #endif // MEDIAHANDLER_H

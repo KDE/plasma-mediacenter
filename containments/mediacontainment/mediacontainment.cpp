@@ -19,6 +19,7 @@
 #include "mediacontainment.h"
 #include "medianotificationwidget.h"
 #include "medialayout.h"
+#include "mediahandler.h"
 #include <browser.h>
 
 // Qt
@@ -31,6 +32,9 @@
 
 static const int BROWSER_WIDTH = 300;
 static const int BROWSER_HEIGHT = 100;
+
+static const int HANDLER_HEIGHT = 140;
+static const int HANDLER_WIDTH = 10;
 
 K_EXPORT_PLASMA_APPLET(mediacontainment, MediaContainment)
 
@@ -82,6 +86,8 @@ void MediaContainment::slotAppletAdded(Plasma::Applet *applet, const QPointF &po
         } else {
             m_browser = browser;
             m_layout->setBrowser(m_browser);
+            MediaHandler *handler = new MediaHandler(m_browser, MediaHandler::Right);
+            handler->resize(HANDLER_WIDTH, HANDLER_HEIGHT);
             m_layout->invalidate();
         }
     }

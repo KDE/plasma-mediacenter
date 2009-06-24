@@ -19,19 +19,24 @@
 #include "mediahandler.h"
 
 #include <QGraphicsSceneResizeEvent>
+#include <QGraphicsSceneHoverEvent>
 #include <QStyleOptionGraphicsItem>
+#include <QPainter>
+
+#include <KDebug>
 
 #include <Plasma/Applet>
 #include <Plasma/FrameSvg>
 #include <Plasma/Svg>
-
-static const int ARROW_SIZE = 16;
+#include <Plasma/Animator>
 
 MediaHandler::MediaHandler(Plasma::Applet *applet, HandlerPosition position) : QGraphicsWidget(applet),
 m_handlerPosition(position),
 m_applet(applet),
 m_handlerSvg(new Plasma::FrameSvg(this)),
-m_arrowSvg(new Plasma::Svg(this))
+m_showFactor(0),
+m_appearing(false),
+m_animationId(0)
 {
     m_applet->installEventFilter(this);
 
@@ -39,11 +44,9 @@ m_arrowSvg(new Plasma::Svg(this))
 
     m_handlerSvg->setCacheAllRenderedFrames(true);
     enableBordersByPosition();
-    m_handlerSvg->setImagePath("widgets/background");
+    m_handlerSvg->setImagePath("widgets/glowbar");
 
-    m_arrowSvg->setContainsMultipleImages(true);
-    m_arrowSvg->setImagePath("widgets/arrows");
-    m_arrowSvg->resize(ARROW_SIZE, ARROW_SIZE);
+    setAcceptsHoverEvents(true);
 }
 
 MediaHandler::~MediaHandler()
@@ -51,29 +54,14 @@ MediaHandler::~MediaHandler()
 
 void MediaHandler::resizeEvent(QGraphicsSceneResizeEvent *event)
 {
-    m_handlerSvg->resizeFrame(QSizeF(event->newSize().width(), event->newSize().width()));
+    Q_UNUSED(event)
+    m_handlerSvg->resizeFrame(QSizeF(10, size().height()));
 }
 
 void MediaHandler::setHandlerPosition(HandlerPosition position)
 {
     m_handlerPosition = position;
     enableBordersByPosition();
-}
-
-QString MediaHandler::arrowPrefixByPosition()
-{
-    switch (m_handlerPosition) {
-        case Right :
-        return "right-arrow";
-        case Left :
-        return "left-arrow";
-        case Top :
-        return "up-arrow";
-        case Bottom:
-        return "down-arrow";
-        default :
-                return "right-arrow";
-    }
 }
 
 void MediaHandler::enableBordersByPosition()
@@ -100,15 +88,54 @@ void MediaHandler::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
 {
     Q_UNUSED(widget)
 
+    painter->setOpacity(m_showFactor);
     m_handlerSvg->paintFrame(painter, option->rect.topLeft());
-    // TODO: draw the arrow
 }
 
 bool MediaHandler::eventFilter(QObject *o, QEvent *e)
 {
     if (o == m_applet && e->type() == QEvent::GraphicsSceneMove) {
-        // TODO: move the handler following applet's position
+        setPos(m_applet->rect().right(), (m_applet->rect().height() - size().height()) / 2);
     }
 
     return false;
+}
+
+void MediaHandler::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+{
+    Q_UNUSED(event)
+
+    Plasma::Animator::self()->stopCustomAnimation(m_animationId);
+    m_appearing = true;
+    m_showFactor = 0;
+    m_animationId = Plasma::Animator::self()->customAnimation(100, 250, Plasma::Animator::EaseInCurve, this, "animateShowHide");
+}
+
+void MediaHandler::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
+{
+    Q_UNUSED(event)
+
+    Plasma::Animator::self()->stopCustomAnimation(m_animationId);
+    m_appearing = false;
+    m_showFactor = 1;
+    m_animationId = Plasma::Animator::self()->customAnimation(100, 250, Plasma::Animator::EaseInCurve, this, "animateShowHide");
+}
+
+void MediaHandler::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
+{
+    if (event->pos().x() <= 2) {
+        emit appletShowRequest(m_applet);
+    }
+}
+
+void MediaHandler::animateShowHide(qreal value)
+{
+    if (!m_appearing) {
+        m_showFactor = 1 - value;
+        update();
+        return;
+    }
+
+    m_showFactor = value;
+    update();
 }
