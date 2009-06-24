@@ -1,22 +1,6 @@
 [Desktop Entry]
 Name=Media Containment
-Name[et]=Meediakonteiner
-Name[km]=ការ​ផ្ទុក​មេឌៀ
-Name[pt]=Contentor Multimédia
-Name[pt_BR]=Contentor Multimédia
-Name[sv]=Mediaomgivning
-Name[uk]=Контейнер мультимедійних даних
-Name[x-test]=xxMediaContainmentxx
 Comment=A dedicated containment for your media applets.
-Comment[en_GB]=A test applet for Media Centre.
-Comment[et]=Meediakeskuse testaplett
-Comment[fr]=Une applet de test pour Media Center
-Comment[km]=សាកល្បង​អាប់ភ្លេត​សម្រាប់​មជ្ឍមណ្ឌល​មេឌៀ ។
-Comment[pt]=Uma 'applet' de testes para Centros Multimédia.
-Comment[pt_BR]=Uma 'applet' de testes para Centros Multimédia.
-Comment[sv]=Ett miniprogram för test av Media Center.
-Comment[uk]=Тестовий аплет медіа-центру.
-Comment[x-test]=xxA test applet for Media Center.xx
 Type=Service
 NoDisplay=true
 
