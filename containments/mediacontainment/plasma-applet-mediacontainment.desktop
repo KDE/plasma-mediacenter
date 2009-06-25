@@ -1,6 +1,14 @@
 [Desktop Entry]
 Name=Media Containment
+Name[pt]=Contentor Multimédia
+Name[pt_BR]=Contentor Multimédia
+Name[sv]=Mediaomgivning
+Name[uk]=Контейнер мультимедійних даних
 Comment=A dedicated containment for your media applets.
+Comment[pt]=Um contentor dedicado aos seus leitores multimédia.
+Comment[pt_BR]=Um contentor dedicado aos seus leitores multimédia.
+Comment[sv]=En särskild omgivning för mediaminiprogram.
+Comment[uk]=Спеціальний контейнер для ваших мультимедійних аплетів.
 Type=Service
 NoDisplay=true
 
