@@ -1,6 +1,7 @@
 
 set (mediacenterlibs_SRCS
 browser.cpp
+playbackcontrol.cpp
 )
 
 kde4_add_library(mediacenterlibs SHARED ${mediacenterlibs_SRCS})
@@ -12,6 +13,7 @@ set (mediacenterlibs_HDRS
     mediacenter_export.h
     mediacenter.h
     browser.h
+    playbackcontrol.h
 )
 
 install (FILES ${mediacenterlibs_HDRS} DESTINATION ${INCLUDE_INSTALL_DIR}/mediacenter COMPONENT Devel)

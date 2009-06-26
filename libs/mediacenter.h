@@ -27,6 +27,11 @@ enum MediaType {
     Audio
 };
 
+enum State {
+    PlayingState,
+    StoppedState,
+    PausedState
+};
 
 } // namespace MediaCenter
 

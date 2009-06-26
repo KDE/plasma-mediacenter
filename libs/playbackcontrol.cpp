@@ -16,29 +16,16 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#ifndef BROWSER_H
-#define BROWSER_H
+#include "playbackcontrol.h"
 
-#include "mediacenter_export.h"
+using namespace MediaCenter;
 
-#include <Plasma/Applet>
-#include "mediacenter.h"
-
-class KUrl;
-
-namespace MediaCenter {
-
-class MEDIACENTER_EXPORT Browser : public Plasma::Applet
+PlaybackControl::PlaybackControl(QObject *parent, const QVariantList &args) : Plasma::Applet(parent, args)
 {
-    Q_OBJECT
-public:
-    Browser(QObject *parent, const QVariantList &args);
-    virtual ~Browser();
+}
 
-signals:
-    void mediaActivated(MediaType type, const KUrl &mediaUrl);
-};
+PlaybackControl::~PlaybackControl()
+{}
 
-} // namespace MediaCenter
-
-#endif // BROWSER_H
+void PlaybackControl::playingStateChanged(MediaCenter::State state)
+{}
