@@ -48,6 +48,8 @@ m_animationId(0)
     enableBordersByPosition();
     m_handlerSvg->setImagePath("widgets/glowbar");
 
+    setContentsMargins(0, 0, 0, 0);
+
     setAcceptsHoverEvents(true);
 }
 
