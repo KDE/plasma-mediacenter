@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=MediaBrowser Applet
 Name[et]=Meediasirvija aplett
+Name[fr]=Applet MediaBrowser
 Name[km]=អាប់ភ្លេត MediaBrowser
 Name[pt]='Applet' de Leitura Multimédia
 Name[pt_BR]='Applet' de Leitura Multimédia
@@ -11,6 +12,7 @@ Name[x-test]=xxMediaBrowser Appletxx
 Comment=An applet to browse through your media files
 Comment[de]=Ein Applet zum Durchsuchen Ihrer Medien-Dateien
 Comment[et]=Aplett meediafailide sirvimiseks
+Comment[fr]=Une applet pour le parcourt des fichiers de média
 Comment[km]=អាប់ភ្លេត​ត្រូវ​រកមើល​តាមរយៈ​ឯកសារ​មេឌៀ​របស់​អ្នក
 Comment[pt]=Uma 'applet' para navegar pelos seus ficheiros multimédia
 Comment[pt_BR]=Uma 'applet' para navegar pelos seus ficheiros multimédia
