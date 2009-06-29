@@ -3,6 +3,7 @@ Name=MediaController
 Name[pt]=Controlador Multimédia
 Name[pt_BR]=Controlador Multimédia
 Name[sv]=Mediahanterare
+Name[tr]=Ortam Denetleyici
 Name[uk]=Контейнер мультимедіа
 Comment=A simple applet to control media reproduction
 Comment[pt]=Uma 'applet' simples para controlar a reprodução multimédia

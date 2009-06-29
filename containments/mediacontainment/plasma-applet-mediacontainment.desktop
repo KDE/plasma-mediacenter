@@ -10,6 +10,7 @@ Comment[fr]=Un conteneur dédié à vos applets de média
 Comment[pt]=Um contentor dedicado aos seus leitores multimédia.
 Comment[pt_BR]=Um contentor dedicado aos seus leitores multimédia.
 Comment[sv]=En särskild omgivning för mediaminiprogram.
+Comment[tr]=Ortam gereçleriniz için bir kapsayıcı.
 Comment[uk]=Спеціальний контейнер для ваших мультимедійних аплетів.
 Type=Service
 NoDisplay=true
