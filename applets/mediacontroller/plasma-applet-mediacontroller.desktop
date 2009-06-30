@@ -5,11 +5,13 @@ Name[pt_BR]=Controlador Multimédia
 Name[sv]=Mediahanterare
 Name[tr]=Ortam Denetleyici
 Name[uk]=Контейнер мультимедіа
+Name[x-test]=xxMediaControllerxx
 Comment=A simple applet to control media reproduction
 Comment[pt]=Uma 'applet' simples para controlar a reprodução multimédia
 Comment[pt_BR]=Uma 'applet' simples para controlar a reprodução multimédia
 Comment[sv]=Ett enkelt miniprogram för att hantera mediareproduktion
 Comment[uk]=Простий аплет, призначений для спостереження за відтворенням мультимедіа
+Comment[x-test]=xxA simple applet to control media reproductionxx
 Type=Service
 
 X-KDE-ServiceTypes=Plasma/Applet
