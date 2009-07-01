@@ -18,6 +18,36 @@
  ***************************************************************************/
 #include "mediasource.h"
 
-MediaSource::MediaSource()
+using namespace MediaCenter;
+
+MediaSource::MediaSource(MediaType type, const KUrl &url) :
+        m_url(url),
+        m_type(type),
+        m_deviceName(QString())
 {
+}
+
+MediaSource::MediaSource(MediiaType type, const QString &deviceName) :
+        m_url(KUrl()),
+        m_type(type),
+        m_deviceName(deviceName)
+{
+}
+
+MediaSource::~MediaSource()
+{}
+
+MediaType MediaSource::type() const
+{
+    return m_type;
+}
+
+KUrl MediaSource::url() const
+{
+    return m_url;
+}
+
+QString MediaSource::deviceName() const
+{
+    return m_deviceName;
 }

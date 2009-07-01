@@ -21,6 +21,8 @@
 
 #include <mediacenter.h>
 
+#include <KUrl>
+
 namespace MediaCenter {
 
 class MediaSource
@@ -39,13 +41,18 @@ public:
      * @param deviceName is the unique device identifier, recommended to be
      * retrieved via Solid.
      */
-    MediaSource(MediaType, const QString &deviceName);
+    MediaSource(MediaType type, const QString &deviceName);
 
     ~MediaSource();
 
     MediaType type() const;
     KUrl url() const;
     QString deviceName() const;
+
+private:
+    KUrl m_url;
+    MediaType m_type;
+    QString m_deviceName;
 };
 }
 

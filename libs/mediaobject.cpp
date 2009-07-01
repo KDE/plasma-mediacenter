@@ -28,6 +28,18 @@ public:
     MediaObject instance;
 };
 
+class MediaObject::MediaObjectPrivate
+{
+public:
+    MediaObjectPrivate(MediaObject *q) : q(q)
+    {}
+
+    MediaObject *q;
+
+    KUrl currentUrl;
+    MediaType currentType;
+};
+
 MediaObject::MediaObject(QObject *parent) : QObject(parent)
 {
 }
