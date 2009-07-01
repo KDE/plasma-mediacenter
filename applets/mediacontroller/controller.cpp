@@ -18,7 +18,13 @@
  ***************************************************************************/
 #include "controller.h"
 
+// Qt
+#include <QGraphicsLinearLayout>
+
 #include <KIcon>
+
+// Plasma
+#include <Plasma/IconWidget>
 
 MediaController::MediaController(QObject *parent, const QVariantList &args)
     : MediaCenter::PlaybackControl(parent, args),
@@ -30,6 +36,30 @@ MediaController::MediaController(QObject *parent, const QVariantList &args)
     m_svg->setEnabledBorders(Plasma::FrameSvg::LeftBorder | Plasma::FrameSvg::RightBorder | Plasma::FrameSvg::BottomBorder);
     m_svg->setCacheAllRenderedFrames(true);
     m_svg->setImagePath("widgets/background");
+
+    QGraphicsLinearLayout *controlLayout = new QGraphicsLinearLayout(Qt::Horizontal);
+
+    Plasma::IconWidget *skipBack = new Plasma::IconWidget(this);
+    skipBack->setIcon("media-skip-backward");
+    connect (skipBack, SIGNAL(clicked()), this, SIGNAL(mediaSkipBackwardRequest()));
+    controlLayout->addItem(skipBack);
+
+    Plasma::IconWidget *stop = new Plasma::IconWidget(this);
+    stop->setIcon("media-playback-stop");
+    connect (stop, SIGNAL(clicked()), this, SIGNAL(stopRequest()));
+    controlLayout->addItem(stop);
+
+    Plasma::IconWidget *playPause = new Plasma::IconWidget(this);
+    playPause->setIcon("media-playback-start");
+    // TODO connect
+    controlLayout->addItem(playPause);
+
+    Plasma::IconWidget *skipForward = new Plasma::IconWidget(this);
+    skipForward->setIcon("media-skip-forward");
+    connect (skipForward, SIGNAL(clicked()), this, SIGNAL(mediaSkipForwardRequest()));
+    controlLayout->addItem(skipForward);
+
+    setLayout(controlLayout);
 }
 
 MediaController::~MediaController()
@@ -47,10 +77,10 @@ void MediaController::resizeEvent(QGraphicsSceneResizeEvent *event)
 
     m_svg->resizeFrame(contentsRect().size());
 
-    m_seekBackRect = seekBackRect();
-    m_seekForwardRect = seekForwardRect();
-    m_stopRect = stopRect();
-    m_playPauseRect = playPauseRect();
+//    m_seekBackRect = seekBackRect();
+//    m_seekForwardRect = seekForwardRect();
+//    m_stopRect = stopRect();
+//    m_playPauseRect = playPauseRect();
 }
 
 void MediaController::paintInterface(QPainter *painter, const QStyleOptionGraphicsItem *option, const QRect &contentsRect)
@@ -61,29 +91,16 @@ void MediaController::paintInterface(QPainter *painter, const QStyleOptionGraphi
     // seek-back, stop, play/pause, seek-forward
     // using the specified functions to retrieve the correct QRects
     // to draw in.
-    KIcon("media-seek-backward").paint(painter, m_seekBackRect);
-    KIcon("media-playback-stop").paint(painter, m_stopRect);
-    KIcon("media-playback-start").paint(painter, m_playPauseRect);
-    KIcon("media-seek-forward").paint(painter, m_seekForwardRect);
+//    KIcon("media-seek-backward").paint(painter, m_seekBackRect);
+//    KIcon("media-playback-stop").paint(painter, m_stopRect);
+//    KIcon("media-playback-start").paint(painter, m_playPauseRect);
+//    KIcon("media-seek-forward").paint(painter, m_seekForwardRect);
 }
 
 int MediaController::iconSizeFromCurrentSize() const
 {
     const int size = contentsRect().height();
     return size;
-//    if (size <= 8 ) {
-//        return 8;
-//    } else if (size <= 16) {
-//        return 16;
-//    } else if (size <= 32) {
-//        return 32;
-//    } else if (size <= 48) {
-//        return 48;
-//    } else if (size <= 64) {
-//        return 64;
-//    } else if (size <= 128) {
-//        return 128;
-//    } else return 256;
 }
 
 QRect MediaController::seekBackRect() const

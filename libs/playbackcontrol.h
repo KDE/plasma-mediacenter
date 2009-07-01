@@ -34,6 +34,9 @@ namespace MediaCenter {
  * for the Plasma MediaCenter Components. Keep in mind that most probably
  * this applet will be loaded and put on the topmost edge of the screen when
  * writing the painting code.
+ *
+ * Always use MediaCenter::MediaObject in order to retrieve current information
+ * about media reproduction.
  */
 
 class MEDIACENTER_EXPORT PlaybackControl : public Plasma::Applet
@@ -57,7 +60,7 @@ signals:
     /**
      * This signal has to be emitted whenever there is need for seeking
      * the current reproduction.
-     * @Note: if the current reproduction media is a picture this signal has no effect.
+     * @note: if the current reproduction media is a picture this signal has no effect.
      */
     void seekRequest(qint64 time);
 
@@ -66,14 +69,37 @@ signals:
      */
     void stopRequest();
 
+    /**
+     * Emit this signal whenever the user requests for the volume level to change.
+     */
+    void volumeLevelChangeRequest(qreal volume);
+
+    /**
+     * Emit this signal in order to request the current media to be skipped forward.
+     */
+    void mediaSkipForwardRequest();
+
+    /**
+     * Emit this signal in order to request the current media to be skipped backward.
+     */
+    void mediaSkipBackwardRequest();
+
 public slots:
     /**
      * This slot is called whenever the current playing state changes.
      * Use this slot in order to update the controller status according
      * to the right playing state.
-     * @Note: the default implementation actually does nothing.
+     * @note: the default implementation actually does nothing.
      */
     virtual void playingStateChanged(MediaCenter::State state);
+
+    /**
+     * This slot is automatically called whenever the seek state changes.
+     * This way the applet can always keep synced with the current playing
+     * state.
+     * @note: the default implementation actually does nothing.
+     */
+    virtual void currentSeekChanged(qreal seek);
 };
 
 } // namespace MediaCenter

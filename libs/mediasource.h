@@ -16,23 +16,37 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#include "playbackcontrol.h"
+#ifndef MEDIASOURCE_H
+#define MEDIASOURCE_H
 
-using namespace MediaCenter;
+#include <mediacenter.h>
 
-PlaybackControl::PlaybackControl(QObject *parent, const QVariantList &args) : Plasma::Applet(parent, args)
+namespace MediaCenter {
+
+class MediaSource
 {
+public:
+    /**
+     * Builds a media source identifying a specific media
+     * by its @param type and its @param url.
+     */
+    MediaSource(MediaType type, const KUrl& url);
+
+    /**
+     * Use this constructor if @param type is either a Cd, Dvd,
+     * or Vcd, since probably you won't have a url to pass.
+     *
+     * @param deviceName is the unique device identifier, recommended to be
+     * retrieved via Solid.
+     */
+    MediaSource(MediaType, const QString &deviceName);
+
+    ~MediaSource();
+
+    MediaType type() const;
+    KUrl url() const;
+    QString deviceName() const;
+};
 }
 
-PlaybackControl::~PlaybackControl()
-{}
-
-void PlaybackControl::playingStateChanged(MediaCenter::State state)
-{
-    Q_UNUSED(state)
-}
-
-void PlaybackControl::currentSeekChanged(qreal seek)
-{
-    Q_UNUSED(seek)
-}
+#endif // MEDIASOURCE_H

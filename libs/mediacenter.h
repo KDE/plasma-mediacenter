@@ -24,7 +24,10 @@ namespace MediaCenter {
 enum MediaType {
     Picture,
     Video,
-    Audio
+    Audio,
+    Dvd,
+    Vcd,
+    Cd
 };
 
 enum State {

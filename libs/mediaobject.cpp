@@ -16,23 +16,28 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#include "playbackcontrol.h"
+#include "mediaobject.h"
+
+#include <kglobal.h>
 
 using namespace MediaCenter;
 
-PlaybackControl::PlaybackControl(QObject *parent, const QVariantList &args) : Plasma::Applet(parent, args)
+class MediaObject::InstanceHelper
+{
+public:
+    MediaObject instance;
+};
+
+MediaObject::MediaObject(QObject *parent) : QObject(parent)
 {
 }
 
-PlaybackControl::~PlaybackControl()
+MediaObject::~MediaObject()
 {}
 
-void PlaybackControl::playingStateChanged(MediaCenter::State state)
-{
-    Q_UNUSED(state)
-}
+K_GLOBAL_STATIC(InstanceHelper, globalHelper)
 
-void PlaybackControl::currentSeekChanged(qreal seek)
+MediaObject *MediaObject::self()
 {
-    Q_UNUSED(seek)
+    return &globalHelper->instance;
 }

@@ -16,23 +16,42 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#include "playbackcontrol.h"
+#ifndef MEDIAOBJECT_H
+#define MEDIAOBJECT_H
 
-using namespace MediaCenter;
+#include <QObject>
+#include <mediacenter.h>
 
-PlaybackControl::PlaybackControl(QObject *parent, const QVariantList &args) : Plasma::Applet(parent, args)
+class KUrl;
+
+namespace MediaCenter {
+
+class MediaObject : public QObject
 {
+    Q_OBJECT
+public:
+    MediaObject *self();
+
+    /**
+     * @return the current media type playing/showed.
+     */
+    MediaType currentType();
+
+    /**
+     * @return the url of the current media.
+     */
+    KUrl currentMedia();
+
+private:
+    MediaObject(QObject *parent = 0);
+    ~MediaObject();
+
+    class InstanceHelper;
+
+    KUrl m_currentUrl;
+    Type m_currentType;
+};
+
 }
 
-PlaybackControl::~PlaybackControl()
-{}
-
-void PlaybackControl::playingStateChanged(MediaCenter::State state)
-{
-    Q_UNUSED(state)
-}
-
-void PlaybackControl::currentSeekChanged(qreal seek)
-{
-    Q_UNUSED(seek)
-}
+#endif // MEDIAOBJECT_H
