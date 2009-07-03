@@ -41,6 +41,7 @@ namespace MediaCenter {
 
 class MEDIACENTER_EXPORT PlaybackControl : public Plasma::Applet
 {
+    Q_OBJECT
 public:
     PlaybackControl(QObject *parent, const QVariantList &args);
     virtual ~PlaybackControl();
@@ -100,6 +101,14 @@ public slots:
      * @note: the default implementation actually does nothing.
      */
     virtual void currentSeekChanged(qreal seek);
+
+    /**
+     * This slot is called whenever a new MediaType is going to be
+     * reproduced (or showed in case of pictures). You might want to
+     * reimplement this slot in order to disable for example
+     * seek and volume controls when a picture is being showed.
+     */
+    virtual void mediaTypeChanged(MediaCenter::MediaType newType);
 };
 
 } // namespace MediaCenter
