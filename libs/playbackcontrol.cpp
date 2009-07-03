@@ -20,7 +20,17 @@
 
 using namespace MediaCenter;
 
-PlaybackControl::PlaybackControl(QObject *parent, const QVariantList &args) : Plasma::Applet(parent, args)
+class PlaybackControl::PlaybackControlPrivate {
+public:
+    PlaybackControlPrivate(PlaybackControl *q) : q(q), mediaObject(0)
+    {}
+
+    PlaybackControl *q;
+    Phonon::MediaObject *mediaObject;
+};
+
+PlaybackControl::PlaybackControl(QObject *parent, const QVariantList &args) : Plasma::Applet(parent, args),
+d(new PlaybackControlPrivate(this))
 {
 }
 
@@ -40,4 +50,14 @@ void PlaybackControl::currentSeekChanged(qreal seek)
 void PlaybackControl::mediaTypeChanged(MediaCenter::MediaType newType)
 {
     Q_UNUSED(newType)
+}
+
+void PlaybackControl::setMediaObject(Phonon::MediaObject *mediaObject)
+{
+    d->mediaObject = mediaObject;
+}
+
+Phonon::MediaObject* PlaybackControl::mediaObject()
+{
+    return d->mediaObject;
 }

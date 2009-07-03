@@ -47,7 +47,7 @@ public:
     void setPlaybackControl(Plasma::Applet *control);
 
     /**
-     * Calling this function make the layout relayouting
+     * Calling this function makes the layout relayouting
      * applets in the containment. It is reccommended to
      * call this function whenever setting new applets.
      */
@@ -56,6 +56,7 @@ public:
     bool eventFilter(QObject *o, QEvent *e);
 
     QRectF browserPreferredShowingRect() const;
+    QRectF controllerPreferredShowingRect() const;
 
 protected slots:
     void animateShowingApplet(Plasma::Applet *);

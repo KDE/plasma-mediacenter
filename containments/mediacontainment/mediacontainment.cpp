@@ -20,6 +20,7 @@
 #include "medianotificationwidget.h"
 #include "medialayout.h"
 #include <browser.h>
+#include <playbackcontrol.h>
 
 // Qt
 #include <QAction>
@@ -37,6 +38,7 @@ K_EXPORT_PLASMA_APPLET(mediacontainment, MediaContainment)
 
 MediaContainment::MediaContainment(QObject *parent, const QVariantList &args) : Plasma::Containment(parent, args),
 m_browser(0),
+m_control(0),
 m_layout(new MediaLayout(this))
 {
     setContainmentType(Plasma::Containment::CustomContainment);
@@ -85,6 +87,22 @@ void MediaContainment::slotAppletAdded(Plasma::Applet *applet, const QPointF &po
             m_layout->setBrowser(m_browser);
             m_layout->invalidate();
         }
+        return;
+    }
+
+    MediaCenter::PlaybackControl *control = qobject_cast<MediaCenter::PlaybackControl*>(applet);
+    if (control) {
+        if (m_control) {
+            KNotification::event(KNotification::Error, i18n("A playback control for the Media Center is already loaded. "
+                                                            "Remove that one before loading a new one please."));
+            kDebug() << "destroying applet";
+            applet->deleteLater();
+        } else {
+            m_control = control;
+            m_layout->setPlaybackControl(m_control);
+            m_layout->invalidate();
+        }
+        return;
     }
 
 }

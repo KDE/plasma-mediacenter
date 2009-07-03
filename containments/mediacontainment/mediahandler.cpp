@@ -58,8 +58,12 @@ MediaHandler::~MediaHandler()
 
 void MediaHandler::resizeEvent(QGraphicsSceneResizeEvent *event)
 {
-    Q_UNUSED(event)
-    m_handlerSvg->resizeFrame(QSizeF(10, size().height()));
+    Q_UNUSED(event);
+    if (m_handlerPosition == Left || m_handlerPosition == Right) {
+        m_handlerSvg->resizeFrame(QSizeF(10, size().height()));
+    } else {
+        m_handlerSvg->resizeFrame(QSizeF(size().width(), 10));
+    }
 }
 
 void MediaHandler::setHandlerPosition(HandlerPosition position)
@@ -90,7 +94,7 @@ void MediaHandler::enableBordersByPosition()
 
 void MediaHandler::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    Q_UNUSED(widget)
+    Q_UNUSED(widget);
 
     painter->setOpacity(m_showFactor);
     m_handlerSvg->paintFrame(painter, option->rect.topLeft());
@@ -103,9 +107,26 @@ bool MediaHandler::eventFilter(QObject *o, QEvent *e)
     }
 
     if (e->type() == QEvent::GraphicsSceneMove) {
-        setPos(m_applet->rect().right(), (m_applet->rect().height() - size().height()) / 2);
+        switch (m_handlerPosition) {
+        case Right :
+            setPos(m_applet->rect().right(), (m_applet->rect().height() - size().height()) / 2);
+            break;
+        case Top :
+            setPos((m_applet->rect().width() - size().width()) / 2, m_applet->rect().top());
+            break;
+        case Left :
+            setPos(m_applet->rect().left(), (m_applet->rect().height() - size().height()) / 2);
+            break;
+        case Bottom :
+            setPos((m_applet->rect().width() - size().width()) / 2, m_applet->rect().bottom());
+            break;
+        }
     } else if (e->type() == QEvent::GraphicsSceneResize) {
-        resize(WIDTH, m_applet->size().height());
+        if (m_handlerPosition == Left || m_handlerPosition == Right) {
+            resize(WIDTH, m_applet->size().height());
+        } else {
+            resize(m_applet->size().width(), WIDTH);
+        }
     } else if (e->type() == QEvent::GraphicsSceneHoverLeave) {
         emit appletHideRequest(m_applet);
     }
@@ -137,9 +158,16 @@ void MediaHandler::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 
 void MediaHandler::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
 {
-    if (event->pos().x() <= 10 && event->pos().x() > 0) {
+    if (event->pos().x() <= 10 && event->pos().x() > 0 && m_handlerPosition == Right) {
+        emit appletShowRequest(m_applet);
+    } else if (event->pos().y() <= 10 && event->pos().y() > 0 && m_handlerPosition == Bottom) {
+        emit appletShowRequest(m_applet);
+    } else if (event->pos().x() < size().width() && event->pos().x() > size().width() - 10 && m_handlerPosition == Left) {
+        emit appletShowRequest(m_applet);
+    } else if (event->pos().y() < size().height() && event->pos().y() > size().height() - 10 && m_handlerPosition == Top) {
         emit appletShowRequest(m_applet);
     }
+
 }
 
 void MediaHandler::animateShowHide(qreal value)

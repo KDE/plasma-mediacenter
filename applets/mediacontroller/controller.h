@@ -21,6 +21,16 @@
 
 #include <playbackcontrol.h>
 
+#include <phonon/phononnamespace.h>
+
+namespace Phonon {
+    class MediaObject;
+}
+
+namespace Plasma {
+    class IconWidget;
+}
+
 class MediaController : public MediaCenter::PlaybackControl
 {
     Q_OBJECT
@@ -32,15 +42,18 @@ public:
 
     void paintInterface(QPainter *painter, const QStyleOptionGraphicsItem *option, const QRect &contentsRect);
 
+    void init();
+
 protected:
     void resizeEvent(QGraphicsSceneResizeEvent *event);
 
+private slots:
+    void togglePlayPayse(Phonon::State, Phonon::State);
+
 private:
     Plasma::FrameSvg *m_svg;
-    QRect m_seekBackRect;
-    QRect m_seekForwardRect;
-    QRect m_stopRect;
-    QRect m_playPauseRect;
+    Phonon::MediaObject *m_mediaObject;
+    Plasma::IconWidget *m_playPause;
 
     int iconSizeFromCurrentSize() const;
 
@@ -48,6 +61,7 @@ private:
     inline QRect seekForwardRect() const;
     inline QRect stopRect() const;
     inline QRect playPauseRect() const;
+
 
 };
 

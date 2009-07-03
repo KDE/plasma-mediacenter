@@ -20,6 +20,7 @@
 
 // Qt
 #include <QGraphicsLinearLayout>
+#include <Phonon/MediaObject>
 
 #include <KIcon>
 
@@ -49,10 +50,10 @@ MediaController::MediaController(QObject *parent, const QVariantList &args)
     connect (stop, SIGNAL(clicked()), this, SIGNAL(stopRequest()));
     controlLayout->addItem(stop);
 
-    Plasma::IconWidget *playPause = new Plasma::IconWidget(this);
-    playPause->setIcon("media-playback-start");
+    m_playPause = new Plasma::IconWidget(this);
+    m_playPause->setIcon("media-playback-start");
     // TODO connect
-    controlLayout->addItem(playPause);
+    controlLayout->addItem(m_playPause);
 
     Plasma::IconWidget *skipForward = new Plasma::IconWidget(this);
     skipForward->setIcon("media-skip-forward");
@@ -76,25 +77,11 @@ void MediaController::resizeEvent(QGraphicsSceneResizeEvent *event)
     Q_UNUSED(event)
 
     m_svg->resizeFrame(contentsRect().size());
-
-//    m_seekBackRect = seekBackRect();
-//    m_seekForwardRect = seekForwardRect();
-//    m_stopRect = stopRect();
-//    m_playPauseRect = playPauseRect();
 }
 
 void MediaController::paintInterface(QPainter *painter, const QStyleOptionGraphicsItem *option, const QRect &contentsRect)
 {
     m_svg->paintFrame(painter, contentsRect.topLeft());
-
-    // then we draw the controls icon in the following order:
-    // seek-back, stop, play/pause, seek-forward
-    // using the specified functions to retrieve the correct QRects
-    // to draw in.
-//    KIcon("media-seek-backward").paint(painter, m_seekBackRect);
-//    KIcon("media-playback-stop").paint(painter, m_stopRect);
-//    KIcon("media-playback-start").paint(painter, m_playPauseRect);
-//    KIcon("media-seek-forward").paint(painter, m_seekForwardRect);
 }
 
 int MediaController::iconSizeFromCurrentSize() const
@@ -103,36 +90,27 @@ int MediaController::iconSizeFromCurrentSize() const
     return size;
 }
 
-QRect MediaController::seekBackRect() const
+void MediaController::init()
 {
-    return QRect(contentsRect().topLeft().toPoint(), QSize(iconSizeFromCurrentSize(), iconSizeFromCurrentSize()));
+    m_mediaObject = mediaObject();
+
+    if (!m_mediaObject) {
+        return;
+    }
+    if (m_mediaObject->state() == Phonon::PlayingState) {
+        m_playPause->setIcon("media-playback-pause");
+    }
 }
 
-QRect MediaController::stopRect() const
+void MediaController::togglePlayPayse(Phonon::State oldState, Phonon::State newState)
 {
-    const int size = iconSizeFromCurrentSize();
-    QRect rect(contentsRect().topLeft().toPoint(), QSize(size, size));
-    rect.translate(size, 0);
+    Q_UNUSED(oldState);
 
-    return rect;
-}
-
-QRect MediaController::playPauseRect() const
-{
-    const int size = iconSizeFromCurrentSize();
-    QRect rect(contentsRect().topLeft().toPoint(), QSize(size, size));
-    rect.translate(size*2, 0);
-
-    return rect;
-}
-
-QRect MediaController::seekForwardRect() const
-{
-    const int size = iconSizeFromCurrentSize();
-    QRect rect(contentsRect().topLeft().toPoint(), QSize(size, size));
-    rect.translate(size*3, 0);
-
-    return rect;
+    if (newState == Phonon::PlayingState) {
+        m_playPause->setIcon("media-playback-pause");
+    } else {
+        m_playPause->setIcon("media-playback-start");
+    }
 }
 
 

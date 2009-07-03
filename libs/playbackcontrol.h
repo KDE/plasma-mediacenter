@@ -24,6 +24,10 @@
 
 #include <Plasma/Applet>
 
+namespace Phonon {
+    class MediaObject;
+}
+
 namespace MediaCenter {
 
 /**
@@ -45,6 +49,21 @@ class MEDIACENTER_EXPORT PlaybackControl : public Plasma::Applet
 public:
     PlaybackControl(QObject *parent, const QVariantList &args);
     virtual ~PlaybackControl();
+
+    /**
+     * This method is called from the containment in order to set the
+     * proper Phonon::MediaObject currently in use to reproduce media content.
+     */
+    void setMediaObject(Phonon::MediaObject *mediaObject);
+
+    /**
+     * Use this method to retrieve the current Phonon::MediaObject in use.
+     * Calling this method in the constructor might not be safe
+     * since a MediaObject is associated to the applet only after the applet
+     * has been added to the containment. You might want to store the
+     * pointer in the init() function.
+     */
+    Phonon::MediaObject *mediaObject();
 
 signals:
     /**
@@ -109,6 +128,11 @@ public slots:
      * seek and volume controls when a picture is being showed.
      */
     virtual void mediaTypeChanged(MediaCenter::MediaType newType);
+
+
+private:
+    class PlaybackControlPrivate;
+    PlaybackControlPrivate *d;
 };
 
 } // namespace MediaCenter

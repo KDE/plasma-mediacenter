@@ -26,6 +26,7 @@ class QAction;
 class QPointF;
 namespace MediaCenter {
     class Browser;
+    class PlaybackControl;
 }
 
 class MediaLayout;
@@ -48,7 +49,11 @@ private slots:
 
 private:
     MediaCenter::Browser *m_browser;
+    MediaCenter::PlaybackControl *m_control;
+
     MediaLayout *m_layout;
+
+    void addMediaApplet(Plasma::Applet *);
 };
 
 #endif // MEDIACONTAINMENT_H

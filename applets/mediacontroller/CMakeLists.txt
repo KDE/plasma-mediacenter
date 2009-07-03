@@ -8,6 +8,7 @@ kde4_add_plugin(plasma_applet_mediacontroller ${controller_SRCS})
 target_link_libraries(plasma_applet_mediacontroller
                       ${KDE4_PLASMA_LIBS}
                       mediacenterlibs
+                      ${KDE4_PHONON_LIBS}
 )
  
 install(TARGETS plasma_applet_mediacontroller

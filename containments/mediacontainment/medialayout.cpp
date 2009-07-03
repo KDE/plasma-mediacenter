@@ -49,6 +49,10 @@ void MediaLayout::setPlaybackControl(Plasma::Applet *control)
 {
     m_control = control;
     m_needLayouting << m_control;
+
+    MediaHandler *handler = new MediaHandler(m_control, MediaHandler::Bottom);
+    connect (handler, SIGNAL(appletHideRequest(Plasma::Applet*)), this, SLOT(animateHidingApplet(Plasma::Applet*)));
+    connect (handler, SIGNAL(appletShowRequest(Plasma::Applet*)), this, SLOT(animateShowingApplet(Plasma::Applet*)));
 }
 
 void MediaLayout::invalidate()
@@ -59,6 +63,7 @@ void MediaLayout::invalidate()
         } else if (applet == m_control) {
             layoutControl();
         }
+        m_needLayouting.removeAll(applet);
     }
 }
 
@@ -80,7 +85,10 @@ void MediaLayout::layoutBrowser()
 }
 
 void MediaLayout::layoutControl()
-{}
+{
+    m_control->setPos(controllerPreferredShowingRect().topLeft());
+    m_control->resize(controllerPreferredShowingRect().size());
+}
 
 bool MediaLayout::eventFilter(QObject *o, QEvent *e)
 {
@@ -97,17 +105,32 @@ QRectF MediaLayout::browserPreferredShowingRect() const
                   QSizeF(m_containment->size().width() / 3.0, m_containment->size().height() * 2 / 3.0));
 }
 
+QRectF MediaLayout::controllerPreferredShowingRect() const
+{
+    const int width = 64 * 4;
+    const int height = 64;
+
+    return QRectF(QPointF((m_containment->size().width() - width) / 2, 0), QSizeF(width, height));
+}
+
 void MediaLayout::animateHidingApplet(Plasma::Applet *applet)
 {
     if (applet == m_browser) {
         Plasma::Animator::self()->moveItem(applet, Plasma::Animator::SlideOutMovement, QPoint(m_browser->rect().x() - m_browser->size().width(),
                                                                                               browserPreferredShowingRect().y()));
+    } else if (applet == m_control) {
+        Plasma::Animator::self()->moveItem(applet, Plasma::Animator::SlideOutMovement, QPoint(controllerPreferredShowingRect().x(),
+                                                                                              m_control->rect().y() - m_control->size().height()));
     }
+
 }
 
 void MediaLayout::animateShowingApplet(Plasma::Applet *applet)
 {
     if (applet == m_browser) {
         Plasma::Animator::self()->moveItem(applet, Plasma::Animator::SlideInMovement, browserPreferredShowingRect().topLeft().toPoint());
+    } else if (applet == m_control) {
+        Plasma::Animator::self()->moveItem(applet, Plasma::Animator::SlideInMovement, controllerPreferredShowingRect().topLeft().toPoint());
     }
+
 }
