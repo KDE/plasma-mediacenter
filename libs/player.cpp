@@ -28,12 +28,12 @@ Player::~Player()
 QString Player::currentMedia()
 {}
 
-void Player::setQueue(const QList<MediaSource> sources)
+void Player::setQueue(const QList<MediaSource> &sources)
 {
     Q_UNUSED(sources);
 }
 
-void Player::enqueue(const QList<MediaSource> sources)
+void Player::enqueue(const QList<MediaSource> &sources)
 {
     Q_UNUSED(sources);
 }
