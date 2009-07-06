@@ -27,3 +27,18 @@ Player::~Player()
 
 QString Player::currentMedia()
 {}
+
+void Player::setQueue(const QList<MediaSource> sources)
+{
+    Q_UNUSED(sources);
+}
+
+void Player::enqueue(const QList<MediaSource> sources)
+{
+    Q_UNUSED(sources);
+}
+
+void Player::setSlideshowInterval(qint64 time)
+{
+    Q_UNUSED(time);
+}

@@ -22,6 +22,7 @@
 #include <Plasma/Applet>
 
 #include <mediacenter.h>
+#include <mediasource.h>
 
 namespace Phonon {
     class MediaObject;
@@ -66,6 +67,27 @@ public:
      */
     virtual QString currentMedia();
 
+    /**
+     * Reimplement this method in order to store and properly set the queue
+     * for reproduction.
+     *
+     * @note: The default implementation does nothing.
+     */
+    virtual void setQueue(const QList<MediaSource> &sources);
+
+    /**
+     * Reimplement this method to let the host containment update the queue as needed.
+     *
+     * @note: The default implementation does nothing.
+     */
+    virtual void enqueue(const QList<MediaSource> &sources);
+
+    /**
+     * This method is used to set the slideshow interval when
+     * showing queues of pictures.
+     */
+    virtual void setSlideshowInterval(qint64 time);
+
 signals:
     /**
      * Take care of emitting this signal whenever the reproduced
@@ -77,6 +99,26 @@ signals:
      * returned by mediaObject().
      */
     void currentTypeChanged(MediaCenter::MediaType newType);
+
+public slots:
+    /**
+     * You must reimplement this method in order to set the proper volume.
+     */
+    virtual void changeVolume(qreal volume) = 0;
+
+    virtual void skipForward() = 0;
+    virtual void skipBackward() = 0;
+
+    virtual void stop() = 0;
+    virtual void play() = 0;
+    virtual void pause() = 0;
+
+    /**
+     * You must reimplement this method in order to let the user
+     * seek the media. This method should do anything if the
+     * current media is a picture.
+     */
+    virtual void seek(qint64 time) = 0;
 };
 }
 
