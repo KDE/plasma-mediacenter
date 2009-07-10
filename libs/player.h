@@ -19,6 +19,8 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include "mediacenter_export.h"
+
 #include <Plasma/Applet>
 
 #include <mediacenter.h>
@@ -39,7 +41,7 @@ namespace MediaCenter {
  * has to be handled by this class.
  */
 
-class Player : public Plasma::Applet
+class MEDIACENTER_EXPORT Player : public Plasma::Applet
 {
     Q_OBJECT
 public:

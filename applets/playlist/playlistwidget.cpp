@@ -278,5 +278,3 @@ void PlaylistWidget::reloadCover(const QModelIndex &index)
     KConfigGroup op = coverService->operationDescription("reload");
     coverService->startOperationCall(op);
 }
-
-#include "playlistwidget.moc"

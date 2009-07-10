@@ -19,39 +19,36 @@
 #include "playlist.h"
 #include "playlistwidget.h"
 
+#include <QGraphicsLinearLayout>
+
 #include <QWidget>
 #include <KConfigDialog>
 
-Playlist::Playlist(QObject *parent, const QVariantList &args)
-    : Plasma::PopupApplet(parent, args), m_playlistWidget(0)
+PlaylistApplet::PlaylistApplet(QObject *parent, const QVariantList &args)
+    : MediaCenter::Playlist(parent, args), m_playlistWidget(0)
 {
     setPopupIcon("view-media-playlist");
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
     setAcceptDrops(true);
     setHasConfigurationInterface(true);
 
+    setContentsMargins(0, 0, 0, 0);
+
     // we make sure the widget is constructed
-    (void)graphicsWidget();
+    m_playlistWidget = new PlaylistWidget;
+    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout;
+    layout->addItem(m_playlistWidget);
 }
 
-Playlist::~Playlist()
+PlaylistApplet::~Playlist()
 {}
 
-QGraphicsWidget* Playlist::graphicsWidget()
-{
-    if (!m_playlistWidget) {
-        m_playlistWidget = new PlaylistWidget(this);
-    }
-
-    return m_playlistWidget;
-}
-
-void Playlist::init()
+void PlaylistApplet::init()
 {
     loadConfiguration();
 }
 
-void Playlist::createConfigurationInterface(KConfigDialog *parent)
+void PlaylistApplet::createConfigurationInterface(KConfigDialog *parent)
 {
     QWidget *config = new QWidget(parent);
     configUi.setupUi(config);
@@ -63,7 +60,7 @@ void Playlist::createConfigurationInterface(KConfigDialog *parent)
     connect (parent, SIGNAL(accepted()), this, SLOT(configAccepted()));
 }
 
-void Playlist::configAccepted()
+void PlaylistApplet::configAccepted()
 {
     KConfigGroup cf = config();
 
@@ -72,7 +69,7 @@ void Playlist::configAccepted()
     m_playlistWidget->setMultiplePlaylistsEnabled(m_multiplePlaylists);
 }
 
-void Playlist::loadConfiguration()
+void PlaylistApplet::loadConfiguration()
 {
     KConfigGroup cf = config();
 
@@ -80,6 +77,4 @@ void Playlist::loadConfiguration()
     m_playlistWidget->setMultiplePlaylistsEnabled(m_multiplePlaylists);
 }
 
-K_EXPORT_PLASMA_APPLET(playlist, Playlist)
-
-#include "playlist.moc"
+K_EXPORT_PLASMA_APPLET(playlist, PlaylistApplet)

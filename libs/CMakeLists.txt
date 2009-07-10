@@ -3,6 +3,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}
 set (mediacenterlibs_SRCS
 browser.cpp
 playbackcontrol.cpp
+playlist.cpp
 )
 
 kde4_add_library(mediacenterlibs SHARED ${mediacenterlibs_SRCS})
@@ -15,6 +16,7 @@ set (mediacenterlibs_HDRS
     mediacenter.h
     browser.h
     playbackcontrol.h
+    playlist.h
 )
 
 install (FILES ${mediacenterlibs_HDRS} DESTINATION ${INCLUDE_INSTALL_DIR}/mediacenter COMPONENT Devel)

@@ -15,37 +15,14 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
- ***************************************************************************/ 
-#ifndef PLAYLIST_H
-#define PLAYLIST_H
+ ***************************************************************************/
+#include "playlist.h"
 
-#include <Plasma/PopupApplet>
+using namespace MediaCenter;
 
-#include "ui_config.h"
-
-class PlaylistWidget;
-
-class Playlist : public Plasma::PopupApplet
+Playlist::Playlist(QObject *parent, const QVariantList &args) : Plasma::Applet(parent, args)
 {
-    Q_OBJECT
-public:
-    Playlist(QObject *parent, const QVariantList &args);
-    ~Playlist();
+}
 
-    QGraphicsWidget *graphicsWidget();
-    void init();
-    void createConfigurationInterface(KConfigDialog *parent);
-
-protected slots:
-    void loadConfiguration();
-    void configAccepted();
-
-private:
-    PlaylistWidget *m_playlistWidget;
-    Ui::Config configUi;
-
-    bool m_multiplePlaylists;
-
-};
-
-#endif
+Playlist::~Playlist()
+{}

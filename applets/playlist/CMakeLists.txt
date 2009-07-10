@@ -2,7 +2,7 @@
 include_directories(${TAGLIB_INCLUDES} ../../)
 
 set(playlist_SRCS
-playlist.cpp
+playlistapplet.cpp
 playlistwidget.cpp
 playlistdelegate.cpp
 ../../utils/utils.cpp
@@ -12,7 +12,7 @@ playlistdelegate.cpp
 kde4_add_ui_files(playlist_SRCS config.ui)
 kde4_add_plugin(plasma_applet_playlist ${playlist_SRCS})
 target_link_libraries(plasma_applet_playlist 
-                      ${KDE4_PLASMA_LIBS} ${KDE4_KDEUI_LIBS} ${TAGLIB_LIBRARIES})
+                      ${KDE4_PLASMA_LIBS} ${KDE4_KDEUI_LIBS} ${TAGLIB_LIBRARIES} mediacenterlibs)
  
 install(TARGETS plasma_applet_playlist
         DESTINATION ${PLUGIN_INSTALL_DIR})
