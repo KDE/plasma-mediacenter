@@ -1,5 +1,5 @@
 
-include_directories(${TAGLIB_INCLUDES} ../../)
+include_directories(${TAGLIB_INCLUDES} ../../libs)
 
 set(playlist_SRCS
 playlistapplet.cpp

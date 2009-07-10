@@ -16,7 +16,7 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#include "playlist.h"
+#include "playlistapplet.h"
 #include "playlistwidget.h"
 
 #include <QGraphicsLinearLayout>
@@ -27,7 +27,6 @@
 PlaylistApplet::PlaylistApplet(QObject *parent, const QVariantList &args)
     : MediaCenter::Playlist(parent, args), m_playlistWidget(0)
 {
-    setPopupIcon("view-media-playlist");
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
     setAcceptDrops(true);
     setHasConfigurationInterface(true);
@@ -38,9 +37,10 @@ PlaylistApplet::PlaylistApplet(QObject *parent, const QVariantList &args)
     m_playlistWidget = new PlaylistWidget;
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout;
     layout->addItem(m_playlistWidget);
+    setLayout(layout);
 }
 
-PlaylistApplet::~Playlist()
+PlaylistApplet::~PlaylistApplet()
 {}
 
 void PlaylistApplet::init()

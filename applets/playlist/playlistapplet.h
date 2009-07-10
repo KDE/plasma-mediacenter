@@ -16,8 +16,8 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/ 
-#ifndef PLAYLIST_H
-#define PLAYLIST_H
+#ifndef PLAYLISTAPPLET_H
+#define PLAYLISTAPPLET_H
 
 #include <playlist.h>
 #include <mediacenter.h>
@@ -25,6 +25,7 @@
 #include "ui_config.h"
 
 class PlaylistWidget;
+class KConfigDialog;
 
 class PlaylistApplet : public MediaCenter::Playlist
 {
