@@ -26,8 +26,10 @@
 MediaLayout::MediaLayout(Plasma::Containment *parent) : QObject(parent),
 m_containment(parent),
 m_browser(0),
-m_control(0)
+m_control(0),
+m_playlist(0)
 {
+
     m_containment->installEventFilter(this);
 }
 
@@ -62,6 +64,8 @@ void MediaLayout::invalidate()
             layoutBrowser();
         } else if (applet == m_control) {
             layoutControl();
+        } else if (applet == m_playlist) {
+            layoutPlaylist();
         }
         m_needLayouting.removeAll(applet);
     }
@@ -74,6 +78,9 @@ void MediaLayout::doCompleteLayout()
     }
     if (m_control) {
         layoutControl();
+    }
+    if (m_playlist) {
+        layoutPlaylist();
     }
 }
 
@@ -88,6 +95,11 @@ void MediaLayout::layoutControl()
 {
     m_control->setPos(controllerPreferredShowingRect().topLeft());
     m_control->resize(controllerPreferredShowingRect().size());
+}
+
+void MediaLayout::layoutPlaylist() {
+    m_playlist->setPos(playlistPreferredShowingRect().topLeft());
+    m_playlist->resize(playlistPreferredShowingRect().size());
 }
 
 bool MediaLayout::eventFilter(QObject *o, QEvent *e)
@@ -113,6 +125,12 @@ QRectF MediaLayout::controllerPreferredShowingRect() const
     return QRectF(QPointF((m_containment->size().width() - width) / 2, 0), QSizeF(width, height));
 }
 
+QRectF MediaLayout::playlistPreferredShowingRect() const
+{
+    return QRectF(QPointF(m_containment->size().width(), (m_containment->size().height() - m_playlist->size().height()) / 2),
+                  QSizeF(m_containment->size().width() / 3.0, m_containment->size().height() * 2 / 3.0));
+}
+
 void MediaLayout::animateHidingApplet(Plasma::Applet *applet)
 {
     if (applet == m_browser) {
@@ -121,6 +139,9 @@ void MediaLayout::animateHidingApplet(Plasma::Applet *applet)
     } else if (applet == m_control) {
         Plasma::Animator::self()->moveItem(applet, Plasma::Animator::SlideOutMovement, QPoint(controllerPreferredShowingRect().x(),
                                                                                               m_control->rect().y() - m_control->size().height()));
+    } else if (applet == m_playlist) {
+        Plasma::Animator::self()->moveItem(applet, Plasma::Animator::SlideOutMovement, QPoint(playlistPreferredShowingRect().x() + m_playlist->size().width(),
+                                                                                              m_playlist->rect().x()));
     }
 
 }
@@ -129,8 +150,12 @@ void MediaLayout::animateShowingApplet(Plasma::Applet *applet)
 {
     if (applet == m_browser) {
         Plasma::Animator::self()->moveItem(applet, Plasma::Animator::SlideInMovement, browserPreferredShowingRect().topLeft().toPoint());
+
     } else if (applet == m_control) {
         Plasma::Animator::self()->moveItem(applet, Plasma::Animator::SlideInMovement, controllerPreferredShowingRect().topLeft().toPoint());
+
+    } else if (applet == m_playlist) {
+        Plasma::Animator::self()->moveItem(applet, Plasma::Animator::SlideInMovement, playlistPreferredShowingRect().topLeft().toPoint());
     }
 
 }

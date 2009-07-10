@@ -27,6 +27,7 @@ class QPointF;
 namespace MediaCenter {
     class Browser;
     class PlaybackControl;
+    class Playlist;
 }
 
 class MediaLayout;
@@ -50,6 +51,7 @@ private slots:
 private:
     MediaCenter::Browser *m_browser;
     MediaCenter::PlaybackControl *m_control;
+    MediaCenter::Playlist *m_playlist;
 
     MediaLayout *m_layout;
 

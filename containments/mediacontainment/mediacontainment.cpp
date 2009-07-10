@@ -21,6 +21,7 @@
 #include "medialayout.h"
 #include <browser.h>
 #include <playbackcontrol.h>
+#include <playlist.h>
 
 // Qt
 #include <QAction>
@@ -39,6 +40,7 @@ K_EXPORT_PLASMA_APPLET(mediacontainment, MediaContainment)
 MediaContainment::MediaContainment(QObject *parent, const QVariantList &args) : Plasma::Containment(parent, args),
 m_browser(0),
 m_control(0),
+m_playlist(0),
 m_layout(new MediaLayout(this))
 {
     setContainmentType(Plasma::Containment::CustomContainment);
@@ -100,6 +102,21 @@ void MediaContainment::slotAppletAdded(Plasma::Applet *applet, const QPointF &po
         } else {
             m_control = control;
             m_layout->setPlaybackControl(m_control);
+            m_layout->invalidate();
+        }
+        return;
+    }
+
+    MediaCenter::Playlist *playlist = qobject_cast<MediaCenter::Playlist*>(applet);
+    if (playlist) {
+        if (m_playlist) {
+            KNotification::event(KNotification::Error, i18n("A playlist applet for the Media Center is already loaded. "
+                                                            "Remove that one before loading a new one please."));
+            kDebug() << "destroying applet";
+            applet->deleteLater();
+        } else {
+            m_playlist = playlist;
+            m_layout->setPlaybackControl(m_playlist);
             m_layout->invalidate();
         }
         return;

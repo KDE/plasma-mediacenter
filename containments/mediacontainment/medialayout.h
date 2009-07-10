@@ -57,6 +57,7 @@ public:
 
     QRectF browserPreferredShowingRect() const;
     QRectF controllerPreferredShowingRect() const;
+    QRectF playlistPreferredShowingRect() const;
 
 protected slots:
     void animateShowingApplet(Plasma::Applet *);
@@ -66,6 +67,7 @@ private:
     Plasma::Containment *m_containment;
     Plasma::Applet *m_browser;
     Plasma::Applet *m_control;
+    Plasma::Applet *m_playlist;
 
     QList<Plasma::Applet*> m_needLayouting;
 
@@ -74,6 +76,7 @@ private:
 
     void layoutBrowser();
     void layoutControl();
+    void layoutPlaylist();
 };
 
 #endif // MEDIALAYOUT_H
