@@ -116,7 +116,7 @@ void MediaContainment::slotAppletAdded(Plasma::Applet *applet, const QPointF &po
             applet->deleteLater();
         } else {
             m_playlist = playlist;
-            m_layout->setPlaybackControl(m_playlist);
+            m_layout->setPlaylist(m_playlist);
             m_layout->invalidate();
         }
         return;

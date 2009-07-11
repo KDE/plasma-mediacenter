@@ -96,8 +96,16 @@ void MediaHandler::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
 {
     Q_UNUSED(widget);
 
+//    painter->fillRect(option->rect, Qt::green);
+
     painter->setOpacity(m_showFactor);
-    m_handlerSvg->paintFrame(painter, option->rect.topLeft());
+    if (m_handlerPosition == Left) {
+        m_handlerSvg->paintFrame(painter, QPointF(option->rect.right() - m_handlerSvg->frameSize().width(), option->rect.top()));
+    } else if (m_handlerPosition == Top) {
+        m_handlerSvg->paintFrame(painter, QPointF(option->rect.left(), option->rect.bottom() - m_handlerSvg->frameSize().height()));
+    } else {
+        m_handlerSvg->paintFrame(painter, option->rect.topLeft());
+    }
 }
 
 bool MediaHandler::eventFilter(QObject *o, QEvent *e)
@@ -115,7 +123,7 @@ bool MediaHandler::eventFilter(QObject *o, QEvent *e)
             setPos((m_applet->rect().width() - size().width()) / 2, m_applet->rect().top());
             break;
         case Left :
-            setPos(m_applet->rect().left(), (m_applet->rect().height() - size().height()) / 2);
+            setPos(m_applet->rect().left() - size().width(), (m_applet->rect().height() - size().height()) / 2);
             break;
         case Bottom :
             setPos((m_applet->rect().width() - size().width()) / 2, m_applet->rect().bottom());

@@ -45,6 +45,7 @@ public:
 
     void setBrowser(Plasma::Applet *browser);
     void setPlaybackControl(Plasma::Applet *control);
+    void setPlaylist(Plasma::Applet *playlist);
 
     /**
      * Calling this function makes the layout relayouting

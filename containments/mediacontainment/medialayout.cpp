@@ -57,6 +57,16 @@ void MediaLayout::setPlaybackControl(Plasma::Applet *control)
     connect (handler, SIGNAL(appletShowRequest(Plasma::Applet*)), this, SLOT(animateShowingApplet(Plasma::Applet*)));
 }
 
+void MediaLayout::setPlaylist(Plasma::Applet *playlist)
+{
+    m_playlist = playlist;
+    m_needLayouting << m_playlist;
+
+    MediaHandler *handler = new MediaHandler(m_playlist, MediaHandler::Left);
+    connect (handler, SIGNAL(appletHideRequest(Plasma::Applet*)), this, SLOT(animateHidingApplet(Plasma::Applet*)));
+    connect (handler, SIGNAL(appletShowRequest(Plasma::Applet*)), this, SLOT(animateShowingApplet(Plasma::Applet*)));
+}
+
 void MediaLayout::invalidate()
 {
     foreach (Plasma::Applet *applet, m_needLayouting) {
@@ -127,8 +137,8 @@ QRectF MediaLayout::controllerPreferredShowingRect() const
 
 QRectF MediaLayout::playlistPreferredShowingRect() const
 {
-    return QRectF(QPointF(m_containment->size().width(), (m_containment->size().height() - m_playlist->size().height()) / 2),
-                  QSizeF(m_containment->size().width() / 3.0, m_containment->size().height() * 2 / 3.0));
+    return QRectF(QPointF(m_containment->size().width() - (m_containment->size().width() / 4.0) , (m_containment->size().height() - m_playlist->size().height()) / 2),
+                  QSizeF(m_containment->size().width() / 4.0, m_containment->size().height() * 2 / 3.0));
 }
 
 void MediaLayout::animateHidingApplet(Plasma::Applet *applet)
@@ -141,7 +151,7 @@ void MediaLayout::animateHidingApplet(Plasma::Applet *applet)
                                                                                               m_control->rect().y() - m_control->size().height()));
     } else if (applet == m_playlist) {
         Plasma::Animator::self()->moveItem(applet, Plasma::Animator::SlideOutMovement, QPoint(playlistPreferredShowingRect().x() + m_playlist->size().width(),
-                                                                                              m_playlist->rect().x()));
+                                                                                              playlistPreferredShowingRect().y()));
     }
 
 }
