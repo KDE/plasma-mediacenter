@@ -33,6 +33,14 @@ namespace Phonon {
 namespace MediaCenter {
 
 /**
+ * @typedef Media defines a QPair of MediaCenter::MediaType and QString.
+ * The first argument is the type of the media while the second is a QString
+ * defining the media. It might be both an udi string pointing to the device
+ * hosting the media or the path to a media file.
+ */
+typedef QPair<MediaCenter::MediaType, QString> Media;
+
+/**
  * @class Player player.h
  * @brief Is the main class for handling the reproduction of all MediaTypes.
  *
@@ -68,21 +76,6 @@ public:
      * the device name containing the media. Use Solid in order to retrieve it.
      */
     virtual QString currentMedia();
-
-    /**
-     * Reimplement this method in order to store and properly set the queue
-     * for reproduction.
-     *
-     * @note: The default implementation does nothing.
-     */
-    virtual void setQueue(const QList<MediaSource> &sources);
-
-    /**
-     * Reimplement this method to let the host containment update the queue as needed.
-     *
-     * @note: The default implementation does nothing.
-     */
-    virtual void enqueue(const QList<MediaSource> &sources);
 
     /**
      * This method is used to set the slideshow interval when
@@ -121,6 +114,27 @@ public slots:
      * current media is a picture.
      */
     virtual void seek(qint64 time) = 0;
+
+        /**
+     * Reimplement this method in order to store and properly set the queue
+     * for reproduction.
+     *
+     * @note: The default implementation does nothing.
+     */
+    virtual void setQueue(const QList<Media> &sources);
+
+    /**
+     * Reimplement this method to let the host containment update the queue as needed.
+     *
+     * @note: The default implementation does nothing.
+     */
+    virtual void enqueue(const QList<Media> &sources);
+
+    /**
+     * This slot is called when one or more media are going to be
+     * enqueued at a specified index.
+     */
+    virtual void enqueue(int index, const QList<Media> &sources);
 };
 }
 
