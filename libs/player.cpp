@@ -18,6 +18,8 @@
  ***************************************************************************/
 #include "player.h"
 
+using namespace MediaCenter;
+
 Player::Player(QObject *parent, const QVariantList &args) : Plasma::Applet(parent, args)
 {
 }
@@ -26,7 +28,9 @@ Player::~Player()
 {}
 
 QString Player::currentMedia()
-{}
+{
+    return QString();
+}
 
 void Player::setQueue(const QList<Media> &sources)
 {

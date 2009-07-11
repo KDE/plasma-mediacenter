@@ -18,10 +18,10 @@
  ***************************************************************************/
 
 #include "mediaplayer.h"
-#include "plasmamediaplayeradaptor.h"
-#include "dbus/playerdbushandler.h"
-#include "dbus/rootdbushandler.h"
-#include "dbus/tracklistdbushandler.h"
+//#include "plasmamediaplayeradaptor.h"
+//#include "dbus/playerdbushandler.h"
+//#include "dbus/rootdbushandler.h"
+//#include "dbus/tracklistdbushandler.h"
 
 #include <QGraphicsProxyWidget>
 #include <QGraphicsLinearLayout>
@@ -40,7 +40,7 @@
 #include <plasma/widgets/videowidget.h>
 
 MediaPlayer::MediaPlayer(QObject *parent, const QVariantList &args)
-    : Plasma::Applet(parent, args),
+    : MediaCenter::Player(parent, args),
       m_ticking(false),
       m_raised(false)
 {
@@ -53,11 +53,11 @@ MediaPlayer::MediaPlayer(QObject *parent, const QVariantList &args)
         m_currentUrl = args.value(0).toString();
     }
 
-    QDBusConnection dbus = QDBusConnection::sessionBus();
-    dbus.registerService("org.mpris.PlasmaMediaPlayer");
-    new PlasmaMediaPlayerAdaptor(this);
-
-    dbus.registerObject("/PlasmaMediaPlayer", this);
+//    QDBusConnection dbus = QDBusConnection::sessionBus();
+//    dbus.registerService("org.mpris.PlasmaMediaPlayer");
+//    new PlasmaMediaPlayerAdaptor(this);
+//
+//    dbus.registerObject("/PlasmaMediaPlayer", this);
 }
 
 
@@ -100,9 +100,9 @@ void MediaPlayer::init()
    m_hideTimer->setSingleShot(true);
    connect(m_hideTimer, SIGNAL(timeout()), this, SLOT(hideControls()));
 
-   new PlayerDBusHandler(this, media, m_video->audioOutput());
-   new TrackListDBusHandler(this, media);
-   new RootDBusHandler(this);
+//   new PlayerDBusHandler(this, media, m_video->audioOutput());
+//   new TrackListDBusHandler(this, media);
+//   new RootDBusHandler(this);
 }
 
 
@@ -126,7 +126,7 @@ void MediaPlayer::ToggleControlsVisibility()
     SetControlsVisible(!m_video->controlsVisible());
 }
 
-void MediaPlayer::PlayPause()
+void MediaPlayer::playPause()
 {
     Phonon::MediaObject *media = m_video->mediaObject();
 
@@ -160,16 +160,16 @@ void MediaPlayer::Lower()
     m_raised = true;
 }
 
-void MediaPlayer::SetPosition(int progress)
+void MediaPlayer::seek(int progress)
 {
     if (!m_ticking) {
         m_video->mediaObject()->seek(progress);
     }
 }
 
-void MediaPlayer::SetVolume(int value)
+void MediaPlayer::setVolume(qreal value)
 {
-     m_video->audioOutput()->setVolume(qreal(value)/100.0);
+     m_video->audioOutput()->setVolume(value);
 }
 
 void MediaPlayer::dropEvent(QGraphicsSceneDragDropEvent *event)
@@ -220,7 +220,7 @@ void MediaPlayer::keyPressEvent(QKeyEvent *event)
         media->seek(media->currentTime() + media->totalTime()/step);
         break;
     case Qt::Key_Space:
-        PlayPause();
+        playPause();
         break;
     case Qt::Key_Up:
         audio->setVolume(qMin(qreal(1.0), audio->volume() + 0.1));
@@ -254,6 +254,23 @@ void MediaPlayer::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     event->accept();
     ToggleControlsVisibility();
 }
+
+void MediaPlayer::stop()
+{}
+
+Phonon::MediaObject* MediaPlayer::mediaObject()
+{
+    if (m_video) {
+        return m_video->mediaObject();
+    }
+    return 0;
+}
+
+void MediaPlayer::skipBackward()
+{}
+
+void MediaPlayer::skipForward()
+{}
 
 K_EXPORT_PLASMA_APPLET(mediaplayer, MediaPlayer)
 

@@ -24,7 +24,6 @@
 #include <Plasma/Applet>
 
 #include <mediacenter.h>
-#include <mediasource.h>
 
 namespace Phonon {
     class MediaObject;
@@ -99,21 +98,20 @@ public slots:
     /**
      * You must reimplement this method in order to set the proper volume.
      */
-    virtual void changeVolume(qreal volume) = 0;
+    virtual void setVolume(qreal volume) = 0;
 
     virtual void skipForward() = 0;
     virtual void skipBackward() = 0;
 
     virtual void stop() = 0;
-    virtual void play() = 0;
-    virtual void pause() = 0;
+    virtual void playPause() = 0;
 
     /**
      * You must reimplement this method in order to let the user
      * seek the media. This method should do anything if the
      * current media is a picture.
      */
-    virtual void seek(qint64 time) = 0;
+    virtual void seek(int time) = 0;
 
         /**
      * Reimplement this method in order to store and properly set the queue

@@ -20,7 +20,7 @@
 #ifndef MEDIAPLAYER_HEADER
 #define MEDIAPLAYER_HEADER
 
-#include <Plasma/Applet>
+#include <player.h>
 
 #include <phonon/mediaobject.h>
 
@@ -41,7 +41,7 @@ namespace Plasma
 
 
 
-class MediaPlayer : public Plasma::Applet
+class MediaPlayer : public MediaCenter::Player
 {
     Q_OBJECT
 
@@ -56,6 +56,8 @@ public:
     void SetControlsVisible(bool visible);
     bool ControlsVisible() const;
 
+    Phonon::MediaObject* mediaObject();
+
 protected:
     void dropEvent(QGraphicsSceneDragDropEvent *event);
     void keyPressEvent(QKeyEvent *event);
@@ -63,15 +65,19 @@ protected:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
 public Q_SLOTS:
-    void PlayPause();
+    void playPause();
     void ToggleControlsVisibility();
     void RaiseLower();
     void Raise();
     void Lower();
-    void SetPosition(int progress);
-    void SetVolume(int value);
+    void seek(int progress);
+    void setVolume(qreal value);
     void ShowOpenFileDialog();
     void OpenUrl(const QString &path);
+
+    void stop();
+    void skipForward();
+    void skipBackward();
 
 private Q_SLOTS:
     void hideControls();
