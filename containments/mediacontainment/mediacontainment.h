@@ -28,6 +28,7 @@ namespace MediaCenter {
     class Browser;
     class PlaybackControl;
     class Playlist;
+    class Player;
 }
 
 class MediaLayout;
@@ -52,6 +53,7 @@ private:
     MediaCenter::Browser *m_browser;
     MediaCenter::PlaybackControl *m_control;
     MediaCenter::Playlist *m_playlist;
+    MediaCenter::Player *m_player;
 
     MediaLayout *m_layout;
 

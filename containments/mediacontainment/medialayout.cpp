@@ -27,7 +27,8 @@ MediaLayout::MediaLayout(Plasma::Containment *parent) : QObject(parent),
 m_containment(parent),
 m_browser(0),
 m_control(0),
-m_playlist(0)
+m_playlist(0),
+m_player(0)
 {
 
     m_containment->installEventFilter(this);
@@ -67,6 +68,13 @@ void MediaLayout::setPlaylist(Plasma::Applet *playlist)
     connect (handler, SIGNAL(appletShowRequest(Plasma::Applet*)), this, SLOT(animateShowingApplet(Plasma::Applet*)));
 }
 
+void MediaLayout::setPlayer(Plasma::Applet *player)
+{
+    m_player = player;
+    m_player->setZValue(-50);
+    m_needLayouting << m_player;
+}
+
 void MediaLayout::invalidate()
 {
     foreach (Plasma::Applet *applet, m_needLayouting) {
@@ -76,6 +84,8 @@ void MediaLayout::invalidate()
             layoutControl();
         } else if (applet == m_playlist) {
             layoutPlaylist();
+        } else if (applet == m_player) {
+            layoutPlayer();
         }
         m_needLayouting.removeAll(applet);
     }
@@ -92,6 +102,9 @@ void MediaLayout::doCompleteLayout()
     if (m_playlist) {
         layoutPlaylist();
     }
+    if (m_player) {
+        layoutPlayer();
+    }
 }
 
 void MediaLayout::layoutBrowser()
@@ -107,9 +120,16 @@ void MediaLayout::layoutControl()
     m_control->resize(controllerPreferredShowingRect().size());
 }
 
-void MediaLayout::layoutPlaylist() {
+void MediaLayout::layoutPlaylist()
+{
     m_playlist->setPos(playlistPreferredShowingRect().topLeft());
     m_playlist->resize(playlistPreferredShowingRect().size());
+}
+
+void MediaLayout::layoutPlayer()
+{
+    m_player->setPos(0, 0);
+    m_player->resize(m_containment->size());
 }
 
 bool MediaLayout::eventFilter(QObject *o, QEvent *e)

@@ -46,6 +46,7 @@ public:
     void setBrowser(Plasma::Applet *browser);
     void setPlaybackControl(Plasma::Applet *control);
     void setPlaylist(Plasma::Applet *playlist);
+    void setPlayer(Plasma::Applet *player);
 
     /**
      * Calling this function makes the layout relayouting
@@ -69,6 +70,7 @@ private:
     Plasma::Applet *m_browser;
     Plasma::Applet *m_control;
     Plasma::Applet *m_playlist;
+    Plasma::Applet *m_player;
 
     QList<Plasma::Applet*> m_needLayouting;
 
@@ -78,6 +80,7 @@ private:
     void layoutBrowser();
     void layoutControl();
     void layoutPlaylist();
+    void layoutPlayer();
 };
 
 #endif // MEDIALAYOUT_H

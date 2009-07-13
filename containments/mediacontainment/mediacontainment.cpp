@@ -19,9 +19,11 @@
 #include "mediacontainment.h"
 #include "medianotificationwidget.h"
 #include "medialayout.h"
+
 #include <browser.h>
 #include <playbackcontrol.h>
 #include <playlist.h>
+#include <player.h>
 
 // Qt
 #include <QAction>
@@ -41,6 +43,7 @@ MediaContainment::MediaContainment(QObject *parent, const QVariantList &args) : 
 m_browser(0),
 m_control(0),
 m_playlist(0),
+m_player(0),
 m_layout(new MediaLayout(this))
 {
     setContainmentType(Plasma::Containment::CustomContainment);
@@ -122,11 +125,32 @@ void MediaContainment::slotAppletAdded(Plasma::Applet *applet, const QPointF &po
         return;
     }
 
+    MediaCenter::Player *player = qobject_cast<MediaCenter::Player*>(applet);
+    if (player) {
+        if (m_player) {
+            KNotification::event(KNotification::Error, i18n("A media player applet for the Media Center is already loaded. "
+                                                            "Remove that one before loading a new one please."));
+            kDebug() << "destroying applet";
+            applet->deleteLater();
+        } else {
+            m_player = player;
+            m_layout->setPlayer(m_player);
+            m_layout->invalidate();
+        }
+        return;
+    }
+
 }
 
 void MediaContainment::slotAppletRemoved(Plasma::Applet *applet)
 {
     if (applet == m_browser) {
         m_browser = 0;
+    } else if (applet == m_player) {
+        m_player = 0;
+    } else if (applet == m_playlist) {
+        m_playlist = 0;
+    } else if (applet == m_control) {
+        m_control = 0;
     }
 }

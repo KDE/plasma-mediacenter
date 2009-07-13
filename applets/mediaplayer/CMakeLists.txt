@@ -1,4 +1,4 @@
-project(plasma-mediaplayer)
+project(plasma-mcplayer)
 
 # Find the required Libaries
 find_package(KDE4 REQUIRED)
@@ -31,15 +31,15 @@ QT4_ADD_DBUS_ADAPTOR(mediaplayer_SRCS org.kde.PlasmaMediaPlayer.xml
                      mediaplayer.h MediaPlayer)
 
 # Now make sure all files get to the right place
-kde4_add_plugin(plasma_applet_mediaplayer ${mediaplayer_SRCS})
-target_link_libraries(plasma_applet_mediaplayer 
+kde4_add_plugin(plasma_applet_mcplayer ${mediaplayer_SRCS})
+target_link_libraries(plasma_applet_mcplayer 
                       ${KDE4_PHONON_LIBS}
                       ${KDE4_PLASMA_LIBS} ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} ${QT_QTDBUS_LIBRARY} mediacenterlibs)
 
 
 
-install(TARGETS plasma_applet_mediaplayer
+install(TARGETS plasma_applet_mcplayer
         DESTINATION ${PLUGIN_INSTALL_DIR})
 
-install(FILES plasma-applet-mediaplayer.desktop
+install(FILES plasma-applet-mcplayer.desktop
         DESTINATION ${SERVICES_INSTALL_DIR})

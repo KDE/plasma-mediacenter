@@ -100,6 +100,8 @@ void MediaPlayer::init()
    m_hideTimer->setSingleShot(true);
    connect(m_hideTimer, SIGNAL(timeout()), this, SLOT(hideControls()));
 
+   SetControlsVisible(false);
+
 //   new PlayerDBusHandler(this, media, m_video->audioOutput());
 //   new TrackListDBusHandler(this, media);
 //   new RootDBusHandler(this);
@@ -272,6 +274,6 @@ void MediaPlayer::skipBackward()
 void MediaPlayer::skipForward()
 {}
 
-K_EXPORT_PLASMA_APPLET(mediaplayer, MediaPlayer)
+K_EXPORT_PLASMA_APPLET(mcplayer, MediaPlayer)
 
 #include "mediaplayer.moc"
