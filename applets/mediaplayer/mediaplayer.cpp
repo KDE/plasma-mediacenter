@@ -94,7 +94,7 @@ void MediaPlayer::init()
 
    media->play();
 
-   m_video->setUsedControls(Plasma::VideoWidget::DefaultControls);
+//   m_video->setUsedControls(Plasma::VideoWidget::DefaultControls);
 
    m_hideTimer = new QTimer(this);
    m_hideTimer->setSingleShot(true);

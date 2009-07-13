@@ -23,13 +23,17 @@
 #include <Phonon/MediaObject>
 
 #include <KIcon>
+#include <KDebug>
 
 // Plasma
 #include <Plasma/IconWidget>
+#include <Plasma/Slider>
 
 MediaController::MediaController(QObject *parent, const QVariantList &args)
     : MediaCenter::PlaybackControl(parent, args),
-    m_svg(new Plasma::FrameSvg(this))
+    m_svg(new Plasma::FrameSvg(this)),
+    m_volumeSlider(new Plasma::Slider(this)),
+    m_seekSlider(new Plasma::Slider(this))
 {
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
     setContentsMargins(0, 0, 0, 0);
@@ -39,6 +43,11 @@ MediaController::MediaController(QObject *parent, const QVariantList &args)
     m_svg->setImagePath("widgets/background");
 
     QGraphicsLinearLayout *controlLayout = new QGraphicsLinearLayout(Qt::Horizontal);
+
+    m_seekSlider->setRange(0, 100);
+    m_seekSlider->setOrientation(Qt::Horizontal);
+    connect (m_seekSlider, SIGNAL(sliderMoved(int)), this, SLOT(slotSeekSlider(int)));
+    controlLayout->addItem(m_seekSlider);
 
     Plasma::IconWidget *skipBack = new Plasma::IconWidget(this);
     skipBack->setIcon("media-skip-backward");
@@ -54,11 +63,18 @@ MediaController::MediaController(QObject *parent, const QVariantList &args)
     m_playPause->setIcon("media-playback-start");
     // TODO connect
     controlLayout->addItem(m_playPause);
+    connect (m_playPause, SIGNAL(clicked()), SIGNAL(playPauseRequest()));
 
     Plasma::IconWidget *skipForward = new Plasma::IconWidget(this);
     skipForward->setIcon("media-skip-forward");
     connect (skipForward, SIGNAL(clicked()), this, SIGNAL(mediaSkipForwardRequest()));
     controlLayout->addItem(skipForward);
+
+    m_volumeSlider->setRange(0, 100);
+    m_volumeSlider->setOrientation(Qt::Horizontal);
+    m_volumeSlider->setValue(100);
+    connect (m_volumeSlider, SIGNAL(sliderMoved(int)), this, SLOT(slotVolumeSlider(int)));
+    controlLayout->addItem(m_volumeSlider);
 
     setLayout(controlLayout);
 }
@@ -92,14 +108,6 @@ int MediaController::iconSizeFromCurrentSize() const
 
 void MediaController::init()
 {
-    m_mediaObject = mediaObject();
-
-    if (!m_mediaObject) {
-        return;
-    }
-    if (m_mediaObject->state() == Phonon::PlayingState) {
-        m_playPause->setIcon("media-playback-pause");
-    }
 }
 
 void MediaController::togglePlayPayse(Phonon::State oldState, Phonon::State newState)
@@ -110,6 +118,30 @@ void MediaController::togglePlayPayse(Phonon::State oldState, Phonon::State newS
         m_playPause->setIcon("media-playback-pause");
     } else {
         m_playPause->setIcon("media-playback-start");
+    }
+}
+
+void MediaController::slotVolumeSlider(int value)
+{
+    emit volumeLevelChangeRequest((qreal)100 / value);
+}
+
+void MediaController::slotSeekSlider(int value)
+{
+    emit seekRequest(value);
+}
+
+void MediaController::receivedMediaObject()
+{
+    if (!mediaObject()) {
+        return;
+    }
+
+    m_mediaObject = mediaObject();
+
+    m_seekSlider->setRange(0, m_mediaObject->totalTime());
+    if (m_mediaObject->state() == Phonon::PlayingState) {
+        m_playPause->setIcon("media-playback-pause");
     }
 }
 

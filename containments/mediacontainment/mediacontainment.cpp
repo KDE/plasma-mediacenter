@@ -106,6 +106,10 @@ void MediaContainment::slotAppletAdded(Plasma::Applet *applet, const QPointF &po
             m_control = control;
             m_layout->setPlaybackControl(m_control);
             m_layout->invalidate();
+
+            if (m_player) {
+                initControls();
+            }
         }
         return;
     }
@@ -136,10 +140,21 @@ void MediaContainment::slotAppletAdded(Plasma::Applet *applet, const QPointF &po
             m_player = player;
             m_layout->setPlayer(m_player);
             m_layout->invalidate();
+
+            if (m_control) {
+                initControls();
+            }
         }
         return;
     }
 
+}
+
+void MediaContainment::initControls()
+{
+    connect (m_control, SIGNAL(playPauseRequest()), m_player, SLOT(playPause()));
+    connect (m_control, SIGNAL(seekRequest(int)), m_player, SLOT(seek(int)));
+    m_control->setMediaObject(m_player->mediaObject());
 }
 
 void MediaContainment::slotAppletRemoved(Plasma::Applet *applet)

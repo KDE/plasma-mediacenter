@@ -29,6 +29,7 @@ namespace Phonon {
 
 namespace Plasma {
     class IconWidget;
+    class Slider;
 }
 
 class MediaController : public MediaCenter::PlaybackControl
@@ -46,14 +47,19 @@ public:
 
 protected:
     void resizeEvent(QGraphicsSceneResizeEvent *event);
+    void receivedMediaObject();
 
 private slots:
     void togglePlayPayse(Phonon::State, Phonon::State);
+    void slotVolumeSlider(int value);
+    void slotSeekSlider(int value);
 
 private:
     Plasma::FrameSvg *m_svg;
     Phonon::MediaObject *m_mediaObject;
     Plasma::IconWidget *m_playPause;
+    Plasma::Slider *m_volumeSlider;
+    Plasma::Slider *m_seekSlider;
 
     int iconSizeFromCurrentSize() const;
 

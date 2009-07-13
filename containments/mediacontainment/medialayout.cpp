@@ -52,6 +52,7 @@ void MediaLayout::setPlaybackControl(Plasma::Applet *control)
 {
     m_control = control;
     m_needLayouting << m_control;
+    m_control->setZValue(1000);
 
     MediaHandler *handler = new MediaHandler(m_control, MediaHandler::Bottom);
     connect (handler, SIGNAL(appletHideRequest(Plasma::Applet*)), this, SLOT(animateHidingApplet(Plasma::Applet*)));
@@ -149,7 +150,7 @@ QRectF MediaLayout::browserPreferredShowingRect() const
 
 QRectF MediaLayout::controllerPreferredShowingRect() const
 {
-    const int width = 64 * 4;
+    const int width = 64 * 4 + 256;
     const int height = 64;
 
     return QRectF(QPointF((m_containment->size().width() - width) / 2, 0), QSizeF(width, height));

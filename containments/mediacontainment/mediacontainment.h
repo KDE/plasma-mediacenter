@@ -58,6 +58,7 @@ private:
     MediaLayout *m_layout;
 
     void addMediaApplet(Plasma::Applet *);
+    void initControls();
 };
 
 #endif // MEDIACONTAINMENT_H

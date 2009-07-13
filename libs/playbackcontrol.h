@@ -68,21 +68,16 @@ public:
 signals:
     /**
      * Emit this signal whenever the controller receives
-     * a play request from the user (e.g. the play button is clicked).
+     * a play/pause request from the user (e.g. the play button is clicked).
      */
-    void playRequest();
-
-    /**
-     * Emit this signal whenever pausing the reproduction is requested.
-     */
-    void pauseRequest();
+    void playPauseRequest();
 
     /**
      * This signal has to be emitted whenever there is need for seeking
      * the current reproduction.
      * @note: if the current reproduction media is a picture this signal has no effect.
      */
-    void seekRequest(qint64 time);
+    void seekRequest(int time);
 
     /**
      * Emit this signal whenever the user requests for the reproduction to be stopped-
@@ -129,6 +124,15 @@ public slots:
      */
     virtual void mediaTypeChanged(MediaCenter::MediaType newType);
 
+protected:
+    /**
+     * This method is called whenever a new Phonon::MediaObject is set
+     * via setMediaObject(). Use this method for internal update purposes
+     * when the MediaObject is ready.
+     *
+     * @note: the default implementation does nothing.
+     */
+    virtual void receivedMediaObject();
 
 private:
     class PlaybackControlPrivate;

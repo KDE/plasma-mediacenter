@@ -55,9 +55,13 @@ void PlaybackControl::mediaTypeChanged(MediaCenter::MediaType newType)
 void PlaybackControl::setMediaObject(Phonon::MediaObject *mediaObject)
 {
     d->mediaObject = mediaObject;
+    receivedMediaObject();
 }
 
 Phonon::MediaObject* PlaybackControl::mediaObject()
 {
     return d->mediaObject;
 }
+
+void PlaybackControl::receivedMediaObject()
+{}
