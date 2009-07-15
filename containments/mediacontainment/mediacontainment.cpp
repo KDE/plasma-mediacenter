@@ -154,6 +154,8 @@ void MediaContainment::initControls()
 {
     connect (m_control, SIGNAL(playPauseRequest()), m_player, SLOT(playPause()));
     connect (m_control, SIGNAL(seekRequest(int)), m_player, SLOT(seek(int)));
+    connect (m_control, SIGNAL(volumeLevelChangeRequest(qreal)), m_player, SLOT(setVolume(qreal)));
+    connect (m_control, SIGNAL(stopRequest()), m_player, SLOT(stop()));
     m_control->setMediaObject(m_player->mediaObject());
 }
 

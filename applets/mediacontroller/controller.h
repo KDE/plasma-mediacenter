@@ -50,7 +50,7 @@ protected:
     void receivedMediaObject();
 
 private slots:
-    void togglePlayPayse(Phonon::State, Phonon::State);
+    void togglePlayPause(Phonon::State, Phonon::State);
     void slotVolumeSlider(int value);
     void slotSeekSlider(int value);
 

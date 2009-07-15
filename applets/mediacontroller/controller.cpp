@@ -110,7 +110,7 @@ void MediaController::init()
 {
 }
 
-void MediaController::togglePlayPayse(Phonon::State oldState, Phonon::State newState)
+void MediaController::togglePlayPause(Phonon::State oldState, Phonon::State newState)
 {
     Q_UNUSED(oldState);
 
@@ -123,7 +123,7 @@ void MediaController::togglePlayPayse(Phonon::State oldState, Phonon::State newS
 
 void MediaController::slotVolumeSlider(int value)
 {
-    emit volumeLevelChangeRequest((qreal)100 / value);
+    emit volumeLevelChangeRequest((qreal)value / 100);
 }
 
 void MediaController::slotSeekSlider(int value)

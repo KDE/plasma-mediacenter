@@ -258,7 +258,9 @@ void MediaPlayer::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 }
 
 void MediaPlayer::stop()
-{}
+{
+    m_video->mediaObject()->stop();
+}
 
 Phonon::MediaObject* MediaPlayer::mediaObject()
 {
