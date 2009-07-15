@@ -140,9 +140,22 @@ void MediaController::receivedMediaObject()
     m_mediaObject = mediaObject();
 
     m_seekSlider->setRange(0, m_mediaObject->totalTime());
+    connect (m_mediaObject, SIGNAL(totalTimeChanged(qint64)), this, SLOT(updateTotalTime(qint64)));
+    connect (m_mediaObject, SIGNAL(tick(qint64)), this, SLOT(updateCurrentTick(qint64)));
+
     if (m_mediaObject->state() == Phonon::PlayingState) {
         m_playPause->setIcon("media-playback-pause");
     }
+}
+
+void MediaController::updateTotalTime(qint64 time)
+{
+    m_seekSlider->setRange(0, time);
+}
+
+void MediaController::updateCurrentTick(qint64 time)
+{
+    m_seekSlider->setValue(time);
 }
 
 

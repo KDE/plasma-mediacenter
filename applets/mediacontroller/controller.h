@@ -53,6 +53,8 @@ private slots:
     void togglePlayPause(Phonon::State, Phonon::State);
     void slotVolumeSlider(int value);
     void slotSeekSlider(int value);
+    void updateTotalTime(qint64 time);
+    void updateCurrentTick(qint64 time);
 
 private:
     Plasma::FrameSvg *m_svg;
