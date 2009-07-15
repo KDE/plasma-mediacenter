@@ -31,9 +31,10 @@
 
 #include <KMimeType>
 #include <KFileDialog>
+#include <KConfigDialog>
 
 #include <phonon/audiooutput.h>
-
+#include <phonon/videowidget.h>
 
 #include <plasma/widgets/iconwidget.h>
 #include <plasma/widgets/slider.h>
@@ -42,7 +43,9 @@
 MediaPlayer::MediaPlayer(QObject *parent, const QVariantList &args)
     : MediaCenter::Player(parent, args),
       m_ticking(false),
-      m_raised(false)
+      m_raised(false),
+      m_fullScreen(false),
+      m_fullScreenVideo(0)
 {
     setAcceptDrops(true);
     setHasConfigurationInterface(true);
@@ -66,6 +69,44 @@ MediaPlayer::~MediaPlayer()
     delete m_video;
 }
 
+void MediaPlayer::createConfigurationInterface(KConfigDialog *parent)
+{
+    QWidget *widget = new QWidget(parent);
+    ui.setupUi(widget);
+
+    parent->addPage(widget, i18n("Configure"), "configure");
+
+    ui.fullScreenCheckBox->setChecked(m_fullScreen);
+    connect (parent, SIGNAL(accepted()), this, SLOT(acceptConfiguration()));
+}
+
+void MediaPlayer::acceptConfiguration()
+{
+    m_fullScreen = ui.fullScreenCheckBox->isChecked();
+    applyConfig();
+}
+
+void MediaPlayer::applyConfig()
+{
+    doFullScreen();
+}
+
+void MediaPlayer::doFullScreen()
+{
+    if (m_fullScreen) {
+        m_fullScreenVideo = m_video->nativeWidget();
+        m_video->setWidget(0);
+        m_fullScreenVideo->setParent(0);
+        m_fullScreenVideo->installEventFilter(this);
+        m_fullScreenVideo->enterFullScreen();
+    } else {
+        m_fullScreenVideo->exitFullScreen();
+        m_fullScreenVideo->removeEventFilter(this);
+        m_video->setWidget(m_fullScreenVideo);
+    }
+
+
+}
 
 void MediaPlayer::init()
 {
@@ -244,6 +285,24 @@ void MediaPlayer::keyPressEvent(QKeyEvent *event)
         SetControlsVisible(true);
         m_hideTimer->start(2000);
     }
+}
+
+bool MediaPlayer::eventFilter(QObject *o, QEvent *e)
+{
+    if (o != m_fullScreenVideo) {
+        return false;
+    }
+
+    if (e->type() == QEvent::KeyPress) {
+        QKeyEvent *keyEvent = static_cast<QKeyEvent*>(e);
+        if (keyEvent->key() == Qt::Key_Escape) {
+            m_fullScreen = false;
+            doFullScreen();
+            return true;
+        }
+    }
+
+    return false;
 }
 
 void MediaPlayer::mousePressEvent(QGraphicsSceneMouseEvent *event)

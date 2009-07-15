@@ -22,6 +22,8 @@
 
 #include <player.h>
 
+#include "ui_config.h"
+
 #include <phonon/mediaobject.h>
 
 class QGraphicsSceneDragDropEvent;
@@ -39,6 +41,7 @@ namespace Plasma
     class VideoWidget;
 }
 
+class KConfigDialog;
 
 
 class MediaPlayer : public MediaCenter::Player
@@ -55,8 +58,11 @@ public:
     void constraintsEvent(Plasma::Constraints constraints);
     void SetControlsVisible(bool visible);
     bool ControlsVisible() const;
+    void createConfigurationInterface(KConfigDialog *parent);
 
     Phonon::MediaObject* mediaObject();
+
+    bool eventFilter(QObject *o, QEvent *e);
 
 protected:
     void dropEvent(QGraphicsSceneDragDropEvent *event);
@@ -81,6 +87,11 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void hideControls();
+    void acceptConfiguration();
+
+private:
+    void applyConfig();
+    void doFullScreen();
 
 private:
     QGraphicsLinearLayout *m_layout;
@@ -90,6 +101,11 @@ private:
 
     bool m_ticking;
     bool m_raised;
+
+    bool m_fullScreen;
+    Phonon::VideoWidget *m_fullScreenVideo;
+
+    Ui::Config ui;
 };
 
 #endif

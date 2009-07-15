@@ -31,6 +31,7 @@ QT4_ADD_DBUS_ADAPTOR(mediaplayer_SRCS org.kde.PlasmaMediaPlayer.xml
                      mediaplayer.h MediaPlayer)
 
 # Now make sure all files get to the right place
+kde4_add_ui_files(mediaplayer_SRCS config.ui)
 kde4_add_plugin(plasma_applet_mcplayer ${mediaplayer_SRCS})
 target_link_libraries(plasma_applet_mcplayer 
                       ${KDE4_PHONON_LIBS}
