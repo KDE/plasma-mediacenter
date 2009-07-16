@@ -28,6 +28,8 @@
 #include <QGraphicsSceneDragDropEvent>
 #include <QDBusConnection>
 #include <QTimer>
+#include <QApplication>
+#include <QDesktopWidget>
 
 #include <KMimeType>
 #include <KFileDialog>
@@ -39,6 +41,7 @@
 #include <plasma/widgets/iconwidget.h>
 #include <plasma/widgets/slider.h>
 #include <plasma/widgets/videowidget.h>
+#include <Plasma/Containment>
 
 MediaPlayer::MediaPlayer(QObject *parent, const QVariantList &args)
     : MediaCenter::Player(parent, args),
@@ -95,9 +98,11 @@ void MediaPlayer::doFullScreen()
 {
     if (m_fullScreen) {
         m_fullScreenVideo = m_video->nativeWidget();
-        m_video->setWidget(0);
         m_fullScreenVideo->setParent(0);
+        m_video->setWidget(0);
         m_fullScreenVideo->installEventFilter(this);
+        QDesktopWidget *desktop = qApp->desktop();
+        m_fullScreenVideo->move(desktop->screenGeometry(containment()->screen()).topLeft());
         m_fullScreenVideo->enterFullScreen();
     } else {
         m_fullScreenVideo->exitFullScreen();
