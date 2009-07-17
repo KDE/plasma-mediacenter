@@ -31,6 +31,7 @@
 #include <KFilePlacesModel>
 #include <KUrl>
 #include <KLineEdit>
+#include <KMimeType>
 #include <KDebug>
 
 #include <Nepomuk/ResourceManager>
@@ -116,6 +117,18 @@ void MediaBrowser::switchToFileModel()
 
    if (!m_lister) {
         m_lister = new KDirLister(this);
+        QStringList mimeTypes;
+        KMimeType::List mimeList = KMimeType::allMimeTypes();
+
+        foreach (KMimeType::Ptr mime, mimeList) {
+            if (mime->name().startsWith("image/") ||
+                mime->name().startsWith("video/") ||
+                mime->name().startsWith("audio/")) {
+                mimeTypes << mime->name();
+            }
+        }
+
+        m_lister->setMimeFilter(mimeTypes);
     }
 
     if (m_model->dirLister() != m_lister) {

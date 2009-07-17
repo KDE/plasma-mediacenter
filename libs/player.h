@@ -82,6 +82,16 @@ public:
      */
     virtual void setSlideshowInterval(qint64 time);
 
+//    /**
+//     * You must reimplement this function in order to
+//     * provide a list of supported mime types the player can
+//     * enqueue and play.
+//     *
+//     * @return: mime types in the form of: "image/jpeg, video/mpeg..."
+//     * @note: wildcards "*" are not supported.
+//     */
+//    virtual QStringList mimeTypes() = 0;
+
 signals:
     /**
      * Take care of emitting this signal whenever the reproduced
