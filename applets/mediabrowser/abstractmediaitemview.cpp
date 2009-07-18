@@ -179,7 +179,6 @@ void AbstractMediaItemView::updateHoveredItem(const QPointF &point)
 void AbstractMediaItemView::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
     updateHoveredItem(event->pos());
-    kDebug() << (QObject*)m_hoveredItem;
     if (m_hoveredItem) {
         m_hoverIndicator->m_rating = m_hoveredItem->m_resource->rating();
     }
@@ -189,7 +188,6 @@ void AbstractMediaItemView::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 void AbstractMediaItemView::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
 {
     updateHoveredItem(event->pos());
-    kDebug() << (QObject*)m_hoveredItem;
     if (m_hoveredItem) {
         m_hoverIndicator->m_rating = m_hoveredItem->m_resource->rating();
     }

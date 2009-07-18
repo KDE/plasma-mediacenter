@@ -48,6 +48,7 @@ public:
     QStyleOptionViewItemV4 styleOption() const;
 
     void setModelIndex(const QModelIndex &index);
+    QModelIndex index() const;
 
     void setItemType(ItemType);
 

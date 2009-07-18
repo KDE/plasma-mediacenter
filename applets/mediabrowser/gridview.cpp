@@ -159,3 +159,14 @@ void GridView::highlightAnimation(qreal value)
     m_hoveredItem->resize( (m_hoveredItem->itemSizeHint().width() * 2) * value, (m_hoveredItem->itemSizeHint().height() * 2) * value);
     m_hoverIndicator->resize(m_hoveredItem->size());
 }
+
+QModelIndex GridView::indexFromPos(const QPointF &pos)
+{
+    foreach (ViewItem *item, m_items) {
+        if (item->rect().contains(pos)) {
+            return item->index();
+        }
+    }
+
+    return QModelIndex();
+}

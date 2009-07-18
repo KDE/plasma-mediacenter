@@ -44,6 +44,7 @@ static const int ITEM_VERTICAL_MARGIN = 15;
 
 ViewItem::ViewItem(const QStyleOptionViewItemV4 &option, QGraphicsItem *parent) : QGraphicsWidget(parent),
 m_option(option),
+m_index(QModelIndex()),
 m_type(LocalFileItem),
 m_frameSvg(new Plasma::FrameSvg(this)),
 m_preview(0),
@@ -86,6 +87,11 @@ void ViewItem::setModelIndex(const QModelIndex &index)
     }
 
     m_resource = new Nepomuk::Resource(item.url());
+}
+
+QModelIndex ViewItem::index() const
+{
+    return m_index;
 }
 
 void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -288,6 +294,10 @@ void ViewItem::updateHoverRating(const QPoint &pos)
 
 void ViewItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    emit ratingActivated(KRatingPainter::getRatingFromPosition(ratingRect(contentsRect().toRect()),
-                                                               Qt::AlignLeft | Qt::AlignVCenter, Qt::LeftToRight, event->pos().toPoint()));
+    if (ratingRect(contentsRect().toRect()).contains(event->pos().toPoint())) {
+        emit ratingActivated(KRatingPainter::getRatingFromPosition(ratingRect(contentsRect().toRect()),
+                                                                   Qt::AlignLeft | Qt::AlignVCenter, Qt::LeftToRight, event->pos().toPoint()));
+    } else {
+        event->ignore();
+    }
 }

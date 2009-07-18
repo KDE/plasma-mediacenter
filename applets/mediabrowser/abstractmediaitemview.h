@@ -70,6 +70,8 @@ public:
      */
     void invalidate();
 
+    virtual QModelIndex indexFromPos(const QPointF &) = 0;
+
 protected:
     virtual void resizeEvent(QGraphicsSceneResizeEvent *event);
     /**

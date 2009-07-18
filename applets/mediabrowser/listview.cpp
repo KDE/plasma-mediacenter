@@ -26,11 +26,15 @@
 #include <QScrollBar>
 #include <QGraphicsSceneResizeEvent>
 #include <QGraphicsSceneHoverEvent>
+#include <QDrag>
+#include <QApplication>
+#include <QMimeData>
 
 // KDE
 #include <KDirModel>
 #include <KDirLister>
 #include <KUrl>
+#include <KFileItem>
 #include <KDebug>
 
 // Plasma
@@ -113,4 +117,55 @@ void ListView::resizeEvent(QGraphicsSceneResizeEvent *event)
     if (m_model) {
         updateScrollBar();
     }
+}
+
+QModelIndex ListView::indexFromPos(const QPointF &pos)
+{
+    foreach (ViewItem *item, m_items) {
+        if (item->geometry().contains(pos)) {
+            return item->index();
+        }
+    }
+
+    return QModelIndex();
+}
+
+void ListView::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    event->accept();
+}
+
+void ListView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (!(event->buttons() & Qt::LeftButton)) {
+        return;
+    }
+
+    kDebug() << "mouseMoveEvent";
+    if ((event->pos() - event->buttonDownPos(Qt::LeftButton)).toPoint().manhattanLength()
+        >= QApplication::startDragDistance()) {
+        tryDrag(event);
+    }
+}
+
+void ListView::tryDrag(QGraphicsSceneMouseEvent *event)
+{
+    QDrag *drag = new QDrag(event->widget());
+    QMimeData *mime = new QMimeData;
+
+    // NOTE: for drag to work a KDirModel::FileItemRole is needed.
+    //       if none is found no drag can occur.
+    QModelIndex index = indexFromPos(event->pos());
+    if (!index.isValid()) {
+        return;
+    }
+    KFileItem item = index.data(KDirModel::FileItemRole).value<KFileItem>();
+    if (item.isNull()) {
+        return;
+    }
+    mime->setUrls(QList<QUrl>() << item.url());
+    drag->setMimeData(mime);
+    drag->setPixmap(item.pixmap(m_option.decorationSize.width()));
+
+    drag->exec(Qt::MoveAction);
 }
