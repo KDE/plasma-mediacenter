@@ -164,6 +164,7 @@ void ListView::tryDrag(QGraphicsSceneMouseEvent *event)
         return;
     }
     mime->setUrls(QList<QUrl>() << item.url());
+    mime->setText(item.url().pathOrUrl());
     drag->setMimeData(mime);
     drag->setPixmap(item.pixmap(m_option.decorationSize.width()));
 

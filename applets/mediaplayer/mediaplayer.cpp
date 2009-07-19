@@ -223,13 +223,18 @@ void MediaPlayer::setVolume(qreal value)
 void MediaPlayer::dropEvent(QGraphicsSceneDragDropEvent *event)
 {
 
-    QString text = event->mimeData()->text();
+    if (event->mimeData()->urls().isEmpty()) {
+        return;
+    }
 
-    QUrl testPath(text);
+    // TODO: handle multiple urls putting them in
+    //       the playlist.
+    QUrl testPath(event->mimeData()->urls().first());
 
     if (QFile::exists(testPath.path())) {
         KMimeType::Ptr type = KMimeType::findByPath(testPath.path());
 
+        // TODO: also handle audios and pictures.
         if (type->name().indexOf("video/") != -1) {
             OpenUrl(testPath.path());
         }
