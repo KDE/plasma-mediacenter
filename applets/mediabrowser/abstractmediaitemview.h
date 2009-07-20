@@ -70,7 +70,7 @@ public:
      */
     void invalidate();
 
-    virtual QModelIndex indexFromPos(const QPointF &) = 0;
+    QModelIndex indexFromPos(const QPointF &);
 
 protected:
     virtual void resizeEvent(QGraphicsSceneResizeEvent *event);
@@ -87,6 +87,9 @@ protected:
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
     void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
+
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
 
 protected slots:
     /**
@@ -118,6 +121,10 @@ private slots:
 
 signals:
     void scrollOffsetChanged(int);
+
+private:
+    void tryDrag(QGraphicsSceneMouseEvent *);
+    ViewItem* itemFromPos(const QPointF &);
 
 protected:
     int m_iconSize;

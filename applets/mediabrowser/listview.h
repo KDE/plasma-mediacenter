@@ -37,7 +37,6 @@ public:
     ~ListView();
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-    QModelIndex indexFromPos(const QPointF &);
 
 protected:
     void setupOptions();
@@ -45,16 +44,9 @@ protected:
 
     void resizeEvent(QGraphicsSceneResizeEvent *event);
 
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-
 public slots:
     void generateItems();
     void updateScrollBar();
-
-private:
-    void tryDrag(QGraphicsSceneMouseEvent *event);
-    ViewItem* itemFromPos(const QPointF &);
 
 
 };

@@ -25,6 +25,9 @@
 #include <Plasma/Animator>
 
 // KDE
+#include <KFileItem>
+#include <KDirModel>
+#include <QPainter>
 #include <KIconLoader>
 #include <KDebug>
 
@@ -35,6 +38,7 @@
 #include <QAbstractItemModel>
 #include <QLocale>
 #include <QGraphicsSceneHoverEvent>
+#include <QApplication>
 
 AbstractMediaItemView::AbstractMediaItemView(QGraphicsItem *parent) : QGraphicsWidget(parent),
 m_model(0),
@@ -209,4 +213,76 @@ void AbstractMediaItemView::setRating(int rating)
     }
 
     m_hoveredItem->m_resource->setRating(rating);
+}
+
+QModelIndex AbstractMediaItemView::indexFromPos(const QPointF &pos)
+{
+    ViewItem *item = itemFromPos(pos);
+    if (item) {
+        return item->index();
+    }
+    return QModelIndex();
+}
+
+ViewItem* AbstractMediaItemView::itemFromPos(const QPointF &pos)
+{
+    foreach (ViewItem *item, m_items) {
+        if (item->geometry().contains(pos)) {
+            return item;
+        }
+    }
+
+    return 0;
+}
+
+void AbstractMediaItemView::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    event->accept();
+}
+
+void AbstractMediaItemView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (!(event->buttons() & Qt::LeftButton)) {
+        return;
+    }
+
+    kDebug() << "mouseMoveEvent";
+    if ((event->pos() - event->buttonDownPos(Qt::LeftButton)).toPoint().manhattanLength()
+        >= QApplication::startDragDistance()) {
+        tryDrag(event);
+    }
+}
+
+void AbstractMediaItemView::tryDrag(QGraphicsSceneMouseEvent *event)
+{
+    QDrag *drag = new QDrag(event->widget());
+    QMimeData *mime = new QMimeData;
+
+    // NOTE: for drag to work a KDirModel::FileItemRole is needed.
+    //       if none is found no drag can occur.
+    ViewItem *viewItem = itemFromPos(event->pos());
+    QModelIndex index = viewItem->index();
+    if (!index.isValid()) {
+        return;
+    }
+    KFileItem item = index.data(KDirModel::FileItemRole).value<KFileItem>();
+    if (item.isNull()) {
+        return;
+    }
+    mime->setUrls(QList<QUrl>() << item.url());
+    mime->setText(item.url().pathOrUrl());
+    drag->setMimeData(mime);
+
+    QPixmap pixmap(viewItem->size().toSize());
+    pixmap.fill(Qt::transparent);
+    QPainter p(&pixmap);
+
+    QStyleOptionGraphicsItem o;
+    o.rect = pixmap.rect();
+
+    viewItem->paint(&p, &o, 0);
+
+    drag->setPixmap(pixmap);
+
+    drag->exec(Qt::MoveAction);
 }
