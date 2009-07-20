@@ -121,13 +121,22 @@ void ListView::resizeEvent(QGraphicsSceneResizeEvent *event)
 
 QModelIndex ListView::indexFromPos(const QPointF &pos)
 {
+    ViewItem *item = itemFromPos(pos);
+    if (item) {
+        return item->index();
+    }
+    return QModelIndex();
+}
+
+ViewItem* ListView::itemFromPos(const QPointF &pos)
+{
     foreach (ViewItem *item, m_items) {
         if (item->geometry().contains(pos)) {
-            return item->index();
+            return item;
         }
     }
 
-    return QModelIndex();
+    return 0;
 }
 
 void ListView::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -155,7 +164,8 @@ void ListView::tryDrag(QGraphicsSceneMouseEvent *event)
 
     // NOTE: for drag to work a KDirModel::FileItemRole is needed.
     //       if none is found no drag can occur.
-    QModelIndex index = indexFromPos(event->pos());
+    ViewItem *viewItem = itemFromPos(event->pos());
+    QModelIndex index = viewItem->index();
     if (!index.isValid()) {
         return;
     }
@@ -166,7 +176,18 @@ void ListView::tryDrag(QGraphicsSceneMouseEvent *event)
     mime->setUrls(QList<QUrl>() << item.url());
     mime->setText(item.url().pathOrUrl());
     drag->setMimeData(mime);
-    drag->setPixmap(item.pixmap(m_option.decorationSize.width()));
+
+    QPixmap pixmap(viewItem->size().toSize());
+    pixmap.fill(Qt::transparent);
+    QPainter p(&pixmap);
+
+    QStyleOptionGraphicsItem o;
+    o.rect = pixmap.rect();
+    const QStyleOptionGraphicsItem *option = new QStyleOptionGraphicsItem(o);
+
+    viewItem->paint(&p, option, 0);
+
+    drag->setPixmap(pixmap);
 
     drag->exec(Qt::MoveAction);
 }

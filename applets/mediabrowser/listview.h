@@ -54,6 +54,7 @@ public slots:
 
 private:
     void tryDrag(QGraphicsSceneMouseEvent *event);
+    ViewItem* itemFromPos(const QPointF &);
 
 
 };

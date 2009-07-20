@@ -104,6 +104,16 @@ signals:
      */
     void currentTypeChanged(MediaCenter::MediaType newType);
 
+    /**
+     * This signal should be emitted whenever the user
+     * directly tries to reproduce media via the player.
+     * This could happen for example when the user drops media files
+     * on the player instead of the playlist.
+     *
+     * @param medias: the list of media received by the user.
+     */
+    void mediaReceived(const QList<Media> &medias);
+
 public slots:
     /**
      * You must reimplement this method in order to set the proper volume.
