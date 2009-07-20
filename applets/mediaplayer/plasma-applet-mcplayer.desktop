@@ -3,11 +3,13 @@ Name=Media Center Player
 Name[pt]=Reprodutor Multimédia
 Name[pt_BR]=Reprodutor Multimédia
 Name[sv]=Spelare för Media Center
+Name[uk]=Програвач медіа-центру
 Name[x-test]=xxMedia Center Playerxx
 Comment=The playing applet for the Media Center.
 Comment[pt]=Uma 'applet' de reprodução para Centros Multimédia.
 Comment[pt_BR]=Uma 'applet' de reprodução para Centros Multimédia.
 Comment[sv]=Spelarminiprogrammet för Media Center.
+Comment[uk]=Аплет відтворення для медіа-центру.
 Comment[x-test]=xxThe playing applet for the Media Center.xx
 
 
