@@ -48,6 +48,11 @@ void PlaylistApplet::init()
     loadConfiguration();
 }
 
+int PlaylistApplet::length()
+{
+    return 0;
+}
+
 void PlaylistApplet::createConfigurationInterface(KConfigDialog *parent)
 {
     QWidget *config = new QWidget(parent);

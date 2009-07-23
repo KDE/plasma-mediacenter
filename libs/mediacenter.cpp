@@ -15,40 +15,41 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
- ***************************************************************************/ 
-#ifndef PLAYLISTAPPLET_H
-#define PLAYLISTAPPLET_H
+ ***************************************************************************/
+#include "mediacenter.h"
 
-#include <playlist.h>
-#include <mediacenter.h>
+#include <QFileInfo>
 
-#include "ui_config.h"
+#include <KMimeType>
+#include <Solid/Device>
+#include <Solid/OpticalDisc>
 
-class PlaylistWidget;
-class KConfigDialog;
+using namespace MediaCenter;
 
-class PlaylistApplet : public MediaCenter::Playlist
+MediaType getType(const QString &media)
 {
-    Q_OBJECT
-public:
-    PlaylistApplet(QObject *parent, const QVariantList &args);
-    ~PlaylistApplet();
+    QFileInfo info(media);
+    if (info.exists()) {
+        KMimeType::Ptr mime = KMimeType::findByPath(media);
+        if (mime->name().startsWith("image/")) {
+            return Picture;
+        } else if (mime->name().startsWith("video/")) {
+            return Video;
+        } else if (mime->name().startsWith("audio/")) {
+            return Audio;
+        } else {
+            return Invalid;
+        }
+    } else { // it is not a file
+        Solid::Device genericDevice(media);
+        if (!genericDevice.isValid()) {
+            return Invalid;
+        }
+        Solid::OpticalDisc *opticalDisc = genericDevice.as<Solid::OpticalDisc>();
+        if (!opticalDisc) {
+            return Invalid;
+        }
 
-    void init();
-    void createConfigurationInterface(KConfigDialog *parent);
-
-    int length();
-
-protected slots:
-    void loadConfiguration();
-    void configAccepted();
-
-private:
-    PlaylistWidget *m_playlistWidget;
-    Ui::Config configUi;
-
-    bool m_multiplePlaylists;
-
-};
-
-#endif
+        return OpticalDisc;
+    }
+}

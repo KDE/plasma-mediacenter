@@ -32,14 +32,6 @@ namespace Phonon {
 namespace MediaCenter {
 
 /**
- * @typedef Media defines a QPair of MediaCenter::MediaType and QString.
- * The first argument is the type of the media while the second is a QString
- * defining the media. It might be both an udi string pointing to the device
- * hosting the media or the path to a media file.
- */
-typedef QPair<MediaCenter::MediaType, QString> Media;
-
-/**
  * @class Player player.h
  * @brief Is the main class for handling the reproduction of all MediaTypes.
  *

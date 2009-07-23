@@ -19,15 +19,16 @@
 #ifndef MEDIACENTER_H
 #define MEDIACENTER_H
 
+#include <QPair>
+
 namespace MediaCenter {
 
 enum MediaType {
+    Invalid = 0,
     Picture,
     Video,
     Audio,
-    Dvd,
-    Vcd,
-    Cd
+    OpticalDisc
 };
 
 enum State {
@@ -35,6 +36,24 @@ enum State {
     StoppedState,
     PausedState
 };
+
+/**
+ * @typedef Media defines a QPair of MediaCenter::MediaType and QString.
+ * The first argument is the type of the media while the second is a QString
+ * defining the media. It might be both an udi string pointing to the device
+ * hosting the media or the path to a media file.
+ */
+typedef QPair<MediaType, QString> Media;
+
+/**
+ * Returns the correct type identifying the source represented
+ * by the given string.
+ *
+ * @param media: the string representing the media. It could be
+ *               either the udi of the device hosting the media
+ *               or the path of the local file.
+ */
+MediaType getType(const QString &media);
 
 } // namespace MediaCenter
 
