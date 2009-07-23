@@ -19,8 +19,14 @@
 #include "test.h"
 #include "widgets/activeitemwidget.h"
 
+#include <mediacenter/mediacenter.h>
+
+#include <KDebug>
+
 #include <QWidget>
 #include <QGraphicsLinearLayout>
+
+#include <Plasma/LineEdit>
 
 MCTest::MCTest(QObject *parent, const QVariantList &args)
     : Plasma::Applet(parent, args)
@@ -33,6 +39,10 @@ MCTest::MCTest(QObject *parent, const QVariantList &args)
     widget->addItem("Item 2");
     layout->addItem(widget);
 
+    m_edit = new Plasma::LineEdit(this);
+    layout->addItem(m_edit);
+    connect (m_edit, SIGNAL(returnPressed()), this, SLOT(doDebug()));
+
     setLayout(layout);
 }
 
@@ -41,6 +51,11 @@ MCTest::~MCTest()
 
 void MCTest::init()
 {
+}
+
+void MCTest::doDebug()
+{
+    kDebug() << (int)MediaCenter::getType(m_edit->text());
 }
 
 K_EXPORT_PLASMA_APPLET(mctest, MCTest)

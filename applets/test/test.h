@@ -21,6 +21,10 @@
 
 #include <Plasma/Applet>
 
+namespace Plasma {
+    class LineEdit;
+}
+
 class MCTest : public Plasma::Applet
 {
     Q_OBJECT
@@ -29,6 +33,12 @@ public:
     ~MCTest();
 
     void init();
+
+public slots:
+    void doDebug();
+
+private:
+    Plasma::LineEdit *m_edit;
 
 };
 

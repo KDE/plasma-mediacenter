@@ -19,6 +19,8 @@
 #ifndef MEDIACENTER_H
 #define MEDIACENTER_H
 
+#include "mediacenter_export.h"
+
 #include <QPair>
 
 namespace MediaCenter {
@@ -53,7 +55,7 @@ typedef QPair<MediaType, QString> Media;
  *               either the udi of the device hosting the media
  *               or the path of the local file.
  */
-MediaType getType(const QString &media);
+MEDIACENTER_EXPORT MediaType getType(const QString &media);
 
 } // namespace MediaCenter
 

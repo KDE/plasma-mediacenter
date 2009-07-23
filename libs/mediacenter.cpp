@@ -24,7 +24,7 @@
 #include <Solid/Device>
 #include <Solid/OpticalDisc>
 
-using namespace MediaCenter;
+namespace MediaCenter {
 
 MediaType getType(const QString &media)
 {
@@ -52,4 +52,6 @@ MediaType getType(const QString &media)
 
         return OpticalDisc;
     }
+}
+
 }
