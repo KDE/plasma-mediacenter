@@ -12,6 +12,7 @@ include_directories(
     utils/
     widgets/
     libs/
+    ../../
 )
 
 add_subdirectory(dataengines)

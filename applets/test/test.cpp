@@ -19,7 +19,7 @@
 #include "test.h"
 #include "widgets/activeitemwidget.h"
 
-#include <mediacenter/mediacenter.h>
+#include <libs/mediacenter.h>
 
 #include <KDebug>
 
