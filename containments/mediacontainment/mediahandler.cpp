@@ -137,6 +137,7 @@ bool MediaHandler::eventFilter(QObject *o, QEvent *e)
         }
     } else if (e->type() == QEvent::GraphicsSceneHoverLeave) {
         emit appletHideRequest(m_applet);
+        m_showFactor = 1;
     }
 
     return false;
@@ -168,12 +169,20 @@ void MediaHandler::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
 {
     if (event->pos().x() <= 10 && event->pos().x() > 0 && m_handlerPosition == Right) {
         emit appletShowRequest(m_applet);
+        m_showFactor = 0;
+        update();
     } else if (event->pos().y() <= 10 && event->pos().y() > 0 && m_handlerPosition == Bottom) {
         emit appletShowRequest(m_applet);
+        m_showFactor = 0;
+        update();
     } else if (event->pos().x() < size().width() && event->pos().x() > size().width() - 10 && m_handlerPosition == Left) {
         emit appletShowRequest(m_applet);
+        m_showFactor = 0;
+        update();
     } else if (event->pos().y() < size().height() && event->pos().y() > size().height() - 10 && m_handlerPosition == Top) {
         emit appletShowRequest(m_applet);
+        m_showFactor = 0;
+        update();
     }
 
 }
