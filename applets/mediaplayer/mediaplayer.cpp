@@ -157,6 +157,7 @@ void MediaPlayer::init()
 
 void MediaPlayer::constraintsEvent(Plasma::Constraints constraints)
 {
+    setBackgroundHints(NoBackground);
 }
 
 void MediaPlayer::SetControlsVisible(bool visible)

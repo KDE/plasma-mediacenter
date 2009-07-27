@@ -19,8 +19,8 @@
 #ifndef PLAYLISTAPPLET_H
 #define PLAYLISTAPPLET_H
 
-#include <playlist.h>
-#include <mediacenter.h>
+#include <mediacenter/playlist.h>
+#include <mediacenter/mediacenter.h>
 
 #include "ui_config.h"
 

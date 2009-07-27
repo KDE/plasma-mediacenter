@@ -21,6 +21,8 @@
 // Qt
 #include <QGraphicsLinearLayout>
 #include <Phonon/MediaObject>
+#include <QStyleOptionGraphicsItem>
+#include <QPainter>
 
 #include <KIcon>
 #include <KDebug>
@@ -28,6 +30,7 @@
 // Plasma
 #include <Plasma/IconWidget>
 #include <Plasma/Slider>
+#include <Plasma/Theme>
 
 MediaController::MediaController(QObject *parent, const QVariantList &args)
     : MediaCenter::PlaybackControl(parent, args),
@@ -36,11 +39,45 @@ MediaController::MediaController(QObject *parent, const QVariantList &args)
     m_seekSlider(new Plasma::Slider(this))
 {
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
-    setContentsMargins(0, 0, 0, 0);
+}
 
+MediaController::~MediaController()
+{}
+
+void MediaController::constraintsEvent(Plasma::Constraints constraints)
+{
+    Q_UNUSED(constraints);
+    setBackgroundHints(NoBackground);
+}
+
+void MediaController::resizeEvent(QGraphicsSceneResizeEvent *event)
+{
+    Q_UNUSED(event)
+
+    m_svg->resizeFrame(rect().size());
+}
+
+void MediaController::paintInterface(QPainter *painter, const QStyleOptionGraphicsItem *option, const QRect &contentsRect)
+{
+    painter->fillRect(option->rect, Qt::green);
+    painter->fillRect(contentsRect, Qt::red);
+    m_svg->paintFrame(painter, option->rect);
+}
+
+int MediaController::iconSizeFromCurrentSize() const
+{
+    const int size = contentsRect().height();
+    return size;
+}
+
+void MediaController::init()
+{
     m_svg->setEnabledBorders(Plasma::FrameSvg::LeftBorder | Plasma::FrameSvg::RightBorder | Plasma::FrameSvg::BottomBorder);
     m_svg->setCacheAllRenderedFrames(true);
-    m_svg->setImagePath("widgets/background");
+    m_svg->setImagePath(Plasma::Theme::defaultTheme()->imagePath("widgets/background"));
+
+    setMarginsFromTheme();
+    connect (Plasma::Theme::defaultTheme(), SIGNAL(themeChanged()), this, SLOT(slotThemeChanged()));
 
     QGraphicsLinearLayout *controlLayout = new QGraphicsLinearLayout(Qt::Horizontal);
 
@@ -77,37 +114,6 @@ MediaController::MediaController(QObject *parent, const QVariantList &args)
     controlLayout->addItem(m_volumeSlider);
 
     setLayout(controlLayout);
-}
-
-MediaController::~MediaController()
-{}
-
-void MediaController::constraintsEvent(Plasma::Constraints constraints)
-{
-    Q_UNUSED(constraints)
-    setBackgroundHints(NoBackground);
-}
-
-void MediaController::resizeEvent(QGraphicsSceneResizeEvent *event)
-{
-    Q_UNUSED(event)
-
-    m_svg->resizeFrame(contentsRect().size());
-}
-
-void MediaController::paintInterface(QPainter *painter, const QStyleOptionGraphicsItem *option, const QRect &contentsRect)
-{
-    m_svg->paintFrame(painter, contentsRect.topLeft());
-}
-
-int MediaController::iconSizeFromCurrentSize() const
-{
-    const int size = contentsRect().height();
-    return size;
-}
-
-void MediaController::init()
-{
 }
 
 void MediaController::togglePlayPause(Phonon::State oldState, Phonon::State newState)
@@ -156,6 +162,25 @@ void MediaController::updateTotalTime(qint64 time)
 void MediaController::updateCurrentTick(qint64 time)
 {
     m_seekSlider->setValue(time);
+}
+
+void MediaController::setMarginsFromTheme()
+{
+    qreal left;
+    qreal right;
+    qreal top;
+    qreal bottom;
+
+    m_svg->getMargins(left, top, right, bottom);
+    kDebug() << "setting to" << left << top << right << bottom;
+    setContentsMargins(left, top, right, bottom);
+}
+
+void MediaController::slotThemeChanged()
+{
+    m_svg->clearCache();
+    m_svg->setImagePath(Plasma::Theme::defaultTheme()->imagePath("widgets/background"));
+    setMarginsFromTheme();
 }
 
 

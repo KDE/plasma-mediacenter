@@ -20,7 +20,7 @@
 #ifndef MEDIAPLAYER_HEADER
 #define MEDIAPLAYER_HEADER
 
-#include <player.h>
+#include <mediacenter/player.h>
 
 #include "ui_config.h"
 

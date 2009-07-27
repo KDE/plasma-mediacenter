@@ -19,7 +19,7 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
-#include <playbackcontrol.h>
+#include <mediacenter/playbackcontrol.h>
 
 #include <phonon/phononnamespace.h>
 
@@ -55,6 +55,7 @@ private slots:
     void slotSeekSlider(int value);
     void updateTotalTime(qint64 time);
     void updateCurrentTick(qint64 time);
+    void slotThemeChanged();
 
 private:
     Plasma::FrameSvg *m_svg;
@@ -65,10 +66,9 @@ private:
 
     int iconSizeFromCurrentSize() const;
 
-    inline QRect seekBackRect() const;
-    inline QRect seekForwardRect() const;
-    inline QRect stopRect() const;
-    inline QRect playPauseRect() const;
+    void setMarginsFromTheme();
+
+
 
 
 };
