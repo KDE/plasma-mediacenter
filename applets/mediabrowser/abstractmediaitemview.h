@@ -90,6 +90,7 @@ protected:
 
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
 protected slots:
@@ -126,7 +127,7 @@ signals:
 private:
     void tryDrag(QGraphicsSceneMouseEvent *);
     ViewItem* itemFromPos(const QPointF &);
-    bool m_doubleClick;
+    void itemClickEvent(QGraphicsSceneMouseEvent *);
 
 protected:
     int m_iconSize;

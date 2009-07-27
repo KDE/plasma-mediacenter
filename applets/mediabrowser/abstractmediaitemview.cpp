@@ -255,13 +255,25 @@ void AbstractMediaItemView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
 }
 
+void AbstractMediaItemView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (KGlobalSettings::singleClick()) {
+        kDebug() << "click";
+        itemClickEvent(event);
+    }
+}
+
 void AbstractMediaItemView::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
     if (KGlobalSettings::singleClick()) {
         return;
     }
 
-    m_doubleClick = true;
+    itemClickEvent(event);
+}
+
+void AbstractMediaItemView::itemClickEvent(QGraphicsSceneMouseEvent *event)
+{
     KDirModel *model = qobject_cast<KDirModel*>(m_model);
     if (model) {
         ViewItem *viewItem = itemFromPos(event->pos());
@@ -280,7 +292,6 @@ void AbstractMediaItemView::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *even
             generateItems();
         }
     }
-
 }
 
 void AbstractMediaItemView::tryDrag(QGraphicsSceneMouseEvent *event)
