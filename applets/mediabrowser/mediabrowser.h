@@ -49,13 +49,16 @@ private:
 
     KUrl m_localUrl;
     bool m_fromPlaces;
+    bool m_folderNavigation;
     BrowsingMode m_mode;
     KDirLister *m_lister;
     KDirModel *m_model;
     QString m_viewType;
+    QStringList m_mimeTypes;
 
 private:
     void createView();
+    void setFolderNavigation();
 
 private slots:
     void loadConfiguration();

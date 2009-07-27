@@ -96,8 +96,6 @@ void MediaHandler::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
 {
     Q_UNUSED(widget);
 
-//    painter->fillRect(option->rect, Qt::green);
-
     painter->setOpacity(m_showFactor);
     if (m_handlerPosition == Left) {
         m_handlerSvg->paintFrame(painter, QPointF(option->rect.right() - m_handlerSvg->frameSize().width(), option->rect.top()));
@@ -161,8 +159,6 @@ void MediaHandler::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
     m_appearing = false;
     m_showFactor = 1;
     m_animationId = Plasma::Animator::self()->customAnimation(100, 250, Plasma::Animator::EaseInCurve, this, "animateShowHide");
-
-//    emit appletHideRequest(m_applet);
 }
 
 void MediaHandler::hoverMoveEvent(QGraphicsSceneHoverEvent *event)

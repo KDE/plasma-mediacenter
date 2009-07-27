@@ -27,8 +27,10 @@
 // KDE
 #include <KFileItem>
 #include <KDirModel>
+#include <KDirLister>
 #include <QPainter>
 #include <KIconLoader>
+#include <KGlobalSettings>
 #include <KDebug>
 
 #include <Nepomuk/Resource>
@@ -251,6 +253,34 @@ void AbstractMediaItemView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         >= QApplication::startDragDistance()) {
         tryDrag(event);
     }
+}
+
+void AbstractMediaItemView::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (KGlobalSettings::singleClick()) {
+        return;
+    }
+
+    m_doubleClick = true;
+    KDirModel *model = qobject_cast<KDirModel*>(m_model);
+    if (model) {
+        ViewItem *viewItem = itemFromPos(event->pos());
+        QModelIndex index = viewItem->index();
+        KFileItem item = index.data(KDirModel::FileItemRole).value<KFileItem>();
+        if (item.isNull()) {
+            return;
+        }
+
+        if (item.isDir()) {
+            qDeleteAll(m_items);
+            m_items.clear();
+            model->dirLister()->stop();
+            model->dirLister()->openUrl(item.url());
+            m_hoveredItem = 0;
+            generateItems();
+        }
+    }
+
 }
 
 void AbstractMediaItemView::tryDrag(QGraphicsSceneMouseEvent *event)

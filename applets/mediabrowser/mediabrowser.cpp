@@ -103,6 +103,8 @@ void MediaBrowser::createConfigurationInterface(KConfigDialog *parent)
         uiLocal.urlRequester->lineEdit()->setText(m_localUrl.url());
     }
 
+    uiGeneral.folderNavigationCheckBox->setChecked(m_folderNavigation);
+
     uiLocal.urlRequester->setMode(KFile::Directory);
 
     connect (parent, SIGNAL(accepted()), this, SLOT(configAccepted()));
@@ -117,18 +119,17 @@ void MediaBrowser::switchToFileModel()
 
    if (!m_lister) {
         m_lister = new KDirLister(this);
-        QStringList mimeTypes;
+        m_mimeTypes;
         KMimeType::List mimeList = KMimeType::allMimeTypes();
 
         foreach (KMimeType::Ptr mime, mimeList) {
             if (mime->name().startsWith("image/") ||
                 mime->name().startsWith("video/") ||
                 mime->name().startsWith("audio/")) {
-                mimeTypes << mime->name();
+                m_mimeTypes << mime->name();
             }
         }
-
-        m_lister->setMimeFilter(mimeTypes);
+        setFolderNavigation();
     }
 
     if (m_model->dirLister() != m_lister) {
@@ -145,6 +146,20 @@ void MediaBrowser::switchToFileModel()
     m_mode = LocalFiles;
 }
 
+void MediaBrowser::setFolderNavigation()
+{
+    if (m_folderNavigation) {
+        if (!m_mimeTypes.contains("inode/directory")) {
+            m_mimeTypes << "inode/directory";
+        }
+    } else {
+        if (m_mimeTypes.contains("inode/directory")) {
+            m_mimeTypes.removeAll("inode/directory");
+        }
+    }
+    m_lister->setMimeFilter(m_mimeTypes);
+}
+
 void MediaBrowser::loadConfiguration()
 {
     KConfigGroup cf = config();
@@ -152,6 +167,7 @@ void MediaBrowser::loadConfiguration()
     m_localUrl = KUrl(cf.readEntry("LocalUrl", QDir::homePath()));
     m_fromPlaces = cf.readEntry("FromPlaces", true);
     m_viewType = cf.readEntry("ViewType", "list");
+    m_folderNavigation = cf.readEntry("FolderNavigation", true);
 }
 
 void MediaBrowser::configAccepted()
@@ -181,6 +197,13 @@ void MediaBrowser::configAccepted()
         m_viewType = type;
         createView();
         switchToFileModel();
+    }
+
+    bool folderNavigation = uiGeneral.folderNavigationCheckBox->isChecked();
+    if (m_folderNavigation != folderNavigation) {
+        m_folderNavigation = folderNavigation;
+        cf.writeEntry("FolderNavigation", m_folderNavigation);
+        setFolderNavigation();
     }
 
     cf.writeEntry("ViewType", type);

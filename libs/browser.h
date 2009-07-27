@@ -36,7 +36,7 @@ public:
     virtual ~Browser();
 
 signals:
-    void mediaActivated(MediaType type, const KUrl &mediaUrl);
+    void mediaActivated(MediaType type, const QString &path);
 };
 
 } // namespace MediaCenter
