@@ -153,7 +153,7 @@ void PlaylistEngine::addToPlaylist(const QString &playlistName, const QString &f
     }
 
     // adding files to memory
-    m_playlists[playlistName].insert(index,files);
+    m_playlists[playlistName].insert(index,file);
 
     // setting data to the engine
     setData(playlistName, m_playlists.value(playlistName));

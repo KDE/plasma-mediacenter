@@ -64,6 +64,7 @@ PlaylistWidget::PlaylistWidget(QGraphicsItem *parent)
       m_playlistEngine(0),
       m_coverEngine(0),
       m_model(new QStandardItemModel(this)),
+      m_indicator(0),
       m_pupdater(new PlaylistUpdater(this)),
       m_cupdater(new CoverUpdater(this)),
       m_multiplePlaylists(false)
@@ -111,7 +112,9 @@ PlaylistWidget::PlaylistWidget(QGraphicsItem *parent)
     setLayout(layout);
 
     setAcceptDrops(true);
-    m_treeView->setAcceptDrops(false);
+//    m_treeView->setAcceptDrops(false);
+
+    m_treeView->installEventFilter(this);
 }
 
 PlaylistWidget::~PlaylistWidget()
@@ -193,6 +196,43 @@ void PlaylistWidget::slotCoverReady(const QString &source)
             }
         }
     }
+}
+
+bool PlaylistWidget::eventFilter(QObject *o, QEvent *e)
+{
+    if (o != m_treeView) {
+        return false;
+    }
+
+    kDebug() << "tree view";
+    if (e->type() == QEvent::GraphicsSceneDragEnter) {
+        kDebug() << "drag enter";
+        QGraphicsSceneDragDropEvent *event = static_cast<QGraphicsSceneDragDropEvent*>(e);
+        m_indicator = new QWidget(m_treeView->nativeWidget()->viewport());
+        m_indicator->resize(m_treeView->nativeWidget()->size().width(), 5);
+        QPalette p = m_indicator->palette();
+        p.setColor(QPalette::Window, Qt::green);
+        m_indicator->setPalette(p);
+        m_indicator->setAutoFillBackground(true);
+        m_indicator->move(0, event->pos().y());
+        m_indicator->show();
+        kDebug() << event->pos().y();
+    } else if (e->type() == QEvent::GraphicsSceneDragMove) {
+        kDebug() << "drag move";
+        kDebug() << m_indicator;
+        if (m_indicator) {
+            QGraphicsSceneDragDropEvent *event = static_cast<QGraphicsSceneDragDropEvent*>(e);
+            kDebug() <<  event->pos().y();
+            m_indicator->move(0, event->pos().y());
+        }
+    } else if (e->type() == QEvent::GraphicsSceneDragLeave) {
+        kDebug() << "drag leave";
+        delete m_indicator;
+        m_indicator = 0;
+    }
+
+    return false;
+
 }
 
 void PlaylistWidget::dropEvent(QGraphicsSceneDragDropEvent *event)

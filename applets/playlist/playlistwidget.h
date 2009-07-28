@@ -48,6 +48,8 @@ public:
     QStringList medias();
     int length();
 
+    bool eventFilter(QObject *, QEvent *);
+
 public Q_SLOTS:
     void playlistUpdated(const QString &, const Plasma::DataEngine::Data &);
     void coverUpdated(const QString &, const Plasma::DataEngine::Data &);
@@ -74,6 +76,8 @@ private:
     Plasma::DataEngine *m_playlistEngine;
     Plasma::DataEngine *m_coverEngine;
     QStandardItemModel *m_model;
+
+    QWidget *m_indicator;
 
     PlaylistUpdater *m_pupdater;
     CoverUpdater *m_cupdater;
