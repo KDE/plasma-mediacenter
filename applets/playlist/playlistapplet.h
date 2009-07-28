@@ -38,6 +38,7 @@ public:
     void createConfigurationInterface(KConfigDialog *parent);
 
     int length();
+    QStringList medias();
 
 protected slots:
     void loadConfiguration();

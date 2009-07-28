@@ -41,9 +41,15 @@ public:
     virtual ~Playlist();
 
     /**
-     * Returns the number of items in the current playlist.
+     * @return the number of items in the current playlist.
      */
     virtual int length() = 0;
+
+    /**
+     * @return the list of strings identifying the medias
+     * in the current playlist.
+     */
+    virtual QStringList medias() = 0;
 
 public slots:
     /**
@@ -52,12 +58,12 @@ public slots:
      * of the device hosting the media.
      * If index is length() + 1 the media is appended.
      *
-     * @param mediaString: the string identifying the source.
-     * @param index: the index at which the source should be
+     * @param mediaString the string identifying the source.
+     * @param index the index at which the source should be
      *               placed in the playlist.
-     * @param playlist: specifies the playlist to append the media to.
+     * @param playlist specifies the playlist to append the media to.
      *                  If none is specified the current playlist is used.
-     * @note: the default implementation does nothing.
+     * @note the default implementation does nothing.
      */
     virtual void addMedia(int index, const QString &mediaString, const QString &playlist = QString());
 
@@ -79,6 +85,15 @@ signals:
      * the playlist.
      */
     void mediaAppended(const QString &mediaString);
+
+    /**
+     * This signal is emitted whenever the current playlist changes
+     * in multiple playlists mode.
+     *
+     * @param medias is the list of strings identifying the medias in the playlist.
+     * @param playlistName is the name for the new playlist.
+     */
+    void playlistChanged(const QStringList &medias, const QString &playlistName);
 
 };
 

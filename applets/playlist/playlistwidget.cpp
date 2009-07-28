@@ -53,8 +53,8 @@
 #include <Plasma/Theme>
 
 // Taglib
-#include <fileref.h>
-#include <tag.h>
+#include <taglib/fileref.h>
+#include <taglib/tag.h>
 
 ///////////////// PlaylistWidget ///////////////////////
 
@@ -277,4 +277,21 @@ void PlaylistWidget::reloadCover(const QModelIndex &index)
 
     KConfigGroup op = coverService->operationDescription("reload");
     coverService->startOperationCall(op);
+}
+
+QStringList PlaylistWidget::medias()
+{
+    QString playlistName = m_comboBox->nativeWidget()->currentText();
+    QStringList medias;
+
+    foreach (const QVariant &tracks, m_playlistEngine->query(playlistName)) {
+        files << medias.toStringList();
+    }
+
+    return medias;
+}
+
+int PlaylistWidget::length()
+{
+    return m_model->rowCount();
 }

@@ -50,7 +50,12 @@ void PlaylistApplet::init()
 
 int PlaylistApplet::length()
 {
-    return 0;
+    return m_playlistWidget->length();
+}
+
+QStringList PlaylistApplet::medias()
+{
+    m_playlistWidget->medias();
 }
 
 void PlaylistApplet::createConfigurationInterface(KConfigDialog *parent)

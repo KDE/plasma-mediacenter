@@ -258,7 +258,6 @@ void AbstractMediaItemView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void AbstractMediaItemView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     if (KGlobalSettings::singleClick()) {
-        kDebug() << "click";
         itemClickEvent(event);
     }
 }

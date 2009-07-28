@@ -45,6 +45,9 @@ public:
 
     bool multiplePlaylistsEnabled();
 
+    QStringList medias();
+    int length();
+
 public Q_SLOTS:
     void playlistUpdated(const QString &, const Plasma::DataEngine::Data &);
     void coverUpdated(const QString &, const Plasma::DataEngine::Data &);
