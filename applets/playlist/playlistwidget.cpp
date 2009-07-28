@@ -207,7 +207,7 @@ void PlaylistWidget::dropEvent(QGraphicsSceneDragDropEvent *event)
     KConfigGroup op = playlistService->operationDescription("add");
     foreach (const KUrl &url, event->mimeData()->urls()) {
         KMimeType::Ptr mime = KMimeType::findByUrl(url);
-        if (mime->name().indexOf("video/") != -1 || mime->name().indexOf("audio/") != -1) {
+        if (mime->name().indexOf("video/") != -1 || mime->name().indexOf("audio/") != -1 || mime->name().indexOf("image/") != -1) {
             op.writeEntry("path", url.path());
             playlistService->startOperationCall(op);
         }

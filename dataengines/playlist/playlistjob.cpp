@@ -42,6 +42,8 @@ void PlaylistJob::start()
         m_engine->addToPlaylist(destination(), parameters()["path"].toString());
     } else if (operationName() == "remove") {
         m_engine->removeFromPlaylist(destination(), parameters()["path"].toString());
+    } else if (operationName() == "addAt") {
+        m_engine->removeFromPlaylist(destination(), parameters()["path"].toString(), parameters()["index"].toInt());
     }
 
     emitResult();

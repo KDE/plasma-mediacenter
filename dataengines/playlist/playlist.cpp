@@ -145,6 +145,28 @@ void PlaylistEngine::addToPlaylist(const QString &playlistName, const QString &f
     addToPlaylist(playlistName, QStringList() << file);
 }
 
+void PlaylistEngine::addToPlaylist(const QString &playlistName, const QString &file, int index)
+{
+    // removing invalid entries
+    if (!QFileInfo(file).exists()) {
+        return;
+    }
+
+    // adding files to memory
+    m_playlists[playlistName].insert(index,files);
+
+    // setting data to the engine
+    setData(playlistName, m_playlists.value(playlistName));
+
+    // storing files in the config
+    saveToConfig(playlistName, m_playlists[playlistName]);
+
+    // update the current playlist
+    if (m_current == playlistName) {
+        setCurrentPlaylist(playlistName);
+    }
+}
+
 QStringList PlaylistEngine::availablePlaylists()
 {
     return m_playlists.keys();

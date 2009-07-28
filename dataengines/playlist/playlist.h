@@ -46,6 +46,7 @@ public:
 public Q_SLOTS:
     void addToPlaylist(const QString &playlistName, QStringList files);
     void addToPlaylist(const QString &playlistName, const QString &file);
+    void addToPlaylist(const QString &playlistName, const QString &file, int index);
 
     /**
      * Slightly different from sources() since this does not return the
