@@ -285,7 +285,7 @@ QStringList PlaylistWidget::medias()
     QStringList medias;
 
     foreach (const QVariant &tracks, m_playlistEngine->query(playlistName)) {
-        files << medias.toStringList();
+        medias << tracks.toStringList();
     }
 
     return medias;
