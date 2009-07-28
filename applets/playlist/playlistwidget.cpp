@@ -112,7 +112,7 @@ PlaylistWidget::PlaylistWidget(QGraphicsItem *parent)
     setLayout(layout);
 
     setAcceptDrops(true);
-//    m_treeView->setAcceptDrops(false);
+    m_treeView->setAcceptDrops(false);
 
     m_treeView->installEventFilter(this);
 }
@@ -137,24 +137,28 @@ void PlaylistWidget::showPlaylist(const QString &playlistName)
 
     foreach (const QString &track, files) {
         TagLib::FileRef ref(track.toLatin1());
-        QStandardItem *item = new QStandardItem(ref.tag()->title().toCString(true));
+        QString name = ref.isNull() ? track : ref.tag()->title().toCString(true);
+        QStandardItem *item = new QStandardItem(name);
         item->setEditable(false);
         if (item->text().isEmpty()) {
             item->setText(QFileInfo(track).baseName());
         }
-        item->setData(ref.tag()->artist().toCString(true), PlaylistDelegate::ArtistRole);
-        item->setData(track, PlaylistDelegate::FilePathRole);
-        item->setData(ref.tag()->album().toCString(true), PlaylistDelegate::AlbumRole);
+        if (!ref.isNull()) {
+            item->setData(ref.tag()->artist().toCString(true), PlaylistDelegate::ArtistRole);
+            item->setData(track, PlaylistDelegate::FilePathRole);
+            item->setData(ref.tag()->album().toCString(true), PlaylistDelegate::AlbumRole);
 
-        // cover retrival
-        QString coverSource = ref.tag()->artist().toCString(true);
-        coverSource.append("|");
-        coverSource.append(ref.tag()->album().toCString(true));
-        item->setData(coverSource, CoverSourceRole);
-        Plasma::DataEngine::Data covers = m_coverEngine->query(coverSource);
-        m_coverEngine->connectSource(coverSource, m_cupdater);
-        if (!covers.isEmpty()) {
-            item->setData(covers["medium"].value<QPixmap>(), Qt::DecorationRole);
+
+            // cover retrival
+            QString coverSource = ref.tag()->artist().toCString(true);
+            coverSource.append("|");
+            coverSource.append(ref.tag()->album().toCString(true));
+            item->setData(coverSource, CoverSourceRole);
+            Plasma::DataEngine::Data covers = m_coverEngine->query(coverSource);
+            m_coverEngine->connectSource(coverSource, m_cupdater);
+            if (!covers.isEmpty()) {
+                item->setData(covers["medium"].value<QPixmap>(), Qt::DecorationRole);
+            }
         }
 
         m_model->appendRow(item);
@@ -215,15 +219,14 @@ bool PlaylistWidget::eventFilter(QObject *o, QEvent *e)
         m_indicator->setPalette(p);
         m_indicator->setAutoFillBackground(true);
         m_indicator->move(0, event->pos().y());
-        m_indicator->show();
-        kDebug() << event->pos().y();
+        kDebug() << m_indicator->pos();
     } else if (e->type() == QEvent::GraphicsSceneDragMove) {
         kDebug() << "drag move";
         kDebug() << m_indicator;
         if (m_indicator) {
             QGraphicsSceneDragDropEvent *event = static_cast<QGraphicsSceneDragDropEvent*>(e);
-            kDebug() <<  event->pos().y();
             m_indicator->move(0, event->pos().y());
+            kDebug() <<  m_indicator->pos();
         }
     } else if (e->type() == QEvent::GraphicsSceneDragLeave) {
         kDebug() << "drag leave";

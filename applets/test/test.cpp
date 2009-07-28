@@ -24,7 +24,9 @@
 #include <KDebug>
 
 #include <QWidget>
+#include <QCheckBox>
 #include <QGraphicsLinearLayout>
+#include <QGraphicsProxyWidget>
 
 #include <Plasma/LineEdit>
 
@@ -33,7 +35,7 @@ MCTest::MCTest(QObject *parent, const QVariantList &args)
 {
 
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
-    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout;
+    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
     ActiveItemWidget *widget = new ActiveItemWidget;
     widget->addItem("Item 1");
     widget->addItem("Item 2");
@@ -43,7 +45,18 @@ MCTest::MCTest(QObject *parent, const QVariantList &args)
     layout->addItem(m_edit);
     connect (m_edit, SIGNAL(returnPressed()), this, SLOT(doDebug()));
 
+    QGraphicsProxyWidget *proxy = new QGraphicsProxyWidget(this);
+    QWidget *w = new QWidget;
+    QCheckBox *cbox = new QCheckBox("helo", w);
+    QPalette p = w->palette();
+    p.setColor(QPalette::Window, Qt::green);
+    w->setPalette(p);
+    w->setMinimumHeight(5);
+    proxy->setWidget(w);
+    layout->addItem(proxy);
+
     setLayout(layout);
+
 }
 
 MCTest::~MCTest()
