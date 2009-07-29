@@ -40,6 +40,9 @@ public:
     int length();
     QStringList medias();
 
+public slots:
+    void appendMedia(const QString &mediaString, const QString &playlist = QString());
+
 protected slots:
     void loadConfiguration();
     void configAccepted();

@@ -240,6 +240,11 @@ bool PlaylistWidget::eventFilter(QObject *o, QEvent *e)
 
 void PlaylistWidget::dropEvent(QGraphicsSceneDragDropEvent *event)
 {
+    append(event->mimeData()->urls());
+}
+
+void PlaylistWidget::append(const QList<QUrl> &list)
+{
     Plasma::Service *playlistService = m_playlistEngine->serviceForSource(m_comboBox->nativeWidget()->currentText());
     if (!playlistService) {
         kDebug() << "invalid service";
@@ -248,14 +253,13 @@ void PlaylistWidget::dropEvent(QGraphicsSceneDragDropEvent *event)
 
     kDebug() << "adding to playlist";
     KConfigGroup op = playlistService->operationDescription("add");
-    foreach (const KUrl &url, event->mimeData()->urls()) {
+    foreach (const KUrl &url, list) {
         KMimeType::Ptr mime = KMimeType::findByUrl(url);
         if (mime->name().indexOf("video/") != -1 || mime->name().indexOf("audio/") != -1 || mime->name().indexOf("image/") != -1) {
             op.writeEntry("path", url.path());
             playlistService->startOperationCall(op);
         }
     }
-
 }
 
 void PlaylistWidget::playlistUpdated(const QString &source, const Plasma::DataEngine::Data &data)

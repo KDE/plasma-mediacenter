@@ -53,21 +53,6 @@ public:
 
 public slots:
     /**
-     * Use this slot to add a media to the playlist.
-     * The media could be either a local file or the udi
-     * of the device hosting the media.
-     * If index is length() + 1 the media is appended.
-     *
-     * @param mediaString the string identifying the source.
-     * @param index the index at which the source should be
-     *               placed in the playlist.
-     * @param playlist specifies the playlist to append the media to.
-     *                  If none is specified the current playlist is used.
-     * @note the default implementation does nothing.
-     */
-    virtual void addMedia(int index, const QString &mediaString, const QString &playlist = QString());
-
-    /**
      * Use this slot in order to append the media.
      * @note: the default implementation does nothing.
      */

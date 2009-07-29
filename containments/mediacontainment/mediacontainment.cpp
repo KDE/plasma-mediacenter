@@ -20,10 +20,10 @@
 #include "medianotificationwidget.h"
 #include "medialayout.h"
 
-#include <browser.h>
-#include <playbackcontrol.h>
-#include <playlist.h>
-#include <player.h>
+#include <mediacenter/browser.h>
+#include <mediacenter/playbackcontrol.h>
+#include <mediacenter/playlist.h>
+#include <mediacenter/player.h>
 
 // Qt
 #include <QAction>

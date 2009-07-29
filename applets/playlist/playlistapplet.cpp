@@ -87,4 +87,7 @@ void PlaylistApplet::loadConfiguration()
     m_playlistWidget->setMultiplePlaylistsEnabled(m_multiplePlaylists);
 }
 
+void PlaylistApplet::appendMedia(const QString &mediaString, const QString &playlist)
+{}
+
 K_EXPORT_PLASMA_APPLET(playlist, PlaylistApplet)

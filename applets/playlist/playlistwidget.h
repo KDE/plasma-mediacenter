@@ -21,6 +21,7 @@
 
 #include <QGraphicsWidget>
 #include <Plasma/DataEngine>
+#include <QList>
 
 namespace Plasma {
     class TreeView;
@@ -54,6 +55,7 @@ public Q_SLOTS:
     void playlistUpdated(const QString &, const Plasma::DataEngine::Data &);
     void coverUpdated(const QString &, const Plasma::DataEngine::Data &);
     void setMultiplePlaylistsEnabled(bool);
+    void append(const QList<QUrl> &);
 
 protected Q_SLOTS:
     void slotPlaylistAdded(const QString &source);

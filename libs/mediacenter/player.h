@@ -23,7 +23,7 @@
 
 #include <Plasma/Applet>
 
-#include <mediacenter.h>
+#include <mediacenter/mediacenter.h>
 
 namespace Phonon {
     class MediaObject;
@@ -63,7 +63,7 @@ public:
     /**
      * Reimplement this function in order to return the current
      * path to the current reproducing media. If the current media
-     * is a MediaCenter::Dvd/MediaCenter::Vcd/MediaCenter::Cd just return
+     * is a MediaCenter::OpticalDisc just return
      * the device name containing the media. Use Solid in order to retrieve it.
      */
     virtual QString currentMedia();
@@ -73,16 +73,6 @@ public:
      * showing queues of pictures.
      */
     virtual void setSlideshowInterval(qint64 time);
-
-//    /**
-//     * You must reimplement this function in order to
-//     * provide a list of supported mime types the player can
-//     * enqueue and play.
-//     *
-//     * @return: mime types in the form of: "image/jpeg, video/mpeg..."
-//     * @note: wildcards "*" are not supported.
-//     */
-//    virtual QStringList mimeTypes() = 0;
 
 signals:
     /**
@@ -125,7 +115,7 @@ public slots:
      */
     virtual void seek(int time) = 0;
 
-        /**
+    /**
      * Reimplement this method in order to store and properly set the queue
      * for reproduction.
      *
