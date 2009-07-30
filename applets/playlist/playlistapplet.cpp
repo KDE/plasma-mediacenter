@@ -22,7 +22,9 @@
 #include <QGraphicsLinearLayout>
 
 #include <QWidget>
+
 #include <KConfigDialog>
+#include <KUrl>
 
 PlaylistApplet::PlaylistApplet(QObject *parent, const QVariantList &args)
     : MediaCenter::Playlist(parent, args), m_playlistWidget(0)
@@ -87,7 +89,15 @@ void PlaylistApplet::loadConfiguration()
     m_playlistWidget->setMultiplePlaylistsEnabled(m_multiplePlaylists);
 }
 
-void PlaylistApplet::appendMedia(const QString &mediaString, const QString &playlist)
-{}
+void PlaylistApplet::appendMedia(const QStringList &mediaStrings, const QString &playlist)
+{
+    Q_UNUSED(playlist); // TODO: take care of the playlist specification
+
+    QList<QUrl> urls;
+    foreach (const QString &path, mediaStrings) {
+        urls << KUrl(path);
+    }
+    m_playlistWidget->append(urls);
+}
 
 K_EXPORT_PLASMA_APPLET(playlist, PlaylistApplet)

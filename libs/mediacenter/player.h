@@ -94,7 +94,7 @@ signals:
      *
      * @param medias: the list of media received by the user.
      */
-    void mediaReceived(const QList<Media> &medias);
+    void mediaReceived(const QStringList &medias);
 
 public slots:
     /**

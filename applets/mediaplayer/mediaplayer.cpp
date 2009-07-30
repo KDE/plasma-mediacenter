@@ -228,18 +228,21 @@ void MediaPlayer::dropEvent(QGraphicsSceneDragDropEvent *event)
         return;
     }
 
-    // TODO: handle multiple urls putting them in
-    //       the playlist.
-    QUrl testPath(event->mimeData()->urls().first());
+    QStringList medias;
+    foreach (const KUrl &url, event->mimeData()->urls()) {
+        if (!QFile::exists(url.path())) {
+            continue;
+        }
 
-    if (QFile::exists(testPath.path())) {
-        KMimeType::Ptr type = KMimeType::findByPath(testPath.path());
-
-        // TODO: also handle audios and pictures.
-        if (type->name().indexOf("video/") != -1) {
-            OpenUrl(testPath.path());
+        KMimeType::Ptr mime = KMimeType::findByPath(url.path());
+        if (mime->name().indexOf("video/") != -1 ||
+            mime->name().indexOf("audio/") != -1 ||
+            mime->name().indexOf("image/") != -1) {
+            medias << url.path();
         }
     }
+
+    emit mediaReceived(medias);
 }
 
 void MediaPlayer::ShowOpenFileDialog()
