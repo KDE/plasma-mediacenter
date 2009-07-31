@@ -52,3 +52,8 @@ void Player::setSlideshowInterval(qint64 time)
 {
     Q_UNUSED(time);
 }
+
+void Player::playMedia(const QString &media)
+{
+    Q_UNUSED(media);
+}

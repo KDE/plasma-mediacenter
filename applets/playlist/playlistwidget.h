@@ -64,13 +64,21 @@ protected Q_SLOTS:
     void updateColors();
     void removeFromPlaylist(const QModelIndex &index);
     void reloadCover(const QModelIndex &index);
+    void slotMediaActivated(const QModelIndex &index);
+
+Q_SIGNALS:
+    void mediaActivated(const QString &media);
 
 protected:
     void dropEvent(QGraphicsSceneDragDropEvent *event);
+//    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+//    void mousePressEvent(QGraphicsSceneMouseEvents *event);
+//    void mouseReleaseEvent(QGrpahicsSceneMouseEvent *event);
 
 private:
     enum ConvenientRoles {
-        CoverSourceRole = Qt::UserRole + 4
+        CoverSourceRole = Qt::UserRole + 4,
+        PathRole = Qt::UserRole + 5
     };
 
     Plasma::TreeView *m_treeView;

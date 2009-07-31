@@ -80,6 +80,13 @@ signals:
      */
     void playlistChanged(const QStringList &medias, const QString &playlistName);
 
+    /**
+     * This signal should be emitted whenever a new media has to be played.
+     * For example emit this signal when the user clicks on a specific media
+     * in the playlist.
+     */
+    void mediaActivated(const QString &media);
+
 };
 
 }

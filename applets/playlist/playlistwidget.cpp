@@ -91,6 +91,8 @@ PlaylistWidget::PlaylistWidget(QGraphicsItem *parent)
     p.setColor(QPalette::Text, Plasma::Theme::defaultTheme()->color(Plasma::Theme::TextColor));
     m_treeView->nativeWidget()->setPalette(p);
 
+    connect (m_treeView->nativeWidget(), SIGNAL(activated(QModelIndex)), this, SLOT(slotMediaActivated(QModelIndex)));
+
     connect (Plasma::Theme::defaultTheme(), SIGNAL(themeChanged()), this, SLOT(updateColors()));
 
     m_comboBox = new Plasma::ComboBox(this);
@@ -130,22 +132,23 @@ void PlaylistWidget::showPlaylist(const QString &playlistName)
     m_model->clear();
     QStringList files;
 
-    foreach (const QVariant &tracks, m_playlistEngine->query(playlistName)) {
-        files << tracks.toStringList();
-        kDebug() << tracks;
+    foreach (const QVariant &medias, m_playlistEngine->query(playlistName)) {
+        files << medias.toStringList();
     }
 
-    foreach (const QString &track, files) {
-        TagLib::FileRef ref(track.toLatin1());
-        QString name = ref.isNull() ? track : ref.tag()->title().toCString(true);
+    foreach (const QString &media, files) {
+        TagLib::FileRef ref(media.toLatin1());
+        QString name = ref.isNull() ? media : ref.tag()->title().toCString(true);
         QStandardItem *item = new QStandardItem(name);
         item->setEditable(false);
+        item->setData(media, PathRole);
         if (item->text().isEmpty()) {
-            item->setText(QFileInfo(track).baseName());
+            item->setText(QFileInfo(media).baseName());
         }
+
         if (!ref.isNull()) {
             item->setData(ref.tag()->artist().toCString(true), PlaylistDelegate::ArtistRole);
-            item->setData(track, PlaylistDelegate::FilePathRole);
+            item->setData(media, PlaylistDelegate::FilePathRole);
             item->setData(ref.tag()->album().toCString(true), PlaylistDelegate::AlbumRole);
 
 
@@ -341,4 +344,9 @@ QStringList PlaylistWidget::medias()
 int PlaylistWidget::length()
 {
     return m_model->rowCount();
+}
+
+void PlaylistWidget::slotMediaActivated(const QModelIndex &index)
+{
+    emit mediaActivated(index.data(PathRole).toString());
 }

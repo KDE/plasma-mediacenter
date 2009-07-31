@@ -135,6 +135,16 @@ public slots:
      * enqueued at a specified index.
      */
     virtual void enqueue(int index, const QList<Media> &sources);
+
+    /**
+     * This slot should be called whenever in order to make
+     * the player play the specified media.
+     *
+     * @param media is the media to be played. It has to exist
+     * in the current queue.
+     * @note the default implementation does nothing.
+     */
+    virtual void playMedia(const QString &media);
 };
 }
 
