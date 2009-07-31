@@ -21,8 +21,12 @@
 #include <QFileInfo>
 
 #include <KMimeType>
+#include <KUrl>
+
 #include <Solid/Device>
 #include <Solid/OpticalDisc>
+
+#include <Phonon/MediaSource>
 
 namespace MediaCenter {
 
@@ -54,4 +58,36 @@ MediaType getType(const QString &media)
     }
 }
 
+Media mediaFromMediaSource(const Phonon::MediaSource &source)
+{
+    if (source.url().isValid()) {
+        Media media;
+        media.second = KUrl(source.url()).path();
+        media.first = getType(media.second);
+        if (media.first == MediaCenter::Invalid) {
+            media.second = "";
+            return media;
+        }
+        return media;
+    }
+
+    if (!source.fileName().isEmpty()) {
+        Media media;
+        media.second = source.fileName();
+        media.first = getType(media.second);
+        if (media.first == MediaCenter::Invalid) {
+            media.second = "";
+            return media;
+        }
+        return media;
+    }
+
+    if (!source.deviceName().isEmpty()) {
+        Media media;
+        media.second = source.deviceName();
+        media.first = MediaCenter::OpticalDisc;
+        return media;
+    }
 }
+
+} // MediaCenter namespace

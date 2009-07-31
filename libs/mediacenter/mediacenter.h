@@ -23,6 +23,10 @@
 
 #include <QPair>
 
+namespace Phonon {
+    class MediaSource;
+}
+
 namespace MediaCenter {
 
 enum MediaType {
@@ -56,6 +60,8 @@ typedef QPair<MediaType, QString> Media;
  *               or the path of the local file.
  */
 MEDIACENTER_EXPORT MediaType getType(const QString &media);
+
+MEDIACENTER_EXPORT Media mediaFromMediaSource(const Phonon::MediaSource &);
 
 } // namespace MediaCenter
 

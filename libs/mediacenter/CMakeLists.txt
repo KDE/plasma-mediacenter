@@ -10,7 +10,7 @@ mediacenter.cpp
 
 kde4_add_library(mediacenterlibs SHARED ${mediacenterlibs_SRCS})
 
-target_link_libraries(mediacenterlibs ${KDE4_PLASMA_LIBS} ${KDE4_SOLID_LIBS})
+target_link_libraries(mediacenterlibs ${KDE4_PLASMA_LIBS} ${KDE4_SOLID_LIBS} ${KDE4_PHONON_LIBS})
 install(TARGETS mediacenterlibs ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 set (mediacenterlibs_HDRS

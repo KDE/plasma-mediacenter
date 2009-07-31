@@ -81,6 +81,8 @@ public Q_SLOTS:
     void ShowOpenFileDialog();
     void OpenUrl(const QString &path);
 
+    void playMedia(const QString &media);
+
     void stop();
     void skipForward();
     void skipBackward();
@@ -92,6 +94,7 @@ private Q_SLOTS:
 private:
     void applyConfig();
     void doFullScreen();
+    void slideShow(const QString &media);
 
 private:
     QGraphicsLinearLayout *m_layout;
@@ -106,6 +109,8 @@ private:
     Phonon::VideoWidget *m_fullScreenVideo;
 
     Ui::Config ui;
+
+    QList<MediaCenter::Media> m_medias;
 };
 
 #endif

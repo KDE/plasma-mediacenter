@@ -344,9 +344,28 @@ Phonon::MediaObject* MediaPlayer::mediaObject()
 }
 
 void MediaPlayer::skipBackward()
-{}
+{
+}
 
 void MediaPlayer::skipForward()
+{}
+
+void MediaPlayer::playMedia(const QString &mediaString)
+{
+    foreach (MediaCenter::Media media, m_medias)  {
+        if (media.second == mediaString) {
+            if (media.first == MediaCenter::Audio ||
+                media.first == MediaCenter::Video ||
+                media.first == MediaCenter::OpticalDisc) {
+                m_video->mediaObject()->setCurrentSource(media.second);
+            } else {
+                slideShow(mediaString);
+            }
+        }
+    }
+}
+
+void MediaPlayer::slideShow(const QString &media)
 {}
 
 K_EXPORT_PLASMA_APPLET(mcplayer, MediaPlayer)
