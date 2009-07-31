@@ -59,8 +59,6 @@ void MediaController::resizeEvent(QGraphicsSceneResizeEvent *event)
 
 void MediaController::paintInterface(QPainter *painter, const QStyleOptionGraphicsItem *option, const QRect &contentsRect)
 {
-    painter->fillRect(option->rect, Qt::green);
-    painter->fillRect(contentsRect, Qt::red);
     m_svg->paintFrame(painter, option->rect);
 }
 

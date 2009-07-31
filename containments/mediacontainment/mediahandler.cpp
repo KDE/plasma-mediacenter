@@ -60,9 +60,9 @@ void MediaHandler::resizeEvent(QGraphicsSceneResizeEvent *event)
 {
     Q_UNUSED(event);
     if (m_handlerPosition == Left || m_handlerPosition == Right) {
-        m_handlerSvg->resizeFrame(QSizeF(10, size().height()));
+        m_handlerSvg->resizeFrame(QSizeF(12, size().height()));
     } else {
-        m_handlerSvg->resizeFrame(QSizeF(size().width(), 10));
+        m_handlerSvg->resizeFrame(QSizeF(size().width(), 12));
     }
 }
 
@@ -100,7 +100,7 @@ void MediaHandler::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
     if (m_handlerPosition == Left) {
         m_handlerSvg->paintFrame(painter, QPointF(option->rect.right() - m_handlerSvg->frameSize().width(), option->rect.top()));
     } else if (m_handlerPosition == Top) {
-        m_handlerSvg->paintFrame(painter, QPointF(option->rect.left(), option->rect.bottom() - m_handlerSvg->frameSize().height()));
+        m_handlerSvg->paintFrame(painter, QPointF(0, option->rect.bottom() - m_handlerSvg->frameSize().height()));
     } else {
         m_handlerSvg->paintFrame(painter, option->rect.topLeft());
     }
