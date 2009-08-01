@@ -78,7 +78,7 @@ protected:
 private:
     enum ConvenientRoles {
         CoverSourceRole = Qt::UserRole + 4,
-        PathRole = Qt::UserRole + 5
+        PathRole = Qt::UserRole + 3
     };
 
     Plasma::TreeView *m_treeView;

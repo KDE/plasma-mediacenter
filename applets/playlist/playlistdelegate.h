@@ -49,6 +49,7 @@ private:
     QRect getContentsRect(const QRect &rect) const;
     QRect removeButtonRect(const QRect &contentsRect) const;
     QRect reloadButtonRect(const QRect &contentsRect) const;
+    QPixmap getIcon(const QString &path, int size) const;
 
 Q_SIGNALS:
     void removeRequested(const QModelIndex &index);

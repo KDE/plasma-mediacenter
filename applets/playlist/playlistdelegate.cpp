@@ -19,6 +19,8 @@
 #include "playlistdelegate.h"
 #include "utils/utils.h"
 
+#include <mediacenter/mediacenter.h>
+
 // Qt
 #include <QMouseEvent>
 #include <QStyleOptionViewItem>
@@ -28,6 +30,7 @@
 #include <QFontMetrics>
 
 // KDE
+#include <KMimeType>
 #include <KIconLoader>
 #include <KApplication>
 #include <KDebug>
@@ -37,8 +40,7 @@
 #include <Plasma/PaintUtils>
 #include <Plasma/FrameSvg>
 
-static const int COVER_SIZE = 64;
-static const int COVER_SMALL_SIZE = 48;
+static const int COVER_SIZE = 48;
 static const int ITEM_MARGIN = 2;
 static const int TOOL_BUTTON_SIZE = 16;
 static const int SPACING = 5;
@@ -77,16 +79,11 @@ void PlaylistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     }
 
     // cover drawing
-    // TODO: cover drawing is audio specific, be aware of image and audio mime also..
-    int size = option.state & QStyle::State_MouseOver ? COVER_SIZE : COVER_SMALL_SIZE;
-    QPixmap cover = index.data(CoverRole).isNull() ? KIconLoader::global()->loadIcon("x-media-podcast", KIconLoader::Desktop, size, KIconLoader::DisabledState)
-                    : index.data(CoverRole).value<QPixmap>().scaled(size, size);
+    // TODO: cover drawing is audio specific, be aware of image and video mime also..
+    QPixmap cover = index.data(CoverRole).isNull() ? getIcon(index.data(FilePathRole).toString(), COVER_SIZE)
+                    : index.data(CoverRole).value<QPixmap>().scaled(COVER_SIZE, COVER_SIZE);
 
-    if (option.state & QStyle::State_MouseOver) {
-        painter->drawPixmap(contentsRect.x(), contentsRect.y(), cover);
-    } else {
-        painter->drawPixmap(contentsRect.x() + (COVER_SIZE - COVER_SMALL_SIZE)/2, contentsRect.y() + (COVER_SIZE - COVER_SMALL_SIZE)/2, cover);
-    }
+    painter->drawPixmap(ITEM_MARGIN + (contentsRect.height() - COVER_SIZE)/2, option.rect.top() + (contentsRect.height() - COVER_SIZE)/2, cover);
 
     painter->setBrush(Plasma::Theme::defaultTheme()->color(Plasma::Theme::TextColor));
 
@@ -95,25 +92,19 @@ void PlaylistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     // the x for the text
     int x = contentsRect.x() + COVER_SIZE + ITEM_MARGIN;
 
-    // song title
-    if (option.state & QStyle::State_MouseOver &&
-        qGray(Plasma::Theme::defaultTheme()->color(Plasma::Theme::HighlightColor).rgb()) > 192) {
-        QPixmap title = Plasma::PaintUtils::shadowText(index.data(TrackNameRole).toString(),
-                                                       Plasma::Theme::defaultTheme()->color(Plasma::Theme::HighlightColor),
-                                                       Plasma::Theme::defaultTheme()->color(Plasma::Theme::TextColor));
-        painter->drawPixmap(x - 2, y + 1, title);
-    } else {
-        painter->drawText(x, y + option.fontMetrics.height(), index.data(TrackNameRole).toString());
-    }
+    const QString text = option.fontMetrics.elidedText(index.data(TrackNameRole).toString(), Qt::ElideMiddle, option.rect.width() - x);
+    QPixmap title = Plasma::PaintUtils::shadowText(text,
+                                                   Plasma::Theme::defaultTheme()->color(Plasma::Theme::TextColor),
+                                                   Plasma::Theme::defaultTheme()->color(Plasma::Theme::HighlightColor));
+
+    painter->drawPixmap(x - 2, y + 1, title);
 
     y += option.fontMetrics.height() + ITEM_MARGIN;
 
     // artist
     painter->save();
-    painter->setPen(option.state & QStyle::State_MouseOver ?
-                    Plasma::Theme::defaultTheme()->color(Plasma::Theme::TextColor) :
-                                                         Plasma::Theme::defaultTheme()->color(Plasma::Theme::HighlightColor));
-    painter->drawText(x, y + option.fontMetrics.height(), index.data(ArtistRole).toString());
+    painter->setPen(Plasma::Theme::defaultTheme()->color(Plasma::Theme::HighlightColor));
+    painter->drawText(x, y + option.fontMetrics.height(), option.fontMetrics.elidedText(index.data(ArtistRole).toString(), Qt::ElideMiddle, option.rect.width() - x));
     painter->restore();
 
 
@@ -166,6 +157,36 @@ QSize PlaylistDelegate::sizeHint(const QStyleOptionViewItem &option, const QMode
 
     kDebug() << "returning QSize(" << width << "," << height << ")" << "for" << index.data().toString();
     return QSize(width, height);
+}
+
+QPixmap PlaylistDelegate::getIcon(const QString &path, int size) const
+{
+    // audio-x-generic : Audio
+    // video-x-generic : Video
+    // image-x-generic : Picture
+    // media-optical   : OpticalDisc
+
+    QString icon;
+    MediaCenter::MediaType type = MediaCenter::getType(path);
+    switch (type) {
+    case MediaCenter::Audio :
+        icon = "audio-x-generic";
+        break;
+    case MediaCenter::Video :
+        icon = "video-x-generic";
+        break;
+    case MediaCenter::Picture :
+        icon = "image-x-generic";
+        break;
+    case MediaCenter::OpticalDisc :
+        icon = "media-optical";
+        break;
+    default :
+            break;
+    }
+
+    QPixmap pixmap = KIconLoader::global()->loadIcon(icon, KIconLoader::Desktop, COVER_SIZE, KIconLoader::DisabledState);
+    return pixmap;
 }
 
 #include "playlistdelegate.moc"

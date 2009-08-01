@@ -136,15 +136,15 @@ void LastFMFetcher::coverReceived(KIO::Job *job, const QByteArray &data)
 QString LastFMFetcher::sizeToString(CoverSize size)
 {
     switch (size) {
-        case LastFMFetcher::Small :
+    case LastFMFetcher::Small :
+        return "small";
+    case LastFMFetcher::Medium :
+        return "medium";
+    case LastFMFetcher::Large :
+        return "large";
+    case LastFMFetcher::ExtraLarge :
+        return "extralarge";
+    default :
             return "small";
-        case LastFMFetcher::Medium :
-            return "medium";
-        case LastFMFetcher::Large :
-            return "large";
-        case LastFMFetcher::ExtraLarge :
-            return "extralarge";
-        default :
-            return "small";
-    }
+}
 }
