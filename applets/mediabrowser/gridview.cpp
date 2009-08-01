@@ -27,7 +27,8 @@
 GridView::GridView(QGraphicsItem *parent) : AbstractMediaItemView(parent),
 m_itemLines(0),
 m_timer(new QTimer(this)),
-m_lastHoveredItem(0)
+m_lastHoveredItem(0),
+m_highlighting(false)
 {
     setupOptions();
     m_timer->setInterval(2000);
@@ -132,7 +133,11 @@ void GridView::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
     if (m_hoveredItem && m_hoveredItem != m_lastHoveredItem) {
         m_lastHoveredItem = m_hoveredItem;
         m_timer->stop();
-        layoutItems();
+        if (m_highlighting) {
+            layoutItems();
+            restoreItems();
+            m_highlighting = false;
+        }
         m_timer->start();
     }
 }
@@ -143,12 +148,14 @@ void GridView::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 
     if (m_timer->isActive()) {
         m_timer->stop();
+        m_highlighting = false;
     }
     m_lastHoveredItem = 0;
 }
 
 void GridView::highlightHoveredItem()
 {
+    fadeOutItems(m_hoveredItem);
     Plasma::Animator::self()->customAnimation(100, 250, Plasma::Animator::EaseInCurve, this, "highlightAnimation");
     m_hoveredItem->setZValue(1000);
     m_timer->stop();
@@ -156,6 +163,7 @@ void GridView::highlightHoveredItem()
 
 void GridView::highlightAnimation(qreal value)
 {
+    m_highlighting = true;
     m_hoveredItem->resize( (m_hoveredItem->itemSizeHint().width() * 2) * value, (m_hoveredItem->itemSizeHint().height() * 2) * value);
     m_hoverIndicator->resize(m_hoveredItem->size());
 }
@@ -169,4 +177,20 @@ QModelIndex GridView::indexFromPos(const QPointF &pos)
     }
 
     return QModelIndex();
+}
+
+void GridView::fadeOutItems(ViewItem *exception)
+{
+    for (int i = 0; i < m_items.count(); i++) {
+        if (m_items[i] != exception) {
+            m_items[i]->setOpacity(0.3);
+        }
+    }
+}
+
+void GridView::restoreItems()
+{
+    for (int i = 0; i < m_items.count(); i++) {
+        m_items[i]->setOpacity(1);
+    }
 }

@@ -51,6 +51,19 @@ private:
     QTimer *m_timer;
 
     ViewItem *m_lastHoveredItem;
+    bool m_highlighting;
+
+private:
+    /**
+     * Makes all items less opaque excepting
+     * the given item;
+     */
+    void fadeOutItems(ViewItem *exception);
+
+    /**
+     * Restores items' opacity.
+     */
+    void restoreItems();
 
 private slots:
     void highlightHoveredItem();

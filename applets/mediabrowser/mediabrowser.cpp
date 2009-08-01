@@ -119,7 +119,6 @@ void MediaBrowser::switchToFileModel()
 
    if (!m_lister) {
         m_lister = new KDirLister(this);
-        m_mimeTypes;
         KMimeType::List mimeList = KMimeType::allMimeTypes();
 
         foreach (KMimeType::Ptr mime, mimeList) {
