@@ -35,6 +35,7 @@
 
 #include <Nepomuk/KRatingPainter>
 #include <Nepomuk/Resource>
+#include <Nepomuk/ResourceManager>
 
 #include <KDebug>
 
@@ -50,7 +51,8 @@ m_frameSvg(new Plasma::FrameSvg(this)),
 m_preview(0),
 m_hoverRating(0),
 m_rating(0),
-m_resource(0)
+m_resource(0),
+m_nepomuk(false)
 {
     setContentsMargins(0, 0, 0, 0);
 
@@ -60,6 +62,8 @@ m_resource(0)
     m_frameSvg->setElementPrefix("hover");
 
     setAcceptedMouseButtons(0);
+    
+    m_nepomuk = Nepomuk::ResourceManager::instance()->initialized();
 }
 
 ViewItem::~ViewItem()
@@ -103,8 +107,10 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
             m_frameSvg->resizeFrame(option->rect.size());
         }
         m_frameSvg->paintFrame(painter, option->rect.topLeft());
-        if (m_option.decorationPosition == QStyleOptionViewItem::Left) {
-            KRatingPainter::paintRating(painter, ratingRect(option->rect), Qt::AlignLeft | Qt::AlignVCenter, m_rating, m_hoverRating);
+        if (m_nepomuk) {
+            if (m_option.decorationPosition == QStyleOptionViewItem::Left) {
+                KRatingPainter::paintRating(painter, ratingRect(option->rect), Qt::AlignLeft | Qt::AlignVCenter, m_rating, m_hoverRating);
+            }
         }
     }
 
@@ -285,6 +291,10 @@ QRect ViewItem::ratingRect(const QRect &contentsRect) const
 
 void ViewItem::updateHoverRating(const QPoint &pos)
 {
+    if (!m_nepomuk) {
+        return;
+    }
+
     m_hoverRating = KRatingPainter::getRatingFromPosition(ratingRect(contentsRect().toRect()), Qt::AlignLeft | Qt::AlignVCenter, Qt::LeftToRight, pos);
     if (m_hoverRating == -1) {
         m_hoverRating = 0;
@@ -294,10 +304,12 @@ void ViewItem::updateHoverRating(const QPoint &pos)
 
 void ViewItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+    if (!m_nepomuk) {
+        event->ignore();
+    }
+
     if (ratingRect(contentsRect().toRect()).contains(event->pos().toPoint())) {
         emit ratingActivated(KRatingPainter::getRatingFromPosition(ratingRect(contentsRect().toRect()),
                                                                    Qt::AlignLeft | Qt::AlignVCenter, Qt::LeftToRight, event->pos().toPoint()));
-    } else {
-        event->ignore();
     }
 }

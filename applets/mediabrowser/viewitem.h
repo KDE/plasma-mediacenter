@@ -72,6 +72,7 @@ private:
     int m_hoverRating;
     int m_rating;
     Nepomuk::Resource *m_resource;
+    bool m_nepomuk;
 
     friend class AbstractMediaItemView;
 

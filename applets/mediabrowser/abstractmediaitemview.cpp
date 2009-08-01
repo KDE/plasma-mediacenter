@@ -186,7 +186,7 @@ void AbstractMediaItemView::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
     updateHoveredItem(event->pos());
     if (m_hoveredItem) {
-        m_hoverIndicator->m_rating = m_hoveredItem->m_resource->rating();
+        m_hoverIndicator->m_rating = m_hoveredItem->m_nepomuk ? m_hoveredItem->m_resource->rating() : 0;
     }
     m_hoverIndicator->updateHoverRating(mapToItem(m_hoverIndicator, event->pos()).toPoint());
 }
@@ -195,7 +195,7 @@ void AbstractMediaItemView::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
 {
     updateHoveredItem(event->pos());
     if (m_hoveredItem) {
-        m_hoverIndicator->m_rating = m_hoveredItem->m_resource->rating();
+        m_hoverIndicator->m_rating = m_hoveredItem->m_nepomuk ? m_hoveredItem->m_resource->rating() : 0;
     }
     m_hoverIndicator->updateHoverRating(mapToItem(m_hoverIndicator, event->pos()).toPoint());
 }
