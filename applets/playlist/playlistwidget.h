@@ -36,6 +36,7 @@ class QModelIndex;
 
 class PlaylistUpdater;
 class CoverUpdater;
+class TreeView;
 
 class PlaylistWidget : public QGraphicsWidget
 {
@@ -49,8 +50,6 @@ public:
     QStringList medias();
     int length();
 
-    bool eventFilter(QObject *, QEvent *);
-
 public Q_SLOTS:
     void playlistUpdated(const QString &, const Plasma::DataEngine::Data &);
     void coverUpdated(const QString &, const Plasma::DataEngine::Data &);
@@ -61,7 +60,6 @@ protected Q_SLOTS:
     void slotPlaylistAdded(const QString &source);
     void slotCoverReady(const QString &source);
     void showPlaylist(const QString &playlistName);
-    void updateColors();
     void removeFromPlaylist(const QModelIndex &index);
     void reloadCover(const QModelIndex &index);
     void slotMediaActivated(const QModelIndex &index);
@@ -71,9 +69,6 @@ Q_SIGNALS:
 
 protected:
     void dropEvent(QGraphicsSceneDragDropEvent *event);
-//    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
-//    void mousePressEvent(QGraphicsSceneMouseEvents *event);
-//    void mouseReleaseEvent(QGrpahicsSceneMouseEvent *event);
 
 private:
     enum ConvenientRoles {
@@ -81,7 +76,7 @@ private:
         PathRole = Qt::UserRole + 3
     };
 
-    Plasma::TreeView *m_treeView;
+    TreeView *m_treeView;
     Plasma::ComboBox *m_comboBox;
     Plasma::DataEngine *m_playlistEngine;
     Plasma::DataEngine *m_coverEngine;

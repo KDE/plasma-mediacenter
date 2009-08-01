@@ -25,6 +25,7 @@
 
 #include <KConfigDialog>
 #include <KUrl>
+#include <KDebug>
 
 PlaylistApplet::PlaylistApplet(QObject *parent, const QVariantList &args)
     : MediaCenter::Playlist(parent, args), m_playlistWidget(0)
@@ -41,6 +42,8 @@ PlaylistApplet::PlaylistApplet(QObject *parent, const QVariantList &args)
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout;
     layout->addItem(m_playlistWidget);
     setLayout(layout);
+
+    setAcceptedMouseButtons(Qt::NoButton);
 }
 
 PlaylistApplet::~PlaylistApplet()

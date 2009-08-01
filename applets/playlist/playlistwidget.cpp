@@ -19,10 +19,12 @@
 #include "playlistwidget.h"
 #include "utils/utils.h"
 #include "playlistdelegate.h"
+#include "treeview.h"
 
 // Qt
 #include <QGraphicsLinearLayout>
 #include <QGraphicsSceneDragDropEvent>
+#include <QGraphicsProxyWidget>
 #include <QStandardItemModel>
 #include <QStandardItem>
 #include <QVariant>
@@ -41,6 +43,7 @@
 #include <KConfigGroup>
 #include <KComboBox>
 #include <KMimeType>
+#include <KGlobalSettings>
 
 // Plasma
 #include <Plasma/TreeView>
@@ -60,7 +63,7 @@
 
 PlaylistWidget::PlaylistWidget(QGraphicsItem *parent)
     : QGraphicsWidget(parent),
-      m_treeView(new Plasma::TreeView(this)),
+      m_treeView(new TreeView),
       m_playlistEngine(0),
       m_coverEngine(0),
       m_model(new QStandardItemModel(this)),
@@ -69,6 +72,12 @@ PlaylistWidget::PlaylistWidget(QGraphicsItem *parent)
       m_cupdater(new CoverUpdater(this)),
       m_multiplePlaylists(false)
 {
+
+    QGraphicsProxyWidget *proxy = new QGraphicsProxyWidget(this);
+    proxy->setWidget(m_treeView);
+    proxy->setAcceptDrops(false);
+    connect (m_treeView, SIGNAL(activated(QModelIndex)), this, SLOT(slotMediaActivated(QModelIndex)));
+
     // here we try to load the playlist engine
     m_playlistEngine = MediaCenter::loadEngineOnce("playlist");
     kDebug() << m_playlistEngine;
@@ -83,17 +92,7 @@ PlaylistWidget::PlaylistWidget(QGraphicsItem *parent)
     connect(delegate, SIGNAL(removeRequested(const QModelIndex &)), this, SLOT(removeFromPlaylist(const QModelIndex &)));
     connect(delegate, SIGNAL(reloadRequested(const QModelIndex &)), this, SLOT(reloadCover(const QModelIndex &)));
 
-    m_treeView->nativeWidget()->setItemDelegate(delegate);
-    m_treeView->nativeWidget()->setHeaderHidden(true);
-    m_treeView->nativeWidget()->setRootIsDecorated(false);
-    QPalette p = m_treeView->nativeWidget()->palette();
-    p.setColor(QPalette::Base, Qt::transparent);
-    p.setColor(QPalette::Text, Plasma::Theme::defaultTheme()->color(Plasma::Theme::TextColor));
-    m_treeView->nativeWidget()->setPalette(p);
-
-    connect (m_treeView->nativeWidget(), SIGNAL(activated(QModelIndex)), this, SLOT(slotMediaActivated(QModelIndex)));
-
-    connect (Plasma::Theme::defaultTheme(), SIGNAL(themeChanged()), this, SLOT(updateColors()));
+    m_treeView->setItemDelegate(delegate);
 
     m_comboBox = new Plasma::ComboBox(this);
     connect (m_comboBox->nativeWidget(), SIGNAL(currentIndexChanged(const QString &)), this, SLOT(showPlaylist(const QString &)));
@@ -110,13 +109,10 @@ PlaylistWidget::PlaylistWidget(QGraphicsItem *parent)
 
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
     layout->addItem(m_comboBox);
-    layout->addItem(m_treeView);
+    layout->addItem(proxy);
     setLayout(layout);
 
     setAcceptDrops(true);
-    m_treeView->setAcceptDrops(false);
-
-    m_treeView->installEventFilter(this);
 }
 
 PlaylistWidget::~PlaylistWidget()
@@ -202,42 +198,6 @@ void PlaylistWidget::slotCoverReady(const QString &source)
     }
 }
 
-bool PlaylistWidget::eventFilter(QObject *o, QEvent *e)
-{
-    if (o != m_treeView) {
-        return false;
-    }
-
-    kDebug() << "tree view";
-    if (e->type() == QEvent::GraphicsSceneDragEnter) {
-        kDebug() << "drag enter";
-        QGraphicsSceneDragDropEvent *event = static_cast<QGraphicsSceneDragDropEvent*>(e);
-        m_indicator = new QWidget(m_treeView->nativeWidget()->viewport());
-        m_indicator->resize(m_treeView->nativeWidget()->size().width(), 5);
-        QPalette p = m_indicator->palette();
-        p.setColor(QPalette::Window, Qt::green);
-        m_indicator->setPalette(p);
-        m_indicator->setAutoFillBackground(true);
-        m_indicator->move(0, event->pos().y());
-        kDebug() << m_indicator->pos();
-    } else if (e->type() == QEvent::GraphicsSceneDragMove) {
-        kDebug() << "drag move";
-        kDebug() << m_indicator;
-        if (m_indicator) {
-            QGraphicsSceneDragDropEvent *event = static_cast<QGraphicsSceneDragDropEvent*>(e);
-            m_indicator->move(0, event->pos().y());
-            kDebug() <<  m_indicator->pos();
-        }
-    } else if (e->type() == QEvent::GraphicsSceneDragLeave) {
-        kDebug() << "drag leave";
-        delete m_indicator;
-        m_indicator = 0;
-    }
-
-    return false;
-
-}
-
 void PlaylistWidget::dropEvent(QGraphicsSceneDragDropEvent *event)
 {
     append(event->mimeData()->urls());
@@ -280,13 +240,6 @@ void PlaylistWidget::coverUpdated(const QString &source, const Plasma::DataEngin
 
     kDebug() << "updated cover for" << source;
     slotCoverReady(source);
-}
-
-void PlaylistWidget::updateColors()
-{
-    QPalette p = m_treeView->nativeWidget()->palette();
-    p.setColor(QPalette::Text, Plasma::Theme::defaultTheme()->color(Plasma::Theme::TextColor));
-    m_treeView->nativeWidget()->setPalette(p);
 }
 
 void PlaylistWidget::removeFromPlaylist(const QModelIndex &index)

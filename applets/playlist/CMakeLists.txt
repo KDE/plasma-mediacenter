@@ -5,6 +5,7 @@ set(playlist_SRCS
 playlistapplet.cpp
 playlistwidget.cpp
 playlistdelegate.cpp
+treeview.cpp
 ../../utils/utils.cpp
 )
  
