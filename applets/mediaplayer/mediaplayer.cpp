@@ -349,6 +349,7 @@ void MediaPlayer::skipForward()
 
 void MediaPlayer::playMedia(const QString &mediaString)
 {
+    kDebug() << "trying to play" << mediaString;
     foreach (MediaCenter::Media media, m_medias)  {
         if (media.second == mediaString) {
             if (media.first == MediaCenter::Audio ||

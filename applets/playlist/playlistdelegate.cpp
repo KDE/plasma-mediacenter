@@ -113,10 +113,13 @@ void PlaylistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 bool PlaylistDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index)
 {
     if (event->type() == QEvent::MouseButtonPress) {
+        kDebug() << "mouse button press" << option.rect;
         if (removeButtonRect(getContentsRect(option.rect)).contains(static_cast<QMouseEvent*>(event)->pos())) {
             emit removeRequested(index);
+            return true;
         } else if (reloadButtonRect(getContentsRect(option.rect)).contains(static_cast<QMouseEvent*>(event)->pos())) {
             emit reloadRequested(index);
+            return true;
         }
     }
 

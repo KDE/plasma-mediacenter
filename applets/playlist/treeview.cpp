@@ -19,6 +19,7 @@
 #include "treeview.h"
 
 #include <QMouseEvent>
+#include <QStyleOptionViewItem>
 
 #include <Plasma/Theme>
 
@@ -61,7 +62,13 @@ void TreeView::mouseDoubleClickEvent(QMouseEvent *event)
 
 void TreeView::mousePressEvent(QMouseEvent *event)
 {
-    Q_UNUSED(event);
+//    Q_UNUSED(event);
+    QStyleOptionViewItem option = viewOptions();
+    QRect rect = visualRect(indexAt(event->pos()));
+    option.rect = rect;
+    if (itemDelegate()->editorEvent(event, model(), option, indexAt(event->pos()))) {
+        return;
+    }
     m_pressed = true;
 }
 
