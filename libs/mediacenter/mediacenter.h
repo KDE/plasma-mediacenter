@@ -61,6 +61,11 @@ typedef QPair<MediaType, QString> Media;
  */
 MEDIACENTER_EXPORT MediaType getType(const QString &media);
 
+/**
+ * @return a MediaCenter::Media from the given Phonon::MediaSource or
+ * an invalid MediaCenter::Media if an error occurrs.
+ * @note an invalid MediaCenter::Media has MediaType Invalid and empty QString.
+ */
 MEDIACENTER_EXPORT Media mediaFromMediaSource(const Phonon::MediaSource &);
 
 } // namespace MediaCenter

@@ -92,7 +92,7 @@ void PlaylistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     // the x for the text
     int x = contentsRect.x() + COVER_SIZE + ITEM_MARGIN;
 
-    const QString text = option.fontMetrics.elidedText(index.data(TrackNameRole).toString(), Qt::ElideMiddle, option.rect.width() - x);
+    const QString text = option.fontMetrics.elidedText(index.data(TrackNameRole).toString(), Qt::ElideMiddle, option.rect.width() - x - TOOL_BUTTON_SIZE);
     QPixmap title = Plasma::PaintUtils::shadowText(text,
                                                    Plasma::Theme::defaultTheme()->color(Plasma::Theme::TextColor),
                                                    Plasma::Theme::defaultTheme()->color(Plasma::Theme::HighlightColor));
@@ -104,7 +104,7 @@ void PlaylistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     // artist
     painter->save();
     painter->setPen(Plasma::Theme::defaultTheme()->color(Plasma::Theme::HighlightColor));
-    painter->drawText(x, y + option.fontMetrics.height(), option.fontMetrics.elidedText(index.data(ArtistRole).toString(), Qt::ElideMiddle, option.rect.width() - x));
+    painter->drawText(x, y + option.fontMetrics.height(), option.fontMetrics.elidedText(index.data(ArtistRole).toString(), Qt::ElideMiddle, option.rect.width() - x -TOOL_BUTTON_SIZE));
     painter->restore();
 
 

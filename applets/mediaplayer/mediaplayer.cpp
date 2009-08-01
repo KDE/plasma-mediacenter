@@ -234,10 +234,7 @@ void MediaPlayer::dropEvent(QGraphicsSceneDragDropEvent *event)
             continue;
         }
 
-        KMimeType::Ptr mime = KMimeType::findByPath(url.path());
-        if (mime->name().indexOf("video/") != -1 ||
-            mime->name().indexOf("audio/") != -1 ||
-            mime->name().indexOf("image/") != -1) {
+        if (MediaCenter::getType(url.path()) != MediaCenter::Invalid) {
             medias << url.path();
         }
     }
@@ -367,6 +364,15 @@ void MediaPlayer::playMedia(const QString &mediaString)
 
 void MediaPlayer::slideShow(const QString &media)
 {}
+
+void MediaPlayer::append(const QStringList &medias)
+{
+    foreach (const QString mediaString, medias) {
+        MediaCenter::Media media;
+        media.first = MediaCenter::getType(mediaString);
+        media.second = mediaString;
+    }
+}
 
 K_EXPORT_PLASMA_APPLET(mcplayer, MediaPlayer)
 

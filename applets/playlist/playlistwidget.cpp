@@ -138,13 +138,10 @@ void PlaylistWidget::showPlaylist(const QString &playlistName)
 
     foreach (const QString &media, files) {
         TagLib::FileRef ref(media.toLatin1());
-        QString name = ref.isNull() ? media : ref.tag()->title().toCString(true);
+        QString name = ref.isNull() ? QFileInfo(media).fileName() : ref.tag()->title().toCString(true);
         QStandardItem *item = new QStandardItem(name);
         item->setEditable(false);
         item->setData(media, PathRole);
-        if (item->text().isEmpty()) {
-            item->setText(QFileInfo(media).baseName());
-        }
 
         if (!ref.isNull()) {
             item->setData(ref.tag()->artist().toCString(true), PlaylistDelegate::ArtistRole);
@@ -348,5 +345,6 @@ int PlaylistWidget::length()
 
 void PlaylistWidget::slotMediaActivated(const QModelIndex &index)
 {
+    kDebug() << "activated" << index.data(PathRole).toString();
     emit mediaActivated(index.data(PathRole).toString());
 }

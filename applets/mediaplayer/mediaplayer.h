@@ -96,6 +96,12 @@ private:
     void doFullScreen();
     void slideShow(const QString &media);
 
+    /**
+     * Appends a media file to the m_medias list
+     * filling also the MediaCenter::MediaType.
+     */
+    void append(const QStringList &medias);
+
 private:
     QGraphicsLinearLayout *m_layout;
     QString m_currentUrl;
