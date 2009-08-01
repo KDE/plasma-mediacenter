@@ -311,5 +311,7 @@ void ViewItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
     if (ratingRect(contentsRect().toRect()).contains(event->pos().toPoint())) {
         emit ratingActivated(KRatingPainter::getRatingFromPosition(ratingRect(contentsRect().toRect()),
                                                                    Qt::AlignLeft | Qt::AlignVCenter, Qt::LeftToRight, event->pos().toPoint()));
+    } else {
+        event->ignore();
     }
 }
