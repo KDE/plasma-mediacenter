@@ -57,7 +57,7 @@ void LastFMFetcher::fetchCover(const QString &artist, const QString &albumName, 
 bool LastFMFetcher::fetchingInProgress(const QString &album, CoverSize size)
 {
     // let's check whether the requested cover is being fetched already
-    foreach (const QueryAttributes value, m_queries.values()) {
+    foreach (const QueryAttributes &value, m_queries) {
         if (value.albumName == album && value.size == size) {
             return true;
         }
