@@ -157,6 +157,7 @@ void MediaContainment::initControls()
     connect (m_control, SIGNAL(volumeLevelChangeRequest(qreal)), m_player, SLOT(setVolume(qreal)));
     connect (m_control, SIGNAL(stopRequest()), m_player, SLOT(stop()));
     connect (m_player, SIGNAL(mediaReceived(QStringList)), m_playlist, SLOT(appendMedia(QStringList)));
+    connect (m_playlist, SIGNAL(mediasAppended(QList<MediaCenter::Media>)), m_player, SLOT(enqueue(QList<MediaCenter::Media>)));
     connect (m_playlist, SIGNAL(mediaActivated(const QString&)), m_player, SLOT(playMedia(const QString &)));
     m_control->setMediaObject(m_player->mediaObject());
 }

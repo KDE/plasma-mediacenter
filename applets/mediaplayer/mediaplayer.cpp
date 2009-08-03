@@ -48,6 +48,7 @@ MediaPlayer::MediaPlayer(QObject *parent, const QVariantList &args)
       m_ticking(false),
       m_raised(false),
       m_fullScreen(false),
+      m_phonon(false),
       m_fullScreenVideo(0)
 {
     setAcceptDrops(true);
@@ -148,12 +149,42 @@ void MediaPlayer::init()
 
    SetControlsVisible(false);
 
+   connect (m_video->mediaObject(), SIGNAL(aboutToFinish()), this, SLOT(playNextMedia()));
+   connect (m_video->mediaObject(), SIGNAL(finished()), this, SLOT(playNextMedia()));
+
 //   new PlayerDBusHandler(this, media, m_video->audioOutput());
 //   new TrackListDBusHandler(this, media);
 //   new RootDBusHandler(this);
 }
 
+void MediaPlayer::playNextMedia()
+{
+    if (m_phonon) {
+        MediaCenter::Media media = MediaCenter::mediaFromMediaSource(m_video->mediaObject()->currentSource());
+        if (media.first == MediaCenter::Invalid) {
+            return;
+        }
+        int nextMedia = 0;
+        bool found = false;
+        for (; nextMedia < m_medias.count(); nextMedia++) {
+            if (found) {
+                break;
+            }
+            if (media.second == m_medias[nextMedia].second) {
+                found = true;
+            }
+        }
 
+        if (!found) {
+            return;
+        }
+
+        playMedia(m_medias[nextMedia]);
+    } else {
+        // TODO: code for slideshow..
+    }
+
+}
 
 void MediaPlayer::constraintsEvent(Plasma::Constraints constraints)
 {
@@ -347,17 +378,19 @@ void MediaPlayer::skipBackward()
 void MediaPlayer::skipForward()
 {}
 
-void MediaPlayer::playMedia(const QString &mediaString)
+void MediaPlayer::playMedia(const MediaCenter::Media &media)
 {
-    kDebug() << "trying to play" << mediaString;
-    foreach (MediaCenter::Media media, m_medias)  {
-        if (media.second == mediaString) {
+    kDebug() << "trying to play" << media.second;
+    foreach (MediaCenter::Media mediaSource, m_medias)  {
+        if (mediaSource.second == media.second) {
             if (media.first == MediaCenter::Audio ||
                 media.first == MediaCenter::Video ||
                 media.first == MediaCenter::OpticalDisc) {
-                m_video->mediaObject()->setCurrentSource(media.second);
+                m_video->mediaObject()->enqueue(media.second);
+                m_phonon = true;
             } else {
-                slideShow(mediaString);
+                slideShow(media.second);
+                m_phonon = false;
             }
         }
     }
@@ -373,6 +406,11 @@ void MediaPlayer::append(const QStringList &medias)
         media.first = MediaCenter::getType(mediaString);
         media.second = mediaString;
     }
+}
+
+void MediaPlayer::enqueue(const QList<MediaCenter::Media> &medias)
+{
+
 }
 
 K_EXPORT_PLASMA_APPLET(mcplayer, MediaPlayer)

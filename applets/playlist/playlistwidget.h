@@ -23,6 +23,8 @@
 #include <Plasma/DataEngine>
 #include <QList>
 
+#include <mediacenter/mediacenter.h>
+
 namespace Plasma {
     class TreeView;
     class ComboBox;
@@ -47,7 +49,7 @@ public:
 
     bool multiplePlaylistsEnabled();
 
-    QStringList medias();
+    QList<MediaCenter::Media> medias();
     int length();
 
 public Q_SLOTS:
@@ -65,7 +67,8 @@ protected Q_SLOTS:
     void slotMediaActivated(const QModelIndex &index);
 
 Q_SIGNALS:
-    void mediaActivated(const QString &media);
+    void mediaActivated(const MediaCenter::Media &);
+    void mediasAppended(const QList<MediaCenter::Media> &medias);
 
 protected:
     void dropEvent(QGraphicsSceneDragDropEvent *event);

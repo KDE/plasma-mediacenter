@@ -23,6 +23,8 @@
 
 #include <Plasma/Applet>
 
+#include <mediacenter/mediacenter.h>
+
 namespace MediaCenter {
 
 /**
@@ -49,7 +51,7 @@ public:
      * @return the list of strings identifying the medias
      * in the current playlist.
      */
-    virtual QStringList medias() = 0;
+    virtual QList<MediaCenter::Media> medias() = 0;
 
 public slots:
     /**
@@ -69,7 +71,7 @@ signals:
      * Use this convenience signal if the media has just been dropped at the end of
      * the playlist.
      */
-    void mediaAppended(const QString &mediaString);
+    void mediasAppended(const QList<MediaCenter::Media> &medias);
 
     /**
      * This signal is emitted whenever the current playlist changes
@@ -85,7 +87,7 @@ signals:
      * For example emit this signal when the user clicks on a specific media
      * in the playlist.
      */
-    void mediaActivated(const QString &media);
+    void mediaActivated(const MediaCenter::Media &);
 
 };
 

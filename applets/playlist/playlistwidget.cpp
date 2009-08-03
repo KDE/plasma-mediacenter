@@ -211,15 +211,23 @@ void PlaylistWidget::append(const QList<QUrl> &list)
         return;
     }
 
+    QList<MediaCenter::Media> medias;
     kDebug() << "adding to playlist";
     KConfigGroup op = playlistService->operationDescription("add");
     foreach (const KUrl &url, list) {
-        KMimeType::Ptr mime = KMimeType::findByUrl(url);
-        if (mime->name().indexOf("video/") != -1 || mime->name().indexOf("audio/") != -1 || mime->name().indexOf("image/") != -1) {
+        MediaCenter::MediaType type = MediaCenter::getType(url.path());
+        if (type != MediaCenter::Invalid) {
             op.writeEntry("path", url.path());
             playlistService->startOperationCall(op);
+
+            MediaCenter::Media media;
+            media.first = type;
+            media.second = url.path();
+            medias << media;
         }
     }
+
+    emit mediasAppended(medias);
 }
 
 void PlaylistWidget::playlistUpdated(const QString &source, const Plasma::DataEngine::Data &data)
@@ -279,13 +287,21 @@ void PlaylistWidget::reloadCover(const QModelIndex &index)
     coverService->startOperationCall(op);
 }
 
-QStringList PlaylistWidget::medias()
+QList<MediaCenter::Media> PlaylistWidget::medias()
 {
     QString playlistName = m_comboBox->nativeWidget()->currentText();
-    QStringList medias;
+    QList<MediaCenter::Media> medias;
 
     foreach (const QVariant &tracks, m_playlistEngine->query(playlistName)) {
-        medias << tracks.toStringList();
+        foreach (const QString &mediaString, tracks.toString()) {
+            MediaCenter::Media media;
+            MediaCenter::MediaType type = MediaCenter::getType(mediaString);
+            if (type == MediaCenter::Invalid) {
+                continue;
+            }
+            media.first = type;
+            media.second = mediaString;
+        }
     }
 
     return medias;
@@ -299,5 +315,11 @@ int PlaylistWidget::length()
 void PlaylistWidget::slotMediaActivated(const QModelIndex &index)
 {
     kDebug() << "activated" << index.data(PathRole).toString();
-    emit mediaActivated(index.data(PathRole).toString());
+    MediaCenter::MediaType type = MediaCenter::getType(index.data(PathRole).toString());
+    if (type != MediaCenter::Invalid) {
+        MediaCenter::Media media;
+        media.first = type;
+        media.second = index.data(PathRole).toString();
+        emit mediaActivated(media);
+    }
 }

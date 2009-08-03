@@ -38,7 +38,7 @@ public:
     void createConfigurationInterface(KConfigDialog *parent);
 
     int length();
-    QStringList medias();
+    QList<MediaCenter::Media> medias();
 
 public slots:
     void appendMedia(const QStringList &mediaStrings, const QString &playlist = QString());

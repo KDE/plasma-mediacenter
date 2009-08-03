@@ -41,19 +41,19 @@ void Player::enqueue(const QList<Media> &sources)
 {
     Q_UNUSED(sources);
 }
-
-void Player::enqueue(int index, const QList<Media> &sources)
-{
-    Q_UNUSED(index);
-    Q_UNUSED(sources);
-}
+//
+//void Player::enqueue(int index, const QList<Media> &sources)
+//{
+//    Q_UNUSED(index);
+//    Q_UNUSED(sources);
+//}
 
 void Player::setSlideshowInterval(qint64 time)
 {
     Q_UNUSED(time);
 }
 
-void Player::playMedia(const QString &media)
+void Player::playMedia(const MediaCenter::Media &media)
 {
     Q_UNUSED(media);
 }
