@@ -18,6 +18,8 @@
  ***************************************************************************/
 #include "mainwindow.h"
 
+#include <KDebug>
+
 #include <QGraphicsView>
 
 #include <Plasma/Corona>
@@ -46,6 +48,13 @@ MainWindow::~MainWindow()
 void MainWindow::loadMediaCenter()
 {
     m_containment = m_corona->addContainment("mediacontainment");
+    if (!m_containment) {
+        kDebug() << "unable to load mediacontaiment";
+    }
+    m_containment->addApplet("mediabrowser");
+    m_containment->addApplet("playlist");
+    m_containment->addApplet("mediacontroller");
+    m_containment->addApplet("mcplayer");
 }
 
 bool MainWindow::eventFilter(QObject *o, QEvent *e)
