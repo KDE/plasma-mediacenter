@@ -19,8 +19,13 @@
 #include "mainwindow.h"
 
 #include <KDebug>
+#include <KMenuBar>
+#include <KMenu>
+#include <KAction>
+#include <KLocale>
 
 #include <QGraphicsView>
+#include <QKeyEvent>
 
 #include <Plasma/Corona>
 #include <Plasma/Containment>
@@ -35,11 +40,22 @@ m_containment(0)
     m_view->setScene(m_corona);
 
     m_view->installEventFilter(this);
+    installEventFilter(this);
 
     m_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_view->setFrameShadow(QFrame::Plain);
     m_view->setFrameShape(QFrame::NoFrame);
+
+    KAction *fullScreen = new KAction(i18n("Go fullscreen"), this);
+    fullScreen->setShortcut(Qt::CTRL + Qt::Key_F);
+    connect (fullScreen, SIGNAL(triggered()), this, SLOT(toggleFullScreen()));
+
+    QMenu *menu = menuBar()->addMenu(i18n("Actions"));
+    menu->addAction(fullScreen);
+
+    menuBar()->addMenu(helpMenu());
+
 }
 
 MainWindow::~MainWindow()
@@ -59,14 +75,29 @@ void MainWindow::loadMediaCenter()
 
 bool MainWindow::eventFilter(QObject *o, QEvent *e)
 {
-    if (o != m_view) {
-        return false;
-    }
-
-    if (e->type() == QEvent::Resize) {
+    if (e->type() == QEvent::Resize && o == m_view) {
         if (m_containment) {
             m_containment->resize(size());
         }
     }
+
+    if (e->type() == QEvent::KeyPress && o == this) {
+        QKeyEvent *key = static_cast<QKeyEvent*>(e);
+        if (key->key() == Qt::Key_Escape && windowState() & Qt::WindowFullScreen) {
+            toggleFullScreen();
+        }
+    }
+
     return false;
+}
+
+void MainWindow::toggleFullScreen()
+{
+    if (windowState() & Qt::WindowFullScreen) {
+        setWindowState(windowState() & ~Qt::WindowFullScreen);
+        menuBar()->show();
+    } else {
+        setWindowState(windowState() | Qt::WindowFullScreen);
+        menuBar()->hide();
+    }
 }

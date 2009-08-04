@@ -38,6 +38,9 @@ public:
 
     void loadMediaCenter();
 
+protected slots:
+    void toggleFullScreen();
+
 private:
     QGraphicsView *m_view;
     Plasma::Corona *m_corona;

@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
                          ki18n("Copyright (c) 2009"));
     aboutData.addAuthor(ki18n("Alessandro Diaferia"),
                         ki18n("Mantainer and main developer"),
-                        "alediaferia@gmail.com"
+                        "alediaferia@gmail.com",
                         "http://alediaferia.wordpress.com");
 
     KCmdLineArgs::init(&aboutData);
