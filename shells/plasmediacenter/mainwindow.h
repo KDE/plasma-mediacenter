@@ -21,6 +21,8 @@
 
 #include <KMainWindow>
 
+#include "ui_theme.h"
+
 class QGraphicsView;
 namespace Plasma {
     class Corona;
@@ -38,13 +40,19 @@ public:
 
     void loadMediaCenter();
 
+public slots:
+    void createConfigurationInterface();
+
 protected slots:
     void toggleFullScreen();
+    void applyConfig();
 
 private:
     QGraphicsView *m_view;
     Plasma::Corona *m_corona;
     Plasma::Containment *m_containment;
+
+    Ui::Theme m_theme;
 };
 
 #endif // MAINWINDOW_H

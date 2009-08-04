@@ -22,18 +22,25 @@
 #include <KMenuBar>
 #include <KMenu>
 #include <KAction>
+#include <KStandardAction>
+#include <KIcon>
 #include <KLocale>
+#include <KPageDialog>
+#include <KPluginInfo>
 
 #include <QGraphicsView>
 #include <QKeyEvent>
 
 #include <Plasma/Corona>
 #include <Plasma/Containment>
+#include <Plasma/Theme>
 
 MainWindow::MainWindow(QWidget *parent) : KMainWindow(parent),
 m_view(new QGraphicsView(this)),
 m_containment(0)
 {
+    Plasma::Theme::defaultTheme()->setUseGlobalSettings(false);
+
     setCentralWidget(m_view);
 
     m_corona = new Plasma::Corona(this);
@@ -49,13 +56,17 @@ m_containment(0)
 
     KAction *fullScreen = new KAction(i18n("Go fullscreen"), this);
     fullScreen->setShortcut(Qt::CTRL + Qt::Key_F);
+    fullScreen->setIcon(KIcon("view-fullscreen"));
     connect (fullScreen, SIGNAL(triggered()), this, SLOT(toggleFullScreen()));
 
-    QMenu *menu = menuBar()->addMenu(i18n("Actions"));
+    KAction *preferences = KStandardAction::preferences(this, SLOT(createConfigurationInterface()), this);
+
+    QMenu *menu = menuBar()->addMenu(i18n("Settings"));
     menu->addAction(fullScreen);
+    menu->addSeparator();
+    menu->addAction(preferences);
 
     menuBar()->addMenu(helpMenu());
-
 }
 
 MainWindow::~MainWindow()
@@ -100,4 +111,32 @@ void MainWindow::toggleFullScreen()
         setWindowState(windowState() | Qt::WindowFullScreen);
         menuBar()->hide();
     }
+}
+
+void MainWindow::createConfigurationInterface()
+{
+    KPageDialog *dialog = new KPageDialog(this);
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
+    dialog->setCaption(i18n("Preferences"));
+
+    QWidget *theme = new QWidget;
+    m_theme.setupUi(theme);
+    KPluginInfo::List themes = Plasma::Theme::listThemeInfo();
+    foreach (const KPluginInfo &info, themes) {
+        m_theme.themeComboBox->addItem(info.name());
+    }
+
+    kDebug() << Plasma::Theme::defaultTheme()->themeName();
+    m_theme.themeComboBox->setCurrentIndex(m_theme.themeComboBox->findText(Plasma::Theme::defaultTheme()->themeName(), Qt::MatchContains));
+
+    KPageWidgetItem *themeItem = dialog->addPage(theme, i18n("Theme settings"));
+    themeItem->setIcon(KIcon("preferences-desktop-theme"));
+
+    connect (dialog, SIGNAL(accepted()), this, SLOT(applyConfig()));
+    dialog->exec();
+}
+
+void MainWindow::applyConfig()
+{
+    Plasma::Theme::defaultTheme()->setThemeName(m_theme.themeComboBox->currentText().toLower());
 }
