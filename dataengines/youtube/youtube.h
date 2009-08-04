@@ -21,9 +21,6 @@
 
 #include <Plasma/DataEngine>
 
-namespace Plasma {
-    class Service;
-}
 class YouTubeInterface;
 /**
  * @class YouTubeEngine

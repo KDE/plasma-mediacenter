@@ -31,9 +31,7 @@ namespace Plasma {
 }
 
 class QStandardItemModel;
-class QDBusInterface;
 class QGraphicsSceneDragDropEvent;
-class QEvent;
 class QModelIndex;
 
 class PlaylistUpdater;

@@ -25,9 +25,6 @@
 class QPainter;
 class QStyleOptionGraphicsItem;
 class QWidget;
-class QRect;
-class QPoint;
-class ViewItem;
 
 class ListView : public AbstractMediaItemView
 {

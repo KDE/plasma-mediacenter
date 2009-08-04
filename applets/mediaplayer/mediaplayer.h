@@ -37,7 +37,6 @@ namespace Phonon
 
 namespace Plasma
 {
-    class IconWidget;
     class VideoWidget;
 }
 

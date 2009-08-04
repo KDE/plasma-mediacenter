@@ -24,7 +24,6 @@
 #include <Plasma/Applet>
 #include <mediacenter/mediacenter.h>
 
-class KUrl;
 
 namespace MediaCenter {
 

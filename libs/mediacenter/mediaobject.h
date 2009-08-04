@@ -93,8 +93,6 @@ signals:
 private:
     MediaObject(QObject *parent = 0);
 
-    class InstanceHelper;
-    class MediaObjectPrivate;
 };
 
 }

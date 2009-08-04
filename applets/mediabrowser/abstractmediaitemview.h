@@ -23,7 +23,6 @@
 #include <QStyleOptionViewItemV4>
 
 class QAbstractItemModel;
-class QAbstractItemDelegate;
 
 namespace Plasma {
     class ScrollBar;
