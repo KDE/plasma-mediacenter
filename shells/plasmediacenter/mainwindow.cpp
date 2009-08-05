@@ -25,8 +25,11 @@
 #include <KStandardAction>
 #include <KIcon>
 #include <KLocale>
-#include <KPageDialog>
+#include <KConfigDialog>
 #include <KPluginInfo>
+#include <KSharedConfig>
+#include <KSharedPtr>
+#include <KConfigSkeleton>
 
 #include <QGraphicsView>
 #include <QKeyEvent>
@@ -38,7 +41,8 @@
 
 MainWindow::MainWindow(QWidget *parent) : KMainWindow(parent),
 m_view(new QGraphicsView(this)),
-m_containment(0)
+m_containment(0),
+m_cfskeleton(new KConfigSkeleton)
 {
     setCentralWidget(m_view);
 
@@ -118,7 +122,7 @@ void MainWindow::toggleFullScreen()
 
 void MainWindow::createConfigurationInterface()
 {
-    KPageDialog *dialog = new KPageDialog(this);
+    KConfigDialog *dialog = new KConfigDialog(this, "Settings", m_cfskeleton);
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->setCaption(i18n("Preferences"));
 

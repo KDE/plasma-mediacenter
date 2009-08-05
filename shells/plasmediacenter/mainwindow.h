@@ -29,6 +29,8 @@ namespace Plasma {
     class Containment;
 }
 
+class KConfigSkeleton;
+
 class MainWindow : public KMainWindow
 {
     Q_OBJECT
@@ -51,6 +53,7 @@ private:
     QGraphicsView *m_view;
     Plasma::Corona *m_corona;
     Plasma::Containment *m_containment;
+    KConfigSkeleton *m_cfskeleton;
 
     Ui::Theme m_theme;
 };
