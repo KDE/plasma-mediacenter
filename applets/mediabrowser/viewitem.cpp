@@ -40,6 +40,7 @@
 #include <KDebug>
 
 #include <Plasma/FrameSvg>
+#include <Plasma/Theme>
 
 static const int ITEM_VERTICAL_MARGIN = 15;
 
@@ -62,6 +63,8 @@ m_nepomuk(false)
     m_frameSvg->setElementPrefix("hover");
 
     setAcceptedMouseButtons(0);
+
+    connect (Plasma::Theme::defaultTheme(), SIGNAL(themeChanged()), this, SLOT(updateColors()));
     
     m_nepomuk = Nepomuk::ResourceManager::instance()->initialized();
 }
@@ -314,4 +317,9 @@ void ViewItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
     } else {
         event->ignore();
     }
+}
+
+void ViewItem::updateColors()
+{
+    m_option.palette.setColor(QPalette::Text, Plasma::Theme::defaultTheme()->color(Plasma::Theme::TextColor));
 }

@@ -21,6 +21,8 @@
 #include <KAboutData>
 #include <KCmdLineArgs>
 
+#include <Plasma/Theme>
+
 #include "mainwindow.h"
 
 int main(int argc, char *argv[])
@@ -40,6 +42,9 @@ int main(int argc, char *argv[])
     KCmdLineArgs::init(&aboutData);
 
     KApplication app;
+
+    Plasma::Theme::defaultTheme()->setUseGlobalSettings(false);
+
     MainWindow *mw = new MainWindow;
     mw->show();
     mw->loadMediaCenter();

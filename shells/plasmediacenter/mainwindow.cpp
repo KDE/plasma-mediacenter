@@ -34,13 +34,12 @@
 #include <Plasma/Corona>
 #include <Plasma/Containment>
 #include <Plasma/Theme>
+#include <Plasma/Applet>
 
 MainWindow::MainWindow(QWidget *parent) : KMainWindow(parent),
 m_view(new QGraphicsView(this)),
 m_containment(0)
 {
-    Plasma::Theme::defaultTheme()->setUseGlobalSettings(false);
-
     setCentralWidget(m_view);
 
     m_corona = new Plasma::Corona(this);
@@ -67,6 +66,8 @@ m_containment(0)
     menu->addAction(preferences);
 
     menuBar()->addMenu(helpMenu());
+
+    resize(450, 400);
 }
 
 MainWindow::~MainWindow()
@@ -77,7 +78,9 @@ void MainWindow::loadMediaCenter()
     m_containment = m_corona->addContainment("mediacontainment");
     if (!m_containment) {
         kDebug() << "unable to load mediacontaiment";
+        return;
     }
+
     m_containment->addApplet("mediabrowser");
     m_containment->addApplet("playlist");
     m_containment->addApplet("mediacontroller");
@@ -123,11 +126,16 @@ void MainWindow::createConfigurationInterface()
     m_theme.setupUi(theme);
     KPluginInfo::List themes = Plasma::Theme::listThemeInfo();
     foreach (const KPluginInfo &info, themes) {
-        m_theme.themeComboBox->addItem(info.name());
+        m_theme.themeComboBox->addItem(info.name(), info.pluginName());
     }
 
     kDebug() << Plasma::Theme::defaultTheme()->themeName();
-    m_theme.themeComboBox->setCurrentIndex(m_theme.themeComboBox->findText(Plasma::Theme::defaultTheme()->themeName(), Qt::MatchContains));
+    for (int i = 0; i < m_theme.themeComboBox->count(); i++) {
+        if (m_theme.themeComboBox->itemData(i).toString() == Plasma::Theme::defaultTheme()->themeName()) {
+            m_theme.themeComboBox->setCurrentIndex(i);
+            break;
+        }
+    }
 
     KPageWidgetItem *themeItem = dialog->addPage(theme, i18n("Theme settings"));
     themeItem->setIcon(KIcon("preferences-desktop-theme"));
@@ -138,5 +146,6 @@ void MainWindow::createConfigurationInterface()
 
 void MainWindow::applyConfig()
 {
-    Plasma::Theme::defaultTheme()->setThemeName(m_theme.themeComboBox->currentText().toLower());
+    kDebug() << m_theme.themeComboBox->itemData(m_theme.themeComboBox->currentIndex()).toString();
+    Plasma::Theme::defaultTheme()->setThemeName(m_theme.themeComboBox->itemData(m_theme.themeComboBox->currentIndex()).toString());
 }
