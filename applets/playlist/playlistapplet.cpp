@@ -38,7 +38,7 @@ PlaylistApplet::PlaylistApplet(QObject *parent, const QVariantList &args)
 
     // we make sure the widget is constructed
     m_playlistWidget = new PlaylistWidget;
-    connect (m_playlistWidget, SIGNAL(mediaActivated(const QString &)), this, SIGNAL(mediaActivated(const QString &)));
+    connect (m_playlistWidget, SIGNAL(mediaActivated(const MediaCenter::Media &)), this, SIGNAL(mediaActivated(const MediaCenter::Media&)));
     connect (m_playlistWidget, SIGNAL(mediasAppended(QList<MediaCenter::Media>)), this, SIGNAL(mediasAppended(QList<MediaCenter::Media>)));
 
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout;

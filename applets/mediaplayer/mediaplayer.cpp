@@ -389,7 +389,11 @@ void MediaPlayer::playMedia(const MediaCenter::Media &media)
             if (media.first == MediaCenter::Audio ||
                 media.first == MediaCenter::Video ||
                 media.first == MediaCenter::OpticalDisc) {
+                kDebug() << "enqueued";
                 m_video->mediaObject()->enqueue(media.second);
+                if (m_video->mediaObject()->state() != Phonon::PlayingState) {
+                    playPause();
+                }
                 m_phonon = true;
             } else {
                 slideShow(media.second);
@@ -408,12 +412,15 @@ void MediaPlayer::append(const QStringList &medias)
         MediaCenter::Media media;
         media.first = MediaCenter::getType(mediaString);
         media.second = mediaString;
+
+        kDebug() << "appending" << mediaString;
+        m_medias << media;
     }
 }
 
 void MediaPlayer::enqueue(const QList<MediaCenter::Media> &medias)
 {
-
+    m_medias << medias;
 }
 
 K_EXPORT_PLASMA_APPLET(mcplayer, MediaPlayer)
