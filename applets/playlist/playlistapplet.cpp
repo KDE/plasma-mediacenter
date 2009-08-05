@@ -71,7 +71,7 @@ void PlaylistApplet::createConfigurationInterface(KConfigDialog *parent)
 
     configUi.multiplePlaylistsCheckBox->setChecked(m_multiplePlaylists);
 
-    parent->addPage(config, i18n("General"), icon());
+    parent->addPage(config, i18n("Playlist settings"), icon());
 
     connect (parent, SIGNAL(accepted()), this, SLOT(configAccepted()));
 }

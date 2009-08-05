@@ -80,7 +80,7 @@ void MediaBrowser::createConfigurationInterface(KConfigDialog *parent)
     QWidget *generalConfig = new QWidget(parent);
     uiGeneral.setupUi(generalConfig);
 
-    parent->addPage(generalConfig, i18n("Appearance"), "preferences-desktop-display");
+    parent->addPage(generalConfig, i18n("Browser appearance"), "preferences-desktop-display");
     if (m_viewType == "list") {
         uiGeneral.listRadio->setChecked(true);
     } else {
@@ -90,7 +90,7 @@ void MediaBrowser::createConfigurationInterface(KConfigDialog *parent)
     QWidget *localConfig = new QWidget(parent);
     uiLocal.setupUi(localConfig);
 
-    parent->addPage(localConfig, i18n("Local Browsing"), QString());
+    parent->addPage(localConfig, i18n("Local Browsing"), "folder-development");
 
     KFilePlacesModel *model = new KFilePlacesModel(this);
     uiLocal.placesCombo->setModel(model);

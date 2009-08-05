@@ -78,7 +78,7 @@ void MediaPlayer::createConfigurationInterface(KConfigDialog *parent)
     QWidget *widget = new QWidget(parent);
     ui.setupUi(widget);
 
-    parent->addPage(widget, i18n("Configure"), "configure");
+    parent->addPage(widget, i18n("Player settings"), "multimedia-player");
 
     ui.fullScreenCheckBox->setChecked(m_fullScreen);
     connect (parent, SIGNAL(accepted()), this, SLOT(acceptConfiguration()));

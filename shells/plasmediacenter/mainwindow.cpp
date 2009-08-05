@@ -103,7 +103,7 @@ bool MainWindow::eventFilter(QObject *o, QEvent *e)
         }
     }
 
-    if (e->type() == QEvent::KeyPress && o == this) {
+    if (e->type() == QEvent::KeyPress) {
         QKeyEvent *key = static_cast<QKeyEvent*>(e);
         if (key->key() == Qt::Key_Escape && windowState() & Qt::WindowFullScreen) {
             toggleFullScreen();
