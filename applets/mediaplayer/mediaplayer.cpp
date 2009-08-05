@@ -86,6 +86,9 @@ void MediaPlayer::createConfigurationInterface(KConfigDialog *parent)
 
 void MediaPlayer::acceptConfiguration()
 {
+    if (m_fullScreen == ui.fullScreenCheckBox->isChecked()) {
+        return;
+    }
     m_fullScreen = ui.fullScreenCheckBox->isChecked();
     applyConfig();
 }

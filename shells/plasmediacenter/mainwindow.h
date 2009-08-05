@@ -27,6 +27,7 @@ class QGraphicsView;
 namespace Plasma {
     class Corona;
     class Containment;
+    class Applet;
 }
 
 class KConfigSkeleton;
@@ -54,6 +55,11 @@ private:
     Plasma::Corona *m_corona;
     Plasma::Containment *m_containment;
     KConfigSkeleton *m_cfskeleton;
+
+    Plasma::Applet *m_browser;
+    Plasma::Applet *m_controller;
+    Plasma::Applet *m_playlist;
+    Plasma::Applet *m_player;
 
     Ui::Theme m_theme;
 };

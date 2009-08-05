@@ -42,7 +42,11 @@
 MainWindow::MainWindow(QWidget *parent) : KMainWindow(parent),
 m_view(new QGraphicsView(this)),
 m_containment(0),
-m_cfskeleton(new KConfigSkeleton)
+m_cfskeleton(new KConfigSkeleton),
+m_browser(0),
+m_controller(0),
+m_playlist(0),
+m_player(0)
 {
     setCentralWidget(m_view);
 
@@ -85,10 +89,10 @@ void MainWindow::loadMediaCenter()
         return;
     }
 
-    m_containment->addApplet("mediabrowser");
-    m_containment->addApplet("playlist");
-    m_containment->addApplet("mediacontroller");
-    m_containment->addApplet("mcplayer");
+    m_browser = m_containment->addApplet("mediabrowser");
+    m_playlist = m_containment->addApplet("playlist");
+    m_controller = m_containment->addApplet("mediacontroller");
+    m_player = m_containment->addApplet("mcplayer");
 }
 
 bool MainWindow::eventFilter(QObject *o, QEvent *e)
@@ -143,6 +147,19 @@ void MainWindow::createConfigurationInterface()
 
     KPageWidgetItem *themeItem = dialog->addPage(theme, i18n("Theme settings"));
     themeItem->setIcon(KIcon("preferences-desktop-theme"));
+
+    if (m_browser) {
+        m_browser->createConfigurationInterface(dialog);
+    }
+    if (m_controller) {
+        m_controller->createConfigurationInterface(dialog);
+    }
+    if (m_playlist) {
+        m_playlist->createConfigurationInterface(dialog);
+    }
+    if (m_player) {
+        m_player->createConfigurationInterface(dialog);
+    }
 
     connect (dialog, SIGNAL(accepted()), this, SLOT(applyConfig()));
     dialog->exec();
