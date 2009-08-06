@@ -63,9 +63,6 @@ public:
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
 
-protected slots:
-    void updateColors();
-
 private:
     QStyleOptionViewItemV4 m_option;
     QModelIndex m_index;

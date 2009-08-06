@@ -169,7 +169,7 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     }
 
     painter->setFont(m_option.font);
-    painter->setPen(m_option.palette.color(QPalette::Text));
+    painter->setPen(Plasma::Theme::defaultTheme()->color(Plasma::Theme::TextColor));
     QString text = m_index.data().toString();
     if (m_option.fontMetrics.width(text) > textRect.width()) {
         text = m_option.fontMetrics.elidedText(text, Qt::ElideMiddle, textRect.width());
@@ -317,9 +317,4 @@ void ViewItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
     } else {
         event->ignore();
     }
-}
-
-void ViewItem::updateColors()
-{
-    m_option.palette.setColor(QPalette::Text, Plasma::Theme::defaultTheme()->color(Plasma::Theme::TextColor));
 }
