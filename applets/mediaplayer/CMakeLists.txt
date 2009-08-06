@@ -14,6 +14,7 @@ include_directories(
 # We add our source code here
 set(mediaplayer_SRCS
     mediaplayer.cpp
+    pictureviewer.cpp
 #    dbus/playerdbushandler.cpp
 #    dbus/rootdbushandler.cpp
 #    dbus/tracklistdbushandler.cpp

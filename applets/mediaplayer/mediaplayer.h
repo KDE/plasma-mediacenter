@@ -29,6 +29,7 @@
 class QGraphicsSceneDragDropEvent;
 class QGraphicsLinearLayout;
 class QTimer;
+class PictureViewer;
 
 namespace Phonon
 {
@@ -95,7 +96,7 @@ private Q_SLOTS:
 private:
     void applyConfig();
     void doFullScreen();
-    void slideShow(const QString &media);
+    void slideShow(const MediaCenter::Media &);
 
     /**
      * Appends a media file to the m_medias list
@@ -115,6 +116,7 @@ private:
     bool m_fullScreen;
     bool m_phonon;
     Phonon::VideoWidget *m_fullScreenVideo;
+    PictureViewer *m_pviewer;
 
     Ui::Config ui;
 

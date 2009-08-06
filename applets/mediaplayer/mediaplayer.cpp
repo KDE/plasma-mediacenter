@@ -18,6 +18,7 @@
  ***************************************************************************/
 
 #include "mediaplayer.h"
+#include "pictureviewer.h"
 //#include "plasmamediaplayeradaptor.h"
 //#include "dbus/playerdbushandler.h"
 //#include "dbus/rootdbushandler.h"
@@ -49,8 +50,10 @@ MediaPlayer::MediaPlayer(QObject *parent, const QVariantList &args)
       m_raised(false),
       m_fullScreen(false),
       m_phonon(false),
-      m_fullScreenVideo(0)
+      m_fullScreenVideo(0),
+      m_pviewer(new PictureViewer(this))
 {
+    m_pviewer->hide();
     setAcceptDrops(true);
     setHasConfigurationInterface(true);
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
@@ -192,6 +195,7 @@ void MediaPlayer::playNextMedia()
 void MediaPlayer::constraintsEvent(Plasma::Constraints constraints)
 {
     setBackgroundHints(NoBackground);
+    setContentsMargins(0,0,0,0);
 }
 
 void MediaPlayer::SetControlsVisible(bool visible)
@@ -396,15 +400,26 @@ void MediaPlayer::playMedia(const MediaCenter::Media &media)
                 }
                 m_phonon = true;
             } else {
-                slideShow(media.second);
+                slideShow(media);
                 m_phonon = false;
             }
         }
     }
 }
 
-void MediaPlayer::slideShow(const QString &media)
-{}
+void MediaPlayer::slideShow(const MediaCenter::Media &media)
+{
+    if (!m_pviewer->isVisible()) {
+        QGraphicsLinearLayout *layout = static_cast<QGraphicsLinearLayout*>(this->layout());
+        layout->removeItem(m_video);
+        m_video->hide();
+        m_pviewer->show();
+        layout->addItem(m_pviewer);
+        setLayout(layout);
+    }
+
+    m_pviewer->loadPicture(media.second);
+}
 
 void MediaPlayer::append(const QStringList &medias)
 {
