@@ -125,6 +125,10 @@ void MediaContainment::slotAppletAdded(Plasma::Applet *applet, const QPointF &po
             m_playlist = playlist;
             m_layout->setPlaylist(m_playlist);
             m_layout->invalidate();
+
+            if (m_player) {
+                m_player->enqueue(m_playlist->medias());
+            }
         }
         return;
     }
@@ -143,6 +147,10 @@ void MediaContainment::slotAppletAdded(Plasma::Applet *applet, const QPointF &po
 
             if (m_control) {
                 initControls();
+            }
+
+            if (m_playlist) {
+                m_player->enqueue(m_playlist->medias());
             }
         }
         return;

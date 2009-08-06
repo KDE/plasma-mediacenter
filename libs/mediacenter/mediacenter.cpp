@@ -88,6 +88,10 @@ Media mediaFromMediaSource(const Phonon::MediaSource &source)
         media.first = MediaCenter::OpticalDisc;
         return media;
     }
+
+    Media media;
+    media.first = Invalid;
+    return media;
 }
 
 } // MediaCenter namespace

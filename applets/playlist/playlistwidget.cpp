@@ -291,9 +291,8 @@ QList<MediaCenter::Media> PlaylistWidget::medias()
 {
     QString playlistName = m_comboBox->nativeWidget()->currentText();
     QList<MediaCenter::Media> medias;
-
     foreach (const QVariant &tracks, m_playlistEngine->query(playlistName)) {
-        foreach (const QString &mediaString, tracks.toString()) {
+        foreach (const QString &mediaString, tracks.toStringList()) {
             MediaCenter::Media media;
             MediaCenter::MediaType type = MediaCenter::getType(mediaString);
             if (type == MediaCenter::Invalid) {
@@ -301,9 +300,9 @@ QList<MediaCenter::Media> PlaylistWidget::medias()
             }
             media.first = type;
             media.second = mediaString;
+            medias << media;
         }
     }
-
     return medias;
 }
 

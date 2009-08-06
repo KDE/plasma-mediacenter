@@ -61,7 +61,7 @@ int PlaylistApplet::length()
 
 QList<MediaCenter::Media> PlaylistApplet::medias()
 {
-    m_playlistWidget->medias();
+    return m_playlistWidget->medias();
 }
 
 void PlaylistApplet::createConfigurationInterface(KConfigDialog *parent)
