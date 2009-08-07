@@ -1,5 +1,6 @@
 /***************************************************************************
  *   Copyright 2008 by Marco Martin <notmart@gmail.com>                    *
+ *   Copyright 2009 by Alessandro Diaferia <alediaferia@gmail.com>         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *

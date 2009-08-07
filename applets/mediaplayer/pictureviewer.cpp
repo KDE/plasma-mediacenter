@@ -28,8 +28,11 @@
 
 PictureViewer::PictureViewer(QGraphicsItem *parent) : QGraphicsWidget(parent),
 m_picture(0),
-m_showTime(3)
+m_showTime(3),
+m_timer(new QTimer(this))
 {
+    m_timer->setSingleShot(true);
+    connect (m_timer, SIGNAL(timeout()), this, SIGNAL(showFinished()));
 }
 
 PictureViewer::~PictureViewer()
@@ -37,6 +40,10 @@ PictureViewer::~PictureViewer()
 
 void PictureViewer::loadPicture(const QString &path)
 {
+    if (m_timer->isActive()) {
+        m_timer->stop();
+    }
+
     MediaCenter::MediaType type = MediaCenter::getType(path);
     if (type != MediaCenter::Picture) {
         return;
@@ -46,7 +53,7 @@ void PictureViewer::loadPicture(const QString &path)
     m_picture = new QImage(path);
     update();
 
-    QTimer::singleShot(m_showTime*1000, this, SIGNAL(showFinished()));
+    m_timer->start(m_showTime*1000);
 }
 
 void PictureViewer::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

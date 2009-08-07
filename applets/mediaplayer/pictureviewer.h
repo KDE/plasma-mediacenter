@@ -43,6 +43,7 @@ Q_SIGNALS:
 private:
     QImage *m_picture;
     int m_showTime;
+    QTimer *m_timer;
 };
 
 #endif // PICTUREVIEWER_H
