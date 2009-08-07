@@ -23,6 +23,8 @@
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
 
+#include <KDebug>
+
 PictureViewer::PictureViewer(QGraphicsItem *parent) : QGraphicsWidget(parent),
 m_picture(0)
 {
@@ -41,6 +43,7 @@ void PictureViewer::loadPicture(const QString &path)
     }
 
     m_picture = new QImage(path);
+    update();
 }
 
 void PictureViewer::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -50,32 +53,19 @@ void PictureViewer::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
         return;
     }
 
+    QImage picture = *m_picture;
     painter->fillRect(option->rect, Qt::black);
-    // the image is smaller than the contents rect
-    if (m_picture->height() <= (int)option->rect.height() && m_picture->width() <= (int)option->rect.width()) {
-        QRectF rect;
-        rect.setX((option->rect.width() - m_picture->width()) / 2.0);
-        rect.setY((option->rect.height() - m_picture->height()) / 2.0);
-        rect.setWidth(m_picture->width());
-        rect.setHeight(m_picture->height());
-        painter->drawImage(rect, *m_picture);
-        return;
+    // the image is bigger than the contents rect
+    if (m_picture->height() > (int)option->rect.height() && m_picture->width() > (int)option->rect.width()) {
+        picture = m_picture->scaled(option->rect.size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
     }
 
     QRectF rect;
-    if (m_picture->height() > (int)option->rect.height() && m_picture->height() >= m_picture->width()) {
-        qreal hRatio = option->rect.height() / m_picture->height();
-        rect.setHeight(option->rect.height());
-        rect.setWidth((qreal)m_picture->width() * hRatio);
-    } else if (m_picture->width() > (int)option->rect.width() && m_picture->width() >= m_picture->height()) {
-        qreal wRatio = option->rect.width() / m_picture->width();
-        rect.setHeight((qreal)m_picture->height() * wRatio);
-        rect.setWidth(option->rect.width());
-    }
+    rect.setX((option->rect.width() - picture.width()) / 2.0);
+    rect.setY((option->rect.height() - picture.height()) / 2.0);
+    rect.setWidth(picture.width());
+    rect.setHeight(picture.height());
+    painter->drawImage(rect, picture);
 
-    rect.setX((option->rect.width() - rect.width()) / 2);
-    rect.setY((option->rect.height() - rect.height()) / 2);
-
-    painter->drawImage(rect, *m_picture);
-
+    painter->drawImage(rect, picture);
 }

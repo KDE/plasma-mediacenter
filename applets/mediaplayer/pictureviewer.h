@@ -32,10 +32,6 @@ public:
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-//
-//protected:
-//    void resizeEvent(QGraphicsSceneResizeEvent *event);
-
 private:
     QImage *m_picture;
 };
