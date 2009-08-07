@@ -155,7 +155,6 @@ void MediaPlayer::init()
 
    SetControlsVisible(false);
 
-   connect (m_video->mediaObject(), SIGNAL(aboutToFinish()), this, SLOT(playNextMedia()));
    connect (m_video->mediaObject(), SIGNAL(finished()), this, SLOT(playNextMedia()));
 
 //   new PlayerDBusHandler(this, media, m_video->audioOutput());
@@ -354,17 +353,6 @@ bool MediaPlayer::eventFilter(QObject *o, QEvent *e)
     return false;
 }
 
-void MediaPlayer::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-   event->accept();
-}
-
-void MediaPlayer::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
-{
-    event->accept();
-    ToggleControlsVisibility();
-}
-
 void MediaPlayer::stop()
 {
     m_video->mediaObject()->stop();
@@ -394,8 +382,9 @@ void MediaPlayer::playMedia(const MediaCenter::Media &media)
                 media.first == MediaCenter::Video ||
                 media.first == MediaCenter::OpticalDisc) {
                 kDebug() << "enqueued";
-                m_video->mediaObject()->enqueue(media.second);
+                m_video->mediaObject()->setCurrentSource(media.second);
                 if (m_video->mediaObject()->state() != Phonon::PlayingState) {
+                    kDebug() << "playpaused";
                     playPause();
                 }
                 m_phonon = true;

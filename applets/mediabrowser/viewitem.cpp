@@ -63,8 +63,6 @@ m_nepomuk(false)
     m_frameSvg->setElementPrefix("hover");
 
     setAcceptedMouseButtons(0);
-
-    connect (Plasma::Theme::defaultTheme(), SIGNAL(themeChanged()), this, SLOT(updateColors()));
     
     m_nepomuk = Nepomuk::ResourceManager::instance()->initialized();
 }
