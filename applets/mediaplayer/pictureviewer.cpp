@@ -37,11 +37,10 @@ void PictureViewer::loadPicture(const QString &path)
 {
     MediaCenter::MediaType type = MediaCenter::getType(path);
     if (type != MediaCenter::Picture) {
-        delete m_picture;
-        m_picture = 0;
         return;
     }
-
+    delete m_picture;
+    m_picture = 0;
     m_picture = new QImage(path);
     update();
 }
