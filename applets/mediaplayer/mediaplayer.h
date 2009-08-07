@@ -116,6 +116,8 @@ private:
     Phonon::VideoWidget *m_fullScreenVideo;
     PictureViewer *m_pviewer;
 
+    MediaCenter::Media m_currentMedia;
+
     Ui::Config ui;
 
     QList<MediaCenter::Media> m_medias;

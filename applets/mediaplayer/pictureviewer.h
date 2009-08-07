@@ -32,8 +32,17 @@ public:
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
+    int showTime();
+
+public Q_SLOTS:
+    void setShowTime(int time);
+
+Q_SIGNALS:
+    void showFinished();
+
 private:
     QImage *m_picture;
+    int m_showTime;
 };
 
 #endif // PICTUREVIEWER_H

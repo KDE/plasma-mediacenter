@@ -156,6 +156,7 @@ void MediaPlayer::init()
    SetControlsVisible(false);
 
    connect (m_video->mediaObject(), SIGNAL(finished()), this, SLOT(playNextMedia()));
+   connect (m_pviewer, SIGNAL(showFinished()), this, SLOT(playNextMedia()));
 
 //   new PlayerDBusHandler(this, media, m_video->audioOutput());
 //   new TrackListDBusHandler(this, media);
@@ -164,30 +165,30 @@ void MediaPlayer::init()
 
 void MediaPlayer::playNextMedia()
 {
-    if (m_phonon) {
-        MediaCenter::Media media = MediaCenter::mediaFromMediaSource(m_video->mediaObject()->currentSource());
-        if (media.first == MediaCenter::Invalid) {
-            return;
-        }
-        int nextMedia = 0;
-        bool found = false;
-        for (; nextMedia < m_medias.count(); nextMedia++) {
-            if (found) {
-                break;
-            }
-            if (media.second == m_medias[nextMedia].second) {
-                found = true;
-            }
-        }
-
-        if (!found) {
-            return;
-        }
-
-        playMedia(m_medias[nextMedia]);
-    } else {
-        // TODO: code for slideshow..
+    kDebug() << "going to next media";
+    MediaCenter::Media media = m_currentMedia;
+    if (media.first == MediaCenter::Invalid) {
+        return;
     }
+    int nextMedia = 0;
+    bool previousFound = false;
+    bool found = false;
+    for (; nextMedia < m_medias.count(); ++nextMedia) {
+        if (previousFound) {
+            found = true;
+            break;
+        }
+        if (media.second == m_medias[nextMedia].second) {
+            previousFound = true;
+        }
+    }
+
+    if (!found) {
+        return;
+    }
+
+    kDebug() << nextMedia << "of" << m_medias.count();
+    playMedia(m_medias[nextMedia]);
 
 }
 
@@ -387,6 +388,7 @@ void MediaPlayer::playMedia(const MediaCenter::Media &media)
                     kDebug() << "playpaused";
                     playPause();
                 }
+                m_currentMedia = media;
                 m_phonon = true;
             } else {
                 slideShow(media);
@@ -408,6 +410,7 @@ void MediaPlayer::slideShow(const MediaCenter::Media &media)
     }
 
     m_pviewer->loadPicture(media.second);
+    m_currentMedia = media;
 }
 
 void MediaPlayer::append(const QStringList &medias)

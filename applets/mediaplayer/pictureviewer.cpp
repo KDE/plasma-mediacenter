@@ -22,11 +22,13 @@
 
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
+#include <QTimer>
 
 #include <KDebug>
 
 PictureViewer::PictureViewer(QGraphicsItem *parent) : QGraphicsWidget(parent),
-m_picture(0)
+m_picture(0),
+m_showTime(3)
 {
 }
 
@@ -43,6 +45,8 @@ void PictureViewer::loadPicture(const QString &path)
     m_picture = 0;
     m_picture = new QImage(path);
     update();
+
+    QTimer::singleShot(m_showTime*1000, this, SIGNAL(showFinished()));
 }
 
 void PictureViewer::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -67,4 +71,9 @@ void PictureViewer::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     painter->drawImage(rect, picture);
 
     painter->drawImage(rect, picture);
+}
+
+void PictureViewer::setShowTime(int time)
+{
+    m_showTime = time;
 }
