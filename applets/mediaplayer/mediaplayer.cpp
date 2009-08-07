@@ -49,7 +49,6 @@ MediaPlayer::MediaPlayer(QObject *parent, const QVariantList &args)
       m_ticking(false),
       m_raised(false),
       m_fullScreen(false),
-      m_phonon(false),
       m_fullScreenVideo(0),
       m_pviewer(new PictureViewer(this))
 {
@@ -382,17 +381,24 @@ void MediaPlayer::playMedia(const MediaCenter::Media &media)
             if (media.first == MediaCenter::Audio ||
                 media.first == MediaCenter::Video ||
                 media.first == MediaCenter::OpticalDisc) {
-                kDebug() << "enqueued";
+                // check whether there is the right widget in the layout
+                if (!m_video->isVisible()) {
+                    QGraphicsLinearLayout *layout = static_cast<QGraphicsLinearLayout*>(this->layout());
+                    layout->removeItem(m_pviewer);
+                    m_video->show();
+                    m_pviewer->hide();
+                    layout->addItem(m_video);
+                    setLayout(layout);
+                }
+
                 m_video->mediaObject()->setCurrentSource(media.second);
                 if (m_video->mediaObject()->state() != Phonon::PlayingState) {
                     kDebug() << "playpaused";
                     playPause();
                 }
                 m_currentMedia = media;
-                m_phonon = true;
             } else {
                 slideShow(media);
-                m_phonon = false;
             }
         }
     }

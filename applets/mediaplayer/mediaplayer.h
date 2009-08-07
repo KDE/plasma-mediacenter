@@ -112,7 +112,6 @@ private:
     bool m_raised;
 
     bool m_fullScreen;
-    bool m_phonon;
     Phonon::VideoWidget *m_fullScreenVideo;
     PictureViewer *m_pviewer;
 
