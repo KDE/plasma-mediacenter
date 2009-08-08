@@ -84,3 +84,8 @@ void PictureViewer::setShowTime(int time)
 {
     m_showTime = time;
 }
+
+int PictureViewer::showTime()
+{
+    return m_showTime;
+}

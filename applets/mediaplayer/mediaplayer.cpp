@@ -416,6 +416,10 @@ void MediaPlayer::slideShow(const MediaCenter::Media &media)
         setLayout(layout);
     }
 
+    if (m_video->mediaObject()->state() == Phonon::PlayingState) {
+        stop();
+    }
+
     m_pviewer->loadPicture(media.second);
     m_currentMedia = media;
 }
