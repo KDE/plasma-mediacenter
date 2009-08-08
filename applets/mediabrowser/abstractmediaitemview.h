@@ -21,6 +21,7 @@
 
 #include <QGraphicsWidget>
 #include <QStyleOptionViewItemV4>
+#include <KUrl>
 
 class QAbstractItemModel;
 
@@ -116,6 +117,8 @@ public slots:
      * the scrollbar.
      */
     virtual void updateScrollBar() = 0;
+    
+    void goPrevious();
 
 private slots:
     void setRating(int);
@@ -127,6 +130,7 @@ private:
     void tryDrag(QGraphicsSceneMouseEvent *);
     ViewItem* itemFromPos(const QPointF &);
     void itemClickEvent(QGraphicsSceneMouseEvent *);
+    KUrl::List m_history;
 
 protected:
     int m_iconSize;

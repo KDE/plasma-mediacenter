@@ -37,7 +37,7 @@ m_combo(0)
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal);
     setLayout(layout);
 
-    setNavigationControls(AllControls);
+    setNavigationControls(BackwardControl);
     setShowNavigationComboBox(false);
 }
 
@@ -92,7 +92,7 @@ void BrowsingWidget::setNavigationControls(NavigationControls controls)
         if (!m_forwardButton) {
             m_forwardButton = new Plasma::ToolButton(this);
             m_forwardButton->setIcon(KIcon("go-next"));
-            connect (m_forwardButton, SIGNAL(clicked()), this, SIGNAL(goForward()));
+            connect (m_forwardButton, SIGNAL(clicked()), this, SIGNAL(goNext()));
         }
         layout->insertItem(0, m_forwardButton);
     }
@@ -101,7 +101,7 @@ void BrowsingWidget::setNavigationControls(NavigationControls controls)
         if (!m_backwardButton) {
             m_backwardButton = new Plasma::ToolButton(this);
             m_backwardButton->setIcon(KIcon("go-previous"));
-            connect (m_backwardButton, SIGNAL(clicked()), this, SIGNAL(goBack()));
+            connect (m_backwardButton, SIGNAL(clicked()), this, SIGNAL(goPrevious()));
         }
         layout->insertItem(0, m_backwardButton);
     }

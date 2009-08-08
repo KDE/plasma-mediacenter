@@ -286,6 +286,7 @@ void AbstractMediaItemView::itemClickEvent(QGraphicsSceneMouseEvent *event)
             qDeleteAll(m_items);
             m_items.clear();
             model->dirLister()->stop();
+            m_history << model->dirLister()->url();
             model->dirLister()->openUrl(item.url());
             m_hoveredItem = 0;
             generateItems();
@@ -325,4 +326,23 @@ void AbstractMediaItemView::tryDrag(QGraphicsSceneMouseEvent *event)
     drag->setPixmap(pixmap);
 
     drag->exec(Qt::MoveAction);
+}
+
+void AbstractMediaItemView::goPrevious()
+{
+    if (m_history.isEmpty()) {
+        return;
+    }
+    
+    KDirModel *model = qobject_cast<KDirModel*>(this->model());
+    if (!model) {
+        return;
+    }
+    
+    if (!m_history.last().isValid()) {
+        return;
+    }
+    model->dirLister()->stop();
+    model->dirLister()->openUrl(m_history.last());
+    m_history.removeLast();
 }

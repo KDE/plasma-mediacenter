@@ -50,8 +50,8 @@ public:
 
 signals:
     void navigationRequested(const QString &destination);
-    void goBack();
-    void goForward();
+    void goPrevious();
+    void goNext();
     void goUp();
 
 private:

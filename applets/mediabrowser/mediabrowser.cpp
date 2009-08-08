@@ -76,6 +76,7 @@ void MediaBrowser::createView()
         m_view = new GridView(this);
     }
 
+    connect (m_browsingWidget, SIGNAL(goPrevious()), m_view, SLOT(goPrevious()));
     QGraphicsLinearLayout *layout = static_cast<QGraphicsLinearLayout*>(this->layout());
     layout->addItem(m_view);
     setLayout(layout);
