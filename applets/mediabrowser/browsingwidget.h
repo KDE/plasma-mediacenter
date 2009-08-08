@@ -31,12 +31,12 @@ class BrowsingWidget : public QGraphicsWidget
     Q_OBJECT
 public:
     enum NavigationControl {
-        NoControl = 0x0,
+        NoControls = 0x0,
         BackwardControl = 0x1,
         ForwardControl = 0x2,
         UpLevelControl = 0x4,
         AllControls = 0x8
-                     };
+                  };
     Q_DECLARE_FLAGS(NavigationControls, NavigationControl);
 
     BrowsingWidget(QGraphicsItem *parent);
@@ -48,6 +48,12 @@ public:
     void setShowNavigationComboBox(bool set);
     bool showNavigationComboBox();
 
+signals:
+    void navigationRequested(const QString &destination);
+    void goBack();
+    void goForward();
+    void goUp();
+
 private:
     NavigationControls m_controls;
     bool m_navigationCombo;
@@ -55,6 +61,8 @@ private:
     Plasma::PushButton *m_backwardButton;
     Plasma::PushButton *m_forwardButton;
     Plasma::PushButton *m_upLevelButton;
+
+    Plasma::ComboBox *m_combo;
 };
 
 #endif // BROWSINGWIDGET_H

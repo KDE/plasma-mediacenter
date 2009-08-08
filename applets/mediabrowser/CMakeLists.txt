@@ -5,6 +5,7 @@ abstractmediaitemview.cpp
 listview.cpp
 gridview.cpp
 viewitem.cpp
+browsingwidget.cpp
 )
  
 # Now make sure all files get to the right place

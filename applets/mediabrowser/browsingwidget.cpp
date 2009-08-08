@@ -22,8 +22,10 @@
 #include <QGraphicsLinearLayout>
 // KDE
 #include <KIcon>
+#include <KComboBox>
 // Plasma
 #include <Plasma/PushButton>
+#include <Plasma/ComboBox>
 
 BrowsingWidget::BrowsingWidget(QGraphicsItem *parent) : QGraphicsWidget(parent),
 m_backwardButton(0),
@@ -78,6 +80,7 @@ void BrowsingWidget::setNavigationControls(NavigationControls controls)
         if (!m_upLevelButton) {
             m_upLevelButton = new Plasma::PushButton(this);
             m_upLevelButton->setIcon(KIcon("go-up"));
+            connect (m_upLevelButton, SIGNAL(clicked()), this, SIGNAL(goUp()));
         }
         layout->insertItem(0, m_upLevelButton);
     }
@@ -86,6 +89,7 @@ void BrowsingWidget::setNavigationControls(NavigationControls controls)
         if (!m_forwardButton) {
             m_forwardButton = new Plasma::PushButton(this);
             m_forwardButton->setIcon(KIcon("go-next"));
+            connect (m_forwardButton, SIGNAL(clicked()), this, SIGNAL(goForward()));
         }
         layout->insertItem(0, m_forwardButton);
     }
@@ -94,6 +98,7 @@ void BrowsingWidget::setNavigationControls(NavigationControls controls)
         if (!m_backwardButton) {
             m_backwardButton = new Plasma::PushButton(this);
             m_backwardButton->setIcon(KIcon("go-previous"));
+            connect (m_backwardButton, SIGNAL(clicked()), this, SIGNAL(goBack()));
         }
         layout->insertItem(0, m_backwardButton);
     }
@@ -101,7 +106,28 @@ void BrowsingWidget::setNavigationControls(NavigationControls controls)
     setLayout(layout);
 }
 
-NavigationControls BrowsingWidget::navigationControls()
+BrowsingWidget::NavigationControls BrowsingWidget::navigationControls()
 {
     return m_controls;
+}
+
+void BrowsingWidget::setShowNavigationComboBox(bool set)
+{
+    if (m_navigationCombo == set) {
+        return;
+    }
+
+    QGraphicsLinearLayout *layout = static_cast<QGraphicsLinearLayout*>(this->layout());
+    m_navigationCombo = set;
+    if (m_navigationCombo) {
+        if (!m_combo) {
+            m_combo = new Plasma::ComboBox(this);
+            connect (m_combo->nativeWidget(), SIGNAL(returnPressed(const QString&)), this, SIGNAL(navigationRequested(const QString&)));
+        }
+        layout->addItem(m_combo);
+    } else {
+        layout->removeItem(m_combo);
+        delete m_combo;
+    }
+    setLayout(layout);
 }
