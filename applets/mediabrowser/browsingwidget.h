@@ -22,7 +22,7 @@
 #include <QGraphicsWidget>
 
 namespace Plasma {
-    class PushButton;
+    class ToolButton;
     class ComboBox;
 }
 
@@ -35,8 +35,8 @@ public:
         BackwardControl = 0x1,
         ForwardControl = 0x2,
         UpLevelControl = 0x4,
-        AllControls = 0x8
-                  };
+        AllControls = 0x7
+    };
     Q_DECLARE_FLAGS(NavigationControls, NavigationControl);
 
     BrowsingWidget(QGraphicsItem *parent);
@@ -58,11 +58,13 @@ private:
     NavigationControls m_controls;
     bool m_navigationCombo;
 
-    Plasma::PushButton *m_backwardButton;
-    Plasma::PushButton *m_forwardButton;
-    Plasma::PushButton *m_upLevelButton;
+    Plasma::ToolButton *m_backwardButton;
+    Plasma::ToolButton *m_forwardButton;
+    Plasma::ToolButton *m_upLevelButton;
 
     Plasma::ComboBox *m_combo;
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(BrowsingWidget::NavigationControls)
 
 #endif // BROWSINGWIDGET_H

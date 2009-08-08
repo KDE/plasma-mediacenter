@@ -25,9 +25,9 @@
 #include "ui_general.h"
 #include "abstractmediaitemview.h"
 
-class KUrl;
 class KDirLister;
 class KDirModel;
+class BrowsingWidget;
 
 class MediaBrowser : public MediaCenter::Browser
 {
@@ -55,6 +55,7 @@ private:
     KDirModel *m_model;
     QString m_viewType;
     QStringList m_mimeTypes;
+    BrowsingWidget *m_browsingWidget;
 
 private:
     void createView();

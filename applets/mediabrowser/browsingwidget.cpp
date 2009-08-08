@@ -23,8 +23,9 @@
 // KDE
 #include <KIcon>
 #include <KComboBox>
+#include <KDebug>
 // Plasma
-#include <Plasma/PushButton>
+#include <Plasma/ToolButton>
 #include <Plasma/ComboBox>
 
 BrowsingWidget::BrowsingWidget(QGraphicsItem *parent) : QGraphicsWidget(parent),
@@ -59,6 +60,7 @@ void BrowsingWidget::setNavigationControls(NavigationControls controls)
     }
 
     if (m_controls == NoControls) {
+        kDebug() << "no controls!!";
         if (m_backwardButton) {
             layout->removeItem(m_backwardButton);
             delete m_backwardButton;
@@ -79,7 +81,7 @@ void BrowsingWidget::setNavigationControls(NavigationControls controls)
 
     if (m_controls & UpLevelControl) {
         if (!m_upLevelButton) {
-            m_upLevelButton = new Plasma::PushButton(this);
+            m_upLevelButton = new Plasma::ToolButton(this);
             m_upLevelButton->setIcon(KIcon("go-up"));
             connect (m_upLevelButton, SIGNAL(clicked()), this, SIGNAL(goUp()));
         }
@@ -88,7 +90,7 @@ void BrowsingWidget::setNavigationControls(NavigationControls controls)
 
     if (m_controls & ForwardControl) {
         if (!m_forwardButton) {
-            m_forwardButton = new Plasma::PushButton(this);
+            m_forwardButton = new Plasma::ToolButton(this);
             m_forwardButton->setIcon(KIcon("go-next"));
             connect (m_forwardButton, SIGNAL(clicked()), this, SIGNAL(goForward()));
         }
@@ -97,7 +99,7 @@ void BrowsingWidget::setNavigationControls(NavigationControls controls)
 
     if (m_controls & BackwardControl) {
         if (!m_backwardButton) {
-            m_backwardButton = new Plasma::PushButton(this);
+            m_backwardButton = new Plasma::ToolButton(this);
             m_backwardButton->setIcon(KIcon("go-previous"));
             connect (m_backwardButton, SIGNAL(clicked()), this, SIGNAL(goBack()));
         }
@@ -123,6 +125,7 @@ void BrowsingWidget::setShowNavigationComboBox(bool set)
     if (m_navigationCombo) {
         if (!m_combo) {
             m_combo = new Plasma::ComboBox(this);
+            m_combo->nativeWidget()->setEditable(true);
             connect (m_combo->nativeWidget(), SIGNAL(returnPressed(const QString&)), this, SIGNAL(navigationRequested(const QString&)));
         }
         layout->addItem(m_combo);

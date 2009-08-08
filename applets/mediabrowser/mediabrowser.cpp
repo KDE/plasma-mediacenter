@@ -19,6 +19,7 @@
 #include "mediabrowser.h"
 #include "listview.h"
 #include "gridview.h"
+#include "browsingwidget.h"
 
 #include <QWidget>
 #include <QGraphicsLinearLayout>
@@ -42,10 +43,15 @@ MediaBrowser::MediaBrowser(QObject *parent, const QVariantList &args)
     m_localUrl(KUrl()),
     m_fromPlaces(true),
     m_lister(0),
-    m_model(0)
+    m_model(0),
+    m_browsingWidget(new BrowsingWidget(this))
 {
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
     Nepomuk::ResourceManager::instance()->init();
+
+    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
+    layout->addItem(m_browsingWidget);
+    setLayout(layout);
 }
 
 MediaBrowser::~MediaBrowser()
@@ -70,7 +76,7 @@ void MediaBrowser::createView()
         m_view = new GridView(this);
     }
 
-    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout;
+    QGraphicsLinearLayout *layout = static_cast<QGraphicsLinearLayout*>(this->layout());
     layout->addItem(m_view);
     setLayout(layout);
 }
