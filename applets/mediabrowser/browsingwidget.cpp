@@ -30,7 +30,8 @@
 BrowsingWidget::BrowsingWidget(QGraphicsItem *parent) : QGraphicsWidget(parent),
 m_backwardButton(0),
 m_forwardButton(0),
-m_upLevelButton(0)
+m_upLevelButton(0),
+m_combo(0)
 {
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal);
     setLayout(layout);
@@ -128,6 +129,7 @@ void BrowsingWidget::setShowNavigationComboBox(bool set)
     } else {
         layout->removeItem(m_combo);
         delete m_combo;
+        m_combo = 0;
     }
     setLayout(layout);
 }
