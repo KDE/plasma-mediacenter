@@ -60,6 +60,9 @@ public:
 
     void setRating(int rating);
 
+    void setDrawBlurredText(bool set);
+    bool drawBlurredText();
+
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
 
@@ -73,6 +76,7 @@ private:
     int m_rating;
     Nepomuk::Resource *m_resource;
     bool m_nepomuk;
+    bool m_blurred;
 
     friend class AbstractMediaItemView;
 

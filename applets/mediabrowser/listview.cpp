@@ -93,6 +93,7 @@ void ListView::generateItems()
     for (int i = 0; i < m_model->rowCount(m_rootIndex); i++) {
         ViewItem *item = new ViewItem(m_option, this);
         item->setModelIndex(m_model->index(i, 0, m_rootIndex));
+        item->setDrawBlurredText(m_blurred);
         m_items << item;
     }
     layoutItems();

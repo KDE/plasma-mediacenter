@@ -54,7 +54,8 @@ m_preview(0),
 m_hoverRating(0),
 m_rating(0),
 m_resource(0),
-m_nepomuk(false)
+m_nepomuk(false),
+m_blurred(true)
 {
     setContentsMargins(0, 0, 0, 0);
 
@@ -173,23 +174,27 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     if (m_option.fontMetrics.width(text) > textRect.width()) {
         text = m_option.fontMetrics.elidedText(text, Qt::ElideMiddle, textRect.width());
     }
-//     painter->drawText(textRect, m_option.displayAlignment, text);
-    QPixmap blurredText = Plasma::PaintUtils::shadowText(text, m_option.font);
-    QPointF txtPoint;
-    if (m_option.displayAlignment & Qt::AlignLeft) {
-        txtPoint.setX(textRect.x());
-    }
-    if (m_option.displayAlignment & Qt::AlignHCenter) {
-        txtPoint.setX((textRect.width() - blurredText.width()) / 2);
-    }
-    if (m_option.displayAlignment & Qt::AlignVCenter) {
-        txtPoint.setY((textRect.height() - blurredText.height()) / 2);
-    }
-    if (m_option.displayAlignment & Qt::AlignBottom) {
-        txtPoint.setY(textRect.height() - blurredText.height());
-    }
 
-    painter->drawPixmap(txtPoint, blurredText);
+    if (m_blurred) {
+        QPixmap blurredText = Plasma::PaintUtils::shadowText(text, m_option.font);
+        QPointF txtPoint;
+        if (m_option.displayAlignment & Qt::AlignLeft) {
+            txtPoint.setX(textRect.x());
+        }
+        if (m_option.displayAlignment & Qt::AlignHCenter) {
+            txtPoint.setX((textRect.width() - blurredText.width()) / 2);
+        }
+        if (m_option.displayAlignment & Qt::AlignVCenter) {
+            txtPoint.setY((textRect.height() - blurredText.height()) / 2);
+        }
+        if (m_option.displayAlignment & Qt::AlignBottom) {
+            txtPoint.setY(textRect.height() - blurredText.height());
+        }
+
+        painter->drawPixmap(txtPoint, blurredText);
+    } else {
+        painter->drawText(textRect, m_option.displayAlignment, text);
+    }
 }
 
 void ViewItem::drawReflection(QPainter *painter, const QRect &reflectionRect, const QIcon &icon)
@@ -332,4 +337,19 @@ void ViewItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
     } else {
         event->ignore();
     }
+}
+
+void ViewItem::setDrawBlurredText(bool set)
+{
+    if (set == m_blurred) {
+        return;
+    }
+
+    m_blurred = set;
+    update();
+}
+
+bool ViewItem::drawBlurredText()
+{
+    return m_blurred;
 }

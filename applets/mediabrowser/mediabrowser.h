@@ -50,6 +50,7 @@ private:
     KUrl m_localUrl;
     bool m_fromPlaces;
     bool m_folderNavigation;
+    bool m_blurred;
     BrowsingMode m_mode;
     KDirLister *m_lister;
     KDirModel *m_model;

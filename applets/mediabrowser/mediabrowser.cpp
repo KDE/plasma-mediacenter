@@ -76,6 +76,8 @@ void MediaBrowser::createView()
         m_view = new GridView(this);
     }
 
+    m_view->setDrawBlurredText(m_blurred);
+
     connect (m_browsingWidget, SIGNAL(goPrevious()), m_view, SLOT(goPrevious()));
     QGraphicsLinearLayout *layout = static_cast<QGraphicsLinearLayout*>(this->layout());
     layout->addItem(m_view);
@@ -111,6 +113,7 @@ void MediaBrowser::createConfigurationInterface(KConfigDialog *parent)
     }
 
     uiGeneral.folderNavigationCheckBox->setChecked(m_folderNavigation);
+    uiGeneral.blurredTextCheckBox->setChecked(m_blurred);
 
     uiLocal.urlRequester->setMode(KFile::Directory);
 
@@ -174,6 +177,7 @@ void MediaBrowser::loadConfiguration()
     m_fromPlaces = cf.readEntry("FromPlaces", true);
     m_viewType = cf.readEntry("ViewType", "list");
     m_folderNavigation = cf.readEntry("FolderNavigation", true);
+    m_blurred = cf.readEntry("BlurredText", true);
 }
 
 void MediaBrowser::configAccepted()
@@ -213,6 +217,12 @@ void MediaBrowser::configAccepted()
     }
 
     cf.writeEntry("ViewType", type);
+    bool blurred = uiGeneral.blurredTextCheckBox->isChecked();
+    if (blurred != m_blurred) {
+        m_blurred = blurred;
+        m_view->setDrawBlurredText(m_blurred);
+        cf.writeEntry("BlurredText", m_blurred);
+    }
 
 }
 

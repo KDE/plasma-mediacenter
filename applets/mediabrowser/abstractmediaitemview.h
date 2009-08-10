@@ -63,6 +63,9 @@ public:
     void setScrollMode(ScrollMode);
     ScrollMode scrollMode();
 
+    void setDrawBlurredText(bool set);
+    bool drawBlurredText();
+
     /**
      * Call this method whenever events like model resetting occur.
      * This method destroys all the existing items so only call it whenever
@@ -139,6 +142,7 @@ protected:
     QStyleOptionViewItemV4 m_option;
     QModelIndex m_rootIndex;
     ScrollMode m_scrollMode;
+    bool m_blurred;
 
     QList<ViewItem*> m_items;
 

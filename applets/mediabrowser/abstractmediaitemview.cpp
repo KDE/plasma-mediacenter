@@ -46,7 +46,8 @@ AbstractMediaItemView::AbstractMediaItemView(QGraphicsItem *parent) : QGraphicsW
 m_model(0),
 m_scrollBar(new Plasma::ScrollBar(this)),
 m_scrollMode(PerPixel),
-m_hoveredItem(0)
+m_hoveredItem(0),
+m_blurred(true)
 
 {
     setFlag(QGraphicsItem::ItemClipsChildrenToShape);
@@ -345,4 +346,22 @@ void AbstractMediaItemView::goPrevious()
     model->dirLister()->stop();
     model->dirLister()->openUrl(m_history.last());
     m_history.removeLast();
+}
+
+void AbstractMediaItemView::setDrawBlurredText(bool set)
+{
+    if (m_blurred == set) {
+        return;
+    }
+
+    kDebug() << "setting blurred text to" << set;
+    m_blurred = set;
+    foreach (ViewItem *item, m_items) {
+        item->setDrawBlurredText(set);
+    }
+}
+
+bool AbstractMediaItemView::drawBlurredText()
+{
+    return m_blurred;
 }
