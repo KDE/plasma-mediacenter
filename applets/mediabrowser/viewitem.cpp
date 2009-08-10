@@ -41,6 +41,7 @@
 
 #include <Plasma/FrameSvg>
 #include <Plasma/Theme>
+#include <Plasma/PaintUtils>
 
 static const int ITEM_VERTICAL_MARGIN = 15;
 
@@ -172,7 +173,23 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     if (m_option.fontMetrics.width(text) > textRect.width()) {
         text = m_option.fontMetrics.elidedText(text, Qt::ElideMiddle, textRect.width());
     }
-    painter->drawText(textRect, m_option.displayAlignment, text);
+//     painter->drawText(textRect, m_option.displayAlignment, text);
+    QPixmap blurredText = Plasma::PaintUtils::shadowText(text, m_option.font);
+    QPointF txtPoint;
+    if (m_option.displayAlignment & Qt::AlignLeft) {
+        txtPoint.setX(textRect.x());
+    }
+    if (m_option.displayAlignment & Qt::AlignHCenter) {
+        txtPoint.setX((textRect.width() - blurredText.width()) / 2);
+    }
+    if (m_option.displayAlignment & Qt::AlignVCenter) {
+        txtPoint.setY((textRect.height() - blurredText.height()) / 2);
+    }
+    if (m_option.displayAlignment & Qt::AlignBottom) {
+        txtPoint.setY(textRect.height() - blurredText.height());
+    }
+
+    painter->drawPixmap(txtPoint, blurredText);
 }
 
 void ViewItem::drawReflection(QPainter *painter, const QRect &reflectionRect, const QIcon &icon)
