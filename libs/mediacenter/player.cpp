@@ -27,9 +27,9 @@ Player::Player(QObject *parent, const QVariantList &args) : Plasma::Applet(paren
 Player::~Player()
 {}
 
-QString Player::currentMedia()
+Media Player::currentMedia()
 {
-    return QString();
+    return Media();
 }
 
 void Player::setQueue(const QList<Media> &sources)

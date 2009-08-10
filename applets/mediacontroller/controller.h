@@ -23,10 +23,6 @@
 
 #include <phonon/phononnamespace.h>
 
-namespace Phonon {
-    class MediaObject;
-}
-
 namespace Plasma {
     class IconWidget;
     class Slider;
@@ -66,10 +62,6 @@ private:
     int iconSizeFromCurrentSize() const;
 
     void setMarginsFromTheme();
-
-
-
-
 };
 
 #endif

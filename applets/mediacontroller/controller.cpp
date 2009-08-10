@@ -96,7 +96,6 @@ void MediaController::init()
 
     m_playPause = new Plasma::IconWidget(this);
     m_playPause->setIcon("media-playback-start");
-    // TODO connect
     controlLayout->addItem(m_playPause);
     connect (m_playPause, SIGNAL(clicked()), SIGNAL(playPauseRequest()));
 

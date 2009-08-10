@@ -64,6 +64,8 @@ public:
     Phonon::MediaObject* mediaObject();
 
     bool eventFilter(QObject *o, QEvent *e);
+    
+    MediaCenter::Media currentMedia();
 
 protected:
     void dropEvent(QGraphicsSceneDragDropEvent *event);

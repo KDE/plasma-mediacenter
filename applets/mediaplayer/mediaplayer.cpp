@@ -165,29 +165,11 @@ void MediaPlayer::init()
 
 void MediaPlayer::playNextMedia()
 {
-    kDebug() << "going to next media";
-    MediaCenter::Media media = m_currentMedia;
-    if (media.first == MediaCenter::Invalid) {
-        return;
-    }
-    int nextMedia = 0;
-    bool previousFound = false;
-    bool found = false;
-    for (; nextMedia < m_medias.count(); ++nextMedia) {
-        if (previousFound) {
-            found = true;
-            break;
-        }
-        if (media.second == m_medias[nextMedia].second) {
-            previousFound = true;
-        }
-    }
-
-    if (!found) {
+    int nextMedia = m_medias.indexOf(m_currentMedia) + 1;
+    if (nextMedia >= m_medias.count()) {
         return;
     }
 
-    kDebug() << nextMedia << "of" << m_medias.count();
     playMedia(m_medias[nextMedia]);
 
 }
@@ -369,10 +351,17 @@ Phonon::MediaObject* MediaPlayer::mediaObject()
 
 void MediaPlayer::skipBackward()
 {
+    int previous = m_medias.indexOf(m_currentMedia) - 1;
+    if (previous < 0) {
+        return;
+    }
+    playMedia(m_medias[previous]);
 }
 
 void MediaPlayer::skipForward()
-{}
+{
+    playNextMedia();
+}
 
 void MediaPlayer::playMedia(const MediaCenter::Media &media)
 {
@@ -439,6 +428,11 @@ void MediaPlayer::append(const QStringList &medias)
 void MediaPlayer::enqueue(const QList<MediaCenter::Media> &medias)
 {
     m_medias << medias;
+}
+
+MediaCenter::Media MediaPlayer::currentMedia()
+{
+    return m_currentMedia;
 }
 
 K_EXPORT_PLASMA_APPLET(mcplayer, MediaPlayer)

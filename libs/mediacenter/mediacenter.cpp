@@ -89,9 +89,7 @@ Media mediaFromMediaSource(const Phonon::MediaSource &source)
         return media;
     }
 
-    Media media;
-    media.first = Invalid;
-    return media;
+    return Media();
 }
 
 } // MediaCenter namespace

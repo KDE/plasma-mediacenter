@@ -66,7 +66,7 @@ public:
      * is a MediaCenter::OpticalDisc just return
      * the device name containing the media. Use Solid in order to retrieve it.
      */
-    virtual QString currentMedia();
+    virtual Media currentMedia();
 
     /**
      * This method is used to set the slideshow interval when
@@ -137,7 +137,7 @@ public slots:
 //    virtual void enqueue(int index, const QList<Media> &sources);
 
     /**
-     * This slot should be called whenever in order to make
+     * This slot should be called whenever it is needed to make
      * the player play the specified media.
      *
      * @param media is the media to be played.
