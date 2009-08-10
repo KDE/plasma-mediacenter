@@ -50,7 +50,7 @@ protected:
     void receivedMediaObject();
 
 private slots:
-    void togglePlayPause(Phonon::State, Phonon::State);
+    void togglePlayPause(Phonon::State newState, Phonon::State oldState);
     void slotVolumeSlider(int value);
     void slotSeekSlider(int value);
     void updateTotalTime(qint64 time);
@@ -59,7 +59,6 @@ private slots:
 
 private:
     Plasma::FrameSvg *m_svg;
-    Phonon::MediaObject *m_mediaObject;
     Plasma::IconWidget *m_playPause;
     Plasma::Slider *m_volumeSlider;
     Plasma::Slider *m_seekSlider;
