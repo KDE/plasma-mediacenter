@@ -20,6 +20,7 @@
 #define MEDIAHANDLER_H
 
 #include <QGraphicsWidget>
+#include <QHash>
 
 namespace Plasma {
     class FrameSvg;
@@ -50,6 +51,26 @@ public:
 
     bool eventFilter(QObject *o, QEvent *e);
 
+    /**
+     * Call this method whenever is needed to stop
+     * glowing animation due to hover events over the
+     * handler. This might be useful while moving the applet
+     * since can happen that the applet passes under the mouse
+     * cursor causing an hoverEvent to be processed.
+     */
+    void setStopHoverEvents(bool set);
+    bool stopHoverEvents();
+
+    /**
+     * Call this method in order to retrieve the MediaHandler
+     * associated with the given applet.
+     *
+     * @param: the applet expected to be associated with an
+     * handler.
+     * @return: the associated handler or 0 if none is found.
+     */
+    static MediaHandler* handlerFromApplet(Plasma::Applet*);
+
 protected:
     void resizeEvent(QGraphicsSceneResizeEvent *event);
 
@@ -79,10 +100,16 @@ private:
     Plasma::FrameSvg *m_handlerSvg;
     qreal m_showFactor;
     bool m_appearing;
+    bool m_appletVisible;
+    bool m_stopHovers;
     int m_animationId;
+
+    static QHash<Plasma::Applet*, MediaHandler*> m_handlers;
 
 private:
     void enableBordersByPosition();
+    void hidingAnimation();
+    void showingAnimation();
 };
 
 #endif // MEDIAHANDLER_H

@@ -19,6 +19,10 @@
 #include "medialayout.h"
 #include "mediahandler.h"
 
+#include <QGraphicsItem>
+
+#include <KDebug>
+
 #include <Plasma/Containment>
 #include <Plasma/Applet>
 #include <Plasma/Animator>
@@ -32,6 +36,7 @@ m_player(0)
 {
 
     m_containment->installEventFilter(this);
+    connect (Plasma::Animator::self(), SIGNAL(movementFinished(QGraphicsItem*)), this, SLOT(restoreHandlerGlows(QGraphicsItem*)));
 }
 
 MediaLayout::~MediaLayout()
@@ -164,6 +169,11 @@ QRectF MediaLayout::playlistPreferredShowingRect() const
 
 void MediaLayout::animateHidingApplet(Plasma::Applet *applet)
 {
+    MediaHandler *handler = MediaHandler::handlerFromApplet(applet);
+    if (handler) {
+        handler->setStopHoverEvents(true);
+    }
+
     if (applet == m_browser) {
         Plasma::Animator::self()->moveItem(applet, Plasma::Animator::SlideOutMovement, QPoint(m_browser->rect().x() - m_browser->size().width(),
                                                                                               browserPreferredShowingRect().y()));
@@ -179,6 +189,11 @@ void MediaLayout::animateHidingApplet(Plasma::Applet *applet)
 
 void MediaLayout::animateShowingApplet(Plasma::Applet *applet)
 {
+    MediaHandler *handler = MediaHandler::handlerFromApplet(applet);
+    if (handler) {
+        handler->setStopHoverEvents(true);
+    }
+
     if (applet == m_browser) {
         Plasma::Animator::self()->moveItem(applet, Plasma::Animator::SlideInMovement, browserPreferredShowingRect().topLeft().toPoint());
 
@@ -188,5 +203,18 @@ void MediaLayout::animateShowingApplet(Plasma::Applet *applet)
     } else if (applet == m_playlist) {
         Plasma::Animator::self()->moveItem(applet, Plasma::Animator::SlideInMovement, playlistPreferredShowingRect().topLeft().toPoint());
     }
+}
 
+void MediaLayout::restoreHandlerGlows(QGraphicsItem *item)
+{
+    Plasma::Applet *applet = qgraphicsitem_cast<Plasma::Applet*>(item);
+    if (!applet) {
+        return;
+    }
+
+    MediaHandler *handler = MediaHandler::handlerFromApplet(applet);
+    if (!handler) {
+        return;
+    }
+    handler->setStopHoverEvents(false);
 }

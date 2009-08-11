@@ -26,11 +26,14 @@
 #include <KDebug>
 
 #include <Plasma/Applet>
+#include <Plasma/Containment>
 #include <Plasma/FrameSvg>
 #include <Plasma/Svg>
 #include <Plasma/Animator>
 
 static const int WIDTH = 60;
+
+QHash<Plasma::Applet*, MediaHandler*> MediaHandler::m_handlers = QHash<Plasma::Applet*, MediaHandler*>();
 
 MediaHandler::MediaHandler(Plasma::Applet *applet, HandlerPosition position) : QGraphicsWidget(applet),
 m_handlerPosition(position),
@@ -38,6 +41,8 @@ m_applet(applet),
 m_handlerSvg(new Plasma::FrameSvg(this)),
 m_showFactor(0),
 m_appearing(false),
+m_appletVisible(false),
+m_stopHovers(false),
 m_animationId(0)
 {
     m_applet->installEventFilter(this);
@@ -51,6 +56,8 @@ m_animationId(0)
     setContentsMargins(0, 0, 0, 0);
 
     setAcceptsHoverEvents(true);
+
+    m_handlers.insert(applet, this);
 }
 
 MediaHandler::~MediaHandler()
@@ -143,22 +150,34 @@ bool MediaHandler::eventFilter(QObject *o, QEvent *e)
 
 void MediaHandler::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
-    Q_UNUSED(event)
+    Q_UNUSED(event);
 
-    Plasma::Animator::self()->stopCustomAnimation(m_animationId);
-    m_appearing = true;
-    m_showFactor = 0;
-    m_animationId = Plasma::Animator::self()->customAnimation(100, 250, Plasma::Animator::EaseInCurve, this, "animateShowHide");
+    if (m_stopHovers) {
+        return;
+    }
+
+    m_appletVisible = m_applet->containment()->contains(m_applet->pos());
+    if (m_appletVisible) {
+        m_showFactor = 0;
+        return;
+    }
+    showingAnimation();
 }
 
 void MediaHandler::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
-    Q_UNUSED(event)
+    Q_UNUSED(event);
 
-    Plasma::Animator::self()->stopCustomAnimation(m_animationId);
-    m_appearing = false;
-    m_showFactor = 1;
-    m_animationId = Plasma::Animator::self()->customAnimation(100, 250, Plasma::Animator::EaseInCurve, this, "animateShowHide");
+    if (m_stopHovers) {
+        m_showFactor = 0;
+        return;
+    }
+
+    if (m_appletVisible) {
+        m_showFactor = 0;
+        return;
+    }
+    hidingAnimation();
 }
 
 void MediaHandler::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
@@ -193,4 +212,40 @@ void MediaHandler::animateShowHide(qreal value)
 
     m_showFactor = value;
     update();
+}
+
+void MediaHandler::hidingAnimation()
+{
+    Plasma::Animator::self()->stopCustomAnimation(m_animationId);
+    m_appearing = false;
+    m_showFactor = 1;
+    m_animationId = Plasma::Animator::self()->customAnimation(100, 250, Plasma::Animator::EaseInCurve, this, "animateShowHide");
+}
+
+void MediaHandler::showingAnimation()
+{
+    Plasma::Animator::self()->stopCustomAnimation(m_animationId);
+    m_appearing = true;
+    m_showFactor = 0;
+    m_animationId = Plasma::Animator::self()->customAnimation(100, 250, Plasma::Animator::EaseInCurve, this, "animateShowHide");
+}
+
+void MediaHandler::setStopHoverEvents(bool set)
+{
+    m_showFactor = 0;
+    m_stopHovers = set;
+}
+
+bool MediaHandler::stopHoverEvents()
+{
+    return m_stopHovers;
+}
+
+MediaHandler* MediaHandler::handlerFromApplet(Plasma::Applet *applet)
+{
+    if (!m_handlers.contains(applet)) {
+        return 0;
+    }
+
+    return m_handlers.value(applet);
 }

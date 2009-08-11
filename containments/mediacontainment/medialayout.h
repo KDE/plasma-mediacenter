@@ -20,13 +20,14 @@
 #define MEDIALAYOUT_H
 
 #include <QObject>
+#include <QRectF>
 
 namespace Plasma {
     class Containment;
     class Applet;
 }
 
-class QRectF;
+class QGraphicsItem;
 
 /**
  * @class MediaLayout
@@ -81,6 +82,9 @@ private:
     void layoutControl();
     void layoutPlaylist();
     void layoutPlayer();
+
+private slots:
+    void restoreHandlerGlows(QGraphicsItem*);
 };
 
 #endif // MEDIALAYOUT_H
