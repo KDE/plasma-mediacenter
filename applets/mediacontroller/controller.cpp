@@ -48,6 +48,7 @@ void MediaController::constraintsEvent(Plasma::Constraints constraints)
 {
     Q_UNUSED(constraints);
     setBackgroundHints(NoBackground);
+    setMarginsFromTheme();
 }
 
 void MediaController::resizeEvent(QGraphicsSceneResizeEvent *event)
