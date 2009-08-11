@@ -62,7 +62,6 @@ MediaPlayer::MediaPlayer(QObject *parent, const QVariantList &args)
     if (args.count()) {
         m_currentUrl = args.value(0).toString();
     }
-
 //    QDBusConnection dbus = QDBusConnection::sessionBus();
 //    dbus.registerService("org.mpris.PlasmaMediaPlayer");
 //    new PlasmaMediaPlayerAdaptor(this);
@@ -123,13 +122,12 @@ void MediaPlayer::doFullScreen()
 void MediaPlayer::init()
 {
    m_layout = new QGraphicsLinearLayout(Qt::Vertical, this);
+   m_layout->setContentsMargins(0, 0, 0, 0);
 
    m_video = new Plasma::VideoWidget(this);
    m_video->setAcceptDrops(false);
 
    m_layout->addItem(m_video);
-
-
 
 //   connect(m_video->audioOutput(), SIGNAL(volumeChanged(qreal)), SLOT(volumeChanged(qreal)));
 
@@ -177,7 +175,6 @@ void MediaPlayer::playNextMedia()
 void MediaPlayer::constraintsEvent(Plasma::Constraints constraints)
 {
     setBackgroundHints(NoBackground);
-    setContentsMargins(0,0,0,0);
 }
 
 void MediaPlayer::SetControlsVisible(bool visible)
