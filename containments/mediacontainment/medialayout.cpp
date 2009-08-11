@@ -34,7 +34,6 @@ m_control(0),
 m_playlist(0),
 m_player(0)
 {
-
     m_containment->installEventFilter(this);
     connect (Plasma::Animator::self(), SIGNAL(movementFinished(QGraphicsItem*)), this, SLOT(restoreHandlerGlows(QGraphicsItem*)));
 }

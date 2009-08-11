@@ -142,7 +142,7 @@ bool MediaHandler::eventFilter(QObject *o, QEvent *e)
         }
     } else if (e->type() == QEvent::GraphicsSceneHoverLeave) {
         emit appletHideRequest(m_applet);
-        m_showFactor = 1;
+        m_showFactor = 0;
     }
 
     return false;
