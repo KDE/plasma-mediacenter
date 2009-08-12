@@ -85,7 +85,7 @@ protected:
      */
     virtual void setupOptions();
 
-    virtual void updateHoveredItem(const QPointF &);
+    virtual void updateHoveredItem(ViewItem *item);
 
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);

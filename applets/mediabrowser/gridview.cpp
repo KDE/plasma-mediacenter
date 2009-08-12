@@ -21,11 +21,15 @@
 
 #include <QScrollBar>
 #include <QTimer>
+#include <QKeyEvent>
+
+#include <KDebug>
 
 #include <Plasma/Animator>
+#include <Plasma/ScrollBar>
 
 GridView::GridView(QGraphicsItem *parent) : AbstractMediaItemView(parent),
-m_itemLines(0),
+m_itemRows(0),
 m_timer(new QTimer(this)),
 m_lastHoveredItem(0),
 m_highlighting(false)
@@ -33,7 +37,7 @@ m_highlighting(false)
     setupOptions();
     m_timer->setInterval(2000);
 
-    connect (m_timer, SIGNAL(timeout()), this, SLOT(highlightHoveredItem()));
+//    connect (m_timer, SIGNAL(timeout()), this, SLOT(highlightHoveredItem()));
 //    connect (Plasma::Animator::self(), SIGNAL(animationFinished(QGraphicsItem*,Plasma::Animator::Animation)),
 //             this, SLOT(slotAnimationFinished(QGraphicsItem*,Plasma::Animator::Animation)));
 }
@@ -46,7 +50,7 @@ void GridView::setupOptions()
     AbstractMediaItemView::setupOptions();
     m_option.decorationPosition = QStyleOptionViewItem::Top;
     m_option.decorationAlignment = Qt::AlignCenter;
-    m_option.displayAlignment = Qt::AlignCenter;
+    m_option.displayAlignment = Qt::AlignHCenter | Qt::AlignBottom;
 }
 
 void GridView::layoutItems()
@@ -54,7 +58,7 @@ void GridView::layoutItems()
     int x = contentsArea().x();
     int y = contentsArea().y();
     const int width = contentsArea().width();
-    m_itemLines = 0;
+    m_itemRows = 0;
 
     for (int i = 0; i < m_items.count(); i++) {
         if (i == 0) {
@@ -64,10 +68,10 @@ void GridView::layoutItems()
         m_items[i]->setPos(x, y);
         m_items[i]->resize(m_items[i]->itemSizeHint());
 
-        if (x + (m_items[i]->size().width() * 2) > contentsArea().right()) {
+        if ((x + m_items[i]->size().width() * 2) > contentsArea().width()) {
            y += m_items[i]->size().height();
            x = 0;
-           ++m_itemLines;
+           ++m_itemRows;
          } else {
            x += m_items[i]->size().width();
          }
@@ -87,6 +91,7 @@ void GridView::generateItems()
     for (int i = 0; i < m_model->rowCount(m_rootIndex); i++) {
         ViewItem *item = new ViewItem(m_option, this);
         item->setModelIndex(m_model->index(i, 0, m_rootIndex));
+        item->setDrawBlurredText(m_blurred);
         m_items << item;
     }
     layoutItems();
@@ -98,10 +103,10 @@ void GridView::updateScrollBar()
         return;
     }
     if (m_scrollMode == PerItem) {
-        verticalScrollBar()->setRange(0, m_itemLines);
+        verticalScrollBar()->setRange(0, m_itemRows);
         verticalScrollBar()->setSingleStep(1);
     } else {
-        verticalScrollBar()->setRange(0, m_itemLines * m_items[0]->size().height() - rect().height());
+        verticalScrollBar()->setRange(0, m_itemRows * m_items[0]->size().height() - rect().height());
         verticalScrollBar()->setSingleStep(1);
         verticalScrollBar()->setPageStep(iconSize() * 2);
     }
@@ -119,38 +124,38 @@ void GridView::resizeEvent(QGraphicsSceneResizeEvent *event)
 void GridView::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
     AbstractMediaItemView::hoverEnterEvent(event);
-
-    if (m_hoveredItem) {
-        m_lastHoveredItem = m_hoveredItem;
-        m_timer->start();
-    }
+//
+//    if (m_hoveredItem) {
+//        m_lastHoveredItem = m_hoveredItem;
+//        m_timer->start();
+//    }
 }
 
 void GridView::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
 {
     AbstractMediaItemView::hoverMoveEvent(event);
 
-    if (m_hoveredItem && m_hoveredItem != m_lastHoveredItem) {
-        m_lastHoveredItem = m_hoveredItem;
-        m_timer->stop();
-        if (m_highlighting) {
-            layoutItems();
-            restoreItems();
-            m_highlighting = false;
-        }
-        m_timer->start();
-    }
+//    if (m_hoveredItem && m_hoveredItem != m_lastHoveredItem) {
+//        m_lastHoveredItem = m_hoveredItem;
+//        m_timer->stop();
+//        if (m_highlighting) {
+//            layoutItems();
+//            restoreItems();
+//            m_highlighting = false;
+//        }
+//        m_timer->start();
+//    }
 }
 
 void GridView::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
     AbstractMediaItemView::hoverLeaveEvent(event);
 
-    if (m_timer->isActive()) {
-        m_timer->stop();
-        m_highlighting = false;
-    }
-    m_lastHoveredItem = 0;
+//    if (m_timer->isActive()) {
+//        m_timer->stop();
+//        m_highlighting = false;
+//    }
+//    m_lastHoveredItem = 0;
 }
 
 void GridView::highlightHoveredItem()
@@ -192,5 +197,62 @@ void GridView::restoreItems()
 {
     for (int i = 0; i < m_items.count(); i++) {
         m_items[i]->setOpacity(1);
+    }
+}
+
+void GridView::keyPressEvent(QKeyEvent *event)
+{
+    if (m_items.isEmpty()) {
+        return;
+    }
+
+    if (event->key() == Qt::Key_Left || event->key() == Qt::Key_Right) {
+        if (!m_hoveredItem) {
+            updateHoveredItem(m_items.first());
+        } else {
+            int index = m_items.indexOf(m_hoveredItem);
+            if (index == -1) {
+                // We should not be here
+                return;
+            }
+            if (event->key() == Qt::Key_Left) {
+                --index;
+            } else { // Qt::Key_Right
+                ++index;
+            }
+
+            if (index < 0 || index >= m_items.count()) {
+                return;
+            }
+            updateHoveredItem(m_items.at(index));
+        }
+    } else if (event->key() == Qt::Key_Up || event->key() == Qt::Key_Down) {
+        if (!m_hoveredItem) {
+            updateHoveredItem(m_items.first());
+        } else {
+            int itemsPerRow = m_items.count() / m_itemRows;
+            kDebug() << "items per row" << itemsPerRow;
+            if (!itemsPerRow) {
+                return;
+            }
+
+            int index = m_items.indexOf(m_hoveredItem);
+            if (index == -1) {
+                return;
+            }
+
+            if (event->key() == Qt::Key_Up) {
+                index -= itemsPerRow;
+            } else {
+                index += itemsPerRow;
+            }
+
+            if (index < 0 || index >= m_items.count()) {
+                return;
+            }
+
+            QGraphicsWidget *item = m_items.at(index);
+            updateHoveredItem(m_items.at(index));
+        }
     }
 }

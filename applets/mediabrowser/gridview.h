@@ -46,8 +46,10 @@ protected:
     void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
 
+    void keyPressEvent(QKeyEvent *event);
+
 private:
-    int m_itemLines;
+    int m_itemRows;
     QTimer *m_timer;
 
     ViewItem *m_lastHoveredItem;

@@ -109,7 +109,7 @@ QRect AbstractMediaItemView::contentsArea() const
         return contentsRect().toRect();
     }
     QRect contents = contentsRect().toRect();
-    contents.setWidth(contents.width() - m_scrollBar->nativeWidget()->width());
+    contents.setWidth(contents.width() - m_scrollBar->size().width());
 
     return contents;
 }
@@ -130,7 +130,6 @@ void AbstractMediaItemView::resizeEvent(QGraphicsSceneResizeEvent *event)
     m_scrollBar->setPos(contentsRect().width() - m_scrollBar->size().width(), 0);
 
     layoutItems();
-
 }
 
 void AbstractMediaItemView::setupOptions()
@@ -170,22 +169,19 @@ void AbstractMediaItemView::invalidate()
     m_items.clear();
 }
 
-void AbstractMediaItemView::updateHoveredItem(const QPointF &point)
+void AbstractMediaItemView::updateHoveredItem(ViewItem *item)
 {
-    for (int i = 0; i < m_items.count(); i++) {
-        if (m_items[i]->rect().contains(mapToItem(m_items[i], point)) && m_items[i] != m_hoveredItem) {
-
-            m_hoveredItem = m_items[i];
-            Plasma::Animator::self()->moveItem(m_hoverIndicator, Plasma::Animator::SlideInMovement, m_hoveredItem->pos().toPoint());
-
-            break;
-        }
+    if (!m_items.contains(item)) {
+        return;
     }
+
+    m_hoveredItem = item;
+    Plasma::Animator::self()->moveItem(m_hoverIndicator, Plasma::Animator::SlideInMovement, m_hoveredItem->pos().toPoint());
 }
 
 void AbstractMediaItemView::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
-    updateHoveredItem(event->pos());
+    updateHoveredItem(itemFromPos(event->pos()));
     if (m_hoveredItem) {
         m_hoverIndicator->m_rating = m_hoveredItem->m_nepomuk ? m_hoveredItem->m_resource->rating() : 0;
     }
@@ -194,7 +190,7 @@ void AbstractMediaItemView::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 
 void AbstractMediaItemView::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
 {
-    updateHoveredItem(event->pos());
+    updateHoveredItem(itemFromPos(event->pos()));
     if (m_hoveredItem) {
         m_hoverIndicator->m_rating = m_hoveredItem->m_nepomuk ? m_hoveredItem->m_resource->rating() : 0;
     }

@@ -188,7 +188,7 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
             txtPoint.setY((textRect.height() - blurredText.height()) / 2);
         }
         if (m_option.displayAlignment & Qt::AlignBottom) {
-            txtPoint.setY(textRect.height() - blurredText.height());
+            txtPoint.setY(option->rect.height() - blurredText.height());
         }
 
         painter->drawPixmap(txtPoint, blurredText);

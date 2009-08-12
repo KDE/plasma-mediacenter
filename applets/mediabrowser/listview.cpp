@@ -129,8 +129,7 @@ void ListView::keyPressEvent(QKeyEvent *event)
 
     if (event->key() == Qt::Key_Up || event->key() == Qt::Key_Down) {
         if (!m_hoveredItem) {
-            QGraphicsWidget *item = m_items.first();
-            updateHoveredItem(mapFromItem(item, item->rect().topLeft()));
+            updateHoveredItem(m_items.first());
         } else {
             int index = m_items.indexOf(m_hoveredItem);
             if (index == -1) {
@@ -146,8 +145,7 @@ void ListView::keyPressEvent(QKeyEvent *event)
             if (index < 0 || index >= m_items.count()) {
                 return;
             }
-            QGraphicsWidget *item = m_items.at(index);
-            updateHoveredItem(mapFromItem(item, item->rect().bottomLeft()));
+            updateHoveredItem(m_items.at(index));
         }
     }
 
