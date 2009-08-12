@@ -65,6 +65,7 @@ public:
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void keyPressEvent(QKeyEvent *event);
 
 private:
     QStyleOptionViewItemV4 m_option;

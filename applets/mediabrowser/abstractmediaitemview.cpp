@@ -50,7 +50,7 @@ m_hoveredItem(0),
 m_blurred(true)
 
 {
-    setFlag(QGraphicsItem::ItemClipsChildrenToShape);
+    setFlags(QGraphicsItem::ItemClipsChildrenToShape | QGraphicsItem::ItemIsFocusable);
     setAcceptsHoverEvents(true);
     setIconSize(KIconLoader::global()->currentSize(KIconLoader::Desktop));
     connect (m_scrollBar, SIGNAL(valueChanged(int)), this, SLOT(layoutItems()));
@@ -241,6 +241,7 @@ ViewItem* AbstractMediaItemView::itemFromPos(const QPointF &pos)
 void AbstractMediaItemView::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     event->accept();
+    setFocus(Qt::OtherFocusReason);
 }
 
 void AbstractMediaItemView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)

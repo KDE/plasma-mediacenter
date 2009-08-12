@@ -29,6 +29,7 @@
 #include <QDrag>
 #include <QApplication>
 #include <QMimeData>
+#include <QKeyEvent>
 
 // KDE
 #include <KDirModel>
@@ -118,4 +119,36 @@ void ListView::resizeEvent(QGraphicsSceneResizeEvent *event)
     if (m_model) {
         updateScrollBar();
     }
+}
+
+void ListView::keyPressEvent(QKeyEvent *event)
+{
+    if (m_items.isEmpty()) {
+        return;
+    }
+
+    if (event->key() == Qt::Key_Up || event->key() == Qt::Key_Down) {
+        if (!m_hoveredItem) {
+            QGraphicsWidget *item = m_items.first();
+            updateHoveredItem(mapFromItem(item, item->rect().topLeft()));
+        } else {
+            int index = m_items.indexOf(m_hoveredItem);
+            if (index == -1) {
+                // We should not be here
+                return;
+            }
+            if (event->key() == Qt::Key_Up) {
+                --index;
+            } else {
+                ++index;
+            }
+
+            if (index < 0 || index >= m_items.count()) {
+                return;
+            }
+            QGraphicsWidget *item = m_items.at(index);
+            updateHoveredItem(mapFromItem(item, item->rect().bottomLeft()));
+        }
+    }
+
 }

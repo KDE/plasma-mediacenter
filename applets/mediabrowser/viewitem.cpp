@@ -353,3 +353,8 @@ bool ViewItem::drawBlurredText()
 {
     return m_blurred;
 }
+
+void ViewItem::keyPressEvent(QKeyEvent *event)
+{
+    event->ignore();
+}

@@ -40,6 +40,7 @@ protected:
     void layoutItems();
 
     void resizeEvent(QGraphicsSceneResizeEvent *event);
+    void keyPressEvent(QKeyEvent *event);
 
 public slots:
     void generateItems();
