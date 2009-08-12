@@ -107,7 +107,7 @@ void ListView::updateScrollBar()
         verticalScrollBar()->setSingleStep(1);
     } else {
         verticalScrollBar()->setRange(0, m_model->rowCount(m_rootIndex) * iconSize() * 2 - rect().height());
-        verticalScrollBar()->setSingleStep(1);
+        verticalScrollBar()->setSingleStep(m_model->rowCount(m_rootIndex));
         verticalScrollBar()->setPageStep(iconSize() * 2);
     }
 }

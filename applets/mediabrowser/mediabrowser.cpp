@@ -78,6 +78,7 @@ void MediaBrowser::createView()
 
     m_view->setDrawBlurredText(m_blurred);
     m_view->setFocus(Qt::OtherFocusReason);
+//    m_view->setScrollMode(AbstractMediaItemView::PerItem);
 
     connect (m_browsingWidget, SIGNAL(goPrevious()), m_view, SLOT(goPrevious()));
     QGraphicsLinearLayout *layout = static_cast<QGraphicsLinearLayout*>(this->layout());
