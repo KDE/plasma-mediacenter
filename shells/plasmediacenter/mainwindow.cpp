@@ -33,6 +33,7 @@
 
 #include <QGraphicsView>
 #include <QKeyEvent>
+#include <QWheelEvent>
 
 #include <Plasma/Corona>
 #include <Plasma/Containment>
@@ -49,6 +50,8 @@ m_playlist(0),
 m_player(0)
 {
     setCentralWidget(m_view);
+
+    m_view->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 
     m_corona = new Plasma::Corona(this);
     m_view->setScene(m_corona);
@@ -89,6 +92,9 @@ void MainWindow::loadMediaCenter()
         return;
     }
 
+    m_containment->resize(m_view->size());
+    m_view->setSceneRect(m_containment->geometry());
+
     m_browser = m_containment->addApplet("mediabrowser");
     m_playlist = m_containment->addApplet("playlist");
     m_controller = m_containment->addApplet("mediacontroller");
@@ -97,12 +103,6 @@ void MainWindow::loadMediaCenter()
 
 bool MainWindow::eventFilter(QObject *o, QEvent *e)
 {
-    if (e->type() == QEvent::Resize && o == m_view) {
-        if (m_containment) {
-            m_containment->resize(size());
-        }
-    }
-
     if (e->type() == QEvent::KeyPress) {
         QKeyEvent *key = static_cast<QKeyEvent*>(e);
         if (key->key() == Qt::Key_Escape && windowState() & Qt::WindowFullScreen) {
@@ -169,4 +169,13 @@ void MainWindow::applyConfig()
 {
     kDebug() << m_theme.themeComboBox->itemData(m_theme.themeComboBox->currentIndex()).toString();
     Plasma::Theme::defaultTheme()->setThemeName(m_theme.themeComboBox->itemData(m_theme.themeComboBox->currentIndex()).toString());
+}
+
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
+    if (!m_containment) {
+        return;
+    }
+    m_containment->resize(m_view->size());
+    m_view->setSceneRect(m_containment->geometry());
 }

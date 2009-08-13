@@ -46,6 +46,9 @@ public:
 public slots:
     void createConfigurationInterface();
 
+protected:
+    void resizeEvent(QResizeEvent *event);
+
 protected slots:
     void toggleFullScreen();
     void applyConfig();
