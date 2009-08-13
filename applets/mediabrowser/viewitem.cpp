@@ -176,7 +176,14 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     }
 
     if (m_blurred) {
-        QPixmap blurredText = Plasma::PaintUtils::shadowText(text, m_option.font);
+        QColor textColor = Plasma::Theme::defaultTheme()->color(Plasma::Theme::TextColor);
+        QColor shadowColor = Plasma::Theme::defaultTheme()->color(Plasma::Theme::BackgroundColor);
+        if (textColor.black() > 210) {
+            textColor = shadowColor;
+            shadowColor = Plasma::Theme::defaultTheme()->color(Plasma::Theme::TextColor);
+        }
+
+        QPixmap blurredText = Plasma::PaintUtils::shadowText(text, m_option.font, textColor, shadowColor);
         QPointF txtPoint;
         if (m_option.displayAlignment & Qt::AlignLeft) {
             txtPoint.setX(textRect.x());
