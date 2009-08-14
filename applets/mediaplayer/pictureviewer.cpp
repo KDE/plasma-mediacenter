@@ -77,8 +77,6 @@ void PictureViewer::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     rect.setWidth(picture.width());
     rect.setHeight(picture.height());
     painter->drawImage(rect, picture);
-
-    painter->drawImage(rect, picture);
 }
 
 void PictureViewer::setShowTime(qint64 time)
