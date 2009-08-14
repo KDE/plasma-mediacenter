@@ -29,6 +29,7 @@
 #include <Plasma/ComboBox>
 
 BrowsingWidget::BrowsingWidget(QGraphicsItem *parent) : QGraphicsWidget(parent),
+m_navigationCombo(false),
 m_backwardButton(0),
 m_forwardButton(0),
 m_upLevelButton(0),
