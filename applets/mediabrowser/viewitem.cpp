@@ -70,7 +70,9 @@ m_blurred(true)
 }
 
 ViewItem::~ViewItem()
-{}
+{
+    delete m_resource;
+}
 
 void ViewItem::setStyleOption(const QStyleOptionViewItemV4 &option)
 {

@@ -35,7 +35,9 @@ d(new PlaybackControlPrivate(this))
 }
 
 PlaybackControl::~PlaybackControl()
-{}
+{
+    delete d;
+}
 
 void PlaybackControl::playingStateChanged(MediaCenter::State state)
 {
