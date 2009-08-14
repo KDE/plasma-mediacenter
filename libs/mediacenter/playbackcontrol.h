@@ -65,7 +65,7 @@ public:
      */
     Phonon::MediaObject *mediaObject();
 
-signals:
+Q_SIGNALS:
     /**
      * Emit this signal whenever the controller receives
      * a play/pause request from the user (e.g. the play button is clicked).
@@ -99,7 +99,7 @@ signals:
      */
     void mediaSkipBackwardRequest();
 
-public slots:
+public Q_SLOTS:
     /**
      * This slot is called whenever the current playing state changes.
      * Use this slot in order to update the controller status according

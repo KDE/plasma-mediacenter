@@ -53,14 +53,14 @@ public:
      */
     virtual QList<MediaCenter::Media> medias() = 0;
 
-public slots:
+public Q_SLOTS:
     /**
      * Use this slot in order to append the media.
      * @note: the default implementation does nothing.
      */
     virtual void appendMedia(const QStringList &mediaStrings, const QString &playlist = QString());
 
-signals:
+Q_SIGNALS:
     /**
      * Emit this signal whenever a new media gets added to the current playlist.
      * Use the index to specify at which position the item has been dropped to.

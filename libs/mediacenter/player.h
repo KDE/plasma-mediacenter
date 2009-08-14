@@ -75,7 +75,7 @@ public:
     void setSlideshowInterval(qint64 time);
     qint64 slideShowInterval();
 
-signals:
+Q_SIGNALS:
     /**
      * Take care of emitting this signal whenever the reproduced
      * MediaType changes.
@@ -102,7 +102,7 @@ signals:
      */
     void slideShowTimeChanged(qint64 time);
 
-public slots:
+public Q_SLOTS:
     /**
      * You must reimplement this method in order to set the proper volume.
      */

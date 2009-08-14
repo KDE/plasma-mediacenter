@@ -34,7 +34,7 @@ public:
     Browser(QObject *parent, const QVariantList &args);
     virtual ~Browser();
 
-signals:
+Q_SIGNALS:
     void mediaActivated(MediaType type, const QString &path);
 };
 
