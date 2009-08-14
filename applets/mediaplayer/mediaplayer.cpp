@@ -156,6 +156,8 @@ void MediaPlayer::init()
    connect (m_video->mediaObject(), SIGNAL(finished()), this, SLOT(playNextMedia()));
    connect (m_pviewer, SIGNAL(showFinished()), this, SLOT(playNextMedia()));
 
+   m_pviewer->setShowTime(slideShowInterval());
+   connect (this, SIGNAL(slideShowTimeChanged(qint64)), m_pviewer, SLOT(setShowTime(qint64)));
 //   new PlayerDBusHandler(this, media, m_video->audioOutput());
 //   new TrackListDBusHandler(this, media);
 //   new RootDBusHandler(this);

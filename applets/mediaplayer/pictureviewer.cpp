@@ -80,7 +80,7 @@ void PictureViewer::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     painter->drawImage(rect, picture);
 }
 
-void PictureViewer::setShowTime(int time)
+void PictureViewer::setShowTime(qint64 time)
 {
     m_showTime = time;
 }

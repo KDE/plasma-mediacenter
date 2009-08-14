@@ -72,7 +72,8 @@ public:
      * This method is used to set the slideshow interval when
      * showing queues of pictures.
      */
-    virtual void setSlideshowInterval(qint64 time);
+    void setSlideshowInterval(qint64 time);
+    qint64 slideShowInterval();
 
 signals:
     /**
@@ -95,6 +96,11 @@ signals:
      * @param medias: the list of media received by the user.
      */
     void mediaReceived(const QStringList &medias);
+
+    /**
+     * This signal is emitted whenever the slide show time changes.
+     */
+    void slideShowTimeChanged(qint64 time);
 
 public slots:
     /**
@@ -144,6 +150,10 @@ public slots:
      * @note the default implementation does nothing.
      */
     virtual void playMedia(const MediaCenter::Media &media);
+
+private:
+    class PlayerPrivate;
+    PlayerPrivate *d;
 };
 }
 

@@ -20,12 +20,25 @@
 
 using namespace MediaCenter;
 
-Player::Player(QObject *parent, const QVariantList &args) : Plasma::Applet(parent, args)
+class Player::PlayerPrivate
+{
+public:
+    PlayerPrivate(Player *q) : q(q),
+    sshowTime(3)
+    {}
+
+    Player *q;
+    qint64 sshowTime;
+};
+
+Player::Player(QObject *parent, const QVariantList &args) : Plasma::Applet(parent, args), d(new PlayerPrivate(this))
 {
 }
 
 Player::~Player()
-{}
+{
+    delete d;
+}
 
 Media Player::currentMedia()
 {
@@ -50,7 +63,13 @@ void Player::enqueue(const QList<Media> &sources)
 
 void Player::setSlideshowInterval(qint64 time)
 {
-    Q_UNUSED(time);
+    d->sshowTime = time;
+    emit slideShowTimeChanged(d->sshowTime);
+}
+
+qint64 Player::slideShowInterval()
+{
+    return d->sshowTime;
 }
 
 void Player::playMedia(const MediaCenter::Media &media)

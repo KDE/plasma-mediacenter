@@ -35,14 +35,14 @@ public:
     int showTime();
 
 public Q_SLOTS:
-    void setShowTime(int time);
+    void setShowTime(qint64 time);
 
 Q_SIGNALS:
     void showFinished();
 
 private:
     QImage *m_picture;
-    int m_showTime;
+    qint64 m_showTime;
     QTimer *m_timer;
 };
 
