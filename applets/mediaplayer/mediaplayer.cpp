@@ -250,14 +250,18 @@ void MediaPlayer::dropEvent(QGraphicsSceneDragDropEvent *event)
         return;
     }
 
-    QStringList medias;
+    QList<MediaCenter::Media> medias;
     foreach (const KUrl &url, event->mimeData()->urls()) {
         if (!QFile::exists(url.path())) {
             continue;
         }
 
-        if (MediaCenter::getType(url.path()) != MediaCenter::Invalid) {
-            medias << url.path();
+        MediaCenter::MediaType type = MediaCenter::getType(url.path());
+        if (type != MediaCenter::Invalid) {
+            MediaCenter::Media media;
+            media.first = type;
+            media.second = url.path();
+            medias << media;
         }
     }
 

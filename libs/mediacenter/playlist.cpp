@@ -27,8 +27,8 @@ Playlist::Playlist(QObject *parent, const QVariantList &args) : Plasma::Applet(p
 Playlist::~Playlist()
 {}
 
-void Playlist::appendMedia(const QStringList &mediaStrings, const QString &playlist)
+void Playlist::appendMedia(const QList<MediaCenter::Media> &medias, const QString &playlist)
 {
-    Q_UNUSED(mediaStrings);
+    Q_UNUSED(medias);
     Q_UNUSED(playlist);
 }

@@ -93,13 +93,16 @@ void PlaylistApplet::loadConfiguration()
     m_playlistWidget->setMultiplePlaylistsEnabled(m_multiplePlaylists);
 }
 
-void PlaylistApplet::appendMedia(const QStringList &mediaStrings, const QString &playlist)
+void PlaylistApplet::appendMedia(const QList<MediaCenter::Media> &medias, const QString &playlist)
 {
     Q_UNUSED(playlist); // TODO: take care of the playlist specification
 
     QList<QUrl> urls;
-    foreach (const QString &path, mediaStrings) {
-        urls << KUrl(path);
+    foreach (const MediaCenter::Media &media, medias) {
+        if (media.first == MediaCenter::Invalid) {
+            continue;
+        }
+        urls << KUrl(media.second);
     }
     m_playlistWidget->append(urls);
 }

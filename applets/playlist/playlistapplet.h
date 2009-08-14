@@ -41,7 +41,7 @@ public:
     QList<MediaCenter::Media> medias();
 
 public slots:
-    void appendMedia(const QStringList &mediaStrings, const QString &playlist = QString());
+    void appendMedia(const QList<MediaCenter::Media> &medias, const QString &playlist = QString());
 
 protected slots:
     void loadConfiguration();

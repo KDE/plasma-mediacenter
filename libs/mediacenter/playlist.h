@@ -58,7 +58,7 @@ public Q_SLOTS:
      * Use this slot in order to append the media.
      * @note: the default implementation does nothing.
      */
-    virtual void appendMedia(const QStringList &mediaStrings, const QString &playlist = QString());
+    virtual void appendMedia(const QList<MediaCenter::Media> &medias, const QString &playlist = QString());
 
 Q_SIGNALS:
     /**

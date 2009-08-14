@@ -103,7 +103,7 @@ Q_SIGNALS:
      *
      * @param medias: the list of media received by the user.
      */
-    void mediaReceived(const QStringList &medias);
+    void mediaReceived(const QList<MediaCenter::Media> &medias);
 
     /**
      * This signal is emitted whenever the slide show time changes.
