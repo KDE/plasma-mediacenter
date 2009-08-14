@@ -34,6 +34,8 @@ public:
 
     int showTime();
 
+    void stop();
+
 public Q_SLOTS:
     void setShowTime(qint64 time);
 

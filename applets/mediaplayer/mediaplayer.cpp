@@ -50,6 +50,7 @@ MediaPlayer::MediaPlayer(QObject *parent, const QVariantList &args)
       m_ticking(false),
       m_raised(false),
       m_fullScreen(false),
+      m_active(false),
       m_fullScreenVideo(0),
       m_pviewer(new PictureViewer(this))
 {
@@ -132,7 +133,7 @@ void MediaPlayer::init()
 //   connect(m_video->audioOutput(), SIGNAL(volumeChanged(qreal)), SLOT(volumeChanged(qreal)));
 
 
-   m_video->setUrl(m_currentUrl);
+//   m_video->setUrl(m_currentUrl);
    Phonon::MediaObject *media = m_video->mediaObject();
 
 //   connect(media, SIGNAL(stateChanged(Phonon::State, Phonon::State)), this, SLOT(stateChanged(Phonon::State, Phonon::State)));
@@ -143,13 +144,13 @@ void MediaPlayer::init()
 //   connect(media, SIGNAL(tick(qint64)), this, SLOT(tick(qint64)));
 //   connect(media, SIGNAL(totalTimeChanged(qint64)), SLOT(totalTimeChanged(qint64)));
 
-   media->play();
+//   media->play();
 
 //   m_video->setUsedControls(Plasma::VideoWidget::DefaultControls);
 
-   m_hideTimer = new QTimer(this);
-   m_hideTimer->setSingleShot(true);
-   connect(m_hideTimer, SIGNAL(timeout()), this, SLOT(hideControls()));
+//   m_hideTimer = new QTimer(this);
+//   m_hideTimer->setSingleShot(true);
+//   connect(m_hideTimer, SIGNAL(timeout()), this, SLOT(hideControls()));
 
    SetControlsVisible(false);
 
@@ -167,6 +168,7 @@ void MediaPlayer::playNextMedia()
 {
     int nextMedia = m_medias.indexOf(m_currentMedia) + 1;
     if (nextMedia >= m_medias.count()) {
+        m_active = false;
         return;
     }
 
@@ -201,6 +203,7 @@ void MediaPlayer::playPause()
     if (media->state() == Phonon::PlayingState) {
         media->pause();
     } else {
+        m_active = true;
         media->play();
     }
 }
@@ -338,6 +341,8 @@ bool MediaPlayer::eventFilter(QObject *o, QEvent *e)
 void MediaPlayer::stop()
 {
     m_video->mediaObject()->stop();
+    m_pviewer->stop();
+    m_active = false;
 }
 
 Phonon::MediaObject* MediaPlayer::mediaObject()
@@ -354,6 +359,7 @@ void MediaPlayer::skipBackward()
     if (previous < 0) {
         return;
     }
+    m_active = true;
     playMedia(m_medias[previous]);
 }
 
@@ -432,6 +438,11 @@ void MediaPlayer::enqueue(const QList<MediaCenter::Media> &medias)
 MediaCenter::Media MediaPlayer::currentMedia()
 {
     return m_currentMedia;
+}
+
+bool MediaPlayer::isActive()
+{
+    return m_active;
 }
 
 K_EXPORT_PLASMA_APPLET(mcplayer, MediaPlayer)

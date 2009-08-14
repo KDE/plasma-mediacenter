@@ -75,6 +75,14 @@ public:
     void setSlideshowInterval(qint64 time);
     qint64 slideShowInterval();
 
+    /**
+     * Reimplement this method in order to inform the whole mediacenter
+     * about the playing state of the player. This method should return
+     * true when the reproduction is in progress or the playing state is paused.
+     * It must return false only when the whole playing state is stopped.
+     */
+    virtual bool isActive() = 0;
+
 Q_SIGNALS:
     /**
      * Take care of emitting this signal whenever the reproduced

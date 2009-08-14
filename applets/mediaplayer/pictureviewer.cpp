@@ -59,12 +59,13 @@ void PictureViewer::loadPicture(const QString &path)
 void PictureViewer::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     Q_UNUSED(widget);
+
+    painter->fillRect(option->rect, Qt::black);
+
     if (!m_picture) {
         return;
     }
-
     QImage picture = *m_picture;
-    painter->fillRect(option->rect, Qt::black);
     // the image is bigger than the contents rect
     if (m_picture->height() > (int)option->rect.height() && m_picture->width() > (int)option->rect.width()) {
         picture = m_picture->scaled(option->rect.size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
@@ -88,4 +89,15 @@ void PictureViewer::setShowTime(qint64 time)
 int PictureViewer::showTime()
 {
     return m_showTime;
+}
+
+void PictureViewer::stop()
+{
+    if (m_timer->isActive()) {
+        m_timer->stop();
+    }
+
+    delete m_picture;
+    m_picture = 0;
+    update();
 }
