@@ -50,6 +50,7 @@ MediaPlayer::MediaPlayer(QObject *parent, const QVariantList &args)
       m_ticking(false),
       m_raised(false),
       m_fullScreen(false),
+      m_sshowTime(3),
       m_active(false),
       m_fullScreenVideo(0),
       m_pviewer(new PictureViewer(this))
@@ -84,26 +85,36 @@ void MediaPlayer::createConfigurationInterface(KConfigDialog *parent)
     parent->addPage(widget, i18n("Player settings"), "multimedia-player");
 
     ui.fullScreenCheckBox->setChecked(m_fullScreen);
+    ui.slideshowSpinBox->setValue(m_sshowTime);
     connect (parent, SIGNAL(accepted()), this, SLOT(acceptConfiguration()));
 }
 
 void MediaPlayer::acceptConfiguration()
 {
-    if (m_fullScreen == ui.fullScreenCheckBox->isChecked()) {
-        return;
-    }
     m_fullScreen = ui.fullScreenCheckBox->isChecked();
+    m_sshowTime = ui.slideshowSpinBox->value();
     applyConfig();
+}
+
+void MediaPlayer::loadConfig()
+{
+    KConfigGroup cf = config();
+
+    m_sshowTime = cf.readEntry("SlideShowTime", 3);
 }
 
 void MediaPlayer::applyConfig()
 {
     doFullScreen();
+
+    m_pviewer->setShowTime(m_sshowTime);
+    KConfigGroup cf = config();
+    cf.writeEntry("SlideShowTime", m_sshowTime);
 }
 
 void MediaPlayer::doFullScreen()
 {
-    if (m_fullScreen) {
+    if (m_fullScreen && !m_video->nativeWidget()->isFullScreen()) {
         m_fullScreenVideo = m_video->nativeWidget();
         m_fullScreenVideo->setParent(0);
         m_video->setWidget(0);
@@ -111,7 +122,7 @@ void MediaPlayer::doFullScreen()
         QDesktopWidget *desktop = qApp->desktop();
         m_fullScreenVideo->move(desktop->screenGeometry(containment()->screen()).topLeft());
         m_fullScreenVideo->enterFullScreen();
-    } else {
+    } else  if (!m_fullScreen && m_video->nativeWidget()->isFullScreen()) {
         m_fullScreenVideo->exitFullScreen();
         m_fullScreenVideo->removeEventFilter(this);
         m_video->setWidget(m_fullScreenVideo);
@@ -122,46 +133,48 @@ void MediaPlayer::doFullScreen()
 
 void MediaPlayer::init()
 {
-   m_layout = new QGraphicsLinearLayout(Qt::Vertical, this);
-   m_layout->setContentsMargins(0, 0, 0, 0);
+    loadConfig();
 
-   m_video = new Plasma::VideoWidget(this);
-   m_video->setAcceptDrops(false);
+    m_layout = new QGraphicsLinearLayout(Qt::Vertical, this);
+    m_layout->setContentsMargins(0, 0, 0, 0);
 
-   m_layout->addItem(m_video);
+    m_video = new Plasma::VideoWidget(this);
+    m_video->setAcceptDrops(false);
 
-//   connect(m_video->audioOutput(), SIGNAL(volumeChanged(qreal)), SLOT(volumeChanged(qreal)));
+    m_layout->addItem(m_video);
+
+    //   connect(m_video->audioOutput(), SIGNAL(volumeChanged(qreal)), SLOT(volumeChanged(qreal)));
 
 
-//   m_video->setUrl(m_currentUrl);
-   Phonon::MediaObject *media = m_video->mediaObject();
+    //   m_video->setUrl(m_currentUrl);
+    Phonon::MediaObject *media = m_video->mediaObject();
 
-//   connect(media, SIGNAL(stateChanged(Phonon::State, Phonon::State)), this, SLOT(stateChanged(Phonon::State, Phonon::State)));
-//   connect(media, SIGNAL(seekableChanged(bool)), this, SLOT(seekableChanged(bool)));
+    //   connect(media, SIGNAL(stateChanged(Phonon::State, Phonon::State)), this, SLOT(stateChanged(Phonon::State, Phonon::State)));
+    //   connect(media, SIGNAL(seekableChanged(bool)), this, SLOT(seekableChanged(bool)));
 
-   media->setTickInterval(200);
+    media->setTickInterval(200);
 
-//   connect(media, SIGNAL(tick(qint64)), this, SLOT(tick(qint64)));
-//   connect(media, SIGNAL(totalTimeChanged(qint64)), SLOT(totalTimeChanged(qint64)));
+    //   connect(media, SIGNAL(tick(qint64)), this, SLOT(tick(qint64)));
+    //   connect(media, SIGNAL(totalTimeChanged(qint64)), SLOT(totalTimeChanged(qint64)));
 
-//   media->play();
+    //   media->play();
 
-//   m_video->setUsedControls(Plasma::VideoWidget::DefaultControls);
+    //   m_video->setUsedControls(Plasma::VideoWidget::DefaultControls);
 
-//   m_hideTimer = new QTimer(this);
-//   m_hideTimer->setSingleShot(true);
-//   connect(m_hideTimer, SIGNAL(timeout()), this, SLOT(hideControls()));
+    //   m_hideTimer = new QTimer(this);
+    //   m_hideTimer->setSingleShot(true);
+    //   connect(m_hideTimer, SIGNAL(timeout()), this, SLOT(hideControls()));
 
-   SetControlsVisible(false);
+    SetControlsVisible(false);
 
-   connect (m_video->mediaObject(), SIGNAL(finished()), this, SLOT(playNextMedia()));
-   connect (m_pviewer, SIGNAL(showFinished()), this, SLOT(playNextMedia()));
+    connect (m_video->mediaObject(), SIGNAL(finished()), this, SLOT(playNextMedia()));
+    connect (m_pviewer, SIGNAL(showFinished()), this, SLOT(playNextMedia()));
 
-   m_pviewer->setShowTime(slideShowInterval());
-   connect (this, SIGNAL(slideShowTimeChanged(qint64)), m_pviewer, SLOT(setShowTime(qint64)));
-//   new PlayerDBusHandler(this, media, m_video->audioOutput());
-//   new TrackListDBusHandler(this, media);
-//   new RootDBusHandler(this);
+    m_pviewer->setShowTime(slideShowInterval());
+    connect (this, SIGNAL(slideShowTimeChanged(qint64)), m_pviewer, SLOT(setShowTime(qint64)));
+    //   new PlayerDBusHandler(this, media, m_video->audioOutput());
+    //   new TrackListDBusHandler(this, media);
+    //   new RootDBusHandler(this);
 }
 
 void MediaPlayer::playNextMedia()

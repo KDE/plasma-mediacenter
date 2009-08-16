@@ -32,7 +32,7 @@ m_showTime(3),
 m_timer(new QTimer(this))
 {
     m_timer->setSingleShot(true);
-    connect (m_timer, SIGNAL(timeout()), this, SIGNAL(showFinished()));
+    connect (m_timer, SIGNAL(timeout()), this, SLOT(slotFinished()));
 }
 
 PictureViewer::~PictureViewer()
@@ -53,7 +53,9 @@ void PictureViewer::loadPicture(const QString &path)
     m_picture = new QImage(path);
     update();
 
-    m_timer->start(m_showTime*1000);
+    if (m_showTime) {
+        m_timer->start(m_showTime*1000);
+    }
 }
 
 void PictureViewer::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -98,4 +100,12 @@ void PictureViewer::stop()
     delete m_picture;
     m_picture = 0;
     update();
+}
+
+void PictureViewer::slotFinished()
+{
+    delete m_picture;
+    m_picture = 0;
+    update();
+    emit showFinished();
 }

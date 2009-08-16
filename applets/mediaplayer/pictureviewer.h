@@ -37,10 +37,18 @@ public:
     void stop();
 
 public Q_SLOTS:
+    /**
+     * Call this method in order to set the slideshow time.
+     * It is set to 3 secs by default. 0 means no slideshow or
+     * infinite time.
+     */
     void setShowTime(qint64 time);
 
 Q_SIGNALS:
     void showFinished();
+
+private slots:
+    void slotFinished();
 
 private:
     QImage *m_picture;

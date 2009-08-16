@@ -125,9 +125,8 @@ void MediaBrowser::createConfigurationInterface(KConfigDialog *parent)
 void MediaBrowser::switchToFileModel()
 {
     kDebug() << "";
-    if (!m_model) {
-        m_model = new KDirModel(this);
-    }
+    delete m_model;
+    m_model = new KDirModel(this);
 
    if (!m_lister) {
         m_lister = new KDirLister(this);

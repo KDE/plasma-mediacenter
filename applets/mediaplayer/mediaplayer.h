@@ -97,6 +97,7 @@ private Q_SLOTS:
     void playNextMedia();
 
 private:
+    void loadConfig();
     void applyConfig();
     void doFullScreen();
     void slideShow(const MediaCenter::Media &);
@@ -117,6 +118,7 @@ private:
     bool m_raised;
 
     bool m_fullScreen;
+    qint64 m_sshowTime;
     bool m_active;
     Phonon::VideoWidget *m_fullScreenVideo;
     PictureViewer *m_pviewer;
