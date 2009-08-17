@@ -232,6 +232,21 @@ void MediaLayout::setOnlyShowBrowser(bool set)
 
     m_onlyBrowser = set;
     if (m_browser) {
+        MediaHandler *handler = MediaHandler::handlerFromApplet(m_browser);
+        if (handler) {
+            handler->setVisible(!m_onlyBrowser);
+            if (!m_onlyBrowser) {
+                connect (handler, SIGNAL(appletHideRequest(Plasma::Applet*)), this, SLOT(animateHidingApplet(Plasma::Applet*)));
+                connect (handler, SIGNAL(appletShowRequest(Plasma::Applet*)), this, SLOT(animateShowingApplet(Plasma::Applet*)));
+            } else {
+                disconnect (handler, SIGNAL(appletHideRequest(Plasma::Applet*)), this, SLOT(animateHidingApplet(Plasma::Applet*)));
+                disconnect (handler, SIGNAL(appletShowRequest(Plasma::Applet*)), this, SLOT(animateShowingApplet(Plasma::Applet*)));
+            }
+
+            if (m_player) {
+                m_player->setVisible(!m_onlyBrowser);
+            }
+        }
         layoutBrowser();
     }
 }

@@ -145,6 +145,8 @@ void MediaContainment::slotAppletAdded(Plasma::Applet *applet, const QPointF &po
             m_layout->setPlayer(m_player);
             m_layout->invalidate();
 
+            m_layout->setOnlyShowBrowser(!m_player->isActive());
+            connect (m_player, SIGNAL(activeStateChanged(bool)), this, SLOT(slotPlayerActive(bool)));
             if (m_control) {
                 initControls();
             }
@@ -183,4 +185,9 @@ void MediaContainment::slotAppletRemoved(Plasma::Applet *applet)
     } else if (applet == m_control) {
         m_control = 0;
     }
+}
+
+void MediaContainment::slotPlayerActive(bool active)
+{
+    m_layout->setOnlyShowBrowser(!active);
 }

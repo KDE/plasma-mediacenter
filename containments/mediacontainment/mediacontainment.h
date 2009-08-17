@@ -48,6 +48,7 @@ protected:
 private slots:
     void slotAppletAdded(Plasma::Applet *applet, const QPointF &pos);
     void slotAppletRemoved(Plasma::Applet *applet);
+    void slotPlayerActive(bool active);
 
 private:
     MediaCenter::Browser *m_browser;
