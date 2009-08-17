@@ -58,6 +58,14 @@ public:
 
     bool eventFilter(QObject *o, QEvent *e);
 
+    /**
+     * Call this method in order to make the layout only show
+     * the media browser fullscreen. This might be particularly useful
+     * when the playing queue is empty or when nothing is playing.
+     */
+    void setOnlyShowBrowser(bool set);
+    bool onlyShowBrowser();
+
     QRectF browserPreferredShowingRect() const;
     QRectF controllerPreferredShowingRect() const;
     QRectF playlistPreferredShowingRect() const;
@@ -74,6 +82,8 @@ private:
     Plasma::Applet *m_player;
 
     QList<Plasma::Applet*> m_needLayouting;
+
+    bool m_onlyBrowser;
 
 private:
     void doCompleteLayout();

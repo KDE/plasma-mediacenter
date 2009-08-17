@@ -51,7 +51,6 @@ MediaPlayer::MediaPlayer(QObject *parent, const QVariantList &args)
       m_raised(false),
       m_fullScreen(false),
       m_sshowTime(3),
-      m_active(false),
       m_fullScreenVideo(0),
       m_pviewer(new PictureViewer(this))
 {
@@ -181,7 +180,7 @@ void MediaPlayer::playNextMedia()
 {
     int nextMedia = m_medias.indexOf(m_currentMedia) + 1;
     if (nextMedia >= m_medias.count()) {
-        m_active = false;
+        setActive(false);
         return;
     }
 
@@ -216,7 +215,7 @@ void MediaPlayer::playPause()
     if (media->state() == Phonon::PlayingState) {
         media->pause();
     } else {
-        m_active = true;
+        setActive(true);
         media->play();
     }
 }
@@ -359,7 +358,7 @@ void MediaPlayer::stop()
 {
     m_video->mediaObject()->stop();
     m_pviewer->stop();
-    m_active = false;
+    setActive(false);
 }
 
 Phonon::MediaObject* MediaPlayer::mediaObject()
@@ -376,7 +375,7 @@ void MediaPlayer::skipBackward()
     if (previous < 0) {
         return;
     }
-    m_active = true;
+    setActive(true);
     playMedia(m_medias[previous]);
 }
 
@@ -455,11 +454,6 @@ void MediaPlayer::enqueue(const QList<MediaCenter::Media> &medias)
 MediaCenter::Media MediaPlayer::currentMedia()
 {
     return m_currentMedia;
-}
-
-bool MediaPlayer::isActive()
-{
-    return m_active;
 }
 
 K_EXPORT_PLASMA_APPLET(mcplayer, MediaPlayer)

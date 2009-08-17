@@ -24,11 +24,13 @@ class Player::PlayerPrivate
 {
 public:
     PlayerPrivate(Player *q) : q(q),
-    sshowTime(3)
+    sshowTime(3),
+    active(false)
     {}
 
     Player *q;
     qint64 sshowTime;
+    bool active;
 };
 
 Player::Player(QObject *parent, const QVariantList &args) : Plasma::Applet(parent, args), d(new PlayerPrivate(this))
@@ -75,4 +77,19 @@ qint64 Player::slideShowInterval()
 void Player::playMedia(const MediaCenter::Media &media)
 {
     Q_UNUSED(media);
+}
+
+bool Player::isActive()
+{
+    return d->active;
+}
+
+void Player::setActive(bool set)
+{
+    if (d->active == set) {
+        return;
+    }
+
+    d->active = set;
+    emit activeStateChanged(d->active);
 }

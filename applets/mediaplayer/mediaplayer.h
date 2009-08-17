@@ -67,8 +67,6 @@ public:
     
     MediaCenter::Media currentMedia();
 
-    bool isActive();
-
 protected:
     void dropEvent(QGraphicsSceneDragDropEvent *event);
     void keyPressEvent(QKeyEvent *event);
@@ -119,7 +117,6 @@ private:
 
     bool m_fullScreen;
     qint64 m_sshowTime;
-    bool m_active;
     Phonon::VideoWidget *m_fullScreenVideo;
     PictureViewer *m_pviewer;
 

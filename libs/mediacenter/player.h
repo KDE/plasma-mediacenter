@@ -76,12 +76,10 @@ public:
     qint64 slideShowInterval();
 
     /**
-     * Reimplement this method in order to inform the whole mediacenter
-     * about the playing state of the player. This method should return
-     * true when the reproduction is in progress or the playing state is paused.
-     * It must return false only when the whole playing state is stopped.
+     * @return the current state of the player.
+     * @see setActive()
      */
-    virtual bool isActive() = 0;
+    virtual bool isActive();
 
 Q_SIGNALS:
     /**
@@ -109,6 +107,11 @@ Q_SIGNALS:
      * This signal is emitted whenever the slide show time changes.
      */
     void slideShowTimeChanged(qint64 time);
+
+    /**
+     * This signal is emitted whenever the active state changes.
+     */
+    void activeStateChanged(bool active);
 
 public Q_SLOTS:
     /**
@@ -158,6 +161,15 @@ public Q_SLOTS:
      * @note the default implementation does nothing.
      */
     virtual void playMedia(const MediaCenter::Media &media);
+
+protected:
+    /**
+     * Use this method to set the current state
+     * of the player. Active means that the player is playing or
+     * paused. Set false when the player is not used, when the queue is empty
+     * or when the reproduction is stopped.
+     */
+    virtual void setActive(bool set);
 
 private:
     class PlayerPrivate;

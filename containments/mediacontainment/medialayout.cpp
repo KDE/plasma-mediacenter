@@ -32,7 +32,8 @@ m_containment(parent),
 m_browser(0),
 m_control(0),
 m_playlist(0),
-m_player(0)
+m_player(0),
+m_onlyBrowser(false)
 {
     m_containment->installEventFilter(this);
     connect (Plasma::Animator::self(), SIGNAL(movementFinished(QGraphicsItem*)), this, SLOT(restoreHandlerGlows(QGraphicsItem*)));
@@ -114,6 +115,11 @@ void MediaLayout::doCompleteLayout()
 
 void MediaLayout::layoutBrowser()
 {
+    if (m_onlyBrowser) {
+        m_browser->setPos(m_containment->rect().topLeft());
+        m_browser->resize(m_containment->size());
+        return;
+    }
     m_browser->setPos(browserPreferredShowingRect().topLeft());
     m_browser->resize(browserPreferredShowingRect().size());
 //    m_browser->setPos(m_browser->pos().x() - m_browser->size().width(), m_browser->pos().y());
@@ -216,4 +222,21 @@ void MediaLayout::restoreHandlerGlows(QGraphicsItem *item)
         return;
     }
     handler->setStopHoverEvents(false);
+}
+
+void MediaLayout::setOnlyShowBrowser(bool set)
+{
+    if (m_onlyBrowser == set) {
+        return;
+    }
+
+    m_onlyBrowser = set;
+    if (m_browser) {
+        layoutBrowser();
+    }
+}
+
+bool MediaLayout::onlyShowBrowser()
+{
+    return m_onlyBrowser;
 }
