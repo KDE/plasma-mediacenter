@@ -91,6 +91,10 @@ void MediaContainment::slotAppletAdded(Plasma::Applet *applet, const QPointF &po
             m_browser = browser;
             m_layout->setBrowser(m_browser);
             m_layout->invalidate();
+
+            if (m_playlist) {
+                connect (m_browser, SIGNAL(mediasActivated(QList<MediaCenter::Media>)), m_playlist, SLOT(appendMedia(QList<MediaCenter::Media>)));
+            }
         }
         return;
     }
@@ -128,6 +132,9 @@ void MediaContainment::slotAppletAdded(Plasma::Applet *applet, const QPointF &po
 
             if (m_player) {
                 m_player->enqueue(m_playlist->medias());
+            }
+            if (m_browser) {
+                connect (m_browser, SIGNAL(mediasActivated(QList<MediaCenter::Media>)), m_playlist, SLOT(appendMedia(QList<MediaCenter::Media>)));
             }
         }
         return;

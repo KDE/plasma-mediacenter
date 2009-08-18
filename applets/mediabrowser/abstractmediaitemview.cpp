@@ -19,6 +19,7 @@
 #include "abstractmediaitemview.h"
 #include "viewitem.h"
 
+
 // Plasma
 #include <Plasma/ScrollBar>
 #include <Plasma/Theme>
@@ -288,6 +289,11 @@ void AbstractMediaItemView::itemClickEvent(QGraphicsSceneMouseEvent *event)
             model->dirLister()->openUrl(item.url());
             m_hoveredItem = 0;
             generateItems();
+        } else {
+            MediaCenter::Media media;
+            media.first = MediaCenter::getType(item.url().path());
+            media.second = item.url().path();
+            emit mediasActivated(QList<MediaCenter::Media>() << media);
         }
     }
 }

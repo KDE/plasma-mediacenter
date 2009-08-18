@@ -35,7 +35,7 @@ public:
     virtual ~Browser();
 
 Q_SIGNALS:
-    void mediaActivated(MediaType type, const QString &path);
+    void mediasActivated(const QList<MediaCenter::Media> &);
 };
 
 } // namespace MediaCenter

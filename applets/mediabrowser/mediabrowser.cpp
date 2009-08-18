@@ -81,6 +81,7 @@ void MediaBrowser::createView()
 //    m_view->setScrollMode(AbstractMediaItemView::PerItem);
 
     connect (m_browsingWidget, SIGNAL(goPrevious()), m_view, SLOT(goPrevious()));
+    connect (m_view, SIGNAL(mediasActivated(QList<MediaCenter::Media>)), this, SIGNAL(mediasActivated(QList<MediaCenter::Media>)));
     QGraphicsLinearLayout *layout = static_cast<QGraphicsLinearLayout*>(this->layout());
     layout->addItem(m_view);
     setLayout(layout);

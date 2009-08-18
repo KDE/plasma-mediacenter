@@ -22,6 +22,7 @@
 #include <QGraphicsWidget>
 #include <QStyleOptionViewItemV4>
 #include <KUrl>
+#include <mediacenter/mediacenter.h>
 
 class QAbstractItemModel;
 
@@ -128,6 +129,7 @@ private slots:
 
 signals:
     void scrollOffsetChanged(int);
+    void mediasActivated(const QList<MediaCenter::Media> &);
 
 private:
     void tryDrag(QGraphicsSceneMouseEvent *);
