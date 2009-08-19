@@ -215,7 +215,6 @@ void MediaPlayer::playPause()
     if (media->state() == Phonon::PlayingState) {
         media->pause();
     } else {
-        setActive(true);
         media->play();
     }
 }
@@ -375,7 +374,6 @@ void MediaPlayer::skipBackward()
     if (previous < 0) {
         return;
     }
-    setActive(true);
     playMedia(m_medias[previous]);
 }
 
@@ -389,6 +387,7 @@ void MediaPlayer::playMedia(const MediaCenter::Media &media)
     kDebug() << "trying to play" << media.second;
     foreach (MediaCenter::Media mediaSource, m_medias)  {
         if (mediaSource.second == media.second) {
+            setActive(true);
             if (media.first == MediaCenter::Audio ||
                 media.first == MediaCenter::Video ||
                 media.first == MediaCenter::OpticalDisc) {

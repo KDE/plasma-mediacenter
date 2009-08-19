@@ -68,6 +68,7 @@ void MediaLayout::setPlaylist(Plasma::Applet *playlist)
 {
     m_playlist = playlist;
     m_needLayouting << m_playlist;
+    m_playlist->setZValue(999);
 
     MediaHandler *handler = new MediaHandler(m_playlist, MediaHandler::Left);
     connect (handler, SIGNAL(appletHideRequest(Plasma::Applet*)), this, SLOT(animateHidingApplet(Plasma::Applet*)));
