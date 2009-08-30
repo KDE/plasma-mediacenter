@@ -2,6 +2,7 @@
 Name=Media Containment
 Name[et]=Meediakonteiner
 Name[fr]=Conteneur pour média
+Name[hr]=Sadržavatelj multimedije
 Name[pt]=Contentor Multimédia
 Name[pt_BR]=Contentor Multimédia
 Name[sv]=Mediaomgivning
@@ -10,6 +11,7 @@ Name[x-test]=xxMedia Containmentxx
 Comment=A dedicated containment for your media applets.
 Comment[et]=Spetsiaalne konteiner meediaaplettidele.
 Comment[fr]=Un conteneur dédié à vos applets de média
+Comment[hr]=Posvećen sadržavatelj multimedijalnih programčića
 Comment[pt]=Um contentor dedicado aos seus leitores multimédia.
 Comment[pt_BR]=Um contentor dedicado aos seus leitores multimédia.
 Comment[sv]=En särskild omgivning för mediaminiprogram.

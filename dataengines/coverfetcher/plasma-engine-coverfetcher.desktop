@@ -2,6 +2,7 @@
 Name=Cover Fetcher Engine
 Name[et]=Kaanepildi tõmbamise mootor
 Name[fr]=Moteur de récupération de couverture
+Name[hr]=Podrška za dohvat omota
 Name[km]=ម៉ាស៊ីន​កម្មវិធីទៅយក​គម្រប
 Name[pt]=Motor de Obtenção de Capas
 Name[pt_BR]=Motor de Obtenção de Capas
@@ -12,6 +13,7 @@ Name[x-test]=xxCover Fetcher Enginexx
 Comment=An Engine able to fetch covers from last.fm.
 Comment[et]=Mootor, mis tõmbab last.fm-ist kaanepilte.
 Comment[fr]=Un moteur capable de récupérer les couvertures depuis last.fm.
+Comment[hr]=Podrška za dohvat omota s last.fm-a
 Comment[km]=ម៉ាស៊ីន​អាច​ទៅយក​គម្រប​ពី last.fm ។
 Comment[pt]=Um motor que consegue obter capas da Last.fm.
 Comment[pt_BR]=Um motor que consegue obter capas da Last.fm.
