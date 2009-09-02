@@ -1,3 +1,4 @@
+add_subdirectory(mediabrowserlibs)
 
 set(mediabrowser_SRCS
 mediabrowser.cpp

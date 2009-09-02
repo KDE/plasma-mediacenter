@@ -16,8 +16,12 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#include "mediabrowserabstractmodel.h"
+#include "mediabrowsermodelpackage.h"
 
-MediaBrowserAbstractModel::MediaBrowserAbstractModel()
+MediaBrowserModelPackage::MediaBrowserModelPackage(QObject *parent, const QVariantList &args) : QObject(parent)
 {
+    Q_UNUSED(args);
 }
+
+MediaBrowserModelPackage::~MediaBrowserModelPackage()
+{}

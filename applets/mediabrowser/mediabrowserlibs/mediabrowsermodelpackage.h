@@ -16,13 +16,17 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#ifndef MEDIABROWSERABSTRACTMODEL_H
-#define MEDIABROWSERABSTRACTMODEL_H
+#ifndef MEDIABROWSERModelPackage_H
+#define MEDIABROWSERModelPackage_H
 
 #include <QObject>
+#include <QVariantList>
+#include "mediabrowser_export.h"
+
+class QAbstractItemModel;
 
 /**
- * @class MediaBrowserAbstractModel @author Alessandro Diaferia
+ * @class MediaBrowserModelPackage @author Alessandro Diaferia
  * @brief A useful class to build custom plugins for the mediabrowser.
  *
  * This class allows you to write custom models to use with the mediabrowser applet.
@@ -33,26 +37,23 @@
  * extension purposes. It just represents an interface between the applet and the
  * provided model.
  */
-class MEDIABROWSER_EXPORT MediaBrowserAbstractModel : public QObject
+class MEDIABROWSER_EXPORT MediaBrowserModelPackage : public QObject
 {
     Q_OBJECT
 public:
     enum BrowsingType {
         LocalBrowsing,
         RemoteBrowsing
-    }
+    };
 
-    /**
-     * The ctor. Nothing special here.
-     */
-    MediaBrowserAbstractModel(QObject *parent);
-    ~MediaBrowserAbstractModel();
+    MediaBrowserModelPackage(QObject *parent, const QVariantList &args);
+    virtual ~MediaBrowserModelPackage();
 
     /**
      * This method must be reimplemented in order to provide the model to be
      * used by the view.
      */
-    virtual QAbstraItemModel *model() = 0;
+    virtual QAbstractItemModel *model() = 0;
 
     /**
      * @return the browsing type of the model. Typically a remote browsing type
@@ -66,4 +67,4 @@ public:
     virtual BrowsingType browsingType() = 0;
 };
 
-#endif // MEDIABROWSERABSTRACTMODEL_H
+#endif // MEDIABROWSERModelPackage_H
