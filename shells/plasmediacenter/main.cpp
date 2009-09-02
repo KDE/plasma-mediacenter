@@ -38,6 +38,7 @@ int main(int argc, char *argv[])
                         ki18n("Mantainer and main developer"),
                         "alediaferia@gmail.com",
                         "http://alediaferia.wordpress.com");
+    aboutData.addCredit(ki18n("Marco Martin"), ki18n("GSoC project mentor"), "notmart@gmail.com", "");
 
     KCmdLineArgs::init(&aboutData);
 

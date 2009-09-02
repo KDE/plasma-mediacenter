@@ -158,6 +158,7 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
         painter->drawPixmap(decorationRect.topLeft(), *m_preview);
 
         reflectionRect.moveTo(decorationRect.left(), decorationRect.top() + m_preview->height() + 1);
+        reflectionRect.setWidth(m_preview->size().width());
         drawReflection(painter, reflectionRect, *m_preview);
     } else {
         QVariant decoration = m_index.data(Qt::DecorationRole);
