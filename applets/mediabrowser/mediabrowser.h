@@ -61,6 +61,7 @@ private:
 private:
     void createView();
     void setFolderNavigation();
+    void showInstalledModelPackages();
 
 private slots:
     void loadConfiguration();

@@ -14,3 +14,4 @@ set (mediabrowserlibs_HDRS
 )
 
 install(FILES ${mediabrowserlibs_HDRS} DESTINATION ${INCLUDE_INSTALL_DIR}/mediabrowserlibs COMPONENT Devel)
+install(FILES mc_modelpackage.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})

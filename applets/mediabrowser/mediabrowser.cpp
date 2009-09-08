@@ -21,6 +21,8 @@
 #include "gridview.h"
 #include "browsingwidget.h"
 
+#include <mediabrowserlibs/modelpackage.h>
+
 #include <QWidget>
 #include <QGraphicsLinearLayout>
 
@@ -33,6 +35,8 @@
 #include <KUrl>
 #include <KLineEdit>
 #include <KMimeType>
+#include <KService>
+#include <KServiceTypeTrader>
 #include <KDebug>
 
 #include <Nepomuk/ResourceManager>
@@ -57,11 +61,24 @@ MediaBrowser::MediaBrowser(QObject *parent, const QVariantList &args)
 MediaBrowser::~MediaBrowser()
 {}
 
+void MediaBrowser::showInstalledModelPackages()
+{
+    KService::List plugins = KServiceTypeTrader::self()->query("Plasma/MediaCenter/ModelPackage");
+    if (plugins.isEmpty()) {
+        kDebug() << "no available model package";
+        return;
+    }
+    foreach (const KSharedPtr<KService> service, plugins) {
+        kDebug() << "Name:" << service->name() << "Comment:" << service->comment();
+    }
+}
+
 void MediaBrowser::init()
 {
     loadConfiguration();
 
     createView();
+    showInstalledModelPackages();
     switchToFileModel();
 }
 
