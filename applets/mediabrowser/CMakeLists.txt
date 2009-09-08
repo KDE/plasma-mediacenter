@@ -5,6 +5,7 @@ listview.cpp
 gridview.cpp
 viewitem.cpp
 browsingwidget.cpp
+startupmodel.cpp
 )
  
 # Now make sure all files get to the right place

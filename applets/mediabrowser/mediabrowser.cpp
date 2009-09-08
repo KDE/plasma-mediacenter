@@ -20,6 +20,7 @@
 #include "listview.h"
 #include "gridview.h"
 #include "browsingwidget.h"
+#include "startupmodel.h"
 
 #include <mediabrowserlibs/modelpackage.h>
 
@@ -71,6 +72,11 @@ void MediaBrowser::showInstalledModelPackages()
     foreach (const KSharedPtr<KService> service, plugins) {
         kDebug() << "Name:" << service->name() << "Comment:" << service->comment();
     }
+
+    StartupModel *model = new StartupModel(this);
+    model->addAvailableModels(plugins);
+    m_view->setModel(model);
+    m_view->generateItems();
 }
 
 void MediaBrowser::init()
@@ -79,7 +85,7 @@ void MediaBrowser::init()
 
     createView();
     showInstalledModelPackages();
-    switchToFileModel();
+//    switchToFileModel();
 }
 
 void MediaBrowser::createView()

@@ -90,6 +90,7 @@ void AbstractMediaItemView::setModel(QAbstractItemModel *model)
         delete m_model;
     }
 
+    m_rootIndex = QModelIndex();
     m_model = model;
 //    connect (m_model, SIGNAL(modelReset()), this, SLOT(generateItems()));
 }
@@ -177,6 +178,7 @@ void AbstractMediaItemView::updateHoveredItem(ViewItem *item)
     }
 
     m_hoveredItem = item;
+    m_hoverIndicator->m_nepomuk = item->m_nepomuk;
     Plasma::Animator::self()->moveItem(m_hoverIndicator, Plasma::Animator::SlideInMovement, m_hoveredItem->pos().toPoint());
 }
 
@@ -186,7 +188,9 @@ void AbstractMediaItemView::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
     if (m_hoveredItem) {
         m_hoverIndicator->m_rating = m_hoveredItem->m_nepomuk ? m_hoveredItem->m_resource->rating() : 0;
     }
-    m_hoverIndicator->updateHoverRating(mapToItem(m_hoverIndicator, event->pos()).toPoint());
+    if (m_hoverIndicator->m_nepomuk) {
+        m_hoverIndicator->updateHoverRating(mapToItem(m_hoverIndicator, event->pos()).toPoint());
+    }
 }
 
 void AbstractMediaItemView::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
@@ -195,15 +199,18 @@ void AbstractMediaItemView::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
     if (m_hoveredItem) {
         m_hoverIndicator->m_rating = m_hoveredItem->m_nepomuk ? m_hoveredItem->m_resource->rating() : 0;
     }
-    m_hoverIndicator->updateHoverRating(mapToItem(m_hoverIndicator, event->pos()).toPoint());
+    if (m_hoverIndicator->m_nepomuk) {
+        m_hoverIndicator->updateHoverRating(mapToItem(m_hoverIndicator, event->pos()).toPoint());
+    }
 }
 
 void AbstractMediaItemView::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
     m_hoverIndicator->setPos(0, -100);
     m_hoveredItem = 0;
-    m_hoverIndicator->updateHoverRating(mapToItem(m_hoverIndicator, event->pos()).toPoint());
-    update();
+    if (m_hoverIndicator->m_nepomuk) {
+        m_hoverIndicator->updateHoverRating(mapToItem(m_hoverIndicator, event->pos()).toPoint());
+    }
 }
 
 void AbstractMediaItemView::setRating(int rating)

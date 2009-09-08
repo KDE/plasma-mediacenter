@@ -88,13 +88,14 @@ QStyleOptionViewItemV4 ViewItem::styleOption() const
 void ViewItem::setModelIndex(const QModelIndex &index)
 {
     m_index = index;
-    askForFilePreview();
 
     KFileItem item = m_index.data(KDirModel::FileItemRole).value<KFileItem>();
     if (item.isNull()) {
+        // nepomuk should be disabled for non-kfileitemmodel's (at least for now..)
+        m_nepomuk = false;
         return;
     }
-
+    askForFilePreview();
     m_resource = new Nepomuk::Resource(item.url());
 }
 
@@ -339,6 +340,7 @@ void ViewItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (!m_nepomuk) {
         event->ignore();
+        return;
     }
 
     if (ratingRect(contentsRect().toRect()).contains(event->pos().toPoint())) {
