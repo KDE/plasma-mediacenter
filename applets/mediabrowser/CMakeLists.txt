@@ -1,5 +1,3 @@
-add_subdirectory(mediabrowserlibs)
-
 set(mediabrowser_SRCS
 mediabrowser.cpp
 abstractmediaitemview.cpp
@@ -25,3 +23,6 @@ install(TARGETS plasma_applet_mediabrowser
  
 install(FILES plasma-applet-mediabrowser.desktop
         DESTINATION ${SERVICES_INSTALL_DIR})
+
+add_subdirectory(mediabrowserlibs)
+add_subdirectory(modelpackages)

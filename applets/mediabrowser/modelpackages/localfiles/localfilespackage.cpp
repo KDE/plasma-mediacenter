@@ -16,30 +16,25 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#ifndef MEDIABROWSER_EXPORT_H
-#define MEDIABROWSER_EXPORT_H
+#include "localfilespackage.h"
 
-/* needed for KDE_EXPORT and KDE_IMPORT macros */
-#include <kdemacros.h>
-#include <KPluginFactory>
-#include <KPluginLoader>
+#include <mediabrowserlibs/mediabrowser_export.h>
 
-#define MEDIABROWSER_PACKAGE_EXPORT( c ) \
-    K_PLUGIN_FACTORY( MediaBrowserFactory, registerPlugin< c >(); ) \
-    K_EXPORT_PLUGIN( MediaBrowserFactory("c") )
+MEDIABROWSER_PACKAGE_EXPORT(LocalFilesPackage)
 
-#ifndef MEDIABROWSER_EXPORT
-# if defined(MAKE_MEDIABROWSER_LIB)
-   /* We are building this library */
-#  define MEDIABROWSER_EXPORT KDE_EXPORT
-# else
-   /* We are using this library */
-#  define MEDIABROWSER_EXPORT KDE_IMPORT
-# endif
-#endif
+LocalFilesPackage::LocalFilesPackage(QObject *parent, const QVariantList &args) : ModelPackage(parent, args)
+{
+}
 
-# ifndef MEDIABROWSER_EXPORT_DEPRECATED
-#  define MEDIABROWSER_EXPORT_DEPRECATED KDE_DEPRECATED MEDIABROWSER_EXPORT
-# endif
+LocalFilesPackage::~LocalFilesPackage()
+{}
 
-#endif // MEDIABROWSER_EXPORT_H
+QAbstractItemModel* LocalFilesPackage::model()
+{
+    return 0;
+}
+
+ModelPackage::BrowsingType LocalFilesPackage::browsingType()
+{
+    return ModelPackage::LocalBrowsing;
+}

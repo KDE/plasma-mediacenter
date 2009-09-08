@@ -16,8 +16,8 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#ifndef MEDIABROWSERModelPackage_H
-#define MEDIABROWSERModelPackage_H
+#ifndef MODELPACKAGE_H
+#define MODELPACKAGE_H
 
 #include <QObject>
 #include <QVariantList>
@@ -37,7 +37,7 @@ class QAbstractItemModel;
  * extension purposes. It just represents an interface between the applet and the
  * provided model.
  */
-class MEDIABROWSER_EXPORT MediaBrowserModelPackage : public QObject
+class MEDIABROWSER_EXPORT ModelPackage : public QObject
 {
     Q_OBJECT
 public:
@@ -46,8 +46,8 @@ public:
         RemoteBrowsing
     };
 
-    MediaBrowserModelPackage(QObject *parent, const QVariantList &args);
-    virtual ~MediaBrowserModelPackage();
+    ModelPackage(QObject *parent, const QVariantList &args);
+    virtual ~ModelPackage();
 
     /**
      * This method must be reimplemented in order to provide the model to be
@@ -60,11 +60,11 @@ public:
      * is specific for web services like YouTube.
      * When using a LocalBrowsing type the expected model is generally a KDirModel
      * or an inheritance of it.
-     * Specifying a BrowsingType allows also using special widgets for navigations purposes
+     * Specifying a BrowsingType allows the view also using special widgets for navigations purposes
      * that allow actions like "go backward", "go forward", "go uplevel" that generally change
      * their meaning if the browsing type is local or remote.
      */
     virtual BrowsingType browsingType() = 0;
 };
 
-#endif // MEDIABROWSERModelPackage_H
+#endif // MODELPACKAGE_H

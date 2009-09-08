@@ -16,30 +16,22 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#ifndef MEDIABROWSER_EXPORT_H
-#define MEDIABROWSER_EXPORT_H
+#ifndef LOCALFILESPACKAGE_H
+#define LOCALFILESPACKAGE_H
 
-/* needed for KDE_EXPORT and KDE_IMPORT macros */
-#include <kdemacros.h>
-#include <KPluginFactory>
-#include <KPluginLoader>
+#include <mediabrowserlibs/modelpackage.h>
 
-#define MEDIABROWSER_PACKAGE_EXPORT( c ) \
-    K_PLUGIN_FACTORY( MediaBrowserFactory, registerPlugin< c >(); ) \
-    K_EXPORT_PLUGIN( MediaBrowserFactory("c") )
+class QAbstractItemModel;
 
-#ifndef MEDIABROWSER_EXPORT
-# if defined(MAKE_MEDIABROWSER_LIB)
-   /* We are building this library */
-#  define MEDIABROWSER_EXPORT KDE_EXPORT
-# else
-   /* We are using this library */
-#  define MEDIABROWSER_EXPORT KDE_IMPORT
-# endif
-#endif
+class LocalFilesPackage : public ModelPackage
+{
+    Q_OBJECT
+public:
+    LocalFilesPackage(QObject *parent, const QVariantList &args);
+    ~LocalFilesPackage();
 
-# ifndef MEDIABROWSER_EXPORT_DEPRECATED
-#  define MEDIABROWSER_EXPORT_DEPRECATED KDE_DEPRECATED MEDIABROWSER_EXPORT
-# endif
+    QAbstractItemModel *model();
+    ModelPackage::BrowsingType browsingType();
+};
 
-#endif // MEDIABROWSER_EXPORT_H
+#endif // LOCALFILESPACKAGE_H
