@@ -2,7 +2,15 @@
 Type=Service
 Icon=folder
 Name=Local Files browsing plugin.
+Name[pt]='Plugin' de navegação nos ficheiros locais.
+Name[pt_BR]='Plugin' de navegação nos ficheiros locais.
+Name[sv]=Insticksprogram för bläddring i lokala filer
+Name[uk]=Додаток для перегляду локальних файлів.
 Comment=A plugin for the mediabrowser applet that allows local files browsing.
+Comment[pt]=Um 'plugin' para a 'applet' de leitura multimédia, que permite a navegação nos ficheiros locais.
+Comment[pt_BR]=Um 'plugin' para a 'applet' de leitura multimédia, que permite a navegação nos ficheiros locais.
+Comment[sv]=Ett insticksprogram för miniprogrammet Mediabläddrare som tillåter bläddring i lokala filer.
+Comment[uk]=Додаток до аплету переглядача носіїв, який надає змогу переглядати локальні файли.
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/ModelPackage
 
