@@ -21,9 +21,11 @@
 
 #include <QObject>
 #include <QVariantList>
+#include <KConfigGroup>
 #include "mediabrowser_export.h"
 
 class QAbstractItemModel;
+class KConfigDialog;
 
 /**
  * @class MediaBrowserModelPackage @author Alessandro Diaferia
@@ -65,6 +67,43 @@ public:
      * their meaning if the browsing type is local or remote.
      */
     virtual BrowsingType browsingType() = 0;
+
+    bool hasConfigurationInterface();
+
+    /**
+     * As from Plasma::Applet this method should be reimplemented
+     * in order to provide a useful configuration interface for
+     * the model if needed.
+     * @note: the method setHasConfigurationInterface() has to be
+     * called in order for this function to be called by the mediabrowser.
+     * @see setHasConfigurationInterface.
+     */
+    virtual void createConfigurationInterface(KConfigDialog *parent);
+
+    /**
+     * @return the appropriate KConfigGroup for this plugin.
+     */
+    KConfigGroup config();
+
+    /**
+     * This method is called whenever the package has been chosen by the user
+     * to be the current navigation helper and just before the model is set
+     * to the view.
+     * Use this method for general initialization purposes.
+     */
+    virtual void init();
+
+protected:
+    /**
+     * As from Plasma::Applet this method should be used in order
+     * to inform about the availability of a configuration interface for
+     * the model.
+     */
+    void setHasConfigurationInterface(bool hasInterface);
+
+private:
+    class ModelPackagePrivate;
+    ModelPackagePrivate *d;
 };
 
 #endif // MODELPACKAGE_H

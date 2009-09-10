@@ -21,7 +21,11 @@
 
 #include <mediabrowserlibs/modelpackage.h>
 
+#include "ui_localconfig.h"
+
 class QAbstractItemModel;
+class KConfigDialog;
+class KDirModel;
 
 class LocalFilesPackage : public ModelPackage
 {
@@ -32,6 +36,25 @@ public:
 
     QAbstractItemModel *model();
     ModelPackage::BrowsingType browsingType();
+
+    void createConfigurationInterface(KConfigDialog *parent);
+
+    void init();
+
+private slots:
+    void configAccepted();
+
+private:
+    Ui::LocalConfig uiLocal;
+    bool m_fromPlaces;
+    bool m_folderNavigation;
+    KUrl m_localUrl;
+    QStringList m_mimeTypes;
+
+    KDirModel *m_model;
+
+private:
+    void setFolderNavigation();
 };
 
 #endif // LOCALFILESPACKAGE_H

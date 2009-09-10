@@ -18,10 +18,47 @@
  ***************************************************************************/
 #include "modelpackage.h"
 
-ModelPackage::ModelPackage(QObject *parent, const QVariantList &args) : QObject(parent)
+#include <KGlobal>
+
+class ModelPackage::ModelPackagePrivate
+{
+public:
+    ModelPackagePrivate(ModelPackage *q) : q(q),
+    cfInterface(false)
+    {}
+
+    ModelPackage *q;
+    bool cfInterface;
+};
+
+ModelPackage::ModelPackage(QObject *parent, const QVariantList &args) : QObject(parent),
+d(new ModelPackagePrivate(this))
 {
     Q_UNUSED(args);
 }
 
 ModelPackage::~ModelPackage()
+{}
+
+bool ModelPackage::hasConfigurationInterface()
+{
+    return d->cfInterface;
+}
+
+void ModelPackage::setHasConfigurationInterface(bool hasInterface)
+{
+    d->cfInterface = hasInterface;
+}
+
+void ModelPackage::createConfigurationInterface(KConfigDialog *parent)
+{
+    Q_UNUSED(parent);
+}
+
+KConfigGroup ModelPackage::config()
+{
+    return KConfigGroup(KGlobal::config(), "ModelPackages");
+}
+
+void ModelPackage::init()
 {}

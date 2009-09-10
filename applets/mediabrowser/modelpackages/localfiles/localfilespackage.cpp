@@ -20,10 +20,22 @@
 
 #include <mediabrowserlibs/mediabrowser_export.h>
 
+#include <KConfigDialog>
+#include <KDirModel>
+#include <KDirLister>
+#include <KMimeType>
+#include <KFilePlacesModel>
+#include <KLineEdit>
+#include <KDebug>
+
 MEDIABROWSER_PACKAGE_EXPORT(LocalFilesPackage)
 
-LocalFilesPackage::LocalFilesPackage(QObject *parent, const QVariantList &args) : ModelPackage(parent, args)
+LocalFilesPackage::LocalFilesPackage(QObject *parent, const QVariantList &args) : ModelPackage(parent, args),
+m_fromPlaces(true),
+m_folderNavigation(true),
+m_model(0)
 {
+    setHasConfigurationInterface(true);
 }
 
 LocalFilesPackage::~LocalFilesPackage()
@@ -31,10 +43,97 @@ LocalFilesPackage::~LocalFilesPackage()
 
 QAbstractItemModel* LocalFilesPackage::model()
 {
-    return 0;
+    if (!m_model) {
+        m_model = new KDirModel(this);
+
+        KMimeType::List mimeList = KMimeType::allMimeTypes();
+
+        foreach (KMimeType::Ptr mime, mimeList) {
+            if (mime->name().startsWith("image/") ||
+                mime->name().startsWith("video/") ||
+                mime->name().startsWith("audio/")) {
+                m_mimeTypes << mime->name();
+            }
+        }
+        setFolderNavigation();
+    }
+
+    return m_model;
 }
 
 ModelPackage::BrowsingType LocalFilesPackage::browsingType()
 {
     return ModelPackage::LocalBrowsing;
+}
+
+void LocalFilesPackage::init()
+{
+    KConfigGroup cf = config();
+
+    m_localUrl = KUrl(cf.readEntry("LocalUrl", QDir::homePath()));
+    m_fromPlaces = cf.readEntry("FromPlaces", true);
+    m_folderNavigation = cf.readEntry("FolderNavigation", true);
+}
+
+void LocalFilesPackage::createConfigurationInterface(KConfigDialog *parent)
+{
+    QWidget *localConfig = new QWidget(parent);
+    uiLocal.setupUi(localConfig);
+
+    parent->addPage(localConfig, i18n("Local Browsing"), "folder-development");
+
+    KFilePlacesModel *model = new KFilePlacesModel(parent);
+    uiLocal.placesCombo->setModel(model);
+
+    if (m_fromPlaces) {
+        uiLocal.showPlace->setChecked(true);
+        uiLocal.placesCombo->setCurrentIndex(model->closestItem(m_localUrl).row());
+    } else {
+        uiLocal.showCustomFolder->setChecked(true);
+        uiLocal.urlRequester->lineEdit()->setText(m_localUrl.url());
+    }
+
+    uiLocal.folderNavigationCheckBox->setChecked(m_folderNavigation);
+    uiLocal.urlRequester->setMode(KFile::Directory);
+
+    connect (parent, SIGNAL(accepted()), this, SLOT(configAccepted()));
+}
+
+void LocalFilesPackage::configAccepted()
+{
+    m_fromPlaces = uiLocal.showPlace->isChecked();
+    m_localUrl = m_fromPlaces ? uiLocal.placesCombo->model()->index(uiLocal.placesCombo->currentIndex(), 0).data(KFilePlacesModel::UrlRole).value<QUrl>()
+                              : uiLocal.urlRequester->url();
+
+    qobject_cast<KDirLister*>(m_model->dirLister())->openUrl(m_localUrl);
+
+    KConfigGroup cf = config();
+    kDebug() << cf.name();
+
+    cf.writeEntry("LocalUrl", m_localUrl);
+    cf.writeEntry("FromPlaces", m_fromPlaces);
+
+    bool folderNavigation = uiLocal.folderNavigationCheckBox->isChecked();
+    if (m_folderNavigation != folderNavigation) {
+        m_folderNavigation = folderNavigation;
+        cf.writeEntry("FolderNavigation", m_folderNavigation);
+        setFolderNavigation();
+    }
+}
+
+void LocalFilesPackage::setFolderNavigation()
+{
+    if (m_folderNavigation) {
+        if (!m_mimeTypes.contains("inode/directory")) {
+            m_mimeTypes << "inode/directory";
+        }
+    } else {
+        if (m_mimeTypes.contains("inode/directory")) {
+            m_mimeTypes.removeAll("inode/directory");
+        }
+    }
+    KDirLister *lister = qobject_cast<KDirLister*>(m_model->dirLister());
+    if (lister) {
+        lister->setMimeFilter(m_mimeTypes);
+    }
 }
