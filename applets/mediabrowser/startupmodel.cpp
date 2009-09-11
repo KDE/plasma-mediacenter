@@ -19,13 +19,30 @@
 #include "startupmodel.h"
 
 #include <KIcon>
+#include <KService>
+#include <KServiceTypeTrader>
+#include <KSycoca>
+#include <KDebug>
 
 StartupModel::StartupModel(QObject *parent) : QAbstractItemModel(parent)
 {
+    init();
+    connect (KSycoca::self(), SIGNAL(databaseChanged(QStringList)), this, SLOT(updateModel(QStringList)));
 }
 
 StartupModel::~StartupModel()
 {}
+
+void StartupModel::init()
+{
+    KService::List plugins = KServiceTypeTrader::self()->query("Plasma/MediaCenter/ModelPackage");
+    if (plugins.isEmpty()) {
+        kError() << "no available model package";
+        return;
+    }
+
+    addAvailableModels(plugins);
+}
 
 int StartupModel::columnCount(const QModelIndex &parent) const
 {
@@ -92,4 +109,17 @@ void StartupModel::addAvailableModels(const KService::List &models)
     beginInsertRows(QModelIndex(), 0, models.count() - 1);
     m_modelServices << models;
     endInsertRows();
+}
+
+void StartupModel::updateModel(const QStringList &changedResources)
+{
+    if (!changedResources.contains("services")) {
+        return;
+    }
+
+    beginRemoveRows(QModelIndex(), 0, m_modelServices.count() -1);
+    m_modelServices.clear();
+    endRemoveRows();
+
+    init();
 }

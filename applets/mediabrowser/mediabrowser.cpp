@@ -36,8 +36,6 @@
 #include <KUrl>
 #include <KLineEdit>
 #include <KMimeType>
-#include <KService>
-#include <KServiceTypeTrader>
 #include <KDebug>
 
 #include <Nepomuk/ResourceManager>
@@ -60,17 +58,7 @@ MediaBrowser::~MediaBrowser()
 
 void MediaBrowser::showInstalledModelPackages()
 {
-    KService::List plugins = KServiceTypeTrader::self()->query("Plasma/MediaCenter/ModelPackage");
-    if (plugins.isEmpty()) {
-        kDebug() << "no available model package";
-        return;
-    }
-    foreach (const KSharedPtr<KService> service, plugins) {
-        kDebug() << "Name:" << service->name() << "Comment:" << service->comment();
-    }
-
     StartupModel *model = new StartupModel(this);
-    model->addAvailableModels(plugins);
     m_view->setModel(model);
     m_view->generateItems();
 }

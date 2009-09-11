@@ -35,10 +35,14 @@ public:
     virtual QModelIndex parent ( const QModelIndex & index ) const;
     virtual int rowCount ( const QModelIndex & parent = QModelIndex() ) const;
 
-    void addAvailableModels(const KService::List &modelServices);
+protected slots:
+    void init();
+    void updateModel(const QStringList &changedResources);
 
 private:
     KService::List m_modelServices;
+
+    void addAvailableModels(const KService::List &modelServices);
 };
 
 #endif // STARTUPMODEL_H
