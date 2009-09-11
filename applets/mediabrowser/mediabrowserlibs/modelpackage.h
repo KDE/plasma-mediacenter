@@ -76,7 +76,7 @@ public:
      * the model if needed.
      * @note: the method setHasConfigurationInterface() has to be
      * called in order for this function to be called by the mediabrowser.
-     * @see setHasConfigurationInterface.
+     * @see setHasConfigurationInterface
      */
     virtual void createConfigurationInterface(KConfigDialog *parent);
 

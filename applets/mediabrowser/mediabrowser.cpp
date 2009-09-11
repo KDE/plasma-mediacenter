@@ -45,10 +45,6 @@
 MediaBrowser::MediaBrowser(QObject *parent, const QVariantList &args)
     : MediaCenter::Browser(parent, args),
     m_view(0),
-    m_localUrl(KUrl()),
-    m_fromPlaces(true),
-    m_lister(0),
-    m_model(0),
     m_browsingWidget(new BrowsingWidget(this))
 {
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
@@ -85,7 +81,6 @@ void MediaBrowser::init()
 
     createView();
     showInstalledModelPackages();
-//    switchToFileModel();
 }
 
 void MediaBrowser::createView()
@@ -122,106 +117,23 @@ void MediaBrowser::createConfigurationInterface(KConfigDialog *parent)
         uiGeneral.gridRadio->setChecked(true);
     }
 
-    QWidget *localConfig = new QWidget(parent);
-    uiLocal.setupUi(localConfig);
-
-    parent->addPage(localConfig, i18n("Local Browsing"), "folder-development");
-
-    KFilePlacesModel *model = new KFilePlacesModel(this);
-    uiLocal.placesCombo->setModel(model);
-
-    if (m_fromPlaces) {
-        uiLocal.showPlace->setChecked(true);
-        uiLocal.placesCombo->setCurrentIndex(model->closestItem(m_localUrl).row());
-    } else {
-        uiLocal.showCustomFolder->setChecked(true);
-        uiLocal.urlRequester->lineEdit()->setText(m_localUrl.url());
-    }
-
-    uiGeneral.folderNavigationCheckBox->setChecked(m_folderNavigation);
     uiGeneral.blurredTextCheckBox->setChecked(m_blurred);
 
-    uiLocal.urlRequester->setMode(KFile::Directory);
-
     connect (parent, SIGNAL(accepted()), this, SLOT(configAccepted()));
-}
-
-void MediaBrowser::switchToFileModel()
-{
-    kDebug() << "";
-    if (!m_model) {
-        delete m_model;
-        m_model = new KDirModel(this);
-    }
-
-   if (!m_lister) {
-        m_lister = new KDirLister(this);
-        KMimeType::List mimeList = KMimeType::allMimeTypes();
-
-        foreach (KMimeType::Ptr mime, mimeList) {
-            if (mime->name().startsWith("image/") ||
-                mime->name().startsWith("video/") ||
-                mime->name().startsWith("audio/")) {
-                m_mimeTypes << mime->name();
-            }
-        }
-        setFolderNavigation();
-    }
-
-    if (m_model->dirLister() != m_lister) {
-        m_model->setDirLister(m_lister);
-    }
-
-    connect (m_lister, SIGNAL(completed()), m_view, SLOT(updateScrollBar()));
-    connect (m_lister, SIGNAL(completed()), m_view, SLOT(generateItems()));
-
-    m_lister->openUrl(m_localUrl);
-
-    m_view->setModel(m_model);
-
-    m_mode = LocalFiles;
-}
-
-void MediaBrowser::setFolderNavigation()
-{
-    if (m_folderNavigation) {
-        if (!m_mimeTypes.contains("inode/directory")) {
-            m_mimeTypes << "inode/directory";
-        }
-    } else {
-        if (m_mimeTypes.contains("inode/directory")) {
-            m_mimeTypes.removeAll("inode/directory");
-        }
-    }
-    m_lister->setMimeFilter(m_mimeTypes);
 }
 
 void MediaBrowser::loadConfiguration()
 {
     KConfigGroup cf = config();
 
-    m_localUrl = KUrl(cf.readEntry("LocalUrl", QDir::homePath()));
-    m_fromPlaces = cf.readEntry("FromPlaces", true);
     m_viewType = cf.readEntry("ViewType", "list");
-    m_folderNavigation = cf.readEntry("FolderNavigation", true);
     m_blurred = cf.readEntry("BlurredText", true);
 }
 
 void MediaBrowser::configAccepted()
 {
-    m_fromPlaces = uiLocal.showPlace->isChecked();
-    m_localUrl = m_fromPlaces ? uiLocal.placesCombo->model()->index(uiLocal.placesCombo->currentIndex(), 0).data(KFilePlacesModel::UrlRole).value<QUrl>()
-                              : uiLocal.urlRequester->url();
-
-    if (m_mode == LocalFiles) {
-        m_lister->openUrl(m_localUrl);
-    }
-
     KConfigGroup cf = config();
     kDebug() << cf.name();
-
-    cf.writeEntry("LocalUrl", m_localUrl);
-    cf.writeEntry("FromPlaces", m_fromPlaces);
 
     QString type;
     if (uiGeneral.listRadio->isChecked()) {
@@ -233,14 +145,6 @@ void MediaBrowser::configAccepted()
     if (m_viewType != type) {
         m_viewType = type;
         createView();
-        switchToFileModel();
-    }
-
-    bool folderNavigation = uiGeneral.folderNavigationCheckBox->isChecked();
-    if (m_folderNavigation != folderNavigation) {
-        m_folderNavigation = folderNavigation;
-        cf.writeEntry("FolderNavigation", m_folderNavigation);
-        setFolderNavigation();
     }
 
     cf.writeEntry("ViewType", type);

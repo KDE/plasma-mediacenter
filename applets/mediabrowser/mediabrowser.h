@@ -21,12 +21,9 @@
 
 #include <mediacenter/browser.h>
 
-#include "ui_localconfig.h"
 #include "ui_general.h"
 #include "abstractmediaitemview.h"
 
-class KDirLister;
-class KDirModel;
 class BrowsingWidget;
 
 class MediaBrowser : public MediaCenter::Browser
@@ -40,27 +37,16 @@ public:
     void init();
     void createConfigurationInterface(KConfigDialog *parent);
 
-    void switchToFileModel();
-
 private:
     AbstractMediaItemView *m_view;
-    Ui::LocalConfig uiLocal;
     Ui::General uiGeneral;
 
-    KUrl m_localUrl;
-    bool m_fromPlaces;
-    bool m_folderNavigation;
     bool m_blurred;
-    BrowsingMode m_mode;
-    KDirLister *m_lister;
-    KDirModel *m_model;
     QString m_viewType;
-    QStringList m_mimeTypes;
     BrowsingWidget *m_browsingWidget;
 
 private:
     void createView();
-    void setFolderNavigation();
     void showInstalledModelPackages();
 
 private slots:
