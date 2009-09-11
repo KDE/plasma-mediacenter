@@ -18,8 +18,9 @@
  ***************************************************************************/
 #include "startupmodel.h"
 
+#include <mediabrowserlibs/modelpackage.h>
+
 #include <KIcon>
-#include <KService>
 #include <KServiceTypeTrader>
 #include <KSycoca>
 #include <KDebug>
@@ -74,10 +75,10 @@ QVariant StartupModel::data(const QModelIndex &index, int role) const
 
     switch (role) {
         case Qt::DisplayRole :
-        return m_modelServices[index.row()]->name();
+        return static_cast<KService*>(index.internalPointer())->name();
         break;
         case Qt::DecorationRole :
-        return KIcon(m_modelServices[index.row()]->icon());
+        return KIcon(static_cast<KService*>(index.internalPointer())->icon());
         break;
         default :
                 return QVariant();
@@ -95,7 +96,7 @@ QModelIndex StartupModel::index(int row, int column, const QModelIndex &parent) 
         return QModelIndex();
     }
 
-    return createIndex(row, column, m_modelServices[row]);
+    return createIndex(row, column, (KService*)m_modelServices[row].data());
 }
 
 QModelIndex StartupModel::parent(const QModelIndex &index) const
@@ -122,4 +123,14 @@ void StartupModel::updateModel(const QStringList &changedResources)
     endRemoveRows();
 
     init();
+}
+
+ModelPackage* StartupModel::packageFromIndex(const QModelIndex &index, QObject *parent, QString *error)
+{
+    if (!index.isValid()) {
+        return 0;
+    }
+
+    KService::Ptr service = m_modelServices[index.row()];
+    return service->createInstance<ModelPackage>(parent, QVariantList(), error);
 }

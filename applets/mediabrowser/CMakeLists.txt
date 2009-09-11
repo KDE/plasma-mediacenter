@@ -17,6 +17,7 @@ target_link_libraries(plasma_applet_mediabrowser
 		      ${KDE4_KFILE_LIBS}
                       ${KDE4_NEPOMUK_LIBS}
                       mediacenterlibs
+                      mediabrowserlibs
                         )
  
 install(TARGETS plasma_applet_mediabrowser

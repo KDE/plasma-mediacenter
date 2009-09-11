@@ -22,6 +22,8 @@
 #include <QAbstractItemModel>
 #include <KService>
 
+class ModelPackage;
+
 class StartupModel : public QAbstractItemModel
 {
     Q_OBJECT
@@ -34,6 +36,12 @@ public:
     virtual QModelIndex index ( int row, int column, const QModelIndex & parent = QModelIndex() ) const;
     virtual QModelIndex parent ( const QModelIndex & index ) const;
     virtual int rowCount ( const QModelIndex & parent = QModelIndex() ) const;
+
+    /**
+     * Be aware that each time you call this method an instance of the plugin is
+     * created.
+     */
+    ModelPackage* packageFromIndex(const QModelIndex &, QObject *parent = 0, QString *error = 0);
 
 protected slots:
     void init();

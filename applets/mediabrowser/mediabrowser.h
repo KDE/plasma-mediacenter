@@ -41,6 +41,8 @@ private:
     AbstractMediaItemView *m_view;
     Ui::General uiGeneral;
 
+    QAbstractItemModel *m_model;
+
     bool m_blurred;
     QString m_viewType;
     BrowsingWidget *m_browsingWidget;
@@ -52,6 +54,7 @@ private:
 private slots:
     void loadConfiguration();
     void configAccepted();
+    void slotIndexActivated(const QModelIndex &);
 
 };
 

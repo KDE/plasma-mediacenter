@@ -43,6 +43,7 @@
 MediaBrowser::MediaBrowser(QObject *parent, const QVariantList &args)
     : MediaCenter::Browser(parent, args),
     m_view(0),
+    m_model(0),
     m_browsingWidget(new BrowsingWidget(this))
 {
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
@@ -58,8 +59,9 @@ MediaBrowser::~MediaBrowser()
 
 void MediaBrowser::showInstalledModelPackages()
 {
-    StartupModel *model = new StartupModel(this);
-    m_view->setModel(model);
+    delete m_model;
+    m_model = new StartupModel(this);
+    m_view->setModel(m_model);
     m_view->generateItems();
 }
 
@@ -88,6 +90,7 @@ void MediaBrowser::createView()
 
     connect (m_browsingWidget, SIGNAL(goPrevious()), m_view, SLOT(goPrevious()));
     connect (m_view, SIGNAL(mediasActivated(QList<MediaCenter::Media>)), this, SIGNAL(mediasActivated(QList<MediaCenter::Media>)));
+    connect (m_view, SIGNAL(indexActivated(QModelIndex)), this, SLOT(slotIndexActivated(QModelIndex)));
     QGraphicsLinearLayout *layout = static_cast<QGraphicsLinearLayout*>(this->layout());
     layout->addItem(m_view);
     setLayout(layout);
@@ -143,6 +146,17 @@ void MediaBrowser::configAccepted()
         cf.writeEntry("BlurredText", m_blurred);
     }
 
+}
+
+void MediaBrowser::slotIndexActivated(const QModelIndex &index)
+{
+    // let's see whether we are loadin' a plugin or not..
+    StartupModel *model = qobject_cast<StartupModel*>(m_model);
+    if (model) {
+        QString error;
+        ModelPackage *package = model->packageFromIndex(index, this, &error);
+        kDebug() << error;
+    }
 }
 
 K_EXPORT_PLASMA_APPLET(mediabrowser, MediaBrowser)

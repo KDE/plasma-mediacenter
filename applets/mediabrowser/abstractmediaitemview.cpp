@@ -279,10 +279,15 @@ void AbstractMediaItemView::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *even
 
 void AbstractMediaItemView::itemClickEvent(QGraphicsSceneMouseEvent *event)
 {
+    ViewItem *viewItem = itemFromPos(event->pos());
+    QModelIndex index = viewItem->index();
+
+    if (index.isValid()) {
+        emit indexActivated(index);
+    }
+
     KDirModel *model = qobject_cast<KDirModel*>(m_model);
     if (model) {
-        ViewItem *viewItem = itemFromPos(event->pos());
-        QModelIndex index = viewItem->index();
         KFileItem item = index.data(KDirModel::FileItemRole).value<KFileItem>();
         if (item.isNull()) {
             return;

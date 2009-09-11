@@ -130,6 +130,7 @@ private slots:
 signals:
     void scrollOffsetChanged(int);
     void mediasActivated(const QList<MediaCenter::Media> &);
+    void indexActivated(const QModelIndex &);
 
 private:
     void tryDrag(QGraphicsSceneMouseEvent *);
