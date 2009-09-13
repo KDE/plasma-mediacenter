@@ -86,7 +86,11 @@ void MediaBrowser::createView()
 
     m_view->setDrawBlurredText(m_blurred);
     m_view->setFocus(Qt::OtherFocusReason);
-//    m_view->setScrollMode(AbstractMediaItemView::PerItem);
+
+    if (m_model) {
+        m_view->setModel(m_model);
+        m_view->generateItems();
+    }
 
     connect (m_browsingWidget, SIGNAL(goPrevious()), m_view, SLOT(goPrevious()));
     connect (m_view, SIGNAL(mediasActivated(QList<MediaCenter::Media>)), this, SIGNAL(mediasActivated(QList<MediaCenter::Media>)));
@@ -156,7 +160,12 @@ void MediaBrowser::slotIndexActivated(const QModelIndex &index)
         QString error;
         ModelPackage *package = model->packageFromIndex(index, this, &error);
         kDebug() << error;
+        connect (package, SIGNAL(modelReady()), m_view, SLOT(generateItems()));
+        connect (package, SIGNAL(modelReady()), m_view, SLOT(updateScrollBar()));
+        package->init();
+        m_view->setModel(package->model());
     }
+    kDebug() << "finished";
 }
 
 K_EXPORT_PLASMA_APPLET(mediabrowser, MediaBrowser)

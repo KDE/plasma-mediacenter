@@ -51,6 +51,7 @@ private:
     KService::List m_modelServices;
 
     void addAvailableModels(const KService::List &modelServices);
+    KService::Ptr service(KService *) const;
 };
 
 #endif // STARTUPMODEL_H

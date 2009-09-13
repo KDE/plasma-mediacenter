@@ -87,6 +87,7 @@ int AbstractMediaItemView::iconSize() const
 void AbstractMediaItemView::setModel(QAbstractItemModel *model)
 {
     if (m_model) {
+        reset();
         delete m_model;
     }
 
@@ -282,13 +283,9 @@ void AbstractMediaItemView::itemClickEvent(QGraphicsSceneMouseEvent *event)
     ViewItem *viewItem = itemFromPos(event->pos());
     QModelIndex index = viewItem->index();
 
-    if (index.isValid()) {
-        emit indexActivated(index);
-    }
-
     KDirModel *model = qobject_cast<KDirModel*>(m_model);
-    if (model) {
-        KFileItem item = index.data(KDirModel::FileItemRole).value<KFileItem>();
+    if (model && model->dirLister()->isFinished()) {
+        KFileItem item = index.isValid() ? index.data(KDirModel::FileItemRole).value<KFileItem>() : KFileItem();
         if (item.isNull()) {
             return;
         }
@@ -308,6 +305,8 @@ void AbstractMediaItemView::itemClickEvent(QGraphicsSceneMouseEvent *event)
             emit mediasActivated(QList<MediaCenter::Media>() << media);
         }
     }
+
+    emit indexActivated(index);
 }
 
 void AbstractMediaItemView::tryDrag(QGraphicsSceneMouseEvent *event)
@@ -379,4 +378,11 @@ void AbstractMediaItemView::setDrawBlurredText(bool set)
 bool AbstractMediaItemView::drawBlurredText()
 {
     return m_blurred;
+}
+
+void AbstractMediaItemView::reset()
+{
+    qDeleteAll(m_items);
+    m_items.clear();
+    m_hoveredItem = 0;
 }

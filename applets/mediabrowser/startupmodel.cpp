@@ -22,6 +22,7 @@
 
 #include <KIcon>
 #include <KServiceTypeTrader>
+#include <KService>
 #include <KSycoca>
 #include <KDebug>
 
@@ -73,17 +74,20 @@ QVariant StartupModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
-    switch (role) {
-        case Qt::DisplayRole :
-        return static_cast<KService*>(index.internalPointer())->name();
-        break;
-        case Qt::DecorationRole :
-        return KIcon(static_cast<KService*>(index.internalPointer())->icon());
-        break;
-        default :
-                return QVariant();
-                ;
+    QVariant data;
+    if (role == Qt::DisplayRole) {
+        KService::Ptr service = this->service(static_cast<KService*>(index.internalPointer()));
+        if (!service.isNull()) {
+            data = service->name();
+        }
+    } else if (role == Qt::DecorationRole) {
+        KService::Ptr service = this->service(static_cast<KService*>(index.internalPointer()));
+        if (!service.isNull()) {
+            data = KIcon(service->icon());
+        }
     }
+
+    return data;
 }
 
 QModelIndex StartupModel::index(int row, int column, const QModelIndex &parent) const
@@ -118,7 +122,7 @@ void StartupModel::updateModel(const QStringList &changedResources)
         return;
     }
 
-    beginRemoveRows(QModelIndex(), 0, m_modelServices.count() -1);
+    beginRemoveRows(QModelIndex(), 0, m_modelServices.count() - 1);
     m_modelServices.clear();
     endRemoveRows();
 
@@ -133,4 +137,16 @@ ModelPackage* StartupModel::packageFromIndex(const QModelIndex &index, QObject *
 
     KService::Ptr service = m_modelServices[index.row()];
     return service->createInstance<ModelPackage>(parent, QVariantList(), error);
+}
+
+KService::Ptr StartupModel::service(KService *service) const
+{
+    KService::List::const_iterator i;
+    for (i = m_modelServices.constBegin(); i != m_modelServices.constEnd(); ++i) {
+        if (*i == service) {
+            return *i;
+        }
+    }
+
+    return KService::Ptr();
 }

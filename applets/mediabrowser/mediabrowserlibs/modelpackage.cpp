@@ -19,6 +19,7 @@
 #include "modelpackage.h"
 
 #include <KGlobal>
+#include <KDebug>
 
 class ModelPackage::ModelPackagePrivate
 {
@@ -57,6 +58,7 @@ void ModelPackage::createConfigurationInterface(KConfigDialog *parent)
 
 KConfigGroup ModelPackage::config()
 {
+    kDebug() << KGlobal::config()->name();
     return KConfigGroup(KGlobal::config(), "ModelPackages");
 }
 

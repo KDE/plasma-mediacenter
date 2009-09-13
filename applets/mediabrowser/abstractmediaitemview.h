@@ -97,6 +97,8 @@ protected:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
+    void reset();
+
 protected slots:
     /**
      * You must reimplement this method in order to always

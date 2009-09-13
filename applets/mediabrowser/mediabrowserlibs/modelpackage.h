@@ -54,6 +54,8 @@ public:
     /**
      * This method must be reimplemented in order to provide the model to be
      * used by the view.
+     * @note remember to emit modelReady when the model is ready to be used
+     * by the view.
      */
     virtual QAbstractItemModel *model() = 0;
 
@@ -92,6 +94,14 @@ public:
      * Use this method for general initialization purposes.
      */
     virtual void init();
+
+signals:
+    /**
+     * Emit this signal when the model is ready to be queried
+     * by the view. Avoiding to emit this signal will cause the
+     * view to never start fetching contents from the model.
+     */
+    void modelReady();
 
 protected:
     /**

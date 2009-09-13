@@ -56,6 +56,8 @@ QAbstractItemModel* LocalFilesPackage::model()
             }
         }
         setFolderNavigation();
+        connect (m_model->dirLister(), SIGNAL(completed()), this, SIGNAL(modelReady()));
+        m_model->dirLister()->openUrl(m_localUrl);
     }
 
     return m_model;
