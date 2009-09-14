@@ -35,7 +35,7 @@ public:
     QModelIndex indexFromPos(const QPointF &);
 
 public slots:
-    void generateItems();
+    void generateItems(const QModelIndex &parent, int start, int end);
     void updateScrollBar();
 
 protected:

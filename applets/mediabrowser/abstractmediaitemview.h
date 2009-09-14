@@ -97,8 +97,6 @@ protected:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
-    void reset();
-
 protected slots:
     /**
      * You must reimplement this method in order to always
@@ -107,6 +105,10 @@ protected slots:
      */
     virtual void layoutItems() = 0;
 
+    void removeItems(const QModelIndex &parent, int start, int end);
+
+    void reset();
+
 public slots:
     /**
      * Reimplement this slot in order to put here
@@ -114,7 +116,7 @@ public slots:
      * in the m_items list. You just need to call this once for
      * each rootIndex change in the model.
      */
-    virtual void generateItems() = 0;
+    virtual void generateItems(const QModelIndex &parent, int start, int end) = 0;
 
     /**
      * Reimplement this function in order to update

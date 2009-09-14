@@ -44,7 +44,8 @@ MediaBrowser::MediaBrowser(QObject *parent, const QVariantList &args)
     : MediaCenter::Browser(parent, args),
     m_view(0),
     m_model(0),
-    m_browsingWidget(new BrowsingWidget(this))
+    m_browsingWidget(new BrowsingWidget(this)),
+    m_package(0)
 {
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
     Nepomuk::ResourceManager::instance()->init();
@@ -62,7 +63,7 @@ void MediaBrowser::showInstalledModelPackages()
     delete m_model;
     m_model = new StartupModel(this);
     m_view->setModel(m_model);
-    m_view->generateItems();
+//    m_view->generateItems();
 }
 
 void MediaBrowser::init()
@@ -89,7 +90,7 @@ void MediaBrowser::createView()
 
     if (m_model) {
         m_view->setModel(m_model);
-        m_view->generateItems();
+//        m_view->generateItems();
     }
 
     connect (m_browsingWidget, SIGNAL(goPrevious()), m_view, SLOT(goPrevious()));
@@ -113,6 +114,12 @@ void MediaBrowser::createConfigurationInterface(KConfigDialog *parent)
     }
 
     uiGeneral.blurredTextCheckBox->setChecked(m_blurred);
+
+    if (m_package) {
+        if (m_package->hasConfigurationInterface()) {
+            m_package->createConfigurationInterface(parent);
+        }
+    }
 
     connect (parent, SIGNAL(accepted()), this, SLOT(configAccepted()));
 }
@@ -159,11 +166,17 @@ void MediaBrowser::slotIndexActivated(const QModelIndex &index)
     if (model) {
         QString error;
         ModelPackage *package = model->packageFromIndex(index, this, &error);
-        kDebug() << error;
-        connect (package, SIGNAL(modelReady()), m_view, SLOT(generateItems()));
-        connect (package, SIGNAL(modelReady()), m_view, SLOT(updateScrollBar()));
+        if (!error.isEmpty()) {
+            kError() << error;
+            return;
+        }
+        m_view->setModel(0);
+        m_package = package;
+//        connect (package, SIGNAL(modelReady()), m_view, SLOT(generateItems()));
+//        connect (package, SIGNAL(modelReady()), m_view, SLOT(updateScrollBar()));
         package->init();
-        m_view->setModel(package->model());
+        m_model = package->model();
+        m_view->setModel(m_model);
     }
     kDebug() << "finished";
 }

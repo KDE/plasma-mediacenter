@@ -25,6 +25,7 @@
 #include "abstractmediaitemview.h"
 
 class BrowsingWidget;
+class ModelPackage;
 
 class MediaBrowser : public MediaCenter::Browser
 {
@@ -46,6 +47,7 @@ private:
     bool m_blurred;
     QString m_viewType;
     BrowsingWidget *m_browsingWidget;
+    ModelPackage *m_package;
 
 private:
     void createView();

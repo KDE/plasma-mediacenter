@@ -28,6 +28,7 @@
 
 StartupModel::StartupModel(QObject *parent) : QAbstractItemModel(parent)
 {
+    kDebug() << "initting";
     init();
     connect (KSycoca::self(), SIGNAL(databaseChanged(QStringList)), this, SLOT(updateModel(QStringList)));
 }
@@ -141,8 +142,9 @@ ModelPackage* StartupModel::packageFromIndex(const QModelIndex &index, QObject *
 
 KService::Ptr StartupModel::service(KService *service) const
 {
-    KService::List::const_iterator i;
-    for (i = m_modelServices.constBegin(); i != m_modelServices.constEnd(); ++i) {
+    KService::List::const_iterator i = m_modelServices.constBegin();
+    KService::List::const_iterator end = m_modelServices.constEnd();
+    for (; i != end; ++i) {
         if (*i == service) {
             return *i;
         }

@@ -87,13 +87,21 @@ int AbstractMediaItemView::iconSize() const
 void AbstractMediaItemView::setModel(QAbstractItemModel *model)
 {
     if (m_model) {
+        disconnect(m_model);
         reset();
         delete m_model;
     }
 
-    m_rootIndex = QModelIndex();
     m_model = model;
-//    connect (m_model, SIGNAL(modelReset()), this, SLOT(generateItems()));
+    m_rootIndex = QModelIndex();
+    if (!m_model) {
+        return;
+    }
+
+    generateItems(m_rootIndex, 0, model->rowCount() - 1);
+    connect (m_model, SIGNAL(modelAboutToBeReset()), this, SLOT(reset()));
+    connect (m_model, SIGNAL(rowsInserted(const QModelIndex & , int, int)), this, SLOT(generateItems(const QModelIndex&, int, int)));
+    connect (m_model, SIGNAL(rowsRemoved(const QModelIndex &, int, int)), this, SLOT(removeItems(const QModelIndex&, int, int)));
 }
 
 QAbstractItemModel* AbstractMediaItemView::model()
@@ -297,7 +305,7 @@ void AbstractMediaItemView::itemClickEvent(QGraphicsSceneMouseEvent *event)
             m_history << model->dirLister()->url();
             model->dirLister()->openUrl(item.url());
             m_hoveredItem = 0;
-            generateItems();
+//            generateItems();
         } else {
             MediaCenter::Media media;
             media.first = MediaCenter::getType(item.url().path());
@@ -382,7 +390,28 @@ bool AbstractMediaItemView::drawBlurredText()
 
 void AbstractMediaItemView::reset()
 {
+    kDebug() << m_model;
     qDeleteAll(m_items);
     m_items.clear();
     m_hoveredItem = 0;
+}
+
+void AbstractMediaItemView::removeItems(const QModelIndex &parent, int start, int end)
+{
+    if (m_rootIndex != parent) {
+        return;
+    }
+
+    if (start < 0 || end >= m_items.count()) {
+        return;
+    }
+
+    kDebug() << "length is" << m_items.count();
+    kDebug() << "removing from" << start << "to" << end;
+    for (int i = start; i < end; i++) {
+        delete m_items.at(i);
+        m_items.removeAt(i);
+    }
+    kDebug() << "now length is" << m_items.count();
+    updateScrollBar();
 }
