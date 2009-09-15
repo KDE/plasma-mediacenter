@@ -299,13 +299,11 @@ void AbstractMediaItemView::itemClickEvent(QGraphicsSceneMouseEvent *event)
         }
 
         if (item.isDir()) {
-            qDeleteAll(m_items);
-            m_items.clear();
             model->dirLister()->stop();
             m_history << model->dirLister()->url();
             model->dirLister()->openUrl(item.url());
             m_hoveredItem = 0;
-//            generateItems();
+            m_rootIndex = model->indexForItem(item);
         } else {
             MediaCenter::Media media;
             media.first = MediaCenter::getType(item.url().path());
@@ -367,6 +365,7 @@ void AbstractMediaItemView::goPrevious()
     }
     model->dirLister()->stop();
     model->dirLister()->openUrl(m_history.last());
+    m_rootIndex = model->indexForUrl(m_history.last());
     m_history.removeLast();
 }
 
@@ -390,7 +389,6 @@ bool AbstractMediaItemView::drawBlurredText()
 
 void AbstractMediaItemView::reset()
 {
-    kDebug() << m_model;
     qDeleteAll(m_items);
     m_items.clear();
     m_hoveredItem = 0;
@@ -405,13 +403,15 @@ void AbstractMediaItemView::removeItems(const QModelIndex &parent, int start, in
     if (start < 0 || end >= m_items.count()) {
         return;
     }
-
-    kDebug() << "length is" << m_items.count();
-    kDebug() << "removing from" << start << "to" << end;
-    for (int i = start; i < end; i++) {
-        delete m_items.at(i);
-        m_items.removeAt(i);
+    m_hoveredItem = 0;
+    QList<ViewItem*>::iterator startIt = m_items.begin();
+    QList<ViewItem*>::iterator endIt = m_items.begin();
+    startIt += (start);
+    endIt += (end);
+    for (; startIt <= endIt; ++startIt) {
+        delete *startIt;
+        m_items.erase(startIt);
     }
-    kDebug() << "now length is" << m_items.count();
+    layoutItems();
     updateScrollBar();
 }

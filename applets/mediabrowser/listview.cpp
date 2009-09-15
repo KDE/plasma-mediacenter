@@ -94,7 +94,7 @@ void ListView::generateItems(const QModelIndex &parent, int start, int end)
     }
 //    qDeleteAll(m_items);
 //    m_items.clear();
-    for (int i = start; i <= end; i++) {
+    for (int i = start; i <= end; ++i) {
         ViewItem *item = new ViewItem(m_option, this);
         item->setModelIndex(m_model->index(i, 0, m_rootIndex));
         item->setDrawBlurredText(m_blurred);
