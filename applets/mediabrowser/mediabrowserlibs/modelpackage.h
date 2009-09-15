@@ -95,14 +95,6 @@ public:
      */
     virtual void init();
 
-signals:
-    /**
-     * Emit this signal when the model is ready to be queried
-     * by the view. Avoiding to emit this signal will cause the
-     * view to never start fetching contents from the model.
-     */
-    void modelReady();
-
 protected:
     /**
      * As from Plasma::Applet this method should be used in order
