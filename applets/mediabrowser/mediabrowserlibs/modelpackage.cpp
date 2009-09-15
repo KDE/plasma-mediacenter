@@ -39,7 +39,8 @@ d(new ModelPackagePrivate(this))
 }
 
 ModelPackage::~ModelPackage()
-{}
+{
+}
 
 bool ModelPackage::hasConfigurationInterface()
 {

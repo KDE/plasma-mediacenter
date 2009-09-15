@@ -63,7 +63,6 @@ void MediaBrowser::showInstalledModelPackages()
     delete m_model;
     m_model = new StartupModel(this);
     m_view->setModel(m_model);
-//    m_view->generateItems();
 }
 
 void MediaBrowser::init()

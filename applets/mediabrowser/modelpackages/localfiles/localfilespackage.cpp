@@ -120,6 +120,8 @@ void LocalFilesPackage::configAccepted()
         cf.writeEntry("FolderNavigation", m_folderNavigation);
         setFolderNavigation();
     }
+
+    cf.sync();
 }
 
 void LocalFilesPackage::setFolderNavigation()
