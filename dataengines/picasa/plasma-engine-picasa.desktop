@@ -1,0 +1,19 @@
+[Desktop Entry]
+Name=Picasa Engine
+
+Comment=An engine that allows you to query Picasa.
+
+Type=Service
+
+X-KDE-ServiceTypes=Plasma/DataEngine
+X-KDE-Library=plasma_engine_picasa
+X-Plasma-EngineName=picasa
+X-KDE-PluginInfo-Author=Francesco Grieco
+X-KDE-PluginInfo-Email=fgrieco@gmail.com
+X-KDE-PluginInfo-Name=picasa
+X-KDE-PluginInfo-Version=0.1
+X-KDE-PluginInfo-Website=http://plasma.kde.org/
+X-KDE-PluginInfo-Category=Multimedia
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=LGPL
+X-KDE-PluginInfo-EnabledByDefault=true
