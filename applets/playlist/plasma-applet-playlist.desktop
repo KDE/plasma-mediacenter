@@ -1,23 +1,24 @@
 [Desktop Entry]
 Name=Playlist
 Name[de]=Wiedergabeliste
+Name[en_GB]=Playlist
 Name[et]=Esitusnimekiri
 Name[fr]=Liste de lecture
+Name[hr]=Playlist
 Name[is]=Lagalisti
 Name[km]=បញ្ជី​ចាក់
 Name[pt]=Lista de Reprodução
-Name[pt_BR]=Lista de Reprodução
 Name[sv]=Spellista
 Name[tr]=Parça listesi
 Name[uk]=Список відтворення
 Name[x-test]=xxPlaylistxx
 Comment=Plasma Playlist Applet
+Comment[en_GB]=Plasma Playlist Applet
 Comment[et]=Plasma esitusnimekirja aplett
 Comment[fr]=Applet Plasma de liste de lecture
 Comment[hr]=Plasma Playlist Programčić
 Comment[km]=អាប់ភ្លេត​បញ្ជីចាក់ប្លាស្មា
 Comment[pt]='Applet' de Lista de Reprodução do Plasma
-Comment[pt_BR]='Applet' de Lista de Reprodução do Plasma
 Comment[sv]=Plasma miniprogram med spellista
 Comment[tr]=Plasma Parça Listesi Programcığı
 Comment[uk]=Аплет списку відтворення Плазми
