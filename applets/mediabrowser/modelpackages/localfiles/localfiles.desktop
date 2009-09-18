@@ -2,6 +2,7 @@
 Type=Service
 Icon=folder
 Name=Local Files browsing plugin.
+Name[nl]=Plugin voor het lokaal bladeren in bestanden.
 Name[pt]='Plugin' de navegação nos ficheiros locais.
 Name[sv]=Insticksprogram för bläddring i lokala filer
 Name[uk]=Додаток для перегляду локальних файлів.
