@@ -33,10 +33,10 @@ bool Video::sourceRequestEvent(const QString &source)
     if (!source.contains(':')) {
         return false;
     }
-    
+
     const QStringList parms = source.split(':');
     const QString serviceName = parms[0];
-    
+
     if (!m_currentProvider || m_currentProvider->serviceId() != serviceName) {
         delete m_currentProvider;
         KService::List offers = KServiceTypeTrader::self()->query("Plasma/MediaCenter/VideoProvider");
@@ -49,25 +49,62 @@ bool Video::sourceRequestEvent(const QString &source)
                 break;
             }
         }
-        
+
         if (service.isNull()) {
             return false;
         }
-        
+
         m_currentProvider = service->createInstance<VideoProvider>(this);
         connect(m_currentProvider, SIGNAL(searchResult(QString, QList<VideoPackage>)),
                 this, SLOT(dataFromResults(QString, QList<VideoPackage)));
     }
-    
-    // TODO: use only the queryied string as source name, not also the eventual params
+
+    QStringList args = parms[1].split('&');
+    QString query = args.takeFirst();
+    QVariantList constraints;
+    foreach (const QString &arg, args) {
+        QStringList pieces = arg.split('=');
+        if (pieces.count() != 2) {
+            continue;
+        }
+        constraints << pieces[0] << pieces[1];
+    }
     setData(parms[1], Plasma::DataEngine::Data());
-    
-    // TODO: parse arguments in the query and pass separatedly
-    m_currentProvider->searchByQuery(parms[1]);
-    return true;    
+
+    m_currentProvider->searchByQuery(query, constraints);
+
+    return true;
 }
 
 void Video::dataFromResults(const QString &query, const QList<VideoPackage> &videos)
-{}
+{
+    QStringList ids;
+    QList<VideoPackage>::const_iterator it = videos.constBegin();
+    QList<VideoPackage>::const_iterator end= videos.constEnd();
+
+    for (; it != end; ++it) {
+        ids << it->id;
+
+        Plasma::DataEngine::Data videoData;
+        videoData["author"] = it->author;
+        videoData["id"] = it->id;
+        videoData["title"] = it->title;
+        videoData["description"] = it->description;
+        videoData["thumbnail"] = it->thumbnail;
+        videoData["keywords"] = it->keywords;
+        videoData["duration"] = it->duration;
+        videoData["category"] = it->category;
+
+        setData(it->id, videoData);
+    }
+
+    // this should never happen since we should keep
+    // connection between query and result
+    // so query must be the same as the named source
+    // from which the query started.
+    Q_ASSERT(sources().contains(query));
+
+    setData(query, ids);
+}
 
 K_EXPORT_PLASMA_DATAENGINE(video, Video)

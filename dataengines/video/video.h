@@ -31,6 +31,12 @@ public:
     ~Video();
     
 protected:
+    /**
+     * Queries to this dataengine should be in the form:
+     * service:searchterm&constraint1=value&constraint2=value ...
+     * where everything after the first "&" is optional.
+     * the "service" parameter indicates which video provider to query.
+     */
     bool sourceRequestEvent(const QString &source);
     
 protected slots:
