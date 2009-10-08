@@ -263,7 +263,6 @@ void AbstractMediaItemView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         return;
     }
 
-    kDebug() << "mouseMoveEvent";
     if ((event->pos() - event->buttonDownPos(Qt::LeftButton)).toPoint().manhattanLength()
         >= QApplication::startDragDistance()) {
         tryDrag(event);
@@ -354,12 +353,12 @@ void AbstractMediaItemView::goPrevious()
     if (m_history.isEmpty()) {
         return;
     }
-    
+
     KDirModel *model = qobject_cast<KDirModel*>(this->model());
     if (!model) {
         return;
     }
-    
+
     if (!m_history.last().isValid()) {
         return;
     }
@@ -414,4 +413,14 @@ void AbstractMediaItemView::removeItems(const QModelIndex &parent, int start, in
     }
     layoutItems();
     updateScrollBar();
+}
+
+void AbstractMediaItemView::setBrowsingType(ModelPackage::BrowsingType type)
+{
+	m_browsingType = type;
+}
+
+ModelPackage::BrowsingType AbstractMediaItemView::browsingType()
+{
+	return m_browsingType;
 }

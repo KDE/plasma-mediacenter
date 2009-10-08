@@ -48,14 +48,20 @@ public:
         RemoteBrowsing
     };
 
+    enum AdditionalRoles {
+    	MediaRole
+    };
+
     ModelPackage(QObject *parent, const QVariantList &args);
     virtual ~ModelPackage();
 
     /**
      * This method must be reimplemented in order to provide the model to be
      * used by the view.
-     * @note remember to emit modelReady when the model is ready to be used
-     * by the view.
+     * If the package is set to RemoteBrowsing the model
+     * must provide an url that points to the media content for each
+     * QModelIndex. It must make use of MediaRole role to accomplish this.
+     * @see MediaRole
      */
     virtual QAbstractItemModel *model() = 0;
 

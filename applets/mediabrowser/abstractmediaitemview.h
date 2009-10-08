@@ -23,6 +23,7 @@
 #include <QStyleOptionViewItemV4>
 #include <KUrl>
 #include <mediacenter/mediacenter.h>
+#include <mediabrowserlibs/modelpackage.h>
 
 class QAbstractItemModel;
 
@@ -66,6 +67,9 @@ public:
 
     void setDrawBlurredText(bool set);
     bool drawBlurredText();
+
+    void setBrowsingType(ModelPackage::BrowsingType);
+    ModelPackage::BrowsingType browsingType();
 
     /**
      * Call this method whenever events like model resetting occur.
@@ -125,7 +129,7 @@ public slots:
      * the scrollbar.
      */
     virtual void updateScrollBar() = 0;
-    
+
     void goPrevious();
 
 private slots:
@@ -141,6 +145,7 @@ private:
     ViewItem* itemFromPos(const QPointF &);
     void itemClickEvent(QGraphicsSceneMouseEvent *);
     KUrl::List m_history;
+    ModelPackage::BrowsingType m_browsingType;
 
 protected:
     int m_iconSize;
