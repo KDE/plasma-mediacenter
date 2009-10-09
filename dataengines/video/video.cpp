@@ -104,6 +104,7 @@ void Video::dataFromResults(const QString &query, const QList<VideoPackage> &vid
         videoData["keywords"] = it->keywords;
         videoData["duration"] = it->duration;
         videoData["category"] = it->category;
+        videoData["embeddedHTML"] = it->embeddedHTML;
 
         setData(it->id, videoData);
     }

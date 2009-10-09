@@ -83,12 +83,45 @@ void YouTubeInterface::parseResults(KJob *job)
         QString description = mediaNode.namedItem("media:description").toElement().text();
         QString keywords = mediaNode.namedItem("media:keywords").toElement().text();
 
+        // The embedding html code for youtube is:
+        //
+        // <object width="425" height="350">
+        // <param name="movie" value="MEDIA_CONTENT_URL"></param>
+        // <embed src="MEDIA_CONTENT_URL"
+        // type="MEDIA_CONTENT_TYPE" width="425" height="350">
+        // </embed>
+        // </object>
+        //
+        // where MEDIA_CONTENT_URL has to be replaced by the url attribute of the media:content node
+        // where the attribute yt:format is 5
+
+        QDomNode n = mediaNode.firstChild();
+        QString MEDIA_CONTENT_URL;
+        QString MEDIA_CONTENT_TYPE;
+        do {
+            if (n.nodeName() == "media:content" && n.toElement().attribute("yt:format") == "5") {
+                MEDIA_CONTENT_URL = n.toElement().attribute("url");
+                MEDIA_CONTENT_TYPE = n.toElement().attribute("type");
+                break;
+            }
+            n = n.nextSibling();
+        } while (n != mediaNode.lastChild());
+
+        QString embeddedHTML = QString(
+        "<object width=\"425\" height=\"350\">\n"
+        "<param name=\"movie\" value=\"%1\"></param>\n"
+        "<embed src=\"%2\"\n"
+        "type=\"%3\" width=\"425\" height=\"350\">\n"
+        "</embed>\n"
+        "</object>\n").arg(MEDIA_CONTENT_URL, MEDIA_CONTENT_URL, MEDIA_CONTENT_TYPE);
+
         VideoPackage video;
         video.title = title;
         video.description = description;
         video.keywords = keywords.split(", ");
         video.id = id;
         video.duration = 0;
+        video.embeddedHTML = embeddedHTML;
 
         videos << video;
     }
