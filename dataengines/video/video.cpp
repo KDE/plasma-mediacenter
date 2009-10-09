@@ -30,6 +30,16 @@ Video::~Video()
 
 bool Video::sourceRequestEvent(const QString &source)
 {
+    if (source == "providers") {
+        KService::List offers = KServiceTypeTrader::self()->query("Plasma/MediaCenter/VideoProvider");
+        QStringList providers;
+        foreach (KService::Ptr service, offers) {
+            providers << service->property("X-KDE-VideoProvider-Name", QVariant::String).toString();
+        }
+        setData(source, providers);
+        return true;
+    }
+
     if (!source.contains(':')) {
         return false;
     }
@@ -56,7 +66,7 @@ bool Video::sourceRequestEvent(const QString &source)
 
         m_currentProvider = service->createInstance<VideoProvider>(this);
         connect(m_currentProvider, SIGNAL(searchResult(QString, QList<VideoPackage>)),
-                this, SLOT(dataFromResults(QString, QList<VideoPackage)));
+                this, SLOT(dataFromResults(QString, QList<VideoPackage>)));
     }
 
     QStringList args = parms[1].split('&');

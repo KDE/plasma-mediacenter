@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Service
-Name=Local Files browsing plugin.
-Comment=A plugin for the mediabrowser applet that allows local files browsing.
+Name=YouTube video provider.
+Comment=A plugin that allows browsing through YouTube videos.
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/VideoProvider
 

@@ -86,7 +86,7 @@ void YouTubeInterface::parseResults(KJob *job)
         VideoPackage video;
         video.title = title;
         video.description = description;
-        video.keywords = keywords.split(",", QString::SkipEmptyParts);
+        video.keywords = keywords.split(", ");
         video.id = id;
         video.duration = 0;
 
