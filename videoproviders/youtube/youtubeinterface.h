@@ -16,30 +16,60 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#ifndef MEDIABROWSER_EXPORT_H
-#define MEDIABROWSER_EXPORT_H
+#ifndef YOUTUBEINTERFACE_H
+#define YOUTUBEINTERFACE_H
 
-/* needed for KDE_EXPORT and KDE_IMPORT macros */
-#include <kdemacros.h>
-#include <KPluginFactory>
-#include <KPluginLoader>
+#include <QObject>
+#include <QHash>
+#include <QList>
 
-#define MEDIABROWSER_PACKAGE_EXPORT( c ) \
-    K_PLUGIN_FACTORY( MediaBrowserFactory, registerPlugin< c >(); ) \
-    K_EXPORT_PLUGIN( MediaBrowserFactory("c") )
+#include <videoprovider/videoprovider.h>
 
-#ifndef MEDIABROWSER_EXPORT
-# if defined(MAKE_MEDIABROWSERLIBS_LIB)
-   /* We are building this library */
-#  define MEDIABROWSER_EXPORT KDE_EXPORT
-# else
-   /* We are using this library */
-#  define MEDIABROWSER_EXPORT KDE_IMPORT
-# endif
+namespace KIO {
+    class Job;
+}
+class QByteArray;
+class KJob;
+
+/**
+ * @class YouTubeInterface
+ * @brief The interface that queries YouTube with search terms
+ * @author Alessandro Diaferia
+ *
+ * This class interfaces YouTube and returns result entries
+ * with the signal result.
+ */
+
+class YouTubeInterface : public QObject
+{
+    Q_OBJECT
+public:
+    YouTubeInterface(QObject *parent = 0);
+    ~YouTubeInterface();
+
+    void query(const QString &searchTerm);
+
+signals:
+    /**
+     * @return the video entry as Plasma::DataEngine::Data.
+     * each value can be retrieved using the following keys:
+     * "title" for the video title
+     * "description" for the video description
+     * "keywords" for the video keywords
+     *
+     * @param searchTerm is the search term to be used as source name.
+     * @param id is the video id to be used as source key
+     * @param video is the video result entry retrieved after the search.
+     */
+    void result(const QString &searchTerm, const QList<VideoPackage> &videos);
+
+protected slots:
+    void ytDataReady(KIO::Job *job, const QByteArray &data);
+    void parseResults(KJob *job);
+
+private:
+    QHash<KIO::Job*, QString> m_queries;
+    QHash<KIO::Job*, QString> m_datas;
+};
+
 #endif
-
-# ifndef MEDIABROWSER_EXPORT_DEPRECATED
-#  define MEDIABROWSER_EXPORT_DEPRECATED KDE_DEPRECATED MEDIABROWSER_EXPORT
-# endif
-
-#endif // MEDIABROWSER_EXPORT_H

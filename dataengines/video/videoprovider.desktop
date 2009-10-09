@@ -1,3 +1,6 @@
 [Desktop Entry]
 Type=ServiceType
 X-KDE-ServiceType=Plasma/MediaCenter/VideoProvider
+
+[PropertyDef::X-KDE-VideoProvider-Name]
+Type=QString

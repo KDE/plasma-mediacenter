@@ -44,7 +44,7 @@ bool Video::sourceRequestEvent(const QString &source)
         KService::List::const_iterator it = offers.constBegin();
         KService::List::const_iterator end = offers.constEnd();
         for (; it != end; ++it) {
-            if ((*it)->name() == serviceName) {
+            if ((*it)->property("X-KDE-VideoProvider-Name", QVariant::String).toString() == serviceName) {
                 service = *it;
                 break;
             }
@@ -71,7 +71,7 @@ bool Video::sourceRequestEvent(const QString &source)
     }
     setData(parms[1], Plasma::DataEngine::Data());
 
-    m_currentProvider->searchByQuery(query, constraints);
+    m_currentProvider->query(query, constraints);
 
     return true;
 }

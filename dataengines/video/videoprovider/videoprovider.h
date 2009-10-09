@@ -24,7 +24,15 @@
 #include <QList>
 #include <QStringList>
 #include <QVariantList>
-#include "video_engine_export.h"
+
+#include "../video_engine_export.h"
+
+#include <KPluginFactory>
+#include <KPluginLoader>
+
+#define VIDEOPROVIDER_EXPORT( c ) \
+    K_PLUGIN_FACTORY( MediaBrowserFactory, registerPlugin< c >(); ) \
+    K_EXPORT_PLUGIN( MediaBrowserFactory("c") )
 
 typedef struct {
     QString id;
@@ -44,14 +52,14 @@ class VIDEO_ENGINE_EXPORT VideoProvider : public QObject
 public:
     VideoProvider(QObject *parent = 0, const QVariantList &args = QVariantList());
     virtual ~VideoProvider();
-    
+
     /**
      * This method is used to actually perform the query to the
      * webservice. Additional arguments are used to filter the query.
      * Supported arguments will be specific for each plugin.
      */
-    virtual void searchByQuery(const QString &searchTerm, const QVariantList &args = QVariantList()) = 0;
-    
+    virtual void query(const QString &searchTerm, const QVariantList &args = QVariantList()) = 0;
+
     /**
      * This method returns a string that uniquely identifies
      * the video provider service. Ids have to be lower-case.
@@ -70,7 +78,7 @@ signals:
      * @param videos must be a list of correctly filled-in VideoPackages.
      */
     void searchResult(const QString &query, const QList<VideoPackage> &videos);
-   
+
 private:
     class VideoProviderPrivate;
     VideoProviderPrivate *d;

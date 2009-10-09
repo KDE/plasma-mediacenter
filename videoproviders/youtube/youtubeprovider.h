@@ -16,30 +16,24 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#ifndef MEDIABROWSER_EXPORT_H
-#define MEDIABROWSER_EXPORT_H
+#ifndef YOUTUBEPROVIDER_H
+#define YOUTUBEPROVIDER_H
 
-/* needed for KDE_EXPORT and KDE_IMPORT macros */
-#include <kdemacros.h>
-#include <KPluginFactory>
-#include <KPluginLoader>
+#include <videoprovider/videoprovider.h>
 
-#define MEDIABROWSER_PACKAGE_EXPORT( c ) \
-    K_PLUGIN_FACTORY( MediaBrowserFactory, registerPlugin< c >(); ) \
-    K_EXPORT_PLUGIN( MediaBrowserFactory("c") )
+class YouTubeInterface;
 
-#ifndef MEDIABROWSER_EXPORT
-# if defined(MAKE_MEDIABROWSERLIBS_LIB)
-   /* We are building this library */
-#  define MEDIABROWSER_EXPORT KDE_EXPORT
-# else
-   /* We are using this library */
-#  define MEDIABROWSER_EXPORT KDE_IMPORT
-# endif
+class YouTubeProvider : public VideoProvider
+{
+    Q_OBJECT
+public:
+    YouTubeProvider(QObject *parent, const QVariantList &args);
+    ~YouTubeProvider();
+
+    void query(const QString &searchTerm, const QVariantList &args = QVariantList());
+
+private:
+    YouTubeInterface *m_interface;
+};
+
 #endif
-
-# ifndef MEDIABROWSER_EXPORT_DEPRECATED
-#  define MEDIABROWSER_EXPORT_DEPRECATED KDE_DEPRECATED MEDIABROWSER_EXPORT
-# endif
-
-#endif // MEDIABROWSER_EXPORT_H

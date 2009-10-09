@@ -21,7 +21,7 @@
 
 #include <Plasma/DataEngine>
 
-#include "videoprovider.h"
+#include "videoprovider/videoprovider.h"
 
 class Video : public Plasma::DataEngine
 {
