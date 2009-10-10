@@ -18,15 +18,23 @@
  */
 #include "video.h"
 
+#include <QImage>
+#include <QPixmap>
+
 #include <KServiceTypeTrader>
 #include <KService>
+#include <KPixmapCache>
+#include <kio/job.h>
 
 Video::Video(QObject *parent, const QVariantList &args) : Plasma::DataEngine(parent, args),
-m_currentProvider(0)
+m_currentProvider(0),
+m_thumbnailsCache(new KPixmapCache("video-thumbnails"))
 {}
 
 Video::~Video()
-{}
+{
+    delete m_thumbnailsCache;
+}
 
 bool Video::sourceRequestEvent(const QString &source)
 {
@@ -100,7 +108,11 @@ void Video::dataFromResults(const QString &query, const QList<VideoPackage> &vid
         videoData["id"] = it->id;
         videoData["title"] = it->title;
         videoData["description"] = it->description;
-        videoData["thumbnail"] = it->thumbnail;
+//         videoData["thumbnail"] = it->thumbnail;
+        KIO::TransferJob *job = KIO::get(KUrl(it->thumbnail), KIO::NoReload, KIO::HideProgressInfo);
+        connect (job, SIGNAL(data(KIO::Job*, QByteArray)), this, SLOT(thumbnailReceived(KIO::Job*,QByteArray)));
+        m_jobs[job] = it->id;
+
         videoData["keywords"] = it->keywords;
         videoData["duration"] = it->duration;
         videoData["category"] = it->category;
@@ -116,6 +128,29 @@ void Video::dataFromResults(const QString &query, const QList<VideoPackage> &vid
     Q_ASSERT(sources().contains(query));
 
     setData(query, ids);
+}
+
+bool Video::updateSourceEvent(const QString &source)
+{
+    QPixmap thumbnail;
+    if (!m_thumbnailsCache->find(source, thumbnail)) {
+        return false;
+    }
+
+    setData(source, "thumbnail", thumbnail);
+    return true;
+}
+
+void Video::thumbnailReceived(KIO::Job *job, const QByteArray &data)
+{
+    if (!m_jobs.contains(job)) {
+        return;
+    }
+
+    QPixmap pixmap = QPixmap::fromImage(QImage::fromData(data));
+    m_thumbnailsCache->insert(m_jobs[job], pixmap);
+
+    updateSourceEvent(m_jobs[job]);
 }
 
 K_EXPORT_PLASMA_DATAENGINE(video, Video)

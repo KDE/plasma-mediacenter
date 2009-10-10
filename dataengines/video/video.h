@@ -20,8 +20,13 @@
 #define VIDEO_H
 
 #include <Plasma/DataEngine>
+#include <QHash>
 
 #include "videoprovider/videoprovider.h"
+class KPixmapCache;
+namespace KIO {
+    class Job;
+}
 
 class Video : public Plasma::DataEngine
 {
@@ -38,12 +43,17 @@ protected:
      * the "service" parameter indicates which video provider to query.
      */
     bool sourceRequestEvent(const QString &source);
-    
+
+    bool updateSourceEvent(const QString &source);
+
 protected slots:
     void dataFromResults(const QString &, const QList<VideoPackage> &videos);
-    
+    void thumbnailReceived(KIO::Job*, const QByteArray &);
+
 private:
     VideoProvider *m_currentProvider;
+    KPixmapCache *m_thumbnailsCache;
+    QHash<KIO::Job*,QString> m_jobs;
 };
 
 #endif

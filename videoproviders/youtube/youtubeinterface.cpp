@@ -25,7 +25,7 @@
 // KDE
 #include <kio/job.h>
 #include <KUrl>
-#include <KDebug>
+
 
 YouTubeInterface::YouTubeInterface(QObject *parent) : QObject(parent)
 {
