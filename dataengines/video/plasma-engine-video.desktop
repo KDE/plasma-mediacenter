@@ -1,6 +1,12 @@
 [Desktop Entry]
 Name=Video Engine
+Name[pt]=Motor de Vídeo
+Name[uk]=Відеорушій
+Name[x-test]=xxVideo Enginexx
 Comment=An engine that allows you to query web services for videos.
+Comment[pt]=Um motor que lhe permite pesquisar vídeos em vários serviços na Web.
+Comment[uk]=Рушій, який надасть вам змогу звантажувати відео зі служб у мережі.
+Comment[x-test]=xxAn engine that allows you to query web services for videos.xx
 Type=Service
 
 X-KDE-ServiceTypes=Plasma/DataEngine
