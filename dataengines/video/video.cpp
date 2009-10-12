@@ -151,6 +151,7 @@ void Video::thumbnailReceived(KIO::Job *job, const QByteArray &data)
     m_thumbnailsCache->insert(m_jobs[job], pixmap);
 
     updateSourceEvent(m_jobs[job]);
+    m_jobs.remove(job);
 }
 
 K_EXPORT_PLASMA_DATAENGINE(video, Video)

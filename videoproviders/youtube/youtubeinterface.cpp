@@ -82,6 +82,8 @@ void YouTubeInterface::parseResults(KJob *job)
         QDomNode mediaNode = entries.at(i).namedItem("media:group");
         QString description = mediaNode.namedItem("media:description").toElement().text();
         QString keywords = mediaNode.namedItem("media:keywords").toElement().text();
+        // FIXME: more than one media:thumbnail exists
+        QString thumbnail = mediaNode.namedItem("media:thumbnail").toElement().attribute("url");
 
         // The embedding html code for youtube is:
         //
@@ -122,6 +124,7 @@ void YouTubeInterface::parseResults(KJob *job)
         video.id = id;
         video.duration = 0;
         video.embeddedHTML = embeddedHTML;
+        video.thumbnail = thumbnail;
 
         videos << video;
     }
