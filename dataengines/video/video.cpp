@@ -57,6 +57,7 @@ bool Video::sourceRequestEvent(const QString &source)
 
     if (!m_currentProvider || m_currentProvider->serviceId() != serviceName) {
         delete m_currentProvider;
+        m_currentProvider = 0;
         KService::List offers = KServiceTypeTrader::self()->query("Plasma/MediaCenter/VideoProvider");
         KService::Ptr service;
         KService::List::const_iterator it = offers.constBegin();
