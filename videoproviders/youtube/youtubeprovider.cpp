@@ -23,6 +23,7 @@
 YouTubeProvider::YouTubeProvider(QObject *parent, const QVariantList &args) : VideoProvider(parent, args),
 m_interface(new YouTubeInterface(this))
 {
+    setServiceId("youtube");
     connect(m_interface, SIGNAL(result(QString,QList<VideoPackage>)), this, SIGNAL(searchResult(QString,QList<VideoPackage>)));
 }
 
