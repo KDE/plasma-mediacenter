@@ -37,7 +37,7 @@ public:
         UpLevelControl = 0x4,
         AllControls = 0x7
     };
-    Q_DECLARE_FLAGS(NavigationControls, NavigationControl);
+    Q_DECLARE_FLAGS(NavigationControls, NavigationControl)
 
     BrowsingWidget(QGraphicsItem *parent);
     ~BrowsingWidget();
