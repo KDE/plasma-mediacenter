@@ -197,6 +197,7 @@ void AbstractMediaItemView::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
     if (m_hoveredItem) {
         m_hoverIndicator->m_rating = m_hoveredItem->m_nepomuk ? m_hoveredItem->m_resource->rating() : 0;
     }
+
     if (m_hoverIndicator->m_nepomuk) {
         m_hoverIndicator->updateHoverRating(mapToItem(m_hoverIndicator, event->pos()).toPoint());
     }
@@ -288,6 +289,10 @@ void AbstractMediaItemView::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *even
 void AbstractMediaItemView::itemClickEvent(QGraphicsSceneMouseEvent *event)
 {
     ViewItem *viewItem = itemFromPos(event->pos());
+    if (!viewItem) {
+        return;
+    }
+
     QModelIndex index = viewItem->index();
 
     KDirModel *model = qobject_cast<KDirModel*>(m_model);
@@ -322,6 +327,10 @@ void AbstractMediaItemView::tryDrag(QGraphicsSceneMouseEvent *event)
     // NOTE: for drag to work a KDirModel::FileItemRole is needed.
     //       if none is found no drag can occur.
     ViewItem *viewItem = itemFromPos(event->pos());
+    if (!viewItem) {
+        return;
+    }
+
     QModelIndex index = viewItem->index();
     if (!index.isValid()) {
         return;
