@@ -24,7 +24,6 @@
 #include <KDebug>
 
 #include <Plasma/Containment>
-#include <Plasma/Applet>
 #include <Plasma/Animator>
 
 MediaLayout::MediaLayout(Plasma::Containment *parent) : QObject(parent),
@@ -47,6 +46,8 @@ void MediaLayout::setBrowser(Plasma::Applet *browser)
 {
     m_browser = browser;
     m_needLayouting << m_browser;
+
+	m_browserBackgroundHints = m_browser->backgroundHints();
 
     MediaHandler *handler = new MediaHandler(m_browser, MediaHandler::Right);
     connect (handler, SIGNAL(appletHideRequest(Plasma::Applet*)), this, SLOT(animateHidingApplet(Plasma::Applet*)));
@@ -117,10 +118,13 @@ void MediaLayout::doCompleteLayout()
 void MediaLayout::layoutBrowser()
 {
     if (m_onlyBrowser) {
+        m_browser->setBackgroundHints(Plasma::Applet::NoBackground);
         m_browser->setPos(m_containment->rect().topLeft());
         m_browser->resize(m_containment->size());
         return;
     }
+
+    m_browser->setBackgroundHints(m_browserBackgroundHints);
     m_browser->setPos(browserPreferredShowingRect().topLeft());
     m_browser->resize(browserPreferredShowingRect().size());
 //    m_browser->setPos(m_browser->pos().x() - m_browser->size().width(), m_browser->pos().y());

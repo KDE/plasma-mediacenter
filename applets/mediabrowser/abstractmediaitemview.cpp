@@ -182,7 +182,15 @@ void AbstractMediaItemView::invalidate()
 
 void AbstractMediaItemView::updateHoveredItem(ViewItem *item)
 {
-    if (!m_items.contains(item)) {
+    if (!item || !m_items.contains(item)) {
+        m_hoverIndicator->setPos(0, -100);
+        if (m_hoverIndicator->m_nepomuk) {
+            m_hoverIndicator->updateHoverRating(QPoint(-1, -1));
+        }
+        if (m_hoveredItem) {
+            update(m_hoveredItem->rect());
+        }
+        m_hoveredItem = 0;
         return;
     }
 
@@ -216,11 +224,7 @@ void AbstractMediaItemView::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
 
 void AbstractMediaItemView::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
-    m_hoverIndicator->setPos(0, -100);
-    m_hoveredItem = 0;
-    if (m_hoverIndicator->m_nepomuk) {
-        m_hoverIndicator->updateHoverRating(mapToItem(m_hoverIndicator, event->pos()).toPoint());
-    }
+    updateHoveredItem(0);
 }
 
 void AbstractMediaItemView::setRating(int rating)

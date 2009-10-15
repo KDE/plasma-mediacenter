@@ -21,10 +21,10 @@
 
 #include <QObject>
 #include <QRectF>
+#include <Plasma/Applet>
 
 namespace Plasma {
     class Containment;
-    class Applet;
 }
 
 class QGraphicsItem;
@@ -80,6 +80,8 @@ private:
     Plasma::Applet *m_control;
     Plasma::Applet *m_playlist;
     Plasma::Applet *m_player;
+
+    Plasma::Applet::BackgroundHints m_browserBackgroundHints;
 
     QList<Plasma::Applet*> m_needLayouting;
 
