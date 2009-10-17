@@ -1,0 +1,60 @@
+The current status of this project:
+
+MediaCenterComponents/
+    |
+    |_applets/: here is where the main components for the mediacenter are placed.
+    |     |
+    |     |_mediabrowser/: this is probably the most important applet for the mediacenter. It currently allows browsing through files with media content.
+    |     |                It exposes an API that allows developing the so called ModelPackages. Each ModelPackage contains an inheritance of QAbstractItemModel that
+    |     |                is used by the mediabrowser in order to allow different kind of browsing. Currently only the local-files browsing plugin is there. This is due
+    |     |                to the fact that in my plans are also pictures and videos browsing models but they're supposed to make use of DataEngines to retrieve datas which
+    |     |                are still not ready. See dataengines part.
+    |     |
+    |     |_mediacontroller/: this is a basic applet for playback controlling. It just works but would need lot of love from the graphics point of view.
+    |     |
+    |     |_mediaplayer/: this is just a "port" from the mediaplayer applet in kdebase by marco martin in order to allow receiving control by the mediacontroller applet.
+    |     |               Lots of code should be cleaned out. Its mpris dbus interface is currently
+    |     |               disabled but should be removed from there and put somewhere more "general" in order to control the whole mediacenter.
+    |     |
+    |     |_playlist/: a simple applet that makes use of the playlist dataengine to store playlists. Needs graphics polishing and the support to multiple playlists should be 
+    |     |            enhanced.
+    |     |
+    |     |_test/: this applet should be removed along with the activeitemwidget under widgets/
+    |
+    |_containments/: this currently contains just the mediacontainment. This is the containment dedicated to media content management. It currently only handles media applets.
+    |                Work has to be done in order to support "the other applets" and remove some bad assumptions about the existance of applets already loaded.
+    |
+    |_dataengines/:
+    |     |
+    |     |_converfetcher/: here we have a cover fetcher dataengine that fetches album covers from last.fm and it is used by the playlist applet. Gotta discuss with the silk people
+    |     |               about the usefulness of this engine from the silk point of view and, in the case, make it less specific to last.fm.
+    |     |_playlist/: this engine simply takes care of storing and managing multiple playlists of any kind of file.
+    |     |
+    |     |_video/: this dataengine follows silk-project guidelines. It provides a plugin structure that allows developing many video providers. It currently works even if some
+    |     |         discussion is in progress about the query string. Nothing difficult to solve soon anyway. (video providers are under the videoproviders toplevel directory).
+    |     |         This dataengine should be used in order to provide a new ModelPackage to allow online-videos-browsing.
+    |     |
+    |     |_picasa/: this is a contribution by a friend. This engine fetches pictures and albums from picasa. The same work done for the video dataengine should be done here.
+    |                A guy (thehayro on IRC) is working on this side with me at the silk project in order to provide a plugin system for pictures providers. This engine would
+    |                just become a provider plugin as soon as the plugin system is ready.
+    |
+    |
+    |_libs/: simply the mediacenter libraries that allow creating new applets. The mediaobject wrapper should be deleted as it isn't used by any component.
+    |
+    |_mocks/: just some mockup.
+    |
+    |_shells/: contain the plasmediacenter application which was intended only for testing but could become a standalone fullscreen application with some polishment.
+    |
+    |_utils/: some utility functions that should probably moved only where they are needed.
+    |
+    |_videproviders/: this directory is intended to host the video providers. Currently we only have the YouTube one but it works just fine.
+    |
+    |_widgets/: initially served as a container for new widgets but nothing new has been created. The activeitemwidget was just a test for mobile devices but can be erased. :)
+
+
+That's the current status. Hope it helps to have ideas clearer about the mediacenter stuff. And hope it helps for someone who would like to help with this and does not know where to start from.
+
+
+Cheers
+--
+Alessandro Diaferia
