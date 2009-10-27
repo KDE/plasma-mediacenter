@@ -3,6 +3,7 @@ Name=Video Engine
 Name[fr]=Moteur vidéo
 Name[pt]=Motor de Vídeo
 Name[sv]=Videogränssnitt
+Name[tr]=Video Motoru
 Name[uk]=Відеорушій
 Name[x-test]=xxVideo Enginexx
 Comment=An engine that allows you to query web services for videos.
