@@ -7,6 +7,7 @@ Name[sv]=YouTube videoleverantör.
 Name[uk]=Показ відео YouTube.
 Name[x-test]=xxYouTube video provider.xx
 Comment=A plugin that allows browsing through YouTube videos.
+Comment[es]=Un motor que le permite navegar entre los vídeos de YouTube.
 Comment[fr]=Un module vous permettant de naviguer en direct parmi les vidéos de Youtube.
 Comment[pt]=Um 'plugin' que lhe permite pesquisar vídeos no YouTube.
 Comment[sv]=Ett insticksprogram som låter dig bläddra igenom videor på YouTube.
