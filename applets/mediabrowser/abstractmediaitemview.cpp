@@ -188,7 +188,7 @@ void AbstractMediaItemView::updateHoveredItem(ViewItem *item)
             m_hoverIndicator->updateHoverRating(QPoint(-1, -1));
         }
         if (m_hoveredItem) {
-            update(m_hoveredItem->rect());
+            update();
         }
         m_hoveredItem = 0;
         return;
@@ -224,6 +224,7 @@ void AbstractMediaItemView::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
 
 void AbstractMediaItemView::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
+	Q_UNUSED(event);
     updateHoveredItem(0);
 }
 
