@@ -52,6 +52,8 @@ void MediaLayout::setBrowser(Plasma::Applet *browser)
     MediaHandler *handler = new MediaHandler(m_browser, MediaHandler::Right);
     connect (handler, SIGNAL(appletHideRequest(Plasma::Applet*)), this, SLOT(animateHidingApplet(Plasma::Applet*)));
     connect (handler, SIGNAL(appletShowRequest(Plasma::Applet*)), this, SLOT(animateShowingApplet(Plasma::Applet*)));
+
+    browser->installEventFilter(this);
 }
 
 void MediaLayout::setPlaybackControl(Plasma::Applet *control)
@@ -63,6 +65,8 @@ void MediaLayout::setPlaybackControl(Plasma::Applet *control)
     MediaHandler *handler = new MediaHandler(m_control, MediaHandler::Bottom);
     connect (handler, SIGNAL(appletHideRequest(Plasma::Applet*)), this, SLOT(animateHidingApplet(Plasma::Applet*)));
     connect (handler, SIGNAL(appletShowRequest(Plasma::Applet*)), this, SLOT(animateShowingApplet(Plasma::Applet*)));
+
+    control->installEventFilter(this);
 }
 
 void MediaLayout::setPlaylist(Plasma::Applet *playlist)
@@ -74,6 +78,8 @@ void MediaLayout::setPlaylist(Plasma::Applet *playlist)
     MediaHandler *handler = new MediaHandler(m_playlist, MediaHandler::Left);
     connect (handler, SIGNAL(appletHideRequest(Plasma::Applet*)), this, SLOT(animateHidingApplet(Plasma::Applet*)));
     connect (handler, SIGNAL(appletShowRequest(Plasma::Applet*)), this, SLOT(animateShowingApplet(Plasma::Applet*)));
+
+    playlist->installEventFilter(this);
 }
 
 void MediaLayout::setPlayer(Plasma::Applet *player)
@@ -81,6 +87,8 @@ void MediaLayout::setPlayer(Plasma::Applet *player)
     m_player = player;
     m_player->setZValue(-50);
     m_needLayouting << m_player;
+
+    player->installEventFilter(this);
 }
 
 void MediaLayout::invalidate()
@@ -152,8 +160,19 @@ bool MediaLayout::eventFilter(QObject *o, QEvent *e)
 {
     if (o == m_containment && e->type() == QEvent::GraphicsSceneResize) {
         doCompleteLayout();
+    } else if (e->type() == QEvent::GraphicsSceneHoverEnter) {
+    	Plasma::Applet *applet = qobject_cast<Plasma::Applet*>(o);
+    	MediaHandler *handler = MediaHandler::handlerFromApplet(applet);
+    	if (handler) {
+    		handler->hoverEnteredApplet();
+    	}
+    } else if (e->type() == QEvent::GraphicsSceneHoverLeave) {
+        Plasma::Applet *applet = qobject_cast<Plasma::Applet*>(o);
+        MediaHandler *handler = MediaHandler::handlerFromApplet(applet);
+        if (handler) {
+            handler->hoverLeftApplet();
+    	}
     }
-
     return false;
 }
 

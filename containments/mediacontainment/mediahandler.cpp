@@ -24,12 +24,14 @@
 #include <QPainter>
 
 #include <KDebug>
+#include <KIcon>
 
 #include <Plasma/Applet>
 #include <Plasma/Containment>
 #include <Plasma/FrameSvg>
 #include <Plasma/Svg>
 #include <Plasma/Animator>
+#include <Plasma/ToolButton>
 
 static const int WIDTH = 60;
 
@@ -43,7 +45,9 @@ m_showFactor(0),
 m_appearing(false),
 m_appletVisible(false),
 m_stopHovers(false),
-m_animationId(0)
+m_animationId(0),
+m_lockButton(new Plasma::ToolButton(this)),
+m_locked(false)
 {
     m_applet->installEventFilter(this);
 
@@ -58,6 +62,10 @@ m_animationId(0)
     setAcceptsHoverEvents(true);
 
     m_handlers.insert(applet, this);
+
+    m_lockButton->hide();
+    m_lockButton->setIcon((!m_locked) ? KIcon("object-locked") : KIcon("object-unlocked"));
+    connect(m_lockButton, SIGNAL(clicked()), this, SLOT(handleAppletLockRequest()));
 }
 
 MediaHandler::~MediaHandler()
@@ -134,15 +142,13 @@ bool MediaHandler::eventFilter(QObject *o, QEvent *e)
             setPos((m_applet->rect().width() - size().width()) / 2, m_applet->rect().bottom());
             break;
         }
+        m_lockButton->setPos(rect().topLeft());
     } else if (e->type() == QEvent::GraphicsSceneResize) {
         if (m_handlerPosition == Left || m_handlerPosition == Right) {
             resize(WIDTH, m_applet->size().height());
         } else {
             resize(m_applet->size().width(), WIDTH);
         }
-    } else if (e->type() == QEvent::GraphicsSceneHoverLeave) {
-        emit appletHideRequest(m_applet);
-        m_showFactor = 0;
     }
 
     return false;
@@ -178,6 +184,7 @@ void MediaHandler::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
         return;
     }
     hidingAnimation();
+    m_lockButton->hide();
 }
 
 void MediaHandler::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
@@ -248,4 +255,26 @@ MediaHandler* MediaHandler::handlerFromApplet(Plasma::Applet *applet)
     }
 
     return m_handlers.value(applet);
+}
+
+void MediaHandler::hoverEnteredApplet()
+{
+    m_lockButton->show();
+}
+
+void MediaHandler::hoverLeftApplet()
+{
+	m_lockButton->hide();
+	emit appletHideRequest(m_applet);
+	m_showFactor = 0;
+}
+
+void MediaHandler::handleAppletLockRequest()
+{
+    emit appletLockRequest(m_applet, !m_locked);
+}
+
+void MediaHandler::setAppletLocked(bool set)
+{
+    set ? m_lockButton->setIcon(KIcon("object-unlocked")) : m_lockButton->setIcon(KIcon("object-locked"));
 }

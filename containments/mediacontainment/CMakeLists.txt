@@ -4,6 +4,7 @@ mediacontainment.cpp
 medianotificationwidget.cpp
 medialayout.cpp
 mediahandler.cpp
+mediatoolbox.cpp
 )
  
 # Now make sure all files get to the right place

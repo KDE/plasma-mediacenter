@@ -19,6 +19,7 @@
 #include "mediacontainment.h"
 #include "medianotificationwidget.h"
 #include "medialayout.h"
+#include "mediatoolbox.h"
 
 #include <mediacenter/browser.h>
 #include <mediacenter/playbackcontrol.h>
@@ -49,6 +50,7 @@ m_layout(new MediaLayout(this))
     setContainmentType(Plasma::Containment::CustomContainment);
     setHasConfigurationInterface(true);
     setAcceptHoverEvents(true);
+    setToolBox(new MediaToolBox(this));
 }
 
 MediaContainment::~MediaContainment()

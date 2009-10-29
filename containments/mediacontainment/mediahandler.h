@@ -26,6 +26,7 @@ namespace Plasma {
     class FrameSvg;
     class Svg;
     class Applet;
+    class ToolButton;
 }
 
 class QGraphicsSceneResizeEvent;
@@ -80,6 +81,12 @@ protected:
 
 protected slots:
     virtual void animateShowHide(qreal);
+    void handleAppletLockRequest();
+
+public slots:
+    void hoverEnteredApplet();
+    void hoverLeftApplet();
+    void setAppletLocked(bool);
 
 signals:
     /**
@@ -94,15 +101,19 @@ signals:
      */
     void appletHideRequest(Plasma::Applet *);
 
+    void appletLockRequest(Plasma::Applet *, bool lock);
+
 private:
     HandlerPosition m_handlerPosition;
     Plasma::Applet *m_applet;
     Plasma::FrameSvg *m_handlerSvg;
+    Plasma::ToolButton *m_lockButton;
     qreal m_showFactor;
     bool m_appearing;
     bool m_appletVisible;
     bool m_stopHovers;
     int m_animationId;
+    bool m_locked;
 
     static QHash<Plasma::Applet*, MediaHandler*> m_handlers;
 
