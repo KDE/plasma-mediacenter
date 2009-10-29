@@ -70,6 +70,9 @@ public:
     QRectF controllerPreferredShowingRect() const;
     QRectF playlistPreferredShowingRect() const;
 
+public slots:
+    void toggleShowAllMediaApplets();
+
 protected slots:
     void animateShowingApplet(Plasma::Applet *);
     void animateHidingApplet(Plasma::Applet *);
@@ -86,6 +89,7 @@ private:
     QList<Plasma::Applet*> m_needLayouting;
 
     bool m_onlyBrowser;
+    bool m_showAll;
 
 private:
     void doCompleteLayout();
@@ -96,7 +100,7 @@ private:
     void layoutPlayer();
 
 private slots:
-    void restoreHandlerGlows(QGraphicsItem*);
+    void setEnableGlowHandler(QGraphicsItem*, bool set);
 };
 
 #endif // MEDIALAYOUT_H

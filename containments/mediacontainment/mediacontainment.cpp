@@ -51,6 +51,8 @@ m_layout(new MediaLayout(this))
     setHasConfigurationInterface(true);
     setAcceptHoverEvents(true);
     setToolBox(new MediaToolBox(this));
+
+    connect (toolBox(), SIGNAL(toggled()), m_layout, SLOT(toggleShowAllMediaApplets()));
 }
 
 MediaContainment::~MediaContainment()
