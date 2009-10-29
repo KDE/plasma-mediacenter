@@ -131,6 +131,9 @@ void MediaContainment::slotAppletAdded(Plasma::Applet *applet, const QPointF &po
             m_layout->invalidate();
 
             if (m_player) {
+                connect (m_playlist, SIGNAL(mediasAppended(QList<MediaCenter::Media>)), m_player, SLOT(enqueue(QList<MediaCenter::Media>)));
+                connect (m_playlist, SIGNAL(mediaActivated(const MediaCenter::Media&)), m_player, SLOT(playMedia(const MediaCenter::Media&)));
+                connect (m_player, SIGNAL(mediaReceived(QStringList)), m_playlist, SLOT(appendMedia(QStringList)));
                 m_player->enqueue(m_playlist->medias());
             }
             if (m_browser) {
@@ -159,6 +162,9 @@ void MediaContainment::slotAppletAdded(Plasma::Applet *applet, const QPointF &po
             }
 
             if (m_playlist) {
+                connect (m_playlist, SIGNAL(mediasAppended(QList<MediaCenter::Media>)), m_player, SLOT(enqueue(QList<MediaCenter::Media>)));
+                connect (m_playlist, SIGNAL(mediaActivated(const MediaCenter::Media&)), m_player, SLOT(playMedia(const MediaCenter::Media&)));
+                connect (m_player, SIGNAL(mediaReceived(QStringList)), m_playlist, SLOT(appendMedia(QStringList)));
                 m_player->enqueue(m_playlist->medias());
             }
         }
@@ -175,9 +181,6 @@ void MediaContainment::initControls()
     connect (m_control, SIGNAL(stopRequest()), m_player, SLOT(stop()));
     connect (m_control, SIGNAL(mediaSkipBackwardRequest()), m_player, SLOT(skipBackward()));
     connect (m_control, SIGNAL(mediaSkipForwardRequest()), m_player, SLOT(skipForward()));
-    connect (m_player, SIGNAL(mediaReceived(QStringList)), m_playlist, SLOT(appendMedia(QStringList)));
-    connect (m_playlist, SIGNAL(mediasAppended(QList<MediaCenter::Media>)), m_player, SLOT(enqueue(QList<MediaCenter::Media>)));
-    connect (m_playlist, SIGNAL(mediaActivated(const MediaCenter::Media&)), m_player, SLOT(playMedia(const MediaCenter::Media&)));
     m_control->setMediaObject(m_player->mediaObject());
 }
 
