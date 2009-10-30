@@ -132,13 +132,14 @@ void MediaLayout::layoutBrowser()
 
 void MediaLayout::layoutControl()
 {
-    m_control->setPos(controllerPreferredShowingRect().topLeft());
+    m_control->setPos(QPointF(controllerPreferredShowingRect().left(),
+            controllerPreferredShowingRect().top() - controllerPreferredShowingRect().height()));
     m_control->resize(controllerPreferredShowingRect().size());
 }
 
 void MediaLayout::layoutPlaylist()
 {
-    m_playlist->setPos(playlistPreferredShowingRect().topLeft());
+    m_playlist->setPos(playlistPreferredShowingRect().topRight());
     m_playlist->resize(playlistPreferredShowingRect().size());
 }
 
@@ -184,7 +185,6 @@ QRectF MediaLayout::playlistPreferredShowingRect() const
 
     qreal rightMargin;
     m_playlist->getContentsMargins(0, 0, &rightMargin, 0);
-    kDebug() << "RIGHT MARGIN" << rightMargin;
     return QRectF(QPointF(m_containment->size().width() - (m_containment->size().width() / 4.0) + rightMargin , (m_containment->size().height() - m_playlist->size().height()) / 2),
                   QSizeF(m_containment->size().width() / 4.0, m_containment->size().height() * 2 / 3.0));
 }
@@ -192,13 +192,13 @@ QRectF MediaLayout::playlistPreferredShowingRect() const
 void MediaLayout::animateHidingApplet(Plasma::Applet *applet)
 {
     if (applet == m_browser) {
-        Plasma::Animator::self()->moveItem(applet, Plasma::Animator::SlideOutMovement, QPoint(m_browser->rect().x() - m_browser->size().width(),
+        Plasma::Animator::self()->moveItem(applet, Plasma::Animator::SlideOutMovement, QPoint(-m_browser->size().width(),
                                                                                               browserPreferredShowingRect().y()));
     } else if (applet == m_control) {
         Plasma::Animator::self()->moveItem(applet, Plasma::Animator::SlideOutMovement, QPoint(controllerPreferredShowingRect().x(),
                                                                                               m_control->rect().y() - m_control->size().height()));
     } else if (applet == m_playlist) {
-        Plasma::Animator::self()->moveItem(applet, Plasma::Animator::SlideOutMovement, QPoint(playlistPreferredShowingRect().x() + m_playlist->size().width(),
+        Plasma::Animator::self()->moveItem(applet, Plasma::Animator::SlideOutMovement, QPoint(m_containment->size().width(),
                                                                                               playlistPreferredShowingRect().y()));
     }
 

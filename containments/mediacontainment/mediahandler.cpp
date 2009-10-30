@@ -186,6 +186,10 @@ void MediaHandler::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 
 void MediaHandler::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
 {
+    if (m_stopHovers) {
+        return;
+    }
+
     if (event->pos().x() <= 10 && event->pos().x() > 0 && m_handlerPosition == Right) {
         emit appletShowRequest(m_applet);
         m_showFactor = 0;

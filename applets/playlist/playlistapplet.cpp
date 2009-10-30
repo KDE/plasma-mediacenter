@@ -34,8 +34,6 @@ PlaylistApplet::PlaylistApplet(QObject *parent, const QVariantList &args)
     setAcceptDrops(true);
     setHasConfigurationInterface(true);
 
-    setContentsMargins(0, 0, 0, 0);
-
     // we make sure the widget is constructed
     m_playlistWidget = new PlaylistWidget;
     connect (m_playlistWidget, SIGNAL(mediaActivated(const MediaCenter::Media &)), this, SIGNAL(mediaActivated(const MediaCenter::Media&)));

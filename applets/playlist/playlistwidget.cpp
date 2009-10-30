@@ -113,6 +113,8 @@ PlaylistWidget::PlaylistWidget(QGraphicsItem *parent)
     setLayout(layout);
 
     setAcceptDrops(true);
+
+    layout->setContentsMargins(0, 0, 0, 0);
 }
 
 PlaylistWidget::~PlaylistWidget()
@@ -167,7 +169,7 @@ void PlaylistWidget::showPlaylist(const QString &playlistName)
     }
 
     KConfigGroup op = playlistService->operationDescription("setCurrent");
-    playlistService->startOperationCall(op); 
+    playlistService->startOperationCall(op);
 }
 
 void PlaylistWidget::slotPlaylistAdded(const QString &source)
@@ -233,20 +235,12 @@ void PlaylistWidget::append(const QList<QUrl> &list)
 void PlaylistWidget::playlistUpdated(const QString &source, const Plasma::DataEngine::Data &data)
 {
     Q_UNUSED(data)
-
-    kDebug() << "data updated";
-
-    kDebug() << source << "updated for PlaylistEngine";
     showPlaylist(source);
 }
 
 void PlaylistWidget::coverUpdated(const QString &source, const Plasma::DataEngine::Data &data)
 {
     Q_UNUSED(data)
-
-    kDebug() << "data updated";
-
-    kDebug() << "updated cover for" << source;
     slotCoverReady(source);
 }
 
