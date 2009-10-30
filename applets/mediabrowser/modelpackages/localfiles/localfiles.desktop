@@ -2,6 +2,7 @@
 Type=Service
 Icon=folder
 Name=Local Files browsing plugin.
+Name[es]=Complemento de exploración de archivos locales.
 Name[fr]=Module de parcours des fichiers locaux
 Name[nl]=Plugin voor het lokaal bladeren in bestanden.
 Name[pt]='Plugin' de navegação nos ficheiros locais.
@@ -10,6 +11,7 @@ Name[tr]=Yerel dosya tarama eklentisi.
 Name[uk]=Додаток для перегляду локальних файлів.
 Name[x-test]=xxLocal Files browsing plugin.xx
 Comment=A plugin for the mediabrowser applet that allows local files browsing.
+Comment[es]=Un complemento para la miniaplicación de exploración de medios que permite explorar archivos locales.
 Comment[fr]=Un module pour l'applet mediabrowser permettant la navigation à travers les fichiers locaux
 Comment[pt]=Um 'plugin' para a 'applet' de leitura multimédia, que permite a navegação nos ficheiros locais.
 Comment[sv]=Ett insticksprogram för miniprogrammet Mediabläddrare som tillåter bläddring i lokala filer.
