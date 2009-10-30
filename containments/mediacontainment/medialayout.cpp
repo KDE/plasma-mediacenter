@@ -158,7 +158,13 @@ bool MediaLayout::eventFilter(QObject *o, QEvent *e)
 
 QRectF MediaLayout::browserPreferredShowingRect() const
 {
-    return QRectF(QPointF(0, (m_containment->size().height() - m_browser->size().height()) / 2),
+    if (!m_browser) {
+        return QRectF();
+    }
+
+    qreal leftMargin;
+    m_browser->getContentsMargins(&leftMargin, 0, 0, 0);
+    return QRectF(QPointF(-leftMargin, (m_containment->size().height() - m_browser->size().height()) / 2),
                   QSizeF(m_containment->size().width() / 3.0, m_containment->size().height() * 2 / 3.0));
 }
 
@@ -172,7 +178,14 @@ QRectF MediaLayout::controllerPreferredShowingRect() const
 
 QRectF MediaLayout::playlistPreferredShowingRect() const
 {
-    return QRectF(QPointF(m_containment->size().width() - (m_containment->size().width() / 4.0) , (m_containment->size().height() - m_playlist->size().height()) / 2),
+    if (!m_playlist) {
+        return QRectF();
+    }
+
+    qreal rightMargin;
+    m_playlist->getContentsMargins(0, 0, &rightMargin, 0);
+    kDebug() << "RIGHT MARGIN" << rightMargin;
+    return QRectF(QPointF(m_containment->size().width() - (m_containment->size().width() / 4.0) + rightMargin , (m_containment->size().height() - m_playlist->size().height()) / 2),
                   QSizeF(m_containment->size().width() / 4.0, m_containment->size().height() * 2 / 3.0));
 }
 
