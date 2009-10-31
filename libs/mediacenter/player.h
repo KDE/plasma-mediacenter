@@ -77,6 +77,7 @@ public:
 
     /**
      * @return the current state of the player.
+     * @internal
      * @see setActive()
      */
     virtual bool isActive();
@@ -112,6 +113,12 @@ Q_SIGNALS:
      * This signal is emitted whenever the active state changes.
      */
     void activeStateChanged(bool active);
+
+    /**
+     * This signal should be emitted whenever the playback state
+     * changes.
+     */
+    void playbackStateChanged(MediaCenter::State);
 
 public Q_SLOTS:
     /**

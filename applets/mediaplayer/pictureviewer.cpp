@@ -52,10 +52,6 @@ void PictureViewer::loadPicture(const QString &path)
     m_picture = 0;
     m_picture = new QImage(path);
     update();
-
-    if (m_showTime) {
-        m_timer->start(m_showTime*1000);
-    }
 }
 
 void PictureViewer::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -86,12 +82,24 @@ void PictureViewer::setShowTime(qint64 time)
     m_showTime = time;
 }
 
-int PictureViewer::showTime()
+int PictureViewer::showTime() const
 {
     return m_showTime;
 }
 
-void PictureViewer::stop()
+void PictureViewer::startTimer()
+{
+    if (m_showTime) {
+        m_timer->start(m_showTime*1000);
+    }
+}
+
+void PictureViewer::stopTimer()
+{
+    m_timer->stop();
+}
+
+void PictureViewer::clearImage()
 {
     if (m_timer->isActive()) {
         m_timer->stop();
@@ -108,4 +116,9 @@ void PictureViewer::slotFinished()
     m_picture = 0;
     update();
     emit showFinished();
+}
+
+bool PictureViewer::isTimerActive() const
+{
+    m_timer->isActive();
 }

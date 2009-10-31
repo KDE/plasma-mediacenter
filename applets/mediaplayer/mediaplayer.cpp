@@ -210,12 +210,23 @@ void MediaPlayer::ToggleControlsVisibility()
 
 void MediaPlayer::playPause()
 {
-    Phonon::MediaObject *media = m_video->mediaObject();
-
-    if (media->state() == Phonon::PlayingState) {
-        media->pause();
+    if (m_currentMedia.first == MediaCenter::Picture) {
+        if (m_pviewer->isTimerActive()) {
+            m_pviewer->stopTimer();
+            emit playbackStateChanged(MediaCenter::PausedState);
+        } else {
+            m_pviewer->startTimer();
+            emit playbackStateChanged(MediaCenter::PlayingState);
+        }
     } else {
-        media->play();
+        Phonon::MediaObject *media = m_video->mediaObject();
+        if (media->state() == Phonon::PlayingState) {
+            media->pause();
+            emit playbackStateChanged(MediaCenter::PausedState);
+        } else {
+            media->play();
+            emit playbackStateChanged(MediaCenter::PlayingState);
+        }
     }
 }
 
@@ -356,8 +367,9 @@ bool MediaPlayer::eventFilter(QObject *o, QEvent *e)
 void MediaPlayer::stop()
 {
     m_video->mediaObject()->stop();
-    m_pviewer->stop();
+    m_pviewer->clearImage();
     setActive(false);
+    emit playbackStateChanged(MediaCenter::StoppedState);
 }
 
 Phonon::MediaObject* MediaPlayer::mediaObject()
@@ -384,7 +396,6 @@ void MediaPlayer::skipForward()
 
 void MediaPlayer::playMedia(const MediaCenter::Media &media)
 {
-    kDebug() << "trying to play" << media.second;
     foreach (MediaCenter::Media mediaSource, m_medias)  {
         if (mediaSource.second == media.second) {
             setActive(true);
@@ -403,7 +414,6 @@ void MediaPlayer::playMedia(const MediaCenter::Media &media)
 
                 m_video->mediaObject()->setCurrentSource(media.second);
                 if (m_video->mediaObject()->state() != Phonon::PlayingState) {
-                    kDebug() << "playpaused";
                     playPause();
                 }
                 m_currentMedia = media;
@@ -430,6 +440,7 @@ void MediaPlayer::slideShow(const MediaCenter::Media &media)
     }
 
     m_pviewer->loadPicture(media.second);
+    m_pviewer->startTimer();
     m_currentMedia = media;
 }
 

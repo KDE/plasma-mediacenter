@@ -39,7 +39,7 @@ PlaybackControl::~PlaybackControl()
     delete d;
 }
 
-void PlaybackControl::playingStateChanged(MediaCenter::State state)
+void PlaybackControl::playbackStateChanged(MediaCenter::State state)
 {
     Q_UNUSED(state)
 }

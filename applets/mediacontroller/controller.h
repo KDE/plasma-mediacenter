@@ -15,7 +15,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
- ***************************************************************************/ 
+ ***************************************************************************/
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
@@ -41,12 +41,14 @@ public:
 
     void init();
 
+public slots:
+    void playbackStateChanged(MediaCenter::State);
+
 protected:
     void resizeEvent(QGraphicsSceneResizeEvent *event);
     void receivedMediaObject();
 
 private slots:
-    void togglePlayPause(Phonon::State newState, Phonon::State oldState);
     void slotVolumeSlider(int value);
     void slotSeekSlider(int value);
     void updateTotalTime(qint64 time);

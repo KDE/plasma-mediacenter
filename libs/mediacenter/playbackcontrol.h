@@ -106,7 +106,7 @@ public Q_SLOTS:
      * to the right playing state.
      * @note: the default implementation actually does nothing.
      */
-    virtual void playingStateChanged(MediaCenter::State state);
+    virtual void playbackStateChanged(MediaCenter::State state);
 
     /**
      * This slot is automatically called whenever the seek state changes.

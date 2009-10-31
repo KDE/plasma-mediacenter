@@ -114,11 +114,9 @@ void MediaController::init()
     setLayout(controlLayout);
 }
 
-void MediaController::togglePlayPause(Phonon::State newState, Phonon::State oldState)
+void MediaController::playbackStateChanged(MediaCenter::State state)
 {
-    Q_UNUSED(oldState);
-
-    if (newState == Phonon::PlayingState) {
+    if (state == MediaCenter::PlayingState) {
         m_playPause->setIcon("media-playback-pause");
     } else {
         m_playPause->setIcon("media-playback-start");
@@ -144,7 +142,6 @@ void MediaController::receivedMediaObject()
     m_seekSlider->setRange(0, mediaObject()->totalTime());
     connect (mediaObject(), SIGNAL(totalTimeChanged(qint64)), this, SLOT(updateTotalTime(qint64)));
     connect (mediaObject(), SIGNAL(tick(qint64)), this, SLOT(updateCurrentTick(qint64)));
-    connect (mediaObject(), SIGNAL(stateChanged(Phonon::State,Phonon::State)), this, SLOT(togglePlayPause(Phonon::State,Phonon::State)));
 
     if (mediaObject()->state() == Phonon::PlayingState) {
         m_playPause->setIcon("media-playback-pause");

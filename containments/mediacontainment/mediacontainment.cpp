@@ -115,9 +115,7 @@ void MediaContainment::slotAppletAdded(Plasma::Applet *applet, const QPointF &po
             m_layout->setPlaybackControl(m_control);
             m_layout->invalidate();
 
-            if (m_player) {
-                initControls();
-            }
+            initControls();
         }
         return;
     }
@@ -161,9 +159,8 @@ void MediaContainment::slotAppletAdded(Plasma::Applet *applet, const QPointF &po
 
             m_layout->setOnlyShowBrowser(!m_player->isActive());
             connect (m_player, SIGNAL(activeStateChanged(bool)), this, SLOT(slotPlayerActive(bool)));
-            if (m_control) {
-                initControls();
-            }
+
+            initControls();
 
             if (m_playlist) {
                 connect (m_playlist, SIGNAL(mediasAppended(QList<MediaCenter::Media>)), m_player, SLOT(enqueue(QList<MediaCenter::Media>)));
@@ -179,12 +176,21 @@ void MediaContainment::slotAppletAdded(Plasma::Applet *applet, const QPointF &po
 
 void MediaContainment::initControls()
 {
+    if (!m_player) {
+        return;
+    }
+
+    if (!m_control) {
+        return;
+    }
+
     connect (m_control, SIGNAL(playPauseRequest()), m_player, SLOT(playPause()));
     connect (m_control, SIGNAL(seekRequest(int)), m_player, SLOT(seek(int)));
     connect (m_control, SIGNAL(volumeLevelChangeRequest(qreal)), m_player, SLOT(setVolume(qreal)));
     connect (m_control, SIGNAL(stopRequest()), m_player, SLOT(stop()));
     connect (m_control, SIGNAL(mediaSkipBackwardRequest()), m_player, SLOT(skipBackward()));
     connect (m_control, SIGNAL(mediaSkipForwardRequest()), m_player, SLOT(skipForward()));
+    connect (m_player, SIGNAL(playbackStateChanged(MediaCenter::State)), m_control, SLOT(playbackStateChanged(MediaCenter::State)));
     m_control->setMediaObject(m_player->mediaObject());
 }
 

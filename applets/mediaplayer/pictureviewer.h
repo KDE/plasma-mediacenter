@@ -32,9 +32,9 @@ public:
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-    int showTime();
+    int showTime() const;
 
-    void stop();
+    bool isTimerActive() const;
 
 public Q_SLOTS:
     /**
@@ -43,6 +43,10 @@ public Q_SLOTS:
      * infinite time.
      */
     void setShowTime(qint64 time);
+
+    void startTimer();
+    void stopTimer();
+    void clearImage();
 
 Q_SIGNALS:
     void showFinished();
