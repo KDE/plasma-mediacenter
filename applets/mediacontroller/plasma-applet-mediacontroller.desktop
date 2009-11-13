@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=MediaController
+Name[en_GB]=MediaController
 Name[es]=MediaController
 Name[et]=Meediakontroller
 Name[fr]=MediaController
@@ -10,6 +11,7 @@ Name[tr]=Ortam Denetleyici
 Name[uk]=Контейнер мультимедіа
 Name[x-test]=xxMediaControllerxx
 Comment=A simple applet to control media reproduction
+Comment[en_GB]=A simple applet to control media reproduction
 Comment[es]=Miniaplicación para controlar la reproducción de medios
 Comment[et]=Lihtne aplett meedia taasesitamise juhtimiseks
 Comment[fr]=Une simple applet pour le contrôle de la reproduciton de médias
