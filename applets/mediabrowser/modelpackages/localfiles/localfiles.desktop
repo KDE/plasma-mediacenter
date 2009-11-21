@@ -12,6 +12,7 @@ Name[tr]=Yerel dosya tarama eklentisi.
 Name[uk]=Додаток для перегляду локальних файлів.
 Name[x-test]=xxLocal Files browsing plugin.xx
 Comment=A plugin for the mediabrowser applet that allows local file browsing.
+Comment[en_GB]=A plugin for the mediabrowser applet that allows local file browsing.
 Comment[pt]=Um 'plugin' para a 'applet' de leitura multimédia, que permite a navegação nos ficheiros locais.
 Comment[sv]=Ett insticksprogram för miniprogrammet Mediabläddrare som tillåter bläddring i lokala filer.
 Comment[uk]=Додаток до аплету переглядача носіїв, який надає змогу переглядати локальні файли.
