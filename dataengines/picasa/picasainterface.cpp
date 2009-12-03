@@ -234,7 +234,6 @@ void PicasaInterface::token(KIO::Job *job, const QByteArray &data)
             m_token = strList[1].trimmed();
         }
     }
-
 }
 
 void PicasaInterface::passwordJob(KJob *job)

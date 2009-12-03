@@ -1,0 +1,32 @@
+[Desktop Entry]
+Name=Flickr Engine
+Name[fr]=Moteur Flickr
+Name[nl]=Flickr-engine
+Name[pt]=Motor do Flickr
+Name[sv]=Flickr-gränssnitt
+Name[tr]=Flickr Motoru
+Name[uk]=Рушій Flickr
+Name[x-test]=xxFlickr Enginexx
+
+Comment=An engine that allows you to query Flickr.
+Comment[de]=Eine Engine, die erlaubt Flickr anzufragen.
+Comment[fr]=Un moteur vous permettant de quérir des images dans Flickr
+Comment[pt]=Um motor que lhe permite efectuar consultas no Flickr.
+Comment[sv]=Ett gränssnitt som låter dig söka på Flickr.
+Comment[uk]=Рушій, який надасть вам змогу надсилати запити до Flickr.
+Comment[x-test]=xxAn engine that allows you to query Flickr.xx
+
+Type=Service
+
+X-KDE-ServiceTypes=Plasma/DataEngine
+X-KDE-Library=plasma_engine_flickr
+X-Plasma-EngineName=flickr
+X-KDE-PluginInfo-Author=Onur-Hayri Bakici
+X-KDE-PluginInfo-Email=thehayro@gmail.com
+X-KDE-PluginInfo-Name=flickr
+X-KDE-PluginInfo-Version=0.1
+X-KDE-PluginInfo-Website=http://plasma.kde.org/
+X-KDE-PluginInfo-Category=Multimedia
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=LGPL
+X-KDE-PluginInfo-EnabledByDefault=true
