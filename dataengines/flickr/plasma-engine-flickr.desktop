@@ -2,6 +2,7 @@
 Name=Flickr Engine
 Name[en_GB]=Flickr Engine
 Name[es]=Motor Flickr
+Name[fr]=Moteur pour « Flickr »
 Name[pt]=Motor do Flickr
 Name[sv]=Flickr-gränssnitt
 Name[uk]=Рушій Flickr
@@ -10,6 +11,7 @@ Name[x-test]=xxFlickr Enginexx
 Comment=An engine that allows you to query Flickr.
 Comment[en_GB]=An engine that allows you to query Flickr.
 Comment[es]=Un motor que le permite consultar en Flickr.
+Comment[fr]=Un moteur vous permettant de quérir des images dans « Flickr »
 Comment[pt]=Um motor que lhe permite efectuar consultas no Flickr.
 Comment[sv]=Ett gränssnitt som låter dig söka på Flickr.
 Comment[uk]=Рушій, який надасть вам змогу надсилати запити до Flickr.
