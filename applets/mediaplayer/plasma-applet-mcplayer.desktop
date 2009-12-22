@@ -2,6 +2,7 @@
 Name=Media Center Player
 Name[en_GB]=Media Centre Player
 Name[es]=Reproductor Media Center
+Name[et]=Meediakeskuse mängija
 Name[fr]=Lecteur Media Center
 Name[hr]=Media Center Player
 Name[pt]=Reprodutor Multimédia
@@ -11,6 +12,7 @@ Name[x-test]=xxMedia Center Playerxx
 Comment=The playing applet for the Media Center.
 Comment[en_GB]=The playing applet for the Media Centre.
 Comment[es]=Miniaplicación de reproducción para el Media Center.
+Comment[et]=Meediakeskuse esitamisaplett
 Comment[fr]=L'applet de lecture pour Media Center
 Comment[hr]=Programčić za sviranje za Media Center.
 Comment[pt]=Uma 'applet' de reprodução para Centros Multimédia.

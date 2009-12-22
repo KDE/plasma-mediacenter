@@ -2,6 +2,7 @@
 Name=Video Engine
 Name[en_GB]=Video Engine
 Name[es]=Motor de vídeo
+Name[et]=Videomootor
 Name[fr]=Moteur vidéo
 Name[pt]=Motor de Vídeo
 Name[sv]=Videogränssnitt
@@ -11,6 +12,7 @@ Name[x-test]=xxVideo Enginexx
 Comment=An engine that allows you to query web services for videos.
 Comment[en_GB]=An engine that allows you to query web services for videos.
 Comment[es]=Un motor que le permite consultar servicios web de vídeo.
+Comment[et]=Mootor veebiteenustele videode kohta päringute esitamiseks.
 Comment[fr]=Un moteur vous permettant de quérir des vidéos à travers des webservices.
 Comment[pt]=Um motor que lhe permite pesquisar vídeos em vários serviços na Web.
 Comment[sv]=Ett gränssnitt som låter dig söka efter videor på webbtjänster.
