@@ -84,7 +84,6 @@ void FlickrInterface::parseResults(KJob *job)
 void FlickrInterface::listPhotos(KJob *job)
 {
     QDomDocument document;
-    //qDebug() << "HELOOOOOOO\n" << m_datas[static_cast<KIO::Job*>(job)];
     if (document.setContent(m_datas[static_cast<KIO::Job*>(job)]))
         qDebug() << "Set Content Success";
     else
@@ -124,8 +123,7 @@ void FlickrInterface::listPhotos(KJob *job)
                         .arg(serverID)
                         .arg(id)
                         .arg(secret);
-        //qDebug() << photo.value("link");
-        emit result(m_queries[static_cast<KIO::Job*>(job)], photo);
+        emit result(id, photo);
     }
 
     m_queries.remove( static_cast<KIO::Job*>(job) );
