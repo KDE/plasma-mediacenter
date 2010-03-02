@@ -120,5 +120,5 @@ void PictureViewer::slotFinished()
 
 bool PictureViewer::isTimerActive() const
 {
-    m_timer->isActive();
+    return m_timer->isActive();
 }
