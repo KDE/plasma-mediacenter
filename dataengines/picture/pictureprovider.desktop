@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=ServiceType
+X-KDE-ServiceType=Plasma/MediaCenter/PictureProvider
+
+[PropertyDef::X-KDE-PictureProvider-Name]
+Type=QString

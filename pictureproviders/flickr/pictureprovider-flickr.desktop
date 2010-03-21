@@ -1,0 +1,24 @@
+[Desktop Entry]
+Type=Service
+Name=Flickr picture provider
+Name[de]=Flickr provider
+Name[en_GB]=Flickr provider
+
+Name[x-test]=xxFlickr picture providerxx
+
+Comment=A plugin that allows browsing through Flickr pictures
+Comment[en_GB]=A plugin that allows browsing through Flickr pictures
+Comment[x-test]=xxA plugin that allows browsing through Flickr pictures.xx
+
+
+X-KDE-ServiceTypes=Plasma/MediaCenter/PictureProvider
+
+
+X-KDE-PluginInfo-Author=Onur-Hayri Bakici
+X-KDE-PluginInfo-Email=thehayro@gmail.com
+X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-Category=Service
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
+X-KDE-Library=pictureprovider_flickr
+X-KDE-PictureProvider-Name=flickr

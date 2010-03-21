@@ -1,0 +1,22 @@
+[Desktop Entry]
+Name=Picture Engine
+Name[tr]=Resim Motoru
+
+Name[x-test]=xxPicture Enginexx
+Comment=An engine that allows you to query web services for pictures.
+Comment[en_GB]=An engine that allows you to query web services for pictures.
+Comment[x-test]=xxAn engine that allows you to query web services for pictures.xx
+Type=Service
+
+X-KDE-ServiceTypes=Plasma/DataEngine
+X-KDE-Library=plasma_engine_picture
+X-Plasma-EngineName=picture
+X-KDE-PluginInfo-Author=Onur-Hayri Bakici
+X-KDE-PluginInfo-Email=thehayro@gmail.com
+X-KDE-PluginInfo-Name=picture
+X-KDE-PluginInfo-Version=0.1
+X-KDE-PluginInfo-Website=http://plasma.kde.org/
+X-KDE-PluginInfo-Category=Multimedia
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=LGPL
+X-KDE-PluginInfo-EnabledByDefault=true
