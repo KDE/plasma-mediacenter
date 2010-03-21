@@ -1,11 +1,7 @@
 [Desktop Entry]
 Name=Picture Engine
-Name[tr]=Resim Motoru
 
-Name[x-test]=xxPicture Enginexx
 Comment=An engine that allows you to query web services for pictures.
-Comment[en_GB]=An engine that allows you to query web services for pictures.
-Comment[x-test]=xxAn engine that allows you to query web services for pictures.xx
 Type=Service
 
 X-KDE-ServiceTypes=Plasma/DataEngine
