@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Picture Engine
+Name[en_GB]=Picture Engine
 Name[es]=Motor de imágenes
 Name[pt]=Motor de Imagens
 Name[sv]=Bildgränssnitt
@@ -7,6 +8,7 @@ Name[uk]=Рушій зображень
 Name[x-test]=xxPicture Enginexx
 
 Comment=An engine that allows you to query web services for pictures.
+Comment[en_GB]=An engine that allows you to query web services for pictures.
 Comment[es]=Un motor que le permite consultar servicios web de imágenes
 Comment[pt]=Um motor que lhe permite pesquisar imagens em vários serviços na Web.
 Comment[sv]=Ett gränssnitt som låter dig söka efter bilder på webbtjänster.
