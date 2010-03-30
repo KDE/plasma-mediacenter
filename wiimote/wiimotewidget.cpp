@@ -80,6 +80,7 @@ WiimoteWidget::WiimoteWidget( KMainWindow *parent )
 
 WiimoteWidget::~WiimoteWidget()
 {
+    m_wiimote->exit();
 }
 
 void WiimoteWidget::buttonAChanged(bool pressed)
