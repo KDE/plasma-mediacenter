@@ -21,3 +21,5 @@ add_subdirectory(containments)
 add_subdirectory(libs)
 add_subdirectory(shells)
 add_subdirectory(videoproviders)
+add_subdirectory(wiimote)
+

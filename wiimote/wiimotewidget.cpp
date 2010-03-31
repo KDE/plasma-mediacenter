@@ -56,6 +56,7 @@ WiimoteWidget::WiimoteWidget( KMainWindow *parent )
     connect(m_wiimote, SIGNAL(connected()), this, SLOT(wiimoteConnected()));
     connect(m_wiimote, SIGNAL(disconnected()), this, SLOT(wiimoteDisconnected()));
     connect(m_wiimote, SIGNAL(batteryChanged(int)), ui.battery, SLOT(setValue(int)));
+    connect(m_wiimote, SIGNAL(infraredChanged()), SLOT(infraredChanged()));
 
     // Buttons
     connect(m_wiimote, SIGNAL(buttonA(bool)),     this, SLOT(buttonAChanged(bool)));
@@ -155,6 +156,15 @@ void WiimoteWidget::wiimoteDisconnected()
     ui.buttonConnect->setEnabled(true);
     ui.buttonDisconnect->setEnabled(false);
     kDebug() << "wiimote disconnected.";
+}
+
+void WiimoteWidget::infraredChanged()
+{
+    QStringList _out;
+    foreach (QPoint p, m_wiimote->state()->infrared) {
+        _out << QString("x: %1 y: %2 ").arg(p.x()).arg(p.y());
+    }
+    ui.labelIR->setText(_out.join("<br />"));
 }
 
 void WiimoteWidget::ledOneStateChanged(int state)

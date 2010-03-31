@@ -96,6 +96,9 @@ void Wiimote::wiimoteEvent(cwiid_wiimote_t *wiimote, int mesg_count,
             }
             printf("\n");
             break;
+        case CWIID_MESG_IR:
+            updateInfrared(mesg[i].ir_mesg);
+            break;
         case CWIID_MESG_ERROR:
             if (cwiid_close(wiimote)) {
                 fprintf(stderr, "Error on wiimote disconnect\n");
@@ -145,6 +148,28 @@ void Wiimote::updateAccelerometers(struct cwiid_acc_mesg acc)
     }
 }
 
+void Wiimote::updateInfrared(struct cwiid_ir_mesg ir_mesg)
+{
+    //bool changed = false;
+    int oldcount = m_state->infrared.count();
+    m_state->infrared.clear();
+    for (int i = 0; i < CWIID_IR_SRC_COUNT; i++) {
+        if (ir_mesg.src[i].valid) {
+            //changed = true;
+            int x = ir_mesg.src[i].pos[CWIID_X];
+            int y = ir_mesg.src[i].pos[CWIID_Y];
+            m_state->infrared << QPoint(x, y);
+        }
+    }
+    if (m_state->infrared.count()) {
+        emit infraredChanged();
+    } else {
+        if (oldcount) { // Also update if sources have vanished
+            emit infraredChanged();
+        }
+    }
+}
+
 void Wiimote::updateButtons(uint16_t buttons)
 {
     /* Button flags
@@ -189,6 +214,12 @@ void Wiimote::updateButtons(uint16_t buttons)
     if ((buttons & CWIID_BTN_A) != m_state->buttonAPressed) {
         m_state->buttonAPressed = buttons & CWIID_BTN_A;
         emit buttonA(m_state->buttonAPressed);
+
+        // We're using this button for debugging:
+        if (m_state->buttonAPressed) {
+            cwiid_get_state(m_wiimote, &m_wiimoteState);
+            dumpState(&m_wiimoteState);
+        }
     }
 
     // B Button
@@ -289,7 +320,7 @@ bool Wiimote::connectWiimote()
     rpt_mode = rpt_mode | CWIID_RPT_ACC;
     rpt_mode = rpt_mode | CWIID_RPT_BTN;
     //rpt_mode = rpt_mode | CWIID_RPT_EXT;
-    //rpt_mode = rpt_mode | CWIID_RPT_IR; // Enable when adding support for the IR sensor
+    rpt_mode = rpt_mode | CWIID_RPT_IR; // Enable when adding support for the IR sensor
     //rpt_mode = rpt_mode | CWIID_RPT_STATUS;
 
     if (cwiid_set_rpt_mode(m_wiimote, rpt_mode)) {
@@ -368,16 +399,18 @@ QString Wiimote::dumpState(struct cwiid_state *state)
     output.append(QString("\nBattery: %1%%").arg(
            (int)(100.0 * state->battery / CWIID_BATTERY_MAX)));
 
-    output.append(QString("\nButtons: %1").arg( state->buttons));
+    //output.append(QString("\nButtons: %1").arg( state->buttons));
 
-    output.append(QString("\nAccelerometers: x=%1 y=%2 z=%3\n").arg(state->acc[CWIID_X], state->acc[CWIID_Y],
-           state->acc[CWIID_Z]));
+    //output.append(QString("\nAccelerometers: x=%1 y=%2 z=%3\n").arg(state->acc[CWIID_X], state->acc[CWIID_Y],
+    //       state->acc[CWIID_Z]));
     output.append("\nIR: ");
+    kDebug() << "- - - - - - - - - - IR:";
     for (i = 0; i < CWIID_IR_SRC_COUNT; i++) {
         if (state->ir_src[i].valid) {
             valid_source = 1;
-            output.append(QString("(%1,%2) ").arg(state->ir_src[i].pos[CWIID_X],
-                               state->ir_src[i].pos[CWIID_Y]));
+            //output.append(QString("(%1,%2) ").arg(state->ir_src[i].pos[CWIID_X],
+            //                   state->ir_src[i].pos[CWIID_Y]));
+            kDebug() << state->ir_src[i].pos[CWIID_X] << state->ir_src[i].pos[CWIID_Y];
         }
     }
 
@@ -397,7 +430,8 @@ QString Wiimote::dumpState(struct cwiid_state *state)
     case CWIID_EXT_CLASSIC:
         break;
     }
-    emit statusChanged(output);
+    //emit statusChanged(output);
+    //kDebug() << output;
     return output;
 }
 

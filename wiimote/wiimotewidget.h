@@ -64,6 +64,8 @@ class WiimoteWidget : public QWidget
         void ledThreeStateChanged(int state);
         void ledFourStateChanged(int state);
 
+        void infraredChanged();
+
     private:
         QLabel* m_label;
         KPushButton* m_connectButton;

@@ -24,6 +24,7 @@
 #define WIIMOTE_H
 
 #include <QThread>
+#include <QPoint>
 
 #include <cwiid.h>
 
@@ -43,6 +44,8 @@ struct WiimoteState {
     int accelX;
     int accelY;
     int accelZ;
+
+    QList<QPoint> infrared;
 
     bool buttonAPressed;
     bool buttonBPressed;
@@ -117,12 +120,15 @@ class Wiimote : public QThread
         void accelerometerZChanged(int);
         void accelerometerChanged(int, int, int);
 
+        void infraredChanged();
+
     protected:
         void run();
 
     private Q_SLOTS:
         void updateBattery(struct cwiid_state *state);
         void updateAccelerometers(struct cwiid_acc_mesg acc);
+        void updateInfrared(struct cwiid_ir_mesg ir_mesg);
 
     private:
         void updateButtons(uint16_t buttons);
