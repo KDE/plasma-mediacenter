@@ -47,17 +47,19 @@ struct WiimoteState {
 
     QList<QPoint> infrared;
 
-    bool buttonAPressed;
-    bool buttonBPressed;
-    bool buttonMinusPressed;
-    bool buttonHomePressed;
-    bool buttonPlusPressed;
-    bool buttonUpPressed;
-    bool buttonDownPressed;
-    bool buttonLeftPressed;
-    bool buttonRightPressed;
-    bool buttonOnePressed;
-    bool buttonTwoPressed;
+    bool buttonAPressed : 1;
+    bool buttonBPressed : 1;
+    bool buttonMinusPressed : 1;
+    bool buttonHomePressed : 1;
+    bool buttonPlusPressed : 1;
+    bool buttonUpPressed : 1;
+    bool buttonDownPressed : 1;
+    bool buttonLeftPressed : 1;
+    bool buttonRightPressed : 1;
+    bool buttonOnePressed : 1;
+    bool buttonTwoPressed : 1;
+    bool nunchukButtonCPressed : 1;
+    bool nunchukButtonZPressed : 1;
 };
 
 
@@ -114,6 +116,8 @@ class Wiimote : public QThread
         void buttonRight(bool);
         void buttonOne(bool);
         void buttonTwo(bool);
+        void nunchukButtonC(bool);
+        void nunchukButtonZ(bool);
 
         void accelerometerXChanged(int);
         void accelerometerYChanged(int);
@@ -132,6 +136,7 @@ class Wiimote : public QThread
 
     private:
         void updateButtons(uint16_t buttons);
+        void updateNunchukButtons(uint8_t buttons);
         QString dumpState(struct cwiid_state *state);
         void setLeds();
 

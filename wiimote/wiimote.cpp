@@ -74,6 +74,9 @@ void Wiimote::wiimoteEvent(cwiid_wiimote_t *wiimote, int mesg_count,
         case CWIID_MESG_BTN:
             updateButtons(mesg[i].btn_mesg.buttons);
             break;
+        case CWIID_MESG_NUNCHUK:
+            updateNunchukButtons(mesg[i].nunchuk_mesg.buttons);
+            break;
         case CWIID_MESG_ACC:
             updateAccelerometers(mesg[i].acc_mesg);
             break;
@@ -259,6 +262,25 @@ void Wiimote::updateButtons(uint16_t buttons)
     }
 }
 
+void Wiimote::updateNunchukButtons(uint8_t buttons)
+{
+
+    /* Nunchuk buttons
+     #define CWIID_NUNCHUK_BTN_Z	0x01
+     #define CWIID_NUNCHUK_BTN_C	0x02
+   */
+
+    if ((buttons & CWIID_NUNCHUK_BTN_C) != m_state->nunchukButtonCPressed) {
+        m_state->nunchukButtonCPressed = buttons & CWIID_NUNCHUK_BTN_C;
+        emit nunchukButtonC(m_state->nunchukButtonCPressed);
+    }
+
+    if ((buttons & CWIID_NUNCHUK_BTN_Z) != m_state->nunchukButtonZPressed) {
+        m_state->nunchukButtonZPressed = buttons & CWIID_NUNCHUK_BTN_Z;
+        emit nunchukButtonZ(m_state->nunchukButtonZPressed);
+    }
+}
+
 void Wiimote::run()
 {
     m_state = new WiimoteState;
@@ -322,6 +344,7 @@ bool Wiimote::connectWiimote()
     //rpt_mode = rpt_mode | CWIID_RPT_EXT;
     rpt_mode = rpt_mode | CWIID_RPT_IR; // Enable when adding support for the IR sensor
     //rpt_mode = rpt_mode | CWIID_RPT_STATUS;
+    rpt_mode = rpt_mode | CWIID_RPT_NUNCHUK; // WARNING: this will cause much event verbosity as for every accelerometer stuff
 
     if (cwiid_set_rpt_mode(m_wiimote, rpt_mode)) {
         kDebug() << "Error setting report mode";
