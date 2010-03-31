@@ -58,6 +58,8 @@ class WiimoteWidget : public QWidget
         void buttonRightChanged(bool);
         void buttonOneChanged(bool);
         void buttonTwoChanged(bool);
+        void nunchukButtonCChanged(bool);
+        void nunchukButtonZChanged(bool);
 
         void ledOneStateChanged(int state);
         void ledTwoStateChanged(int state);

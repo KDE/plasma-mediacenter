@@ -71,6 +71,8 @@ WiimoteWidget::WiimoteWidget( KMainWindow *parent )
     connect(m_wiimote, SIGNAL(buttonOne(bool)),   this, SLOT(buttonOneChanged(bool)));
     connect(m_wiimote, SIGNAL(buttonTwo(bool)),   this, SLOT(buttonTwoChanged(bool)));
     //connect(m_wiimote, SIGNAL(buttonAReleased()), this, SLOT(buttonAChanged()));
+    connect(m_wiimote, SIGNAL(nunchukButtonC(bool)), this, SLOT(nunchukButtonCChanged(bool)));
+    connect(m_wiimote, SIGNAL(nunchukButtonZ(bool)), this, SLOT(nunchukButtonZChanged(bool)));
 
     connect(m_wiimote, SIGNAL(accelerometerXChanged(int)), ui.accelX, SLOT(setValue(int)));
     connect(m_wiimote, SIGNAL(accelerometerYChanged(int)), ui.accelY, SLOT(setValue(int)));
@@ -137,6 +139,16 @@ void WiimoteWidget::buttonOneChanged(bool pressed)
 void WiimoteWidget::buttonTwoChanged(bool pressed)
 {
     ui.buttonTwo->setDown(pressed);
+}
+
+void WiimoteWidget::nunchukButtonCChanged(bool pressed)
+{
+    ui.nunchukButtonC->setDown(pressed);
+}
+
+void WiimoteWidget::nunchukButtonZChanged(bool pressed)
+{
+    ui.nunchukButtonZ->setDown(pressed);
 }
 
 void WiimoteWidget::statusChanged(const QString &status)
