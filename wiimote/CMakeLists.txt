@@ -10,6 +10,7 @@ set(wiimote_SRCS
     main.cpp
     wiimote.cpp
     wiimotewidget.cpp
+    infraredimage.cpp
 )
 
 kde4_add_ui_files(wiimote_SRCS wiimoteinterface.ui)
@@ -18,3 +19,6 @@ kde4_add_executable(wiimote-demo ${wiimote_SRCS})
 target_link_libraries(wiimote-demo ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} cwiid)
 
 install(TARGETS wiimote-demo ${INSTALL_TARGETS_DEFAULT_ARGS})
+
+add_subdirectory(flicklist)
+

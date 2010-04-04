@@ -26,7 +26,7 @@
 
 // KDE
 #include <KDebug>
-
+#include <bluetooth/bluetooth.h>
 #include "wiimote.h"
 
 #define LAZINESS 1
@@ -44,6 +44,11 @@ Wiimote::Wiimote( QObject* parent )
     // Be the global object used to pass on events
     // from the static callback function
     myWiimote = this;
+    m_knightRiderTimer = new QTimer(this);
+    connect(m_knightRiderTimer, SIGNAL(timeout()), SLOT(knightRider()));
+    m_knightRiderTimer->setInterval(150);
+    m_knightRiderState = 0;
+    _knUp = true;
 }
 
 Wiimote::~Wiimote()
@@ -69,6 +74,45 @@ void Wiimote::cwiidCallback(cwiid_wiimote_t *wiimote, int mesg_count,
 void Wiimote::wiimoteEvent(cwiid_wiimote_t *wiimote, int mesg_count,
                     union cwiid_mesg mesg[], struct timespec *timestamp)
 {
+    // throttling: throw away events that are too old
+    /*
+
+struct timespec
+  {
+    __time_t tv_sec;            / * Seconds.  * /
+    long int tv_nsec;           / * Nanoseconds.  * /
+  };
+
+
+    */
+    //QDateTime t(QDate(1970, 1, 1), QTime(0, 0, 0));
+    QTime t(0, 0, 0);
+    bool outdated = false;
+    int cur = QTime::currentTime().msec();
+    int msec = (int)(timestamp->tv_nsec / 1000000);
+    long long sec = timestamp->tv_sec;
+    int _age = (sec * 1000) + msec;
+    int age = cur - _age;
+    int s = sec%((int)(sec/100)*100);
+    int ms = (s*1000) + msec;
+    t = t.addSecs(sec);
+    t = t.addMSecs(msec);
+
+    int delay = 0;
+    if (msec < t.msec()) {
+        delay = t.msec() - msec;
+    } else {
+        delay = (t.msec() + 1000) - msec;
+    }
+    int now_s = t.second();
+    int now_ms = (now_s * 1000) + t.msec();
+
+
+    //kDebug() << ms << msec << now_ms << now_ms - ms << t << t.msec() << "Delay:" << delay;
+    //kDebug() << "sec:" << sec << "msec" << msec << "cur" << cur << "age" << age << _age << t << QDateTime::currentDateTime().toUTC();
+    
+    //kDebug() << "event @ msec:" << timestamp->tv_sec << timestamp->tv_nsec << (int)(timestamp->tv_nsec / 1000000) << (long)(timestamp->tv_sec * 1000) << msec;
+    //return;
     Q_UNUSED( timestamp );
     int i;
     for (i=0; i < mesg_count; i++) {
@@ -134,9 +178,15 @@ void Wiimote::updateAccelerometers(struct cwiid_acc_mesg acc)
 
     if (x != m_state->accelX) {
         diffX = m_state->accelX - x;
-        if (m_state->buttonAPressed)
-            if (diffX < -LAZINESS || diffX > LAZINESS)
-                kDebug() << "X Changed:" << diffX;
+        diffX = 128 - x;
+        if (m_state->buttonAPressed) {
+            if (diffX < -LAZINESS || diffX > LAZINESS) {
+                if (diffX < 130) {
+                    //kDebug() << "X Changed:" << diffX;
+                    emit dragUpDown(diffX);
+                }
+            }
+        }
         m_state->accelX = x;
         emit accelerometerXChanged(x);
         changed = true;
@@ -176,10 +226,10 @@ void Wiimote::updateInfrared(struct cwiid_ir_mesg ir_mesg)
         }
     }
     if (m_state->infrared.count()) {
-        emit infraredChanged();
+        emit infraredChanged(QTime::currentTime());
     } else {
         if (oldcount) { // Also update if sources have vanished
-            emit infraredChanged();
+            emit infraredChanged(QTime::currentTime());
         }
     }
 }
@@ -203,12 +253,14 @@ void Wiimote::updateButtons(uint16_t buttons)
     // Up Button
     if ((buttons & CWIID_BTN_UP) != m_state->buttonUpPressed) {
         m_state->buttonUpPressed = buttons & CWIID_BTN_UP;
+        emit dragUpDown(-1);
         emit buttonUp(m_state->buttonUpPressed);
     }
 
     // Down Button
     if ((buttons & CWIID_BTN_DOWN) != m_state->buttonDownPressed) {
         m_state->buttonDownPressed = buttons & CWIID_BTN_DOWN;
+        emit dragUpDown(1);
         emit buttonDown(m_state->buttonDownPressed);
     }
 
@@ -270,6 +322,63 @@ void Wiimote::updateButtons(uint16_t buttons)
     if ((buttons & CWIID_BTN_2) != m_state->buttonTwoPressed) {
         m_state->buttonTwoPressed = buttons & CWIID_BTN_2;
         emit buttonTwo(m_state->buttonTwoPressed);
+        if (m_state->buttonTwoPressed) {
+            m_knightRiderTimer->start();
+        } else {
+            m_knightRiderTimer->stop();
+        }
+    }
+}
+
+void Wiimote::knightRider()
+{
+
+    if (_knUp) {
+        m_knightRiderState++;
+    } else {
+        m_knightRiderState--;
+    }
+        //= m_knightRiderState + _kn;
+    switch (m_knightRiderState)
+    {
+        case 0:
+            ledOneOff();
+            ledTwoOff();
+            ledThreeOff();
+            ledFourOff();
+            break;
+        case 1:
+            ledOneOn();
+            ledTwoOff();
+            ledThreeOff();
+            ledFourOff();
+            break;
+        case 2:
+            ledOneOff();
+            ledTwoOn();
+            ledThreeOff();
+            ledFourOff();
+            break;
+        case 3:
+            ledOneOff();
+            ledTwoOff();
+            ledThreeOn();
+            ledFourOff();
+            break;
+        case 4:
+            ledOneOff();
+            ledTwoOff();
+            ledThreeOff();
+            ledFourOn();
+            break;
+        default:
+            break;
+    }
+    if (m_knightRiderState >= 4) {
+        _knUp = false;
+    }
+    if (1 >= m_knightRiderState) {
+        _knUp = true;
     }
 }
 
@@ -483,7 +592,7 @@ void Wiimote::setLeds()
 {
     if (m_wiimote) {
         int n = cwiid_set_led(m_wiimote, m_ledState);
-        kDebug() << n << m_ledState;
+        //kDebug() << n << m_ledState;
     }
 }
 

@@ -25,8 +25,13 @@
 
 #include <QThread>
 #include <QPoint>
+#include <iostream>
 
 #include <cwiid.h>
+
+//typedef QList<QPoint> QPointList;
+
+
 
 struct WiimoteState {
 
@@ -124,7 +129,10 @@ class Wiimote : public QThread
         void accelerometerZChanged(int);
         void accelerometerChanged(int, int, int);
 
-        void infraredChanged();
+        void infraredChanged(QTime);
+
+        /* Gestures */
+        void dragUpDown(int);
 
     protected:
         void run();
@@ -133,6 +141,7 @@ class Wiimote : public QThread
         void updateBattery(struct cwiid_state *state);
         void updateAccelerometers(struct cwiid_acc_mesg acc);
         void updateInfrared(struct cwiid_ir_mesg ir_mesg);
+        void knightRider();
 
     private:
         void updateButtons(uint16_t buttons);
@@ -146,7 +155,14 @@ class Wiimote : public QThread
         unsigned char m_ledState;
 
         struct WiimoteState* m_state;
+
+        QTimer* m_knightRiderTimer;
+        int m_knightRiderState;
+        bool _knUp;
 };
+
+//Q_DECLARE_METATYPE(QPointList)
+//qRegisterMetaType<QPointList>("QPointList");
 
 #endif // WIIMOTE_H
 

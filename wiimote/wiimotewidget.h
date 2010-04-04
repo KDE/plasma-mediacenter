@@ -24,7 +24,7 @@
 #define WIIMOTEWIDGET_H
 
 #include <QWidget>
-
+#include "infraredimage.h"
 #include "ui_wiimoteinterface.h"
 
 class QLabel;
@@ -60,16 +60,20 @@ class WiimoteWidget : public QWidget
         void buttonTwoChanged(bool);
         void nunchukButtonCChanged(bool);
         void nunchukButtonZChanged(bool);
+        void openInfraredDialog();
 
         void ledOneStateChanged(int state);
         void ledTwoStateChanged(int state);
         void ledThreeStateChanged(int state);
         void ledFourStateChanged(int state);
 
-        void infraredChanged();
+        void infraredChanged(QTime);
 
     private:
+        KDialog* m_infraredDialog;
+        QLabel* m_infraredLabel;
         QLabel* m_label;
+        InfraredImage* m_infraredImage;
         KPushButton* m_connectButton;
         Wiimote* m_wiimote;
 

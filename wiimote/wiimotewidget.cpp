@@ -27,6 +27,7 @@
 
 // KDE
 #include <KDebug>
+#include <KDialog>
 #include <KMainWindow>
 #include <KPushButton>
 
@@ -34,12 +35,16 @@
 #include "wiimotewidget.h"
 
 WiimoteWidget::WiimoteWidget( KMainWindow *parent )
-    : QWidget(parent)
+    : QWidget(parent),
+    m_infraredDialog(0),
+    m_infraredLabel(0),
+    m_infraredImage(0)
 {
     ui.setupUi(this);
     ui.buttonDisconnect->setEnabled(false);
 
     m_wiimote = new Wiimote(this);
+    m_infraredImage = new InfraredImage(QSize(300, 240));
 
     // Hook up UI to Wiimote object
     connect(ui.buttonConnect, SIGNAL(clicked()), m_wiimote, SLOT(connectWiimote()));
@@ -49,6 +54,7 @@ WiimoteWidget::WiimoteWidget( KMainWindow *parent )
     connect(ui.led2, SIGNAL(stateChanged(int)), SLOT(ledTwoStateChanged(int)));
     connect(ui.led3, SIGNAL(stateChanged(int)), SLOT(ledThreeStateChanged(int)));
     connect(ui.led4, SIGNAL(stateChanged(int)), SLOT(ledFourStateChanged(int)));
+    connect(ui.irButton, SIGNAL(clicked()), SLOT(openInfraredDialog()));
 
     // Hook up Wiimote object to UI
     connect(m_wiimote, SIGNAL(statusChanged(const QString&)),
@@ -56,7 +62,11 @@ WiimoteWidget::WiimoteWidget( KMainWindow *parent )
     connect(m_wiimote, SIGNAL(connected()), this, SLOT(wiimoteConnected()));
     connect(m_wiimote, SIGNAL(disconnected()), this, SLOT(wiimoteDisconnected()));
     connect(m_wiimote, SIGNAL(batteryChanged(int)), ui.battery, SLOT(setValue(int)));
-    connect(m_wiimote, SIGNAL(infraredChanged()), SLOT(infraredChanged()));
+
+    // The following has to be a blocking connection since we're accessing
+    // data from the wiimote's thread in its slots
+    connect(m_wiimote, SIGNAL(infraredChanged(QTime)),
+            this, SLOT(infraredChanged(QTime)), Qt::BlockingQueuedConnection);
 
     // Buttons
     connect(m_wiimote, SIGNAL(buttonA(bool)),     this, SLOT(buttonAChanged(bool)));
@@ -170,13 +180,53 @@ void WiimoteWidget::wiimoteDisconnected()
     kDebug() << "wiimote disconnected.";
 }
 
-void WiimoteWidget::infraredChanged()
+void WiimoteWidget::openInfraredDialog()
 {
-    QStringList _out;
-    foreach (QPoint p, m_wiimote->state()->infrared) {
-        _out << QString("x: %1 y: %2 ").arg(p.x()).arg(p.y());
+    kDebug() << "opening dialog";
+    /*
+dialog->setCaption( "My title" );
+   dialog->setButtons( KDialog::Ok | KDialog::Cancel | KDialog::Apply );
+
+   FooWidget *widget = new FooWidget( dialog );
+   dialog->setMainWidget( widget );
+   connect( dialog, SIGNAL( applyClicked() ), widget, SLOT( save() ) );
+   connect( dialog, SIGNAL( okClicked() ), widget, SLOT( save() ) );
+   connect( widget, SIGNAL( changed( bool ) ), dialog, SLOT( enableButtonApply( bool ) ) );
+
+   dialog->enableButtonApply( false );
+   dialog->show();
+   */
+    if (m_infraredDialog) {
+        m_infraredDialog->show();
+        return;
     }
-    ui.labelIR->setText(_out.join("<br />"));
+    m_infraredDialog = new KDialog(this);
+    m_infraredDialog->setCaption("Infrared Sensors");
+    m_infraredDialog->setButtons(KDialog::Close);
+    m_infraredLabel = new QLabel(m_infraredDialog);
+    m_infraredDialog->setMainWidget(m_infraredLabel);
+    m_infraredDialog->show();
+}
+
+void WiimoteWidget::infraredChanged(QTime t)
+{
+    int diff = QTime::currentTime().msec() - t.msec();
+    if (diff > 5) { // Skip events that are older than 5 msec to throttle the framerate a bit
+        //kDebug() << "skipping, Age:" << diff;
+        return;
+    }
+    if (m_infraredDialog) {
+        QList<QPoint> leds = m_wiimote->state()->infrared;
+        m_infraredImage->state = m_wiimote->state();
+        m_infraredImage->resize(m_infraredLabel->geometry().size());
+        QStringList _out;
+        foreach (QPoint p, leds) {
+            _out << QString("x: %1 y: %2 ").arg(p.x()).arg(p.y());
+        }
+        //m_infraredLabel->setText(_out.join("<br />"));
+        m_infraredImage->setLeds(leds);
+        m_infraredLabel->setPixmap(m_infraredImage->pixmap());
+    }
 }
 
 void WiimoteWidget::ledOneStateChanged(int state)
