@@ -52,6 +52,9 @@ struct WiimoteState {
 
     QList<QPoint> infrared;
 
+    int nunchukStickX;
+    int nunchukStickY;
+
     bool buttonAPressed : 1;
     bool buttonBPressed : 1;
     bool buttonMinusPressed : 1;
@@ -126,6 +129,7 @@ class Wiimote : public QThread
         void buttonTwo(bool);
         void nunchukButtonC(bool);
         void nunchukButtonZ(bool);
+        void nunchukStickChanged(int, int);
 
         void accelerometerXChanged(int);
         void accelerometerYChanged(int);
@@ -149,6 +153,7 @@ class Wiimote : public QThread
     private:
         void updateButtons(uint16_t buttons);
         void updateNunchukButtons(uint8_t buttons);
+        void updateNunchuk(struct cwiid_nunchuk_mesg);
         QString dumpState(struct cwiid_state *state);
         void setLeds();
 

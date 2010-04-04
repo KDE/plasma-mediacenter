@@ -23,6 +23,9 @@
 // Qt
 #include <QTime>
 #include <QTimer>
+#include <QApplication>
+#include <QKeyEvent>
+#include <QWidget>
 
 // KDE
 #include <KDebug>
@@ -135,7 +138,7 @@ struct timespec
             updateButtons(mesg[i].btn_mesg.buttons);
             break;
         case CWIID_MESG_NUNCHUK:
-            updateNunchukButtons(mesg[i].nunchuk_mesg.buttons);
+            updateNunchuk(mesg[i].nunchuk_mesg);
             break;
         case CWIID_MESG_ACC:
             updateAccelerometers(mesg[i].acc_mesg);
@@ -237,7 +240,7 @@ void Wiimote::updateInfrared(struct cwiid_ir_mesg ir_mesg)
             //changed = true;
             int x = ir_mesg.src[i].pos[CWIID_X];
             int y = ir_mesg.src[i].pos[CWIID_Y];
-            m_state->infrared << QPoint(x, y);
+            m_state->infrared << QPoint(-x, y);
         }
     }
     if (m_state->buttonBPressed && oldLeds.count() == m_state->infrared.count() && m_state->infrared.count()) {
@@ -420,6 +423,23 @@ void Wiimote::updateNunchukButtons(uint8_t buttons)
     if ((buttons & CWIID_NUNCHUK_BTN_Z) != m_state->nunchukButtonZPressed) {
         m_state->nunchukButtonZPressed = buttons & CWIID_NUNCHUK_BTN_Z;
         emit nunchukButtonZ(m_state->nunchukButtonZPressed);
+    }
+}
+
+void Wiimote::updateNunchuk(struct cwiid_nunchuk_mesg nunchuk)
+{
+    updateNunchukButtons(nunchuk.buttons);
+
+    int x = nunchuk.stick[CWIID_X];
+    int y = nunchuk.stick[CWIID_Y];
+
+    if (m_state->nunchukStickX != x ||
+        m_state->nunchukStickY != y) {
+
+        m_state->nunchukStickX = x;
+        m_state->nunchukStickY = y;
+
+        emit nunchukStickChanged(m_state->nunchukStickX, m_state->nunchukStickY);
     }
 }
 

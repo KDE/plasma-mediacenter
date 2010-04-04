@@ -69,6 +69,10 @@ class WiimoteWidget : public QWidget
 
         void infraredChanged(QTime);
 
+        void updateCursorPosition(int, int, int);
+
+        void stickNavigation(int, int);
+
     private:
         KDialog* m_infraredDialog;
         QLabel* m_infraredLabel;

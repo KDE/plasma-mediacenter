@@ -24,6 +24,7 @@
 #include <QBoxLayout>
 #include <QLabel>
 #include <QTimer>
+#include <QCursor>
 
 // KDE
 #include <KDebug>
@@ -50,6 +51,7 @@ WiimoteWidget::WiimoteWidget( KMainWindow *parent )
     connect(ui.buttonConnect, SIGNAL(clicked()), m_wiimote, SLOT(connectWiimote()));
     connect(ui.buttonDisconnect, SIGNAL(clicked()), m_wiimote, SLOT(disconnectWiimote()));
     connect(ui.buttonRumble, SIGNAL(toggled(bool)), m_wiimote, SLOT(rumble(bool)));
+
     connect(ui.led1, SIGNAL(stateChanged(int)), SLOT(ledOneStateChanged(int)));
     connect(ui.led2, SIGNAL(stateChanged(int)), SLOT(ledTwoStateChanged(int)));
     connect(ui.led3, SIGNAL(stateChanged(int)), SLOT(ledThreeStateChanged(int)));
@@ -87,6 +89,8 @@ WiimoteWidget::WiimoteWidget( KMainWindow *parent )
     connect(m_wiimote, SIGNAL(accelerometerXChanged(int)), ui.accelX, SLOT(setValue(int)));
     connect(m_wiimote, SIGNAL(accelerometerYChanged(int)), ui.accelY, SLOT(setValue(int)));
     connect(m_wiimote, SIGNAL(accelerometerZChanged(int)), ui.accelZ, SLOT(setValue(int)));
+    //connect(m_wiimote, SIGNAL(accelerometerChanged(int,int,int)), this, SLOT(updateCursorPosition(int,int,int)));
+    connect(m_wiimote, SIGNAL(nunchukStickChanged(int,int)), this, SLOT(stickNavigation(int,int)));
 
     m_wiimote->start();
 }
@@ -263,6 +267,24 @@ void WiimoteWidget::ledFourStateChanged(int state)
     } else {
        m_wiimote->ledFourOff();
     }
+}
+
+void WiimoteWidget::updateCursorPosition(int x, int y, int z)
+{
+    Q_UNUSED(z);
+    QCursor::setPos(x, y);
+}
+
+void WiimoteWidget::stickNavigation(int x, int y)
+{
+    if (!ui.nunchukNavigation->isChecked()) {
+        return;
+    }
+
+    // it seems that the starting position of the stick
+    // is : X == 119 and Y == 128
+    // In addition to this Qt uses an inverse Y axis
+    QCursor::setPos(QCursor::pos() + QPoint(x - 119, - y + 128));
 }
 
 #include "wiimotewidget.moc"
