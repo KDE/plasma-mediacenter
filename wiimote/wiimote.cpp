@@ -46,6 +46,9 @@ Wiimote::Wiimote( QObject* parent )
     myWiimote = this;
     m_knightRiderTimer = new QTimer(this);
     connect(m_knightRiderTimer, SIGNAL(timeout()), SLOT(knightRider()));
+
+    m_scrollSpeed = 10;
+    
     m_knightRiderTimer->setInterval(150);
     m_knightRiderState = 0;
     _knUp = true;
@@ -61,6 +64,16 @@ Wiimote::~Wiimote()
 WiimoteState* Wiimote::state()
 {
     return m_state;
+}
+
+int Wiimote::scrollSpeed()
+{
+    return m_scrollSpeed;
+}
+
+void Wiimote::setScrollSpeed(int speed)
+{
+    m_scrollSpeed = speed;
 }
 
 void Wiimote::cwiidCallback(cwiid_wiimote_t *wiimote, int mesg_count,
@@ -86,6 +99,7 @@ struct timespec
 
     */
     //QDateTime t(QDate(1970, 1, 1), QTime(0, 0, 0));
+    /*
     QTime t(0, 0, 0);
     bool outdated = false;
     int cur = QTime::currentTime().msec();
@@ -106,7 +120,7 @@ struct timespec
     }
     int now_s = t.second();
     int now_ms = (now_s * 1000) + t.msec();
-
+    */
 
     //kDebug() << ms << msec << now_ms << now_ms - ms << t << t.msec() << "Delay:" << delay;
     //kDebug() << "sec:" << sec << "msec" << msec << "cur" << cur << "age" << age << _age << t << QDateTime::currentDateTime().toUTC();
@@ -183,7 +197,7 @@ void Wiimote::updateAccelerometers(struct cwiid_acc_mesg acc)
             if (diffX < -LAZINESS || diffX > LAZINESS) {
                 if (diffX < 130) {
                     //kDebug() << "X Changed:" << diffX;
-                    emit dragUpDown(diffX);
+                    //emit dragUpDown(diffX);
                 }
             }
         }
@@ -216,6 +230,7 @@ void Wiimote::updateInfrared(struct cwiid_ir_mesg ir_mesg)
 {
     //bool changed = false;
     int oldcount = m_state->infrared.count();
+    QList<QPoint> oldLeds = m_state->infrared;
     m_state->infrared.clear();
     for (int i = 0; i < CWIID_IR_SRC_COUNT; i++) {
         if (ir_mesg.src[i].valid) {
@@ -224,6 +239,13 @@ void Wiimote::updateInfrared(struct cwiid_ir_mesg ir_mesg)
             int y = ir_mesg.src[i].pos[CWIID_Y];
             m_state->infrared << QPoint(x, y);
         }
+    }
+    if (m_state->buttonBPressed && oldLeds.count() == m_state->infrared.count() && m_state->infrared.count()) {
+        int diff = oldLeds.first().y() - m_state->infrared.first().y();
+        kDebug() << "dragUpDown" << (diff / 10) * m_scrollSpeed;
+        int d = (diff / 10) * m_scrollSpeed;
+
+        emit dragUpDown((int)(diff/10*m_scrollSpeed));
     }
     if (m_state->infrared.count()) {
         emit infraredChanged(QTime::currentTime());
@@ -253,14 +275,14 @@ void Wiimote::updateButtons(uint16_t buttons)
     // Up Button
     if ((buttons & CWIID_BTN_UP) != m_state->buttonUpPressed) {
         m_state->buttonUpPressed = buttons & CWIID_BTN_UP;
-        emit dragUpDown(-1);
+        emit dragUpDown(m_scrollSpeed);
         emit buttonUp(m_state->buttonUpPressed);
     }
 
     // Down Button
     if ((buttons & CWIID_BTN_DOWN) != m_state->buttonDownPressed) {
         m_state->buttonDownPressed = buttons & CWIID_BTN_DOWN;
-        emit dragUpDown(1);
+        emit dragUpDown(-m_scrollSpeed);
         emit buttonDown(m_state->buttonDownPressed);
     }
 

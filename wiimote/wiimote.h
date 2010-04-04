@@ -83,6 +83,9 @@ class Wiimote : public QThread
         bool ledThree();
         bool ledFour();
 
+        int scrollSpeed();
+        void setScrollSpeed(int);
+
         static void cwiidCallback(cwiid_wiimote_t *wiimote, int mesg_count,
                     union cwiid_mesg mesg[], struct timespec *timestamp);
         void wiimoteEvent(cwiid_wiimote_t *wiimote, int mesg_count,
@@ -159,6 +162,8 @@ class Wiimote : public QThread
         QTimer* m_knightRiderTimer;
         int m_knightRiderState;
         bool _knUp;
+
+        int m_scrollSpeed;
 };
 
 //Q_DECLARE_METATYPE(QPointList)
