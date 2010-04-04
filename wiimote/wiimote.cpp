@@ -29,6 +29,8 @@
 
 #include "wiimote.h"
 
+#define LAZINESS 1
+
 //cwiid_mesg_callback_t print_callback;
 
 Wiimote* myWiimote = 0;
@@ -128,19 +130,27 @@ void Wiimote::updateAccelerometers(struct cwiid_acc_mesg acc)
     y = acc.acc[CWIID_Y];
     z = acc.acc[CWIID_Z];
 
+    int diffX = 0, diffY = 0, diffZ = 0;
+
     if (x != m_state->accelX) {
+        diffX = m_state->accelX - x;
+        if (m_state->buttonAPressed)
+            if (diffX < -LAZINESS || diffX > LAZINESS)
+                kDebug() << "X Changed:" << diffX;
         m_state->accelX = x;
         emit accelerometerXChanged(x);
         changed = true;
     }
 
     if (y != m_state->accelY) {
+        diffY = m_state->accelY - y;
         m_state->accelY = y;
         emit accelerometerYChanged(y);
         changed = true;
     }
 
     if (z != m_state->accelZ) {
+        diffZ = m_state->accelZ - z;
         m_state->accelZ = z;
         emit accelerometerZChanged(z);
         changed = true;
@@ -149,6 +159,7 @@ void Wiimote::updateAccelerometers(struct cwiid_acc_mesg acc)
     if (changed) {
         emit accelerometerChanged(x, y, z);
     }
+    //kDebug() << "x, y, z:" << x << y << z << " diffX, diffY, diffZ:" << diffX << diffY << diffZ;
 }
 
 void Wiimote::updateInfrared(struct cwiid_ir_mesg ir_mesg)
