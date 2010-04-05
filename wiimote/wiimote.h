@@ -140,6 +140,7 @@ class Wiimote : public QThread
 
         /* Gestures */
         void dragUpDown(int);
+        void flickUpDown(int);
 
     protected:
         void run();

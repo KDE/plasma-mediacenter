@@ -243,9 +243,15 @@ void Wiimote::updateInfrared(struct cwiid_ir_mesg ir_mesg)
             m_state->infrared << QPoint(-x, y);
         }
     }
+    if (m_state->buttonAPressed && oldLeds.count() == m_state->infrared.count() && m_state->infrared.count()) {
+        int diff = oldLeds.first().y() - m_state->infrared.first().y();
+        int d = (diff / 10) * m_scrollSpeed;
+        //kDebug() << "Flick Up/Down" << d;
+        emit flickUpDown(d);
+    }
     if (m_state->buttonBPressed && oldLeds.count() == m_state->infrared.count() && m_state->infrared.count()) {
         int diff = oldLeds.first().y() - m_state->infrared.first().y();
-        kDebug() << "dragUpDown" << (diff / 10) * m_scrollSpeed;
+        //kDebug() << "dragUpDown" << (diff / 10) * m_scrollSpeed;
         int d = (diff / 10) * m_scrollSpeed;
 
         emit dragUpDown((int)(diff/10*m_scrollSpeed));

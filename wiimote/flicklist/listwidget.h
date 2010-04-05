@@ -43,9 +43,12 @@ class ListWidget: public Plasma::ScrollWidget
 
         Wiimote* wiimote();
 
+        qreal velocity;
+        
     public Q_SLOTS:
         void itemsAdded (const KUrl &directoryUrl, const KFileItemList &items);
         void wiimoteDragUpDown(int moves);
+        void wiimoteFlickUpDown(int moves);
 
     private:
         QGraphicsWidget* m_widget;

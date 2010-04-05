@@ -29,13 +29,15 @@ class FlickList : public Plasma::PopupApplet
 
     private Q_SLOTS:
             void setSpeed();
+            void setVelocity();
 
-        
     private:
         QGraphicsWidget* m_widget;
         ListWidget *m_listWidget;
         Plasma::PushButton* m_setSpeed;
         Plasma::LineEdit* m_speed;
+        Plasma::PushButton* m_setVelocity;
+        Plasma::LineEdit* m_velocity;
 };
  
 // This is the command that links your applet to the .desktop file

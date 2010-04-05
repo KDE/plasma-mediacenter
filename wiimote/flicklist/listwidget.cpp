@@ -44,15 +44,16 @@ ListWidget::ListWidget(QGraphicsWidget* parent) : Plasma::ScrollWidget(parent),
     setWidget(m_widget);
     setMinimumSize(100, 100);
     setPreferredSize(200, 200);
+    velocity = 20;
     //m_widget->setMinimumSize(100, 100);
     //m_widget->setPreferredSize(200, 200);
-    QStringList knoppen;
-    knoppen << "eins" << "zwei" << "drei" << "vier" << "fünf" << "sechs";
-    knoppen << knoppen;
-    knoppen << knoppen;
-    Plasma::Label* lbl = new Plasma::Label(m_widget);
-    lbl->setText("<h3>boven!</h3>");
-    m_layout->addItem(lbl);
+    //QStringList knoppen;
+    //knoppen << "eins" << "zwei" << "drei" << "vier" << "fünf" << "sechs";
+    //knoppen << knoppen;
+    //knoppen << knoppen;
+    //Plasma::Label* lbl = new Plasma::Label(m_widget);
+    //lbl->setText("<h3>boven!</h3>");
+    //m_layout->addItem(lbl);
 
     m_dirLister = new KDirLister(this);
     connect(m_dirLister, SIGNAL(itemsAdded(const KUrl &, const KFileItemList &)),
@@ -72,7 +73,18 @@ ListWidget::ListWidget(QGraphicsWidget* parent) : Plasma::ScrollWidget(parent),
 
     m_wiimote = new Wiimote(this);
     connect(m_wiimote, SIGNAL(dragUpDown(int)), this, SLOT(wiimoteDragUpDown(int)));
+    connect(m_wiimote, SIGNAL(flickUpDown(int)), this, SLOT(wiimoteFlickUpDown(int)));
     m_wiimote->start();
+}
+
+void ListWidget::wiimoteFlickUpDown(int moves)
+{
+    qreal velo = moves * velocity;
+    QPointF p = QPointF(0, qMin(velo, 500.0));
+    if (!p.isNull()) {
+        //kDebug() << "list flicking to" << p;
+        flick(p);
+    }
 }
 
 void ListWidget::wiimoteDragUpDown(int moves)
@@ -82,11 +94,11 @@ void ListWidget::wiimoteDragUpDown(int moves)
     QPointF p = scrollPosition();
     //kDebug() << scrollPosition();
     qreal ynew = qMax((qreal)(0.0), (-moves * m) + p.y());
-    kDebug() << "Preferred height, ynew:" << m_widget->preferredHeight() << ynew;
+    //kDebug() << "Preferred height, ynew:" << m_widget->preferredHeight() << ynew;
     ynew = qMin(m_widget->preferredHeight(), ynew);
     QPointF p2 = QPointF(p.x(), ynew);
     setScrollPosition(p2);
-    kDebug() << "scrolled" << p << " to" << p2 << moves;
+    //kDebug() << "scrolled" << p << " to" << p2 << moves;
 }
 
 
@@ -107,6 +119,7 @@ void ListWidget::itemsAdded (const KUrl &directoryUrl, const KFileItemList &item
         Plasma::IconWidget* knop = new Plasma::IconWidget(m_widget);
         knop->setOrientation(Qt::Horizontal);
         knop->setMinimumHeight(48);
+        knop->setMaximumWidth(400);
         //knop->setText(txt);
         m_layout->addItem(knop);
 
