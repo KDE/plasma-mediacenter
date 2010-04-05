@@ -254,7 +254,7 @@ void Wiimote::updateInfrared(struct cwiid_ir_mesg ir_mesg)
         //kDebug() << "dragUpDown" << (diff / 10) * m_scrollSpeed;
         int d = (diff / 10) * m_scrollSpeed;
 
-        emit dragUpDown((int)(diff/10*m_scrollSpeed));
+        emit dragUpDown(d);
     }
     if (m_state->infrared.count()) {
         emit infraredChanged(QTime::currentTime());
@@ -639,7 +639,7 @@ bool Wiimote::ledTwo()
 void Wiimote::setLeds()
 {
     if (m_wiimote) {
-        int n = cwiid_set_led(m_wiimote, m_ledState);
+        cwiid_set_led(m_wiimote, m_ledState);
         //kDebug() << n << m_ledState;
     }
 }

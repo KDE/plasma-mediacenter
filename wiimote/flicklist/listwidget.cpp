@@ -82,8 +82,9 @@ void ListWidget::wiimoteFlickUpDown(int moves)
     qreal velo = moves * velocity;
     QPointF p = QPointF(0, qMin(velo, 500.0));
     if (!p.isNull()) {
-        //kDebug() << "list flicking to" << p;
-        flick(p);
+        kDebug() << "list flicking to" << p;
+        kDebug() << "needs patch to kdelibs, then enable flick(p); in listwidget.cpp";
+        //flick(p);
     }
 }
 

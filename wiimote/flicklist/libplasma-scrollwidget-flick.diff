@@ -1,0 +1,83 @@
+Index: plasma/widgets/scrollwidget.h
+===================================================================
+--- plasma/widgets/scrollwidget.h	(revision 1111134)
++++ plasma/widgets/scrollwidget.h	(working copy)
+@@ -195,6 +195,17 @@
+     void setScrollPosition(const QPointF &position);
+ 
+     /**
++     * Flicks the internal widget for to a position at velocity relative to the current
++     * scrolling position.
++     * @code
++     * myScrollWidget->flick(QPointF(0, 500); // Flick 500 pixels up
++     * @endcode
++     * @param velocity the amount of pixel in x and y direction
++     * @since 4.5
++     */
++    void flick(const QPointF velocity);
++
++    /**
+      * @return the position of the internal widget relative to this widget
+      * @since 4.4
+      */
+Index: plasma/widgets/scrollwidget.cpp
+===================================================================
+--- plasma/widgets/scrollwidget.cpp	(revision 1111134)
++++ plasma/widgets/scrollwidget.cpp	(working copy)
+@@ -417,8 +417,8 @@
+                     start->setEndValue(minExtent - dist/2);
+                     end->setStartValue(minExtent - dist/2);
+                     end->setEndValue(minExtent);
+-                    start->setDuration(FixupDuration/4);
+-                    end->setDuration(3*FixupDuration/4);
++                    start->setDuration(qAbs(FixupDuration/4));
++                    end->setDuration(qAbs(3*FixupDuration/4));
+                     group->start();
+                 } else {
+                     QObject *obj = start->targetObject();
+@@ -436,8 +436,8 @@
+                 start->setEndValue(maxExtent - dist/2);
+                 end->setStartValue(maxExtent - dist/2);
+                 end->setEndValue(maxExtent);
+-                start->setDuration(FixupDuration/4);
+-                end->setDuration(3*FixupDuration/4);
++                start->setDuration(qAbs(FixupDuration/4));
++                end->setDuration(qAbs(3*FixupDuration/4));
+                 group->start();
+             } else {
+                 QObject *obj = start->targetObject();
+@@ -1105,19 +1105,31 @@
+         if (d->hasContentsProperty) {
+             QVariant var = d->widget.data()->property("contentsSize");
+             return var.toSizeF();
+-        } else
++        } else {
+             return d->widget.data()->size();
++        }
+     }
+     return QSizeF();
+ }
+ 
++void ScrollWidget::flick(QPointF velocity)
++{
++    //kDebug() << "flicking" << velocity;
++    //QPointF newPos = QPointF(scrollPosition().x(), scrollPosition().y() + moves);
++    //QPointF newPos = scrollPosition() + velocity/2;
++    //setScrollPosition(newPos);
++    d->flickX(velocity.x());
++    d->flickY(velocity.y());
++}
++
+ void ScrollWidget::setScrollPosition(const QPointF &position)
+ {
+     if (d->widget) {
+-        if (d->hasOffsetProperty)
++        if (d->hasOffsetProperty) {
+             d->widget.data()->setProperty("scrollPosition", position);
+-        else
++        } else {
+             d->widget.data()->setPos(-position.toPoint());
++        }
+     }
+ }
+ 
