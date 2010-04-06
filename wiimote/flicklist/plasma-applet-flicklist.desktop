@@ -1,6 +1,12 @@
 [Desktop Entry]
 Name=flicklist
+Name[pt]=flicklist
+Name[sv]=Blädderlista
+Name[uk]=flicklist
 Comment=Plasma flicklist
+Comment[pt]=Flicklist do Plasma
+Comment[sv]=Plasma blädderlista
+Comment[uk]=Аплет Плазми flicklist
 Type=Service
 
 X-KDE-ServiceTypes=Plasma/Applet
