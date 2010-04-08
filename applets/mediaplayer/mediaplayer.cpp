@@ -466,6 +466,11 @@ MediaCenter::Media MediaPlayer::currentMedia()
     return m_currentMedia;
 }
 
+void MediaPlayer::clearQueue()
+{
+    m_medias.clear();
+}
+
 K_EXPORT_PLASMA_APPLET(mcplayer, MediaPlayer)
 
 #include "mediaplayer.moc"

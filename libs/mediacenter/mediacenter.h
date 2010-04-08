@@ -37,9 +37,18 @@ enum MediaType {
     OpticalDisc
 };
 
-enum State {
+enum UIComponent {
+    UIControlBar,
+    UIInfoBar,
+    UIBrowser,
+    UIPlayer,
+    UIPlaylist,
+    UIHomeScreen
+};
+
+enum PlaybackState {
     PlayingState,
-    StoppedState,
+    StoppedState, //TODO: Remove stopped state
     PausedState
 };
 

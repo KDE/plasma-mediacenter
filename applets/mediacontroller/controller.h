@@ -1,5 +1,6 @@
 /***************************************************************************
  *   Copyright 2009 by Alessandro Diaferia <alediaferia@gmail.com>         *
+ *   Copyright 2010 by Christophe Olinger <olingerc@binarylooks.com>       *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,6 +22,8 @@
 
 #include <mediacenter/playbackcontrol.h>
 
+#include <QGraphicsLinearLayout>
+
 #include <phonon/phononnamespace.h>
 
 namespace Plasma {
@@ -36,13 +39,21 @@ public:
     ~MediaController();
 
     void constraintsEvent(Plasma::Constraints constraints);
-
     void paintInterface(QPainter *painter, const QStyleOptionGraphicsItem *option, const QRect &contentsRect);
-
     void init();
 
+    void addToLayout(QList<QGraphicsWidget*> list);
+
+signals:
+    void browserGoPrevious();
+    void togglePlaylistVisible();
+    void toggleControlAutohide();
+    void layoutToPictureState();
+    void layoutToVideoState();
+    void layoutToMusicState();
+
 public slots:
-    void playbackStateChanged(MediaCenter::State);
+    void playbackStateChanged(MediaCenter::PlaybackState);
 
 protected:
     void resizeEvent(QGraphicsSceneResizeEvent *event);
@@ -54,12 +65,23 @@ private slots:
     void updateTotalTime(qint64 time);
     void updateCurrentTick(qint64 time);
     void slotThemeChanged();
+    void iconAutohidePressed();
 
 private:
     Plasma::FrameSvg *m_svg;
+
     Plasma::IconWidget *m_playPause;
+    Plasma::IconWidget *m_skipBack;
+    Plasma::IconWidget *m_skipForward;
+    Plasma::IconWidget *m_stop;
     Plasma::Slider *m_volumeSlider;
     Plasma::Slider *m_seekSlider;
+    Plasma::IconWidget *m_iconGoPrevious;
+    Plasma::IconWidget *m_iconTogglePlaylistVisible;
+    Plasma::IconWidget *m_iconToggleControlAutohide;
+    Plasma::IconWidget *m_iconSlideshow;
+
+    QGraphicsLinearLayout *m_layout;
 
     int iconSizeFromCurrentSize() const;
 

@@ -1,5 +1,6 @@
 /***************************************************************************
  *   Copyright 2009 by Alessandro Diaferia <alediaferia@gmail.com>         *
+ *   Copyright 2010 by Christophe Olinger <olingerc@binarylooks.com>       *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -26,7 +27,7 @@
 namespace Plasma {
     class Containment;
 }
-
+class MediaHandler;
 class QGraphicsItem;
 
 /**
@@ -63,15 +64,19 @@ public:
      * the media browser fullscreen. This might be particularly useful
      * when the playing queue is empty or when nothing is playing.
      */
-    void setOnlyShowBrowser(bool set);
-    bool onlyShowBrowser();
 
+    void setPlaylistVisible(bool set);
+    bool playlistVisible();
     QRectF browserPreferredShowingRect() const;
     QRectF controllerPreferredShowingRect() const;
     QRectF playlistPreferredShowingRect() const;
 
 public slots:
     void toggleShowAllMediaApplets();
+
+    void togglePlaylistVisible();
+    void toggleControlAutohide();
+    void setControlAutohide(bool);
 
 protected slots:
     void animateShowingApplet(Plasma::Applet *);
@@ -88,12 +93,15 @@ private:
 
     QList<Plasma::Applet*> m_needLayouting;
 
-    bool m_onlyBrowser;
     bool m_showAll;
+    bool m_playlistVisible;
+    bool m_controlAutohide;
+
+    MediaHandler* m_playlistHandler;
+    MediaHandler* m_controlHandler;
 
 private:
     void doCompleteLayout();
-
     void layoutBrowser();
     void layoutControl();
     void layoutPlaylist();

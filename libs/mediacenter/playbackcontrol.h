@@ -21,6 +21,7 @@
 
 #include "mediacenter_export.h"
 #include "mediacenter.h"
+#include "mediacenterstate.h"
 
 #include <Plasma/Applet>
 
@@ -55,6 +56,11 @@ public:
      * proper Phonon::MediaObject currently in use to reproduce media content.
      */
     void setMediaObject(Phonon::MediaObject *mediaObject);
+
+    /**
+     * Reimplement this to be able to put widgets into the applet on each state changes
+     */
+    virtual void addToLayout(QList<QGraphicsWidget*> list);
 
     /**
      * Use this method to retrieve the current Phonon::MediaObject in use.
@@ -99,6 +105,13 @@ Q_SIGNALS:
      */
     void mediaSkipBackwardRequest();
 
+    /**
+     * Emit this signal in order to request the player to start a slideshow.
+     */
+    void mediaPlaySlideshow();
+    void layoutToPictureState();
+    void layoutToVideoState();
+
 public Q_SLOTS:
     /**
      * This slot is called whenever the current playing state changes.
@@ -106,7 +119,7 @@ public Q_SLOTS:
      * to the right playing state.
      * @note: the default implementation actually does nothing.
      */
-    virtual void playbackStateChanged(MediaCenter::State state);
+    virtual void playbackStateChanged(MediaCenter::PlaybackState state);
 
     /**
      * This slot is automatically called whenever the seek state changes.
@@ -123,6 +136,11 @@ public Q_SLOTS:
      * seek and volume controls when a picture is being showed.
      */
     virtual void mediaTypeChanged(MediaCenter::MediaType newType);
+
+    /**
+     *Make other applets (containment actually) have access to the doLayout function of the controller
+     */
+    virtual void doLayout(MediaCenter::State);
 
 protected:
     /**

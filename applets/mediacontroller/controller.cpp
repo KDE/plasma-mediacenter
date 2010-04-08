@@ -1,5 +1,6 @@
 /***************************************************************************
  *   Copyright 2009 by Alessandro Diaferia <alediaferia@gmail.com>         *
+ *   Copyright 2010 by Christophe Olinger <olingerc@binarylooks.com>       *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -35,8 +36,18 @@
 MediaController::MediaController(QObject *parent, const QVariantList &args)
     : MediaCenter::PlaybackControl(parent, args),
     m_svg(new Plasma::FrameSvg(this)),
+
     m_volumeSlider(new Plasma::Slider(this)),
-    m_seekSlider(new Plasma::Slider(this))
+    m_seekSlider(new Plasma::Slider(this)),
+    m_iconGoPrevious(new Plasma::IconWidget(this)),
+    m_iconTogglePlaylistVisible(new Plasma::IconWidget(this)),
+    m_iconToggleControlAutohide(new Plasma::IconWidget(this)),
+    m_skipBack(new Plasma::IconWidget(this)),
+    m_playPause(new Plasma::IconWidget(this)),
+    m_skipForward(new Plasma::IconWidget(this)),
+    m_stop(new Plasma::IconWidget(this)),
+    m_layout(new QGraphicsLinearLayout(Qt::Horizontal)),
+    m_iconSlideshow(new Plasma::IconWidget(this))
 {
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
 }
@@ -71,50 +82,20 @@ int MediaController::iconSizeFromCurrentSize() const
 
 void MediaController::init()
 {
-    m_svg->setEnabledBorders(Plasma::FrameSvg::LeftBorder | Plasma::FrameSvg::RightBorder | Plasma::FrameSvg::BottomBorder);
+    m_svg->setEnabledBorders(Plasma::FrameSvg::BottomBorder);
     m_svg->setCacheAllRenderedFrames(true);
     m_svg->setImagePath(Plasma::Theme::defaultTheme()->imagePath("widgets/background"));
 
     setMarginsFromTheme();
     connect (Plasma::Theme::defaultTheme(), SIGNAL(themeChanged()), this, SLOT(slotThemeChanged()));
 
-    QGraphicsLinearLayout *controlLayout = new QGraphicsLinearLayout(Qt::Horizontal);
+    m_seekSlider->hide();
+    m_volumeSlider->hide();
 
-    m_seekSlider->setRange(0, 100);
-    m_seekSlider->setOrientation(Qt::Horizontal);
-    connect (m_seekSlider, SIGNAL(sliderMoved(int)), this, SLOT(slotSeekSlider(int)));
-    controlLayout->addItem(m_seekSlider);
-
-    Plasma::IconWidget *skipBack = new Plasma::IconWidget(this);
-    skipBack->setIcon("media-skip-backward");
-    connect (skipBack, SIGNAL(clicked()), this, SIGNAL(mediaSkipBackwardRequest()));
-    controlLayout->addItem(skipBack);
-
-    Plasma::IconWidget *stop = new Plasma::IconWidget(this);
-    stop->setIcon("media-playback-stop");
-    connect (stop, SIGNAL(clicked()), this, SIGNAL(stopRequest()));
-    controlLayout->addItem(stop);
-
-    m_playPause = new Plasma::IconWidget(this);
-    m_playPause->setIcon("media-playback-start");
-    controlLayout->addItem(m_playPause);
-    connect (m_playPause, SIGNAL(clicked()), SIGNAL(playPauseRequest()));
-
-    Plasma::IconWidget *skipForward = new Plasma::IconWidget(this);
-    skipForward->setIcon("media-skip-forward");
-    connect (skipForward, SIGNAL(clicked()), this, SIGNAL(mediaSkipForwardRequest()));
-    controlLayout->addItem(skipForward);
-
-    m_volumeSlider->setRange(0, 100);
-    m_volumeSlider->setOrientation(Qt::Horizontal);
-    m_volumeSlider->setValue(100);
-    connect (m_volumeSlider, SIGNAL(sliderMoved(int)), this, SLOT(slotVolumeSlider(int)));
-    controlLayout->addItem(m_volumeSlider);
-
-    setLayout(controlLayout);
+    setLayout(m_layout);
 }
 
-void MediaController::playbackStateChanged(MediaCenter::State state)
+void MediaController::playbackStateChanged(MediaCenter::PlaybackState state)
 {
     if (state == MediaCenter::PlayingState) {
         m_playPause->setIcon("media-playback-pause");
@@ -177,5 +158,16 @@ void MediaController::slotThemeChanged()
     setMarginsFromTheme();
 }
 
+void MediaController::iconAutohidePressed()
+{
+    //TODO: I need some ON/OFF Effect
+}
+
+void MediaController::addToLayout(QList<QGraphicsWidget*> list)
+{
+    foreach (QGraphicsWidget *w, list) {
+        m_layout->addItem(w);
+    }
+}
 
 K_EXPORT_PLASMA_APPLET(mediacontroller, MediaController)

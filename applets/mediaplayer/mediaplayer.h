@@ -84,21 +84,23 @@ public Q_SLOTS:
 
     void playMedia(const MediaCenter::Media &media);
     void enqueue(const QList<MediaCenter::Media> &sources);
+    void clearQueue();
 
     void stop();
     void skipForward();
     void skipBackward();
 
+    void playNextMedia(); //FIXME go back to private
+    void slideShow(const MediaCenter::Media &);
+
 private Q_SLOTS:
     void hideControls();
     void acceptConfiguration();
-    void playNextMedia();
 
 private:
     void loadConfig();
     void applyConfig();
     void doFullScreen();
-    void slideShow(const MediaCenter::Media &);
 
     /**
      * Appends a media file to the m_medias list

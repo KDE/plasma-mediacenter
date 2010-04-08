@@ -298,6 +298,7 @@ void AbstractMediaItemView::itemClickEvent(QGraphicsSceneMouseEvent *event)
         return;
     }
 
+
     QModelIndex index = viewItem->index();
 
     KDirModel *model = qobject_cast<KDirModel*>(m_model);
@@ -313,15 +314,42 @@ void AbstractMediaItemView::itemClickEvent(QGraphicsSceneMouseEvent *event)
             model->dirLister()->openUrl(item.url());
             m_hoveredItem = 0;
             m_rootIndex = model->indexForItem(item);
+	    emit mediasListInDirectory(listMediaInDirectory()); //FIXME: This doesn't seem to work. m_items is always empty?
         } else {
+
             MediaCenter::Media media;
             media.first = MediaCenter::getType(item.url().path());
             media.second = item.url().path();
-            emit mediasActivated(QList<MediaCenter::Media>() << media);
+	    emit mediasActivated(QList<MediaCenter::Media>() << media);
+	    emit mediaActivated(media);
         }
     }
 
     emit indexActivated(index);
+}
+
+//FIXME: This doesnt work. I wanted to have this to be able to have a picture slideshow of all media in the current directory
+QList<MediaCenter::Media> AbstractMediaItemView::listMediaInDirectory()
+{
+    MediaCenter::Media media;
+    QList<MediaCenter::Media> list;
+    KFileItem item;
+    KDirModel *model = qobject_cast<KDirModel*>(m_model);
+
+    for (int i = 0; i < m_items.count(); i++) {
+      QModelIndex index = m_items[i]->index();
+      if (model && model->dirLister()->isFinished()) {
+        item = index.isValid() ? index.data(KDirModel::FileItemRole).value<KFileItem>() : KFileItem();
+        //if (item.isNull()) {
+        //    return;
+        //}
+      }
+      media.first = MediaCenter::getType(item.url().path());
+      media.second = item.url().path();
+      list << media;
+    }
+    kWarning() << "m_items: " << m_items.size() << "created mediaDirList " << list.size();
+    return list;
 }
 
 void AbstractMediaItemView::tryDrag(QGraphicsSceneMouseEvent *event)

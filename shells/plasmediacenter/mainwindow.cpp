@@ -78,7 +78,8 @@ m_player(0)
 
     menuBar()->addMenu(helpMenu());
 
-    resize(450, 400);
+    resize(1024, 600); //netbook size
+    //showFullScreen();
 }
 
 MainWindow::~MainWindow()
@@ -97,8 +98,8 @@ void MainWindow::loadMediaCenter()
 
     m_browser = m_containment->addApplet("mediabrowser");
     m_playlist = m_containment->addApplet("playlist");
-    m_controller = m_containment->addApplet("mediacontroller");
     m_player = m_containment->addApplet("mcplayer");
+    m_controller = m_containment->addApplet("mediacontroller"); //Keep the controller last
 }
 
 bool MainWindow::eventFilter(QObject *o, QEvent *e)

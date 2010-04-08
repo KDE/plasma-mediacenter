@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright 2009 by Alessandro Diaferia <alediaferia@gmail.com>         *
+ *   Copyright 2010 by Christophe Olinger <olingerc@binarylooks.com>       *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -15,57 +15,40 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
- ***************************************************************************/ 
-#ifndef MEDIABROWSER_H
-#define MEDIABROWSER_H
+ ***************************************************************************/
 
-#include <mediacenter/browser.h>
+#ifndef VIDEOSTATE_H
+#define VIDEOSTATE_H
 
-#include "ui_general.h"
-#include "abstractmediaitemview.h"
+#include "mediacenterstate.h"
 
-class BrowsingWidget;
-class ModelPackage;
+#include <QState>
 
-class MediaBrowser : public MediaCenter::Browser
+#include <Plasma/IconWidget>
+
+namespace MediaCenter {
+    enum VideoSubComponent {
+        VideoStateLabel
+    };
+
+class MEDIACENTER_EXPORT VideoState : public MediaCenterState
 {
     Q_OBJECT
 public:
-    enum BrowsingMode { LocalFiles, RemoteSearches };
-     MediaBrowser(QObject *parent, const QVariantList &args);
-    ~MediaBrowser();
+    VideoState(QState *parent=0);
+    ~VideoState();
 
-    void init();
-    void createConfigurationInterface(KConfigDialog *parent);
+    QList<QGraphicsWidget*> subComponents();
+    void configureUIComponents(QList<Plasma:: Applet*> list);
+    void connectSubComponents(QList<Plasma:: Applet*> list);
 
-    void setBrowsingWidgets(bool);
-    bool browsingWidgets();
-
-    bool m_browsingWidgets;
-
-signals:
-    void goPrevious();
+protected:
+    void onExit(QEvent* event);
+    void onEntry(QEvent* event);
 
 private:
-    AbstractMediaItemView *m_view;
-    Ui::General uiGeneral;
-
-    QAbstractItemModel *m_model;
-
-    bool m_blurred;
-    QString m_viewType;
-    BrowsingWidget *m_browsingWidget;
-    ModelPackage *m_package;
-
-private:
-    void createView();
-    void showInstalledModelPackages();
-
-private slots:
-    void loadConfiguration();
-    void configAccepted();
-    void slotIndexActivated(const QModelIndex &);
-
+    Plasma::IconWidget *m_videoStateLabel;
 };
 
-#endif
+} //namespace end
+#endif // VIDEOSTATE_H

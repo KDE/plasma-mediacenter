@@ -6,6 +6,10 @@ playbackcontrol.cpp
 playlist.cpp
 player.cpp
 mediacenter.cpp
+mediacenterstate.cpp
+picturestate.cpp
+videostate.cpp
+musicstate.cpp
 )
 
 kde4_add_library(mediacenterlibs SHARED ${mediacenterlibs_SRCS})
@@ -20,6 +24,10 @@ set (mediacenterlibs_HDRS
     playbackcontrol.h
     playlist.h
     player.h
+    mediacenterstate.h
+    picturestate.h
+    videostate.h
+    musicstate.h
 )
 
 install (FILES ${mediacenterlibs_HDRS} DESTINATION ${INCLUDE_INSTALL_DIR}/mediacenter COMPONENT Devel)

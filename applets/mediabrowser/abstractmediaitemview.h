@@ -138,6 +138,8 @@ private slots:
 signals:
     void scrollOffsetChanged(int);
     void mediasActivated(const QList<MediaCenter::Media> &);
+    void mediasListInDirectory(const QList<MediaCenter::Media> &);
+    void mediaActivated(const MediaCenter::Media &);
     void indexActivated(const QModelIndex &);
 
 private:
@@ -146,6 +148,7 @@ private:
     void itemClickEvent(QGraphicsSceneMouseEvent *);
     KUrl::List m_history;
     ModelPackage::BrowsingType m_browsingType;
+    QList<MediaCenter::Media> listMediaInDirectory();
 
 protected:
     int m_iconSize;

@@ -118,7 +118,7 @@ Q_SIGNALS:
      * This signal should be emitted whenever the playback state
      * changes.
      */
-    void playbackStateChanged(MediaCenter::State);
+    void playbackStateChanged(MediaCenter::PlaybackState);
 
 public Q_SLOTS:
     /**
@@ -153,6 +153,11 @@ public Q_SLOTS:
      * @note: The default implementation does nothing.
      */
     virtual void enqueue(const QList<Media> &sources);
+
+    /**
+     * This function can be used to clear the list of media currently enqueued
+     */
+    virtual void clearQueue() = 0;
 
 //    /**
 //     * This slot is called when one or more media are going to be

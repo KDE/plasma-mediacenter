@@ -44,14 +44,18 @@ MediaBrowser::MediaBrowser(QObject *parent, const QVariantList &args)
     : MediaCenter::Browser(parent, args),
     m_view(0),
     m_model(0),
-    m_browsingWidget(new BrowsingWidget(this)),
-    m_package(0)
+    m_browsingWidget(0),
+    m_package(0),
+    m_browsingWidgets(false)
 {
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
     Nepomuk::ResourceManager::instance()->init();
 
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
-    layout->addItem(m_browsingWidget);
+    if (m_browsingWidgets) {
+        m_browsingWidget = new BrowsingWidget(this);
+        layout->addItem(m_browsingWidget);
+    }
     setLayout(layout);
 }
 
@@ -94,7 +98,10 @@ void MediaBrowser::createView()
 
     connect (m_browsingWidget, SIGNAL(goPrevious()), m_view, SLOT(goPrevious()));
     connect (m_view, SIGNAL(mediasActivated(QList<MediaCenter::Media>)), this, SIGNAL(mediasActivated(QList<MediaCenter::Media>)));
+    connect (m_view, SIGNAL(mediasListInDirectory(QList<MediaCenter::Media>)), this, SIGNAL(mediasListInDirectory(QList<MediaCenter::Media>)));
+    connect (m_view, SIGNAL(mediaActivated(const MediaCenter::Media&)), this, SIGNAL(mediaActivated(const MediaCenter::Media&)));
     connect (m_view, SIGNAL(indexActivated(QModelIndex)), this, SLOT(slotIndexActivated(QModelIndex)));
+    connect (this, SIGNAL(goPrevious()), m_view, SLOT(goPrevious()));
     QGraphicsLinearLayout *layout = static_cast<QGraphicsLinearLayout*>(this->layout());
     layout->addItem(m_view);
     setLayout(layout);
@@ -178,6 +185,16 @@ void MediaBrowser::slotIndexActivated(const QModelIndex &index)
         m_view->setModel(m_model);
     }
     kDebug() << "finished";
+}
+
+void MediaBrowser::setBrowsingWidgets(bool set)
+{
+    //TODO Implement some toggling of the browsing widgets, they will probably never be needed in the browser
+}
+
+bool MediaBrowser::browsingWidgets()
+{
+    return m_browsingWidgets;
 }
 
 K_EXPORT_PLASMA_APPLET(mediabrowser, MediaBrowser)

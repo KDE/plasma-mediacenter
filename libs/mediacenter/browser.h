@@ -34,8 +34,18 @@ public:
     Browser(QObject *parent, const QVariantList &args);
     virtual ~Browser();
 
+    void setBrowsingWidgets(bool);
+    bool browsingWidgets();
+
 Q_SIGNALS:
     void mediasActivated(const QList<MediaCenter::Media> &);
+
+    /**
+     * This signal should emit a list of all the Media in the Current directory. Useful for picture slideshow
+     * and brwosing single pictures
+     */
+    void mediasListInDirectory(const QList<MediaCenter::Media> &);
+    void mediaActivated(const MediaCenter::Media &);
 };
 
 } // namespace MediaCenter

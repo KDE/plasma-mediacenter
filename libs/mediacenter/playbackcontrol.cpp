@@ -39,7 +39,7 @@ PlaybackControl::~PlaybackControl()
     delete d;
 }
 
-void PlaybackControl::playbackStateChanged(MediaCenter::State state)
+void PlaybackControl::playbackStateChanged(MediaCenter::PlaybackState state)
 {
     Q_UNUSED(state)
 }
@@ -52,6 +52,16 @@ void PlaybackControl::currentSeekChanged(qreal seek)
 void PlaybackControl::mediaTypeChanged(MediaCenter::MediaType newType)
 {
     Q_UNUSED(newType)
+}
+
+void PlaybackControl::doLayout(MediaCenter::State mode)
+{
+    Q_UNUSED(mode)
+}
+
+void PlaybackControl::addToLayout(QList<QGraphicsWidget*> list)
+{
+     Q_UNUSED(list)
 }
 
 void PlaybackControl::setMediaObject(Phonon::MediaObject *mediaObject)

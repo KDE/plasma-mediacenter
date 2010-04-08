@@ -1,5 +1,6 @@
 /***************************************************************************
  *   Copyright 2009 by Alessandro Diaferia <alediaferia@gmail.com>         *
+ *   Copyright 2010 by Christophe Olinger <olingerc@binarylooks.com>       *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -32,7 +33,10 @@ m_browser(0),
 m_control(0),
 m_playlist(0),
 m_player(0),
-m_onlyBrowser(false),
+m_playlistHandler(0),
+m_controlHandler(0),
+m_playlistVisible(false),
+m_controlAutohide(false),
 m_showAll(false)
 {
     m_containment->installEventFilter(this);
@@ -47,11 +51,7 @@ void MediaLayout::setBrowser(Plasma::Applet *browser)
     m_browser = browser;
     m_needLayouting << m_browser;
 
-	m_browserBackgroundHints = m_browser->backgroundHints();
-
-    MediaHandler *handler = new MediaHandler(m_browser, MediaHandler::Right);
-    connect (handler, SIGNAL(appletHideRequest(Plasma::Applet*)), this, SLOT(animateHidingApplet(Plasma::Applet*)));
-    connect (handler, SIGNAL(appletShowRequest(Plasma::Applet*)), this, SLOT(animateShowingApplet(Plasma::Applet*)));
+    m_browserBackgroundHints = m_browser->backgroundHints();
 }
 
 void MediaLayout::setPlaybackControl(Plasma::Applet *control)
@@ -63,6 +63,8 @@ void MediaLayout::setPlaybackControl(Plasma::Applet *control)
     MediaHandler *handler = new MediaHandler(m_control, MediaHandler::Bottom);
     connect (handler, SIGNAL(appletHideRequest(Plasma::Applet*)), this, SLOT(animateHidingApplet(Plasma::Applet*)));
     connect (handler, SIGNAL(appletShowRequest(Plasma::Applet*)), this, SLOT(animateShowingApplet(Plasma::Applet*)));
+
+    m_controlHandler = handler;
 }
 
 void MediaLayout::setPlaylist(Plasma::Applet *playlist)
@@ -74,6 +76,8 @@ void MediaLayout::setPlaylist(Plasma::Applet *playlist)
     MediaHandler *handler = new MediaHandler(m_playlist, MediaHandler::Left);
     connect (handler, SIGNAL(appletHideRequest(Plasma::Applet*)), this, SLOT(animateHidingApplet(Plasma::Applet*)));
     connect (handler, SIGNAL(appletShowRequest(Plasma::Applet*)), this, SLOT(animateShowingApplet(Plasma::Applet*)));
+
+    m_playlistHandler = handler;
 }
 
 void MediaLayout::setPlayer(Plasma::Applet *player)
@@ -94,9 +98,9 @@ void MediaLayout::invalidate()
             layoutPlaylist();
         } else if (applet == m_player) {
             layoutPlayer();
-        }
+	}
         m_needLayouting.removeAll(applet);
-    }
+     }
 }
 
 void MediaLayout::doCompleteLayout()
@@ -117,17 +121,11 @@ void MediaLayout::doCompleteLayout()
 
 void MediaLayout::layoutBrowser()
 {
-    if (m_onlyBrowser) {
-        m_browser->setBackgroundHints(Plasma::Applet::NoBackground);
-        m_browser->setPos(m_containment->rect().topLeft());
-        m_browser->resize(m_containment->size());
-        return;
-    }
-
-    m_browser->setBackgroundHints(m_browserBackgroundHints);
-    m_browser->setPos(browserPreferredShowingRect().topLeft());
-    m_browser->resize(browserPreferredShowingRect().size());
-//    m_browser->setPos(m_browser->pos().x() - m_browser->size().width(), m_browser->pos().y());
+      m_browser->setBackgroundHints(Plasma::Applet::NoBackground);
+      m_browser->setPos(m_containment->rect().left(), m_containment->rect().top() +
+                        controllerPreferredShowingRect().size().height());
+      m_browser->resize(m_containment->size().width(), m_containment->size().height() -
+                        controllerPreferredShowingRect().size().height());
 }
 
 void MediaLayout::layoutControl()
@@ -165,14 +163,15 @@ QRectF MediaLayout::browserPreferredShowingRect() const
 
     qreal leftMargin;
     m_browser->getContentsMargins(&leftMargin, 0, 0, 0);
-    return QRectF(QPointF(-leftMargin, (m_containment->size().height() - m_browser->size().height()) / 2),
-                  QSizeF(m_containment->size().width() / 3.0, m_containment->size().height() * 2 / 3.0));
+    return QRectF(QPointF(-leftMargin, (m_containment->size().height() - controllerPreferredShowingRect().size().height())),
+                  QSizeF(m_containment->size().width(), m_containment->size().height() -
+                  controllerPreferredShowingRect().size().height()));
 }
 
 QRectF MediaLayout::controllerPreferredShowingRect() const
 {
-    const int width = 64 * 4 + 256;
-    const int height = 64;
+    const int width = m_containment->size().width();
+    const int height = 60;
 
     return QRectF(QPointF((m_containment->size().width() - width) / 2, 0), QSizeF(width, height));
 }
@@ -185,8 +184,10 @@ QRectF MediaLayout::playlistPreferredShowingRect() const
 
     qreal rightMargin;
     m_playlist->getContentsMargins(0, 0, &rightMargin, 0);
-    return QRectF(QPointF(m_containment->size().width() - (m_containment->size().width() / 4.0) + rightMargin , (m_containment->size().height() - m_playlist->size().height()) / 2),
-                  QSizeF(m_containment->size().width() / 4.0, m_containment->size().height() * 2 / 3.0));
+    return QRectF(QPointF(m_containment->size().width() - (m_containment->size().width() / 4.0) + rightMargin,
+                          (controllerPreferredShowingRect().height())),
+                           QSizeF(m_containment->size().width() / 4.0, m_containment->size().height() -
+                           controllerPreferredShowingRect().size().height()));
 }
 
 void MediaLayout::animateHidingApplet(Plasma::Applet *applet)
@@ -201,7 +202,6 @@ void MediaLayout::animateHidingApplet(Plasma::Applet *applet)
         Plasma::Animator::self()->moveItem(applet, Plasma::Animator::SlideOutMovement, QPoint(m_containment->size().width(),
                                                                                               playlistPreferredShowingRect().y()));
     }
-
 }
 
 void MediaLayout::animateShowingApplet(Plasma::Applet *applet)
@@ -232,59 +232,22 @@ void MediaLayout::setEnableGlowHandler(QGraphicsItem *item, bool set)
     kDebug() << "set stop hovers to" << !set;
 }
 
-void MediaLayout::setOnlyShowBrowser(bool set)
-{
-    if (m_onlyBrowser == set) {
-        return;
-    }
-
-    m_onlyBrowser = set;
-    if (m_browser) {
-        MediaHandler *handler = MediaHandler::handlerFromApplet(m_browser);
-        if (handler) {
-            handler->setVisible(!m_onlyBrowser);
-            if (!m_onlyBrowser) {
-                connect (handler, SIGNAL(appletHideRequest(Plasma::Applet*)), this, SLOT(animateHidingApplet(Plasma::Applet*)));
-                connect (handler, SIGNAL(appletShowRequest(Plasma::Applet*)), this, SLOT(animateShowingApplet(Plasma::Applet*)));
-            } else {
-                disconnect (handler, SIGNAL(appletHideRequest(Plasma::Applet*)), this, SLOT(animateHidingApplet(Plasma::Applet*)));
-                disconnect (handler, SIGNAL(appletShowRequest(Plasma::Applet*)), this, SLOT(animateShowingApplet(Plasma::Applet*)));
-            }
-
-            if (m_player) {
-                m_player->setVisible(!m_onlyBrowser);
-            }
-        }
-        layoutBrowser();
-    }
-}
-
-bool MediaLayout::onlyShowBrowser()
-{
-    return m_onlyBrowser;
-}
-
 void MediaLayout::toggleShowAllMediaApplets()
 {
-    // let's behave this way for now
-    if (m_onlyBrowser) {
-        return;
-    }
-
     kDebug() << "setting show all to" << !m_showAll;
 
     if (!m_showAll) {
         if (m_browser) {
-            animateShowingApplet(m_browser);
-            setEnableGlowHandler(m_browser, false);
+	    animateShowingApplet(m_browser);
+	    setEnableGlowHandler(m_browser, false);
         }
         if (m_playlist) {
-            animateShowingApplet(m_playlist);
-            setEnableGlowHandler(m_playlist, false);
+	    animateShowingApplet(m_playlist);
+	    setEnableGlowHandler(m_playlist, false);
         }
         if (m_control) {
-            animateShowingApplet(m_control);
-            setEnableGlowHandler(m_control, false);
+	    animateShowingApplet(m_control);
+	    setEnableGlowHandler(m_control, false);
         }
         m_showAll = true;
     } else {
@@ -302,4 +265,51 @@ void MediaLayout::toggleShowAllMediaApplets()
         }
         m_showAll = false;
     }
+}
+
+void MediaLayout::togglePlaylistVisible()
+{
+    if (m_playlistVisible == true) {
+        animateHidingApplet(m_playlist);
+        m_playlistVisible = false;
+        connect (m_playlistHandler, SIGNAL(appletHideRequest(Plasma::Applet*)), this, SLOT(animateHidingApplet(Plasma::Applet*)));
+        connect (m_playlistHandler, SIGNAL(appletShowRequest(Plasma::Applet*)), this, SLOT(animateShowingApplet(Plasma::Applet*)));
+    } else {
+        animateShowingApplet(m_playlist);
+        m_playlistVisible = true;
+        disconnect (m_playlistHandler, SIGNAL(appletHideRequest(Plasma::Applet*)), this, SLOT(animateHidingApplet(Plasma::Applet*)));
+        disconnect (m_playlistHandler, SIGNAL(appletShowRequest(Plasma::Applet*)), this, SLOT(animateShowingApplet(Plasma::Applet*)));
+    }
+}
+
+void MediaLayout::toggleControlAutohide()
+{
+    if (m_controlAutohide == true) {
+        animateHidingApplet(m_control);
+        m_controlAutohide = false;
+        connect (m_controlHandler, SIGNAL(appletHideRequest(Plasma::Applet*)), this, SLOT(animateHidingApplet(Plasma::Applet*)));
+        connect (m_controlHandler, SIGNAL(appletShowRequest(Plasma::Applet*)), this, SLOT(animateShowingApplet(Plasma::Applet*)));
+    } else {
+        animateShowingApplet(m_control);
+        m_controlAutohide = true;
+        disconnect (m_controlHandler, SIGNAL(appletHideRequest(Plasma::Applet*)), this, SLOT(animateHidingApplet(Plasma::Applet*)));
+        disconnect (m_controlHandler, SIGNAL(appletShowRequest(Plasma::Applet*)), this, SLOT(animateShowingApplet(Plasma::Applet*)));
+    }
+}
+
+void MediaLayout::setControlAutohide(bool set) {
+    m_controlAutohide = set;
+    toggleControlAutohide();
+}
+
+bool MediaLayout::playlistVisible() {
+    return m_playlistVisible;
+}
+
+void MediaLayout::setPlaylistVisible (bool set) {
+    if (m_playlistVisible == set) {
+        return;
+    }
+    m_playlistVisible = !set;
+    togglePlaylistVisible();
 }
