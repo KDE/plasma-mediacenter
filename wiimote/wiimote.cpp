@@ -33,6 +33,7 @@
 #include "wiimote.h"
 
 #define LAZINESS 1
+#define FPS 40
 
 //cwiid_mesg_callback_t print_callback;
 
@@ -42,7 +43,8 @@ Wiimote::Wiimote( QObject* parent )
     : QThread(parent),
     m_wiimote(0),
     m_ledState(0),
-    m_state(0)
+    m_state(0),
+    m_msec(0)
 {
     // Be the global object used to pass on events
     // from the static callback function
@@ -119,7 +121,7 @@ struct timespec
     if (msec < t.msec()) {
         delay = t.msec() - msec;
     } else {
-        delay = (t.msec() + 1000) - msec;
+//         delay = (t.msec() + 1000) - msec;
     }
     int now_s = t.second();
     int now_ms = (now_s * 1000) + t.msec();
@@ -231,6 +233,18 @@ void Wiimote::updateAccelerometers(struct cwiid_acc_mesg acc)
 
 void Wiimote::updateInfrared(struct cwiid_ir_mesg ir_mesg)
 {
+    /* limit to FPS frames per second */
+    int ctime = QTime::currentTime().msec();
+    if (ctime < m_msec) {
+        ctime = ctime + 1000;
+    }
+    if ((ctime - m_msec) < (1000 / FPS)) {
+
+        //kDebug() << "skip:" << (ctime - m_msec) << (1000 / FPS) << FPS << m_msec << ctime;
+        return;
+    }
+    m_msec = QTime::currentTime().msec();;
+
     //bool changed = false;
     int oldcount = m_state->infrared.count();
     QList<QPoint> oldLeds = m_state->infrared;
@@ -243,6 +257,7 @@ void Wiimote::updateInfrared(struct cwiid_ir_mesg ir_mesg)
             m_state->infrared << QPoint(-x, y);
         }
     }
+    //kDebug() << m_state->infrared;
     if (m_state->buttonAPressed && oldLeds.count() == m_state->infrared.count() && m_state->infrared.count()) {
         int diff = oldLeds.first().y() - m_state->infrared.first().y();
         int d = (diff / 10) * m_scrollSpeed;
@@ -313,10 +328,12 @@ void Wiimote::updateButtons(uint16_t buttons)
         emit buttonA(m_state->buttonAPressed);
 
         // We're using this button for debugging:
+        /*
         if (m_state->buttonAPressed) {
             cwiid_get_state(m_wiimote, &m_wiimoteState);
             dumpState(&m_wiimoteState);
         }
+        */
     }
 
     // B Button

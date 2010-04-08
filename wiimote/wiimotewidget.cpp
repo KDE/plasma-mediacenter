@@ -47,6 +47,8 @@ WiimoteWidget::WiimoteWidget( KMainWindow *parent )
     m_wiimote = new Wiimote(this);
     m_infraredImage = new InfraredImage(QSize(300, 240));
 
+    connect(m_infraredImage, SIGNAL(changed()), this, SLOT(updateInfraredImage()));
+
     // Hook up UI to Wiimote object
     connect(ui.buttonConnect, SIGNAL(clicked()), m_wiimote, SLOT(connectWiimote()));
     connect(ui.buttonDisconnect, SIGNAL(clicked()), m_wiimote, SLOT(disconnectWiimote()));
@@ -98,6 +100,13 @@ WiimoteWidget::WiimoteWidget( KMainWindow *parent )
 WiimoteWidget::~WiimoteWidget()
 {
     m_wiimote->exit();
+}
+
+void WiimoteWidget::updateInfraredImage()
+{
+    if (m_infraredLabel) {
+        m_infraredLabel->setPixmap(m_infraredImage->pixmap());
+    }
 }
 
 void WiimoteWidget::buttonAChanged(bool pressed)
@@ -208,6 +217,7 @@ dialog->setCaption( "My title" );
     m_infraredDialog->setCaption("Infrared Sensors");
     m_infraredDialog->setButtons(KDialog::Close);
     m_infraredLabel = new QLabel(m_infraredDialog);
+    m_infraredDialog->resize(600, 600);
     m_infraredDialog->setMainWidget(m_infraredLabel);
     m_infraredDialog->show();
 }
@@ -227,9 +237,11 @@ void WiimoteWidget::infraredChanged(QTime t)
         foreach (QPoint p, leds) {
             _out << QString("x: %1 y: %2 ").arg(p.x()).arg(p.y());
         }
+        //kDebug() << _out.join(" | ");
         //m_infraredLabel->setText(_out.join("<br />"));
         m_infraredImage->setLeds(leds);
         m_infraredLabel->setPixmap(m_infraredImage->pixmap());
+        //kDebug() << "pixmap set" << m_infraredImage->pixmap().size();
     }
 }
 

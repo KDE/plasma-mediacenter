@@ -32,7 +32,7 @@
 #include <KPushButton>
 #include "infraredimage.h"
 
-const QSize irResolution = QSize(1000, 1000);
+const QSize irResolution = QSize(600, 600);
 
 InfraredImage::InfraredImage(const QSize &size, QObject* parent)
     : QObject(parent)
@@ -42,6 +42,7 @@ InfraredImage::InfraredImage(const QSize &size, QObject* parent)
     QList<QPoint> leds;
     leds << QPoint(40, 400) << QPoint(300, 600);
     setLeds(leds);
+    emit changed();
 }
 
 void InfraredImage::setLeds(QList<QPoint> leds)
@@ -61,11 +62,13 @@ void InfraredImage::setLeds(QList<QPoint> leds)
     painter.setPen(pen);
     //painter.setFont(QFont("Arial", 30));
     //painter.drawRect(QRect(0,0, 300, 240), Qt::AlignCenter, "Qt");
+    QList<QPointF> l;
     foreach(const QPoint &led, leds) {
         int w = m_image.width();
         qreal xFactor = (qreal)(w) / (qreal)(irResolution.width());
         //if (w > irResolution.x()) {
-        int x = w - led.x() * xFactor;
+        int x = w - qAbs(led.x() * xFactor); //
+        //kDebug() << "W / X / XFactor:" << w << led.x() << xFactor << " = "<< (led.x() * xFactor) << " -> " << x;
 
         int h = m_image.height();
         qreal yFactor = (qreal)(h) / (qreal)(irResolution.height());
@@ -77,9 +80,17 @@ void InfraredImage::setLeds(QList<QPoint> leds)
         //} else {
 
         //}
+        l << QPointF(x,y);
+        //kDebug() << QRect(QPoint(x, y), QSize(8, 8));
         painter.drawEllipse(QRect(QPoint(x, y), QSize(8, 8)));
     }
-    //painter.end();
+    //pen.setOpacity(.5);
+    //painter.setPen(pen);
+    painter.drawEllipse(QRect(QPoint(300, 300), QSize(12, 12)));
+    //kDebug() << "points:" << l;
+    painter.drawText(QPointF(0,0), "This works");
+    painter.end();
+    //emit changed();
 }
 
 QPixmap InfraredImage::pixmap()

@@ -38,6 +38,7 @@ int main(int argc, char *argv[])
     WiimoteWidget* wiimoteWidget = new WiimoteWidget(mainWindow);
     mainWindow->setCentralWidget(wiimoteWidget);
     mainWindow->show();
+    //KIcon* i = new KIcon ("camera-web")
 
     return app.exec();
 }

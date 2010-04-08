@@ -40,6 +40,9 @@ class InfraredImage : public QObject
 
         struct WiimoteState *state;
 
+    Q_SIGNALS:
+        void changed();
+
     public Q_SLOTS:
         //void statusChanged(const QString &status);
         //void ledsChanged();

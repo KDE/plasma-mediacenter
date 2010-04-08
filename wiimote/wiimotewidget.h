@@ -68,6 +68,7 @@ class WiimoteWidget : public QWidget
         void ledFourStateChanged(int state);
 
         void infraredChanged(QTime);
+        void updateInfraredImage();
 
         void updateCursorPosition(int, int, int);
 

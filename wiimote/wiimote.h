@@ -168,7 +168,7 @@ class Wiimote : public QThread
         QTimer* m_knightRiderTimer;
         int m_knightRiderState;
         bool _knUp;
-
+        int m_msec;
         int m_scrollSpeed;
 };
 
