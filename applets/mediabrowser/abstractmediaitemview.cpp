@@ -53,7 +53,7 @@ m_blurred(true)
 {
     setFlags(QGraphicsItem::ItemClipsChildrenToShape | QGraphicsItem::ItemIsFocusable);
     setAcceptsHoverEvents(true);
-    setIconSize(KIconLoader::global()->currentSize(KIconLoader::Desktop));
+    setIconSize(KIconLoader::SizeEnormous);
     connect (m_scrollBar, SIGNAL(valueChanged(int)), this, SLOT(layoutItems()));
     m_scrollBar->setZValue(1000);
 

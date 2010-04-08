@@ -44,6 +44,7 @@
 #include <Plasma/PaintUtils>
 
 static const int ITEM_VERTICAL_MARGIN = 15;
+static const float s_itemSpacing = 0.1;   //Factor of the size to be left as the margin/spacing
 
 ViewItem::ViewItem(const QStyleOptionViewItemV4 &option, QGraphicsItem *parent) : QGraphicsWidget(parent),
 m_option(option),
@@ -146,21 +147,30 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 
     } else if (m_option.decorationPosition == QStyleOptionViewItem::Top) {
         textRect.setSize(textRectSize());
+
         const int x = (option->rect.width() - decorationWidth) / 2;
-        const int y = (option->rect.height() - decorationHeight - reflectionHeight - textRect.size().height()) / 2;
+        const int y = (option->rect.height() - decorationHeight - reflectionHeight - textRect.height()) / 2;
         decorationRect.moveTo(x, y);
 
         reflectionRect.moveTo(decorationRect.bottomLeft());
 
-        textRect.moveTo(0, reflectionRect.bottom());
+        textRect.moveTo(reflectionRect.bottomLeft());
     }
 
     if (m_preview) {
-        painter->drawPixmap(decorationRect.topLeft(), *m_preview);
-
-        reflectionRect.moveTo(decorationRect.left(), decorationRect.top() + m_preview->height() + 1);
-        reflectionRect.setWidth(m_preview->size().width());
+        QRect previewRect;
+        previewRect.setSize(m_preview->size());
+        previewRect.moveCenter(decorationRect.center());
+        painter->drawPixmap(previewRect.topLeft(), *m_preview);
+        reflectionRect.moveTo(previewRect.left(), previewRect.bottom() + 2);
+        reflectionRect.setWidth(previewRect.width());
         drawReflection(painter, reflectionRect, *m_preview);
+        
+        if (m_option.decorationPosition == QStyleOptionViewItem::Left) {
+                textRect.moveTo(decorationRect.right(), (decorationRect.top()+reflectionRect.bottom())/2);
+        } else if (m_option.decorationPosition == QStyleOptionViewItem::Top) {
+                textRect.moveTo(reflectionRect.bottomLeft());
+        }
     } else {
         QVariant decoration = m_index.data(Qt::DecorationRole);
         if (decoration.type() == QVariant::Icon) {
@@ -282,18 +292,20 @@ QSize ViewItem::itemSizeHint() const
     }
 
     if (m_option.decorationPosition == QStyleOptionViewItem::Left) {
-        int height = qMax(m_option.decorationSize.width() + 2*ITEM_VERTICAL_MARGIN, m_option.fontMetrics.height());
+        int decorationHeight = m_option.decorationSize.height() * (1 + 2*s_itemSpacing);
+        int height = qMax(decorationHeight, m_option.fontMetrics.height());
         int width = m_option.decorationSize.width() + m_option.fontMetrics.width(m_index.data().toString());
 
         return QSize(width, height);
     } else if (m_option.decorationPosition == QStyleOptionViewItem::Top) {
-        int width = m_option.decorationSize.width() * 2;
-        int height = m_option.decorationSize.width() * 1.7;
-        QRect textRect(0, 0, width, width - height);
-        QRect bounding = m_option.fontMetrics.boundingRect(textRect, m_option.decorationAlignment, m_index.data().toString());
+        int width = m_option.decorationSize.width();
+        int height = m_option.decorationSize.width();
+        int reflectionHeight = height * 0.33;
+        height += reflectionHeight + textRectSize().height();
 
-        height += bounding.height();
-        return QSize(width, height);
+        height += s_itemSpacing*height;
+        width += s_itemSpacing*width;
+        return QSize(width, height);    //Spacing between items
     }
 
     return QSize(0, 0);
