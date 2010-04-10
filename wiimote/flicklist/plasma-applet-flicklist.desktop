@@ -3,10 +3,12 @@ Name=flicklist
 Name[pt]=flicklist
 Name[sv]=Blädderlista
 Name[uk]=flicklist
+Name[x-test]=xxflicklistxx
 Comment=Plasma flicklist
 Comment[pt]=Flicklist do Plasma
 Comment[sv]=Plasma blädderlista
 Comment[uk]=Аплет Плазми flicklist
+Comment[x-test]=xxPlasma flicklistxx
 Type=Service
 
 X-KDE-ServiceTypes=Plasma/Applet
