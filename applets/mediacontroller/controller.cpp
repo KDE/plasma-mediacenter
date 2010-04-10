@@ -46,8 +46,9 @@ MediaController::MediaController(QObject *parent, const QVariantList &args)
     m_playPause(new Plasma::IconWidget(this)),
     m_skipForward(new Plasma::IconWidget(this)),
     m_stop(new Plasma::IconWidget(this)),
-    m_layout(new QGraphicsLinearLayout(Qt::Horizontal)),
-    m_iconSlideshow(new Plasma::IconWidget(this))
+    m_iconSlideshow(new Plasma::IconWidget(this)),
+    m_layout(new QGraphicsLinearLayout(Qt::Horizontal))
+
 {
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
 }

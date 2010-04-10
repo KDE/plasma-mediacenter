@@ -18,7 +18,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 #include "medialayout.h"
-#include "mediahandler.h"
+#include "private/mediahandler_p.h"
 
 #include <QGraphicsItem>
 
@@ -33,11 +33,12 @@ m_browser(0),
 m_control(0),
 m_playlist(0),
 m_player(0),
-m_playlistHandler(0),
-m_controlHandler(0),
+m_showAll(false),
 m_playlistVisible(false),
 m_controlAutohide(false),
-m_showAll(false)
+m_playlistHandler(0),
+m_controlHandler(0)
+
 {
     m_containment->installEventFilter(this);
 }

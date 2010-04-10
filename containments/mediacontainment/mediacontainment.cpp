@@ -19,13 +19,13 @@
  ***************************************************************************/
 #include "mediacontainment.h"
 #include "medianotificationwidget.h"
-#include "medialayout.h"
 #include "mediatoolbox.h"
 
 #include <mediacenter/browser.h>
 #include <mediacenter/playbackcontrol.h>
 #include <mediacenter/playlist.h>
 #include <mediacenter/player.h>
+#include <mediacenter/medialayout.h>
 
 #include <mediacenter/mediacenterstate.h>
 #include <mediacenter/videostate.h>
@@ -53,11 +53,11 @@ m_browser(0),
 m_control(0),
 m_playlist(0),
 m_player(0),
-m_pictureState(0),
 m_videoState(0),
-m_mediaCenterState(0),
 m_currentState(MediaCenter::PictureMode),
+m_pictureState(0),
 m_previousState(MediaCenter::PictureMode),
+m_mediaCenterState(0),
 m_musicIsPlaying(false),
 m_layout(new MediaLayout(this))
 {
@@ -92,9 +92,9 @@ void MediaContainment::startStateMachine()
     m_musicState->addTransition(m_control, SIGNAL(layoutToPictureState()), m_pictureState);    
 
     //I use these signals to tell the mediacontainment to do an actual state switch
-    connect (m_videoState, SIGNAL(state(MediaCenter::State)), this, SLOT(switchState(MediaCenter::State)));
-    connect (m_pictureState, SIGNAL(state(MediaCenter::State)), this, SLOT(switchState(MediaCenter::State)));
-    connect (m_musicState, SIGNAL(state(MediaCenter::State)), this, SLOT(switchState(MediaCenter::State)));    
+    connect (m_videoState, SIGNAL(state(MediaCenter::Mode)), this, SLOT(switchState(MediaCenter::Mode)));
+    connect (m_pictureState, SIGNAL(state(MediaCenter::Mode)), this, SLOT(switchState(MediaCenter::Mode)));
+    connect (m_musicState, SIGNAL(state(MediaCenter::Mode)), this, SLOT(switchState(MediaCenter::Mode)));
 
     //connections for MainComponents
     m_mediaCenterState->connectMainSubComponents(m_currentUIComponents);
@@ -172,9 +172,9 @@ void MediaContainment::slotAppletAdded(Plasma::Applet *applet, const QPointF &po
             startStateMachine();
 
             //FIXME The following is a hack to get PMC into a good initial state
-            MediaCenter::State state1 = MediaCenter::PictureMode;
-            MediaCenter::State state2 = MediaCenter::VideoMode;
-            MediaCenter::State state3 = MediaCenter::MusicMode;
+            MediaCenter::Mode state1 = MediaCenter::PictureMode;
+            MediaCenter::Mode state2 = MediaCenter::VideoMode;
+            MediaCenter::Mode state3 = MediaCenter::MusicMode;
             switchState(state1);
             switchState(state2);
             switchState(state3);
@@ -252,7 +252,7 @@ void MediaContainment::slotAppletRemoved(Plasma::Applet *applet)
     }
 }
 
-void MediaContainment::switchState(MediaCenter::State newState)
+void MediaContainment::switchState(MediaCenter::Mode newState)
 {
     setCurrentState(newState);
     QList<QGraphicsWidget*> list;
@@ -295,13 +295,13 @@ void MediaContainment::switchState(MediaCenter::State newState)
     m_visibleSubComponents = list;
 }
 
-void MediaContainment::setCurrentState(MediaCenter::State newstate)
+void MediaContainment::setCurrentState(MediaCenter::Mode newstate)
 {
     m_previousState = m_currentState;
     m_currentState = newstate;
 }
 
-MediaCenter::State MediaContainment::currentState()
+MediaCenter::Mode MediaContainment::currentState()
 {
     return m_currentState;
 }

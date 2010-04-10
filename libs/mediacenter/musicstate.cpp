@@ -39,11 +39,13 @@ MusicState::~MusicState()
 
 void MusicState::onExit(QEvent* event)
 {
+    Q_UNUSED(event);
 }
 
 void MusicState::onEntry(QEvent* event)
 {
-    MediaCenter::State newState = MediaCenter::MusicMode;
+    Q_UNUSED(event);
+    MediaCenter::Mode newState = MediaCenter::MusicMode;
     emit state(newState);
 }
 
@@ -82,14 +84,17 @@ void MusicState::configureUIComponents(QList<Plasma:: Applet*> list)
 
 void MusicState::connectMediaLayout(MediaLayout *layout)
 {
+    Q_UNUSED(layout);
     //connect (m_musicTogglePlaylist, SIGNAL(clicked()), layout, SLOT(togglePlaylistVisible())); FIXME BUILD Error
 }
 
 void MusicState::configureMediaLayout(MediaLayout *layout)
 {
+    Q_UNUSED(layout);
     //layout->setPlaylistVisible(true); FIXME BUILD error
 }
 
 void MusicState::connectSubComponents(QList<Plasma:: Applet*> list)
 {
+    Q_UNUSED(list);
 }

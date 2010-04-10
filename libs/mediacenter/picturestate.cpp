@@ -38,11 +38,13 @@ PictureState::~PictureState()
 
 void PictureState::onExit(QEvent* event)
 {
+    Q_UNUSED(event);
 }
 
 void PictureState::onEntry(QEvent* event)
 {
-    MediaCenter::State newState = MediaCenter::PictureMode;
+    Q_UNUSED(event);
+    MediaCenter::Mode newState = MediaCenter::PictureMode;
     emit state(newState);
     kWarning() << "In Picture State";
 }
@@ -78,5 +80,6 @@ void PictureState::configureUIComponents(QList<Plasma:: Applet*> list)
 
 void PictureState::connectSubComponents(QList<Plasma:: Applet*> list)
 {
+    Q_UNUSED(list);
 }
 

@@ -10,6 +10,8 @@ mediacenterstate.cpp
 picturestate.cpp
 videostate.cpp
 musicstate.cpp
+medialayout.cpp
+private/mediahandler.cpp
 )
 
 kde4_add_library(mediacenterlibs SHARED ${mediacenterlibs_SRCS})
@@ -18,7 +20,6 @@ target_link_libraries(mediacenterlibs ${KDE4_PLASMA_LIBS} ${KDE4_SOLID_LIBS} ${K
 install(TARGETS mediacenterlibs ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 set (mediacenterlibs_HDRS
-    mediacenter_export.h
     mediacenter.h
     browser.h
     playbackcontrol.h
@@ -28,6 +29,7 @@ set (mediacenterlibs_HDRS
     picturestate.h
     videostate.h
     musicstate.h
+    medialayout.h
 )
 
 install (FILES ${mediacenterlibs_HDRS} DESTINATION ${INCLUDE_INSTALL_DIR}/mediacenter COMPONENT Devel)

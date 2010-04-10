@@ -31,11 +31,11 @@
 
 namespace MediaCenter {
 
-enum State {
+enum Mode {
     PictureMode,
     MusicMode,
     VideoMode,
-    Home
+    HomeMode
 };
 
 enum MainSubComponent {
@@ -89,7 +89,7 @@ public:
     virtual QList<QGraphicsWidget*> subComponents();
 
 signals:
-     void state(MediaCenter::State);
+     void state(MediaCenter::Mode);
 
 protected:
     virtual void onExit(QEvent* event);

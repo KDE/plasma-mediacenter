@@ -40,11 +40,13 @@ VideoState::~VideoState()
 
 void VideoState::onExit(QEvent* event)
 {
+    Q_UNUSED(event);
 }
 
 void VideoState::onEntry(QEvent* event)
 {
-    MediaCenter::State newState = MediaCenter::VideoMode;
+    Q_UNUSED(event);
+    MediaCenter::Mode newState = MediaCenter::VideoMode;
     emit state(newState);
 }
 
@@ -79,5 +81,6 @@ void VideoState::configureUIComponents(QList<Plasma:: Applet*> list)
 
 void VideoState::connectSubComponents(QList<Plasma:: Applet*> list)
 {
+    Q_UNUSED(list);
 }
 

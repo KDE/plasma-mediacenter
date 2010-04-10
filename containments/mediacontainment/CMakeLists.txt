@@ -2,8 +2,6 @@
 set(containment_SRCS
 mediacontainment.cpp
 medianotificationwidget.cpp
-medialayout.cpp
-mediahandler.cpp
 mediatoolbox.cpp
 )
  

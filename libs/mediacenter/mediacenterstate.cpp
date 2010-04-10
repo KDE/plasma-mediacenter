@@ -23,7 +23,7 @@
 #include <mediacenter/playbackcontrol.h>
 #include <mediacenter/playlist.h>
 #include <mediacenter/player.h>
-#include <containments/mediacontainment/medialayout.h>
+#include <mediacenter/medialayout.h>
 
 using namespace MediaCenter;
 

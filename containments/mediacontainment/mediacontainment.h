@@ -50,8 +50,8 @@ public:
 
     QList<QAction*> contextualActions();
 
-    MediaCenter::State currentState();
-    void setCurrentState(MediaCenter::State);
+    MediaCenter::Mode currentState();
+    void setCurrentState(MediaCenter::Mode);
 
     QList<QGraphicsWidget*> currentMainComponents();
     void addCurrentMainComponent(QGraphicsWidget*);
@@ -65,7 +65,7 @@ protected:
 private slots:
     void slotAppletAdded(Plasma::Applet *applet, const QPointF &pos);
     void slotAppletRemoved(Plasma::Applet *applet);
-    void switchState(MediaCenter::State newState);
+    void switchState(MediaCenter::Mode newState);
 
 private:
     MediaCenter::Browser *m_browser;
@@ -73,8 +73,8 @@ private:
     MediaCenter::Playlist *m_playlist;
     MediaCenter::Player *m_player;
 
-    MediaCenter::State m_currentState;
-    MediaCenter::State m_previousState;
+    MediaCenter::Mode m_currentState;
+    MediaCenter::Mode m_previousState;
 
     MediaCenter::VideoState *m_videoState;
     MediaCenter::PictureState *m_pictureState;
@@ -92,7 +92,7 @@ private:
     void addMediaApplet(Plasma::Applet *);
 
     void initControls();
-    void connectControls(MediaCenter::State);
+    void connectControls(MediaCenter::Mode);
 
     void startStateMachine();
 };

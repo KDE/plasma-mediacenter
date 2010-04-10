@@ -54,7 +54,7 @@ void PlaybackControl::mediaTypeChanged(MediaCenter::MediaType newType)
     Q_UNUSED(newType)
 }
 
-void PlaybackControl::doLayout(MediaCenter::State mode)
+void PlaybackControl::doLayout(MediaCenter::Mode mode)
 {
     Q_UNUSED(mode)
 }

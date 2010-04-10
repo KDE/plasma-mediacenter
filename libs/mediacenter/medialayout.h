@@ -20,6 +20,8 @@
 #ifndef MEDIALAYOUT_H
 #define MEDIALAYOUT_H
 
+#include "mediacenter_export.h"
+
 #include <QObject>
 #include <QRectF>
 #include <Plasma/Applet>
@@ -38,7 +40,7 @@ class QGraphicsItem;
  * @author Alessandro Diaferia
  */
 
-class MediaLayout : public QObject
+class MEDIACENTER_EXPORT MediaLayout : public QObject
 {
     Q_OBJECT
 public:

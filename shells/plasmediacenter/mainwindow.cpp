@@ -104,6 +104,8 @@ void MainWindow::loadMediaCenter()
 
 bool MainWindow::eventFilter(QObject *o, QEvent *e)
 {
+    Q_UNUSED(o);
+
     if (e->type() == QEvent::KeyPress) {
         QKeyEvent *key = static_cast<QKeyEvent*>(e);
         if (key->key() == Qt::Key_Escape && windowState() & Qt::WindowFullScreen) {
@@ -174,6 +176,8 @@ void MainWindow::applyConfig()
 
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
+    Q_UNUSED(event);
+
     if (!m_containment) {
         return;
     }

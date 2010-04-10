@@ -140,7 +140,7 @@ public Q_SLOTS:
     /**
      *Make other applets (containment actually) have access to the doLayout function of the controller
      */
-    virtual void doLayout(MediaCenter::State);
+    virtual void doLayout(MediaCenter::Mode);
 
 protected:
     /**

@@ -27,6 +27,9 @@
 
 int main(int argc, char *argv[])
 {
+    Q_UNUSED(argc);
+    Q_UNUSED(argv);
+
     KAboutData aboutData("plasmediacenter",
                          0,
                          ki18n("Plasmediacenter"),
