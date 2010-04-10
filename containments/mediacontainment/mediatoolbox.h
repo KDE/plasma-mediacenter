@@ -29,7 +29,6 @@
 #include <plasma/abstracttoolbox.h>
 
 
-class QGraphicsLinearLayout;
 
 namespace Plasma
 {
@@ -38,7 +37,6 @@ namespace Plasma
     class Svg;
 }
 
-class ToolContainer;
 
 class MediaToolBox : public Plasma::AbstractToolBox
 {

@@ -114,5 +114,6 @@ void MediaCenterState::configureUIComponents(QList<Plasma:: Applet*> list)
 
 QList<QGraphicsWidget*> MediaCenterState::subComponents()
 {
+    return QList<QGraphicsWidget*>();
 }
 

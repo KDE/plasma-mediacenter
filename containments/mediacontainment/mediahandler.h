@@ -26,7 +26,6 @@ namespace Plasma {
     class FrameSvg;
     class Svg;
     class Applet;
-    class ToolButton;
 }
 
 class QGraphicsSceneResizeEvent;

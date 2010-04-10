@@ -12,7 +12,6 @@
 
 #include "listwidget.h"
 
-class QSizeF;
 
 // Define our plasma Applet
 class FlickList : public Plasma::PopupApplet
