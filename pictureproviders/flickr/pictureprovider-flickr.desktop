@@ -3,6 +3,7 @@ Type=Service
 Name=Flickr picture provider
 Name[en_GB]=Flickr picture provider
 Name[pt]=Fornecedor de imagens do Flickr
+Name[pt_BR]=Fornecedor de imagens Flickr
 Name[sv]=Flickr-bildleverantör
 Name[uk]=Служба зображень Flickr
 Name[x-test]=xxFlickr picture providerxx
