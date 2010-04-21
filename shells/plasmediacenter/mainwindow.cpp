@@ -16,24 +16,26 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#include "mainwindow.h"
 
-#include <KDebug>
-#include <KMenuBar>
-#include <KMenu>
-#include <KAction>
-#include <KStandardAction>
-#include <KIcon>
-#include <KLocale>
-#include <KConfigDialog>
-#include <KPluginInfo>
-#include <KSharedConfig>
-#include <KSharedPtr>
-#include <KConfigSkeleton>
+#include "mainwindow.h"
 
 #include <QGraphicsView>
 #include <QKeyEvent>
 #include <QWheelEvent>
+
+#include <KAction>
+#include <KCmdLineArgs>
+#include <KConfigDialog>
+#include <KConfigSkeleton>
+#include <KDebug>
+#include <KIcon>
+#include <KLocale>
+#include <KMenu>
+#include <KMenuBar>
+#include <KPluginInfo>
+#include <KSharedConfig>
+#include <KSharedPtr>
+#include <KStandardAction>
 
 #include <Plasma/Corona>
 #include <Plasma/Containment>
@@ -69,6 +71,7 @@ m_player(0)
     fullScreen->setIcon(KIcon("view-fullscreen"));
     connect (fullScreen, SIGNAL(triggered()), this, SLOT(toggleFullScreen()));
 
+
     KAction *preferences = KStandardAction::preferences(this, SLOT(createConfigurationInterface()), this);
 
     QMenu *menu = menuBar()->addMenu(i18n("Settings"));
@@ -80,6 +83,11 @@ m_player(0)
 
     resize(1024, 600); //netbook size
     //showFullScreen();
+
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    if (args->isSet("fullscreen")) {
+        toggleFullScreen();
+    }
 }
 
 MainWindow::~MainWindow()

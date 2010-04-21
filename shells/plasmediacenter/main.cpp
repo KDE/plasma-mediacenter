@@ -43,7 +43,12 @@ int main(int argc, char *argv[])
                         "http://alediaferia.wordpress.com");
     aboutData.addCredit(ki18n("Marco Martin"), ki18n("GSoC project mentor"), "notmart@gmail.com", "");
 
-    KCmdLineArgs::init(&aboutData);
+    KCmdLineArgs::init(argc, argv, &aboutData);
+
+    KCmdLineOptions options;
+    options.add("f");
+    options.add("nofullscreen", ki18n("Starts Plasma Media Center in fullscreen mode (the default)"));
+    KCmdLineArgs::addCmdLineOptions(options);
 
     KApplication app;
 
