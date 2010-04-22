@@ -183,7 +183,7 @@ void AbstractMediaItemView::invalidate()
 void AbstractMediaItemView::updateHoveredItem(ViewItem *item)
 {
     if (!item || !m_items.contains(item)) {
-        m_hoverIndicator->setPos(0, -100);
+        m_hoverIndicator->hide();
         if (m_hoverIndicator->m_nepomuk) {
             m_hoverIndicator->updateHoverRating(QPoint(-1, -1));
         }
@@ -196,6 +196,7 @@ void AbstractMediaItemView::updateHoveredItem(ViewItem *item)
 
     m_hoveredItem = item;
     m_hoverIndicator->m_nepomuk = item->m_nepomuk;
+    m_hoverIndicator->show();
     Plasma::Animator::self()->moveItem(m_hoverIndicator, Plasma::Animator::SlideInMovement, m_hoveredItem->pos().toPoint());
 }
 
@@ -224,7 +225,7 @@ void AbstractMediaItemView::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
 
 void AbstractMediaItemView::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
-	Q_UNUSED(event);
+    Q_UNUSED(event);
     updateHoveredItem(0);
 }
 
