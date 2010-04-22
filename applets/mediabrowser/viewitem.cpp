@@ -220,24 +220,7 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 
 void ViewItem::drawReflection(QPainter *painter, const QRect &reflectionRect, const QIcon &icon)
 {
-    const int decorationWidth = m_option.decorationSize.width();
-    const int decorationHeight = decorationWidth;
-
-    QPixmap pixmap(reflectionRect.width(), reflectionRect.height());
-    pixmap.fill(Qt::transparent);
-
-    QLinearGradient grad(reflectionRect.width() / 2, 0, reflectionRect.width() / 2, reflectionRect.height());
-    grad.setColorAt(0, Qt::black);
-    grad.setColorAt(1, Qt::transparent);
-
-    QPainter p(&pixmap);
-    p.fillRect(0, 0, reflectionRect.width(), reflectionRect.height(), grad);
-    p.scale(1, -1);
-    p.setCompositionMode(QPainter::CompositionMode_SourceIn);
-
-    icon.paint(&p, 0, -decorationHeight, decorationWidth, decorationHeight);
-    p.end();
-    painter->drawPixmap(reflectionRect, pixmap);
+    drawReflection(painter, reflectionRect, icon.pixmap(m_option.decorationSize));
 }
 
 void ViewItem::drawReflection(QPainter *painter, const QRect &reflectionRect, const QPixmap &pm)
