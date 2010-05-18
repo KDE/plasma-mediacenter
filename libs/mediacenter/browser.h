@@ -37,15 +37,43 @@ public:
     void setBrowsingWidgets(bool);
     bool browsingWidgets();
 
+    virtual void showStartupState() = 0;
+    virtual QList<MediaCenter::Media> selectedMedias() const = 0;
+
+    virtual KUrl directory() const = 0;
+
+public Q_SLOTS:
+    virtual void openDirectory(const KUrl &url) = 0;
+    virtual void listMediaInDirectory() = 0;
+    virtual void selectedMediasAdd(const MediaCenter::Media &) = 0;
+    virtual void selectedMediasRemove(const MediaCenter::Media &) = 0;
+    virtual void clearSelectedMedias() = 0;
+
 Q_SIGNALS:
     void mediasActivated(const QList<MediaCenter::Media> &);
 
     /**
      * This signal should emit a list of all the Media in the Current directory. Useful for picture slideshow
-     * and brwosing single pictures
+     * and brwosing single pictures (next/previous)
      */
     void mediasListInDirectory(const QList<MediaCenter::Media> &);
     void mediaActivated(const MediaCenter::Media &);
+
+    /**
+     * This signal should be emitted as soon as the selection of items changes
+     */
+    void selectedMediasChanged(const QList<MediaCenter::Media> &);
+
+   /**
+    * The browser should emit these signals when a certain dataengine type is selected
+    * to inform the state machine to switch to the corresponding state.
+    */
+    void musicDataEngine();
+    void videoDataEngine();
+    void pictureDataEngine();
+    //TODO: Replace these with one signal that contains a pointer to the engine
+    //This pointer we can then use in the states (useful for example when we enter a state via the background buttons
+    //to load the last engine). But we need to have the modelpackage library in the general libraries.
 };
 
 } // namespace MediaCenter

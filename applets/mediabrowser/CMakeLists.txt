@@ -7,7 +7,7 @@ viewitem.cpp
 browsingwidget.cpp
 startupmodel.cpp
 )
- 
+
 # Now make sure all files get to the right place
 kde4_add_ui_files(mediabrowser_SRCS general.ui)
 kde4_add_plugin(plasma_applet_mediabrowser ${mediabrowser_SRCS})

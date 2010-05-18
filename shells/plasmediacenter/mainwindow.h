@@ -22,6 +22,8 @@
 #include <KMainWindow>
 
 #include "ui_theme.h"
+#include "ui_backgrounddialog.h"
+
 
 class QGraphicsView;
 namespace Plasma {
@@ -54,6 +56,7 @@ protected slots:
     void applyConfig();
 
 private:
+    KConfigGroup wallpaperConfig(Plasma::Containment * containment, const QString &plugin);
     QGraphicsView *m_view;
     Plasma::Corona *m_corona;
     Plasma::Containment *m_containment;
@@ -63,8 +66,12 @@ private:
     Plasma::Applet *m_controller;
     Plasma::Applet *m_playlist;
     Plasma::Applet *m_player;
+    Plasma::Applet *m_infobar;
+
+    KUrl m_wallpaper;
 
     Ui::Theme m_theme;
+    Ui::BackgroundDialog m_background;
 };
 
 #endif // MAINWINDOW_H

@@ -24,64 +24,37 @@
 
 #include <QGraphicsLinearLayout>
 
-#include <phonon/phononnamespace.h>
-
-namespace Plasma {
-    class IconWidget;
-    class Slider;
-}
-
 class MediaController : public MediaCenter::PlaybackControl
 {
     Q_OBJECT
 public:
      MediaController(QObject *parent, const QVariantList &args);
-    ~MediaController();
+    virtual ~MediaController();
 
     void constraintsEvent(Plasma::Constraints constraints);
     void paintInterface(QPainter *painter, const QStyleOptionGraphicsItem *option, const QRect &contentsRect);
     void init();
 
-    void addToLayout(QList<QGraphicsWidget*> list);
-
-signals:
-    void browserGoPrevious();
-    void togglePlaylistVisible();
-    void toggleControlAutohide();
-    void layoutToPictureState();
-    void layoutToVideoState();
-    void layoutToMusicState();
-
-public slots:
-    void playbackStateChanged(MediaCenter::PlaybackState);
+    virtual void addToLayout(QGraphicsWidget *widget, const MediaCenter::LayoutZone &zone);
+    void addLayouts();
+    void resetLayouts();
 
 protected:
     void resizeEvent(QGraphicsSceneResizeEvent *event);
-    void receivedMediaObject();
 
 private slots:
-    void slotVolumeSlider(int value);
-    void slotSeekSlider(int value);
-    void updateTotalTime(qint64 time);
-    void updateCurrentTick(qint64 time);
     void slotThemeChanged();
-    void iconAutohidePressed();
 
 private:
     Plasma::FrameSvg *m_svg;
 
-    Plasma::IconWidget *m_playPause;
-    Plasma::IconWidget *m_skipBack;
-    Plasma::IconWidget *m_skipForward;
-    Plasma::IconWidget *m_stop;
-    Plasma::Slider *m_volumeSlider;
-    Plasma::Slider *m_seekSlider;
-    Plasma::IconWidget *m_iconGoPrevious;
-    Plasma::IconWidget *m_iconTogglePlaylistVisible;
-    Plasma::IconWidget *m_iconToggleControlAutohide;
-    Plasma::IconWidget *m_iconSlideshow;
-
-    QGraphicsLinearLayout *m_layout;
+    QGraphicsLinearLayout *m_layoutVertical;
+    QGraphicsLinearLayout *m_layoutHorizontalTop;
+    QGraphicsLinearLayout *m_layoutHorizontalBottom;
+    QGraphicsLinearLayout *m_layoutTopLeft;
+    QGraphicsLinearLayout *m_layoutTopMiddle;
+    QGraphicsLinearLayout *m_layoutTopRight;
+    QGraphicsLinearLayout *m_layoutBottomLeft;
 
     int iconSizeFromCurrentSize() const;
 

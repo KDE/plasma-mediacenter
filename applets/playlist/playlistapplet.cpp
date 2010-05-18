@@ -57,9 +57,9 @@ int PlaylistApplet::length()
     return m_playlistWidget->length();
 }
 
-QList<MediaCenter::Media> PlaylistApplet::medias()
+QList<MediaCenter::Media> PlaylistApplet::medias(MediaCenter::MediaType type)
 {
-    return m_playlistWidget->medias();
+    return m_playlistWidget->medias(type);
 }
 
 void PlaylistApplet::createConfigurationInterface(KConfigDialog *parent)
@@ -104,5 +104,11 @@ void PlaylistApplet::appendMedia(const QList<MediaCenter::Media> &medias, const 
     }
     m_playlistWidget->append(urls);
 }
+
+void PlaylistApplet::setPlaylistMediaType(const MediaCenter::MediaType &type)
+{
+    m_playlistWidget->setMediaTypeToShow(type);
+}
+
 
 K_EXPORT_PLASMA_APPLET(playlist, PlaylistApplet)

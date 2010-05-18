@@ -36,6 +36,7 @@
 #include <Nepomuk/KRatingPainter>
 #include <Nepomuk/Resource>
 #include <Nepomuk/ResourceManager>
+#include <nepomuk/kratingwidget.h>
 
 #include <KDebug>
 
@@ -56,7 +57,11 @@ m_hoverRating(0),
 m_rating(0),
 m_resource(0),
 m_nepomuk(false),
-m_blurred(true)
+m_blurred(true),
+m_selectByIcon(true),
+m_selectIcon(),
+m_isSelected(false),
+m_isNotFile(false)
 {
     setContentsMargins(0, 0, 0, 0);
 
@@ -66,8 +71,11 @@ m_blurred(true)
     m_frameSvg->setElementPrefix("hover");
 
     setAcceptedMouseButtons(0);
-    
-    m_nepomuk = Nepomuk::ResourceManager::instance()->initialized();
+
+    m_nepomuk = true;
+    if (!m_selectByIcon) {
+        Nepomuk::ResourceManager::instance()->initialized();
+    }
 }
 
 ViewItem::~ViewItem()
@@ -109,16 +117,20 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 {
     Q_UNUSED(widget)
 
-    if (m_option.state & QStyle::State_MouseOver) {
+    if (m_option.state & QStyle::State_MouseOver || m_isSelected == true) {
         if (m_frameSvg->size() != option->rect.size()) {
             m_frameSvg->resizeFrame(option->rect.size());
         }
         m_frameSvg->paintFrame(painter, option->rect.topLeft());
         if (m_nepomuk) {
             if (m_option.decorationPosition == QStyleOptionViewItem::Left) {
-                KRatingPainter::paintRating(painter, ratingRect(option->rect), Qt::AlignLeft | Qt::AlignVCenter, m_rating, m_hoverRating);
+                //KRatingPainter::paintRating(painter, ratingRect(option->rect), Qt::AlignLeft | Qt::AlignVCenter, m_rating, m_hoverRating);
             }
         }
+        if (m_selectByIcon && m_isNotFile == false) {
+            drawSelectIcon(painter, option);
+        }
+
     }
 
     if (!m_index.isValid()) {
@@ -312,10 +324,21 @@ QSize ViewItem::textRectSize() const
 
 QRect ViewItem::ratingRect(const QRect &contentsRect) const
 {
-    QRect ratingRect(0, 0, 72, 16);
-    ratingRect.moveTo(contentsRect.right() - ratingRect.width(), contentsRect.y() + 1);
+    QRect ratingRect(0, 0, 0, 0);
 
     return ratingRect;
+}
+
+QRect ViewItem::selectRect(const QRect &contentsRect) const
+{
+    if (!m_selectByIcon || m_isNotFile) { //TODO: Do the inactivating of selection sign differently
+        return QRect(0,0,0,0);
+    }
+
+    QRect selectRect(0, 0, 32, 32);
+    selectRect.moveTo(contentsRect.right() - selectRect.width() - 5, contentsRect.bottom() - selectRect.height() - 5);
+
+    return selectRect;
 }
 
 void ViewItem::updateHoverRating(const QPoint &pos)
@@ -324,7 +347,7 @@ void ViewItem::updateHoverRating(const QPoint &pos)
         return;
     }
 
-    m_hoverRating = KRatingPainter::getRatingFromPosition(ratingRect(contentsRect().toRect()), Qt::AlignLeft | Qt::AlignVCenter, Qt::LeftToRight, pos);
+    //m_hoverRating = KRatingPainter::getRatingFromPosition(ratingRect(contentsRect().toRect()), Qt::AlignLeft | Qt::AlignVCenter, Qt::LeftToRight, pos);
     if (m_hoverRating == -1) {
         m_hoverRating = 0;
     }
@@ -339,8 +362,11 @@ void ViewItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
     }
 
     if (ratingRect(contentsRect().toRect()).contains(event->pos().toPoint())) {
-        emit ratingActivated(KRatingPainter::getRatingFromPosition(ratingRect(contentsRect().toRect()),
-                                                                   Qt::AlignLeft | Qt::AlignVCenter, Qt::LeftToRight, event->pos().toPoint()));
+        //emit ratingActivated(KRatingPainter::getRatingFromPosition(ratingRect(contentsRect().toRect()),
+        //                                                           Qt::AlignLeft | Qt::AlignVCenter, Qt::LeftToRight, event->pos().toPoint()));
+    }
+    if (selectRect(contentsRect().toRect()).contains(event->pos().toPoint())) {
+            emit itemSelected();
     } else {
         event->ignore();
     }
@@ -365,3 +391,31 @@ void ViewItem::keyPressEvent(QKeyEvent *event)
 {
     event->ignore();
 }
+
+void ViewItem::drawSelectIcon(QPainter* painter, const QStyleOptionGraphicsItem* option)
+{
+    const char* icon = m_isSelected ? "list-remove" : "list-add";
+    m_selectIcon = KIconLoader::global()->loadIcon(icon, KIconLoader::NoGroup, qMin(16,16));
+    painter->drawPixmap(selectRect(option->rect), m_selectIcon);
+}
+
+bool ViewItem::isSelected()
+{
+    return m_isSelected;
+}
+
+void ViewItem::setSelected(bool set)
+{
+    m_isSelected = set;
+}
+
+void ViewItem::showCornerIcons(bool set)
+{
+    //TODO: Find a way to turn of the actions in the item corners for touch based devices
+}
+
+void ViewItem::setIsNotFile(bool set)
+{
+    m_isNotFile = set;
+}
+

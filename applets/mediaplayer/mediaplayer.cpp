@@ -51,10 +51,13 @@ MediaPlayer::MediaPlayer(QObject *parent, const QVariantList &args)
       m_raised(false),
       m_fullScreen(false),
       m_sshowTime(3),
-      m_fullScreenVideo(0),
-      m_pviewer(new PictureViewer(this))
+      m_picture(new PictureViewer(this)),
+      m_currentVideoPlaybackState(MediaCenter::StoppedState),
+      m_currentMusicPlaybackState(MediaCenter::StoppedState),
+      m_currentPicturePlaybackState(MediaCenter::StoppedState),
+      m_currentStateType(MediaCenter::Video)
 {
-    m_pviewer->hide();
+    m_picture->hide();
     setAcceptDrops(true);
     setHasConfigurationInterface(true);
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
@@ -63,17 +66,13 @@ MediaPlayer::MediaPlayer(QObject *parent, const QVariantList &args)
     if (args.count()) {
         m_currentUrl = args.value(0).toString();
     }
-//    QDBusConnection dbus = QDBusConnection::sessionBus();
-//    dbus.registerService("org.mpris.PlasmaMediaPlayer");
-//    new PlasmaMediaPlayerAdaptor(this);
-//
-//    dbus.registerObject("/PlasmaMediaPlayer", this);
 }
 
 
 MediaPlayer::~MediaPlayer()
 {
     delete m_video;
+    delete m_music;
 }
 
 void MediaPlayer::createConfigurationInterface(KConfigDialog *parent)
@@ -83,14 +82,12 @@ void MediaPlayer::createConfigurationInterface(KConfigDialog *parent)
 
     parent->addPage(widget, i18n("Player settings"), "multimedia-player");
 
-    ui.fullScreenCheckBox->setChecked(m_fullScreen);
     ui.slideshowSpinBox->setValue(m_sshowTime);
     connect (parent, SIGNAL(accepted()), this, SLOT(acceptConfiguration()));
 }
 
 void MediaPlayer::acceptConfiguration()
 {
-    m_fullScreen = ui.fullScreenCheckBox->isChecked();
     m_sshowTime = ui.slideshowSpinBox->value();
     applyConfig();
 }
@@ -104,30 +101,9 @@ void MediaPlayer::loadConfig()
 
 void MediaPlayer::applyConfig()
 {
-    doFullScreen();
-
-    m_pviewer->setShowTime(m_sshowTime);
+    m_picture->setShowTime(m_sshowTime);
     KConfigGroup cf = config();
     cf.writeEntry("SlideShowTime", m_sshowTime);
-}
-
-void MediaPlayer::doFullScreen()
-{
-    if (m_fullScreen && !m_video->nativeWidget()->isFullScreen()) {
-        m_fullScreenVideo = m_video->nativeWidget();
-        m_fullScreenVideo->setParent(0);
-        m_video->setWidget(0);
-        m_fullScreenVideo->installEventFilter(this);
-        QDesktopWidget *desktop = qApp->desktop();
-        m_fullScreenVideo->move(desktop->screenGeometry(containment()->screen()).topLeft());
-        m_fullScreenVideo->enterFullScreen();
-    } else  if (!m_fullScreen && m_video->nativeWidget()->isFullScreen()) {
-        m_fullScreenVideo->exitFullScreen();
-        m_fullScreenVideo->removeEventFilter(this);
-        m_video->setWidget(m_fullScreenVideo);
-    }
-
-
 }
 
 void MediaPlayer::init()
@@ -142,91 +118,131 @@ void MediaPlayer::init()
 
     m_layout->addItem(m_video);
 
-    //   connect(m_video->audioOutput(), SIGNAL(volumeChanged(qreal)), SLOT(volumeChanged(qreal)));
+    m_music = new Plasma::VideoWidget(this);
+    m_music->setAcceptDrops(false);
 
+    m_layout->addItem(m_music);
 
-    //   m_video->setUrl(m_currentUrl);
     Phonon::MediaObject *media = m_video->mediaObject();
-
-    //   connect(media, SIGNAL(stateChanged(Phonon::State, Phonon::State)), this, SLOT(stateChanged(Phonon::State, Phonon::State)));
-    //   connect(media, SIGNAL(seekableChanged(bool)), this, SLOT(seekableChanged(bool)));
 
     media->setTickInterval(200);
 
-    //   connect(media, SIGNAL(tick(qint64)), this, SLOT(tick(qint64)));
-    //   connect(media, SIGNAL(totalTimeChanged(qint64)), SLOT(totalTimeChanged(qint64)));
+    Phonon::MediaObject *audio = m_music->mediaObject();
 
-    //   media->play();
-
-    //   m_video->setUsedControls(Plasma::VideoWidget::DefaultControls);
-
-    //   m_hideTimer = new QTimer(this);
-    //   m_hideTimer->setSingleShot(true);
-    //   connect(m_hideTimer, SIGNAL(timeout()), this, SLOT(hideControls()));
+    audio->setTickInterval(200);
 
     SetControlsVisible(false);
 
-    connect (m_video->mediaObject(), SIGNAL(finished()), this, SLOT(playNextMedia()));
-    connect (m_pviewer, SIGNAL(showFinished()), this, SLOT(playNextMedia()));
+    connect (m_video->mediaObject(), SIGNAL(finished()), this, SLOT(playNextVideoMedia()));
+    connect (m_music->mediaObject(), SIGNAL(finished()), this, SLOT(playNextMusicMedia()));
+    connect (m_picture, SIGNAL(showFinished()), this, SLOT(playNextPictureMedia()));
 
-    m_pviewer->setShowTime(slideShowInterval());
-    connect (this, SIGNAL(slideShowTimeChanged(qint64)), m_pviewer, SLOT(setShowTime(qint64)));
-    //   new PlayerDBusHandler(this, media, m_video->audioOutput());
-    //   new TrackListDBusHandler(this, media);
-    //   new RootDBusHandler(this);
+    m_picture->setShowTime(slideShowInterval());
+    connect (this, SIGNAL(slideShowTimeChanged(qint64)), m_picture, SLOT(setShowTime(qint64)));
 }
 
-void MediaPlayer::playNextMedia()
+void MediaPlayer::playNextPictureMedia()
 {
-    int nextMedia = m_medias.indexOf(m_currentMedia) + 1;
-    if (nextMedia >= m_medias.count()) {
-        setActive(false);
+    int nextMedia = m_pictureMedias.indexOf(m_currentPictureMedia) + 1;
+    if (nextMedia >= m_pictureMedias.count()) {
+        setPictureActive(false);
         return;
     }
+    if (m_currentPicturePlaybackState == MediaCenter::PlayingState ||
+        m_currentPicturePlaybackState == MediaCenter::StoppedState ||
+        m_currentPicturePlaybackState == MediaCenter::PausedState ||
+        m_currentPicturePlaybackState == MediaCenter::SinglePictureState) {
+        playPictureMedia(m_pictureMedias[nextMedia]);
+    }
+}
 
-    playMedia(m_medias[nextMedia]);
+void MediaPlayer::playNextVideoMedia()
+{
+    int nextMedia = m_videoMedias.indexOf(m_currentVideoMedia) + 1;
+    if (nextMedia >= m_videoMedias.count()) {
+        setVideoActive(false);
+        return;
+    }
+    if (m_currentVideoPlaybackState == MediaCenter::PlayingState) {
+        playVideoMedia(m_videoMedias[nextMedia]);
+    }
+}
 
+void MediaPlayer::playNextMusicMedia()
+{
+    int nextMedia = m_musicMedias.indexOf(m_currentMusicMedia) + 1;
+    if (nextMedia >= m_musicMedias.count()) {
+        setMusicActive(false);
+        return;
+    }
+    if (m_currentMusicPlaybackState == MediaCenter::PlayingState) {
+        playMusicMedia(m_musicMedias[nextMedia]);
+    }
 }
 
 void MediaPlayer::constraintsEvent(Plasma::Constraints constraints)
 {
+    Q_UNUSED(constraints);
+
     setBackgroundHints(NoBackground);
 }
 
 void MediaPlayer::SetControlsVisible(bool visible)
 {
     m_video->setControlsVisible(visible);
+    m_music->setControlsVisible(visible);
 }
 
 bool MediaPlayer::ControlsVisible() const
 {
     return m_video->controlsVisible();
+    return m_music->controlsVisible();
 }
 
 void MediaPlayer::ToggleControlsVisibility()
 {
     SetControlsVisible(!m_video->controlsVisible());
+    SetControlsVisible(!m_music->controlsVisible());
 }
 
-void MediaPlayer::playPause()
+void MediaPlayer::playPauseVideo()
 {
-    if (m_currentMedia.first == MediaCenter::Picture) {
-        if (m_pviewer->isTimerActive()) {
-            m_pviewer->stopTimer();
-            emit playbackStateChanged(MediaCenter::PausedState);
-        } else {
-            m_pviewer->startTimer();
-            emit playbackStateChanged(MediaCenter::PlayingState);
-        }
+    Phonon::MediaObject *media = m_video->mediaObject();
+    if (media->state() == Phonon::PlayingState) {
+        media->pause();
+        m_currentVideoPlaybackState = MediaCenter::PausedState;
+        emit videoPlaybackStateChanged(MediaCenter::PausedState);
     } else {
-        Phonon::MediaObject *media = m_video->mediaObject();
-        if (media->state() == Phonon::PlayingState) {
-            media->pause();
-            emit playbackStateChanged(MediaCenter::PausedState);
-        } else {
-            media->play();
-            emit playbackStateChanged(MediaCenter::PlayingState);
-        }
+        media->play();
+        m_currentVideoPlaybackState = MediaCenter::PlayingState;
+        emit videoPlaybackStateChanged(MediaCenter::PlayingState);
+    }
+}
+
+void MediaPlayer::playPauseMusic()
+{
+    Phonon::MediaObject *media = m_music->mediaObject();
+    if (media->state() == Phonon::PlayingState) {
+        media->pause();
+        m_currentMusicPlaybackState = MediaCenter::PausedState;
+        emit musicPlaybackStateChanged(MediaCenter::PausedState);
+    } else {
+        media->play();
+        m_currentMusicPlaybackState = MediaCenter::PlayingState;
+        emit musicPlaybackStateChanged(MediaCenter::PlayingState);
+    }
+}
+
+void MediaPlayer::playPausePicture()
+{
+    if (m_picture->isTimerActive()) {
+        m_picture->stopTimer();
+        m_currentPicturePlaybackState = MediaCenter::PausedState;
+        emit picturePlaybackStateChanged(MediaCenter::PausedState);
+    } else {
+        m_picture->startTimer();
+        m_currentPicturePlaybackState = MediaCenter::PlayingState;
+        emit picturePlaybackStateChanged(MediaCenter::PlayingState);
     }
 }
 
@@ -253,21 +269,39 @@ void MediaPlayer::Lower()
     m_raised = true;
 }
 
-void MediaPlayer::seek(int progress)
+void MediaPlayer::seekVideo(int progress)
 {
     if (!m_ticking) {
-        m_video->mediaObject()->seek(progress);
+        if (m_currentStateType == MediaCenter::Video) {
+            m_video->mediaObject()->seek(progress);
+        }
     }
 }
 
-void MediaPlayer::setVolume(qreal value)
+void MediaPlayer::seekMusic(int progress)
 {
-     m_video->audioOutput()->setVolume(value);
+    if (!m_ticking) {
+        if (m_currentStateType == MediaCenter::Audio) {
+            m_music->mediaObject()->seek(progress);
+        }
+    }
 }
+
+void MediaPlayer::setVolume(int value)
+{
+    //They should all have the same volume.
+    m_video->audioOutput()->setVolume(qreal(value)/100);
+    m_music->audioOutput()->setVolume(qreal(value)/100);
+}
+
+qreal MediaPlayer::volume() const
+{
+    return m_video->audioOutput()->volume();
+}
+
 
 void MediaPlayer::dropEvent(QGraphicsSceneDragDropEvent *event)
 {
-
     if (event->mimeData()->urls().isEmpty()) {
         return;
     }
@@ -309,9 +343,18 @@ void MediaPlayer::hideControls()
 
 void MediaPlayer::keyPressEvent(QKeyEvent *event)
 {
-    Phonon::MediaObject *media = m_video->mediaObject();
-    Phonon::AudioOutput *audio = m_video->audioOutput();
+    Phonon::MediaObject *media;
+    Phonon::AudioOutput *audio;
     const qreal step = 30;
+
+    if (m_currentStateType == MediaCenter::Video) {
+        media = m_video->mediaObject();
+        audio = m_video->audioOutput();
+    }
+    if (m_currentStateType == MediaCenter::Audio) {
+        media = m_music->mediaObject();
+        audio = m_music->audioOutput();
+    }
 
     switch (event->key())
     {
@@ -322,7 +365,15 @@ void MediaPlayer::keyPressEvent(QKeyEvent *event)
         media->seek(media->currentTime() + media->totalTime()/step);
         break;
     case Qt::Key_Space:
-        playPause();
+        if (m_currentStateType == MediaCenter::Audio) {
+            playPauseMusic();
+        }
+        if (m_currentStateType == MediaCenter::Video) {
+            playPauseVideo();
+        }
+        if (m_currentStateType == MediaCenter::Picture) {
+            playPausePicture();
+        }
         break;
     case Qt::Key_Up:
         audio->setVolume(qMin(qreal(1.0), audio->volume() + 0.1));
@@ -348,77 +399,193 @@ void MediaPlayer::keyPressEvent(QKeyEvent *event)
 
 bool MediaPlayer::eventFilter(QObject *o, QEvent *e)
 {
-    if (o != m_fullScreenVideo) {
-        return false;
-    }
+    Q_UNUSED(o);
 
     if (e->type() == QEvent::KeyPress) {
         QKeyEvent *keyEvent = static_cast<QKeyEvent*>(e);
         if (keyEvent->key() == Qt::Key_Escape) {
             m_fullScreen = false;
-            doFullScreen();
             return true;
         }
     }
-
     return false;
 }
 
-void MediaPlayer::stop()
+void MediaPlayer::stopVideo()
 {
-    m_video->mediaObject()->stop();
-    m_pviewer->clearImage();
-    setActive(false);
-    emit playbackStateChanged(MediaCenter::StoppedState);
+    if (m_currentStateType == MediaCenter::Video) {
+        m_video->mediaObject()->stop();
+        m_currentVideoPlaybackState = MediaCenter::StoppedState;
+        emit videoPlaybackStateChanged(MediaCenter::StoppedState);
+    }
+    setVideoActive(false);
+}
+
+void MediaPlayer::stopMusic()
+{
+    if (m_currentStateType == MediaCenter::Audio) {
+        m_music->mediaObject()->stop();
+        m_currentMusicPlaybackState = MediaCenter::StoppedState;
+        emit musicPlaybackStateChanged(MediaCenter::StoppedState);
+    }
+    setMusicActive(false);
+}
+
+void MediaPlayer::stopPicture()
+{
+    if (m_currentStateType == MediaCenter::Picture) {
+        m_picture->clearImage();
+        m_picture->stopTimer();
+        m_currentPicturePlaybackState = MediaCenter::StoppedState;
+        emit picturePlaybackStateChanged(MediaCenter::StoppedState);
+    }
+    setPictureActive(false);
 }
 
 Phonon::MediaObject* MediaPlayer::mediaObject()
 {
-    if (m_video) {
+    if (m_currentStateType == MediaCenter::Video) {
         return m_video->mediaObject();
+    }
+    if (m_currentStateType == MediaCenter::Audio) {
+        return m_music->mediaObject();
     }
     return 0;
 }
 
-void MediaPlayer::skipBackward()
+void MediaPlayer::skipVideoBackward()
 {
-    int previous = m_medias.indexOf(m_currentMedia) - 1;
+    int previous = m_videoMedias.indexOf(m_currentVideoMedia) - 1;
     if (previous < 0) {
         return;
     }
-    playMedia(m_medias[previous]);
+    if (m_currentVideoPlaybackState == MediaCenter::PlayingState) {
+        playVideoMedia(m_videoMedias[previous]);
+    }
 }
 
-void MediaPlayer::skipForward()
+void MediaPlayer::skipVideoForward()
 {
-    playNextMedia();
+    playNextVideoMedia();
 }
 
-void MediaPlayer::playMedia(const MediaCenter::Media &media)
+void MediaPlayer::skipMusicBackward()
 {
-    foreach (MediaCenter::Media mediaSource, m_medias)  {
+    int previous = m_musicMedias.indexOf(m_currentMusicMedia) - 1;
+    if (previous < 0) {
+        return;
+    }
+    if (m_currentMusicPlaybackState == MediaCenter::PlayingState) {
+        playMusicMedia(m_musicMedias[previous]);
+    }
+}
+
+void MediaPlayer::skipMusicForward()
+{
+    playNextMusicMedia();
+}
+
+void MediaPlayer::skipPictureBackward()
+{
+    int previous = m_pictureMedias.indexOf(m_currentPictureMedia) - 1;
+    if (previous < 0) {
+        return;
+    }
+    if (m_currentPicturePlaybackState == MediaCenter::PlayingState ||
+        m_currentPicturePlaybackState == MediaCenter::PausedState ||
+        m_currentPicturePlaybackState == MediaCenter::SinglePictureState) {
+        playPictureMedia(m_pictureMedias[previous]);
+    }
+}
+
+void MediaPlayer::skipPictureForward()
+{
+    playNextPictureMedia();
+    kWarning() << "Picture forward";
+}
+
+void MediaPlayer::playVideoMedia(const MediaCenter::Media &media)
+{
+    kWarning() << "MediaPlayer told to play Video, medias size: " << m_videoMedias.size();
+    foreach (MediaCenter::Media mediaSource, m_videoMedias)  {
         if (mediaSource.second == media.second) {
-            setActive(true);
-            if (media.first == MediaCenter::Audio ||
-                media.first == MediaCenter::Video ||
+            setVideoActive(true);
+            //Video
+            if (media.first == MediaCenter::Video ||
                 media.first == MediaCenter::OpticalDisc) {
                 // check whether there is the right widget in the layout
                 if (!m_video->isVisible()) {
                     QGraphicsLinearLayout *layout = static_cast<QGraphicsLinearLayout*>(this->layout());
-                    layout->removeItem(m_pviewer);
+                    layout->removeItem(m_picture);
+                    layout->removeItem(m_music);
                     m_video->show();
-                    m_pviewer->hide();
+                    m_music->hide();
+                    m_picture->hide();
                     layout->addItem(m_video);
                     setLayout(layout);
                 }
-
                 m_video->mediaObject()->setCurrentSource(media.second);
+
                 if (m_video->mediaObject()->state() != Phonon::PlayingState) {
-                    playPause();
+                    m_currentVideoMedia = media;
+                    kWarning() << " currentMedia: " << media.second;
+                    emit newVideoMedia(m_currentVideoMedia);
+                    emit newVideoObject(m_video->mediaObject());
+                    playPauseVideo();
                 }
-                m_currentMedia = media;
-            } else {
+                return;
+            }
+        }
+    }
+}
+
+void MediaPlayer::playMusicMedia(const MediaCenter::Media &media)
+{
+    kWarning() << "MediaPlayer told to play music, medias size: " << m_musicMedias.size();
+    foreach (MediaCenter::Media mediaSource, m_musicMedias)  {
+        if (mediaSource.second == media.second) {
+            setMusicActive(true);
+            //Audio
+            if (media.first == MediaCenter::Audio) {
+                // check whether there is the right widget in the layout
+                kWarning() << "playMedia Audio";
+                if (!m_music->isVisible()) {
+                    QGraphicsLinearLayout *layout = static_cast<QGraphicsLinearLayout*>(this->layout());
+                    layout->removeItem(m_picture);
+                    layout->removeItem(m_video);
+                    m_music->show();
+                    m_video->hide();
+                    m_picture->hide();
+                    layout->addItem(m_music);
+                    setLayout(layout);
+                }
+                m_music->mediaObject()->setCurrentSource(media.second);
+
+                if (m_music->mediaObject()->state() != Phonon::PlayingState) {
+                    m_currentMusicMedia = media;
+                    kWarning() << " currentMedia: " << media.second;
+                    emit newMusicMedia(m_currentMusicMedia);
+                    emit newMusicObject(m_music->mediaObject());
+                    playPauseMusic();
+                }
+                return;
+            }
+        }
+    }
+}
+void MediaPlayer::playPictureMedia(const MediaCenter::Media &media)
+{
+    kWarning() << "MediaPlayer told to play picture, medias size: " << m_pictureMedias.size();
+    foreach (MediaCenter::Media mediaSource, m_pictureMedias)  {
+        if (mediaSource.second == media.second) {
+            setPictureActive(true);
+            //Picture
+            if (media.first == MediaCenter::Picture) {
+                kWarning() << "playMedia Picture";
                 slideShow(media);
+            }
+            else {
+                kWarning() << "MediaType unknown";
             }
         }
     }
@@ -426,25 +593,36 @@ void MediaPlayer::playMedia(const MediaCenter::Media &media)
 
 void MediaPlayer::slideShow(const MediaCenter::Media &media)
 {
-    if (!m_pviewer->isVisible()) {
+    if (!m_picture->isVisible()) {
         QGraphicsLinearLayout *layout = static_cast<QGraphicsLinearLayout*>(this->layout());
         layout->removeItem(m_video);
+        layout->removeItem(m_music);
         m_video->hide();
-        m_pviewer->show();
-        layout->addItem(m_pviewer);
+        m_music->hide();
+        m_picture->show();
+        layout->addItem(m_picture);
         setLayout(layout);
     }
+        m_picture->loadPicture(media.second);
+        m_currentPictureMedia = media;
+        emit newPictureMedia(m_currentPictureMedia);
 
-    if (m_video->mediaObject()->state() == Phonon::PlayingState) {
-        stop();
+    if (slideShowInterval() == 0) {
+       kWarning() << "single picture mode";
+       m_currentPicturePlaybackState = MediaCenter::SinglePictureState;
+       emit picturePlaybackStateChanged(MediaCenter::SinglePictureState);
     }
 
-    m_pviewer->loadPicture(media.second);
-    m_pviewer->startTimer();
-    m_currentMedia = media;
+    if (slideShowInterval() > 0) {
+        kWarning() << "slideshow";
+        if (m_currentPicturePlaybackState == MediaCenter::PlayingState) {
+            kWarning() << "continue slideshow";
+            m_picture->startTimer();
+        }
+    }
 }
 
-void MediaPlayer::append(const QStringList &medias)
+void MediaPlayer::appendMusic(const QStringList &medias)
 {
     foreach (const QString mediaString, medias) {
         MediaCenter::Media media;
@@ -452,23 +630,241 @@ void MediaPlayer::append(const QStringList &medias)
         media.second = mediaString;
 
         kDebug() << "appending" << mediaString;
-        m_medias << media;
+        m_musicMedias << media;
     }
 }
 
-void MediaPlayer::enqueue(const QList<MediaCenter::Media> &medias)
+void MediaPlayer::appendPicture(const QStringList &medias)
 {
-    m_medias << medias;
+    foreach (const QString mediaString, medias) {
+        MediaCenter::Media media;
+        media.first = MediaCenter::getType(mediaString);
+        media.second = mediaString;
+
+        kDebug() << "appending" << mediaString;
+        m_pictureMedias << media;
+    }
 }
 
-MediaCenter::Media MediaPlayer::currentMedia()
+void MediaPlayer::appendVideo(const QStringList &medias)
 {
-    return m_currentMedia;
+    foreach (const QString mediaString, medias) {
+        MediaCenter::Media media;
+        media.first = MediaCenter::getType(mediaString);
+        media.second = mediaString;
+
+        kDebug() << "appending" << mediaString;
+        m_videoMedias << media;
+    }
 }
 
-void MediaPlayer::clearQueue()
+void MediaPlayer::enqueueVideos(const QList<MediaCenter::Media> &medias)
 {
-    m_medias.clear();
+    kWarning() << "Video enqued";
+    m_videoMedias << medias;
+}
+
+void MediaPlayer::enqueuePictures(const QList<MediaCenter::Media> &medias)
+{
+    m_pictureMedias << medias;
+}
+
+void MediaPlayer::enqueueMusic(const QList<MediaCenter::Media> &medias)
+{
+    kWarning() << "Music enqued";
+    m_musicMedias << medias;
+}
+
+MediaCenter::Media MediaPlayer::currentVideoMedia() const
+{
+    return m_currentVideoMedia;
+}
+
+void MediaPlayer::setCurrentVideoMedia(const MediaCenter::Media &media)
+{
+    m_currentVideoMedia = media;
+}
+
+MediaCenter::Media MediaPlayer::currentPictureMedia()  const
+{
+    return m_currentPictureMedia;
+}
+
+void MediaPlayer::setCurrentPictureMedia(const MediaCenter::Media &media)
+{
+    m_currentPictureMedia = media;
+}
+
+MediaCenter::Media MediaPlayer::currentMusicMedia() const
+{
+    return m_currentMusicMedia;
+}
+
+void MediaPlayer::setCurrentMusicMedia(const MediaCenter::Media &media)
+{
+    m_currentMusicMedia = media;
+}
+
+void MediaPlayer::clearPictureQueue()
+{
+    m_pictureMedias.clear();
+}
+
+void MediaPlayer::clearVideoQueue()
+{
+    m_videoMedias.clear();
+}
+
+void MediaPlayer::clearMusicQueue()
+{
+    m_musicMedias.clear();
+}
+
+MediaCenter::PlaybackState MediaPlayer::videoPlayerPlaybackState() const
+{
+    return m_currentVideoPlaybackState;
+}
+
+MediaCenter::PlaybackState MediaPlayer::musicPlayerPlaybackState() const
+{
+    return m_currentMusicPlaybackState;
+}
+
+MediaCenter::PlaybackState MediaPlayer::picturePlayerPlaybackState() const
+{
+    return m_currentPicturePlaybackState;
+}
+
+void MediaPlayer::playAllVideoMedia()
+{
+    if (m_videoMedias.isEmpty()) {
+        kWarning() << "No video to play";
+        emit nothingToPlay();
+	//TODO: Do something with this signal
+        return;
+    }
+
+    if (m_currentVideoPlaybackState == MediaCenter::PlayingState) {
+        playPauseVideo();
+        return;
+    }
+
+    MediaCenter::Media media;
+    if (m_videoMedias.contains(m_currentVideoMedia)) {
+        media = m_currentVideoMedia;
+    } else {
+        media = m_videoMedias[0];
+    }
+
+    if (m_currentStateType == MediaCenter::Video) {
+        if (m_currentVideoPlaybackState == MediaCenter::PausedState) {
+            playPauseVideo();
+            return;
+        }
+        if (m_currentVideoPlaybackState == MediaCenter::StoppedState) {
+            playVideoMedia(media);
+            playPauseVideo();
+            return;
+        }
+    }
+}
+
+void MediaPlayer::playAllMusicMedia()
+{
+    if (m_musicMedias.isEmpty()) {
+        kWarning() << "No music to play";
+        emit nothingToPlay();
+	//TODO: Do something with this signal
+        return;
+    }
+
+    if (m_currentMusicPlaybackState == MediaCenter::PlayingState) {
+        playPauseMusic();
+        return;
+    }
+
+    MediaCenter::Media media;
+    if (m_musicMedias.contains(m_currentMusicMedia)) {
+        media = m_currentMusicMedia;
+    } else {
+        media = m_musicMedias[0];
+    }
+
+    if (m_currentStateType == MediaCenter::Audio) {
+        if (m_currentMusicPlaybackState == MediaCenter::PausedState) {
+            playPauseMusic();
+            return;
+        }
+        if (m_currentMusicPlaybackState == MediaCenter::StoppedState) {
+            playMusicMedia(media);
+            playPauseMusic();
+            return;
+        }
+    }
+}
+
+void MediaPlayer::playAllPictureMedia()
+{
+    if (m_pictureMedias.isEmpty()) {
+        kWarning() << "No picture to play";
+        emit nothingToPlay();
+	//TODO: Do something with this signal
+        return;
+    }
+
+    if (m_currentPicturePlaybackState == MediaCenter::PlayingState) {
+        playPausePicture();
+        return;
+    }
+
+    MediaCenter::Media media;
+    if (m_pictureMedias.contains(m_currentPictureMedia)) {
+        media = m_currentPictureMedia;
+    } else {
+        media = m_pictureMedias[0];
+    }
+
+    if (m_currentStateType == MediaCenter::Picture) {
+        if (m_currentPicturePlaybackState == MediaCenter::PausedState) {
+            playPictureMedia(m_currentPictureMedia);
+            playPausePicture();
+            return;
+        }
+        if (m_currentPicturePlaybackState == MediaCenter::StoppedState ||
+            m_currentPicturePlaybackState == MediaCenter::SinglePictureState) {
+            playPictureMedia(media);
+            playPausePicture();
+            return;
+        }
+    }
+}
+
+void MediaPlayer::setPlayerType(const MediaCenter::MediaType &type)
+{
+    if (type == MediaCenter::Audio) {
+        m_video->hide();
+        m_music->hide();
+        m_picture->hide();
+        kWarning() << "Hiding all players";
+    }
+    if (type == MediaCenter::Video) {
+        m_video->show();
+        m_music->hide();
+        m_picture->hide();
+        kWarning() << "Hiding all except video";
+    }
+    if (type == MediaCenter::Picture) {
+        m_video->hide();
+        m_music->hide();
+        m_picture->show();
+        kWarning() << "Hiding all except picture";
+    }
+    m_currentStateType = type;
+}
+
+QRectF MediaPlayer::pictureRect() const
+{
+    return m_picture->pictureRect();
 }
 
 K_EXPORT_PLASMA_APPLET(mcplayer, MediaPlayer)

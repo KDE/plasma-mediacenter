@@ -23,6 +23,7 @@
 #include <QVariantList>
 #include <KConfigGroup>
 #include "mediabrowser_export.h"
+#include "mediacenter/mediacenter.h"
 
 class QAbstractItemModel;
 class KConfigDialog;
@@ -74,7 +75,7 @@ public:
      * that allow actions like "go backward", "go forward", "go uplevel" that generally change
      * their meaning if the browsing type is local or remote.
      */
-    virtual BrowsingType browsingType() = 0;
+    virtual BrowsingType browsingType() const = 0;
 
     bool hasConfigurationInterface();
 
@@ -101,6 +102,8 @@ public:
      */
     virtual void init();
 
+    MediaCenter::MediaTypes allowedMediaTypes();
+
 protected:
     /**
      * As from Plasma::Applet this method should be used in order
@@ -108,10 +111,13 @@ protected:
      * the model.
      */
     void setHasConfigurationInterface(bool hasInterface);
+    void setAllowedMediaTypes(const MediaCenter::MediaTypes &type);
 
 private:
     class ModelPackagePrivate;
     ModelPackagePrivate *d;
+
+    MediaCenter::MediaTypes m_allowedMediaTypes;
 };
 
 #endif // MODELPACKAGE_H

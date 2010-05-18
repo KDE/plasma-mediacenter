@@ -22,33 +22,74 @@
 
 #include "mediacenterstate.h"
 
+#include <phonon/mediaobject.h>
+
 #include <Plasma/IconWidget>
+#include <Plasma/Slider>
+#include <Plasma/TabBar>
+
+namespace Nepomuk {
+    class Resource;
+}
+
+class KRatingWidget;
 
 namespace MediaCenter {
-    enum MusicSubComponent {
-        MusicStateLabel
-    };
 
 class MEDIACENTER_EXPORT MusicState : public MediaCenterState
 {
     Q_OBJECT
 public:
     MusicState(QState *parent = 0);
-    ~MusicState();
+    virtual ~MusicState();
 
-    QList<QGraphicsWidget*> subComponents();
-    void configureUIComponents(QList<Plasma:: Applet*> list);
-    void connectMediaLayout(MediaLayout *layout);
-    void configureMediaLayout(MediaLayout *layout);
-    void connectSubComponents(QList<Plasma:: Applet*> list);
+    virtual QList<QGraphicsWidget*> subComponents() const;
+    virtual void configure();
+    virtual void initConnections();
+
+    Phonon::MediaObject *mediaObject() const;
 
 protected:
-    void onExit(QEvent* event);
-    void onEntry(QEvent* event);
+    virtual void onExit(QEvent* event);
+    virtual void onEntry(QEvent* event);
+
+private slots:
+    void updateTotalTime(const qint64 time);
+    void updateCurrentTick(const qint64 time);
+
+    virtual void onPlaybackStateChanged(const MediaCenter::PlaybackState &state);
+
+    void setMedia(const MediaCenter::Media &media);
+    void setMediaObject(Phonon::MediaObject *object);
+
+    void selectedMediasChanged(const QList<MediaCenter::Media> &list);
+    void slotRatingChanged(const int rating);
 
 private:
-    Plasma::IconWidget *m_musicStateLabel;
+    void receivedMediaObject() const;
+    void updateInfoDisplay();
+
+    Plasma::Slider *m_musicVolumeSlider;
+    Plasma::Slider *m_musicSeekSlider;
+    Plasma::IconWidget *m_musicSkipBack;
+    Plasma::IconWidget *m_musicPlayPause;
+    Plasma::IconWidget *m_musicSkipForward;
+    Plasma::IconWidget *m_musicStop;
     Plasma::IconWidget *m_musicTogglePlaylist;
+    Plasma::TabBar *m_musicTabBar;
+    Plasma::IconWidget *m_label;
+    Plasma::IconWidget *m_selectedMediasLabel;
+    Plasma::IconWidget *m_currentlyPlayingLabel;
+
+    Phonon::MediaObject *m_musicObject;
+    MediaCenter::Media m_musicMedia;
+    KUrl m_lastDirectory;
+
+    Nepomuk::Resource *m_resource;
+    KRatingWidget *m_ratingWidget;
+    QGraphicsProxyWidget *m_ratingProxyWidget;
+    bool m_nepomuk;
+
 };
 
 } //namespace end

@@ -68,8 +68,8 @@ public:
     void setDrawBlurredText(bool set);
     bool drawBlurredText();
 
-    void setBrowsingType(ModelPackage::BrowsingType);
-    ModelPackage::BrowsingType browsingType();
+    void setBrowsingType(const ModelPackage::BrowsingType &);
+    ModelPackage::BrowsingType browsingType() const;
 
     /**
      * Call this method whenever events like model resetting occur.
@@ -131,9 +131,11 @@ public slots:
     virtual void updateScrollBar() = 0;
 
     void goPrevious();
+    void listMediaInDirectory();
 
 private slots:
     void setRating(int);
+    void slotItemSelected();
 
 signals:
     void scrollOffsetChanged(int);
@@ -141,6 +143,9 @@ signals:
     void mediasListInDirectory(const QList<MediaCenter::Media> &);
     void mediaActivated(const MediaCenter::Media &);
     void indexActivated(const QModelIndex &);
+    void mediaSelected(const MediaCenter::Media);
+    void mediaUnselected(const MediaCenter::Media);
+    void directoryChanged();
 
 private:
     void tryDrag(QGraphicsSceneMouseEvent *);
@@ -148,7 +153,6 @@ private:
     void itemClickEvent(QGraphicsSceneMouseEvent *);
     KUrl::List m_history;
     ModelPackage::BrowsingType m_browsingType;
-    QList<MediaCenter::Media> listMediaInDirectory();
 
 protected:
     int m_iconSize;

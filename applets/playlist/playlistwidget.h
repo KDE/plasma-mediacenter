@@ -47,14 +47,17 @@ public:
 
     bool multiplePlaylistsEnabled();
 
-    QList<MediaCenter::Media> medias();
+    QList<MediaCenter::Media> medias(const MediaCenter::MediaType &type) const;
     int length();
+
+    void setCurrentPlaylist(QString playlistName);
 
 public Q_SLOTS:
     void playlistUpdated(const QString &, const Plasma::DataEngine::Data &);
     void coverUpdated(const QString &, const Plasma::DataEngine::Data &);
     void setMultiplePlaylistsEnabled(bool);
     void append(const QList<QUrl> &);
+    void setMediaTypeToShow(const MediaCenter::MediaType &type);
 
 protected Q_SLOTS:
     void slotPlaylistAdded(const QString &source);
@@ -82,6 +85,7 @@ private:
     Plasma::DataEngine *m_playlistEngine;
     Plasma::DataEngine *m_coverEngine;
     QStandardItemModel *m_model;
+    MediaCenter::MediaType m_mediaTypeToShow;
 
     QWidget *m_indicator;
 

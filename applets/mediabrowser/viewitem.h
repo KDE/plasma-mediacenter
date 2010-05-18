@@ -63,6 +63,14 @@ public:
     void setDrawBlurredText(bool set);
     bool drawBlurredText();
 
+    bool isSelected();
+
+    void showCornerIcons(bool set);
+    void setIsNotFile(bool set);
+
+public slots:
+    void setSelected(bool set);
+
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void keyPressEvent(QKeyEvent *event);
@@ -78,22 +86,30 @@ private:
     Nepomuk::Resource *m_resource;
     bool m_nepomuk;
     bool m_blurred;
+    bool m_selectByIcon;
+    bool m_isSelected;
+    bool m_isNotFile;
 
     friend class AbstractMediaItemView;
 
 private:
     void drawReflection(QPainter *painter, const QRect &reflectionRect, const QIcon &icon);
     void drawReflection(QPainter *painter, const QRect &reflectionRect, const QPixmap &pm);
+    void drawSelectIcon(QPainter *painter, const QStyleOptionGraphicsItem *option);
     void askForFilePreview();
 
     QRect ratingRect(const QRect &contentsRect) const;
+    QRect selectRect(const QRect &contentsRect) const;
     QSize textRectSize() const;
+
+    QPixmap m_selectIcon;
 
 private slots:
     void slotGotPreview(const KFileItem &item, const QPixmap &preview);
 
 signals:
     void ratingActivated(int);
+    void itemSelected();
 
 };
 

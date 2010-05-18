@@ -26,11 +26,13 @@
 #include <mediacenter/playlist.h>
 #include <mediacenter/player.h>
 #include <mediacenter/medialayout.h>
+#include <mediacenter/infodisplay.h>
 
 #include <mediacenter/mediacenterstate.h>
 #include <mediacenter/videostate.h>
 #include <mediacenter/picturestate.h>
 #include <mediacenter/musicstate.h>
+#include <mediacenter/homestate.h>
 
 // Qt
 #include <QAction>
@@ -42,10 +44,6 @@
 #include <KNotification>
 #include <KLocale>
 
-static const int BROWSER_WIDTH = 300;
-static const int BROWSER_HEIGHT = 100;
-
-
 K_EXPORT_PLASMA_APPLET(mediacontainment, MediaContainment)
 
 MediaContainment::MediaContainment(QObject *parent, const QVariantList &args) : Plasma::Containment(parent, args),
@@ -53,13 +51,12 @@ m_browser(0),
 m_control(0),
 m_playlist(0),
 m_player(0),
-m_videoState(0),
-m_currentState(MediaCenter::PictureMode),
-m_pictureState(0),
-m_previousState(MediaCenter::PictureMode),
+m_infoDisplay(0),
+m_homeState(0),
+m_currentState(MediaCenter::HomeMode),
+m_previousState(MediaCenter::HomeMode),
 m_mediaCenterState(0),
-m_musicIsPlaying(false),
-m_layout(new MediaLayout(this))
+m_layout(new MediaCenter::MediaLayout(this))
 {
     setContainmentType(Plasma::Containment::CustomContainment);
     setHasConfigurationInterface(true);
@@ -79,34 +76,47 @@ void MediaContainment::startStateMachine()
 
     //Set up all possible states
     m_mediaCenterState = new MediaCenter::MediaCenterState();
+    m_homeState = new MediaCenter::HomeState(machine);
     m_videoState = new MediaCenter::VideoState(machine);
     m_pictureState = new MediaCenter::PictureState(machine);
-    m_musicState = new MediaCenter::MusicState(machine);    
+    m_musicState = new MediaCenter::MusicState(machine);
 
     //Define state change buttons
-    m_videoState->addTransition(m_control, SIGNAL(layoutToPictureState()), m_pictureState);
-    m_videoState->addTransition(m_control, SIGNAL(layoutToMusicState()), m_musicState);
-    m_pictureState->addTransition(m_control, SIGNAL(layoutToVideoState()), m_videoState);
-    m_pictureState->addTransition(m_control, SIGNAL(layoutToMusicState()), m_musicState);
-    m_musicState->addTransition(m_control, SIGNAL(layoutToVideoState()), m_videoState);
-    m_musicState->addTransition(m_control, SIGNAL(layoutToPictureState()), m_pictureState);    
+    m_videoState->addTransition(m_mediaCenterState, SIGNAL(layoutToPictureState()), m_pictureState);
+    m_videoState->addTransition(m_mediaCenterState, SIGNAL(layoutToMusicState()), m_musicState);
+    m_videoState->addTransition(m_mediaCenterState, SIGNAL(layoutToHomeState()), m_homeState);
+    m_pictureState->addTransition(m_mediaCenterState, SIGNAL(layoutToVideoState()), m_videoState);
+    m_pictureState->addTransition(m_mediaCenterState, SIGNAL(layoutToMusicState()), m_musicState);
+    m_pictureState->addTransition(m_mediaCenterState, SIGNAL(layoutToHomeState()), m_homeState);
+    m_musicState->addTransition(m_mediaCenterState, SIGNAL(layoutToVideoState()), m_videoState);
+    m_musicState->addTransition(m_mediaCenterState, SIGNAL(layoutToPictureState()), m_pictureState);
+    m_musicState->addTransition(m_mediaCenterState, SIGNAL(layoutToHomeState()), m_homeState);
+    m_homeState->addTransition(m_mediaCenterState, SIGNAL(layoutToVideoState()), m_videoState);
+    m_homeState->addTransition(m_mediaCenterState, SIGNAL(layoutToPictureState()), m_pictureState);
+    m_homeState->addTransition(m_mediaCenterState, SIGNAL(layoutToMusicState()), m_musicState);
 
     //I use these signals to tell the mediacontainment to do an actual state switch
-    connect (m_videoState, SIGNAL(state(MediaCenter::Mode)), this, SLOT(switchState(MediaCenter::Mode)));
-    connect (m_pictureState, SIGNAL(state(MediaCenter::Mode)), this, SLOT(switchState(MediaCenter::Mode)));
-    connect (m_musicState, SIGNAL(state(MediaCenter::Mode)), this, SLOT(switchState(MediaCenter::Mode)));
+    connect (m_videoState, SIGNAL(state(const MediaCenter::Mode)), this, SLOT(switchState(const MediaCenter::Mode)));
+    connect (m_pictureState, SIGNAL(state(const MediaCenter::Mode)), this, SLOT(switchState(const MediaCenter::Mode)));
+    connect (m_musicState, SIGNAL(state(const MediaCenter::Mode)), this, SLOT(switchState(const MediaCenter::Mode)));
+    connect (m_homeState, SIGNAL(state(const MediaCenter::Mode)), this, SLOT(switchState(const MediaCenter::Mode)));
 
-    //connections for MainComponents
-    m_mediaCenterState->connectMainSubComponents(m_currentUIComponents);
-    //m_mediaCenterState->connectMediaLayout(m_layout); FIXME build error
-    
-    //connections of all subcomponents for all states
-    m_pictureState->connectSubComponents(m_currentUIComponents);
-    m_videoState->connectSubComponents(m_currentUIComponents);
-    m_musicState->connectSubComponents(m_currentUIComponents);    
+    //Initialize pointers for each state
+    m_mediaCenterState->init(m_layout,m_currentUIComponents);
+    m_homeState->init(m_layout,m_currentUIComponents);
+    m_videoState->init(m_layout,m_currentUIComponents);
+    m_pictureState->init(m_layout,m_currentUIComponents);
+    m_musicState->init(m_layout,m_currentUIComponents);
+
+    //Connect each state
+    m_mediaCenterState->initConnections();
+    m_homeState->initConnections();
+    m_videoState->initConnections();
+    m_pictureState->initConnections();
+    m_musicState->initConnections();
 
     //Setup and start statemachine
-    machine->setInitialState(m_videoState);
+    machine->setInitialState(m_homeState);
     machine->start();
 }
 
@@ -135,7 +145,6 @@ void MediaContainment::slotAppletAdded(Plasma::Applet *applet, const QPointF &po
 {
     Q_UNUSED(pos)
 
-    // browser check
     MediaCenter::Browser *browser = qobject_cast<MediaCenter::Browser*>(applet);
     if (browser) {
         if (m_browser) {
@@ -147,7 +156,23 @@ void MediaContainment::slotAppletAdded(Plasma::Applet *applet, const QPointF &po
             m_browser = browser;
             m_layout->setBrowser(m_browser);
             m_layout->invalidate();
-	    m_currentUIComponents << m_browser;
+            m_currentUIComponents << m_browser;
+        }
+        return;
+    }
+
+    MediaCenter::InfoDisplay *infoDisplay = qobject_cast<MediaCenter::InfoDisplay*>(applet);
+    if (infoDisplay) {
+        if (m_infoDisplay) {
+            KNotification::event(KNotification::Error, i18n("An information display applet for the Media Center is already loaded. "
+                                                            "Remove that one before loading a new one please."));
+            kDebug() << "destroying applet";
+            applet->deleteLater();
+        } else {
+            m_infoDisplay = infoDisplay;
+            m_layout->setInfoDisplay(m_infoDisplay);
+            m_layout->invalidate();
+            m_currentUIComponents << m_infoDisplay;
         }
         return;
     }
@@ -165,19 +190,7 @@ void MediaContainment::slotAppletAdded(Plasma::Applet *applet, const QPointF &po
             m_layout->invalidate();
             m_currentUIComponents << m_control;
 
-            initControls();
-
-            //This is the last applet added, so start the machine
-            m_layout->setControlAutohide(false); //TODO Put this somewhere else
             startStateMachine();
-
-            //FIXME The following is a hack to get PMC into a good initial state
-            MediaCenter::Mode state1 = MediaCenter::PictureMode;
-            MediaCenter::Mode state2 = MediaCenter::VideoMode;
-            MediaCenter::Mode state3 = MediaCenter::MusicMode;
-            switchState(state1);
-            switchState(state2);
-            switchState(state3);
         }
         return;
     }
@@ -193,7 +206,7 @@ void MediaContainment::slotAppletAdded(Plasma::Applet *applet, const QPointF &po
             m_playlist = playlist;
             m_layout->setPlaylist(m_playlist);
             m_layout->invalidate();
-	    m_currentUIComponents << m_playlist;
+            m_currentUIComponents << m_playlist;
         }
         return;
     }
@@ -215,30 +228,6 @@ void MediaContainment::slotAppletAdded(Plasma::Applet *applet, const QPointF &po
     }
 }
 
-void MediaContainment::initControls()
-{
-    if (!m_player) {
-        return;
-    }
-
-    if (!m_control) {
-        return;
-    }
-    kDebug() << "Init controls";
-    connect(m_control, SIGNAL(toggleControlAutohide()), m_layout, SLOT(toggleControlAutohide()));
-
-    connect(m_control, SIGNAL(browserGoPrevious()), m_browser, SIGNAL(goPrevious()));
-    connect(m_control, SIGNAL(togglePlaylistVisible()), m_layout, SLOT(togglePlaylistVisible()));
-    connect (m_control, SIGNAL(playPauseRequest()), m_player, SLOT(playPause()));
-    connect (m_control, SIGNAL(seekRequest(int)), m_player, SLOT(seek(int)));
-    connect (m_control, SIGNAL(volumeLevelChangeRequest(qreal)), m_player, SLOT(setVolume(qreal)));
-    connect (m_control, SIGNAL(stopRequest()), m_player, SLOT(stop()));
-    connect (m_control, SIGNAL(mediaSkipBackwardRequest()), m_player, SLOT(skipBackward()));
-    connect (m_control, SIGNAL(mediaSkipForwardRequest()), m_player, SLOT(skipForward()));
-    connect (m_player, SIGNAL(playbackStateChanged(MediaCenter::PlaybackState)), m_control, SLOT(playbackStateChanged(MediaCenter::PlaybackState)));
-    m_control->setMediaObject(m_player->mediaObject());
-}
-
 void MediaContainment::slotAppletRemoved(Plasma::Applet *applet)
 {
     if (applet == m_browser) {
@@ -249,80 +238,87 @@ void MediaContainment::slotAppletRemoved(Plasma::Applet *applet)
         m_playlist = 0;
     } else if (applet == m_control) {
         m_control = 0;
+    } else if (applet == m_infoDisplay) {
+        m_infoDisplay = 0;
     }
 }
 
-void MediaContainment::switchState(MediaCenter::Mode newState)
+void MediaContainment::switchState(const MediaCenter::Mode &newState)
 {
-    setCurrentState(newState);
-    QList<QGraphicsWidget*> list;
-
-    if (newState == MediaCenter::PictureMode) {
-        list = m_pictureState->subComponents();
-        m_pictureState->configureUIComponents(m_currentUIComponents); //this also configures the UIComponents and sets connections
-    }
-    if (newState== MediaCenter::VideoMode) {
-        list = m_videoState->subComponents();
-        m_videoState->configureUIComponents(m_currentUIComponents); //this also configures the UIComponents and sets connections
-    }
-    if (newState== MediaCenter::MusicMode) {
-        list = m_musicState->subComponents();
-        m_musicState->configureUIComponents(m_currentUIComponents); //this also configures the UIComponents and sets connections
-    }
-
-    //Add and configure the MainSubcompoments
-    if (m_visibleMainComponents.isEmpty()) { //Do all this only add initialization
-        m_visibleMainComponents = m_mediaCenterState->mainSubComponents();
-        m_control->addToLayout(m_visibleMainComponents);
-	//m_mediaCenterState->configureMediaLayout(m_layout);  FIXME build error
-    }
-
     //Hide the currentSubComponents
-    foreach (QGraphicsWidget *w, m_visibleSubComponents) {
+    foreach (QGraphicsWidget* w, m_visibleSubComponents) {
         w->hide();
     }
 
-    //Add to the applet
-    m_control->addToLayout(list);
+    //This creates new layouts in the controller
+    m_control->resetLayouts();
+    m_infoDisplay->resetLayouts();
 
-    //Show the the new subComponents
-    foreach (QGraphicsWidget *w, list) {
+    setCurrentState(newState);
+    QList<QGraphicsWidget*> list;
+
+    if (newState == MediaCenter::HomeMode) {
+        list = m_homeState->subComponents();
+        m_homeState->configure();
+    }
+    if (newState == MediaCenter::PictureMode) {
+        list = m_pictureState->subComponents();
+        m_pictureState->configure();
+    }
+    if (newState== MediaCenter::VideoMode) {
+        list = m_videoState->subComponents();
+        m_videoState->configure();
+    }
+    if (newState== MediaCenter::MusicMode) {
+        list = m_musicState->subComponents();
+        m_musicState->configure();
+    }
+
+    //Add and configure the MainSubcompoments
+    m_visibleMainComponents = m_mediaCenterState->mainSubComponents();
+    list << m_visibleMainComponents;
+    m_mediaCenterState->configure();
+
+    //Show the new subComponents
+    foreach (QGraphicsWidget* w , list) {
         w->show();
     }
 
+    //This adds the layouts to the controller
+    m_control->addLayouts();
+    m_infoDisplay->addLayouts();
+
     //Update the currently visible subComponents
-    m_visibleSubComponents.clear();
     m_visibleSubComponents = list;
 }
 
-void MediaContainment::setCurrentState(MediaCenter::Mode newstate)
+void MediaContainment::setCurrentState(const MediaCenter::Mode &newstate)
 {
     m_previousState = m_currentState;
     m_currentState = newstate;
 }
 
-MediaCenter::Mode MediaContainment::currentState()
+MediaCenter::Mode MediaContainment::currentState() const
 {
     return m_currentState;
 }
 
-QList<QGraphicsWidget*> MediaContainment::currentMainComponents()
+QList<QGraphicsWidget*> MediaContainment::currentMainComponents() const
 {
     return m_visibleMainComponents;
 }
 
-void MediaContainment::addCurrentMainComponent(QGraphicsWidget* c)
+void MediaContainment::addCurrentMainComponent(QGraphicsWidget* widget)
 {
-    m_visibleMainComponents << c;
+    m_visibleMainComponents << widget;
 }
 
-QList<QGraphicsWidget*> MediaContainment::currentSubComponents()
+QList<QGraphicsWidget*> MediaContainment::currentSubComponents() const
 {
     return m_visibleSubComponents;
 }
 
-void MediaContainment::addCurrentSubComponent(QGraphicsWidget* c)
+void MediaContainment::addCurrentSubComponent(QGraphicsWidget* widget)
 {
-    m_visibleSubComponents << c;
+    m_visibleSubComponents << widget;
 }
-

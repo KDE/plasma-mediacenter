@@ -61,57 +61,93 @@ public:
     bool ControlsVisible() const;
     void createConfigurationInterface(KConfigDialog *parent);
 
-    Phonon::MediaObject* mediaObject();
+    virtual Phonon::MediaObject* mediaObject();
 
     bool eventFilter(QObject *o, QEvent *e);
-    
-    MediaCenter::Media currentMedia();
+
+    virtual MediaCenter::Media currentVideoMedia() const;
+    virtual void setCurrentVideoMedia(const MediaCenter::Media &media);
+    virtual MediaCenter::Media currentMusicMedia() const;
+    virtual void setCurrentMusicMedia(const MediaCenter::Media &media);
+    virtual MediaCenter::Media currentPictureMedia() const;
+    virtual void setCurrentPictureMedia(const MediaCenter::Media &media);
+
+    virtual void setPlayerType(const MediaCenter::MediaType &type);
+
+    virtual MediaCenter::PlaybackState videoPlayerPlaybackState() const;
+    virtual MediaCenter::PlaybackState musicPlayerPlaybackState() const;
+    virtual MediaCenter::PlaybackState picturePlayerPlaybackState() const;
+
+    virtual QRectF pictureRect() const;
+
+public slots:
+    virtual void playPauseVideo();
+    virtual void playPauseMusic();
+    virtual void playPausePicture();
+    void ToggleControlsVisibility();
+    void RaiseLower();
+    void Raise();
+    void Lower();
+    virtual void seekVideo(const int progress);
+    virtual void seekMusic(const int progress);
+    virtual void setVolume(const int value);
+    virtual qreal volume() const;
+    void ShowOpenFileDialog();
+    void OpenUrl(const QString &path);
+
+    virtual void playVideoMedia(const MediaCenter::Media &media);
+    virtual void playAllVideoMedia();
+    virtual void playPictureMedia(const MediaCenter::Media &media);
+    virtual void playAllPictureMedia();
+    virtual void playMusicMedia(const MediaCenter::Media &media);
+    virtual void playAllMusicMedia();
+    virtual void enqueueVideos(const QList<MediaCenter::Media> &sources);
+    virtual void clearVideoQueue();
+    virtual void enqueuePictures(const QList<MediaCenter::Media> &sources);
+    virtual void clearPictureQueue();
+    virtual void enqueueMusic(const QList<MediaCenter::Media> &sources);
+    virtual void clearMusicQueue();
+
+    virtual void stopVideo();
+    virtual void skipVideoForward();
+    virtual void skipVideoBackward();
+    virtual void stopMusic();
+    virtual void skipMusicForward();
+    virtual void skipMusicBackward();
+    virtual void stopPicture();
+    virtual void skipPictureForward();
+    virtual void skipPictureBackward();
+
+    void slideShow(const MediaCenter::Media &);
 
 protected:
     void dropEvent(QGraphicsSceneDragDropEvent *event);
     void keyPressEvent(QKeyEvent *event);
 
-public Q_SLOTS:
-    void playPause();
-    void ToggleControlsVisibility();
-    void RaiseLower();
-    void Raise();
-    void Lower();
-    void seek(int progress);
-    void setVolume(qreal value);
-    void ShowOpenFileDialog();
-    void OpenUrl(const QString &path);
-
-    void playMedia(const MediaCenter::Media &media);
-    void enqueue(const QList<MediaCenter::Media> &sources);
-    void clearQueue();
-
-    void stop();
-    void skipForward();
-    void skipBackward();
-
-    void playNextMedia(); //FIXME go back to private
-    void slideShow(const MediaCenter::Media &);
-
-private Q_SLOTS:
+private slots:
     void hideControls();
     void acceptConfiguration();
+    void playNextPictureMedia();
+    void playNextMusicMedia();
+    void playNextVideoMedia();
 
 private:
     void loadConfig();
     void applyConfig();
-    void doFullScreen();
 
     /**
      * Appends a media file to the m_medias list
      * filling also the MediaCenter::MediaType.
      */
-    void append(const QStringList &medias);
+    void appendMusic(const QStringList &medias);
+    void appendPicture(const QStringList &medias);
+    void appendVideo(const QStringList &medias);
 
 private:
     QGraphicsLinearLayout *m_layout;
     QString m_currentUrl;
     Plasma::VideoWidget *m_video;
+    Plasma::VideoWidget *m_music;
     QTimer *m_hideTimer;
 
     bool m_ticking;
@@ -119,14 +155,23 @@ private:
 
     bool m_fullScreen;
     qint64 m_sshowTime;
-    Phonon::VideoWidget *m_fullScreenVideo;
-    PictureViewer *m_pviewer;
+    PictureViewer *m_picture;
 
-    MediaCenter::Media m_currentMedia;
+    MediaCenter::Media m_currentVideoMedia;
+    MediaCenter::Media m_currentMusicMedia;
+    MediaCenter::Media m_currentPictureMedia;
+
+    MediaCenter::PlaybackState m_currentVideoPlaybackState;
+    MediaCenter::PlaybackState m_currentPicturePlaybackState;
+    MediaCenter::PlaybackState m_currentMusicPlaybackState;
+
+    MediaCenter::MediaType m_currentStateType;
 
     Ui::Config ui;
 
-    QList<MediaCenter::Media> m_medias;
+    QList<MediaCenter::Media> m_videoMedias;
+    QList<MediaCenter::Media> m_pictureMedias;
+    QList<MediaCenter::Media> m_musicMedias;
 };
 
 #endif

@@ -29,6 +29,7 @@
 PictureViewer::PictureViewer(QGraphicsItem *parent) : QGraphicsWidget(parent),
 m_picture(0),
 m_showTime(3),
+m_pictureRect(QRectF()),
 m_timer(new QTimer(this))
 {
     m_timer->setSingleShot(true);
@@ -75,6 +76,7 @@ void PictureViewer::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     rect.setWidth(picture.width());
     rect.setHeight(picture.height());
     painter->drawImage(rect, picture);
+    m_pictureRect = QRectF(0,0, m_picture->width(), m_picture->height());
 }
 
 void PictureViewer::setShowTime(qint64 time)
@@ -122,3 +124,9 @@ bool PictureViewer::isTimerActive() const
 {
     return m_timer->isActive();
 }
+
+QRectF PictureViewer::pictureRect()
+{
+    return m_pictureRect;
+}
+

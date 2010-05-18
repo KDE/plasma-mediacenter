@@ -25,34 +25,67 @@ class Player::PlayerPrivate
 public:
     PlayerPrivate(Player *q) : q(q),
     sshowTime(3),
-    active(false)
+    activeVideo(false),
+    activeMusic(false),
+    activePicture(false)
     {}
 
     Player *q;
     qint64 sshowTime;
-    bool active;
+    bool activeVideo;
+    bool activeMusic;
+    bool activePicture;
 };
 
 Player::Player(QObject *parent, const QVariantList &args) : Plasma::Applet(parent, args), d(new PlayerPrivate(this))
-{
-}
+{}
 
 Player::~Player()
 {
     delete d;
 }
 
-Media Player::currentMedia()
+Media Player::currentVideoMedia() const
 {
     return Media();
 }
 
-void Player::setQueue(const QList<Media> &sources)
+Media Player::currentMusicMedia() const
+{
+    return Media();
+}
+
+Media Player::currentPictureMedia() const
+{
+    return Media();
+}
+
+void Player::setVideoQueue(const QList<Media> &sources)
 {
     Q_UNUSED(sources);
 }
 
-void Player::enqueue(const QList<Media> &sources)
+void Player::enqueueVideos(const QList<Media> &sources)
+{
+    Q_UNUSED(sources);
+}
+
+void Player::setMusicQueue(const QList<Media> &sources)
+{
+    Q_UNUSED(sources);
+}
+
+void Player::enqueueMusic(const QList<Media> &sources)
+{
+    Q_UNUSED(sources);
+}
+
+void Player::setPictureQueue(const QList<Media> &sources)
+{
+    Q_UNUSED(sources);
+}
+
+void Player::enqueuePictures(const QList<Media> &sources)
 {
     Q_UNUSED(sources);
 }
@@ -63,33 +96,87 @@ void Player::enqueue(const QList<Media> &sources)
 //    Q_UNUSED(sources);
 //}
 
-void Player::setSlideshowInterval(qint64 time)
+void Player::setSlideshowInterval(const qint64 time)
 {
     d->sshowTime = time;
     emit slideShowTimeChanged(d->sshowTime);
 }
 
-qint64 Player::slideShowInterval()
+qint64 Player::slideShowInterval() const
 {
     return d->sshowTime;
 }
 
-void Player::playMedia(const MediaCenter::Media &media)
+void Player::playVideoMedia(const MediaCenter::Media &media)
 {
     Q_UNUSED(media);
 }
 
-bool Player::isActive()
+void Player::playAllVideoMedia()
+{}
+
+void Player::playPictureMedia(const MediaCenter::Media &media)
 {
-    return d->active;
+    Q_UNUSED(media);
 }
 
-void Player::setActive(bool set)
+void Player::playAllPictureMedia()
+{}
+
+void Player::playMusicMedia(const MediaCenter::Media &media)
 {
-    if (d->active == set) {
+    Q_UNUSED(media);
+}
+
+void Player::playAllMusicMedia()
+{}
+
+bool Player::isVideoActive()
+{
+    return d->activeVideo;
+}
+
+void Player::setVideoActive(const bool set)
+{
+    if (d->activeVideo == set) {
         return;
     }
 
-    d->active = set;
-    emit activeStateChanged(d->active);
+    d->activeVideo = set;
+    emit activeVideoStateChanged(d->activeVideo);
+}
+
+bool Player::isMusicActive()
+{
+    return d->activeMusic;
+}
+
+void Player::setMusicActive(const bool set)
+{
+    if (d->activeMusic == set) {
+        return;
+    }
+
+    d->activeMusic = set;
+    emit activeMusicStateChanged(d->activeMusic);
+}
+
+bool Player::isPictureActive()
+{
+    return d->activePicture;
+}
+
+void Player::setPictureActive(const bool set)
+{
+    if (d->activePicture == set) {
+        return;
+    }
+
+    d->activePicture = set;
+    emit activePictureStateChanged(d->activePicture);
+}
+
+void Player::setPlayerType(const MediaType &type)
+{
+    Q_UNUSED(type);
 }

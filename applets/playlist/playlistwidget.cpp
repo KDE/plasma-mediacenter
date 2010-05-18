@@ -70,7 +70,8 @@ PlaylistWidget::PlaylistWidget(QGraphicsItem *parent)
       m_indicator(0),
       m_pupdater(new PlaylistUpdater(this)),
       m_cupdater(new CoverUpdater(this)),
-      m_multiplePlaylists(false)
+      m_multiplePlaylists(false),
+      m_mediaTypeToShow(MediaCenter::Video)
 {
 
     QGraphicsProxyWidget *proxy = new QGraphicsProxyWidget(this);
@@ -128,10 +129,18 @@ void PlaylistWidget::showPlaylist(const QString &playlistName)
     m_playlistEngine->connectSource(playlistName, m_pupdater);
 
     m_model->clear();
+    QStringList temp;
     QStringList files;
 
     foreach (const QVariant &medias, m_playlistEngine->query(playlistName)) {
-        files << medias.toStringList();
+        temp << medias.toStringList();
+    }
+
+    //This part forces the playlist to only show a certain type of media
+    foreach (QString file, temp) {
+        if (MediaCenter::getType(file) == m_mediaTypeToShow) {
+            files << file;
+        }
     }
 
     foreach (const QString &media, files) {
@@ -170,6 +179,7 @@ void PlaylistWidget::showPlaylist(const QString &playlistName)
 
     KConfigGroup op = playlistService->operationDescription("setCurrent");
     playlistService->startOperationCall(op);
+    kWarning() << "show Playlist " << playlistName;
 }
 
 void PlaylistWidget::slotPlaylistAdded(const QString &source)
@@ -228,7 +238,6 @@ void PlaylistWidget::append(const QList<QUrl> &list)
             medias << media;
         }
     }
-
     emit mediasAppended(medias);
 }
 
@@ -281,20 +290,22 @@ void PlaylistWidget::reloadCover(const QModelIndex &index)
     coverService->startOperationCall(op);
 }
 
-QList<MediaCenter::Media> PlaylistWidget::medias()
+QList<MediaCenter::Media> PlaylistWidget::medias(const MediaCenter::MediaType &type) const
 {
     QString playlistName = m_comboBox->nativeWidget()->currentText();
     QList<MediaCenter::Media> medias;
     foreach (const QVariant &tracks, m_playlistEngine->query(playlistName)) {
         foreach (const QString &mediaString, tracks.toStringList()) {
             MediaCenter::Media media;
-            MediaCenter::MediaType type = MediaCenter::getType(mediaString);
-            if (type == MediaCenter::Invalid) {
+            MediaCenter::MediaType typeOfCurrent = MediaCenter::getType(mediaString);
+            if (typeOfCurrent == MediaCenter::Invalid) {
                 continue;
             }
-            media.first = type;
-            media.second = mediaString;
-            medias << media;
+            if (typeOfCurrent == type) {
+                media.first = typeOfCurrent;
+                media.second = mediaString;
+                medias << media;
+            }
         }
     }
     return medias;
@@ -314,5 +325,18 @@ void PlaylistWidget::slotMediaActivated(const QModelIndex &index)
         media.first = type;
         media.second = index.data(PathRole).toString();
         emit mediaActivated(media);
+    }
+}
+
+void PlaylistWidget::setCurrentPlaylist(QString playlistName)
+{
+    m_comboBox->nativeWidget()->addItem(playlistName);
+}
+
+void PlaylistWidget::setMediaTypeToShow(const MediaCenter::MediaType &type)
+{
+    m_mediaTypeToShow = type;
+    foreach (const QString &source, m_playlistEngine->sources()) {
+        showPlaylist(source);
     }
 }

@@ -47,11 +47,17 @@ public:
      */
     virtual int length() = 0;
 
+    //TODO Find a better way to handle playlists and types
+    /**
+    * This function forces the plaliyts to show only a certain mediatype
+    */
+    virtual void setPlaylistMediaType(const MediaCenter::MediaType &) = 0;
+
     /**
      * @return the list of strings identifying the medias
      * in the current playlist.
      */
-    virtual QList<MediaCenter::Media> medias() = 0;
+    virtual QList<MediaCenter::Media> medias(MediaCenter::MediaType) = 0;
 
 public Q_SLOTS:
     /**

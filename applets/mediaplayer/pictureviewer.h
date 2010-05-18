@@ -36,6 +36,8 @@ public:
 
     bool isTimerActive() const;
 
+    QRectF pictureRect();
+
 public Q_SLOTS:
     /**
      * Call this method in order to set the slideshow time.
@@ -58,6 +60,7 @@ private:
     QImage *m_picture;
     qint64 m_showTime;
     QTimer *m_timer;
+    QRectF m_pictureRect;
 };
 
 #endif // PICTUREVIEWER_H

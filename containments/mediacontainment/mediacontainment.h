@@ -33,9 +33,11 @@ namespace MediaCenter {
     class PlaybackControl;
     class Playlist;
     class Player;
+    class InfoDisplay;
     class PictureState;
     class VideoState;
     class MusicState;
+    class HomeState;
 }
 
 class MediaLayout;
@@ -50,14 +52,14 @@ public:
 
     QList<QAction*> contextualActions();
 
-    MediaCenter::Mode currentState();
-    void setCurrentState(MediaCenter::Mode);
+    MediaCenter::Mode currentState() const;
+    void setCurrentState(const MediaCenter::Mode &mode);
 
-    QList<QGraphicsWidget*> currentMainComponents();
-    void addCurrentMainComponent(QGraphicsWidget*);
+    QList<QGraphicsWidget*> currentMainComponents() const;
+    void addCurrentMainComponent(QGraphicsWidget *widget);
 
-    QList<QGraphicsWidget*> currentSubComponents();
-    void addCurrentSubComponent(QGraphicsWidget*);
+    QList<QGraphicsWidget*> currentSubComponents() const;
+    void addCurrentSubComponent(QGraphicsWidget *widget);
 
 protected:
     void constraintsEvent(Plasma::Constraints constraints);
@@ -65,13 +67,14 @@ protected:
 private slots:
     void slotAppletAdded(Plasma::Applet *applet, const QPointF &pos);
     void slotAppletRemoved(Plasma::Applet *applet);
-    void switchState(MediaCenter::Mode newState);
+    void switchState(const MediaCenter::Mode &newState);
 
 private:
     MediaCenter::Browser *m_browser;
     MediaCenter::PlaybackControl *m_control;
     MediaCenter::Playlist *m_playlist;
     MediaCenter::Player *m_player;
+    MediaCenter::InfoDisplay *m_infoDisplay;
 
     MediaCenter::Mode m_currentState;
     MediaCenter::Mode m_previousState;
@@ -79,20 +82,16 @@ private:
     MediaCenter::VideoState *m_videoState;
     MediaCenter::PictureState *m_pictureState;
     MediaCenter::MusicState *m_musicState;
-    MediaCenter::MediaCenterState *m_mediaCenterState;    
+    MediaCenter::HomeState *m_homeState;
+    MediaCenter::MediaCenterState *m_mediaCenterState;
 
     QList<QGraphicsWidget*> m_visibleMainComponents;
     QList<QGraphicsWidget*> m_visibleSubComponents;
     QList<Plasma::Applet*> m_currentUIComponents;
 
-    bool m_musicIsPlaying;
-
-    MediaLayout *m_layout;
+    MediaCenter::MediaLayout *m_layout;
 
     void addMediaApplet(Plasma::Applet *);
-
-    void initControls();
-    void connectControls(MediaCenter::Mode);
 
     void startStateMachine();
 };

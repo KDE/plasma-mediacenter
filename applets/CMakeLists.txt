@@ -3,4 +3,5 @@ add_subdirectory(test)
 add_subdirectory(mediabrowser)
 add_subdirectory(mediacontroller)
 add_subdirectory(mediaplayer)
+add_subdirectory(mediainfobar)
  

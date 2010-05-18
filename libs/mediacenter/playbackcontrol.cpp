@@ -22,11 +22,10 @@ using namespace MediaCenter;
 
 class PlaybackControl::PlaybackControlPrivate {
 public:
-    PlaybackControlPrivate(PlaybackControl *q) : q(q), mediaObject(0)
+    PlaybackControlPrivate(PlaybackControl *q) : q(q)
     {}
 
     PlaybackControl *q;
-    Phonon::MediaObject *mediaObject;
 };
 
 PlaybackControl::PlaybackControl(QObject *parent, const QVariantList &args) : Plasma::Applet(parent, args),
@@ -38,42 +37,3 @@ PlaybackControl::~PlaybackControl()
 {
     delete d;
 }
-
-void PlaybackControl::playbackStateChanged(MediaCenter::PlaybackState state)
-{
-    Q_UNUSED(state)
-}
-
-void PlaybackControl::currentSeekChanged(qreal seek)
-{
-    Q_UNUSED(seek)
-}
-
-void PlaybackControl::mediaTypeChanged(MediaCenter::MediaType newType)
-{
-    Q_UNUSED(newType)
-}
-
-void PlaybackControl::doLayout(MediaCenter::Mode mode)
-{
-    Q_UNUSED(mode)
-}
-
-void PlaybackControl::addToLayout(QList<QGraphicsWidget*> list)
-{
-     Q_UNUSED(list)
-}
-
-void PlaybackControl::setMediaObject(Phonon::MediaObject *mediaObject)
-{
-    d->mediaObject = mediaObject;
-    receivedMediaObject();
-}
-
-Phonon::MediaObject* PlaybackControl::mediaObject()
-{
-    return d->mediaObject;
-}
-
-void PlaybackControl::receivedMediaObject()
-{}

@@ -38,7 +38,6 @@
 #include <KMimeType>
 #include <KDebug>
 
-#include <Nepomuk/ResourceManager>
 
 MediaBrowser::MediaBrowser(QObject *parent, const QVariantList &args)
     : MediaCenter::Browser(parent, args),
@@ -49,7 +48,6 @@ MediaBrowser::MediaBrowser(QObject *parent, const QVariantList &args)
     m_browsingWidgets(false)
 {
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
-    Nepomuk::ResourceManager::instance()->init();
 
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
     if (m_browsingWidgets) {
@@ -101,7 +99,11 @@ void MediaBrowser::createView()
     connect (m_view, SIGNAL(mediasListInDirectory(QList<MediaCenter::Media>)), this, SIGNAL(mediasListInDirectory(QList<MediaCenter::Media>)));
     connect (m_view, SIGNAL(mediaActivated(const MediaCenter::Media&)), this, SIGNAL(mediaActivated(const MediaCenter::Media&)));
     connect (m_view, SIGNAL(indexActivated(QModelIndex)), this, SLOT(slotIndexActivated(QModelIndex)));
+    connect (m_view, SIGNAL(mediaSelected(MediaCenter::Media)), this, SLOT(selectedMediasAdd(MediaCenter::Media)));
+    connect (m_view, SIGNAL(mediaUnselected(MediaCenter::Media)), this, SLOT(selectedMediasRemove(MediaCenter::Media)));
     connect (this, SIGNAL(goPrevious()), m_view, SLOT(goPrevious()));
+    connect (m_view, SIGNAL(directoryChanged()), this, SLOT(clearSelectedMedias()));
+
     QGraphicsLinearLayout *layout = static_cast<QGraphicsLinearLayout*>(this->layout());
     layout->addItem(m_view);
     setLayout(layout);
@@ -167,7 +169,7 @@ void MediaBrowser::configAccepted()
 
 void MediaBrowser::slotIndexActivated(const QModelIndex &index)
 {
-    // let's see whether we are loadin' a plugin or not..
+    // let's see whether we are loading a plugin or not..
     StartupModel *model = qobject_cast<StartupModel*>(m_model);
     if (model) {
         QString error;
@@ -183,6 +185,16 @@ void MediaBrowser::slotIndexActivated(const QModelIndex &index)
         package->init();
         m_model = package->model();
         m_view->setModel(m_model);
+
+        if (package->allowedMediaTypes() == MediaCenter::Video) {
+            emit videoDataEngine();
+        }
+        if (package->allowedMediaTypes() == MediaCenter::Audio) {
+            emit musicDataEngine();
+        }
+        if (package->allowedMediaTypes() == MediaCenter::Picture) {
+            emit pictureDataEngine();
+        }
     }
     kDebug() << "finished";
 }
@@ -195,6 +207,62 @@ void MediaBrowser::setBrowsingWidgets(bool set)
 bool MediaBrowser::browsingWidgets()
 {
     return m_browsingWidgets;
+}
+
+void MediaBrowser::showStartupState()
+{
+    //Calling directly showInstalledModelPackages makes PMC crash on startup
+    m_model = new StartupModel(this);
+    m_view->setModel(m_model);
+}
+
+KUrl MediaBrowser::directory() const
+{
+    KDirModel *modeldir = qobject_cast<KDirModel*>(m_model);
+    if (!modeldir) {
+        return KUrl();
+    }
+    return modeldir->dirLister()->url();
+}
+
+void MediaBrowser::openDirectory(const KUrl &url)
+{
+    KDirModel *modeldir = qobject_cast<KDirModel*>(m_model);
+    if (modeldir) {
+        modeldir->dirLister()->openUrl(url);
+    }
+}
+
+void MediaBrowser::listMediaInDirectory()
+{
+    m_view->listMediaInDirectory();
+}
+
+void MediaBrowser::selectedMediasAdd(const MediaCenter::Media &media)
+{
+    if (!m_selectedMedias.contains(media)) {
+        m_selectedMedias << media;
+        emit selectedMediasChanged(m_selectedMedias);
+    }
+}
+
+void MediaBrowser::selectedMediasRemove(const MediaCenter::Media &media)
+{
+    if (m_selectedMedias.contains(media)) {
+        m_selectedMedias.removeAll(media);
+        emit selectedMediasChanged(m_selectedMedias);
+    }
+}
+
+QList<MediaCenter::Media> MediaBrowser::selectedMedias() const
+{
+    return m_selectedMedias;
+}
+
+void MediaBrowser::clearSelectedMedias()
+{
+    m_selectedMedias.clear();
+    emit selectedMediasChanged(m_selectedMedias);
 }
 
 K_EXPORT_PLASMA_APPLET(mediabrowser, MediaBrowser)

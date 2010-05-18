@@ -38,7 +38,10 @@ public:
     void createConfigurationInterface(KConfigDialog *parent);
 
     int length();
-    QList<MediaCenter::Media> medias();
+    QList<MediaCenter::Media> medias(MediaCenter::MediaType type);
+
+    //TODO Find a better way to handle playlists and types
+    void setPlaylistMediaType(const MediaCenter::MediaType &type);
 
 public slots:
     void appendMedia(const QList<MediaCenter::Media> &medias, const QString &playlist = QString());

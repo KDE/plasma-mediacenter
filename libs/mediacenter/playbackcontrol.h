@@ -24,10 +24,7 @@
 #include "mediacenterstate.h"
 
 #include <Plasma/Applet>
-
-namespace Phonon {
-    class MediaObject;
-}
+#include <Plasma/Slider>
 
 namespace MediaCenter {
 
@@ -52,105 +49,23 @@ public:
     virtual ~PlaybackControl();
 
     /**
-     * This method is called from the containment in order to set the
-     * proper Phonon::MediaObject currently in use to reproduce media content.
-     */
-    void setMediaObject(Phonon::MediaObject *mediaObject);
-
-    /**
      * Reimplement this to be able to put widgets into the applet on each state changes
      */
-    virtual void addToLayout(QList<QGraphicsWidget*> list);
-
-    /**
-     * Use this method to retrieve the current Phonon::MediaObject in use.
-     * Calling this method in the constructor might not be safe
-     * since a MediaObject is associated to the applet only after the applet
-     * has been added to the containment. You might want to store the
-     * pointer in the init() function.
-     */
-    Phonon::MediaObject *mediaObject();
+    virtual void addToLayout(QGraphicsWidget *widget, const MediaCenter::LayoutZone &zone) = 0;
 
 Q_SIGNALS:
-    /**
-     * Emit this signal whenever the controller receives
-     * a play/pause request from the user (e.g. the play button is clicked).
-     */
-    void playPauseRequest();
-
-    /**
-     * This signal has to be emitted whenever there is need for seeking
-     * the current reproduction.
-     * @note: if the current reproduction media is a picture this signal has no effect.
-     */
-    void seekRequest(int time);
-
-    /**
-     * Emit this signal whenever the user requests for the reproduction to be stopped-
-     */
-    void stopRequest();
-
-    /**
-     * Emit this signal whenever the user requests for the volume level to change.
-     */
-    void volumeLevelChangeRequest(qreal volume);
-
-    /**
-     * Emit this signal in order to request the current media to be skipped forward.
-     */
-    void mediaSkipForwardRequest();
-
-    /**
-     * Emit this signal in order to request the current media to be skipped backward.
-     */
-    void mediaSkipBackwardRequest();
-
     /**
      * Emit this signal in order to request the player to start a slideshow.
      */
     void mediaPlaySlideshow();
-    void layoutToPictureState();
-    void layoutToVideoState();
+
+    void browserGoPrevious();
+    void togglePlaylistVisible();
+    void toggleControlAutohide();
 
 public Q_SLOTS:
-    /**
-     * This slot is called whenever the current playing state changes.
-     * Use this slot in order to update the controller status according
-     * to the right playing state.
-     * @note: the default implementation actually does nothing.
-     */
-    virtual void playbackStateChanged(MediaCenter::PlaybackState state);
-
-    /**
-     * This slot is automatically called whenever the seek state changes.
-     * This way the applet can always keep synced with the current playing
-     * state.
-     * @note: the default implementation actually does nothing.
-     */
-    virtual void currentSeekChanged(qreal seek);
-
-    /**
-     * This slot is called whenever a new MediaType is going to be
-     * reproduced (or showed in case of pictures). You might want to
-     * reimplement this slot in order to disable for example
-     * seek and volume controls when a picture is being showed.
-     */
-    virtual void mediaTypeChanged(MediaCenter::MediaType newType);
-
-    /**
-     *Make other applets (containment actually) have access to the doLayout function of the controller
-     */
-    virtual void doLayout(MediaCenter::Mode);
-
-protected:
-    /**
-     * This method is called whenever a new Phonon::MediaObject is set
-     * via setMediaObject(). Use this method for internal update purposes
-     * when the MediaObject is ready.
-     *
-     * @note: the default implementation does nothing.
-     */
-    virtual void receivedMediaObject();
+    virtual void resetLayouts() = 0;
+    virtual void addLayouts() = 0;
 
 private:
     class PlaybackControlPrivate;

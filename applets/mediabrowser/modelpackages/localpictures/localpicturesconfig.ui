@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>LocalConfig</class>
- <widget class="QWidget" name="LocalConfig">
+ <class>LocalPicturesConfig</class>
+ <widget class="QWidget" name="LocalPicturesConfig">
   <property name="geometry">
    <rect>
     <x>0</x>

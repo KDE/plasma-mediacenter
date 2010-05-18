@@ -1,8 +1,8 @@
 [Desktop Entry]
 Type=Service
-Icon=folder
-Name=Local Files browsing plugin.
-Name[en_GB]=Local Files browsing plugin.
+Icon=folder-video
+Name=Local Videos browsing plugin.
+Name[en_GB]=Local Videos browsing plugin.
 Name[es]=Complemento de exploración de archivos locales.
 Name[et]=Kohalike failide sirvimine plugin.
 Name[fr]=Module de parcours des fichiers locaux
@@ -13,7 +13,7 @@ Name[pt_BR]=Plugin de navegação nos arquivos locais.
 Name[sv]=Insticksprogram för bläddring i lokala filer
 Name[tr]=Yerel dosya tarama eklentisi.
 Name[uk]=Додаток для перегляду локальних файлів.
-Name[x-test]=xxLocal Files browsing plugin.xx
+Name[x-test]=xxLocal Videos browsing plugin.xx
 Comment=A plugin for the mediabrowser applet that allows local file browsing.
 Comment[en_GB]=A plugin for the mediabrowser applet that allows local file browsing.
 Comment[es]=Un complemento para la miniaplicación de exploración de medios que permite explorar archivos locales.
@@ -33,4 +33,4 @@ X-KDE-PluginInfo-Version=1.0
 X-KDE-PluginInfo-Category=Service
 X-KDE-PluginInfo-License=GPL
 X-KDE-PluginInfo-EnabledByDefault=true
-X-KDE-Library=mc_localfiles
+X-KDE-Library=mc_localvideos

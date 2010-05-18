@@ -36,6 +36,7 @@ enum MediaType {
     Audio,
     OpticalDisc
 };
+Q_DECLARE_FLAGS(MediaTypes, MediaType)
 
 enum UIComponent {
     UIControlBar,
@@ -46,10 +47,29 @@ enum UIComponent {
     UIHomeScreen
 };
 
+enum InfoDisplayMode {
+    InfoDisplayFloating,
+    InfoDisplayBottom
+};
+
 enum PlaybackState {
     PlayingState,
-    StoppedState, //TODO: Remove stopped state
-    PausedState
+    StoppedState,
+    PausedState,
+    SinglePictureState
+};
+
+/**
+ * Each applet needs to be able to accept widgets into
+ * different zones. The states that send the widgets to the applets, also send
+ * this zone information along
+ */
+
+enum LayoutZone {
+    ControlLeft,
+    ControlMiddle,
+    ControlRight,
+    ControlBottom
 };
 
 /**
@@ -76,6 +96,8 @@ MEDIACENTER_EXPORT MediaType getType(const QString &media);
  * @note an invalid MediaCenter::Media has MediaType Invalid and empty QString.
  */
 MEDIACENTER_EXPORT Media mediaFromMediaSource(const Phonon::MediaSource &);
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(MediaCenter::MediaTypes)
 
 } // namespace MediaCenter
 

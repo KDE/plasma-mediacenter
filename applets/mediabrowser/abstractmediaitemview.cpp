@@ -19,7 +19,6 @@
 #include "abstractmediaitemview.h"
 #include "viewitem.h"
 
-
 // Plasma
 #include <Plasma/ScrollBar>
 #include <Plasma/Theme>
@@ -65,6 +64,7 @@ m_blurred(true)
 
     m_hoverIndicator->setAcceptedMouseButtons(Qt::LeftButton);
     connect (m_hoverIndicator, SIGNAL(ratingActivated(int)), this, SLOT(setRating(int)));
+    connect (m_hoverIndicator, SIGNAL(itemSelected()), this, SLOT(slotItemSelected()));
 }
 
 AbstractMediaItemView::~AbstractMediaItemView()
@@ -194,7 +194,16 @@ void AbstractMediaItemView::updateHoveredItem(ViewItem *item)
         return;
     }
 
+    QModelIndex index = item->index();
+    KFileItem file = index.isValid() ? index.data(KDirModel::FileItemRole).value<KFileItem>() : KFileItem();
+    if (file.isNull() || file.isDir()) {
+        m_hoverIndicator->setIsNotFile(true);
+    } else {
+        m_hoverIndicator->setIsNotFile(false);
+    }
+
     m_hoveredItem = item;
+    m_hoverIndicator->setSelected(m_hoveredItem->isSelected());
     m_hoverIndicator->m_nepomuk = item->m_nepomuk;
     m_hoverIndicator->show();
     Plasma::Animator::self()->moveItem(m_hoverIndicator, Plasma::Animator::SlideInMovement, m_hoveredItem->pos().toPoint());
@@ -308,49 +317,56 @@ void AbstractMediaItemView::itemClickEvent(QGraphicsSceneMouseEvent *event)
         if (item.isNull()) {
             return;
         }
-
         if (item.isDir()) {
             model->dirLister()->stop();
             m_history << model->dirLister()->url();
             model->dirLister()->openUrl(item.url());
             m_hoveredItem = 0;
             m_rootIndex = model->indexForItem(item);
-	    emit mediasListInDirectory(listMediaInDirectory()); //FIXME: This doesn't seem to work. m_items is always empty?
+            listMediaInDirectory();
+            emit directoryChanged();
         } else {
 
             MediaCenter::Media media;
             media.first = MediaCenter::getType(item.url().path());
             media.second = item.url().path();
-	    emit mediasActivated(QList<MediaCenter::Media>() << media);
-	    emit mediaActivated(media);
+            emit mediasActivated(QList<MediaCenter::Media>() << media);
+            emit mediaActivated(media);
         }
     }
 
     emit indexActivated(index);
 }
 
-//FIXME: This doesnt work. I wanted to have this to be able to have a picture slideshow of all media in the current directory
-QList<MediaCenter::Media> AbstractMediaItemView::listMediaInDirectory()
+void AbstractMediaItemView::listMediaInDirectory()
 {
     MediaCenter::Media media;
     QList<MediaCenter::Media> list;
     KFileItem item;
+    KFileItemList items;
     KDirModel *model = qobject_cast<KDirModel*>(m_model);
 
-    for (int i = 0; i < m_items.count(); i++) {
-      QModelIndex index = m_items[i]->index();
-      if (model && model->dirLister()->isFinished()) {
-        item = index.isValid() ? index.data(KDirModel::FileItemRole).value<KFileItem>() : KFileItem();
-        //if (item.isNull()) {
-        //    return;
-        //}
-      }
-      media.first = MediaCenter::getType(item.url().path());
-      media.second = item.url().path();
-      list << media;
+    if (model) {
+        if (!model->dirLister()->isFinished()) {
+            KDirLister *lister = model->dirLister();
+            //FIXME:This signal is emitted several times??? (Check what folerview does)
+            connect (lister, SIGNAL(completed()), this, SLOT(listMediaInDirectory()));
+        }
+
+        if (model && model->dirLister()->isFinished()) {
+            items = model->dirLister()->itemsForDir(model->dirLister()->url(), KDirLister::AllItems);
+        }
+
+        foreach (const KFileItem &item, items) {
+            if (MediaCenter::getType(item.url().path()) == MediaCenter::Picture) {
+                media.first = MediaCenter::getType(item.url().path());
+                media.second = item.url().path();
+                list << media;
+            }
+        }
+        //At the moment I only want pictures. Maybe I can create a signal for each mediatype?
+        emit mediasListInDirectory(list);
     }
-    kWarning() << "m_items: " << m_items.size() << "created mediaDirList " << list.size();
-    return list;
 }
 
 void AbstractMediaItemView::tryDrag(QGraphicsSceneMouseEvent *event)
@@ -409,6 +425,7 @@ void AbstractMediaItemView::goPrevious()
     model->dirLister()->openUrl(m_history.last());
     m_rootIndex = model->indexForUrl(m_history.last());
     m_history.removeLast();
+    emit directoryChanged();
 }
 
 void AbstractMediaItemView::setDrawBlurredText(bool set)
@@ -458,12 +475,42 @@ void AbstractMediaItemView::removeItems(const QModelIndex &parent, int start, in
     updateScrollBar();
 }
 
-void AbstractMediaItemView::setBrowsingType(ModelPackage::BrowsingType type)
+void AbstractMediaItemView::setBrowsingType(const ModelPackage::BrowsingType &type)
 {
 	m_browsingType = type;
 }
 
-ModelPackage::BrowsingType AbstractMediaItemView::browsingType()
+ModelPackage::BrowsingType AbstractMediaItemView::browsingType() const
 {
 	return m_browsingType;
+}
+
+void AbstractMediaItemView::slotItemSelected()
+{
+    QModelIndex index = m_hoveredItem->index();
+    MediaCenter::Media media;
+    KDirModel *model = qobject_cast<KDirModel*>(m_model);
+    if (model && model->dirLister()->isFinished()) {
+        KFileItem item = index.isValid() ? index.data(KDirModel::FileItemRole).value<KFileItem>() : KFileItem();
+        if (item.isNull()) {
+            return;
+        }
+        if (item.isDir()) {
+            return;
+        }
+        if (!item.isDir()) {
+            media.first = MediaCenter::getType(item.url().path());
+            media.second = item.url().path();
+        }
+    }
+    if (m_hoveredItem->isSelected()) {
+        m_hoveredItem->setSelected(false);
+        emit mediaUnselected(media);
+        return;
+    }
+    if (!m_hoveredItem->isSelected()) {
+        m_hoveredItem->setSelected(true);
+        emit mediaSelected(media);
+        return;
+    }
 }

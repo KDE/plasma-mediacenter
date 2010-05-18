@@ -41,10 +41,28 @@ public:
     void setBrowsingWidgets(bool);
     bool browsingWidgets();
 
+    void showStartupState();
+
     bool m_browsingWidgets;
+
+    QList<MediaCenter::Media> selectedMedias() const;
+
+    KUrl directory() const;
+
+public slots:
+    void openDirectory(const KUrl &url);
+    void listMediaInDirectory();
+    void selectedMediasAdd(const MediaCenter::Media &media);
+    void selectedMediasRemove(const MediaCenter::Media &media);
+    void clearSelectedMedias();
 
 signals:
     void goPrevious();
+    void mediasListInDirectory(const QList<MediaCenter::Media> &list);
+
+    void musicDataEngine();
+    void videoDataEngine();
+    void pictureDataEngine();
 
 private:
     AbstractMediaItemView *m_view;
@@ -56,6 +74,7 @@ private:
     QString m_viewType;
     BrowsingWidget *m_browsingWidget;
     ModelPackage *m_package;
+    QList<MediaCenter::Media> m_selectedMedias;
 
 private:
     void createView();

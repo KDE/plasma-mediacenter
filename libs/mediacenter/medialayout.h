@@ -20,6 +20,7 @@
 #ifndef MEDIALAYOUT_H
 #define MEDIALAYOUT_H
 
+#include "mediacenter.h"
 #include "mediacenter_export.h"
 
 #include <QObject>
@@ -31,6 +32,9 @@ namespace Plasma {
 }
 class MediaHandler;
 class QGraphicsItem;
+
+namespace MediaCenter {
+
 
 /**
  * @class MediaLayout
@@ -51,6 +55,7 @@ public:
     void setPlaybackControl(Plasma::Applet *control);
     void setPlaylist(Plasma::Applet *playlist);
     void setPlayer(Plasma::Applet *player);
+    void setInfoDisplay(Plasma::Applet *infoDisplay);
 
     /**
      * Calling this function makes the layout relayouting
@@ -61,17 +66,17 @@ public:
 
     bool eventFilter(QObject *o, QEvent *e);
 
-    /**
-     * Call this method in order to make the layout only show
-     * the media browser fullscreen. This might be particularly useful
-     * when the playing queue is empty or when nothing is playing.
-     */
-
     void setPlaylistVisible(bool set);
     bool playlistVisible();
+
+    void setInfoDisplayOnly(bool set);
+
     QRectF browserPreferredShowingRect() const;
     QRectF controllerPreferredShowingRect() const;
     QRectF playlistPreferredShowingRect() const;
+    QRectF infoDisplayPreferredShowingRect() const;
+
+    MediaCenter::InfoDisplayMode infoDisplayMode() const;
 
 public slots:
     void toggleShowAllMediaApplets();
@@ -79,6 +84,15 @@ public slots:
     void togglePlaylistVisible();
     void toggleControlAutohide();
     void setControlAutohide(bool);
+    void controlAutohideOn();
+    void controlAutohideOff();
+
+    void showBrowser();
+    void showPlayer();
+    void showPlaylist();
+    void hidePlaylist();
+
+    void setInfoDisplayMode(const MediaCenter::InfoDisplayMode &mode);
 
 protected slots:
     void animateShowingApplet(Plasma::Applet *);
@@ -90,6 +104,7 @@ private:
     Plasma::Applet *m_control;
     Plasma::Applet *m_playlist;
     Plasma::Applet *m_player;
+    Plasma::Applet *m_infoDisplay;
 
     Plasma::Applet::BackgroundHints m_browserBackgroundHints;
 
@@ -98,19 +113,24 @@ private:
     bool m_showAll;
     bool m_playlistVisible;
     bool m_controlAutohide;
+    bool m_infoDisplayOnly;
 
     MediaHandler* m_playlistHandler;
     MediaHandler* m_controlHandler;
+    MediaHandler* m_infoDisplayHandler;
+
+    MediaCenter::InfoDisplayMode m_infoDisplayMode;
 
 private:
     void doCompleteLayout();
     void layoutBrowser();
     void layoutControl();
+    void layoutInfoDisplay();
     void layoutPlaylist();
     void layoutPlayer();
 
 private slots:
     void setEnableGlowHandler(QGraphicsItem*, bool set);
 };
-
+} //ending namespace MEDIACENTER
 #endif // MEDIALAYOUT_H

@@ -23,29 +23,75 @@
 #include "mediacenterstate.h"
 
 #include <Plasma/IconWidget>
+#include <Plasma/TabBar>
+#include <Plasma/Slider>
+
+namespace Nepomuk {
+    class Resource;
+}
+
+class KRatingWidget;
+
 
 namespace MediaCenter {
-    enum PictureSubComponent {
-        PictureStateLabel
-    };
 
 class MEDIACENTER_EXPORT PictureState : public MediaCenterState
 {
     Q_OBJECT
 public:
     PictureState(QState *parent = 0);
-    ~PictureState();
+    virtual ~PictureState();
 
-    QList<QGraphicsWidget*> subComponents();
-    void configureUIComponents(QList<Plasma:: Applet*> list);
-    void connectSubComponents(QList<Plasma:: Applet*> list);
+    virtual QList<QGraphicsWidget*> subComponents() const;
+    virtual void configure();
+    virtual void initConnections();
 
 protected:
-    void onExit(QEvent* event);
-    void onEntry(QEvent* event);
+    virtual void onExit(QEvent* event);
+    virtual void onEntry(QEvent* event);
+
+    void addBackgroundState();
+    void removeBackgroundState();
 
 private:
-    Plasma::IconWidget *m_pictureStateLabel;
+    void updateInfoDisplay();
+
+    Plasma::IconWidget *m_pictureToBrowser;
+    Plasma::TabBar *m_pictureTabBar;
+    Plasma::IconWidget *m_label;
+    Plasma::IconWidget *m_startSlideshow;
+    Plasma::Slider *m_slideshowTimeSlider;
+    Plasma::IconWidget *m_slideshowLabel;
+    Plasma::IconWidget *m_nextPicture;
+    Plasma::IconWidget *m_previousPicture;
+    Plasma::IconWidget *m_selectedMediasLabel;
+    Plasma::IconWidget *m_currentlyPlayingLabel;
+    Plasma::IconWidget *m_switchDisplayMode;
+    MediaCenter::Media m_pictureMedia;
+
+    KUrl m_lastDirectory;
+
+    Nepomuk::Resource *m_resource;
+    KRatingWidget *m_ratingWidget;
+    QGraphicsProxyWidget *m_ratingProxyWidget;
+    bool m_nepomuk;
+
+private slots:
+    void enterBrowsingState();
+    void enterSinglePictureFullscreenState();
+    void enterPictureFloatingState();
+    void enterSlideshowState();
+
+    void updateSLideshowInterval(const int &time);
+    void onPlaybackStateChanged(const MediaCenter::PlaybackState &state);
+    void setMedia(const MediaCenter::Media &media);
+
+    void selectedMediasChanged(const QList<MediaCenter::Media> &list);
+    void slotRatingChanged(const int rating);
+
+    void pauseOnSkip();
+    void toggleFloatingState();
+
 };
 
 } //namespace end

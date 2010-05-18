@@ -16,26 +16,26 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#ifndef LOCALFILESPACKAGE_H
-#define LOCALFILESPACKAGE_H
+#ifndef LOCALPICTURESPACKAGE_H
+#define LOCALPICTURESPACKAGE_H
 
 #include <mediabrowserlibs/modelpackage.h>
 
-#include "ui_localconfig.h"
+#include "ui_localpicturesconfig.h"
 
 class QAbstractItemModel;
 class KConfigDialog;
 class KDirModel;
 
-class LocalFilesPackage : public ModelPackage
+class LocalPicturesPackage : public ModelPackage
 {
     Q_OBJECT
 public:
-    LocalFilesPackage(QObject *parent, const QVariantList &args);
-    ~LocalFilesPackage();
+    LocalPicturesPackage(QObject *parent, const QVariantList &args);
+    ~LocalPicturesPackage();
 
     QAbstractItemModel *model();
-    ModelPackage::BrowsingType browsingType();
+    ModelPackage::BrowsingType browsingType() const;
 
     void createConfigurationInterface(KConfigDialog *parent);
 
@@ -45,7 +45,7 @@ private slots:
     void configAccepted();
 
 private:
-    Ui::LocalConfig uiLocal;
+    Ui::LocalPicturesConfig uiLocal;
     bool m_fromPlaces;
     bool m_folderNavigation;
     KUrl m_localUrl;
@@ -57,4 +57,4 @@ private:
     void setFolderNavigation();
 };
 
-#endif // LOCALFILESPACKAGE_H
+#endif // LOCALPICTURESPACKAGE_H

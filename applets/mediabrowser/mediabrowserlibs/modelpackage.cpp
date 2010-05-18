@@ -65,3 +65,14 @@ KConfigGroup ModelPackage::config()
 
 void ModelPackage::init()
 {}
+
+void ModelPackage::setAllowedMediaTypes(const MediaCenter::MediaTypes &type)
+{
+    m_allowedMediaTypes = type;
+}
+
+MediaCenter::MediaTypes ModelPackage::allowedMediaTypes()
+{
+    return m_allowedMediaTypes;
+}
+

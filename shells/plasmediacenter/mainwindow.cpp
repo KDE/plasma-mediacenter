@@ -41,6 +41,7 @@
 #include <Plasma/Containment>
 #include <Plasma/Theme>
 #include <Plasma/Applet>
+#include <Plasma/Wallpaper>
 
 MainWindow::MainWindow(QWidget *parent) : KMainWindow(parent),
 m_view(new QGraphicsView(this)),
@@ -49,7 +50,8 @@ m_cfskeleton(new KConfigSkeleton),
 m_browser(0),
 m_controller(0),
 m_playlist(0),
-m_player(0)
+m_player(0),
+m_infobar(0)
 {
     setCentralWidget(m_view);
 
@@ -107,6 +109,7 @@ void MainWindow::loadMediaCenter()
     m_browser = m_containment->addApplet("mediabrowser");
     m_playlist = m_containment->addApplet("playlist");
     m_player = m_containment->addApplet("mcplayer");
+    m_infobar = m_containment->addApplet("mediainfobar");
     m_controller = m_containment->addApplet("mediacontroller"); //Keep the controller last
 }
 
@@ -141,6 +144,7 @@ void MainWindow::createConfigurationInterface()
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->setCaption(i18n("Preferences"));
 
+    //The settings
     QWidget *theme = new QWidget;
     m_theme.setupUi(theme);
     KPluginInfo::List themes = Plasma::Theme::listThemeInfo();
@@ -155,9 +159,16 @@ void MainWindow::createConfigurationInterface()
             break;
         }
     }
+    //Background Settings
+    QWidget *background = new QWidget;
+    m_background.setupUi(background);
+
+
 
     KPageWidgetItem *themeItem = dialog->addPage(theme, i18n("Theme settings"));
     themeItem->setIcon(KIcon("preferences-desktop-theme"));
+    KPageWidgetItem *backgroundItem = dialog->addPage(background, i18n("Background settings"));
+    backgroundItem->setIcon(KIcon("preferences-desktop-theme"));
 
     if (m_browser) {
         m_browser->createConfigurationInterface(dialog);
@@ -171,6 +182,9 @@ void MainWindow::createConfigurationInterface()
     if (m_player) {
         m_player->createConfigurationInterface(dialog);
     }
+    if (m_infobar) {
+        m_infobar->createConfigurationInterface(dialog);
+    }
 
     connect (dialog, SIGNAL(accepted()), this, SLOT(applyConfig()));
     dialog->exec();
@@ -180,6 +194,20 @@ void MainWindow::applyConfig()
 {
     kDebug() << m_theme.themeComboBox->itemData(m_theme.themeComboBox->currentIndex()).toString();
     Plasma::Theme::defaultTheme()->setThemeName(m_theme.themeComboBox->itemData(m_theme.themeComboBox->currentIndex()).toString());
+    kWarning() << m_background.fileRequester->url();
+    m_wallpaper = m_background.fileRequester->url().toLocalFile();
+
+    Plasma::Wallpaper *currentWallpaper = m_containment->wallpaper();
+    if (currentWallpaper) {
+        KConfigGroup cfg = wallpaperConfig(m_containment, currentWallpaper->pluginName());
+        currentWallpaper->save(cfg);
+    }
+    KConfigGroup cfg = wallpaperConfig(m_containment, "image");
+    cfg.writeEntry("wallpaper", m_wallpaper);
+    //cfg.writeEntry("wallpapercolor", (color.isEmpty() ? "0,0,0" : color));
+    //cfg.writeEntry("wallpaperposition", position);
+    cfg.sync();
+    m_containment->setWallpaper("image", "SingleImage");
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event)
@@ -192,3 +220,16 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     m_containment->resize(m_view->size());
     m_view->setSceneRect(m_containment->geometry());
 }
+
+KConfigGroup MainWindow::wallpaperConfig(Plasma::Containment * containment, const QString &plugin)
+{
+    Q_ASSERT(containment);
+
+    //FIXME: we have details about the structure of the containment config duplicated here!
+
+    KConfigGroup cfg = containment->config();
+    cfg = KConfigGroup(&cfg, "Wallpaper");
+    return KConfigGroup(&cfg, plugin);
+}
+
+

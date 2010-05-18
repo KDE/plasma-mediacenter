@@ -16,7 +16,7 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#include "localfilespackage.h"
+#include "localvideospackage.h"
 
 #include <mediabrowserlibs/mediabrowser_export.h>
 
@@ -28,20 +28,22 @@
 #include <KLineEdit>
 #include <KDebug>
 
-MEDIABROWSER_PACKAGE_EXPORT(LocalFilesPackage)
+MEDIABROWSER_PACKAGE_EXPORT(LocalVideosPackage)
 
-LocalFilesPackage::LocalFilesPackage(QObject *parent, const QVariantList &args) : ModelPackage(parent, args),
+LocalVideosPackage::LocalVideosPackage(QObject *parent, const QVariantList &args) : ModelPackage(parent, args),
 m_fromPlaces(true),
 m_folderNavigation(true),
 m_model(0)
 {
     setHasConfigurationInterface(true);
+
+    setAllowedMediaTypes(MediaCenter::Video);
 }
 
-LocalFilesPackage::~LocalFilesPackage()
+LocalVideosPackage::~LocalVideosPackage()
 {}
 
-QAbstractItemModel* LocalFilesPackage::model()
+QAbstractItemModel* LocalVideosPackage::model()
 {
     if (!m_model) {
         m_model = new KDirModel(this);
@@ -49,9 +51,7 @@ QAbstractItemModel* LocalFilesPackage::model()
         KMimeType::List mimeList = KMimeType::allMimeTypes();
 
         foreach (KMimeType::Ptr mime, mimeList) {
-            if (mime->name().startsWith("image/") ||
-                mime->name().startsWith("video/") ||
-                mime->name().startsWith("audio/")) {
+            if (mime->name().startsWith("video/")) {
                 m_mimeTypes << mime->name();
             }
         }
@@ -62,26 +62,26 @@ QAbstractItemModel* LocalFilesPackage::model()
     return m_model;
 }
 
-ModelPackage::BrowsingType LocalFilesPackage::browsingType()
+ModelPackage::BrowsingType LocalVideosPackage::browsingType() const
 {
     return ModelPackage::LocalBrowsing;
 }
 
-void LocalFilesPackage::init()
+void LocalVideosPackage::init()
 {
     KConfigGroup cf = config();
 
-    m_localUrl = KUrl(cf.readEntry("LocalUrl", QDir::homePath()));
-    m_fromPlaces = cf.readEntry("FromPlaces", true);
-    m_folderNavigation = cf.readEntry("FolderNavigation", true);
+    m_localUrl = KUrl(cf.readEntry("LocalVideosUrl", QDir::homePath()));
+    m_fromPlaces = cf.readEntry("VideosFromPlaces", true);
+    m_folderNavigation = cf.readEntry("VideosFolderNavigation", true);
 }
 
-void LocalFilesPackage::createConfigurationInterface(KConfigDialog *parent)
+void LocalVideosPackage::createConfigurationInterface(KConfigDialog *parent)
 {
-    QWidget *localConfig = new QWidget(parent);
-    uiLocal.setupUi(localConfig);
+    QWidget *localVideosConfig = new QWidget(parent);
+    uiLocal.setupUi(localVideosConfig);
 
-    parent->addPage(localConfig, i18n("Local Browsing"), "folder-development");
+    parent->addPage(localVideosConfig, i18n("Local Videos Browsing"), "folder-development");
 
     KFilePlacesModel *model = new KFilePlacesModel(parent);
     uiLocal.placesCombo->setModel(model);
@@ -100,7 +100,7 @@ void LocalFilesPackage::createConfigurationInterface(KConfigDialog *parent)
     connect (parent, SIGNAL(accepted()), this, SLOT(configAccepted()));
 }
 
-void LocalFilesPackage::configAccepted()
+void LocalVideosPackage::configAccepted()
 {
     m_fromPlaces = uiLocal.showPlace->isChecked();
     m_localUrl = m_fromPlaces ? uiLocal.placesCombo->model()->index(uiLocal.placesCombo->currentIndex(), 0).data(KFilePlacesModel::UrlRole).value<QUrl>()
@@ -111,20 +111,20 @@ void LocalFilesPackage::configAccepted()
     KConfigGroup cf = config();
     kDebug() << cf.name();
 
-    cf.writeEntry("LocalUrl", m_localUrl);
-    cf.writeEntry("FromPlaces", m_fromPlaces);
+    cf.writeEntry("LocalVideosUrl", m_localUrl);
+    cf.writeEntry("VideosFromPlaces", m_fromPlaces);
 
     bool folderNavigation = uiLocal.folderNavigationCheckBox->isChecked();
     if (m_folderNavigation != folderNavigation) {
         m_folderNavigation = folderNavigation;
-        cf.writeEntry("FolderNavigation", m_folderNavigation);
+        cf.writeEntry("VideosFolderNavigation", m_folderNavigation);
         setFolderNavigation();
     }
 
     cf.sync();
 }
 
-void LocalFilesPackage::setFolderNavigation()
+void LocalVideosPackage::setFolderNavigation()
 {
     if (m_folderNavigation) {
         if (!m_mimeTypes.contains("inode/directory")) {

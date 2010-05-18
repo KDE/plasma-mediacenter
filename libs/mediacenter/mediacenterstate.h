@@ -23,14 +23,18 @@
 #include "mediacenter.h"
 #include "mediacenter_export.h"
 
-#include <QState>
-#include <QGraphicsWidget>
+#include <QtCore/QState>
+#include <QtGui/QGraphicsWidget>
 
 #include <Plasma/IconWidget>
 #include <Plasma/Applet>
 
 namespace MediaCenter {
 
+/**
+ * Each new Mode has to be added to this enum list. A mode is identical to a
+ * state in the state machine.
+ */
 enum Mode {
     PictureMode,
     MusicMode,
@@ -38,15 +42,12 @@ enum Mode {
     HomeMode
 };
 
-enum MainSubComponent {
-    JumpToVideoState,
-    JumpToMusicState,
-    JumpToPictureState,
-    JumpToHome,
-    ToggleControlBarAutohide,
-    ToggleInfoBarAutohide
-};
 class MediaLayout;
+class Player;
+class PlaybackControl;
+class Playlist;
+class Browser;
+class InfoDisplay;
 
 class MEDIACENTER_EXPORT MediaCenterState : public QState
 {
@@ -55,51 +56,93 @@ public:
     MediaCenterState(QState *parent = 0);
     virtual ~MediaCenterState();
 
-    //This function hands out all main subcomponents to the UIcomponents
-    QList<QGraphicsWidget*> mainSubComponents();
-    //This handles connections of MainSubComponents
-    void connectMainSubComponents(QList<Plasma:: Applet*> list);
+    /**
+     * Use this function to option pointers to all subcomponents that are shared by the different
+     * states. While defining the widgets this function also adds them to the layouts of the
+     * different applets. The returned list can be used to keep track of the widgets that
+     * currently are in use.
+     */
+    QList<QGraphicsWidget*> mainSubComponents() const;
+
+    void init(MediaLayout* &layout,QList<Plasma:: Applet*> &list);
 
     /**
-     *This function should be reimplemented by every state to connect subcomponents
-     *with slots in the UIComponents
+     * This handles all connections for this state, except conflicting connections
+     * which need to be handled in the entry and exit functions. Reimplement this in
+     * every state.
      */
-    virtual void connectSubComponents(QList<Plasma:: Applet*> list);
+    virtual void initConnections();
 
     /**
-     *This function handles connections of the medialayout and should be reimplemented
-     *to connect the layout slots to subcomponents of that state
+     * This function will configure all components and the layout. For example to turn off or on
+     * the autohide of applets or show/hide applets, etc.
      */
-    virtual void connectMediaLayout(MediaLayout* layout);
+    virtual void configure();
 
     /**
-     *This function will exectute functions handled by the media layout for each state
+     * This function hands out a list of pointers to wigets that are specific to this state.
+     * It also hands these points to the addToLayout functions of the applets by joining
+     * to the pointers the information of in which zone the widget should go.
      */
-    virtual void configureMediaLayout(MediaLayout* layout);
+    virtual QList<QGraphicsWidget*> subComponents() const;
+
+Q_SIGNALS:
+    /**
+     * This signal should be emitted by each state on entry and causes the containment to actually
+     * call the important fucntions like addToLayout, or configure of each state when switched".
+     * So first: the below signals cause a state change
+     *    second: the containemnt uses this signal emitted onEntry of each state
+     */
+    void state(const MediaCenter::Mode &mode);
 
     /**
-     *This function should be reimplemented by every state to handle UICComponents' configuration
+     * These signals are the actual state switch initiators. They are connected to the state machine
+     * in the containment
      */
-    virtual void configureUIComponents(QList<Plasma:: Applet*> list);
-
-    /**
-     *Every state needs a list of subComponents for the UIApplets. The UIApplets should recognize
-     *which subComponents arrive and do the layouting accordingly
-     */
-    virtual QList<QGraphicsWidget*> subComponents();
-
-signals:
-     void state(MediaCenter::Mode);
+    void layoutToPictureState();
+    void layoutToVideoState();
+    void layoutToMusicState();
+    void layoutToHomeState();
 
 protected:
-    virtual void onExit(QEvent* event);
-    virtual void onEntry(QEvent* event);
+    virtual void onExit(QEvent *event);
+    virtual void onEntry(QEvent *event);
 
-    Plasma::IconWidget *m_jumpToHome;
-    Plasma::IconWidget *m_jumpToVideo;
-    Plasma::IconWidget *m_jumpToPicture;
-    Plasma::IconWidget *m_jumpToMusic;
-    Plasma::IconWidget *m_toggleControlBarAutohide;
+    /**
+     * This function should be called on entry of each state to show
+     * the current Background States Icons.
+     * Each state should be able to add itself to the backgroundStates List if a background mode
+     * makes sense. This list is used to draw icons to nackground states.
+     */
+    void showBackgroundStates();
+
+    MediaCenter::Browser *m_browser;
+    MediaCenter::Player *m_player;
+    MediaCenter::PlaybackControl *m_control;
+    MediaCenter::Playlist *m_playlist;
+    MediaCenter::InfoDisplay *m_infoDisplay;
+    MediaCenter::MediaLayout *m_layout;
+
+    static Plasma::IconWidget *s_jumpToHome;
+    static Plasma::IconWidget *s_toggleControlBarAutohide;
+    static Plasma::IconWidget *s_browserGoPrevious;
+
+    static Plasma::IconWidget *s_backgroundMusic;
+    static Plasma::IconWidget *s_backgroundVideo;
+    static Plasma::IconWidget *s_backgroundPicture;
+
+    static bool s_backgroundPictureMode;
+    static bool s_backgroundVideoMode;
+    static bool s_backgroundMusicMode;
+
+    static MediaCenter::Mode s_currentState;
+
+protected Q_SLOTS:
+    virtual void onPlaybackStateChanged(const MediaCenter::PlaybackState &state);
+
+private Q_SLOTS:
+    void slotSetCurrentState(const MediaCenter::Mode &mode);
+
 };
 
 } //namespace MediaCenter

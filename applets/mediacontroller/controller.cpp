@@ -21,7 +21,6 @@
 
 // Qt
 #include <QGraphicsLinearLayout>
-#include <Phonon/MediaObject>
 #include <QStyleOptionGraphicsItem>
 #include <QPainter>
 
@@ -29,28 +28,23 @@
 #include <KDebug>
 
 // Plasma
-#include <Plasma/IconWidget>
-#include <Plasma/Slider>
 #include <Plasma/Theme>
 
 MediaController::MediaController(QObject *parent, const QVariantList &args)
     : MediaCenter::PlaybackControl(parent, args),
     m_svg(new Plasma::FrameSvg(this)),
-
-    m_volumeSlider(new Plasma::Slider(this)),
-    m_seekSlider(new Plasma::Slider(this)),
-    m_iconGoPrevious(new Plasma::IconWidget(this)),
-    m_iconTogglePlaylistVisible(new Plasma::IconWidget(this)),
-    m_iconToggleControlAutohide(new Plasma::IconWidget(this)),
-    m_skipBack(new Plasma::IconWidget(this)),
-    m_playPause(new Plasma::IconWidget(this)),
-    m_skipForward(new Plasma::IconWidget(this)),
-    m_stop(new Plasma::IconWidget(this)),
-    m_iconSlideshow(new Plasma::IconWidget(this)),
-    m_layout(new QGraphicsLinearLayout(Qt::Horizontal))
+    m_layoutVertical(new QGraphicsLinearLayout(Qt::Vertical)),
+    m_layoutHorizontalTop(new QGraphicsLinearLayout(m_layoutVertical)),
+    m_layoutHorizontalBottom(new QGraphicsLinearLayout(m_layoutVertical)),
+    m_layoutTopLeft(new QGraphicsLinearLayout(Qt::Horizontal)),
+    m_layoutTopMiddle(new QGraphicsLinearLayout(Qt::Horizontal)),
+    m_layoutTopRight(new QGraphicsLinearLayout(Qt::Horizontal)),
+    m_layoutBottomLeft(new QGraphicsLinearLayout(Qt::Horizontal))
 
 {
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
+    setContentsMargins(0,0,0,0);
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
 }
 
 MediaController::~MediaController()
@@ -90,54 +84,13 @@ void MediaController::init()
     setMarginsFromTheme();
     connect (Plasma::Theme::defaultTheme(), SIGNAL(themeChanged()), this, SLOT(slotThemeChanged()));
 
-    m_seekSlider->hide();
-    m_volumeSlider->hide();
+    m_layoutVertical->addItem(m_layoutHorizontalTop);
+    m_layoutVertical->addItem(m_layoutHorizontalBottom);
 
-    setLayout(m_layout);
-}
+    m_layoutVertical->setStretchFactor(m_layoutHorizontalTop,3);
+    m_layoutVertical->setStretchFactor(m_layoutHorizontalBottom,1);
 
-void MediaController::playbackStateChanged(MediaCenter::PlaybackState state)
-{
-    if (state == MediaCenter::PlayingState) {
-        m_playPause->setIcon("media-playback-pause");
-    } else {
-        m_playPause->setIcon("media-playback-start");
-    }
-}
-
-void MediaController::slotVolumeSlider(int value)
-{
-    emit volumeLevelChangeRequest((qreal)value / 100);
-}
-
-void MediaController::slotSeekSlider(int value)
-{
-    emit seekRequest(value);
-}
-
-void MediaController::receivedMediaObject()
-{
-    if (!mediaObject()) {
-        return;
-    }
-
-    m_seekSlider->setRange(0, mediaObject()->totalTime());
-    connect (mediaObject(), SIGNAL(totalTimeChanged(qint64)), this, SLOT(updateTotalTime(qint64)));
-    connect (mediaObject(), SIGNAL(tick(qint64)), this, SLOT(updateCurrentTick(qint64)));
-
-    if (mediaObject()->state() == Phonon::PlayingState) {
-        m_playPause->setIcon("media-playback-pause");
-    }
-}
-
-void MediaController::updateTotalTime(qint64 time)
-{
-    m_seekSlider->setRange(0, time);
-}
-
-void MediaController::updateCurrentTick(qint64 time)
-{
-    m_seekSlider->setValue(time);
+    setLayout(m_layoutVertical);
 }
 
 void MediaController::setMarginsFromTheme()
@@ -148,7 +101,7 @@ void MediaController::setMarginsFromTheme()
     qreal bottom;
 
     m_svg->getMargins(left, top, right, bottom);
-    kDebug() << "setting to" << left << top << right << bottom;
+    //kDebug() << "setting to" << left << top << right << bottom;
     setContentsMargins(left, top, right, bottom);
 }
 
@@ -159,15 +112,46 @@ void MediaController::slotThemeChanged()
     setMarginsFromTheme();
 }
 
-void MediaController::iconAutohidePressed()
+void MediaController::resetLayouts()
 {
-    //TODO: I need some ON/OFF Effect
+    delete m_layoutTopLeft;
+    delete m_layoutTopMiddle;
+    delete m_layoutTopRight;
+    delete m_layoutBottomLeft;
+
+    m_layoutTopLeft = new QGraphicsLinearLayout(m_layoutHorizontalTop);
+    m_layoutTopMiddle = new QGraphicsLinearLayout(m_layoutHorizontalTop);
+    m_layoutTopRight = new QGraphicsLinearLayout(m_layoutHorizontalTop);
+    m_layoutBottomLeft = new QGraphicsLinearLayout(m_layoutHorizontalBottom);
+
+    m_layoutTopMiddle->setPreferredWidth(this->size().width()/1.2);
+    m_layoutBottomLeft->setPreferredHeight(this->size().height()/4);
+    m_layoutTopMiddle->setContentsMargins(0,0,0,0);
 }
 
-void MediaController::addToLayout(QList<QGraphicsWidget*> list)
+void MediaController::addLayouts()
 {
-    foreach (QGraphicsWidget *w, list) {
-        m_layout->addItem(w);
+    m_layoutHorizontalTop->addItem(m_layoutTopLeft);
+    m_layoutHorizontalTop->addItem(m_layoutTopMiddle);
+    m_layoutHorizontalTop->addItem(m_layoutTopRight);
+    m_layoutHorizontalBottom->addItem(m_layoutBottomLeft);
+}
+
+
+void MediaController::addToLayout(QGraphicsWidget *widget, const MediaCenter::LayoutZone &zone)
+{
+    if (zone == MediaCenter::ControlLeft) {
+        m_layoutTopLeft->addItem(widget);
+    }
+    if (zone == MediaCenter::ControlMiddle) {
+        m_layoutTopMiddle->addItem(widget);
+        m_layoutTopMiddle->setAlignment(widget,Qt::AlignVCenter);
+    }
+    if (zone == MediaCenter::ControlRight) {
+        m_layoutTopRight->addItem(widget);
+    }
+    if (zone == MediaCenter::ControlBottom) {
+        m_layoutBottomLeft->addItem(widget);
     }
 }
 
