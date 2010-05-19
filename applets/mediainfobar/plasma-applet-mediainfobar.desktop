@@ -1,9 +1,7 @@
 [Desktop Entry]
 Name=MediaInfoBar
-Name[en_GB]=MediaInfoBar
 Name[x-test]=xxMediaInfoBarxx
 Comment=A simple applet to display media information
-Comment[en_GB]=A simple applet to display media information
 Comment[x-test]=xxA simple applet to display media informationxx
 Type=Service
 
