@@ -3,6 +3,7 @@ Type=Service
 Icon=folder-video
 Name=Local Videos browsing plugin.
 Name[pt]='Plugin' de navegação nos vídeos locais.
+Name[pt_BR]=Plugin de navegação nos vídeos locais.
 Name[sv]=Insticksprogram för bläddring i lokala videor.
 Name[uk]=Додаток для перегляду локальних відеофайлів.
 Name[x-test]=xxLocal Videos browsing plugin.xx
