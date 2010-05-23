@@ -52,14 +52,15 @@ m_option(option),
 m_index(QModelIndex()),
 m_type(LocalFileItem),
 m_frameSvg(new Plasma::FrameSvg(this)),
-m_preview(0),
+m_preview(QPixmap()),
+m_selectIcon(QPixmap()),
+m_blurredText(QPixmap()),
 m_hoverRating(0),
 m_rating(0),
 m_resource(0),
 m_nepomuk(false),
 m_blurred(true),
 m_selectByIcon(true),
-m_selectIcon(),
 m_isSelected(false),
 m_isNotFile(false)
 {
@@ -96,6 +97,11 @@ QStyleOptionViewItemV4 ViewItem::styleOption() const
 
 void ViewItem::setModelIndex(const QModelIndex &index)
 {
+    if (m_index == index) {
+        return;
+    }
+
+    m_blurredText = QPixmap();
     m_index = index;
 
     KFileItem item = m_index.data(KDirModel::FileItemRole).value<KFileItem>();
@@ -140,16 +146,15 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     QRect decorationRect;
     QRect reflectionRect;
 
-    const int decorationWidth = m_option.decorationSize.width();
-    const int decorationHeight = decorationWidth;
-    const int reflectionHeight = decorationHeight * 0.33;
+    const int decorationSize = m_option.decorationSize.width();
+    const int reflectionHeight = decorationSize * 0.33;
 
-    decorationRect.setSize(QSize(decorationWidth, decorationHeight));
-    reflectionRect.setSize(QSize(decorationWidth, reflectionHeight));
+    decorationRect.setSize(QSize(decorationSize, decorationSize));
+    reflectionRect.setSize(QSize(decorationSize, reflectionHeight));
 
     if (m_option.decorationPosition == QStyleOptionViewItem::Left) {
-        const int x = (option->rect.height() - decorationHeight) / 2;
-        const int y = (option->rect.height() - decorationHeight - reflectionHeight) / 2;
+        const int x = (option->rect.height() - decorationSize) / 2;
+        const int y = (option->rect.height() - decorationSize - reflectionHeight) / 2;
         decorationRect.moveTo(x, y);
 
         reflectionRect.moveTo(decorationRect.bottomLeft());
@@ -160,8 +165,8 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     } else if (m_option.decorationPosition == QStyleOptionViewItem::Top) {
         textRect.setSize(textRectSize());
 
-        const int x = (option->rect.width() - decorationWidth) / 2;
-        const int y = (option->rect.height() - decorationHeight - reflectionHeight - textRect.height()) / 2;
+        const int x = (option->rect.width() - decorationSize) / 2;
+        const int y = (option->rect.height() - decorationSize - reflectionHeight - textRect.height());
         decorationRect.moveTo(x, y);
 
         reflectionRect.moveTo(decorationRect.bottomLeft());
@@ -169,15 +174,15 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
         textRect.moveTo(reflectionRect.bottomLeft());
     }
 
-    if (m_preview) {
+    if (!m_preview.isNull()) {
         QRect previewRect;
-        previewRect.setSize(m_preview->size());
+        previewRect.setSize(m_preview.size());
         previewRect.moveCenter(decorationRect.center());
-        painter->drawPixmap(previewRect.topLeft(), *m_preview);
-        reflectionRect.moveTo(previewRect.left(), previewRect.bottom() + 2);
+        painter->drawPixmap(previewRect.topLeft(), m_preview);
+        reflectionRect.moveTo(previewRect.left(), previewRect.bottom());
         reflectionRect.setWidth(previewRect.width());
-        drawReflection(painter, reflectionRect, *m_preview);
-        
+        drawReflection(painter, reflectionRect, m_preview);
+
         if (m_option.decorationPosition == QStyleOptionViewItem::Left) {
                 textRect.moveTo(decorationRect.right(), (decorationRect.top()+reflectionRect.bottom())/2);
         } else if (m_option.decorationPosition == QStyleOptionViewItem::Top) {
@@ -202,29 +207,32 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     }
 
     if (m_blurred) {
-        QColor textColor = Plasma::Theme::defaultTheme()->color(Plasma::Theme::TextColor);
-        QColor shadowColor = Plasma::Theme::defaultTheme()->color(Plasma::Theme::BackgroundColor);
-        if (textColor.black() > 210) {
-            textColor = shadowColor;
-            shadowColor = Plasma::Theme::defaultTheme()->color(Plasma::Theme::TextColor);
+        if (m_blurredText.isNull()) {
+            QColor textColor = Plasma::Theme::defaultTheme()->color(Plasma::Theme::TextColor);
+            QColor shadowColor = Plasma::Theme::defaultTheme()->color(Plasma::Theme::BackgroundColor);
+            if (textColor.black() > 210) {
+                textColor = shadowColor;
+                shadowColor = Plasma::Theme::defaultTheme()->color(Plasma::Theme::TextColor);
+            }
+
+            m_blurredText = Plasma::PaintUtils::shadowText(text, m_option.font, textColor, shadowColor);
         }
 
-        QPixmap blurredText = Plasma::PaintUtils::shadowText(text, m_option.font, textColor, shadowColor);
         QPointF txtPoint;
         if (m_option.displayAlignment & Qt::AlignLeft) {
             txtPoint.setX(textRect.x());
         }
         if (m_option.displayAlignment & Qt::AlignHCenter) {
-            txtPoint.setX((textRect.width() - blurredText.width()) / 2);
+            txtPoint.setX((textRect.width() - m_blurredText.width()) / 2);
         }
         if (m_option.displayAlignment & Qt::AlignVCenter) {
-            txtPoint.setY((textRect.height() - blurredText.height()) / 2);
+            txtPoint.setY((textRect.height() - m_blurredText.height()) / 2);
         }
         if (m_option.displayAlignment & Qt::AlignBottom) {
-            txtPoint.setY(option->rect.height() - blurredText.height());
+            txtPoint.setY(option->rect.height() - m_blurredText.height());
         }
 
-        painter->drawPixmap(txtPoint, blurredText);
+        painter->drawPixmap(txtPoint, m_blurredText);
     } else {
         painter->drawText(textRect, m_option.displayAlignment, text);
     }
@@ -260,8 +268,7 @@ void ViewItem::drawReflection(QPainter *painter, const QRect &reflectionRect, co
 
 void ViewItem::askForFilePreview()
 {
-    delete m_preview;
-    m_preview = 0;
+    m_preview = QPixmap();
     // if the model is a KDirModel ask for previews
     if (!m_index.data(KDirModel::FileItemRole).isNull()) {
         KFileItem item = m_index.data(KDirModel::FileItemRole).value<KFileItem>();
@@ -269,14 +276,13 @@ void ViewItem::askForFilePreview()
             return;
         }
         KIO::PreviewJob *previewJob = KIO::filePreview(item.url(), m_option.decorationSize.width(), 0, 0, 0, false, true, 0);
-        connect (previewJob, SIGNAL(gotPreview(const KFileItem &, const QPixmap &)), this, SLOT(slotGotPreview(const KFileItem &, const QPixmap&)));
+        connect(previewJob, SIGNAL(gotPreview(const KFileItem &, const QPixmap &)), this, SLOT(slotGotPreview(const KFileItem &, const QPixmap&)));
     }
 }
 
 void ViewItem::slotGotPreview(const KFileItem &item, const QPixmap &preview)
 {
-    Q_UNUSED(item)
-    m_preview = new QPixmap(preview);
+    m_preview = preview;
     update();
 }
 

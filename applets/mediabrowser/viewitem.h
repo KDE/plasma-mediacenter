@@ -80,7 +80,9 @@ private:
     QModelIndex m_index;
     ItemType m_type;
     Plasma::FrameSvg *m_frameSvg;
-    QPixmap *m_preview;
+    QPixmap m_preview;
+    QPixmap m_selectIcon;
+    QPixmap m_blurredText;
     int m_hoverRating;
     int m_rating;
     Nepomuk::Resource *m_resource;
@@ -101,8 +103,6 @@ private:
     QRect ratingRect(const QRect &contentsRect) const;
     QRect selectRect(const QRect &contentsRect) const;
     QSize textRectSize() const;
-
-    QPixmap m_selectIcon;
 
 private slots:
     void slotGotPreview(const KFileItem &item, const QPixmap &preview);
