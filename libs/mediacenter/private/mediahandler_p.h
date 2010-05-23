@@ -110,6 +110,7 @@ private:
     void enableBordersByPosition();
     void hidingAnimation();
     void showingAnimation();
+    void placeHandler();
 };
 
 #endif // MEDIAHANDLER_H

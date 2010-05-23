@@ -53,6 +53,7 @@ m_animationId(0)
 
     m_handlerSvg->setCacheAllRenderedFrames(true);
     enableBordersByPosition();
+    placeHandler();
     m_handlerSvg->setImagePath("widgets/glowbar");
 
     setContentsMargins(0, 0, 0, 0);
@@ -123,20 +124,7 @@ bool MediaHandler::eventFilter(QObject *o, QEvent *e)
     }
 
     if (e->type() == QEvent::GraphicsSceneMove) {
-        switch (m_handlerPosition) {
-        case Right :
-            setPos(m_applet->rect().right(), (m_applet->rect().height() - size().height()) / 2);
-            break;
-        case Top :
-            setPos((m_applet->rect().width() - size().width()) / 2, m_applet->rect().top());
-            break;
-        case Left :
-            setPos(m_applet->rect().left() - size().width(), (m_applet->rect().height() - size().height()) / 2);
-            break;
-        case Bottom :
-            setPos((m_applet->rect().width() - size().width()) / 2, m_applet->rect().bottom());
-            break;
-        }
+        placeHandler();
     } else if (e->type() == QEvent::GraphicsSceneResize) {
         if (m_handlerPosition == Left || m_handlerPosition == Right) {
             resize(WIDTH, m_applet->size().height());
@@ -236,6 +224,24 @@ void MediaHandler::showingAnimation()
     m_appearing = true;
     m_showFactor = 0;
     m_animationId = Plasma::Animator::self()->customAnimation(100, 250, Plasma::Animator::EaseInCurve, this, "animateShowHide");
+}
+
+void MediaHandler::placeHandler()
+{
+    switch (m_handlerPosition) {
+    case Right :
+        setPos(m_applet->rect().right(), (m_applet->rect().height() - size().height()) / 2);
+        break;
+    case Top :
+        setPos((m_applet->rect().width() - size().width()) / 2, m_applet->rect().top() - size().height());
+        break;
+    case Left :
+        setPos(m_applet->rect().left() - size().width(), (m_applet->rect().height() - size().height()) / 2);
+        break;
+    case Bottom :
+        setPos((m_applet->rect().width() - size().width()) / 2, m_applet->rect().bottom());
+        break;
+    }
 }
 
 void MediaHandler::setStopHoverEvents(bool set)

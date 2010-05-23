@@ -406,7 +406,7 @@ void MediaLayout::animateHidingApplet(Plasma::Applet *applet)
                                                                                               m_control->rect().y() - m_control->size().height()));
         if (m_infoDisplayMode == MediaCenter::InfoDisplayBottom) {
             Plasma::Animator::self()->moveItem(m_infoDisplay, Plasma::Animator::SlideOutMovement, QPoint(infoDisplayPreferredShowingRect().x(),
-                                                                                                  m_containment->size().height() + infoDisplayPreferredShowingRect().height()));
+                                                                                                  m_containment->rect().bottom()));
         }
         if (m_infoDisplayMode == MediaCenter::InfoDisplayFloating) {
             Plasma::Animator::self()->moveItem(m_infoDisplay, Plasma::Animator::SlideOutMovement, QPoint(m_containment->size().width(),
@@ -418,7 +418,7 @@ void MediaLayout::animateHidingApplet(Plasma::Applet *applet)
     } else if (applet == m_infoDisplay) {
         if (m_infoDisplayMode == MediaCenter::InfoDisplayBottom) {
             Plasma::Animator::self()->moveItem(applet, Plasma::Animator::SlideOutMovement, QPoint(infoDisplayPreferredShowingRect().x(),
-                                                                                                  m_containment->size().height() + infoDisplayPreferredShowingRect().height()));
+                                                                                                  m_containment->rect().bottom()));
         }
         if (m_infoDisplayMode == MediaCenter::InfoDisplayFloating) {
             Plasma::Animator::self()->moveItem(applet, Plasma::Animator::SlideOutMovement, QPoint(m_containment->size().width(),
