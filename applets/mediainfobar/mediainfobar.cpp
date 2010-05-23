@@ -33,15 +33,11 @@
 MediaInfoBar::MediaInfoBar(QObject *parent, const QVariantList &args)
     : MediaCenter::InfoDisplay(parent, args),
     m_svg(new Plasma::FrameSvg(this)),
-    m_layoutVertical(new QGraphicsLinearLayout(Qt::Vertical)),
-    m_layoutHorizontalTop(new QGraphicsLinearLayout(m_layoutVertical)),
-    m_layoutHorizontalBottom(new QGraphicsLinearLayout(m_layoutVertical)),
-    m_layoutTopLeft(new QGraphicsLinearLayout(Qt::Horizontal)),
-    m_layoutTopMiddle(new QGraphicsLinearLayout(Qt::Horizontal)),
-    m_layoutTopRight(new QGraphicsLinearLayout(Qt::Horizontal)),
-    m_layoutBottomLeft(new QGraphicsLinearLayout(Qt::Horizontal)),
+    m_layoutHorizontalTop(new QGraphicsLinearLayout(this)),
+    m_layoutTopLeft(new QGraphicsLinearLayout(Qt::Horizontal, m_layoutHorizontalTop)),
+    m_layoutTopMiddle(new QGraphicsLinearLayout(Qt::Horizontal, m_layoutHorizontalTop)),
+    m_layoutTopRight(new QGraphicsLinearLayout(Qt::Horizontal, m_layoutHorizontalTop)),
     m_currentMode(MediaCenter::InfoDisplayBottom)
-
 {
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
     setContentsMargins(0,0,0,0);
@@ -85,10 +81,7 @@ void MediaInfoBar::init()
     setMarginsFromTheme();
     connect (Plasma::Theme::defaultTheme(), SIGNAL(themeChanged()), this, SLOT(slotThemeChanged()));
 
-    m_layoutVertical->addItem(m_layoutHorizontalTop);
-    m_layoutVertical->addItem(m_layoutHorizontalBottom);
-
-    setLayout(m_layoutVertical);
+    setLayout(m_layoutHorizontalTop);
 }
 
 void MediaInfoBar::setMarginsFromTheme()
@@ -115,12 +108,10 @@ void MediaInfoBar::resetLayouts()
     delete m_layoutTopLeft;
     delete m_layoutTopMiddle;
     delete m_layoutTopRight;
-    delete m_layoutBottomLeft;
 
     m_layoutTopLeft = new QGraphicsLinearLayout(m_layoutHorizontalTop);
     m_layoutTopMiddle = new QGraphicsLinearLayout(m_layoutHorizontalTop);
     m_layoutTopRight = new QGraphicsLinearLayout(m_layoutHorizontalTop);
-    m_layoutBottomLeft = new QGraphicsLinearLayout(m_layoutHorizontalBottom);
 }
 
 void MediaInfoBar::addLayouts()
@@ -142,9 +133,6 @@ void MediaInfoBar::addToLayout(QGraphicsWidget *widget, const MediaCenter::Layou
     if (zone == MediaCenter::ControlRight) {
         m_layoutTopRight->addItem(widget);
     }
-    if (zone == MediaCenter::ControlBottom) {
-        m_layoutBottomLeft->addItem(widget);
-    }
 }
 
 void MediaInfoBar::setMode(const MediaCenter::InfoDisplayMode &mode)
@@ -165,12 +153,9 @@ void MediaInfoBar::setMode(const MediaCenter::InfoDisplayMode &mode)
         m_layoutHorizontalTop->setOrientation(Qt::Vertical);
     }
     m_layoutHorizontalTop->invalidate();
-    m_layoutHorizontalBottom->invalidate();
     m_layoutTopLeft->invalidate();
     m_layoutTopMiddle->invalidate();
     m_layoutTopRight->invalidate();
-    m_layoutBottomLeft->invalidate();
-    m_layoutVertical->invalidate();
 }
 
 K_EXPORT_PLASMA_APPLET(mediainfobar, MediaInfoBar)

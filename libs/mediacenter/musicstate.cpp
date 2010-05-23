@@ -48,8 +48,6 @@ MusicState::MusicState (QState *parent)
     m_musicSkipForward(new Plasma::IconWidget()),
     m_musicStop(new Plasma::IconWidget()),
     m_musicTogglePlaylist(new Plasma::IconWidget()),
-    m_musicTabBar(new Plasma::TabBar()),
-    m_label(new Plasma::IconWidget("Music")),
     m_selectedMediasLabel(new Plasma::IconWidget("")),
     m_currentlyPlayingLabel(new Plasma::IconWidget()),
     m_musicObject(new Phonon::MediaObject()),
@@ -59,10 +57,6 @@ MusicState::MusicState (QState *parent)
     m_ratingProxyWidget(new QGraphicsProxyWidget()),
     m_nepomuk(false)
 {
-    m_musicTabBar->addTab("By Artist");
-    m_musicTabBar->addTab("By Album");
-    m_musicTabBar->addTab("By Genre");
-
     m_nepomuk = Nepomuk::ResourceManager::instance()->initialized();
 }
 
@@ -131,17 +125,9 @@ QList<QGraphicsWidget*> MusicState::subComponents() const
     list << m_musicVolumeSlider;
     m_control->addToLayout(m_musicVolumeSlider, MediaCenter::ControlMiddle);
 
-    list << m_label;
-    m_control->addToLayout(m_label, MediaCenter::ControlBottom);
-
-    m_musicTabBar->setMaximumHeight(20);
-    m_musicTabBar->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
-    list << m_musicTabBar;
-    m_control->addToLayout(m_musicTabBar, MediaCenter::ControlBottom);
-
     m_musicTogglePlaylist->setIcon("view-media-playlist");
     list << m_musicTogglePlaylist;
-    m_control->addToLayout(m_musicTogglePlaylist, MediaCenter::ControlBottom);
+    m_control->addToLayout(m_musicTogglePlaylist, MediaCenter::ControlRight);
 
 
 
@@ -174,6 +160,11 @@ void MusicState::configure()
     m_browser->setVisible(true);
     m_layout->setPlaylistVisible(true);
     m_layout->setControlAutohide(false);
+
+    m_browser->clearViewModes();
+    m_browser->addViewMode("Musicmode 1");
+    m_browser->addViewMode("Musicmode 2");
+    m_browser->setShowingBrowsingWidgets(true);
 
     receivedMediaObject();
     if (m_musicObject) {

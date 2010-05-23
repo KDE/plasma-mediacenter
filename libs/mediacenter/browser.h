@@ -34,8 +34,11 @@ public:
     Browser(QObject *parent, const QVariantList &args);
     virtual ~Browser();
 
-    void setBrowsingWidgets(bool);
-    bool browsingWidgets();
+    virtual void setShowingBrowsingWidgets(bool) = 0;
+    virtual bool isShowingBrowsingWidgets() const = 0;
+
+    virtual void addViewMode(const QString &) = 0;
+    virtual QStringList viewModes() const = 0;
 
     virtual void showStartupState() = 0;
     virtual QList<MediaCenter::Media> selectedMedias() const = 0;
@@ -48,6 +51,8 @@ public Q_SLOTS:
     virtual void selectedMediasAdd(const MediaCenter::Media &) = 0;
     virtual void selectedMediasRemove(const MediaCenter::Media &) = 0;
     virtual void clearSelectedMedias() = 0;
+
+    virtual void clearViewModes() = 0;
 
 Q_SIGNALS:
     void mediasActivated(const QList<MediaCenter::Media> &);

@@ -24,6 +24,7 @@
 namespace Plasma {
     class ToolButton;
     class ComboBox;
+    class TabBar;
 }
 
 class BrowsingWidget : public QGraphicsWidget
@@ -33,9 +34,10 @@ public:
     enum NavigationControl {
         NoControls = 0x0,
         BackwardControl = 0x1,
-        ForwardControl = 0x2,
-        UpLevelControl = 0x4,
-        AllControls = 0x7
+        ViewModeControl = 0x2,
+        ForwardControl = 0x4,
+        UpLevelControl = 0x8,
+        AllControls = 0x15
     };
     Q_DECLARE_FLAGS(NavigationControls, NavigationControl)
 
@@ -47,6 +49,13 @@ public:
 
     void setShowNavigationComboBox(bool set);
     bool showNavigationComboBox();
+
+    //Use this function to add (and later connect) the viewmodes
+    void addViewMode(const QString &title);
+    QStringList viewModes() const;
+
+public slots:
+    void clearViewModes();
 
 signals:
     void navigationRequested(const QString &destination);
@@ -61,6 +70,7 @@ private:
     Plasma::ToolButton *m_backwardButton;
     Plasma::ToolButton *m_forwardButton;
     Plasma::ToolButton *m_upLevelButton;
+    Plasma::TabBar *m_viewModeControl;
 
     Plasma::ComboBox *m_combo;
 };

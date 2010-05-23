@@ -43,8 +43,6 @@ VideoState::VideoState (QState *parent)
     m_videoSkipForward(new Plasma::IconWidget()),
     m_videoStop(new Plasma::IconWidget()),
     m_videoTogglePlaylist(new Plasma::IconWidget()),
-    m_videoTabBar(new Plasma::TabBar()),
-    m_label(new Plasma::IconWidget("Video")),
     m_selectedMediasLabel(new Plasma::IconWidget("")),
     m_currentlyPlayingLabel(new Plasma::IconWidget()),
     m_videoObject(new Phonon::MediaObject()),
@@ -54,12 +52,6 @@ VideoState::VideoState (QState *parent)
     m_ratingProxyWidget(new QGraphicsProxyWidget()),
     m_nepomuk(false)
 {
-    //I shouldn't reconfigure the subcomponents on every statechange.
-    //Maybe put this with init connections and call that function just initState or something?
-    m_videoTabBar->addTab("By Director");
-    m_videoTabBar->addTab("By Tag");
-    m_videoTabBar->addTab("By Rating");
-
     m_nepomuk = Nepomuk::ResourceManager::instance()->initialized();
 }
 
@@ -132,17 +124,9 @@ QList<QGraphicsWidget*> VideoState::subComponents() const
     list << m_videoVolumeSlider;
     m_control->addToLayout(m_videoVolumeSlider, MediaCenter::ControlMiddle);
 
-    list << m_label;
-    m_control->addToLayout(m_label, MediaCenter::ControlBottom);
-
-    m_videoTabBar->setMaximumHeight(20);
-    m_videoTabBar->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
-    list << m_videoTabBar;
-    m_control->addToLayout(m_videoTabBar, MediaCenter::ControlBottom);
-
     m_videoTogglePlaylist->setIcon("view-media-playlist");
     list << m_videoTogglePlaylist;
-    m_control->addToLayout(m_videoTogglePlaylist, MediaCenter::ControlBottom);
+    m_control->addToLayout(m_videoTogglePlaylist, MediaCenter::ControlRight);
 
 
     list << m_currentlyPlayingLabel;
@@ -184,6 +168,11 @@ void VideoState::configure()
         m_layout->setControlAutohide(true);
         enterPlayingState();
     }
+
+    m_browser->clearViewModes();
+    m_browser->addViewMode("Videomode 1");
+    m_browser->addViewMode("Videomode 2");
+    m_browser->setShowingBrowsingWidgets(true);
 
     //connect seek slider to media object
     receivedMediaObject();
@@ -355,8 +344,6 @@ void VideoState::enterBrowsingState() const
     m_player->stopVideo();
     m_layout->showBrowser();
     m_layout->showPlaylist();
-    s_browserGoPrevious->setVisible(true);
-    m_videoTabBar->setVisible(true);
     m_layout->controlAutohideOff();
     //(see comment in enterPlayingState function)
     connect (m_playlist, SIGNAL(mediaActivated(const MediaCenter::Media&)), this, SLOT(enterPlayingState()));
@@ -372,9 +359,7 @@ void VideoState::enterPlayingState() const
     if (m_player->videoPlayerPlaybackState() == MediaCenter::PlayingState ||
         m_player->videoPlayerPlaybackState() == MediaCenter::StoppedState) {
         //BUG:Sometimes the player is not correctly sized. especilly when playing from
-	//the playlist the first time the videostate is entered.
-        s_browserGoPrevious->setVisible(false);
-        m_videoTabBar->setVisible(false);
+        //the playlist the first time the videostate is entered.
         m_layout->controlAutohideOn();
         m_layout->hidePlaylist();
         m_layout->showPlayer();

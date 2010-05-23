@@ -32,7 +32,6 @@ using namespace MediaCenter;
 //Static variables initialization
 Plasma::IconWidget *MediaCenterState::s_jumpToHome = new Plasma::IconWidget();
 Plasma::IconWidget *MediaCenterState::s_toggleControlBarAutohide = new Plasma::IconWidget();
-Plasma::IconWidget *MediaCenterState::s_browserGoPrevious = new Plasma::IconWidget();
 
 Plasma::IconWidget *MediaCenterState::s_backgroundMusic = new Plasma::IconWidget();
 Plasma::IconWidget *MediaCenterState::s_backgroundPicture = new Plasma::IconWidget();
@@ -76,10 +75,6 @@ QList<QGraphicsWidget*> MediaCenterState::mainSubComponents() const
     list << s_jumpToHome;
     m_control->addToLayout(s_jumpToHome, MediaCenter::ControlLeft);
 
-    s_browserGoPrevious->setIcon("go-previous-view");
-    list << s_browserGoPrevious;
-    m_control->addToLayout(s_browserGoPrevious, MediaCenter::ControlLeft);
-
     s_backgroundVideo->setIcon("folder-video");
     s_backgroundVideo->setVisible(false);
     list << s_backgroundVideo;
@@ -97,21 +92,20 @@ QList<QGraphicsWidget*> MediaCenterState::mainSubComponents() const
         m_infoDisplay->addToLayout(s_backgroundPicture, MediaCenter::ControlLeft);
         m_infoDisplay->addToLayout(s_backgroundMusic, MediaCenter::ControlLeft);
     } else {
-        m_control->addToLayout(s_backgroundVideo, MediaCenter::ControlRight);
-        m_control->addToLayout(s_backgroundPicture, MediaCenter::ControlRight);
-        m_control->addToLayout(s_backgroundMusic, MediaCenter::ControlRight);
+        m_control->addToLayout(s_backgroundVideo, MediaCenter::ControlLeft);
+        m_control->addToLayout(s_backgroundPicture, MediaCenter::ControlLeft);
+        m_control->addToLayout(s_backgroundMusic, MediaCenter::ControlLeft);
     }
 
     s_toggleControlBarAutohide->setIcon("mail-attachment");
     list << s_toggleControlBarAutohide;
-    m_control->addToLayout(s_toggleControlBarAutohide, MediaCenter::ControlBottom);
+    m_control->addToLayout(s_toggleControlBarAutohide, MediaCenter::ControlRight);
 
     return list;
 }
 
 void MediaCenterState::initConnections()
 {
-    connect (s_browserGoPrevious, SIGNAL(clicked()), m_browser, SIGNAL(goPrevious()));
     connect (s_toggleControlBarAutohide, SIGNAL(clicked()), m_layout, SLOT(toggleControlAutohide()));
     connect (s_jumpToHome, SIGNAL(clicked()), this, SIGNAL(layoutToHomeState()));
 

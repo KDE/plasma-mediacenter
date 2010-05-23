@@ -38,8 +38,6 @@ using namespace MediaCenter;
 PictureState::PictureState (QState *parent)
     : MediaCenterState(parent),
     m_pictureToBrowser(new Plasma::IconWidget()),
-    m_pictureTabBar(new Plasma::TabBar()),
-    m_label(new Plasma::IconWidget("Picture")),
     m_startSlideshow(new Plasma::IconWidget()),
     m_slideshowTimeSlider(new Plasma::Slider()),
     m_slideshowLabel(new Plasma::IconWidget()),
@@ -54,10 +52,6 @@ PictureState::PictureState (QState *parent)
     m_ratingProxyWidget(new QGraphicsProxyWidget()),
     m_nepomuk(false)
 {
-    m_pictureTabBar->addTab("By Year");
-    m_pictureTabBar->addTab("By Digikam Album");
-    m_pictureTabBar->addTab("By Tag");
-
     m_nepomuk = Nepomuk::ResourceManager::instance()->initialized();
 }
 
@@ -140,17 +134,9 @@ QList<QGraphicsWidget*> PictureState::subComponents() const
     list << m_pictureToBrowser;
     m_control->addToLayout(m_pictureToBrowser, MediaCenter::ControlRight);
 
-    list << m_label;
-    m_control->addToLayout(m_label, MediaCenter::ControlBottom);
-
-    m_pictureTabBar->setMaximumHeight(20);
-    m_pictureTabBar->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
-    list << m_pictureTabBar;
-    m_control->addToLayout(m_pictureTabBar, MediaCenter::ControlBottom);
-
     m_switchDisplayMode->setIcon("view-split-left-right");
     list << m_switchDisplayMode;
-    m_control->addToLayout(m_switchDisplayMode, MediaCenter::ControlBottom);
+    m_control->addToLayout(m_switchDisplayMode, MediaCenter::ControlRight);
 
 
 
@@ -177,6 +163,12 @@ void PictureState::configure()
 {
     m_layout->setPlaylistVisible(false);
     m_playlist->setVisible(false);
+
+    m_browser->clearViewModes();
+    m_browser->addViewMode("Picturemode 1");
+    m_browser->addViewMode("Picturemode 2");
+    m_browser->addViewMode("Picturemode 3");
+    m_browser->setShowingBrowsingWidgets(true);
 
     m_player->setPlayerType(MediaCenter::Picture);
     m_player->clearPictureQueue();
@@ -227,7 +219,6 @@ void PictureState::enterBrowsingState()
 {
     kWarning() << "Browsing";
     m_pictureToBrowser->setVisible(false);
-    s_browserGoPrevious->setVisible(true);
     m_nextPicture->setVisible(false);
     m_previousPicture->setVisible(false);
     m_slideshowTimeSlider->setVisible(true);
@@ -250,7 +241,6 @@ void PictureState::enterBrowsingState()
 void MediaCenter::PictureState::enterSlideshowState()
 {
     m_pictureToBrowser->setVisible(true);
-    s_browserGoPrevious->setVisible(false);
     m_nextPicture->setVisible(true);
     m_previousPicture->setVisible(true);
     m_slideshowTimeSlider->setVisible(true);
@@ -281,7 +271,6 @@ void MediaCenter::PictureState::enterSlideshowState()
 void PictureState::enterSinglePictureFullscreenState()
 {
     m_pictureToBrowser->setVisible(true);
-    s_browserGoPrevious->setVisible(false);
     m_nextPicture->setVisible(true);
     m_previousPicture->setVisible(true);
     m_switchDisplayMode->setVisible(true);

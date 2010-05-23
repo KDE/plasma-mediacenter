@@ -125,7 +125,6 @@ protected:
 
     static Plasma::IconWidget *s_jumpToHome;
     static Plasma::IconWidget *s_toggleControlBarAutohide;
-    static Plasma::IconWidget *s_browserGoPrevious;
 
     static Plasma::IconWidget *s_backgroundMusic;
     static Plasma::IconWidget *s_backgroundVideo;

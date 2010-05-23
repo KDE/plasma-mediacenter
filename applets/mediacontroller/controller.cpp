@@ -33,13 +33,10 @@
 MediaController::MediaController(QObject *parent, const QVariantList &args)
     : MediaCenter::PlaybackControl(parent, args),
     m_svg(new Plasma::FrameSvg(this)),
-    m_layoutVertical(new QGraphicsLinearLayout(Qt::Vertical)),
-    m_layoutHorizontalTop(new QGraphicsLinearLayout(m_layoutVertical)),
-    m_layoutHorizontalBottom(new QGraphicsLinearLayout(m_layoutVertical)),
+    m_layoutHorizontalTop(new QGraphicsLinearLayout(this)),
     m_layoutTopLeft(new QGraphicsLinearLayout(Qt::Horizontal)),
     m_layoutTopMiddle(new QGraphicsLinearLayout(Qt::Horizontal)),
-    m_layoutTopRight(new QGraphicsLinearLayout(Qt::Horizontal)),
-    m_layoutBottomLeft(new QGraphicsLinearLayout(Qt::Horizontal))
+    m_layoutTopRight(new QGraphicsLinearLayout(Qt::Horizontal))
 
 {
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
@@ -84,13 +81,7 @@ void MediaController::init()
     setMarginsFromTheme();
     connect (Plasma::Theme::defaultTheme(), SIGNAL(themeChanged()), this, SLOT(slotThemeChanged()));
 
-    m_layoutVertical->addItem(m_layoutHorizontalTop);
-    m_layoutVertical->addItem(m_layoutHorizontalBottom);
-
-    m_layoutVertical->setStretchFactor(m_layoutHorizontalTop,3);
-    m_layoutVertical->setStretchFactor(m_layoutHorizontalBottom,1);
-
-    setLayout(m_layoutVertical);
+    setLayout(m_layoutHorizontalTop);
 }
 
 void MediaController::setMarginsFromTheme()
@@ -117,15 +108,12 @@ void MediaController::resetLayouts()
     delete m_layoutTopLeft;
     delete m_layoutTopMiddle;
     delete m_layoutTopRight;
-    delete m_layoutBottomLeft;
 
     m_layoutTopLeft = new QGraphicsLinearLayout(m_layoutHorizontalTop);
     m_layoutTopMiddle = new QGraphicsLinearLayout(m_layoutHorizontalTop);
     m_layoutTopRight = new QGraphicsLinearLayout(m_layoutHorizontalTop);
-    m_layoutBottomLeft = new QGraphicsLinearLayout(m_layoutHorizontalBottom);
 
     m_layoutTopMiddle->setPreferredWidth(this->size().width()/1.2);
-    m_layoutBottomLeft->setPreferredHeight(this->size().height()/4);
     m_layoutTopMiddle->setContentsMargins(0,0,0,0);
 }
 
@@ -134,7 +122,6 @@ void MediaController::addLayouts()
     m_layoutHorizontalTop->addItem(m_layoutTopLeft);
     m_layoutHorizontalTop->addItem(m_layoutTopMiddle);
     m_layoutHorizontalTop->addItem(m_layoutTopRight);
-    m_layoutHorizontalBottom->addItem(m_layoutBottomLeft);
 }
 
 
@@ -149,9 +136,6 @@ void MediaController::addToLayout(QGraphicsWidget *widget, const MediaCenter::La
     }
     if (zone == MediaCenter::ControlRight) {
         m_layoutTopRight->addItem(widget);
-    }
-    if (zone == MediaCenter::ControlBottom) {
-        m_layoutBottomLeft->addItem(widget);
     }
 }
 

@@ -24,6 +24,8 @@
 #include "ui_general.h"
 #include "abstractmediaitemview.h"
 
+#include <QGraphicsLinearLayout>
+
 class BrowsingWidget;
 class ModelPackage;
 
@@ -38,13 +40,14 @@ public:
     void init();
     void createConfigurationInterface(KConfigDialog *parent);
 
-    void setBrowsingWidgets(bool);
-    bool browsingWidgets();
+    void setShowingBrowsingWidgets(bool);
+    bool isShowingBrowsingWidgets() const;
 
     void showStartupState();
 
-    bool m_browsingWidgets;
-
+    void addViewMode(const QString &title);
+    QStringList viewModes() const;
+    
     QList<MediaCenter::Media> selectedMedias() const;
 
     KUrl directory() const;
@@ -56,8 +59,9 @@ public slots:
     void selectedMediasRemove(const MediaCenter::Media &media);
     void clearSelectedMedias();
 
+    void clearViewModes();
+
 signals:
-    void goPrevious();
     void mediasListInDirectory(const QList<MediaCenter::Media> &list);
 
     void musicDataEngine();
@@ -73,8 +77,11 @@ private:
     bool m_blurred;
     QString m_viewType;
     BrowsingWidget *m_browsingWidget;
+    bool m_browsingWidgets;
     ModelPackage *m_package;
     QList<MediaCenter::Media> m_selectedMedias;
+
+    QGraphicsLinearLayout *m_layout;
 
 private:
     void createView();

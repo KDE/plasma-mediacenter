@@ -25,7 +25,6 @@
 #include <mediabrowserlibs/modelpackage.h>
 
 #include <QWidget>
-#include <QGraphicsLinearLayout>
 
 #include <KDirModel>
 #include <KDirLister>
@@ -43,18 +42,14 @@ MediaBrowser::MediaBrowser(QObject *parent, const QVariantList &args)
     : MediaCenter::Browser(parent, args),
     m_view(0),
     m_model(0),
-    m_browsingWidget(0),
+    m_browsingWidget(new BrowsingWidget(this)),
     m_package(0),
-    m_browsingWidgets(false)
+    m_browsingWidgets(true),
+    m_layout(new QGraphicsLinearLayout(Qt::Vertical, this))
 {
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
-
-    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
-    if (m_browsingWidgets) {
-        m_browsingWidget = new BrowsingWidget(this);
-        layout->addItem(m_browsingWidget);
-    }
-    setLayout(layout);
+    m_browsingWidget->setNavigationControls(BrowsingWidget::BackwardControl | BrowsingWidget::ViewModeControl);
+    setLayout(m_layout);
 }
 
 MediaBrowser::~MediaBrowser()
@@ -101,7 +96,6 @@ void MediaBrowser::createView()
     connect (m_view, SIGNAL(indexActivated(QModelIndex)), this, SLOT(slotIndexActivated(QModelIndex)));
     connect (m_view, SIGNAL(mediaSelected(MediaCenter::Media)), this, SLOT(selectedMediasAdd(MediaCenter::Media)));
     connect (m_view, SIGNAL(mediaUnselected(MediaCenter::Media)), this, SLOT(selectedMediasRemove(MediaCenter::Media)));
-    connect (this, SIGNAL(goPrevious()), m_view, SLOT(goPrevious()));
     connect (m_view, SIGNAL(directoryChanged()), this, SLOT(clearSelectedMedias()));
 
     QGraphicsLinearLayout *layout = static_cast<QGraphicsLinearLayout*>(this->layout());
@@ -199,15 +193,30 @@ void MediaBrowser::slotIndexActivated(const QModelIndex &index)
     kDebug() << "finished";
 }
 
-void MediaBrowser::setBrowsingWidgets(bool set)
+void MediaBrowser::setShowingBrowsingWidgets(bool set)
 {
-    //TODO Implement some toggling of the browsing widgets, they will probably never be needed in the browser
-}
+    if (m_browsingWidgets == set) {
+        return;
+    }
+    m_browsingWidgets = set;
 
-bool MediaBrowser::browsingWidgets()
+    if (m_browsingWidget) {
+        if (!m_browsingWidgets) {
+            m_browsingWidget->setVisible(false);
+            m_layout->removeItem(m_browsingWidget);
+        }
+        if (m_browsingWidgets) {
+            m_layout->insertItem(0, m_browsingWidget);
+            m_browsingWidget->setVisible(true);
+        }
+    }
+}
+    bool m_browsingWidgets;
+bool MediaBrowser::isShowingBrowsingWidgets() const
 {
     return m_browsingWidgets;
 }
+
 
 void MediaBrowser::showStartupState()
 {
@@ -264,5 +273,23 @@ void MediaBrowser::clearSelectedMedias()
     m_selectedMedias.clear();
     emit selectedMediasChanged(m_selectedMedias);
 }
+
+void MediaBrowser::addViewMode(const QString& title)
+{
+    m_browsingWidget->addViewMode(title);
+}
+
+QStringList MediaBrowser::viewModes() const
+{
+    return m_browsingWidget->viewModes();
+}
+
+
+void MediaBrowser::clearViewModes()
+{
+    m_browsingWidget->clearViewModes();
+}
+
+
 
 K_EXPORT_PLASMA_APPLET(mediabrowser, MediaBrowser)

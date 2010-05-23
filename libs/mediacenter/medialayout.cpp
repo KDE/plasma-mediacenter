@@ -354,7 +354,7 @@ QRectF MediaLayout::controllerPreferredShowingRect() const
     }
 
     const int width = m_containment->size().width();
-    const int height = 100;
+    const int height = 50;
 
     return QRectF(QPointF(0, 0), QSizeF(width, height));
 }

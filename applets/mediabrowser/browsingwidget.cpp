@@ -27,12 +27,14 @@
 // Plasma
 #include <Plasma/ToolButton>
 #include <Plasma/ComboBox>
+#include <Plasma/TabBar>
 
 BrowsingWidget::BrowsingWidget(QGraphicsItem *parent) : QGraphicsWidget(parent),
 m_navigationCombo(false),
 m_backwardButton(0),
 m_forwardButton(0),
 m_upLevelButton(0),
+m_viewModeControl(0),
 m_combo(0)
 {
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal);
@@ -59,6 +61,9 @@ void BrowsingWidget::setNavigationControls(NavigationControls controls)
     if (m_upLevelButton) {
         layout->removeItem(m_upLevelButton);
     }
+    if (m_viewModeControl) {
+        layout->removeItem(m_viewModeControl);
+    }
 
     if (m_controls == NoControls) {
         kDebug() << "no controls!!";
@@ -76,6 +81,11 @@ void BrowsingWidget::setNavigationControls(NavigationControls controls)
             layout->removeItem(m_upLevelButton);
             delete m_upLevelButton;
             m_upLevelButton = 0;
+        }
+        if (m_viewModeControl) {
+            layout->removeItem(m_viewModeControl);
+            delete m_viewModeControl;
+            m_viewModeControl = 0;
         }
         return;
     }
@@ -105,6 +115,12 @@ void BrowsingWidget::setNavigationControls(NavigationControls controls)
             connect (m_backwardButton, SIGNAL(clicked()), this, SIGNAL(goPrevious()));
         }
         layout->insertItem(0, m_backwardButton);
+    }
+    if (m_controls & ViewModeControl) {
+        if (!m_viewModeControl) {
+            m_viewModeControl = new Plasma::TabBar(this);
+        }
+        layout->addItem(m_viewModeControl);
     }
 
     setLayout(layout);
@@ -137,3 +153,30 @@ void BrowsingWidget::setShowNavigationComboBox(bool set)
     }
     setLayout(layout);
 }
+
+void BrowsingWidget::addViewMode(const QString& title)
+{
+    m_viewModeControl->addTab(title);
+}
+
+QStringList BrowsingWidget::viewModes() const
+{
+    QStringList list;
+    for (int i = 0; i < m_viewModeControl->nativeWidget()->count(); i++) {
+        list << m_viewModeControl->tabText(i);
+    }
+    return list;
+}
+
+void BrowsingWidget::clearViewModes()
+{
+    int total = m_viewModeControl->nativeWidget()->count();
+    if (total == 0) {
+        return;
+    }
+    //FIXME: Use the new clear function available from KDE 4.5
+    for (int i = 0; i < total; i++) {
+        m_viewModeControl->removeTab(0);
+    }
+}
+

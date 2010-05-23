@@ -43,7 +43,6 @@ void HomeState::onExit(QEvent* event)
 {
     Q_UNUSED(event);
 
-    s_browserGoPrevious->setVisible(true);
     s_toggleControlBarAutohide->setVisible(true);
     s_jumpToHome->setVisible(true);
 
@@ -58,11 +57,8 @@ void HomeState::onEntry(QEvent* event)
 
     showBackgroundStates();
 
-    s_browserGoPrevious->setVisible(false);
     s_toggleControlBarAutohide->setVisible(false);
     s_jumpToHome->setVisible(false);
-
-    m_layout->setInfoDisplayOnly(true);
 }
 
 QList<QGraphicsWidget*> HomeState::subComponents() const
@@ -90,8 +86,10 @@ void HomeState::configure()
         m_control->setVisible(true);
     }
 
-    m_layout->setPlaylistVisible(false);
-    m_layout->controlAutohideOn();
+    m_browser->clearViewModes();
+    m_browser->setShowingBrowsingWidgets(false);
+
+    m_layout->setInfoDisplayOnly(true);
 }
 
 void HomeState::initConnections()

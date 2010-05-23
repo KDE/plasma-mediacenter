@@ -23,7 +23,6 @@
 #include "mediacenterstate.h"
 
 #include <Plasma/IconWidget>
-#include <Plasma/TabBar>
 #include <Plasma/Slider>
 
 namespace Nepomuk {
@@ -57,8 +56,6 @@ private:
     void updateInfoDisplay();
 
     Plasma::IconWidget *m_pictureToBrowser;
-    Plasma::TabBar *m_pictureTabBar;
-    Plasma::IconWidget *m_label;
     Plasma::IconWidget *m_startSlideshow;
     Plasma::Slider *m_slideshowTimeSlider;
     Plasma::IconWidget *m_slideshowLabel;

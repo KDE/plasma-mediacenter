@@ -48,13 +48,10 @@ private slots:
 private:
     Plasma::FrameSvg *m_svg;
 
-    QGraphicsLinearLayout *m_layoutVertical;
     QGraphicsLinearLayout *m_layoutHorizontalTop;
-    QGraphicsLinearLayout *m_layoutHorizontalBottom;
     QGraphicsLinearLayout *m_layoutTopLeft;
     QGraphicsLinearLayout *m_layoutTopMiddle;
     QGraphicsLinearLayout *m_layoutTopRight;
-    QGraphicsLinearLayout *m_layoutBottomLeft;
 
     int iconSizeFromCurrentSize() const;
 

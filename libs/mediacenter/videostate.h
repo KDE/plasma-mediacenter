@@ -26,7 +26,6 @@
 
 #include <Plasma/IconWidget>
 #include <Plasma/Slider>
-#include <Plasma/TabBar>
 
 namespace Nepomuk {
     class Resource;
@@ -112,8 +111,6 @@ private:
     Plasma::IconWidget *m_videoSkipForward;
     Plasma::IconWidget *m_videoStop;
     Plasma::IconWidget *m_videoTogglePlaylist;
-    Plasma::TabBar *m_videoTabBar;
-    Plasma::IconWidget *m_label;
     Plasma::IconWidget *m_selectedMediasLabel;
     Plasma::IconWidget *m_currentlyPlayingLabel;
 
