@@ -49,9 +49,6 @@ protected:
     virtual void onExit(QEvent* event);
     virtual void onEntry(QEvent* event);
 
-    void addBackgroundState();
-    void removeBackgroundState();
-
 private:
     void updateInfoDisplay();
 

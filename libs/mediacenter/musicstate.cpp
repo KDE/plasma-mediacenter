@@ -69,6 +69,14 @@ void MusicState::onExit(QEvent* event)
 
     m_lastDirectory = m_browser->directory();
 
+    if (m_player->musicPlayerPlaybackState() == MediaCenter::PlayingState) {
+        s_backgroundMusicMode = true;
+    }
+    if (m_player->musicPlayerPlaybackState() == MediaCenter::StoppedState||
+        m_player->musicPlayerPlaybackState() == MediaCenter::PausedState) {
+        s_backgroundMusicMode = false;
+    }
+
     disconnect (m_browser, SIGNAL(mediasActivated(QList<MediaCenter::Media>)), m_playlist, SLOT(appendMedia(QList<MediaCenter::Media>)));
     disconnect (m_playlist, SIGNAL(mediasAppended(QList<MediaCenter::Media>)), m_player, SLOT(enqueueMusic(QList<MediaCenter::Media>)));
     disconnect (m_playlist, SIGNAL(mediaActivated(const MediaCenter::Media&)), m_player, SLOT(playMusicMedia(const MediaCenter::Media&)));
@@ -100,34 +108,34 @@ QList<QGraphicsWidget*> MusicState::subComponents() const
 
     m_musicSkipBack->setIcon("media-skip-backward");
     list << m_musicSkipBack;
-    m_control->addToLayout(m_musicSkipBack, MediaCenter::ControlMiddle);
+    m_control->addToLayout(m_musicSkipBack, MediaCenter::MiddleZone);
 
     m_musicPlayPause->setIcon("media-playback-start");
     list << m_musicPlayPause;
-    m_control->addToLayout(m_musicPlayPause, MediaCenter::ControlMiddle);
+    m_control->addToLayout(m_musicPlayPause, MediaCenter::MiddleZone);
 
     m_musicStop->setIcon("media-playback-stop");
     list << m_musicStop;
-    m_control->addToLayout(m_musicStop, MediaCenter::ControlMiddle);
+    m_control->addToLayout(m_musicStop, MediaCenter::MiddleZone);
 
     m_musicSkipForward->setIcon("media-skip-forward");
     list << m_musicSkipForward;
-    m_control->addToLayout(m_musicSkipForward, MediaCenter::ControlMiddle);
+    m_control->addToLayout(m_musicSkipForward, MediaCenter::MiddleZone);
 
     m_musicSeekSlider->setRange(0, 100);
     m_musicSeekSlider->setOrientation(Qt::Horizontal);
     list << m_musicSeekSlider;
-    m_control->addToLayout(m_musicSeekSlider, MediaCenter::ControlMiddle);
+    m_control->addToLayout(m_musicSeekSlider, MediaCenter::MiddleZone);
 
     m_musicVolumeSlider->setRange(0, 100);
     m_musicVolumeSlider->setOrientation(Qt::Vertical);
     m_musicVolumeSlider->setValue(m_player->volume());
     list << m_musicVolumeSlider;
-    m_control->addToLayout(m_musicVolumeSlider, MediaCenter::ControlMiddle);
+    m_control->addToLayout(m_musicVolumeSlider, MediaCenter::MiddleZone);
 
     m_musicTogglePlaylist->setIcon("view-media-playlist");
     list << m_musicTogglePlaylist;
-    m_control->addToLayout(m_musicTogglePlaylist, MediaCenter::ControlRight);
+    m_control->addToLayout(m_musicTogglePlaylist, MediaCenter::RightZone);
 
 
 
@@ -135,18 +143,18 @@ QList<QGraphicsWidget*> MusicState::subComponents() const
     list << m_currentlyPlayingLabel;
     m_currentlyPlayingLabel->setMinimumSize(230,20);
     m_currentlyPlayingLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-    m_infoDisplay->addToLayout(m_currentlyPlayingLabel, MediaCenter::ControlLeft);
+    m_infoDisplay->addToLayout(m_currentlyPlayingLabel, MediaCenter::LeftZone);
 
     m_ratingProxyWidget->setWidget(m_ratingWidget);
     m_ratingWidget->setAttribute(Qt::WA_TranslucentBackground);
     m_ratingWidget->setMaximumSize(170,35);
     list << m_ratingProxyWidget;
-    m_infoDisplay->addToLayout(m_ratingProxyWidget, MediaCenter::ControlMiddle);
+    m_infoDisplay->addToLayout(m_ratingProxyWidget, MediaCenter::MiddleZone);
 
     list << m_selectedMediasLabel;
     m_selectedMediasLabel->setMinimumSize(230,20);
     m_selectedMediasLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-    m_infoDisplay->addToLayout(m_selectedMediasLabel, MediaCenter::ControlMiddle);
+    m_infoDisplay->addToLayout(m_selectedMediasLabel, MediaCenter::MiddleZone);
 
     return list;
 }
@@ -158,8 +166,10 @@ void MusicState::configure()
     m_player->setVisible(false);
     m_playlist->setVisible(true);
     m_browser->setVisible(true);
-    m_layout->setPlaylistVisible(true);
     m_layout->setControlAutohide(false);
+    m_layout->setPlaylistVisible(true);
+
+    m_layout->controlAutohideOff();
 
     m_browser->clearViewModes();
     m_browser->addViewMode("Musicmode 1");
@@ -214,11 +224,9 @@ void MusicState::onPlaybackStateChanged(const MediaCenter::PlaybackState &state)
 
     if (state == MediaCenter::PlayingState) {
         m_musicPlayPause->setIcon("media-playback-pause");
-        s_backgroundMusicMode = true;
         return;
     } else {
         m_musicPlayPause->setIcon("media-playback-start");
-        s_backgroundMusicMode = false;
     }
 }
 

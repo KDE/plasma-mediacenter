@@ -127,14 +127,14 @@ void MediaController::addLayouts()
 
 void MediaController::addToLayout(QGraphicsWidget *widget, const MediaCenter::LayoutZone &zone)
 {
-    if (zone == MediaCenter::ControlLeft) {
+    if (zone == MediaCenter::LeftZone) {
         m_layoutTopLeft->addItem(widget);
     }
-    if (zone == MediaCenter::ControlMiddle) {
+    if (zone == MediaCenter::MiddleZone) {
         m_layoutTopMiddle->addItem(widget);
         m_layoutTopMiddle->setAlignment(widget,Qt::AlignVCenter);
     }
-    if (zone == MediaCenter::ControlRight) {
+    if (zone == MediaCenter::RightZone) {
         m_layoutTopRight->addItem(widget);
     }
 }

@@ -73,7 +73,7 @@ QList<QGraphicsWidget*> MediaCenterState::mainSubComponents() const
 
     s_jumpToHome->setIcon("user-home");
     list << s_jumpToHome;
-    m_control->addToLayout(s_jumpToHome, MediaCenter::ControlLeft);
+    m_control->addToLayout(s_jumpToHome, MediaCenter::LeftZone);
 
     s_backgroundVideo->setIcon("folder-video");
     s_backgroundVideo->setVisible(false);
@@ -88,18 +88,18 @@ QList<QGraphicsWidget*> MediaCenterState::mainSubComponents() const
     list << s_backgroundMusic;
 
     if (s_currentState == MediaCenter::HomeMode) {
-        m_infoDisplay->addToLayout(s_backgroundVideo, MediaCenter::ControlLeft);
-        m_infoDisplay->addToLayout(s_backgroundPicture, MediaCenter::ControlLeft);
-        m_infoDisplay->addToLayout(s_backgroundMusic, MediaCenter::ControlLeft);
+        m_infoDisplay->addToLayout(s_backgroundVideo, MediaCenter::LeftZone);
+        m_infoDisplay->addToLayout(s_backgroundPicture, MediaCenter::LeftZone);
+        m_infoDisplay->addToLayout(s_backgroundMusic, MediaCenter::LeftZone);
     } else {
-        m_control->addToLayout(s_backgroundVideo, MediaCenter::ControlLeft);
-        m_control->addToLayout(s_backgroundPicture, MediaCenter::ControlLeft);
-        m_control->addToLayout(s_backgroundMusic, MediaCenter::ControlLeft);
+        m_control->addToLayout(s_backgroundVideo, MediaCenter::LeftZone);
+        m_control->addToLayout(s_backgroundPicture, MediaCenter::LeftZone);
+        m_control->addToLayout(s_backgroundMusic, MediaCenter::LeftZone);
     }
 
     s_toggleControlBarAutohide->setIcon("mail-attachment");
     list << s_toggleControlBarAutohide;
-    m_control->addToLayout(s_toggleControlBarAutohide, MediaCenter::ControlRight);
+    m_control->addToLayout(s_toggleControlBarAutohide, MediaCenter::RightZone);
 
     return list;
 }

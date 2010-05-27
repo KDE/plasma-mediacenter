@@ -69,6 +69,15 @@ void PictureState::onExit(QEvent *event)
 
     m_lastDirectory = m_browser->directory();
 
+    if (m_player->picturePlayerPlaybackState() == MediaCenter::PausedState ||
+        m_player->picturePlayerPlaybackState() == MediaCenter::PlayingState) {
+        s_backgroundPictureMode = true;
+    }
+    if (m_player->picturePlayerPlaybackState() == MediaCenter::StoppedState ||
+        m_player->picturePlayerPlaybackState() == MediaCenter::SinglePictureState) {
+        s_backgroundPictureMode = false;
+    }
+
     enterBrowsingState();
 
     disconnect (m_browser, SIGNAL(mediaActivated(const MediaCenter::Media&)), m_player, SLOT(playPictureMedia(const MediaCenter::Media&)));
@@ -110,51 +119,51 @@ QList<QGraphicsWidget*> PictureState::subComponents() const
 
     m_previousPicture->setIcon("media-skip-backward");
     list << m_previousPicture;
-    m_control->addToLayout(m_previousPicture, MediaCenter::ControlMiddle);
+    m_control->addToLayout(m_previousPicture, MediaCenter::MiddleZone);
 
     m_nextPicture->setIcon("media-skip-forward");
     list << m_nextPicture;
-    m_control->addToLayout(m_nextPicture, MediaCenter::ControlMiddle);
+    m_control->addToLayout(m_nextPicture, MediaCenter::MiddleZone);
 
     m_startSlideshow->setIcon("media-playback-start");
     list << m_startSlideshow;
-    m_control->addToLayout(m_startSlideshow, MediaCenter::ControlRight);
+    m_control->addToLayout(m_startSlideshow, MediaCenter::RightZone);
 
     m_slideshowTimeSlider->setOrientation(Qt::Vertical);
     m_slideshowTimeSlider->setRange(0,10);
     m_slideshowTimeSlider->setValue(m_player->slideShowInterval());
     list << m_slideshowTimeSlider;
-    m_control->addToLayout(m_slideshowTimeSlider, MediaCenter::ControlRight);
+    m_control->addToLayout(m_slideshowTimeSlider, MediaCenter::RightZone);
 
     m_slideshowLabel->setText(QString::number(m_player->slideShowInterval()));
     list << m_slideshowLabel;
-    m_control->addToLayout(m_slideshowLabel, MediaCenter::ControlRight);
+    m_control->addToLayout(m_slideshowLabel, MediaCenter::RightZone);
 
     m_pictureToBrowser->setIcon("view-restore");
     list << m_pictureToBrowser;
-    m_control->addToLayout(m_pictureToBrowser, MediaCenter::ControlRight);
+    m_control->addToLayout(m_pictureToBrowser, MediaCenter::RightZone);
 
     m_switchDisplayMode->setIcon("view-split-left-right");
     list << m_switchDisplayMode;
-    m_control->addToLayout(m_switchDisplayMode, MediaCenter::ControlRight);
+    m_control->addToLayout(m_switchDisplayMode, MediaCenter::RightZone);
 
 
 
     list << m_currentlyPlayingLabel;
     m_currentlyPlayingLabel->setMinimumSize(230,20);
     m_currentlyPlayingLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-    m_infoDisplay->addToLayout(m_currentlyPlayingLabel, MediaCenter::ControlLeft);
+    m_infoDisplay->addToLayout(m_currentlyPlayingLabel, MediaCenter::LeftZone);
 
     m_ratingProxyWidget->setWidget(m_ratingWidget);
     m_ratingWidget->setAttribute(Qt::WA_TranslucentBackground);
     m_ratingWidget->setMaximumSize(60,60);
     list << m_ratingProxyWidget;
-    m_infoDisplay->addToLayout(m_ratingProxyWidget, MediaCenter::ControlMiddle);
+    m_infoDisplay->addToLayout(m_ratingProxyWidget, MediaCenter::MiddleZone);
 
     list << m_selectedMediasLabel;
     m_selectedMediasLabel->setMinimumSize(170, 35);
     m_selectedMediasLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-    m_infoDisplay->addToLayout(m_selectedMediasLabel, MediaCenter::ControlMiddle);
+    m_infoDisplay->addToLayout(m_selectedMediasLabel, MediaCenter::MiddleZone);
 
     return list;
 }
@@ -179,8 +188,8 @@ void PictureState::initConnections()
 {
     connect (m_pictureToBrowser, SIGNAL (clicked()), this, SLOT (enterBrowsingState()));
     connect (m_pictureToBrowser, SIGNAL (clicked()), m_player, SLOT (stopPicture()));
+    connect (m_player, SIGNAL(lastPictureShown()), m_pictureToBrowser, SIGNAL(clicked()));
     connect (m_slideshowTimeSlider, SIGNAL(valueChanged(int)), this, SLOT (updateSLideshowInterval(int)));
-    connect (m_startSlideshow, SIGNAL (clicked()), m_player, SLOT (playAllPictureMedia()));
     connect (m_startSlideshow, SIGNAL (clicked()), this, SLOT (enterSlideshowState()));
     connect (m_browser, SIGNAL (mediasListInDirectory(QList<MediaCenter::Media>)), m_player, SLOT (clearPictureQueue()));
     connect (m_browser, SIGNAL (mediasListInDirectory(QList<MediaCenter::Media>)), m_player, SLOT (enqueuePictures(QList<MediaCenter::Media>)));
@@ -194,21 +203,6 @@ void PictureState::initConnections()
     connect (m_switchDisplayMode, SIGNAL(clicked()), this, SLOT(toggleFloatingState()));
 }
 
-void PictureState::addBackgroundState()
-{
-    if (m_player->picturePlayerPlaybackState() == MediaCenter::PausedState ||
-        m_player->picturePlayerPlaybackState() == MediaCenter::PlayingState) {
-        s_backgroundPictureMode = true;
-        return;
-    }
-    s_backgroundPictureMode = false;
-}
-
-void PictureState::removeBackgroundState()
-{
-    s_backgroundPictureMode = false;
-}
-
 void MediaCenter::PictureState::updateSLideshowInterval(const int &time)
 {
     m_slideshowLabel->setText(QString::number(time));
@@ -217,7 +211,6 @@ void MediaCenter::PictureState::updateSLideshowInterval(const int &time)
 
 void PictureState::enterBrowsingState()
 {
-    kWarning() << "Browsing";
     m_pictureToBrowser->setVisible(false);
     m_nextPicture->setVisible(false);
     m_previousPicture->setVisible(false);
@@ -226,12 +219,13 @@ void PictureState::enterBrowsingState()
     m_startSlideshow->setVisible(true);
     m_switchDisplayMode->setVisible(false);
     m_infoDisplay->setVisible(true);
-    m_layout->showBrowser();
+    s_toggleControlBarAutohide->setVisible(true);
 
+    m_layout->showBrowser();
+    m_layout->controlAutohideOff();
     m_layout->setInfoDisplayMode(MediaCenter::InfoDisplayBottom);
     m_infoDisplay->setMode(MediaCenter::InfoDisplayBottom);
 
-    m_layout->controlAutohideOff();
     m_player->setSlideshowInterval(m_slideshowTimeSlider->value());
 
     m_browser->clearSelectedMedias(); //BUG: Since the directory is not changed, the items are still selectedMedias
@@ -240,6 +234,20 @@ void PictureState::enterBrowsingState()
 
 void MediaCenter::PictureState::enterSlideshowState()
 {
+    if (m_layout->infoDisplayMode() == MediaCenter::InfoDisplayFloating) {
+      toggleFloatingState();
+    }
+
+    m_player->setSlideshowInterval(m_slideshowTimeSlider->value()); //This needs to be set before any playAll
+
+    if (m_layout->infoDisplayMode() == MediaCenter::InfoDisplayBottom &&
+        !s_backgroundPictureMode) {
+         m_player->playAllPictureMedia();
+         //If I playAll at end of this function the player does not resize 
+         //after clicking play in the browser (=infodisplaybottom mode)
+         //thus, I start playing here
+    }
+
     m_pictureToBrowser->setVisible(true);
     m_nextPicture->setVisible(true);
     m_previousPicture->setVisible(true);
@@ -248,11 +256,7 @@ void MediaCenter::PictureState::enterSlideshowState()
     m_startSlideshow->setVisible(true);
     m_switchDisplayMode->setVisible(true);
 
-    m_layout->setInfoDisplayMode(MediaCenter::InfoDisplayBottom);
-    m_infoDisplay->setMode(MediaCenter::InfoDisplayBottom);
-
     m_layout->showPlayer();
-    m_player->setSlideshowInterval(m_slideshowTimeSlider->value());
 
     if (m_player->picturePlayerPlaybackState() == MediaCenter::PausedState) {
         m_layout->controlAutohideOff();
@@ -264,8 +268,13 @@ void MediaCenter::PictureState::enterSlideshowState()
     m_browser->clearSelectedMedias();
     updateInfoDisplay();
 
-    //Needed to get the player to the correct size if we were in floating previously
-    m_layout->invalidate();
+    if (m_layout->infoDisplayMode() == MediaCenter::InfoDisplayFloating &&
+        !s_backgroundPictureMode) {
+      m_player->playAllPictureMedia();
+      //This playAll is needed to resize player when starting slideshow from floating mode
+      //If I put it at the beginning of this function, the player does not resize correctly
+      //when starting a slideshow while in floating mode
+    }
 }
 
 void PictureState::enterSinglePictureFullscreenState()
@@ -281,13 +290,14 @@ void PictureState::enterSinglePictureFullscreenState()
     m_switchDisplayMode->setIcon("view-split-left-right");
 
     m_player->setSlideshowInterval(0);
+
     m_layout->controlAutohideOn();
 
     m_browser->clearSelectedMedias();
     updateInfoDisplay();
 
     //Needed to get the player to the correct size if we were in floating previously
-    m_layout->invalidate();
+    m_layout->layoutPlayer();
 }
 
 void PictureState::onPlaybackStateChanged(const MediaCenter::PlaybackState &state)
@@ -296,16 +306,13 @@ void PictureState::onPlaybackStateChanged(const MediaCenter::PlaybackState &stat
 
     if (state == MediaCenter::PlayingState) {
         m_startSlideshow->setIcon("media-playback-pause");
-        s_backgroundPictureMode = true;
         return;
     }
     if (state == MediaCenter::PausedState) {
         m_startSlideshow->setIcon("media-playback-start");
-        s_backgroundPictureMode = true;
         return;
     } else {
         m_startSlideshow->setIcon("media-playback-start");
-        s_backgroundPictureMode = false;
     }
 }
 
@@ -318,13 +325,12 @@ void MediaCenter::PictureState::pauseOnSkip()
 
 void PictureState::setMedia(const MediaCenter::Media &media)
 {
-    //m_layout->invalidate();
     m_pictureMedia = media;
     updateInfoDisplay();
 
-    //if (m_layout->infoDisplayMode() == MediaCenter::InfoDisplayFloating) {
-    //   m_layout->invalidate();
-    //}
+    if (m_layout->infoDisplayMode() == MediaCenter::InfoDisplayFloating) {
+       m_layout->layoutPlayer();
+    }
 }
 
 void PictureState::selectedMediasChanged(const QList<MediaCenter::Media > &list)
@@ -423,13 +429,11 @@ void PictureState::enterPictureFloatingState()
 {
     s_toggleControlBarAutohide->setVisible(false);
 
-    m_layout->setInfoDisplayMode(MediaCenter::InfoDisplayFloating);
     m_infoDisplay->setMode(MediaCenter::InfoDisplayFloating);
+    m_layout->setInfoDisplayMode(MediaCenter::InfoDisplayFloating);
     m_switchDisplayMode->setIcon("view-preview");
 
     m_layout->controlAutohideOff();
-
-    m_layout->invalidate();
 
     if (m_player->picturePlayerPlaybackState() == MediaCenter::PlayingState) {
         m_player->playPausePicture();

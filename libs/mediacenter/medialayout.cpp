@@ -31,6 +31,8 @@
 
 using namespace MediaCenter;
 
+static const qreal MARGINFACTOR = 0.2; //used when laying out the player in floating mode
+
 MediaLayout::MediaLayout(Plasma::Containment *parent) : QObject(parent),
 m_containment(parent),
 m_browser(0),
@@ -41,14 +43,29 @@ m_infoDisplay(0),
 m_showAll(false),
 m_playlistVisible(false),
 m_controlAutohide(false),
+m_controlVisible(true),
 m_playlistHandler(0),
 m_controlHandler(0),
 m_infoDisplayHandler(0),
-m_infoDisplayOnly(false),
-m_infoDisplayMode(MediaCenter::InfoDisplayBottom)
+m_infoDisplayOnly(true),
+m_infoDisplayMode(MediaCenter::InfoDisplayBottom),
+m_playerNewRect(QRectF())
 
 {
     m_containment->installEventFilter(this);
+
+    m_resizeBrowserAnimation = Plasma::Animator::create(Plasma::Animator::GeometryAnimation);
+    m_resizePlaylistAnimation = Plasma::Animator::create(Plasma::Animator::GeometryAnimation);
+    m_resizePlayerAnimation = Plasma::Animator::create(Plasma::Animator::GeometryAnimation);
+    m_resizeInfoDisplayAnimation = Plasma::Animator::create(Plasma::Animator::GeometryAnimation);
+
+    m_slidePlaylistAnimation = Plasma::Animator::create(Plasma::Animator::SlideAnimation);
+    m_slideControlAnimation = Plasma::Animator::create(Plasma::Animator::SlideAnimation);
+    m_slideInfoDisplayAnimation = Plasma::Animator::create(Plasma::Animator::SlideAnimation);
+
+    m_fadeOutPlayer = Plasma::Animator::create(Plasma::Animator::FadeAnimation);
+    m_fadeInPlayer = Plasma::Animator::create(Plasma::Animator::FadeAnimation);
+    connect(m_fadeOutPlayer,SIGNAL(finished()), this, SLOT(fadeInPlayer()));
 }
 
 MediaLayout::~MediaLayout()
@@ -59,6 +76,7 @@ void MediaLayout::setBrowser(Plasma::Applet *browser)
 {
     m_browser = browser;
     m_needLayouting << m_browser;
+    m_browser->setZValue(10);
 
     m_browserBackgroundHints = m_browser->backgroundHints();
 }
@@ -68,12 +86,7 @@ void MediaLayout::setPlaybackControl(Plasma::Applet *control)
     m_control = control;
     m_needLayouting << m_control;
     m_control->setZValue(1000);
-
-    MediaHandler *handler = new MediaHandler(m_control, MediaHandler::Bottom);
-    connect (handler, SIGNAL(appletHideRequest(Plasma::Applet*)), this, SLOT(animateHidingApplet(Plasma::Applet*)));
-    connect (handler, SIGNAL(appletShowRequest(Plasma::Applet*)), this, SLOT(animateShowingApplet(Plasma::Applet*)));
-
-    m_controlHandler = handler;
+    m_controlHandler = new MediaHandler(m_control, MediaHandler::Bottom);
 }
 
 void MediaLayout::setInfoDisplay(Plasma::Applet *infoDisplay)
@@ -81,12 +94,7 @@ void MediaLayout::setInfoDisplay(Plasma::Applet *infoDisplay)
     m_infoDisplay = infoDisplay;
     m_needLayouting << m_infoDisplay;
     m_infoDisplay->setZValue(2000);
-
-    MediaHandler *handler = new MediaHandler(m_infoDisplay, MediaHandler::Top);
-    connect (handler, SIGNAL(appletHideRequest(Plasma::Applet*)), this, SLOT(animateHidingApplet(Plasma::Applet*)));
-    connect (handler, SIGNAL(appletShowRequest(Plasma::Applet*)), this, SLOT(animateShowingApplet(Plasma::Applet*)));
-
-    m_infoDisplayHandler = handler;
+    m_infoDisplayHandler = new MediaHandler(m_infoDisplay, MediaHandler::Top);
 }
 
 void MediaLayout::setPlaylist(Plasma::Applet *playlist)
@@ -94,12 +102,7 @@ void MediaLayout::setPlaylist(Plasma::Applet *playlist)
     m_playlist = playlist;
     m_needLayouting << m_playlist;
     m_playlist->setZValue(999);
-
-    MediaHandler *handler = new MediaHandler(m_playlist, MediaHandler::Left);
-    connect (handler, SIGNAL(appletHideRequest(Plasma::Applet*)), this, SLOT(animateHidingApplet(Plasma::Applet*)));
-    connect (handler, SIGNAL(appletShowRequest(Plasma::Applet*)), this, SLOT(animateShowingApplet(Plasma::Applet*)));
-
-    m_playlistHandler = handler;
+    m_playlistHandler = new MediaHandler(m_playlist, MediaHandler::Left);
 }
 
 void MediaLayout::setPlayer(Plasma::Applet *player)
@@ -112,7 +115,7 @@ void MediaLayout::setPlayer(Plasma::Applet *player)
 void MediaLayout::invalidate()
 {
     if (m_needLayouting.isEmpty()) {
-      //FIXME: part of my repainting hack for floating mode
+        //This allows calling doCompleteLayout from outside of medialayout
         doCompleteLayout();
     }
     foreach (Plasma::Applet *applet, m_needLayouting) {
@@ -142,7 +145,7 @@ void MediaLayout::doCompleteLayout()
     if (m_playlist) {
         layoutPlaylist();
     }
-    if (m_player) {
+    if (m_player  && m_player->isVisible()) {
         layoutPlayer();
     }
     if (m_infoDisplay) {
@@ -152,126 +155,159 @@ void MediaLayout::doCompleteLayout()
 
 void MediaLayout::layoutBrowser()
 {
+    QPointF point;
+    QSizeF size;
+
     if (m_playlistVisible) {
-        if (!m_controlAutohide) {
-            m_browser->setBackgroundHints(Plasma::Applet::NoBackground);
-            m_browser->setPos(m_containment->rect().left(), m_containment->rect().top());
-            m_browser->resize(m_containment->size().width() - playlistPreferredShowingRect().size().width(), m_containment->size().height());
-        }
         if (m_controlAutohide) {
             m_browser->setBackgroundHints(Plasma::Applet::NoBackground);
-            m_browser->setPos(m_containment->rect().left(), m_containment->rect().top() +
+            point = QPointF(m_containment->rect().left(), m_containment->rect().top());
+            size = QSizeF(m_containment->size().width() - playlistPreferredShowingRect().size().width(), m_containment->size().height());
+        }
+        if (!m_controlAutohide) {
+            m_browser->setBackgroundHints(Plasma::Applet::NoBackground);
+            point = QPointF(m_containment->rect().left(), m_containment->rect().top() +
                               controllerPreferredShowingRect().size().height());
-            m_browser->resize(m_containment->size().width() - playlistPreferredShowingRect().size().width(), m_containment->size().height() -
-                              controllerPreferredShowingRect().size().height() - infoDisplayPreferredShowingRect().size().height());
+            size = QSizeF(m_containment->size().width() - playlistPreferredShowingRect().size().width(),
+                        m_containment->size().height() - controllerPreferredShowingRect().size().height() - infoDisplayPreferredShowingRect().size().height());
         }
         if (m_infoDisplayMode == MediaCenter::InfoDisplayFloating) {
             m_browser->setBackgroundHints(Plasma::Applet::NoBackground);
-            m_browser->setPos(m_containment->rect().left(), m_containment->rect().top() +
+            point = QPointF(m_containment->rect().left(), m_containment->rect().top() +
                               controllerPreferredShowingRect().size().height());
-            m_browser->resize(infoDisplayPreferredShowingRect().left(), m_containment->size().height() -
+            size = QSizeF(infoDisplayPreferredShowingRect().left(), m_containment->size().height() -
                               controllerPreferredShowingRect().size().height());
         }
     }
     if (!m_playlistVisible) {
-        if (!m_controlAutohide) {
-            m_browser->setBackgroundHints(Plasma::Applet::NoBackground);
-            m_browser->setPos(m_containment->rect().left(), m_containment->rect().top());
-            m_browser->resize(m_containment->size().width(), m_containment->size().height());
-        }
         if (m_controlAutohide) {
             m_browser->setBackgroundHints(Plasma::Applet::NoBackground);
-            m_browser->setPos(m_containment->rect().left(), m_containment->rect().top() +
+            point = QPointF(m_containment->rect().left(), m_containment->rect().top());
+            size = QSizeF(m_containment->size().width(), m_containment->size().height());
+        }
+        if (!m_controlAutohide) {
+            m_browser->setBackgroundHints(Plasma::Applet::NoBackground);
+            point = QPointF(m_containment->rect().left(), m_containment->rect().top() +
                               controllerPreferredShowingRect().size().height());
-            m_browser->resize(m_containment->size().width(), m_containment->size().height() -
+            size = QSizeF(m_containment->size().width(), m_containment->size().height() -
                             controllerPreferredShowingRect().size().height() - infoDisplayPreferredShowingRect().size().height());
         }
         if (m_infoDisplayMode == MediaCenter::InfoDisplayFloating) {
             m_browser->setBackgroundHints(Plasma::Applet::NoBackground);
-            m_browser->setPos(m_containment->rect().left(), m_containment->rect().top() +
+            point = QPointF(m_containment->rect().left(), m_containment->rect().top() +
                               controllerPreferredShowingRect().size().height());
-            m_browser->resize(infoDisplayPreferredShowingRect().left(), m_containment->size().height() -
+            size = QSizeF(infoDisplayPreferredShowingRect().left(), m_containment->size().height() -
                               controllerPreferredShowingRect().size().height());
         }
     }
     if (m_infoDisplayOnly) {
         m_browser->setBackgroundHints(Plasma::Applet::NoBackground);
-        m_browser->setPos(m_containment->rect().left(), m_containment->rect().top());
-        m_browser->resize(m_containment->size().width(), m_containment->size().height() - infoDisplayPreferredShowingRect().size().height());
+        point = QPointF(m_containment->rect().left(), m_containment->rect().top());
+        size = QSizeF(m_containment->size().width(), m_containment->size().height() - infoDisplayPreferredShowingRect().size().height());
     }
+
+    animateResizingApplet(m_browser,QRectF(point,size));
 }
 
 void MediaLayout::layoutControl()
 {
-    if (!m_controlAutohide) {
-        m_control->setPos(QPointF(m_containment->rect().left(), m_containment->rect().top() -
-                            controllerPreferredShowingRect().height()));
+    if (m_controlAutohide) {
+        m_control->setPos(QPointF(0, 0 - controllerPreferredShowingRect().height()));
         m_control->resize(controllerPreferredShowingRect().size());
     }
-    if (m_controlAutohide) {
-        m_control->setPos(QPointF(m_containment->rect().left(), m_containment->rect().top()));
+    if (!m_controlAutohide) {
+        m_control->setPos(QPointF(0, 0));
         m_control->resize(controllerPreferredShowingRect().size());
     }
 }
 
 void MediaLayout::layoutInfoDisplay()
 {
-    m_infoDisplay->setMinimumWidth(300);
-
     if (m_infoDisplayMode == MediaCenter::InfoDisplayBottom) {
-        if (!m_controlAutohide) {
-            m_infoDisplay->setPos(QPointF(m_containment->rect().left(), m_containment->rect().bottom()));
+        if (m_controlAutohide) {
+            m_infoDisplay->setPos(QPointF(0, m_containment->rect().bottom()));
             m_infoDisplay->resize(infoDisplayPreferredShowingRect().size());
         }
-        if (m_controlAutohide) {
-            m_infoDisplay->setPos(QPointF(m_containment->rect().left(), m_containment->rect().bottom() -
+        if (!m_controlAutohide) {
+            m_infoDisplay->setPos(QPointF(0, m_containment->rect().bottom() -
                                 infoDisplayPreferredShowingRect().height()));
             m_infoDisplay->resize(infoDisplayPreferredShowingRect().size());
         }
     }
 
     if (m_infoDisplayMode == MediaCenter::InfoDisplayFloating) {
+
         m_infoDisplay->setPos(QPointF(infoDisplayPreferredShowingRect().left(), infoDisplayPreferredShowingRect().top()));
         m_infoDisplay->resize(infoDisplayPreferredShowingRect().size());
     }
 }
 
-//FIXME there is an error somewhere in here :-/ When the bars are hidden, the playlist
-//does not show/hide correctly
 void MediaLayout::layoutPlaylist()
 {
+    QPointF point;
+    QSizeF size;
+
     if (m_playlistVisible) {
-        if (!m_controlAutohide) {
-            m_playlist->setPos(playlistPreferredShowingRect().left(),0);
-            m_playlist->resize(playlistPreferredShowingRect().size());
+        if (!m_controlVisible && m_controlAutohide) {
+            point = QPointF(playlistPreferredShowingRect().left(),0);
+            size = QSizeF(playlistPreferredShowingRect().size());
         }
-        if (m_controlAutohide) {
-            m_playlist->setPos(playlistPreferredShowingRect().left(), controllerPreferredShowingRect().height());
-            m_playlist->resize(playlistPreferredShowingRect().size().width(), playlistPreferredShowingRect().size().height() -
+        if (m_controlVisible && !m_controlAutohide) {
+            point = QPointF(playlistPreferredShowingRect().left(), controllerPreferredShowingRect().bottom());
+            size = QSizeF(playlistPreferredShowingRect().size().width(), playlistPreferredShowingRect().size().height() -
                          infoDisplayPreferredShowingRect().size().height() - controllerPreferredShowingRect().size().height());
+        }
+        if (!m_controlVisible && m_controlAutohide) {
+            point = QPointF(playlistPreferredShowingRect().left(),0);
+            size = QSizeF(playlistPreferredShowingRect().size());
         }
     }
     if (!m_playlistVisible) {
-        if (!m_controlAutohide) {
-            m_playlist->setPos(playlistPreferredShowingRect().right(), 0);
-            m_playlist->resize(playlistPreferredShowingRect().size());
+        if (!m_controlVisible && m_controlAutohide) {
+            point = QPointF(playlistPreferredShowingRect().right(), 0);
+            size = QSizeF(playlistPreferredShowingRect().size());
         }
-        if (m_controlAutohide) {
-            m_playlist->setPos(playlistPreferredShowingRect().right(),0);
-            m_playlist->resize(playlistPreferredShowingRect().size());
+        if (m_controlVisible && !m_controlAutohide) {
+            if (m_infoDisplayOnly) {
+                point = QPointF(playlistPreferredShowingRect().right(), 0);
+                size = QSizeF(playlistPreferredShowingRect().size());
+            }
+            if (!m_infoDisplayOnly) {
+                point = QPointF(playlistPreferredShowingRect().right(), controllerPreferredShowingRect().bottom());
+                size = QSizeF(playlistPreferredShowingRect().size().width(), playlistPreferredShowingRect().size().height() -
+                             infoDisplayPreferredShowingRect().size().height() - controllerPreferredShowingRect().size().height());
+            }
+        }
+        if (m_controlVisible && m_controlAutohide) {
+            point = QPointF(playlistPreferredShowingRect().right(), 0);
+            m_playlist->setPos(m_containment->rect().right(), 0); //Without this manual positioning, the playlist is at 50 px from top when toggling in video playing state
+            size = QSizeF(playlistPreferredShowingRect().size());
         }
     }
+    animateResizingApplet(m_playlist, QRectF(point,size));
 }
 
 void MediaLayout::layoutPlayer()
 {
-    const qreal MARGINFACTOR = 0.2;
-
     m_player->setMinimumSize(50,50);
+
+    QPointF point;
+    QSizeF size;
+
+    if (m_infoDisplayMode == MediaCenter::InfoDisplayBottom) {
+        point = QPointF(0,0);
+        size = QSizeF(m_containment->size());
+        m_player->setGeometry(QRectF(point,size));
+        return;
+    }
 
     if (m_infoDisplayMode == MediaCenter::InfoDisplayFloating) {
         MediaCenter::Player *player = qobject_cast<MediaCenter::Player*>(m_player);
-        QRectF pictureRect = player->pictureRect();
+
+        //Calling pictureRect from the player gives the size of the previous picture ?
+        // So I just ask again what size the current picture is
+        QImage *picture = new QImage(player->currentPictureMedia().second);
+        QRectF pictureRect = QRectF(0,0, picture->width(), picture->height());
 
         qreal availableWidth = m_containment->rect().width() - infoDisplayPreferredShowingRect().width();
         qreal availableHeight = m_containment->rect().height() - controllerPreferredShowingRect().height();
@@ -296,34 +332,34 @@ void MediaLayout::layoutPlayer()
 
         //Landscape Pictures
         if (pictureRatio <= availableRatio && pictureRect.height() <= pictureRect.width()) {
-            m_player->setPos((availableRect.left() + (availableRect.width() / 2)) - ((pictureRect.width() * availablePictureHeightRatio / 2)),
+            point = QPointF((availableRect.left() + (availableRect.width() / 2)) - ((pictureRect.width() * availablePictureHeightRatio / 2)),
                                availableRect.top());
-            m_player->resize(pictureRect.width() * availablePictureHeightRatio - 7 ,availableRect.height() - 5);
+            size = QSizeF(pictureRect.width() * availablePictureHeightRatio - 7 ,availableRect.height() - 5);
         }
         if (pictureRatio >= availableRatio && pictureRect.height() <= pictureRect.width()) {
-            m_player->setPos(availableRect.left(),
+            point = QPointF(availableRect.left(),
                              (((m_containment->rect().height() - (m_containment->rect().height() * MARGINFACTOR)/2  ) - availableRect.top())/2 + availableRect.top()) - (pictureRect.height() * availablePictureWidthRatio / 2));
-            m_player->resize(availableRect.width() - 5 ,pictureRect.height() * availablePictureWidthRatio - 4.2);
+            size = QSizeF(availableRect.width() - 5 ,pictureRect.height() * availablePictureWidthRatio - 4.2);
         }
 
         //Portrait Pictures
         if (pictureRatio <= availableRatio && pictureRect.height() >= pictureRect.width()) {
-            m_player->setPos((availableRect.left() + (availableRect.width() / 2)) - ((pictureRect.width() * availablePictureHeightRatio / 2)),
+            point = QPointF((availableRect.left() + (availableRect.width() / 2)) - ((pictureRect.width() * availablePictureHeightRatio / 2)),
                                availableRect.top());
-            m_player->resize(pictureRect.width() * availablePictureHeightRatio - 4.2 ,availableRect.height() - 5);
+            size = QSizeF(pictureRect.width() * availablePictureHeightRatio - 4.2 ,availableRect.height() - 5);
         }
         if (pictureRatio >= availableRatio && pictureRect.height() >= pictureRect.width()) {
-            m_player->setPos(availableRect.left(),
+            point = QPointF(availableRect.left(),
                              (((m_containment->rect().height() - (m_containment->rect().height() * MARGINFACTOR)/2  ) - availableRect.top())/2 + availableRect.top()) - (pictureRect.height() * availablePictureWidthRatio / 2));
-            m_player->resize(availableRect.width() ,pictureRect.height() * availablePictureWidthRatio);
+            size = QSizeF(availableRect.width() ,pictureRect.height() * availablePictureWidthRatio);
         }
-        //BUG:The player needs to be correctly repainted after this resize. currently the correct repainting happens only on resize of window?!
     }
 
-    if (m_infoDisplayMode == MediaCenter::InfoDisplayBottom) {
-        m_player->setPos(0,0);
-        m_player->resize(m_containment->size());
-    }
+    m_playerNewRect = QRectF(point,size);
+
+    m_fadeOutPlayer->setProperty("targetOpacity",0); //FIXME:Fade in works, but fade out doesn't. Why ?
+    m_fadeOutPlayer->setTargetWidget(m_player);
+    m_fadeOutPlayer->start();
 }
 
 bool MediaLayout::eventFilter(QObject *o, QEvent *e)
@@ -367,18 +403,13 @@ QRectF MediaLayout::infoDisplayPreferredShowingRect() const
     if (m_infoDisplayMode == MediaCenter::InfoDisplayBottom) {
         const int width = m_containment->size().width();
         const int height = 50;
-        //kWarning() << "we send out bottom"<< QRectF(QPointF(0, m_containment->size().height() - height), QSizeF(width, height));
-        //BUG: at startup, the containment size is not immediately correct, causing the controller to be positioned incorrectly,
-        //using the Windowstate change event makes it correct, but causes a lot of repainting
-        return QRectF(QPointF(0, m_containment->size().height() - height), QSizeF(width, height));
+        return QRectF(QPointF(0, m_containment->rect().bottom() - height), QSizeF(width, height));
     }
 
     if (m_infoDisplayMode == MediaCenter::InfoDisplayFloating) {
-
         const int leftMargin = m_containment->size().width() * 0.69;
         const int width = m_containment->size().width() * 0.3;
         const int height = m_containment->size().height() - controllerPreferredShowingRect().size().height() - (controllerPreferredShowingRect().size().height() / 6);
-        //kWarning() << "we send out floating" << QRectF(QPointF(leftMargin , controllerPreferredShowingRect().height() + (controllerPreferredShowingRect().height() / 6)), QSizeF(width, height));
         return QRectF(QPointF(leftMargin , controllerPreferredShowingRect().height() + (controllerPreferredShowingRect().height() / 6)), QSizeF(width, height));
     }
 }
@@ -389,69 +420,124 @@ QRectF MediaLayout::playlistPreferredShowingRect() const
         return QRectF();
     }
 
-    qreal rightMargin;
-    m_playlist->getContentsMargins(0, 0, &rightMargin, 0);
-    return QRectF(QPointF(m_containment->size().width() - (m_containment->size().width() / 5.0) + rightMargin,
+    qreal rightMargin = 0;
+    //m_playlist->getContentsMargins(0, 0, &rightMargin, 0);
+    //FIXME: The margin caused the playlist to move too far.
+    //TODO:Make the playlist fit exactly into the available space (like Nuno's mockups)
+    return QRectF(QPointF(m_containment->size().width() - (m_containment->size().width() / 4.0) + rightMargin,
                            controllerPreferredShowingRect().size().height()),
-                           QSizeF(m_containment->size().width() / 5.0, m_containment->size().height()));
+                           QSizeF(m_containment->size().width() / 4.0, m_containment->size().height()));
 }
 
 void MediaLayout::animateHidingApplet(Plasma::Applet *applet)
 {
+    if ((applet == m_control && m_slideControlAnimation->state() == Plasma::Animation::Running) ||
+        (applet == m_infoDisplay && m_slideInfoDisplayAnimation->state() == Plasma::Animation::Running) ||
+        (applet == m_playlist && m_slidePlaylistAnimation->state() == Plasma::Animation::Running)) {
+        return;
+    }
+
+    m_slidePlaylistAnimation->setProperty("movementDirection", Plasma::Animation::MoveRight);
+    m_slideControlAnimation->setProperty("movementDirection", Plasma::Animation::MoveUp);
+    m_slidePlaylistAnimation->setProperty("distance", m_playlist->rect().right());
+    m_slidePlaylistAnimation->setTargetWidget(m_playlist);
+    m_slideControlAnimation->setProperty("distance", m_control->rect().bottom());
+    m_slideControlAnimation->setTargetWidget(m_control);
+    if (infoDisplayMode() == MediaCenter::InfoDisplayBottom) {
+        m_slideInfoDisplayAnimation->setProperty("movementDirection", Plasma::Animation::MoveDown);
+        m_slideInfoDisplayAnimation->setProperty("distance", m_infoDisplay->rect().bottom());
+        m_slideInfoDisplayAnimation->setTargetWidget(m_infoDisplay);
+    }
+    if (infoDisplayMode() == MediaCenter::InfoDisplayFloating) {
+        m_slideInfoDisplayAnimation->setProperty("movementDirection", Plasma::Animation::MoveRight);
+        m_slideInfoDisplayAnimation->setProperty("distance", m_infoDisplay->rect().right());
+        m_slideInfoDisplayAnimation->setTargetWidget(m_infoDisplay);
+    }
+
     if (applet == m_browser) {
-        Plasma::Animator::self()->moveItem(applet, Plasma::Animator::SlideOutMovement, QPoint(-m_browser->size().width(),
-                                                                                              browserPreferredShowingRect().y()));
-    } else if (applet == m_control) {
-        Plasma::Animator::self()->moveItem(applet, Plasma::Animator::SlideOutMovement, QPoint(controllerPreferredShowingRect().x(),
-                                                                                              m_control->rect().y() - m_control->size().height()));
-        if (m_infoDisplayMode == MediaCenter::InfoDisplayBottom) {
-            Plasma::Animator::self()->moveItem(m_infoDisplay, Plasma::Animator::SlideOutMovement, QPoint(infoDisplayPreferredShowingRect().x(),
-                                                                                                  m_containment->rect().bottom()));
-        }
-        if (m_infoDisplayMode == MediaCenter::InfoDisplayFloating) {
-            Plasma::Animator::self()->moveItem(m_infoDisplay, Plasma::Animator::SlideOutMovement, QPoint(m_containment->size().width(),
-                                                                                                  controllerPreferredShowingRect().bottom()));
+    } else if (applet == m_control || applet == m_infoDisplay) {
+        if (m_controlVisible) {
+            m_slideControlAnimation->start();
+            m_slideInfoDisplayAnimation->start();
+            m_controlVisible = false;
         }
     } else if (applet == m_playlist) {
-        Plasma::Animator::self()->moveItem(applet, Plasma::Animator::SlideOutMovement, QPoint(m_containment->size().width(),
-                                                                                              playlistPreferredShowingRect().y()));
-    } else if (applet == m_infoDisplay) {
-        if (m_infoDisplayMode == MediaCenter::InfoDisplayBottom) {
-            Plasma::Animator::self()->moveItem(applet, Plasma::Animator::SlideOutMovement, QPoint(infoDisplayPreferredShowingRect().x(),
-                                                                                                  m_containment->rect().bottom()));
+        if (m_playlistVisible) {
+            m_slidePlaylistAnimation->start();
+            m_playlistVisible = false;
         }
-        if (m_infoDisplayMode == MediaCenter::InfoDisplayFloating) {
-            Plasma::Animator::self()->moveItem(applet, Plasma::Animator::SlideOutMovement, QPoint(m_containment->size().width(),
-                                                                                                  controllerPreferredShowingRect().bottom()));
-        }
-        Plasma::Animator::self()->moveItem(m_control, Plasma::Animator::SlideOutMovement, QPoint(controllerPreferredShowingRect().x(),
-                                                                                              m_control->rect().y() - m_control->size().height()));
     }
 }
 
 void MediaLayout::animateShowingApplet(Plasma::Applet *applet)
 {
-    if (applet == m_browser) {
-        Plasma::Animator::self()->moveItem(applet, Plasma::Animator::SlideInMovement, browserPreferredShowingRect().topLeft().toPoint());
-    } else if (applet == m_control) {
-        Plasma::Animator::self()->moveItem(applet, Plasma::Animator::SlideInMovement, controllerPreferredShowingRect().topLeft().toPoint());
-        if (m_infoDisplayMode == MediaCenter::InfoDisplayBottom) {
-            Plasma::Animator::self()->moveItem(m_infoDisplay, Plasma::Animator::SlideInMovement, infoDisplayPreferredShowingRect().topLeft().toPoint());
-        }
-        if (m_infoDisplayMode == MediaCenter::InfoDisplayFloating) {
-            Plasma::Animator::self()->moveItem(m_infoDisplay, Plasma::Animator::SlideInMovement, infoDisplayPreferredShowingRect().topLeft().toPoint());
-        }
+    if ((applet == m_control && m_slideControlAnimation->state() == Plasma::Animation::Running) ||
+        (applet == m_infoDisplay && m_slideInfoDisplayAnimation->state() == Plasma::Animation::Running) ||
+        (applet == m_playlist && m_slidePlaylistAnimation->state() == Plasma::Animation::Running)) {
+        return;
+    }
 
+    m_slidePlaylistAnimation->setProperty("movementDirection", Plasma::Animation::MoveLeft);
+    m_slideControlAnimation->setProperty("movementDirection", Plasma::Animation::MoveDown);
+    m_slidePlaylistAnimation->setProperty("distance", m_playlist->rect().right());
+    m_slidePlaylistAnimation->setTargetWidget(m_playlist);
+    m_slideControlAnimation->setProperty("distance", m_control->rect().bottom());
+    m_slideControlAnimation->setTargetWidget(m_control);
+    if (infoDisplayMode() == MediaCenter::InfoDisplayBottom) {
+        m_slideInfoDisplayAnimation->setProperty("movementDirection", Plasma::Animation::MoveUp);
+        m_slideInfoDisplayAnimation->setProperty("distance", m_infoDisplay->rect().bottom());
+        m_slideInfoDisplayAnimation->setTargetWidget(m_infoDisplay);
+    }
+    if (infoDisplayMode() == MediaCenter::InfoDisplayFloating) {
+        m_slideInfoDisplayAnimation->setProperty("movementDirection", Plasma::Animation::MoveLeft);
+        m_slideInfoDisplayAnimation->setProperty("distance", m_infoDisplay->rect().right());
+        m_slideInfoDisplayAnimation->setTargetWidget(m_infoDisplay);
+    }
+
+    if (applet == m_browser) {
+    } else if (applet == m_control || applet == m_infoDisplay) {
+        if (!m_controlVisible) {
+            m_slideControlAnimation->start();
+            m_slideInfoDisplayAnimation->start(); 
+            m_controlVisible = true;
+        }
     } else if (applet == m_playlist) {
-        Plasma::Animator::self()->moveItem(applet, Plasma::Animator::SlideInMovement, playlistPreferredShowingRect().topLeft().toPoint());
-    } else if (applet == m_infoDisplay) {
-        if (m_infoDisplayMode == MediaCenter::InfoDisplayBottom) {
-            Plasma::Animator::self()->moveItem(applet, Plasma::Animator::SlideInMovement, infoDisplayPreferredShowingRect().topLeft().toPoint());
+        if (!m_playlistVisible) {
+            layoutPlaylist(); //necessary for correct placement at startup
+            m_slidePlaylistAnimation->start();
+            m_playlistVisible = true;
         }
-        if (m_infoDisplayMode == MediaCenter::InfoDisplayFloating) {
-            Plasma::Animator::self()->moveItem(applet, Plasma::Animator::SlideInMovement, infoDisplayPreferredShowingRect().topLeft().toPoint());
+    }
+}
+
+void MediaCenter::MediaLayout::animateResizingApplet(Plasma::Applet *applet, QRectF target)
+{
+    if (applet == m_browser) {
+        if (m_resizeBrowserAnimation->state() == Plasma::Animation::Running) {
+            m_resizeBrowserAnimation->stop();
         }
-        Plasma::Animator::self()->moveItem(m_control, Plasma::Animator::SlideInMovement, controllerPreferredShowingRect().topLeft().toPoint());
+        m_resizeBrowserAnimation->setTargetWidget(m_browser);
+        m_resizeBrowserAnimation->setProperty("startGeometry", m_browser->geometry());
+        m_resizeBrowserAnimation->setProperty("targetGeometry", target);
+        m_resizeBrowserAnimation->start();
+    }
+    if (applet == m_playlist) {
+        if (m_resizePlaylistAnimation->state() == Plasma::Animation::Running) {
+            m_resizePlaylistAnimation->stop();
+        }
+        m_resizePlaylistAnimation->setTargetWidget(m_playlist);
+        m_resizePlaylistAnimation->setProperty("startGeometry", m_playlist->geometry());
+        m_resizePlaylistAnimation->setProperty("targetGeometry", target);
+        m_resizePlaylistAnimation->start();
+    }
+    if (applet == m_player) {
+        if (m_resizePlayerAnimation->state() == Plasma::Animation::Running) {
+            m_resizePlayerAnimation->stop();
+        }
+        m_resizePlayerAnimation->setTargetWidget(m_player);
+        m_resizePlayerAnimation->setProperty("startGeometry", m_player->geometry());
+        m_resizePlayerAnimation->setProperty("targetGeometry", target);
+        m_resizePlayerAnimation->start();
     }
 }
 
@@ -517,44 +603,52 @@ void MediaLayout::togglePlaylistVisible()
 {
     if (m_playlistVisible == true) {
         animateHidingApplet(m_playlist);
-        m_playlistVisible = false;
         connect (m_playlistHandler, SIGNAL(appletHideRequest(Plasma::Applet*)), this, SLOT(animateHidingApplet(Plasma::Applet*)));
         connect (m_playlistHandler, SIGNAL(appletShowRequest(Plasma::Applet*)), this, SLOT(animateShowingApplet(Plasma::Applet*)));
+        layoutBrowser();
+        return;
     } else {
         animateShowingApplet(m_playlist);
-        m_playlistVisible = true;
         disconnect (m_playlistHandler, SIGNAL(appletHideRequest(Plasma::Applet*)), this, SLOT(animateHidingApplet(Plasma::Applet*)));
         disconnect (m_playlistHandler, SIGNAL(appletShowRequest(Plasma::Applet*)), this, SLOT(animateShowingApplet(Plasma::Applet*)));
+        layoutBrowser();
+        return;
     }
-    layoutBrowser();
 }
 
 void MediaLayout::toggleControlAutohide()
 {
-    //FIXME:The whole m_controlAutohide true/false settings needs to be reworked for the whole nedialyut class
-    if (m_controlAutohide == true) {
+    if (m_controlAutohide == false) {
         animateHidingApplet(m_control);
-        animateHidingApplet(m_infoDisplay);
-        m_controlAutohide = false;
+        m_controlAutohide = true;
         connect (m_controlHandler, SIGNAL(appletHideRequest(Plasma::Applet*)), this, SLOT(animateHidingApplet(Plasma::Applet*)));
         connect (m_controlHandler, SIGNAL(appletShowRequest(Plasma::Applet*)), this, SLOT(animateShowingApplet(Plasma::Applet*)));
         connect (m_infoDisplayHandler, SIGNAL(appletHideRequest(Plasma::Applet*)), this, SLOT(animateHidingApplet(Plasma::Applet*)));
         connect (m_infoDisplayHandler, SIGNAL(appletShowRequest(Plasma::Applet*)), this, SLOT(animateShowingApplet(Plasma::Applet*)));
-    } else {
+        layoutBrowser();
+        layoutPlaylist();
+        return;
+    }
+    if (m_controlAutohide == true) {
         animateShowingApplet(m_control);
-        animateShowingApplet(m_infoDisplay);
-        m_controlAutohide = true;
+        m_controlAutohide = false;
         disconnect (m_controlHandler, SIGNAL(appletHideRequest(Plasma::Applet*)), this, SLOT(animateHidingApplet(Plasma::Applet*)));
         disconnect (m_controlHandler, SIGNAL(appletShowRequest(Plasma::Applet*)), this, SLOT(animateShowingApplet(Plasma::Applet*)));
         disconnect (m_infoDisplayHandler, SIGNAL(appletHideRequest(Plasma::Applet*)), this, SLOT(animateHidingApplet(Plasma::Applet*)));
         disconnect (m_infoDisplayHandler, SIGNAL(appletShowRequest(Plasma::Applet*)), this, SLOT(animateShowingApplet(Plasma::Applet*)));
+        layoutBrowser();
+        layoutPlaylist();
+        return;
     }
-    layoutBrowser();
-    layoutPlaylist();
 }
 
 void MediaLayout::setControlAutohide(bool set) {
-    m_controlAutohide = set;
+    if (m_controlAutohide == set) {
+        return;
+    }
+    //Since we are going to toggle now, we need to set autoHide to the opposite
+    //of the wanted setting.
+    m_controlAutohide = !set;
     toggleControlAutohide();
 }
 
@@ -566,6 +660,8 @@ void MediaLayout::setPlaylistVisible (bool set) {
     if (m_playlistVisible == set) {
         return;
     }
+    //Since we are going to toggle now, we need to set autoHide to the opposite
+    //of the wanted setting.
     m_playlistVisible = !set;
     togglePlaylistVisible();
 }
@@ -594,16 +690,12 @@ void MediaLayout::hidePlaylist()
 
 void MediaLayout::controlAutohideOn()
 {
-    if (m_controlAutohide) {
-        setControlAutohide(true);
-    }
+    setControlAutohide(true);
 }
 
 void MediaLayout::controlAutohideOff()
 {
-    if (!m_controlAutohide) {
-        setControlAutohide(false);
-    }
+    setControlAutohide(false);
 }
 
 void MediaLayout::setInfoDisplayOnly(bool set)
@@ -613,13 +705,16 @@ void MediaLayout::setInfoDisplayOnly(bool set)
         m_infoDisplay->setVisible(true);
         m_control->setVisible(false);
         controlAutohideOff();
+        disconnect (m_infoDisplayHandler, SIGNAL(appletHideRequest(Plasma::Applet*)), this, SLOT(animateHidingApplet(Plasma::Applet*)));
+        disconnect (m_infoDisplayHandler, SIGNAL(appletShowRequest(Plasma::Applet*)), this, SLOT(animateShowingApplet(Plasma::Applet*)));
+        //Just to make sure they are never connected in the homestate
     }
     if (!set) {
-        m_infoDisplay->setVisible(false);
+        m_infoDisplay->setVisible(true);
         m_control->setVisible(true);
-        controlAutohideOn();
     }
     layoutBrowser();
+    layoutPlaylist(); //Necessary for correct playlist placement on startup
 }
 
 void MediaLayout::setInfoDisplayMode(const MediaCenter::InfoDisplayMode &mode)
@@ -629,16 +724,9 @@ void MediaLayout::setInfoDisplayMode(const MediaCenter::InfoDisplayMode &mode)
     }
     m_infoDisplayMode = mode;
 
-    if (mode == MediaCenter::InfoDisplayBottom) {
-        connect (m_infoDisplayHandler, SIGNAL(appletHideRequest(Plasma::Applet*)), this, SLOT(animateHidingApplet(Plasma::Applet*)));
-        connect (m_infoDisplayHandler, SIGNAL(appletShowRequest(Plasma::Applet*)), this, SLOT(animateShowingApplet(Plasma::Applet*)));
-    }
-    if (mode == MediaCenter::InfoDisplayFloating) {
-        disconnect (m_infoDisplayHandler, SIGNAL(appletHideRequest(Plasma::Applet*)), this, SLOT(animateHidingApplet(Plasma::Applet*)));
-        disconnect (m_infoDisplayHandler, SIGNAL(appletShowRequest(Plasma::Applet*)), this, SLOT(animateShowingApplet(Plasma::Applet*)));
-    }
-
-    doCompleteLayout();
+    layoutInfoDisplay();
+    layoutPlayer();
+    layoutBrowser();
 }
 
 MediaCenter::InfoDisplayMode MediaLayout::infoDisplayMode() const
@@ -646,3 +734,11 @@ MediaCenter::InfoDisplayMode MediaLayout::infoDisplayMode() const
     return m_infoDisplayMode;
 }
 
+void MediaLayout::fadeInPlayer()
+{
+    m_player->setGeometry(m_playerNewRect);
+
+    m_fadeInPlayer->setProperty("targetOpacity", 1);
+    m_fadeInPlayer->setTargetWidget(m_player);
+    m_fadeInPlayer->start();
+}

@@ -52,6 +52,7 @@ m_animationId(0)
     setZValue(m_applet->zValue() - 1);
 
     m_handlerSvg->setCacheAllRenderedFrames(true);
+    placeHandler();
     enableBordersByPosition();
     placeHandler();
     m_handlerSvg->setImagePath("widgets/glowbar");

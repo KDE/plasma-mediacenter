@@ -130,6 +130,7 @@ private slots:
     void playNextPictureMedia();
     void playNextMusicMedia();
     void playNextVideoMedia();
+    void returnToFirstPicture();
 
 private:
     void loadConfig();

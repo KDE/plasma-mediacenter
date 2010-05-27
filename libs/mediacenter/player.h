@@ -150,6 +150,8 @@ Q_SIGNALS:
     void musicPlaybackStateChanged(const MediaCenter::PlaybackState);
     void picturePlaybackStateChanged(const MediaCenter::PlaybackState);
 
+    void lastPictureShown();
+
     /**
      * In order to have mediaobject information in the state objects
      * we need these signals. The state need the information in order

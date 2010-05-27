@@ -67,7 +67,7 @@ QList<QGraphicsWidget*> HomeState::subComponents() const
 
     m_quit->setIcon("system-shutdown");
     list << m_quit;
-    m_infoDisplay->addToLayout(m_quit, MediaCenter::ControlRight);
+    m_infoDisplay->addToLayout(m_quit, MediaCenter::RightZone);
 
     return list;
 }
@@ -89,6 +89,7 @@ void HomeState::configure()
     m_browser->clearViewModes();
     m_browser->setShowingBrowsingWidgets(false);
 
+    m_layout->setPlaylistVisible(false);
     m_layout->setInfoDisplayOnly(true);
 }
 

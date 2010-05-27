@@ -64,13 +64,17 @@ void VideoState::onExit(QEvent* event)
 
     m_lastDirectory = m_browser->directory();
 
+    if (m_player->videoPlayerPlaybackState() == MediaCenter::PlayingState) {
+        s_backgroundVideoMode = true;
+    } else {
+        s_backgroundVideoMode = false;
+    }
+
     disconnect (m_browser, SIGNAL(mediasActivated(QList<MediaCenter::Media>)), m_playlist, SLOT(appendMedia(QList<MediaCenter::Media>)));
     disconnect (m_playlist, SIGNAL(mediasAppended(QList<MediaCenter::Media>)), m_player, SLOT(enqueueVideos(QList<MediaCenter::Media>)));
     disconnect (m_playlist, SIGNAL(mediaActivated(const MediaCenter::Media&)), m_player, SLOT(playVideoMedia(MediaCenter::Media)));
     disconnect (m_browser, SIGNAL (selectedMediasChanged(QList<MediaCenter::Media>)), this, SLOT(selectedMediasChanged(QList<MediaCenter::Media>)));
-    //Disconnect the following just to make sure (they are connected in the enterBrowsingState function)
     disconnect (m_playlist, SIGNAL(mediaActivated(const MediaCenter::Media&)), this, SLOT(enterPlayingState()));
-    disconnect (m_videoPlayPause, SIGNAL(clicked()), this, SLOT(enterPlayingState()));
 }
 
 void VideoState::onEntry(QEvent* event)
@@ -92,6 +96,7 @@ void VideoState::onEntry(QEvent* event)
     connect (m_playlist, SIGNAL(mediasAppended(QList<MediaCenter::Media>)), m_player, SLOT(enqueueVideos(QList<MediaCenter::Media>)));
     connect (m_playlist, SIGNAL(mediaActivated(const MediaCenter::Media&)), m_player, SLOT(playVideoMedia(const MediaCenter::Media&)));
     connect (m_browser, SIGNAL (selectedMediasChanged(QList<MediaCenter::Media>)), this, SLOT(selectedMediasChanged(QList<MediaCenter::Media>)));
+    connect (m_playlist, SIGNAL(mediaActivated(const MediaCenter::Media&)), this, SLOT(enterPlayingState()));
 }
 
 QList<QGraphicsWidget*> VideoState::subComponents() const
@@ -100,50 +105,50 @@ QList<QGraphicsWidget*> VideoState::subComponents() const
 
     m_videoSkipBack->setIcon("media-skip-backward");
     list << m_videoSkipBack;
-    m_control->addToLayout(m_videoSkipBack, MediaCenter::ControlMiddle);
+    m_control->addToLayout(m_videoSkipBack, MediaCenter::MiddleZone);
 
     m_videoPlayPause->setIcon("media-playback-start");
     list << m_videoPlayPause;
-    m_control->addToLayout(m_videoPlayPause, MediaCenter::ControlMiddle);
+    m_control->addToLayout(m_videoPlayPause, MediaCenter::MiddleZone);
 
     m_videoStop->setIcon("media-playback-stop");
     list << m_videoStop;
-    m_control->addToLayout(m_videoStop, MediaCenter::ControlMiddle);
+    m_control->addToLayout(m_videoStop, MediaCenter::MiddleZone);
 
     m_videoSkipForward->setIcon("media-skip-forward");
     list << m_videoSkipForward;
-    m_control->addToLayout(m_videoSkipForward, MediaCenter::ControlMiddle);
+    m_control->addToLayout(m_videoSkipForward, MediaCenter::MiddleZone);
 
     m_videoSeekSlider->setRange(0, 100);
     m_videoSeekSlider->setOrientation(Qt::Horizontal);
     list << m_videoSeekSlider;
-    m_control->addToLayout(m_videoSeekSlider, MediaCenter::ControlMiddle);
+    m_control->addToLayout(m_videoSeekSlider, MediaCenter::MiddleZone);
 
     m_videoVolumeSlider->setRange(0, 100);
     m_videoVolumeSlider->setOrientation(Qt::Vertical);
     list << m_videoVolumeSlider;
-    m_control->addToLayout(m_videoVolumeSlider, MediaCenter::ControlMiddle);
+    m_control->addToLayout(m_videoVolumeSlider, MediaCenter::MiddleZone);
 
     m_videoTogglePlaylist->setIcon("view-media-playlist");
     list << m_videoTogglePlaylist;
-    m_control->addToLayout(m_videoTogglePlaylist, MediaCenter::ControlRight);
+    m_control->addToLayout(m_videoTogglePlaylist, MediaCenter::RightZone);
 
 
     list << m_currentlyPlayingLabel;
     m_currentlyPlayingLabel->setMinimumSize(230,20);
     m_currentlyPlayingLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-    m_infoDisplay->addToLayout(m_currentlyPlayingLabel, MediaCenter::ControlLeft);
+    m_infoDisplay->addToLayout(m_currentlyPlayingLabel, MediaCenter::LeftZone);
 
     m_ratingProxyWidget->setWidget(m_ratingWidget);
     m_ratingWidget->setAttribute(Qt::WA_TranslucentBackground);
     m_ratingWidget->setMaximumSize(170,35);
     list << m_ratingProxyWidget;
-    m_infoDisplay->addToLayout(m_ratingProxyWidget, MediaCenter::ControlMiddle);
+    m_infoDisplay->addToLayout(m_ratingProxyWidget, MediaCenter::MiddleZone);
 
     list << m_selectedMediasLabel;
     m_selectedMediasLabel->setMinimumSize(230,20);
     m_selectedMediasLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-    m_infoDisplay->addToLayout(m_selectedMediasLabel, MediaCenter::ControlMiddle);
+    m_infoDisplay->addToLayout(m_selectedMediasLabel, MediaCenter::MiddleZone);
 
     return list;
 }
@@ -157,15 +162,17 @@ void VideoState::configure()
         m_player->setVisible(false);
         m_playlist->setVisible(true);
         m_browser->setVisible(true);
-        m_layout->setPlaylistVisible(true);
         m_layout->setControlAutohide(false);
+        m_layout->setPlaylistVisible(true);
+
         enterBrowsingState();
    } else {
         m_player->setVisible(true);
         m_playlist->setVisible(true);
         m_browser->setVisible(false);
-        m_layout->setPlaylistVisible(false);
         m_layout->setControlAutohide(true);
+        m_layout->setPlaylistVisible(false);
+
         enterPlayingState();
     }
 
@@ -196,7 +203,7 @@ void VideoState::initConnections()
     connect (m_videoTogglePlaylist, SIGNAL(clicked()), m_layout, SLOT(togglePlaylistVisible()));
     connect (m_videoSeekSlider, SIGNAL(sliderMoved(int)), m_player, SLOT(seekVideo(int)));
     connect (m_videoStop, SIGNAL(clicked()), this, SLOT(enterBrowsingState()));
-    connect (m_videoPlayPause, SIGNAL(clicked()), m_player, SLOT(playAllVideoMedia()));
+    connect (m_videoPlayPause, SIGNAL(clicked()), this, SLOT(enterPlayingState()));
     connect (m_videoSkipForward, SIGNAL(clicked()), m_player, SLOT(skipVideoForward()));
     connect (m_videoSkipBack, SIGNAL(clicked()), m_player, SLOT(skipVideoBackward()));
     connect (m_videoVolumeSlider, SIGNAL(sliderMoved(int)), m_player, SLOT(setVolume(int)));
@@ -222,10 +229,8 @@ void VideoState::onPlaybackStateChanged(const MediaCenter::PlaybackState &state)
 
     if (state == MediaCenter::PlayingState) {
         m_videoPlayPause->setIcon("media-playback-pause");
-        s_backgroundVideoMode = true;
     } else {
         m_videoPlayPause->setIcon("media-playback-start");
-        s_backgroundVideoMode = false;
     }
 }
 
@@ -247,7 +252,6 @@ Phonon::MediaObject* VideoState::mediaObject() const
 
 void VideoState::receivedMediaObject() const
 {
-  kWarning() << "connect slider";
     if (!mediaObject()) {
         kDebug() << "Media object error in VideoState";
         return;
@@ -340,37 +344,26 @@ void VideoState::slotRatingChanged(const int rating)
 
 void VideoState::enterBrowsingState() const
 {
-    kWarning() << "Enter browsing state";
     m_player->stopVideo();
     m_layout->showBrowser();
-    m_layout->showPlaylist();
     m_layout->controlAutohideOff();
-    //(see comment in enterPlayingState function)
-    connect (m_playlist, SIGNAL(mediaActivated(const MediaCenter::Media&)), this, SLOT(enterPlayingState()));
-    connect (m_videoPlayPause, SIGNAL(clicked()), this, SLOT(enterPlayingState()));
+    m_layout->showPlaylist();
 }
 
 void VideoState::enterPlayingState() const
 {
-    kWarning() << "Enter playing state";
+    if (!s_backgroundVideoMode) {
+        m_player->playAllVideoMedia();
+    }
+
+    //This function is called every time the play/pause button is clicked
     //We only want to turn autohide on, and hide buttons when the user enters fullscreen player,
     //not when he only pauses or plays when previously paused
-
     if (m_player->videoPlayerPlaybackState() == MediaCenter::PlayingState ||
         m_player->videoPlayerPlaybackState() == MediaCenter::StoppedState) {
-        //BUG:Sometimes the player is not correctly sized. especilly when playing from
-        //the playlist the first time the videostate is entered.
         m_layout->controlAutohideOn();
         m_layout->hidePlaylist();
         m_layout->showPlayer();
-        kWarning() << "show player";
     }
-    if (m_player->videoPlayerPlaybackState() == MediaCenter::PausedState) {
-        m_layout->controlAutohideOff();
-    }
-    //To prevent the playing state to call this function again when hitting pause
-    //this would not be needed if I could call this function BEFORE playing the media (and check
-    // for the stopped blayback state but when I do that the player is not correctly sized.
-    disconnect (m_playlist, SIGNAL(mediaActivated(const MediaCenter::Media&)), this, SLOT(enterPlayingState()));
-    disconnect (m_videoPlayPause, SIGNAL(clicked()), this, SLOT(enterPlayingState()));
+    m_layout->layoutPlayer();
 }

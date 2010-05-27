@@ -25,7 +25,9 @@
 
 #include <QObject>
 #include <QRectF>
+
 #include <Plasma/Applet>
+#include <plasma/animations/animation.h>
 
 namespace Plasma {
     class Containment;
@@ -63,6 +65,7 @@ public:
      * call this function whenever setting new applets.
      */
     void invalidate();
+    void layoutPlayer(); //States need to call this sometimes
 
     bool eventFilter(QObject *o, QEvent *e);
 
@@ -113,6 +116,7 @@ private:
     bool m_showAll;
     bool m_playlistVisible;
     bool m_controlAutohide;
+    bool m_controlVisible;
     bool m_infoDisplayOnly;
 
     MediaHandler* m_playlistHandler;
@@ -121,16 +125,32 @@ private:
 
     MediaCenter::InfoDisplayMode m_infoDisplayMode;
 
+    Plasma::Animation *m_resizeBrowserAnimation;
+    Plasma::Animation *m_resizePlaylistAnimation;
+    Plasma::Animation *m_resizePlayerAnimation;
+    Plasma::Animation *m_resizeInfoDisplayAnimation;
+
+    Plasma::Animation *m_slidePlaylistAnimation;
+    Plasma::Animation *m_slideControlAnimation;
+    Plasma::Animation *m_slideInfoDisplayAnimation;
+
+    Plasma::Animation *m_fadeOutPlayer;
+    Plasma::Animation *m_fadeInPlayer;
+
+    QRectF m_playerNewRect;
+
 private:
     void doCompleteLayout();
     void layoutBrowser();
     void layoutControl();
     void layoutInfoDisplay();
     void layoutPlaylist();
-    void layoutPlayer();
+
+    void animateResizingApplet(Plasma::Applet *applet, QRectF target);
 
 private slots:
     void setEnableGlowHandler(QGraphicsItem*, bool set);
+    void fadeInPlayer();
 };
 } //ending namespace MEDIACENTER
 #endif // MEDIALAYOUT_H

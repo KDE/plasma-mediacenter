@@ -66,10 +66,9 @@ enum PlaybackState {
  */
 
 enum LayoutZone {
-    ControlLeft,
-    ControlMiddle,
-    ControlRight,
-    ControlBottom
+    LeftZone,
+    MiddleZone,
+    RightZone,
 };
 
 /**
