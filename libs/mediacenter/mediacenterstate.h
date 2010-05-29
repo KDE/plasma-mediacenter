@@ -116,6 +116,8 @@ protected:
      */
     void showBackgroundStates();
 
+
+protected:
     MediaCenter::Browser *m_browser;
     MediaCenter::Player *m_player;
     MediaCenter::PlaybackControl *m_control;
@@ -123,17 +125,7 @@ protected:
     MediaCenter::InfoDisplay *m_infoDisplay;
     MediaCenter::MediaLayout *m_layout;
 
-    static Plasma::IconWidget *s_jumpToHome;
-    static Plasma::IconWidget *s_toggleControlBarAutohide;
-
-    static Plasma::IconWidget *s_backgroundMusic;
-    static Plasma::IconWidget *s_backgroundVideo;
-    static Plasma::IconWidget *s_backgroundPicture;
-
-    static bool s_backgroundPictureMode;
-    static bool s_backgroundVideoMode;
-    static bool s_backgroundMusicMode;
-
+private:
     static MediaCenter::Mode s_currentState;
 
 protected Q_SLOTS:

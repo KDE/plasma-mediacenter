@@ -49,9 +49,10 @@ public:
     virtual ~PlaybackControl();
 
     /**
-     * Reimplement this to be able to put widgets into the applet on each state changes
+     * Reimplement this to be able to put widgets into the applet on each state changes.
+     * Call applyLayouts when finished adding components to the layout.
      */
-    virtual void addToLayout(QGraphicsWidget *widget, const MediaCenter::LayoutZone &zone) = 0;
+    virtual void addToLayout(QGraphicsWidget *component, const MediaCenter::LayoutZone &zone) = 0;
 
 Q_SIGNALS:
     /**
@@ -64,8 +65,18 @@ Q_SIGNALS:
     void toggleControlAutohide();
 
 public Q_SLOTS:
-    virtual void resetLayouts() = 0;
-    virtual void addLayouts() = 0;
+    /**
+     * This slot should be reimplemented in order to invalidate layouts
+     * and remove components from them. After this slot is called new
+     * components can be added via the addToLayout method.
+     * Call applyLayouts when finished adding components.
+     */
+    virtual void resetLayout() = 0;
+
+    /**
+     * Call this slot when the layout needs to be applied to the applet.
+     */
+    virtual void applyLayout() = 0;
 
 private:
     class PlaybackControlPrivate;

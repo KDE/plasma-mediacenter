@@ -14,6 +14,7 @@ musicstate.cpp
 homestate.cpp
 medialayout.cpp
 private/mediahandler.cpp
+private/sharedlayoutcomponentsmanager.cpp
 )
 
 kde4_add_library(mediacenterlibs SHARED ${mediacenterlibs_SRCS})

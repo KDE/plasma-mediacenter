@@ -45,18 +45,25 @@ public:
     virtual ~InfoDisplay();
 
     /**
-     * Reimplement this to be able to put widgets into the applet on each state changes
+     * Reimplement this to be able to put widgets into the applet on each state changes.
+     * Call applyLayouts when finished adding components to the layout.
      */
     virtual void addToLayout(QGraphicsWidget *widget, const MediaCenter::LayoutZone &zone) = 0;
     virtual void setMode(const MediaCenter::InfoDisplayMode &mode) = 0;
 
 public Q_SLOTS:
+    /**
+     * This slot should be reimplemented in order to invalidate layouts
+     * and remove components from them. After this slot is called new
+     * components can be added via the addToLayout method.
+     * Call applyLayouts when finished adding components.
+     */
+    virtual void resetLayout() = 0;
 
     /**
-     *Make other applets (containment actually) have access to the doLayout function of the controller
+     * Call this slot when the layout needs to be applied to the applet.
      */
-    virtual void resetLayouts() = 0;
-    virtual void addLayouts() = 0;
+    virtual void applyLayout() = 0;
 
 private:
     class InfoDisplayPrivate;

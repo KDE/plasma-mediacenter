@@ -103,7 +103,7 @@ void MediaInfoBar::slotThemeChanged()
     setMarginsFromTheme();
 }
 
-void MediaInfoBar::resetLayouts()
+void MediaInfoBar::resetLayout()
 {
     delete m_layoutTopLeft;
     delete m_layoutTopMiddle;
@@ -114,7 +114,7 @@ void MediaInfoBar::resetLayouts()
     m_layoutTopRight = new QGraphicsLinearLayout(m_layoutHorizontalTop);
 }
 
-void MediaInfoBar::addLayouts()
+void MediaInfoBar::applyLayout()
 {
     m_layoutHorizontalTop->addItem(m_layoutTopLeft);
     m_layoutHorizontalTop->addItem(m_layoutTopMiddle);

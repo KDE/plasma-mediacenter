@@ -20,6 +20,9 @@
 #define PICTUREVIEWER_H
 
 #include <QGraphicsWidget>
+#include <QPixmap>
+
+class QGraphicsSceneResizeEvent;
 
 class PictureViewer : public QGraphicsWidget
 {
@@ -36,7 +39,10 @@ public:
 
     bool isTimerActive() const;
 
-    QRectF pictureRect();
+    QRectF pictureRect() const;
+
+protected:
+    void resizeEvent(QGraphicsSceneResizeEvent *event);
 
 public Q_SLOTS:
     /**
@@ -53,14 +59,19 @@ public Q_SLOTS:
 Q_SIGNALS:
     void showFinished();
 
-private slots:
+private Q_SLOTS:
     void slotFinished();
 
 private:
-    QImage *m_picture;
+    QPixmap m_picture;
     qint64 m_showTime;
     QTimer *m_timer;
     QRectF m_pictureRect;
+    QString m_picturePath;
+    QRect m_relativePictureRect;
+
+private:
+    void adjustPixmapSize(const QSize &);
 };
 
 #endif // PICTUREVIEWER_H

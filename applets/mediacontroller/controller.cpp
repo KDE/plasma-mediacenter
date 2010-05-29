@@ -103,7 +103,7 @@ void MediaController::slotThemeChanged()
     setMarginsFromTheme();
 }
 
-void MediaController::resetLayouts()
+void MediaController::resetLayout()
 {
     delete m_layoutTopLeft;
     delete m_layoutTopMiddle;
@@ -117,7 +117,7 @@ void MediaController::resetLayouts()
     m_layoutTopMiddle->setContentsMargins(0,0,0,0);
 }
 
-void MediaController::addLayouts()
+void MediaController::applyLayout()
 {
     m_layoutHorizontalTop->addItem(m_layoutTopLeft);
     m_layoutHorizontalTop->addItem(m_layoutTopMiddle);

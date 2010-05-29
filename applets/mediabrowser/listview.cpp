@@ -79,7 +79,6 @@ void ListView::layoutItems()
         m_items[i]->setPos(x, y);
         m_items[i]->resize(width, m_items[i]->itemSizeHint().height());
         y += m_items[i]->size().height();
-        m_hoverIndicator->resize(width, m_items[i]->itemSizeHint().height());
     }
 
     if (m_hoveredItem) {

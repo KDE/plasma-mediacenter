@@ -83,6 +83,7 @@ private:
     QPixmap m_preview;
     QPixmap m_selectIcon;
     QPixmap m_blurredText;
+    QPixmap m_reflection;
     int m_hoverRating;
     int m_rating;
     Nepomuk::Resource *m_resource;

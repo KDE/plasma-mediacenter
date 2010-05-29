@@ -36,8 +36,10 @@ public:
     void init();
 
     virtual void addToLayout(QGraphicsWidget *widget, const MediaCenter::LayoutZone &zone);
-    void addLayouts();
-    void resetLayouts();
+
+public Q_SLOTS:
+    void applyLayout();
+    void resetLayout();
 
 protected:
     void resizeEvent(QGraphicsSceneResizeEvent *event);

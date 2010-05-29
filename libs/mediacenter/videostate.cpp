@@ -24,6 +24,7 @@
 #include <mediacenter/player.h>
 #include <mediacenter/infodisplay.h>
 #include <mediacenter/medialayout.h>
+#include <mediacenter/private/sharedlayoutcomponentsmanager.h>
 
 #include <nepomuk/kratingwidget.h>
 #include <Nepomuk/Resource>
@@ -43,7 +44,7 @@ VideoState::VideoState (QState *parent)
     m_videoSkipForward(new Plasma::IconWidget()),
     m_videoStop(new Plasma::IconWidget()),
     m_videoTogglePlaylist(new Plasma::IconWidget()),
-    m_selectedMediasLabel(new Plasma::IconWidget("")),
+    m_selectedMediasLabel(new Plasma::IconWidget()),
     m_currentlyPlayingLabel(new Plasma::IconWidget()),
     m_videoObject(new Phonon::MediaObject()),
     m_lastDirectory(KUrl()),
@@ -56,7 +57,8 @@ VideoState::VideoState (QState *parent)
 }
 
 VideoState::~VideoState()
-{}
+{
+}
 
 void VideoState::onExit(QEvent* event)
 {
@@ -65,9 +67,9 @@ void VideoState::onExit(QEvent* event)
     m_lastDirectory = m_browser->directory();
 
     if (m_player->videoPlayerPlaybackState() == MediaCenter::PlayingState) {
-        s_backgroundVideoMode = true;
+        SharedLayoutComponentsManager::self()->setBackgroundVideoMode(true);
     } else {
-        s_backgroundVideoMode = false;
+        SharedLayoutComponentsManager::self()->setBackgroundVideoMode(false);;
     }
 
     disconnect (m_browser, SIGNAL(mediasActivated(QList<MediaCenter::Media>)), m_playlist, SLOT(appendMedia(QList<MediaCenter::Media>)));
@@ -85,7 +87,7 @@ void VideoState::onEntry(QEvent* event)
 
     showBackgroundStates();
     //Do not show the current state's background state icon
-    s_backgroundVideo->setVisible(false);
+    SharedLayoutComponentsManager::self()->backgroundVideoWidget()->setVisible(false);
 
     if (m_lastDirectory.hasPath()) {
          m_browser->openDirectory(m_lastDirectory);
@@ -352,7 +354,7 @@ void VideoState::enterBrowsingState() const
 
 void VideoState::enterPlayingState() const
 {
-    if (!s_backgroundVideoMode) {
+    if (!SharedLayoutComponentsManager::self()->isBackgroundVideoMode()) {
         m_player->playAllVideoMedia();
     }
 

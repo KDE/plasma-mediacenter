@@ -47,6 +47,7 @@
 
 MediaPlayer::MediaPlayer(QObject *parent, const QVariantList &args)
     : MediaCenter::Player(parent, args),
+      m_hideTimer(new QTimer(this)),
       m_ticking(false),
       m_raised(false),
       m_fullScreen(false),
@@ -83,7 +84,7 @@ void MediaPlayer::createConfigurationInterface(KConfigDialog *parent)
     parent->addPage(widget, i18n("Player settings"), "multimedia-player");
 
     ui.slideshowSpinBox->setValue(m_sshowTime);
-    connect (parent, SIGNAL(accepted()), this, SLOT(acceptConfiguration()));
+    connect(parent, SIGNAL(accepted()), this, SLOT(acceptConfiguration()));
 }
 
 void MediaPlayer::acceptConfiguration()
@@ -403,6 +404,7 @@ void MediaPlayer::keyPressEvent(QKeyEvent *event)
 
     if (event->key() != Qt::Key_V) {
         SetControlsVisible(true);
+#warning "Implement this!"
         m_hideTimer->start(2000);
     }
 }

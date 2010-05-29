@@ -75,12 +75,10 @@ void GridView::layoutItems()
          } else {
            x += m_items[i]->size().width();
          }
-
-         m_hoverIndicator->resize(m_items[i]->size()); // TODO: no need to iterate this
     }
 
     if (m_hoveredItem) {
-        m_hoverIndicator->setPos(m_hoveredItem->pos());
+        m_hoverIndicator->resize(m_hoveredItem->size());
     }
 }
 

@@ -27,10 +27,11 @@
 #include <KDebug>
 
 PictureViewer::PictureViewer(QGraphicsItem *parent) : QGraphicsWidget(parent),
-m_picture(0),
+m_picture(QPixmap()),
 m_showTime(3),
 m_pictureRect(QRectF()),
-m_timer(new QTimer(this))
+m_timer(new QTimer(this)),
+m_picturePath(QString())
 {
     m_timer->setSingleShot(true);
     connect (m_timer, SIGNAL(timeout()), this, SLOT(slotFinished()));
@@ -45,14 +46,61 @@ void PictureViewer::loadPicture(const QString &path)
         m_timer->stop();
     }
 
+    if (m_picturePath == path) {
+        return;
+    }
+
     MediaCenter::MediaType type = MediaCenter::getType(path);
     if (type != MediaCenter::Picture) {
         return;
     }
-    delete m_picture;
-    m_picture = 0;
-    m_picture = new QImage(path);
+    m_picturePath = path;
+    m_picture = QPixmap(m_picturePath);
+    m_pictureRect = QRectF(0,0, m_picture.width(), m_picture.height());
+
+    adjustPixmapSize(size().toSize());
     update();
+}
+
+void PictureViewer::resizeEvent(QGraphicsSceneResizeEvent* event)
+{
+    QGraphicsWidget::resizeEvent(event);
+    kDebug() << "resized to size" << size().toSize();
+    adjustPixmapSize(size().toSize());
+}
+
+void PictureViewer::adjustPixmapSize(const QSize &s)
+{
+    if (s.isNull()) {
+        return;
+    }
+    QPixmap picture = QPixmap(m_picturePath);
+    // if the original pixmap fits the widget (aka is smaller than needed)
+    // then we shouldn't change its size. We only want to calculate the needed
+    // rect
+    if (picture.width() < s.width() && picture.height() < s.height()) {
+        QRect rect;
+        rect.setX((s.width() - picture.width()) / 2.0);
+        rect.setY((s.height() - picture.height()) / 2.0);
+        rect.setWidth(picture.width());
+        rect.setHeight(picture.height());
+        m_relativePictureRect = rect;
+
+        m_picture = picture;
+        return;
+    }
+
+    // the image is bigger than the contents rect
+    picture = picture.scaled(s, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+    m_picture = picture;
+
+    QRect rect;
+    rect.setX((s.width() - m_picture.width()) / 2.0);
+    rect.setY((s.height() - m_picture.height()) / 2.0);
+    rect.setWidth(m_picture.width());
+    rect.setHeight(m_picture.height());
+    m_relativePictureRect = rect;
 }
 
 void PictureViewer::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -61,22 +109,12 @@ void PictureViewer::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
 
     painter->fillRect(option->rect, Qt::black);
 
-    if (!m_picture) {
+    if (m_picture.isNull()) {
+        kDebug() << "null pixmap; returning from paint";
         return;
     }
-    QImage picture = *m_picture;
-    // the image is bigger than the contents rect
-    if (m_picture->height() > (int)option->rect.height() && m_picture->width() > (int)option->rect.width()) {
-        picture = m_picture->scaled(option->rect.size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    }
 
-    QRectF rect;
-    rect.setX((option->rect.width() - picture.width()) / 2.0);
-    rect.setY((option->rect.height() - picture.height()) / 2.0);
-    rect.setWidth(picture.width());
-    rect.setHeight(picture.height());
-    painter->drawImage(rect, picture);
-    m_pictureRect = QRectF(0,0, m_picture->width(), m_picture->height());
+    painter->drawPixmap(m_relativePictureRect.topLeft(), m_picture);
 }
 
 void PictureViewer::setShowTime(qint64 time)
@@ -107,15 +145,13 @@ void PictureViewer::clearImage()
         m_timer->stop();
     }
 
-    delete m_picture;
-    m_picture = 0;
+    m_picture = QPixmap();
     update();
 }
 
 void PictureViewer::slotFinished()
 {
-    delete m_picture;
-    m_picture = 0;
+    m_picture = QPixmap();
     update();
     emit showFinished();
 }
@@ -125,7 +161,7 @@ bool PictureViewer::isTimerActive() const
     return m_timer->isActive();
 }
 
-QRectF PictureViewer::pictureRect()
+QRectF PictureViewer::pictureRect() const
 {
     return m_pictureRect;
 }

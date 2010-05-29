@@ -25,21 +25,10 @@
 #include <mediacenter/player.h>
 #include <mediacenter/infodisplay.h>
 #include <mediacenter/medialayout.h>
+#include <mediacenter/private/sharedlayoutcomponentsmanager.h>
 
 
 using namespace MediaCenter;
-
-//Static variables initialization
-Plasma::IconWidget *MediaCenterState::s_jumpToHome = new Plasma::IconWidget();
-Plasma::IconWidget *MediaCenterState::s_toggleControlBarAutohide = new Plasma::IconWidget();
-
-Plasma::IconWidget *MediaCenterState::s_backgroundMusic = new Plasma::IconWidget();
-Plasma::IconWidget *MediaCenterState::s_backgroundPicture = new Plasma::IconWidget();
-Plasma::IconWidget *MediaCenterState::s_backgroundVideo = new Plasma::IconWidget();
-
-bool MediaCenterState::s_backgroundPictureMode = false;
-bool MediaCenterState::s_backgroundVideoMode = false;
-bool MediaCenterState::s_backgroundMusicMode = false;
 
 MediaCenter::Mode MediaCenterState::s_currentState = HomeMode;
 
@@ -71,51 +60,46 @@ QList<QGraphicsWidget*> MediaCenterState::mainSubComponents() const
 {
     QList<QGraphicsWidget*> list;
 
-    s_jumpToHome->setIcon("user-home");
-    list << s_jumpToHome;
-    m_control->addToLayout(s_jumpToHome, MediaCenter::LeftZone);
+    list << SharedLayoutComponentsManager::self()->homeWidget();
+    m_control->addToLayout(SharedLayoutComponentsManager::self()->homeWidget(), MediaCenter::LeftZone);
 
-    s_backgroundVideo->setIcon("folder-video");
-    s_backgroundVideo->setVisible(false);
-    list << s_backgroundVideo;
+    SharedLayoutComponentsManager::self()->backgroundVideoWidget()->setVisible(false);
+    list << SharedLayoutComponentsManager::self()->backgroundVideoWidget();
 
-    s_backgroundPicture->setIcon("folder-image");
-    s_backgroundPicture->setVisible(false);
-    list << s_backgroundPicture;
+    SharedLayoutComponentsManager::self()->backgroundPictureWidget()->setVisible(false);
+    list << SharedLayoutComponentsManager::self()->backgroundPictureWidget();
 
-    s_backgroundMusic->setIcon("folder-sound");
-    s_backgroundMusic->setVisible(false);
-    list << s_backgroundMusic;
+    SharedLayoutComponentsManager::self()->backgroundMusicWidget()->setVisible(false);
+    list << SharedLayoutComponentsManager::self()->backgroundMusicWidget();
 
     if (s_currentState == MediaCenter::HomeMode) {
-        m_infoDisplay->addToLayout(s_backgroundVideo, MediaCenter::LeftZone);
-        m_infoDisplay->addToLayout(s_backgroundPicture, MediaCenter::LeftZone);
-        m_infoDisplay->addToLayout(s_backgroundMusic, MediaCenter::LeftZone);
+        m_infoDisplay->addToLayout(SharedLayoutComponentsManager::self()->backgroundVideoWidget(), MediaCenter::LeftZone);
+        m_infoDisplay->addToLayout(SharedLayoutComponentsManager::self()->backgroundPictureWidget(), MediaCenter::LeftZone);
+        m_infoDisplay->addToLayout(SharedLayoutComponentsManager::self()->backgroundMusicWidget(), MediaCenter::LeftZone);
     } else {
-        m_control->addToLayout(s_backgroundVideo, MediaCenter::LeftZone);
-        m_control->addToLayout(s_backgroundPicture, MediaCenter::LeftZone);
-        m_control->addToLayout(s_backgroundMusic, MediaCenter::LeftZone);
+        m_control->addToLayout(SharedLayoutComponentsManager::self()->backgroundVideoWidget(), MediaCenter::LeftZone);
+        m_control->addToLayout(SharedLayoutComponentsManager::self()->backgroundPictureWidget(), MediaCenter::LeftZone);
+        m_control->addToLayout(SharedLayoutComponentsManager::self()->backgroundMusicWidget(), MediaCenter::LeftZone);
     }
 
-    s_toggleControlBarAutohide->setIcon("mail-attachment");
-    list << s_toggleControlBarAutohide;
-    m_control->addToLayout(s_toggleControlBarAutohide, MediaCenter::RightZone);
+    list << SharedLayoutComponentsManager::self()->barAutohideControlWidget();
+    m_control->addToLayout(SharedLayoutComponentsManager::self()->barAutohideControlWidget(), MediaCenter::RightZone);
 
     return list;
 }
 
 void MediaCenterState::initConnections()
 {
-    connect (s_toggleControlBarAutohide, SIGNAL(clicked()), m_layout, SLOT(toggleControlAutohide()));
-    connect (s_jumpToHome, SIGNAL(clicked()), this, SIGNAL(layoutToHomeState()));
+    connect (SharedLayoutComponentsManager::self()->barAutohideControlWidget(), SIGNAL(clicked()), m_layout, SLOT(toggleControlAutohide()));
+    connect (SharedLayoutComponentsManager::self()->homeWidget(), SIGNAL(clicked()), this, SIGNAL(layoutToHomeState()));
 
     connect (m_browser, SIGNAL(pictureDataEngine()), this, SIGNAL(layoutToPictureState()));
     connect (m_browser, SIGNAL(videoDataEngine()), this, SIGNAL(layoutToVideoState()));
     connect (m_browser, SIGNAL(musicDataEngine()), this, SIGNAL(layoutToMusicState()));
 
-    connect (s_backgroundMusic, SIGNAL (clicked()), this, SIGNAL(layoutToMusicState()));
-    connect (s_backgroundVideo, SIGNAL (clicked()), this, SIGNAL(layoutToVideoState()));
-    connect (s_backgroundPicture, SIGNAL (clicked()), this, SIGNAL(layoutToPictureState()));
+    connect (SharedLayoutComponentsManager::self()->backgroundMusicWidget(), SIGNAL (clicked()), this, SIGNAL(layoutToMusicState()));
+    connect (SharedLayoutComponentsManager::self()->backgroundVideoWidget(), SIGNAL (clicked()), this, SIGNAL(layoutToVideoState()));
+    connect (SharedLayoutComponentsManager::self()->backgroundPictureWidget(), SIGNAL (clicked()), this, SIGNAL(layoutToPictureState()));
 }
 
 void MediaCenterState::configure()
@@ -154,19 +138,19 @@ void MediaCenterState::init(MediaCenter::MediaLayout* &layout, QList< Plasma::Ap
 void MediaCenter::MediaCenterState::showBackgroundStates()
 {
     //Hide all background icons
-    s_backgroundMusic->setVisible(false);
-    s_backgroundPicture->setVisible(false);
-    s_backgroundVideo->setVisible(false);
+    SharedLayoutComponentsManager::self()->backgroundMusicWidget()->setVisible(false);
+    SharedLayoutComponentsManager::self()->backgroundPictureWidget()->setVisible(false);
+    SharedLayoutComponentsManager::self()->backgroundVideoWidget()->setVisible(false);
 
     //Unhide icons for the active background states
-    if (s_backgroundMusicMode) {
-        s_backgroundMusic->setVisible(true);
+    if (SharedLayoutComponentsManager::self()->isBackgroundMusicMode()) {
+        SharedLayoutComponentsManager::self()->backgroundMusicWidget()->setVisible(true);
     }
-    if (s_backgroundPictureMode) {
-        s_backgroundPicture->setVisible(true);
+    if (SharedLayoutComponentsManager::self()->isBackgroundPictureMode()) {
+        SharedLayoutComponentsManager::self()->backgroundPictureWidget()->setVisible(true);
     }
-    if (s_backgroundVideoMode) {
-        s_backgroundVideo->setVisible(true);
+    if (SharedLayoutComponentsManager::self()->isBackgroundVideoMode()) {
+        SharedLayoutComponentsManager::self()->backgroundVideoWidget()->setVisible(true);
     }
 }
 

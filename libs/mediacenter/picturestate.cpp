@@ -25,6 +25,7 @@
 #include <mediacenter/player.h>
 #include <mediacenter/infodisplay.h>
 #include <mediacenter/medialayout.h>
+#include <mediacenter/private/sharedlayoutcomponentsmanager.h>
 
 #include <nepomuk/kratingwidget.h>
 #include <Nepomuk/Resource>
@@ -56,7 +57,8 @@ PictureState::PictureState (QState *parent)
 }
 
 PictureState::~PictureState()
-{}
+{
+}
 
 void PictureState::onExit(QEvent *event)
 {
@@ -71,11 +73,11 @@ void PictureState::onExit(QEvent *event)
 
     if (m_player->picturePlayerPlaybackState() == MediaCenter::PausedState ||
         m_player->picturePlayerPlaybackState() == MediaCenter::PlayingState) {
-        s_backgroundPictureMode = true;
+        SharedLayoutComponentsManager::self()->setBackgroundPictureMode(true);
     }
     if (m_player->picturePlayerPlaybackState() == MediaCenter::StoppedState ||
         m_player->picturePlayerPlaybackState() == MediaCenter::SinglePictureState) {
-        s_backgroundPictureMode = false;
+        SharedLayoutComponentsManager::self()->setBackgroundPictureMode(false);
     }
 
     enterBrowsingState();
@@ -93,7 +95,7 @@ void PictureState::onEntry(QEvent *event)
     emit state(MediaCenter::PictureMode);
 
     showBackgroundStates();
-    s_backgroundPicture->setVisible(false);
+    SharedLayoutComponentsManager::self()->backgroundPictureWidget()->setVisible(false);
 
     if (m_lastDirectory.hasPath()) {
         m_browser->openDirectory(m_lastDirectory);
@@ -105,10 +107,10 @@ void PictureState::onEntry(QEvent *event)
     connect (m_browser, SIGNAL(mediaActivated(const MediaCenter::Media&)), m_layout, SLOT(showPlayer()));
     connect (m_browser, SIGNAL (selectedMediasChanged(QList<MediaCenter::Media>)), this, SLOT(selectedMediasChanged(QList<MediaCenter::Media>)));
 
-    if (s_backgroundPictureMode) {
+    if (SharedLayoutComponentsManager::self()->isBackgroundPictureMode()) {
         enterSlideshowState();
     }
-    if (!s_backgroundPictureMode) {
+    if (!SharedLayoutComponentsManager::self()->isBackgroundPictureMode()) {
         enterBrowsingState();
     }
 }
@@ -219,7 +221,7 @@ void PictureState::enterBrowsingState()
     m_startSlideshow->setVisible(true);
     m_switchDisplayMode->setVisible(false);
     m_infoDisplay->setVisible(true);
-    s_toggleControlBarAutohide->setVisible(true);
+    SharedLayoutComponentsManager::self()->barAutohideControlWidget()->setVisible(true);
 
     m_layout->showBrowser();
     m_layout->controlAutohideOff();
@@ -241,7 +243,7 @@ void MediaCenter::PictureState::enterSlideshowState()
     m_player->setSlideshowInterval(m_slideshowTimeSlider->value()); //This needs to be set before any playAll
 
     if (m_layout->infoDisplayMode() == MediaCenter::InfoDisplayBottom &&
-        !s_backgroundPictureMode) {
+        !SharedLayoutComponentsManager::self()->isBackgroundPictureMode()) {
          m_player->playAllPictureMedia();
          //If I playAll at end of this function the player does not resize 
          //after clicking play in the browser (=infodisplaybottom mode)
@@ -269,7 +271,7 @@ void MediaCenter::PictureState::enterSlideshowState()
     updateInfoDisplay();
 
     if (m_layout->infoDisplayMode() == MediaCenter::InfoDisplayFloating &&
-        !s_backgroundPictureMode) {
+        !SharedLayoutComponentsManager::self()->isBackgroundPictureMode()) {
       m_player->playAllPictureMedia();
       //This playAll is needed to resize player when starting slideshow from floating mode
       //If I put it at the beginning of this function, the player does not resize correctly
@@ -283,7 +285,7 @@ void PictureState::enterSinglePictureFullscreenState()
     m_nextPicture->setVisible(true);
     m_previousPicture->setVisible(true);
     m_switchDisplayMode->setVisible(true);
-    s_toggleControlBarAutohide->setVisible(true);
+    SharedLayoutComponentsManager::self()->barAutohideControlWidget()->setVisible(true);
 
     m_layout->setInfoDisplayMode(MediaCenter::InfoDisplayBottom);
     m_infoDisplay->setMode(MediaCenter::InfoDisplayBottom);
@@ -427,7 +429,7 @@ void PictureState::toggleFloatingState()
 
 void PictureState::enterPictureFloatingState()
 {
-    s_toggleControlBarAutohide->setVisible(false);
+    SharedLayoutComponentsManager::self()->barAutohideControlWidget()->setVisible(false);
 
     m_infoDisplay->setMode(MediaCenter::InfoDisplayFloating);
     m_layout->setInfoDisplayMode(MediaCenter::InfoDisplayFloating);

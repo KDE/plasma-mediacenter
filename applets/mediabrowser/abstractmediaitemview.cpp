@@ -206,6 +206,11 @@ void AbstractMediaItemView::updateHoveredItem(ViewItem *item)
     m_hoverIndicator->setSelected(m_hoveredItem->isSelected());
     m_hoverIndicator->m_nepomuk = item->m_nepomuk;
     m_hoverIndicator->show();
+    
+    if (m_hoveredItem->size() != m_hoverIndicator->size()) {
+        m_hoverIndicator->resize(m_hoveredItem->size());
+    }
+    
     Plasma::Animator::self()->moveItem(m_hoverIndicator, Plasma::Animator::SlideInMovement, m_hoveredItem->pos().toPoint());
 }
 

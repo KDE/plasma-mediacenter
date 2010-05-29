@@ -245,17 +245,22 @@ void ViewItem::drawReflection(QPainter *painter, const QRect &reflectionRect, co
 
 void ViewItem::drawReflection(QPainter *painter, const QRect &reflectionRect, const QPixmap &pm)
 {
+    if (!m_reflection.isNull()) {
+        painter->drawPixmap(reflectionRect, m_reflection);
+        return;
+    }
+
     const int decorationWidth = m_option.decorationSize.width();
     const int decorationHeight = decorationWidth;
 
-    QPixmap pixmap(reflectionRect.width(), reflectionRect.height());
-    pixmap.fill(Qt::transparent);
+    m_reflection = QPixmap(reflectionRect.width(), reflectionRect.height());
+    m_reflection.fill(Qt::transparent);
 
     QLinearGradient grad(reflectionRect.width() / 2, 0, reflectionRect.width() / 2, reflectionRect.height());
     grad.setColorAt(0, Qt::black);
     grad.setColorAt(1, Qt::transparent);
 
-    QPainter p(&pixmap);
+    QPainter p(&m_reflection);
     p.fillRect(0, 0, reflectionRect.width(), reflectionRect.height(), grad);
     p.scale(1, -1);
     p.setCompositionMode(QPainter::CompositionMode_SourceIn);
@@ -263,7 +268,7 @@ void ViewItem::drawReflection(QPainter *painter, const QRect &reflectionRect, co
     p.drawPixmap(0, -decorationHeight, decorationWidth, decorationHeight, pm);
 
     p.end();
-    painter->drawPixmap(reflectionRect, pixmap);
+    painter->drawPixmap(reflectionRect, m_reflection);
 }
 
 void ViewItem::askForFilePreview()
@@ -283,6 +288,8 @@ void ViewItem::askForFilePreview()
 void ViewItem::slotGotPreview(const KFileItem &item, const QPixmap &preview)
 {
     m_preview = preview;
+    // we need to invalidate the pixmap when the preview gets loaded
+    m_reflection = QPixmap();
     update();
 }
 
@@ -298,7 +305,9 @@ QSize ViewItem::itemSizeHint() const
         int width = m_option.decorationSize.width() + m_option.fontMetrics.width(m_index.data().toString());
 
         return QSize(width, height);
-    } else if (m_option.decorationPosition == QStyleOptionViewItem::Top) {
+    }
+
+    if (m_option.decorationPosition == QStyleOptionViewItem::Top) {
         int width = m_option.decorationSize.width();
         int height = m_option.decorationSize.width();
         int reflectionHeight = height * 0.33;
@@ -316,8 +325,8 @@ QSize ViewItem::itemSizeHint() const
 QSize ViewItem::textRectSize() const
 {
     if (m_option.decorationPosition == QStyleOptionViewItem::Top) {
-        int width = contentsRect().width();
-        int height = m_option.decorationSize.width() * 1.7;
+        const int width = contentsRect().width();
+        const int height = m_option.decorationSize.width() * 1.7;
         QRect textRect(0, 0, width, width - height);
         QRect bounding = m_option.fontMetrics.boundingRect(textRect, m_option.decorationAlignment, m_index.data().toString());
         bounding.setWidth(width);

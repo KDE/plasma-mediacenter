@@ -25,6 +25,7 @@
 #include <mediacenter/player.h>
 #include <mediacenter/infodisplay.h>
 #include <mediacenter/medialayout.h>
+#include <mediacenter/private/sharedlayoutcomponentsmanager.h>
 
 #include <nepomuk/kratingwidget.h>
 #include <Nepomuk/Resource>
@@ -48,7 +49,7 @@ MusicState::MusicState (QState *parent)
     m_musicSkipForward(new Plasma::IconWidget()),
     m_musicStop(new Plasma::IconWidget()),
     m_musicTogglePlaylist(new Plasma::IconWidget()),
-    m_selectedMediasLabel(new Plasma::IconWidget("")),
+    m_selectedMediasLabel(new Plasma::IconWidget()),
     m_currentlyPlayingLabel(new Plasma::IconWidget()),
     m_musicObject(new Phonon::MediaObject()),
     m_lastDirectory(KUrl()),
@@ -61,7 +62,8 @@ MusicState::MusicState (QState *parent)
 }
 
 MusicState::~MusicState()
-{}
+{
+}
 
 void MusicState::onExit(QEvent* event)
 {
@@ -70,11 +72,11 @@ void MusicState::onExit(QEvent* event)
     m_lastDirectory = m_browser->directory();
 
     if (m_player->musicPlayerPlaybackState() == MediaCenter::PlayingState) {
-        s_backgroundMusicMode = true;
+        SharedLayoutComponentsManager::self()->setBackgroundMusicMode(true);
     }
     if (m_player->musicPlayerPlaybackState() == MediaCenter::StoppedState||
         m_player->musicPlayerPlaybackState() == MediaCenter::PausedState) {
-        s_backgroundMusicMode = false;
+        SharedLayoutComponentsManager::self()->setBackgroundMusicMode(false);
     }
 
     disconnect (m_browser, SIGNAL(mediasActivated(QList<MediaCenter::Media>)), m_playlist, SLOT(appendMedia(QList<MediaCenter::Media>)));
@@ -90,7 +92,7 @@ void MusicState::onEntry(QEvent* event)
     emit state(MediaCenter::MusicMode);
 
     showBackgroundStates();
-    s_backgroundMusic->setVisible(false);
+    SharedLayoutComponentsManager::self()->backgroundMusicWidget()->setVisible(false);
 
     if (m_lastDirectory.hasPath()) {
         m_browser->openDirectory(m_lastDirectory);

@@ -30,11 +30,11 @@ namespace Phonon {
 namespace MediaCenter {
 
 enum MediaType {
-    Invalid = 0,
-    Picture,
-    Video,
-    Audio,
-    OpticalDisc
+    Invalid = 0x0,
+    Picture = 0x1,
+    Video = 0x2,
+    Audio = 0x4,
+    OpticalDisc = 0x8
 };
 Q_DECLARE_FLAGS(MediaTypes, MediaType)
 

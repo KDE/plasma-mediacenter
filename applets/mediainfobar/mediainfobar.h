@@ -36,9 +36,12 @@ public:
     void init();
 
     void addToLayout(QGraphicsWidget *widget, const MediaCenter::LayoutZone &zone);
-    void addLayouts();
-    void resetLayouts();
+
     void setMode(const MediaCenter::InfoDisplayMode &mode);
+
+public Q_SLOTS:
+    void applyLayout();
+    void resetLayout();
 
 signals:
     void toggleInfoBarAutohide();

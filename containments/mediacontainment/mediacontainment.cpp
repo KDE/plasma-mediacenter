@@ -67,15 +67,16 @@ m_layout(new MediaCenter::MediaLayout(this))
 }
 
 MediaContainment::~MediaContainment()
-{}
+{
+}
 
 void MediaContainment::startStateMachine()
 {
     //Prepare StateMachine
-    QStateMachine *machine = new QStateMachine();
+    QStateMachine *machine = new QStateMachine(this);
 
     //Set up all possible states
-    m_mediaCenterState = new MediaCenter::MediaCenterState();
+    m_mediaCenterState = new MediaCenter::MediaCenterState(machine);
     m_homeState = new MediaCenter::HomeState(machine);
     m_videoState = new MediaCenter::VideoState(machine);
     m_pictureState = new MediaCenter::PictureState(machine);
@@ -96,10 +97,10 @@ void MediaContainment::startStateMachine()
     m_homeState->addTransition(m_mediaCenterState, SIGNAL(layoutToMusicState()), m_musicState);
 
     //I use these signals to tell the mediacontainment to do an actual state switch
-    connect (m_videoState, SIGNAL(state(const MediaCenter::Mode)), this, SLOT(switchState(const MediaCenter::Mode)));
-    connect (m_pictureState, SIGNAL(state(const MediaCenter::Mode)), this, SLOT(switchState(const MediaCenter::Mode)));
-    connect (m_musicState, SIGNAL(state(const MediaCenter::Mode)), this, SLOT(switchState(const MediaCenter::Mode)));
-    connect (m_homeState, SIGNAL(state(const MediaCenter::Mode)), this, SLOT(switchState(const MediaCenter::Mode)));
+    connect(m_videoState, SIGNAL(state(const MediaCenter::Mode)), this, SLOT(switchState(const MediaCenter::Mode)));
+    connect(m_pictureState, SIGNAL(state(const MediaCenter::Mode)), this, SLOT(switchState(const MediaCenter::Mode)));
+    connect(m_musicState, SIGNAL(state(const MediaCenter::Mode)), this, SLOT(switchState(const MediaCenter::Mode)));
+    connect(m_homeState, SIGNAL(state(const MediaCenter::Mode)), this, SLOT(switchState(const MediaCenter::Mode)));
 
     //Initialize pointers for each state
     m_mediaCenterState->init(m_layout,m_currentUIComponents);
@@ -251,8 +252,8 @@ void MediaContainment::switchState(const MediaCenter::Mode &newState)
     }
 
     //This creates new layouts in the controller
-    m_control->resetLayouts();
-    m_infoDisplay->resetLayouts();
+    m_control->resetLayout();
+    m_infoDisplay->resetLayout();
 
     setCurrentState(newState);
     QList<QGraphicsWidget*> list;
@@ -285,8 +286,8 @@ void MediaContainment::switchState(const MediaCenter::Mode &newState)
     }
 
     //This adds the layouts to the controller
-    m_control->addLayouts();
-    m_infoDisplay->addLayouts();
+    m_control->applyLayout();
+    m_infoDisplay->applyLayout();
 
     //Update the currently visible subComponents
     m_visibleSubComponents = list;

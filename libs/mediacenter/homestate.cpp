@@ -25,6 +25,7 @@
 #include <mediacenter/player.h>
 #include <mediacenter/infodisplay.h>
 #include <mediacenter/medialayout.h>
+#include <mediacenter/private/sharedlayoutcomponentsmanager.h>
 
 #include <KApplication>
 
@@ -37,14 +38,15 @@ HomeState::HomeState (QState *parent)
 {}
 
 HomeState::~HomeState()
-{}
+{
+}
 
 void HomeState::onExit(QEvent* event)
 {
     Q_UNUSED(event);
 
-    s_toggleControlBarAutohide->setVisible(true);
-    s_jumpToHome->setVisible(true);
+    SharedLayoutComponentsManager::self()->barAutohideControlWidget()->setVisible(true);
+    SharedLayoutComponentsManager::self()->homeWidget()->setVisible(true);
 
     m_layout->setInfoDisplayOnly(false);
 }
@@ -57,8 +59,8 @@ void HomeState::onEntry(QEvent* event)
 
     showBackgroundStates();
 
-    s_toggleControlBarAutohide->setVisible(false);
-    s_jumpToHome->setVisible(false);
+    SharedLayoutComponentsManager::self()->barAutohideControlWidget()->setVisible(false);
+    SharedLayoutComponentsManager::self()->homeWidget()->setVisible(false);
 }
 
 QList<QGraphicsWidget*> HomeState::subComponents() const
@@ -80,9 +82,9 @@ void HomeState::configure()
     m_player->setVisible(false);
     m_playlist->setVisible(false);
     m_control->setVisible(false);
-    if (s_backgroundMusicMode ||
-        s_backgroundVideoMode ||
-        s_backgroundPictureMode) {
+    if (SharedLayoutComponentsManager::self()->isBackgroundMusicMode() ||
+        SharedLayoutComponentsManager::self()->isBackgroundVideoMode() ||
+        SharedLayoutComponentsManager::self()->isBackgroundPictureMode()) {
         m_control->setVisible(true);
     }
 
