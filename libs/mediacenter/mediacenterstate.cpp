@@ -30,8 +30,6 @@
 
 using namespace MediaCenter;
 
-MediaCenter::Mode MediaCenterState::s_currentState = HomeMode;
-
 MediaCenterState::MediaCenterState (QState *parent) : QState(parent),
     m_browser(0),
     m_player(0),
@@ -72,7 +70,7 @@ QList<QGraphicsWidget*> MediaCenterState::mainSubComponents() const
     SharedLayoutComponentsManager::self()->backgroundMusicWidget()->setVisible(false);
     list << SharedLayoutComponentsManager::self()->backgroundMusicWidget();
 
-    if (s_currentState == MediaCenter::HomeMode) {
+    if (SharedLayoutComponentsManager::self()->currentMode() == MediaCenter::HomeMode) {
         m_infoDisplay->addToLayout(SharedLayoutComponentsManager::self()->backgroundVideoWidget(), MediaCenter::LeftZone);
         m_infoDisplay->addToLayout(SharedLayoutComponentsManager::self()->backgroundPictureWidget(), MediaCenter::LeftZone);
         m_infoDisplay->addToLayout(SharedLayoutComponentsManager::self()->backgroundMusicWidget(), MediaCenter::LeftZone);
@@ -161,6 +159,6 @@ void MediaCenter::MediaCenterState::onPlaybackStateChanged(const MediaCenter::Pl
 
 void MediaCenterState::slotSetCurrentState(const MediaCenter::Mode& mode)
 {
-    s_currentState = mode;
+    SharedLayoutComponentsManager::self()->setCurrentMode(mode);
 }
 

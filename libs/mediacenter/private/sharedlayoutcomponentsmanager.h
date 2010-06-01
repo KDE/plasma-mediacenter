@@ -23,6 +23,8 @@
 #include <QtCore/QObject>
 #include <QtCore/QWeakPointer>
 
+#include <mediacenter/mediacenterstate.h>
+
 namespace Plasma {
     class IconWidget;
 }
@@ -40,6 +42,9 @@ public:
     Plasma::IconWidget* backgroundMusicWidget() const;
     Plasma::IconWidget* backgroundVideoWidget() const;
     Plasma::IconWidget* backgroundPictureWidget() const;
+
+    void setCurrentMode(MediaCenter::Mode);
+    MediaCenter::Mode currentMode() const;
 
     bool isBackgroundPictureMode() const;
     bool isBackgroundVideoMode() const;
@@ -60,9 +65,11 @@ private:
     QWeakPointer<Plasma::IconWidget> m_backgroundVideo;
     QWeakPointer<Plasma::IconWidget> m_backgroundPicture;
 
-    bool m_backgroundPictureMode;
-    bool m_backgroundVideoMode;
-    bool m_backgroundMusicMode;
+    MediaCenter::Mode m_currentMode;
+
+    bool m_backgroundPictureMode : 1;
+    bool m_backgroundVideoMode : 1;
+    bool m_backgroundMusicMode : 1;
 };
 
 #endif // SHAREDLAYOUTCOMPONENTSMANAGER_H

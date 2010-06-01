@@ -37,6 +37,7 @@ m_toggleControlBarAutohide(new Plasma::IconWidget(KIcon("mail-attachment"), QStr
 m_backgroundMusic(new Plasma::IconWidget(KIcon("folder-sound"), QString())),
 m_backgroundVideo(new Plasma::IconWidget(KIcon("folder-video"), QString())),
 m_backgroundPicture(new Plasma::IconWidget(KIcon("folder-image"), QString())),
+m_currentMode(MediaCenter::HomeMode),
 m_backgroundPictureMode(false),
 m_backgroundVideoMode(false),
 m_backgroundMusicMode(false)
@@ -80,6 +81,16 @@ Plasma::IconWidget* SharedLayoutComponentsManager::backgroundPictureWidget() con
 Plasma::IconWidget* SharedLayoutComponentsManager::backgroundVideoWidget() const
 {
     return m_backgroundVideo.data();
+}
+
+void SharedLayoutComponentsManager::setCurrentMode(MediaCenter::Mode mode)
+{
+    m_currentMode = mode;
+}
+
+MediaCenter::Mode SharedLayoutComponentsManager::currentMode() const
+{
+    return m_currentMode;
 }
 
 bool SharedLayoutComponentsManager::isBackgroundMusicMode() const
