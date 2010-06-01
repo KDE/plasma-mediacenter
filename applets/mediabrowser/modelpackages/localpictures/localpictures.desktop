@@ -2,6 +2,7 @@
 Type=Service
 Icon=folder-image
 Name=Local Pictures browsing plugin.
+Name[en_GB]=Local Pictures browsing plugin.
 Name[et]=Kohalike piltide sirvimine plugin.
 Name[pt]='Plugin' de navegação nas imagens locais.
 Name[pt_BR]=Plugin de navegação nas imagens locais.
