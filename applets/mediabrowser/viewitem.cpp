@@ -265,7 +265,9 @@ void ViewItem::drawReflection(QPainter *painter, const QRect &reflectionRect, co
     p.scale(1, -1);
     p.setCompositionMode(QPainter::CompositionMode_SourceIn);
 
-    p.drawPixmap(0, -decorationHeight, decorationWidth, decorationHeight, pm);
+    p.drawPixmap(QRect(0, -reflectionRect.height(), reflectionRect.width(), reflectionRect.height()),
+                 pm,
+                 QRect(0, pm.height() - reflectionRect.height(), reflectionRect.width(), reflectionRect.height()));
 
     p.end();
     painter->drawPixmap(reflectionRect, m_reflection);

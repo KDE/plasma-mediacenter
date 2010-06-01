@@ -30,9 +30,9 @@ int main(int argc, char *argv[])
     Q_UNUSED(argc);
     Q_UNUSED(argv);
 
-    KAboutData aboutData("plasmediacenter",
+    KAboutData aboutData("plasma-mediacenter",
                          0,
-                         ki18n("Plasmediacenter"),
+                         ki18n("Plasma Mediacenter Shell"),
                          "0.1",
                          ki18n("A convenient shell for the Plasma Media Center Components"),
                          KAboutData::License_GPL_V2,
