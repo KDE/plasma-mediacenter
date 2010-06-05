@@ -32,7 +32,6 @@ public:
     ~GridView();
 
     void setupOptions();
-    QModelIndex indexFromPos(const QPointF &);
 
 public slots:
     void generateItems(const QModelIndex &parent, int start, int end);

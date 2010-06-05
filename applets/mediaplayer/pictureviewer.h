@@ -20,7 +20,8 @@
 #define PICTUREVIEWER_H
 
 #include <QGraphicsWidget>
-#include <QPixmap>
+#include <QRunnable>
+#include <QTimer>
 
 class QGraphicsSceneResizeEvent;
 
@@ -60,18 +61,70 @@ Q_SIGNALS:
     void showFinished();
 
 private Q_SLOTS:
-    void slotFinished();
+    void slotImageLoaded(const QImage &image);
+    void slotImageScaled(const QSize &size, const QImage &image);
+    void slotDelayedResize();
 
 private:
-    QPixmap m_picture;
+    QImage m_picture;
+    QImage m_scaledPicture;
     qint64 m_showTime;
-    QTimer *m_timer;
+    QTimer m_timer;
     QRectF m_pictureRect;
     QString m_picturePath;
     QRect m_relativePictureRect;
+    QTimer m_resizeTimer;
 
 private:
     void adjustPixmapSize(const QSize &);
+};
+
+//// helper classes ////
+
+class ImageLoader : public QObject, public QRunnable
+{
+    Q_OBJECT
+public:
+    ImageLoader(const QString &imagePath)
+    {
+        m_path = imagePath;
+    }
+
+    void run()
+    {
+        QImage image(m_path);
+        emit loaded(image);
+    }
+
+signals:
+    void loaded(const QImage &image);
+
+private:
+    QString m_path;
+};
+
+class ImageScaler : public QObject, public QRunnable
+{
+    Q_OBJECT
+public:
+    ImageScaler(const QImage &image, const QSize &newSize)
+    {
+        m_image = image;
+        m_size = newSize;
+    }
+
+    void run()
+    {
+        QImage image = m_image.scaled(m_size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        emit scaled(m_size, image);
+    }
+
+signals:
+    void scaled(const QSize &size, const QImage &image);
+
+private:
+    QImage m_image;
+    QSize m_size;
 };
 
 #endif // PICTUREVIEWER_H

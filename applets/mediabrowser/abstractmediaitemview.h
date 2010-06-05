@@ -101,6 +101,8 @@ protected:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
+    ViewItem* itemFromPos(const QPointF &);
+
 protected slots:
     /**
      * You must reimplement this method in order to always
@@ -149,7 +151,6 @@ signals:
 
 private:
     void tryDrag(QGraphicsSceneMouseEvent *);
-    ViewItem* itemFromPos(const QPointF &);
     void itemClickEvent(QGraphicsSceneMouseEvent *);
     KUrl::List m_history;
     ModelPackage::BrowsingType m_browsingType;

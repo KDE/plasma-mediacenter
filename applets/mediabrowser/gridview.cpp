@@ -87,8 +87,8 @@ void GridView::generateItems(const QModelIndex &parent, int start, int end)
     if (parent != m_rootIndex) {
         return;
     }
-//    qDeleteAll(m_items);
-//    m_items.clear();
+    qDeleteAll(m_items);
+    m_items.clear();
     for (int i = start; i <= end; i++) {
         ViewItem *item = new ViewItem(m_option, this);
         item->setModelIndex(m_model->index(i, 0, m_rootIndex));
@@ -175,17 +175,6 @@ void GridView::highlightAnimation(qreal value)
     m_hoverIndicator->resize(m_hoveredItem->size());
 }
 
-QModelIndex GridView::indexFromPos(const QPointF &pos)
-{
-    foreach (ViewItem *item, m_items) {
-        if (item->rect().contains(pos)) {
-            return item->index();
-        }
-    }
-
-    return QModelIndex();
-}
-
 void GridView::fadeOutItems(ViewItem *exception)
 {
     for (int i = 0; i < m_items.count(); i++) {
@@ -232,29 +221,15 @@ void GridView::keyPressEvent(QKeyEvent *event)
         if (!m_hoveredItem) {
             updateHoveredItem(m_items.first());
         } else {
-            int itemsPerRow = m_items.count() / m_itemRows;
-            kDebug() << "items per row" << itemsPerRow;
-            if (!itemsPerRow) {
-                return;
-            }
-
-            int index = m_items.indexOf(m_hoveredItem);
-            if (index == -1) {
-                return;
-            }
-
-            if (event->key() == Qt::Key_Up) {
-                index -= itemsPerRow;
+            QPointF currentPoint = m_hoveredItem->pos() + QPointF(1, 1);
+            event->key() == Qt::Key_Up ? currentPoint.setY(currentPoint.y() - m_hoveredItem->size().height()) :
+                                        currentPoint.setY(currentPoint.y() + m_hoveredItem->size().height());
+            ViewItem *newItem = itemFromPos(currentPoint);
+            if (newItem) {
+                updateHoveredItem(newItem);
             } else {
-                index += itemsPerRow;
+                updateHoveredItem(m_items.last());
             }
-
-            if (index < 0 || index >= m_items.count()) {
-                return;
-            }
-
-            QGraphicsWidget *item = m_items.at(index);
-            updateHoveredItem(m_items.at(index));
         }
     }
 }
