@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menus>
+    <homeMenu>
+        <Item>
+            <name>Videos</name>
+            <image>video.png</image>
+        </Item>
+        <Item>
+            <name>Music</name>
+            <image>music.png</image>
+        </Item>
+        <Item>
+            <name>Disc</name>
+            <image>disc.png</image>
+        </Item>
+        <Item>
+            <name>Utilities</name>
+            <image>utilities.png</image>
+        </Item>
+        <Item>
+            <name>Exit</name>
+            <image>exit.png</image>
+        </Item>
+    </homeMenu>
+</menus>
