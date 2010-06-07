@@ -28,10 +28,12 @@
 
 #include <Plasma/Containment>
 #include <Plasma/Animator>
+#include <Plasma/Theme>
 
 using namespace MediaCenter;
 
 static const qreal MARGINFACTOR = 0.2; //used when laying out the player in floating mode
+static const qreal PLAYLISTSIZEFACTOR = 3.5; //used to define the ratio playlist width to total width
 
 MediaLayout::MediaLayout(Plasma::Containment *parent) : QObject(parent),
 m_containment(parent),
@@ -66,6 +68,9 @@ m_playerNewRect(QRectF())
     m_fadeOutPlayer = Plasma::Animator::create(Plasma::Animator::FadeAnimation);
     m_fadeInPlayer = Plasma::Animator::create(Plasma::Animator::FadeAnimation);
     connect(m_fadeOutPlayer,SIGNAL(finished()), this, SLOT(fadeInPlayer()));
+
+    //Some applets (i.e. playlist) change position depending on the applied theme.
+    connect (Plasma::Theme::defaultTheme(), SIGNAL(themeChanged()), this, SLOT(doCompleteLayout()));
 }
 
 MediaLayout::~MediaLayout()
@@ -244,6 +249,31 @@ void MediaLayout::layoutInfoDisplay()
 
 void MediaLayout::layoutPlaylist()
 {
+    qreal left = 0;
+    qreal top = 0;
+    qreal right = 0;
+    qreal bottom = 0;
+    Plasma::FrameSvg *svg = new Plasma::FrameSvg(this);
+
+    //The following part determines the margin size depending on the background of the widget
+    QString imagePath;
+    if (m_playlist->backgroundHints() == Plasma::Applet::StandardBackground) {
+        imagePath = Plasma::Theme::defaultTheme()->imagePath("widgets/background");
+        svg->setImagePath(imagePath);
+        svg->getMargins(left,top,right,bottom);
+    } else if (m_playlist->backgroundHints() == Plasma::Applet::TranslucentBackground) {
+        imagePath = Plasma::Theme::defaultTheme()->imagePath("widgets/translucentbackground");
+        svg->setImagePath(imagePath);
+        svg->getMargins(left,top,right,bottom);
+    } else if (m_playlist->backgroundHints() == Plasma::Applet::NoBackground) {
+        //FIXME: Currently this supposes that the playlist is painting it's own background and
+        //uses the standard widgets/background. In case we get custom playlists, this
+        //needs to be changed
+        imagePath = Plasma::Theme::defaultTheme()->imagePath("widgets/background");
+        svg->setImagePath(imagePath);
+        svg->getMargins(left,top,right,bottom);
+    }
+
     QPointF point;
     QSizeF size;
 
@@ -253,9 +283,9 @@ void MediaLayout::layoutPlaylist()
             size = QSizeF(playlistPreferredShowingRect().size());
         }
         if (m_controlVisible && !m_controlAutohide) {
-            point = QPointF(playlistPreferredShowingRect().left(), controllerPreferredShowingRect().bottom());
+            point = QPointF(playlistPreferredShowingRect().left(), controllerPreferredShowingRect().bottom() - top/2);
             size = QSizeF(playlistPreferredShowingRect().size().width(), playlistPreferredShowingRect().size().height() -
-                         infoDisplayPreferredShowingRect().size().height() - controllerPreferredShowingRect().size().height());
+                         infoDisplayPreferredShowingRect().size().height() - controllerPreferredShowingRect().size().height() + bottom/2 + top/2);
         }
         if (!m_controlVisible && m_controlAutohide) {
             point = QPointF(playlistPreferredShowingRect().left(),0);
@@ -265,6 +295,7 @@ void MediaLayout::layoutPlaylist()
     if (!m_playlistVisible) {
         if (!m_controlVisible && m_controlAutohide) {
             point = QPointF(playlistPreferredShowingRect().right(), 0);
+            m_playlist->setPos(m_containment->rect().right(), 0); //Without this manual positioning, the playlist is at 50 px from top when toggling in video playing state
             size = QSizeF(playlistPreferredShowingRect().size());
         }
         if (m_controlVisible && !m_controlAutohide) {
@@ -273,9 +304,9 @@ void MediaLayout::layoutPlaylist()
                 size = QSizeF(playlistPreferredShowingRect().size());
             }
             if (!m_infoDisplayOnly) {
-                point = QPointF(playlistPreferredShowingRect().right(), controllerPreferredShowingRect().bottom());
+                point = QPointF(playlistPreferredShowingRect().right(), controllerPreferredShowingRect().bottom() - top/2) ;
                 size = QSizeF(playlistPreferredShowingRect().size().width(), playlistPreferredShowingRect().size().height() -
-                             infoDisplayPreferredShowingRect().size().height() - controllerPreferredShowingRect().size().height());
+                             infoDisplayPreferredShowingRect().size().height() - controllerPreferredShowingRect().size().height()  + bottom/2 + top/2);
             }
         }
         if (m_controlVisible && m_controlAutohide) {
@@ -420,13 +451,9 @@ QRectF MediaLayout::playlistPreferredShowingRect() const
         return QRectF();
     }
 
-    qreal rightMargin = 0;
-    //m_playlist->getContentsMargins(0, 0, &rightMargin, 0);
-    //FIXME: The margin caused the playlist to move too far.
-    //TODO:Make the playlist fit exactly into the available space (like Nuno's mockups)
-    return QRectF(QPointF(m_containment->size().width() - (m_containment->size().width() / 4.0) + rightMargin,
+    return QRectF(QPointF(m_containment->size().width() - (m_containment->size().width() / PLAYLISTSIZEFACTOR),
                            controllerPreferredShowingRect().size().height()),
-                           QSizeF(m_containment->size().width() / 4.0, m_containment->size().height()));
+                           QSizeF(m_containment->size().width() / PLAYLISTSIZEFACTOR, m_containment->size().height()));
 }
 
 void MediaLayout::animateHidingApplet(Plasma::Applet *applet)

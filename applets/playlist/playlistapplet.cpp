@@ -27,12 +27,50 @@
 #include <KUrl>
 #include <KDebug>
 
+#include <Plasma/Theme>
+
 PlaylistApplet::PlaylistApplet(QObject *parent, const QVariantList &args)
-    : MediaCenter::Playlist(parent, args), m_playlistWidget(0)
+    : MediaCenter::Playlist(parent, args),
+    m_svg(new Plasma::FrameSvg(this)),
+    m_playlistWidget(0)
 {
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
+
     setAcceptDrops(true);
     setHasConfigurationInterface(true);
+}
+
+PlaylistApplet::~PlaylistApplet()
+{}
+
+void PlaylistApplet::constraintsEvent(Plasma::Constraints constraints)
+{
+    Q_UNUSED(constraints);
+    setBackgroundHints(Plasma::Applet::NoBackground);
+    setMarginsFromTheme();
+}
+
+void PlaylistApplet::resizeEvent(QGraphicsSceneResizeEvent *event)
+{
+    Q_UNUSED(event)
+
+    m_svg->resizeFrame(rect().size());
+}
+
+void PlaylistApplet::paintInterface(QPainter *painter, const QStyleOptionGraphicsItem *option, const QRect &contentsRect)
+{
+    m_svg->paintFrame(painter, option->rect);
+}
+
+void PlaylistApplet::init()
+{
+    m_svg->setEnabledBorders(Plasma::FrameSvg::LeftBorder);
+    m_svg->setCacheAllRenderedFrames(true);
+    m_svg->setImagePath(Plasma::Theme::defaultTheme()->imagePath("widgets/background"));
+
+    setMarginsFromTheme();
+    connect (Plasma::Theme::defaultTheme(), SIGNAL(themeChanged()), this, SLOT(slotThemeChanged()));
 
     // we make sure the widget is constructed
     m_playlistWidget = new PlaylistWidget;
@@ -42,14 +80,27 @@ PlaylistApplet::PlaylistApplet(QObject *parent, const QVariantList &args)
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout;
     layout->addItem(m_playlistWidget);
     setLayout(layout);
+
+    loadConfiguration();
 }
 
-PlaylistApplet::~PlaylistApplet()
-{}
-
-void PlaylistApplet::init()
+void PlaylistApplet::setMarginsFromTheme()
 {
-    loadConfiguration();
+    qreal left;
+    qreal right;
+    qreal top;
+    qreal bottom;
+
+    m_svg->getMargins(left, top, right, bottom);
+    //kDebug() << "setting to" << left << top << right << bottom;
+    setContentsMargins(left, top, right, bottom);
+}
+
+void PlaylistApplet::slotThemeChanged()
+{
+    m_svg->clearCache();
+    m_svg->setImagePath(Plasma::Theme::defaultTheme()->imagePath("widgets/background"));
+    setMarginsFromTheme();
 }
 
 int PlaylistApplet::length()

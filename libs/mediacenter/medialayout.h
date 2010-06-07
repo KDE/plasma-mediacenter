@@ -140,7 +140,6 @@ private:
     QRectF m_playerNewRect;
 
 private:
-    void doCompleteLayout();
     void layoutBrowser();
     void layoutControl();
     void layoutInfoDisplay();
@@ -151,6 +150,7 @@ private:
 private slots:
     void setEnableGlowHandler(QGraphicsItem*, bool set);
     void fadeInPlayer();
+    void doCompleteLayout();
 };
 } //ending namespace MEDIACENTER
 #endif // MEDIALAYOUT_H

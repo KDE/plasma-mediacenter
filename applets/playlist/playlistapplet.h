@@ -34,6 +34,8 @@ public:
     PlaylistApplet(QObject *parent, const QVariantList &args);
     ~PlaylistApplet();
 
+    void constraintsEvent(Plasma::Constraints constraints);
+    void paintInterface(QPainter *painter, const QStyleOptionGraphicsItem *option, const QRect &contentsRect);
     void init();
     void createConfigurationInterface(KConfigDialog *parent);
 
@@ -46,11 +48,19 @@ public:
 public slots:
     void appendMedia(const QList<MediaCenter::Media> &medias, const QString &playlist = QString());
 
+protected:
+    void resizeEvent(QGraphicsSceneResizeEvent *event);
+
 protected slots:
     void loadConfiguration();
     void configAccepted();
 
+    void slotThemeChanged();
+
 private:
+    void setMarginsFromTheme();
+
+    Plasma::FrameSvg *m_svg;
     PlaylistWidget *m_playlistWidget;
     Ui::Config configUi;
 

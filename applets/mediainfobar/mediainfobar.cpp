@@ -40,7 +40,6 @@ MediaInfoBar::MediaInfoBar(QObject *parent, const QVariantList &args)
     m_currentMode(MediaCenter::InfoDisplayBottom)
 {
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
-    setContentsMargins(0,0,0,0);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
 }
 
