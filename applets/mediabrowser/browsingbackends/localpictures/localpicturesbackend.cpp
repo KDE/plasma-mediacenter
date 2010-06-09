@@ -165,6 +165,7 @@ void LocalPicturesBackend::configAccepted()
     }
 
     if (useNepomuk != m_useNepomuk) {
+        m_useNepomuk = useNepomuk;
         cf.writeEntry("Nepomuk", m_useNepomuk);
     }
     cf.sync();
