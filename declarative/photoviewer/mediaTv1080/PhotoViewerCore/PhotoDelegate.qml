@@ -5,10 +5,12 @@ Component {
     
     Rectangle {
         id: photoWrapper
-        color: 'black';
-        x: 0; y: 0; width: photoviewer.width; height: photoviewer.height;
-        
+
         property bool showText: true;
+        property int itemsShown: 3;
+
+        color: 'black';
+        x: 0; y: 0; width: photoviewer.width/itemsShown; height: photoviewer.height;
         
         Image {
             id: image;
@@ -33,6 +35,34 @@ Component {
                 text: display; 
                 color: "white";
                 elide: Text.ElideRight
+            }
+        }
+        Rectangle {
+            id: reflectedImageWrapper
+            anchors.top: image.bottom;
+            anchors.horizontalCenter: image.horizontalCenter;
+            width: image.width; height: image.height;
+            color: "#00FFFFFF";
+            transform: Rotation { origin.x: image.width/2; origin.y: image.height/2; axis { x: 1; y: 0; z: 0 } angle: 180;}
+
+            
+            Image {
+                id: reflectedImage;
+                source: image.source;
+                smooth: true;
+                fillMode: Image.PreserveAspectFit;
+                anchors.fill: parent;
+                //rotation: 180;
+            }
+            
+            Rectangle {
+                id: reflectedImageFilter;
+                anchors.fill: parent;
+                
+                gradient: Gradient {
+                    GradientStop { position: 0.5; color: "black" }
+                    GradientStop { position: 1.0; color: "#00FFFFFF" }
+                }
             }
         }
     }
