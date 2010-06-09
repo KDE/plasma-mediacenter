@@ -18,7 +18,7 @@
  ***************************************************************************/
 #include "startupmodel.h"
 
-#include <mediabrowserlibs/modelpackage.h>
+#include <mediabrowserlibs/abstractbrowsingbackend.h>
 
 #include <KIcon>
 #include <KServiceTypeTrader>
@@ -38,9 +38,9 @@ StartupModel::~StartupModel()
 
 void StartupModel::init()
 {
-    KService::List plugins = KServiceTypeTrader::self()->query("Plasma/MediaCenter/ModelPackage");
+    KService::List plugins = KServiceTypeTrader::self()->query("Plasma/MediaCenter/BrowsingBackend");
     if (plugins.isEmpty()) {
-        kError() << "no available model package";
+        kError() << "no available browsing backend";
         return;
     }
 
@@ -130,14 +130,14 @@ void StartupModel::updateModel(const QStringList &changedResources)
     init();
 }
 
-ModelPackage* StartupModel::packageFromIndex(const QModelIndex &index, QObject *parent, QString *error)
+AbstractBrowsingBackend* StartupModel::backendFromIndex(const QModelIndex &index, QObject *parent, QString *error)
 {
     if (!index.isValid()) {
         return 0;
     }
 
     KService::Ptr service = m_modelServices[index.row()];
-    return service->createInstance<ModelPackage>(parent, QVariantList(), error);
+    return service->createInstance<AbstractBrowsingBackend>(parent, QVariantList(), error);
 }
 
 KService::Ptr StartupModel::service(KService *service) const

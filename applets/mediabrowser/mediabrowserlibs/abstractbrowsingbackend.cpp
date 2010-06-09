@@ -16,45 +16,63 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#ifndef LOCALPICTURESPACKAGE_H
-#define LOCALPICTURESPACKAGE_H
+#include "abstractbrowsingbackend.h"
 
-#include <mediabrowserlibs/modelpackage.h>
+#include <KGlobal>
+#include <KDebug>
 
-#include "ui_localpicturesconfig.h"
-
-class QAbstractItemModel;
-class KConfigDialog;
-class KDirModel;
-
-class LocalPicturesPackage : public ModelPackage
+class AbstractBrowsingBackend::AbstractBrowsingBackendPrivate
 {
-    Q_OBJECT
 public:
-    LocalPicturesPackage(QObject *parent, const QVariantList &args);
-    ~LocalPicturesPackage();
+    AbstractBrowsingBackendPrivate(AbstractBrowsingBackend *q) : q(q),
+    cfInterface(false)
+    {}
 
-    QAbstractItemModel *model();
-    ModelPackage::BrowsingType browsingType() const;
-
-    void createConfigurationInterface(KConfigDialog *parent);
-
-    void init();
-
-private slots:
-    void configAccepted();
-
-private:
-    Ui::LocalPicturesConfig uiLocal;
-    bool m_fromPlaces;
-    bool m_folderNavigation;
-    KUrl m_localUrl;
-    QStringList m_mimeTypes;
-
-    KDirModel *m_model;
-
-private:
-    void setFolderNavigation();
+    AbstractBrowsingBackend *q;
+    bool cfInterface;
 };
 
-#endif // LOCALPICTURESPACKAGE_H
+AbstractBrowsingBackend::AbstractBrowsingBackend(QObject *parent, const QVariantList &args) : QObject(parent),
+d(new AbstractBrowsingBackendPrivate(this))
+{
+    Q_UNUSED(args);
+}
+
+AbstractBrowsingBackend::~AbstractBrowsingBackend()
+{
+}
+
+bool AbstractBrowsingBackend::hasConfigurationInterface()
+{
+    return d->cfInterface;
+}
+
+void AbstractBrowsingBackend::setHasConfigurationInterface(bool hasInterface)
+{
+    d->cfInterface = hasInterface;
+}
+
+void AbstractBrowsingBackend::createConfigurationInterface(KConfigDialog *parent)
+{
+    Q_UNUSED(parent);
+}
+
+KConfigGroup AbstractBrowsingBackend::config()
+{
+    kDebug() << KGlobal::config()->name();
+    return KConfigGroup(KGlobal::config(), "AbstractBrowsingBackends");
+}
+
+void AbstractBrowsingBackend::init()
+{}
+
+void AbstractBrowsingBackend::setAllowedMediaTypes(const MediaCenter::MediaTypes &type)
+{
+    m_allowedMediaTypes = type;
+}
+
+MediaCenter::MediaTypes AbstractBrowsingBackend::allowedMediaTypes()
+{
+    return m_allowedMediaTypes;
+}
+

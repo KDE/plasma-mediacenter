@@ -22,7 +22,8 @@
 #include <QAbstractItemModel>
 #include <KService>
 
-class ModelPackage;
+class AbstractBrowsingBackend;
+
 
 class StartupModel : public QAbstractItemModel
 {
@@ -41,7 +42,7 @@ public:
      * Be aware that each time you call this method an instance of the plugin is
      * created.
      */
-    ModelPackage* packageFromIndex(const QModelIndex &, QObject *parent = 0, QString *error = 0);
+    AbstractBrowsingBackend* backendFromIndex(const QModelIndex &, QObject *parent = 0, QString *error = 0);
 
 protected slots:
     void init();

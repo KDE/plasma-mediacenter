@@ -27,7 +27,7 @@
 #include <QGraphicsLinearLayout>
 
 class BrowsingWidget;
-class ModelPackage;
+class AbstractBrowsingBackend;
 
 class MediaBrowser : public MediaCenter::Browser
 {
@@ -47,7 +47,7 @@ public:
 
     void addViewMode(const QString &title);
     QStringList viewModes() const;
-    
+
     QList<MediaCenter::Media> selectedMedias() const;
 
     KUrl directory() const;
@@ -78,14 +78,14 @@ private:
     QString m_viewType;
     BrowsingWidget *m_browsingWidget;
     bool m_browsingWidgets;
-    ModelPackage *m_package;
+    AbstractBrowsingBackend *m_backend;
     QList<MediaCenter::Media> m_selectedMedias;
 
     QGraphicsLinearLayout *m_layout;
 
 private:
     void createView();
-    void showInstalledModelPackages();
+    void showInstalledBackends();
 
 private slots:
     void loadConfiguration();

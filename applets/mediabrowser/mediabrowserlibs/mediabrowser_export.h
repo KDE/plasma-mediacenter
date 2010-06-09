@@ -24,7 +24,7 @@
 #include <KPluginFactory>
 #include <KPluginLoader>
 
-#define MEDIABROWSER_PACKAGE_EXPORT( c ) \
+#define MEDIABROWSER_BACKEND_EXPORT( c ) \
     K_PLUGIN_FACTORY( MediaBrowserFactory, registerPlugin< c >(); ) \
     K_EXPORT_PLUGIN( MediaBrowserFactory("c") )
 

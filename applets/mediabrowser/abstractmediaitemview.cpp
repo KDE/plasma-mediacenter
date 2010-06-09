@@ -100,7 +100,7 @@ void AbstractMediaItemView::setModel(QAbstractItemModel *model)
 
     qDeleteAll(m_items);
     m_items.clear();
-    
+
     generateItems(m_rootIndex, 0, model->rowCount() - 1);
     connect (m_model, SIGNAL(modelAboutToBeReset()), this, SLOT(reset()));
     connect (m_model, SIGNAL(rowsInserted(const QModelIndex & , int, int)), this, SLOT(generateItems(const QModelIndex&, int, int)));
@@ -333,14 +333,13 @@ void AbstractMediaItemView::itemClickEvent(QGraphicsSceneMouseEvent *event)
             m_rootIndex = model->indexForItem(item);
             listMediaInDirectory();
             emit directoryChanged();
-        } else {
-
+        } else if (item.isLocalFile()) {
             MediaCenter::Media media;
             media.first = MediaCenter::getType(item.url().path());
-            media.second = item.url().path();
+            media.second = item.localPath();
             emit mediasActivated(QList<MediaCenter::Media>() << media);
             emit mediaActivated(media);
-        }
+        } // TODO check the chance to have remote files or
     }
 
     emit indexActivated(index);
@@ -483,14 +482,14 @@ void AbstractMediaItemView::removeItems(const QModelIndex &parent, int start, in
     updateScrollBar();
 }
 
-void AbstractMediaItemView::setBrowsingType(const ModelPackage::BrowsingType &type)
+void AbstractMediaItemView::setBrowsingType(const AbstractBrowsingBackend::BrowsingType &type)
 {
-	m_browsingType = type;
+    m_browsingType = type;
 }
 
-ModelPackage::BrowsingType AbstractMediaItemView::browsingType() const
+AbstractBrowsingBackend::BrowsingType AbstractMediaItemView::browsingType() const
 {
-	return m_browsingType;
+    return m_browsingType;
 }
 
 void AbstractMediaItemView::slotItemSelected()

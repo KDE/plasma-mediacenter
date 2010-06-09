@@ -27,4 +27,4 @@ install(FILES plasma-applet-mediabrowser.desktop
         DESTINATION ${SERVICES_INSTALL_DIR})
 
 add_subdirectory(mediabrowserlibs)
-add_subdirectory(modelpackages)
+add_subdirectory(browsingbackends)

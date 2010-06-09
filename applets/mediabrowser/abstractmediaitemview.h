@@ -23,7 +23,7 @@
 #include <QStyleOptionViewItemV4>
 #include <KUrl>
 #include <mediacenter/mediacenter.h>
-#include <mediabrowserlibs/modelpackage.h>
+#include <mediabrowserlibs/abstractbrowsingbackend.h>
 
 class QAbstractItemModel;
 
@@ -68,8 +68,8 @@ public:
     void setDrawBlurredText(bool set);
     bool drawBlurredText();
 
-    void setBrowsingType(const ModelPackage::BrowsingType &);
-    ModelPackage::BrowsingType browsingType() const;
+    void setBrowsingType(const AbstractBrowsingBackend::BrowsingType &);
+    AbstractBrowsingBackend::BrowsingType browsingType() const;
 
     /**
      * Call this method whenever events like model resetting occur.
@@ -121,6 +121,9 @@ public slots:
      * the code for items generations. Items must be collected
      * in the m_items list. You just need to call this once for
      * each rootIndex change in the model.
+     * A ViewItem with this view as parent has to be created for each QModelIndex
+     * that has to be shown. Each ViewItem must be updated with the QModelIndex it is
+     * in charge of and the current model in use.
      */
     virtual void generateItems(const QModelIndex &parent, int start, int end) = 0;
 
@@ -153,7 +156,7 @@ private:
     void tryDrag(QGraphicsSceneMouseEvent *);
     void itemClickEvent(QGraphicsSceneMouseEvent *);
     KUrl::List m_history;
-    ModelPackage::BrowsingType m_browsingType;
+    AbstractBrowsingBackend::BrowsingType m_browsingType;
 
 protected:
     int m_iconSize;

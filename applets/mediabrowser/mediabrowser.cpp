@@ -22,7 +22,7 @@
 #include "browsingwidget.h"
 #include "startupmodel.h"
 
-#include <mediabrowserlibs/modelpackage.h>
+#include <mediabrowserlibs/abstractbrowsingbackend.h>
 
 #include <QWidget>
 
@@ -43,7 +43,7 @@ MediaBrowser::MediaBrowser(QObject *parent, const QVariantList &args)
     m_view(0),
     m_model(0),
     m_browsingWidget(new BrowsingWidget(this)),
-    m_package(0),
+    m_backend(0),
     m_browsingWidgets(true),
     m_layout(new QGraphicsLinearLayout(Qt::Vertical, this))
 {
@@ -55,7 +55,7 @@ MediaBrowser::MediaBrowser(QObject *parent, const QVariantList &args)
 MediaBrowser::~MediaBrowser()
 {}
 
-void MediaBrowser::showInstalledModelPackages()
+void MediaBrowser::showInstalledBackends()
 {
     delete m_model;
     m_model = new StartupModel(this);
@@ -67,7 +67,7 @@ void MediaBrowser::init()
     loadConfiguration();
 
     createView();
-    showInstalledModelPackages();
+    showInstalledBackends();
 }
 
 void MediaBrowser::createView()
@@ -117,9 +117,9 @@ void MediaBrowser::createConfigurationInterface(KConfigDialog *parent)
 
     uiGeneral.blurredTextCheckBox->setChecked(m_blurred);
 
-    if (m_package) {
-        if (m_package->hasConfigurationInterface()) {
-            m_package->createConfigurationInterface(parent);
+    if (m_backend) {
+        if (m_backend->hasConfigurationInterface()) {
+            m_backend->createConfigurationInterface(parent);
         }
     }
 
@@ -167,26 +167,26 @@ void MediaBrowser::slotIndexActivated(const QModelIndex &index)
     StartupModel *model = qobject_cast<StartupModel*>(m_model);
     if (model) {
         QString error;
-        ModelPackage *package = model->packageFromIndex(index, this, &error);
+        AbstractBrowsingBackend *backend = model->backendFromIndex(index, this, &error);
         if (!error.isEmpty()) {
             kError() << error;
             return;
         }
         m_view->setModel(0);
-        m_package = package;
-//        connect (package, SIGNAL(modelReady()), m_view, SLOT(generateItems()));
-//        connect (package, SIGNAL(modelReady()), m_view, SLOT(updateScrollBar()));
-        package->init();
-        m_model = package->model();
+        m_backend = backend;
+//        connect (backend, SIGNAL(modelReady()), m_view, SLOT(generateItems()));
+//        connect (backend, SIGNAL(modelReady()), m_view, SLOT(updateScrollBar()));
+        backend->init();
+        m_model = backend->model();
         m_view->setModel(m_model);
 
-        if (package->allowedMediaTypes() == MediaCenter::Video) {
+        if (backend->allowedMediaTypes() == MediaCenter::Video) {
             emit videoDataEngine();
         }
-        if (package->allowedMediaTypes() == MediaCenter::Audio) {
+        if (backend->allowedMediaTypes() == MediaCenter::Audio) {
             emit musicDataEngine();
         }
-        if (package->allowedMediaTypes() == MediaCenter::Picture) {
+        if (backend->allowedMediaTypes() == MediaCenter::Picture) {
             emit pictureDataEngine();
         }
     }
@@ -211,7 +211,7 @@ void MediaBrowser::setShowingBrowsingWidgets(bool set)
         }
     }
 }
-    bool m_browsingWidgets;
+
 bool MediaBrowser::isShowingBrowsingWidgets() const
 {
     return m_browsingWidgets;
@@ -220,7 +220,7 @@ bool MediaBrowser::isShowingBrowsingWidgets() const
 
 void MediaBrowser::showStartupState()
 {
-    //Calling directly showInstalledModelPackages makes PMC crash on startup
+    //Calling directly showInstalledBackends makes PMC crash on startup
     m_model = new StartupModel(this);
     m_view->setModel(m_model);
 }
@@ -289,7 +289,6 @@ void MediaBrowser::clearViewModes()
 {
     m_browsingWidget->clearViewModes();
 }
-
 
 
 K_EXPORT_PLASMA_APPLET(mediabrowser, MediaBrowser)

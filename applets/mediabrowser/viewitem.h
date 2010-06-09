@@ -41,6 +41,10 @@ class ViewItem : public QGraphicsWidget
 public:
     enum ItemType { LocalFileItem, RemoteFileItem };
 
+    /**
+     * Each ViewItem must be created passing the option object
+     * describing its appearance constraints.
+     */
     ViewItem(const QStyleOptionViewItemV4 &option, QGraphicsItem *parent = 0);
     ~ViewItem();
 

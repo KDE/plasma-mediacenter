@@ -77,6 +77,7 @@ m_isNotFile(false)
     if (!m_selectByIcon) {
         Nepomuk::ResourceManager::instance()->initialized();
     }
+
 }
 
 ViewItem::~ViewItem()
@@ -110,8 +111,18 @@ void ViewItem::setModelIndex(const QModelIndex &index)
         m_nepomuk = false;
         return;
     }
+
+    bool ok;
+    KUrl url = item.mostLocalUrl(ok);
+
+    if (!ok) {
+        // FIXME disabling nepomuk for non local files for now.
+        m_nepomuk = false;
+        return;
+    }
+    
     askForFilePreview();
-    m_resource = new Nepomuk::Resource(item.url());
+    m_resource = new Nepomuk::Resource(url);
 }
 
 QModelIndex ViewItem::index() const
@@ -282,7 +293,13 @@ void ViewItem::askForFilePreview()
         if (!item.mimetype().startsWith("image/")) {
             return;
         }
-        KIO::PreviewJob *previewJob = KIO::filePreview(item.url(), m_option.decorationSize.width(), 0, 0, 0, false, true, 0);
+
+        bool ok;
+        KUrl url = item.mostLocalUrl(ok);
+        if (!ok) {
+            return;
+        }
+        KIO::PreviewJob *previewJob = KIO::filePreview(url, m_option.decorationSize.width(), 0, 0, 0, false, true, 0);
         connect(previewJob, SIGNAL(gotPreview(const KFileItem &, const QPixmap &)), this, SLOT(slotGotPreview(const KFileItem &, const QPixmap&)));
     }
 }

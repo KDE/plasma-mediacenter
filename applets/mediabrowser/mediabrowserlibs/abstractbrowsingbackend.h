@@ -29,7 +29,7 @@ class QAbstractItemModel;
 class KConfigDialog;
 
 /**
- * @class MediaBrowserModelPackage @author Alessandro Diaferia
+ * @class AbstractBrowsingBackend @author Alessandro Diaferia
  * @brief A useful class to build custom plugins for the mediabrowser.
  *
  * This class allows you to write custom models to use with the mediabrowser applet.
@@ -40,7 +40,7 @@ class KConfigDialog;
  * extension purposes. It just represents an interface between the applet and the
  * provided model.
  */
-class MEDIABROWSER_EXPORT ModelPackage : public QObject
+class MEDIABROWSER_EXPORT AbstractBrowsingBackend : public QObject
 {
     Q_OBJECT
 public:
@@ -53,8 +53,8 @@ public:
     	MediaRole
     };
 
-    ModelPackage(QObject *parent, const QVariantList &args);
-    virtual ~ModelPackage();
+    AbstractBrowsingBackend(QObject *parent, const QVariantList &args);
+    virtual ~AbstractBrowsingBackend();
 
     /**
      * This method must be reimplemented in order to provide the model to be
@@ -114,8 +114,8 @@ protected:
     void setAllowedMediaTypes(const MediaCenter::MediaTypes &type);
 
 private:
-    class ModelPackagePrivate;
-    ModelPackagePrivate *d;
+    class AbstractBrowsingBackendPrivate;
+    AbstractBrowsingBackendPrivate *d;
 
     MediaCenter::MediaTypes m_allowedMediaTypes;
 };

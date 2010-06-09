@@ -87,8 +87,7 @@ void GridView::generateItems(const QModelIndex &parent, int start, int end)
     if (parent != m_rootIndex) {
         return;
     }
-    qDeleteAll(m_items);
-    m_items.clear();
+
     for (int i = start; i <= end; i++) {
         ViewItem *item = new ViewItem(m_option, this);
         item->setModelIndex(m_model->index(i, 0, m_rootIndex));
