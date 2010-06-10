@@ -1,22 +1,22 @@
 [Desktop Entry]
 Type=Service
 Icon=folder-sound
-Name=Local Music browsing plugin.
-Name[en_GB]=Local Music browsing plugin.
-Name[et]=Kohaliku muusika sirvimine plugin.
-Name[pt]='Plugin' de navegação na música local.
-Name[pt_BR]=Plugin de navegação na música local.
-Name[sv]=Insticksprogram för bläddring i lokal musik.
-Name[uk]=Додаток для прослуховування локальної музики.
-Name[x-test]=xxLocal Music browsing plugin.xx
-Comment=A plugin for the mediabrowser applet that allows local music browsing.
-Comment[en_GB]=A plugin for the mediabrowser applet that allows local music browsing.
-Comment[et]=Meediasirvija plugin kohaliku muusika sirvimiseks.
-Comment[pt]=Um 'plugin' para a 'applet' de leitura multimédia, que permite a navegação pela música local.
-Comment[pt_BR]=Um plugin para o mini-aplicativo de leitor multimídia, que permite a navegação nas músicas locais.
-Comment[sv]=Ett insticksprogram för miniprogrammet Mediabläddrare som tillåter bläddring i lokal musik.
-Comment[uk]=Додаток до аплету переглядача носіїв, який надає змогу прослуховувати локальні музичні файли.
-Comment[x-test]=xxA plugin for the mediabrowser applet that allows local music browsing.xx
+Name=Local Music browsing plugin
+Name[en_GB]=Local Music browsing plugin
+Name[et]=Kohaliku muusika sirvimine plugin
+Name[pt]='Plugin' de navegação na música local
+Name[pt_BR]=Plugin de navegação na música local
+Name[sv]=Insticksprogram för bläddring i lokal musik
+Name[uk]=Додаток для прослуховування локальної музики
+Name[x-test]=xxLocal Music browsing pluginxx
+Comment=A plugin for the mediabrowser applet that allows local music browsing
+Comment[en_GB]=A plugin for the mediabrowser applet that allows local music browsing
+Comment[et]=Meediasirvija plugin kohaliku muusika sirvimiseks
+Comment[pt]=Um 'plugin' para a 'applet' de leitura multimédia, que permite a navegação pela música local
+Comment[pt_BR]=Um plugin para o mini-aplicativo de leitor multimídia, que permite a navegação nas músicas locais
+Comment[sv]=Ett insticksprogram för miniprogrammet Mediabläddrare som tillåter bläddring i lokal musik
+Comment[uk]=Додаток до аплету переглядача носіїв, який надає змогу прослуховувати локальні музичні файли
+Comment[x-test]=xxA plugin for the mediabrowser applet that allows local music browsingxx
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 

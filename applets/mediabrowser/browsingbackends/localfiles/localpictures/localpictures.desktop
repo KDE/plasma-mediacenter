@@ -1,24 +1,24 @@
 [Desktop Entry]
 Type=Service
 Icon=folder-image
-Name=Local Pictures browsing plugin.
-Name[en_GB]=Local Pictures browsing plugin.
-Name[et]=Kohalike piltide sirvimine plugin.
-Name[pt]='Plugin' de navegação nas imagens locais.
-Name[pt_BR]=Plugin de navegação nas imagens locais.
-Name[sv]=Insticksprogram för bläddring i lokala bilder.
-Name[uk]=Додаток для перегляду локальних зображень.
-Name[x-test]=xxLocal Pictures browsing plugin.xx
-Comment=A plugin for the mediabrowser applet that allows local file browsing.
-Comment[en_GB]=A plugin for the mediabrowser applet that allows local file browsing.
-Comment[es]=Un complemento para la miniaplicación de exploración de medios que permite explorar archivos locales.
-Comment[et]=Meediasirvija plugin kohalike failide sirvimiseks.
+Name=Local Pictures browsing plugin
+Name[en_GB]=Local Pictures browsing plugin
+Name[et]=Kohalike piltide sirvimine plugin
+Name[pt]='Plugin' de navegação nas imagens locais
+Name[pt_BR]=Plugin de navegação nas imagens locais
+Name[sv]=Insticksprogram för bläddring i lokala bilder
+Name[uk]=Додаток для перегляду локальних зображень
+Name[x-test]=xxLocal Pictures browsing pluginxx
+Comment=A plugin for the mediabrowser applet that allows local file browsing
+Comment[en_GB]=A plugin for the mediabrowser applet that allows local file browsing
+Comment[es]=Un complemento para la miniaplicación de exploración de medios que permite explorar archivos locales
+Comment[et]=Meediasirvija plugin kohalike failide sirvimiseks
 Comment[fr]=Un module pour l'applet mediabrowser permettant la navigation à travers les fichiers locaux
-Comment[pt]=Um 'plugin' para a 'applet' de leitura multimédia, que permite a navegação nos ficheiros locais.
-Comment[pt_BR]=Um plugin para o mini-aplicativo de leitor multimídia, que permite a navegação nos arquivos locais.
-Comment[sv]=Ett insticksprogram för miniprogrammet Mediabläddrare som tillåter bläddring i lokala filer.
-Comment[uk]=Додаток до аплету переглядача носіїв, який надає змогу переглядати локальні файли.
-Comment[x-test]=xxA plugin for the mediabrowser applet that allows local file browsing.xx
+Comment[pt]=Um 'plugin' para a 'applet' de leitura multimédia, que permite a navegação nos ficheiros locais
+Comment[pt_BR]=Um plugin para o mini-aplicativo de leitor multimídia, que permite a navegação nos arquivos locais
+Comment[sv]=Ett insticksprogram för miniprogrammet Mediabläddrare som tillåter bläddring i lokala filer
+Comment[uk]=Додаток до аплету переглядача носіїв, який надає змогу переглядати локальні файли
+Comment[x-test]=xxA plugin for the mediabrowser applet that allows local file browsingxx
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 

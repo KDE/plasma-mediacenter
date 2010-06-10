@@ -24,6 +24,7 @@
 #include <KConfigGroup>
 #include "mediabrowser_export.h"
 #include "mediacenter/mediacenter.h"
+#include <kservice.h>
 
 class QAbstractItemModel;
 class KConfigDialog;
@@ -53,6 +54,10 @@ public:
     	MediaRole
     };
 
+    /**
+     * Used to load a backend instance via a plugin loader through KService.
+     * The first argument of @param args must be the unique serviceID of the service.
+     * */
     AbstractBrowsingBackend(QObject *parent, const QVariantList &args);
     virtual ~AbstractBrowsingBackend();
 
@@ -104,6 +109,7 @@ public:
 
     MediaCenter::MediaTypes allowedMediaTypes();
 
+    QString name() const;
 protected:
     /**
      * As from Plasma::Applet this method should be used in order

@@ -137,7 +137,7 @@ AbstractBrowsingBackend* StartupModel::backendFromIndex(const QModelIndex &index
     }
 
     KService::Ptr service = m_modelServices[index.row()];
-    return service->createInstance<AbstractBrowsingBackend>(parent, QVariantList(), error);
+    return service->createInstance<AbstractBrowsingBackend>(parent, QVariantList() << service->storageId(), error);
 }
 
 KService::Ptr StartupModel::service(KService *service) const

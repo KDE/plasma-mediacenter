@@ -19,23 +19,27 @@
 #include "abstractbrowsingbackend.h"
 
 #include <KGlobal>
+#include <KService>
+#include <KPluginInfo>
 #include <KDebug>
 
 class AbstractBrowsingBackend::AbstractBrowsingBackendPrivate
 {
 public:
-    AbstractBrowsingBackendPrivate(AbstractBrowsingBackend *q) : q(q),
+    AbstractBrowsingBackendPrivate(KService::Ptr service, AbstractBrowsingBackend *q) :
+    backendInfo(service),
+    q(q),
     cfInterface(false)
     {}
 
     AbstractBrowsingBackend *q;
     bool cfInterface;
-
+    KPluginInfo backendInfo;
     MediaCenter::MediaTypes allowedMediaTypes;
 };
 
 AbstractBrowsingBackend::AbstractBrowsingBackend(QObject *parent, const QVariantList &args) : QObject(parent),
-d(new AbstractBrowsingBackendPrivate(this))
+d(new AbstractBrowsingBackendPrivate(KService::serviceByStorageId(args.count() ? args.first().toString() : QString()), this))
 {
     Q_UNUSED(args);
 }
@@ -62,7 +66,7 @@ void AbstractBrowsingBackend::createConfigurationInterface(KConfigDialog *parent
 KConfigGroup AbstractBrowsingBackend::config()
 {
     kDebug() << KGlobal::config()->name();
-    return KConfigGroup(KGlobal::config(), "BrowsingBackends");
+    return KConfigGroup(KGlobal::config(), name());
 }
 
 void AbstractBrowsingBackend::init()
@@ -76,5 +80,10 @@ void AbstractBrowsingBackend::setAllowedMediaTypes(const MediaCenter::MediaTypes
 MediaCenter::MediaTypes AbstractBrowsingBackend::allowedMediaTypes()
 {
     return d->allowedMediaTypes;
+}
+
+QString AbstractBrowsingBackend::name() const
+{
+    return d->backendInfo.name();
 }
 
