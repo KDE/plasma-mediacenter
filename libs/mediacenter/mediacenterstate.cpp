@@ -104,7 +104,9 @@ void MediaCenterState::configure()
 {}
 
 QList<QGraphicsWidget*> MediaCenterState::subComponents() const
-{}
+{
+    return QList<QGraphicsWidget*>();
+}
 
 void MediaCenterState::init(MediaCenter::MediaLayout* &layout, QList< Plasma::Applet* > &list)
 {
