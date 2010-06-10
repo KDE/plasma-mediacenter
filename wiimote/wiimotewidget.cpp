@@ -214,7 +214,7 @@ dialog->setCaption( "My title" );
         return;
     }
     m_infraredDialog = new KDialog(this);
-    m_infraredDialog->setCaption("Infrared Sensors");
+    m_infraredDialog->setCaption(i18n("Infrared Sensors"));
     m_infraredDialog->setButtons(KDialog::Close);
     m_infraredLabel = new QLabel(m_infraredDialog);
     m_infraredDialog->resize(600, 600);

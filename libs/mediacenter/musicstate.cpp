@@ -275,11 +275,11 @@ void MusicState::updateInfoDisplay()
     //Update rating
     if (list.size() > 1) {
         QString number = QString::number(list.size());
-        m_selectedMediasLabel->setText("Rating of " + number + " selected items");
+        m_selectedMediasLabel->setText(i18n("Rating of %1 selected items", number ));
         m_ratingWidget->setEnabled(true);
     }
     if (list.size() == 1) {
-        m_selectedMediasLabel->setText("Rating of selected item");
+        m_selectedMediasLabel->setText(i18n("Rating of selected item"));
         m_ratingWidget->setEnabled(true);
         m_resource = new Nepomuk::Resource(list[0].second);
         m_ratingWidget->setRating(m_resource->rating());
@@ -287,7 +287,7 @@ void MusicState::updateInfoDisplay()
     if (list.isEmpty()) {
         if (m_player->musicPlayerPlaybackState() == MediaCenter::PausedState ||
             m_player->musicPlayerPlaybackState() == MediaCenter::PlayingState) {
-            m_selectedMediasLabel->setText("Rating of active item");
+            m_selectedMediasLabel->setText(i18n("Rating of active item"));
             m_ratingWidget->setEnabled(true);
             m_resource = new Nepomuk::Resource(m_musicMedia.second);
             m_ratingWidget->setRating(m_resource->rating());

@@ -381,13 +381,13 @@ void PictureState::updateInfoDisplay()
         m_currentlyPlayingLabel->setText(label);
     }
     if (m_player->picturePlayerPlaybackState() == MediaCenter::PausedState) {
-        m_currentlyPlayingLabel->setText("(Paused) " + label);
+        m_currentlyPlayingLabel->setText(i18n("(Paused) %1",label ));
     }
     if (m_player->picturePlayerPlaybackState() == MediaCenter::SinglePictureState) {
-        m_currentlyPlayingLabel->setText("(Single picture) " + label);
+        m_currentlyPlayingLabel->setText(i18n("(Single picture) %1",label ));
     }
     if (m_player->picturePlayerPlaybackState() == MediaCenter::StoppedState) {
-        m_currentlyPlayingLabel->setText("No picture shown");
+        m_currentlyPlayingLabel->setText(i18n("No picture shown"));
     }
 }
 

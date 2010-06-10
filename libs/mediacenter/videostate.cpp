@@ -314,10 +314,10 @@ void VideoState::updateInfoDisplay()
         m_currentlyPlayingLabel->setText(label);
     }
     if (m_player->videoPlayerPlaybackState() == MediaCenter::PausedState) {
-        m_currentlyPlayingLabel->setText("(Paused) " + label);
+        m_currentlyPlayingLabel->setText(i18n( "(Paused) %1",label ));
     }
     if (m_player->videoPlayerPlaybackState() == MediaCenter::StoppedState) {
-        m_currentlyPlayingLabel->setText("No video playing");
+        m_currentlyPlayingLabel->setText(i18n("No video playing"));
     }
 }
 
