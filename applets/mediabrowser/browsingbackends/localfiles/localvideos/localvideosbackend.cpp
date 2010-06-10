@@ -19,6 +19,9 @@
 #include "localvideosbackend.h"
 
 #include <mediabrowserlibs/mediabrowser_export.h>
+#include "nfo.h"
+
+#include <Nepomuk/Query/ResourceTypeTerm>
 
 MEDIABROWSER_BACKEND_EXPORT(LocalVideosBackend)
 
@@ -26,6 +29,7 @@ LocalVideosBackend::LocalVideosBackend(QObject *parent, const QVariantList &args
 LocalFilesAbstractBackend("LocalVideosBackend", parent, args)
 {
     m_acceptedMimePrefix = "video/";
+    m_term = Nepomuk::Query::ResourceTypeTerm(Vocabulary::NFO::Video());
     setAllowedMediaTypes(MediaCenter::Video);
 }
 

@@ -22,6 +22,7 @@
 #define LOCALFILESABSTRACTBACKEND_H
 
 #include <mediabrowserlibs/abstractbrowsingbackend.h>
+#include <Nepomuk/Query/Term>
 
 #include "ui_configbase.h"
 
@@ -29,7 +30,7 @@ class KDirModel;
 
 class LocalFilesAbstractBackend : public AbstractBrowsingBackend
 {
-
+    Q_OBJECT
 public:
     LocalFilesAbstractBackend(const QString &name, QObject* parent, const QVariantList& args);
     virtual ~LocalFilesAbstractBackend();
@@ -53,6 +54,7 @@ private:
 
 protected:
     QString m_acceptedMimePrefix;
+    Nepomuk::Query::Term m_term;
 
 private:
     Ui::ConfigBase ui;

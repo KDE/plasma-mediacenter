@@ -35,10 +35,6 @@
 #include <Nepomuk/Query/QueryServiceClient>
 #include <Nepomuk/Query/FileQuery>
 
-#include "nfo.h"
-#include "nie.h"
-
-
 LocalFilesAbstractBackend::LocalFilesAbstractBackend(const QString& name, QObject* parent, const QVariantList& args) :
 AbstractBrowsingBackend(parent, args),
 m_acceptedMimePrefix(QString()),
@@ -153,27 +149,27 @@ void LocalFilesAbstractBackend::configAccepted()
         }
         m_watchedDirs = watchedDirs;
 
-        cf.writeEntry("WatchedFolders", m_watchedDirs);
+        cf.writeEntry(m_backendName + "WatchedFolders", m_watchedDirs);
     } else {
         m_fromPlaces = ui.showPlace->isChecked();
         m_localUrl = m_fromPlaces ? ui.placesCombo->model()->index(ui.placesCombo->currentIndex(), 0).data(KFilePlacesModel::UrlRole).value<QUrl>()
                                     : ui.urlRequester->url();
         qobject_cast<KDirLister*>(m_model->dirLister())->openUrl(m_localUrl);
 
-        cf.writeEntry("LocalPicturesUrl", m_localUrl);
-        cf.writeEntry("PicturesFromPlaces", m_fromPlaces);
+        cf.writeEntry(m_backendName + "Url", m_localUrl);
+        cf.writeEntry(m_backendName + "FromPlaces", m_fromPlaces);
 
         bool folderNavigation = ui.folderNavigationCheckBox->isChecked();
         if (m_folderNavigation != folderNavigation) {
             m_folderNavigation = folderNavigation;
-            cf.writeEntry("PicturesFolderNavigation", m_folderNavigation);
+            cf.writeEntry(m_backendName + "FolderNavigation", m_folderNavigation);
             setFolderNavigation();
         }
     }
 
     if (useNepomuk != m_useNepomuk) {
         m_useNepomuk = useNepomuk;
-        cf.writeEntry("Nepomuk", m_useNepomuk);
+        cf.writeEntry(m_backendName + "Nepomuk", m_useNepomuk);
     }
     cf.sync();
     initModel();
@@ -185,7 +181,7 @@ void LocalFilesAbstractBackend::initModel()
         m_model->dirLister()->setMimeFilter(QStringList());
 
         Nepomuk::Query::FileQuery query;
-        query.setTerm(Nepomuk::Query::ResourceTypeTerm(Vocabulary::NFO::Image()));
+        query.setTerm(m_term);
         foreach (const QString &folder, m_watchedDirs) {
             query.addIncludeFolder(folder);
         }

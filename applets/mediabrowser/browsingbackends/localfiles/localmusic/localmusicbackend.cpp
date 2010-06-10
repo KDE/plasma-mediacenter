@@ -19,14 +19,8 @@
 #include "localmusicbackend.h"
 
 #include <mediabrowserlibs/mediabrowser_export.h>
-
-#include <KConfigDialog>
-#include <KDirModel>
-#include <KDirLister>
-#include <KMimeType>
-#include <KFilePlacesModel>
-#include <KLineEdit>
-#include <KDebug>
+#include <Nepomuk/Query/ResourceTypeTerm>
+#include "nfo.h"
 
 MEDIABROWSER_BACKEND_EXPORT(LocalMusicBackend)
 
@@ -35,6 +29,7 @@ LocalFilesAbstractBackend("LocalMusic", parent, args)
 {
 
     m_acceptedMimePrefix = "audio/";
+    m_term = Nepomuk::Query::ResourceTypeTerm(Vocabulary::NFO::Audio());
     setAllowedMediaTypes(MediaCenter::Audio);
 }
 

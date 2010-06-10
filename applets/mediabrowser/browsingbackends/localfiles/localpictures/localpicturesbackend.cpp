@@ -19,7 +19,8 @@
 #include "localpicturesbackend.h"
 
 #include <mediabrowserlibs/mediabrowser_export.h>
-
+#include "nfo.h"
+#include <Nepomuk/Query/ResourceTypeTerm>
 
 MEDIABROWSER_BACKEND_EXPORT(LocalPicturesBackend)
 
@@ -27,6 +28,7 @@ LocalPicturesBackend::LocalPicturesBackend(QObject *parent, const QVariantList &
 LocalFilesAbstractBackend("LocalPictures", parent, args)
 {
     m_acceptedMimePrefix = "image/";
+    m_term = Nepomuk::Query::ResourceTypeTerm(Vocabulary::NFO::Image());
     setAllowedMediaTypes(MediaCenter::Picture);
 }
 
