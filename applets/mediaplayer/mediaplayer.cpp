@@ -196,8 +196,7 @@ void MediaPlayer::SetControlsVisible(bool visible)
 
 bool MediaPlayer::ControlsVisible() const
 {
-    return m_video->controlsVisible();
-    return m_music->controlsVisible();
+    return (m_video->controlsVisible() && m_music->controlsVisible());
 }
 
 void MediaPlayer::ToggleControlsVisibility()

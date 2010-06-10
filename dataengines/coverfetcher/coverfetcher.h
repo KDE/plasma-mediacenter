@@ -20,6 +20,7 @@
 #define COVERFETCHER_H
 
 #include <Plasma/DataEngine>
+#include <KPixmapCache>
 
 #include "lastfmfetcher.h"
 
@@ -44,6 +45,7 @@ public slots:
 
 private:
     LastFMFetcher *m_fetcher;
+    KPixmapCache m_cache;
 };
 
 #endif

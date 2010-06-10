@@ -19,11 +19,9 @@
 #include "coverfetcher.h"
 #include "coverservice.h"
 
-// KDE
-#include <KPixmapCache>
-
 CoverFetcherEngine::CoverFetcherEngine(QObject *parent, const QVariantList &args)
-    : Plasma::DataEngine(parent, args), m_fetcher(new LastFMFetcher(this))
+    : Plasma::DataEngine(parent, args), m_fetcher(new LastFMFetcher(this)),
+    m_cache(KPixmapCache("mccovers"))
 {
     connect (m_fetcher, SIGNAL(coverReady(const QString &,
                                const QString &, LastFMFetcher::CoverSize, const QPixmap &)),
@@ -57,22 +55,22 @@ bool CoverFetcherEngine::sourceRequestEvent(const QString &source)
     QPixmap pixmap;
     // we check whether we have a cache copy of the cover for each
     // size type we support
-    if (KPixmapCache("mccovers").find(source + "|small", pixmap)) {
+    if (m_cache.find(source + "|small", pixmap)) {
         kDebug() << "small in cache";
         setData(source, "small", pixmap);
         readySizes |= LastFMFetcher::Small;
     }
-    if (KPixmapCache("mccovers").find(source + "|medium", pixmap)) {
+    if (m_cache.find(source + "|medium", pixmap)) {
         kDebug() << "medium in cache";
         setData(source, "medium", pixmap);
         readySizes |= LastFMFetcher::Medium;
     }
-    if (KPixmapCache("mccovers").find(source + "|large", pixmap)) {
+    if (m_cache.find(source + "|large", pixmap)) {
         kDebug() << "large in cache";
         setData(source, "large", pixmap);
         readySizes |= LastFMFetcher::Large;
     }
-    if (KPixmapCache("mccovers").find(source +"|extralarge", pixmap)) {
+    if (m_cache.find(source +"|extralarge", pixmap)) {
         kDebug() << "extralarge in cache";
         setData(source, "extralarge", pixmap);
         readySizes |= LastFMFetcher::ExtraLarge;
@@ -112,7 +110,7 @@ void CoverFetcherEngine::getCover(const QString &artist,
 
     kDebug() << "setting cover for" << artist << albumName;
 
-    KPixmapCache("mccovers").insert(artist + "|" + albumName + "|" + LastFMFetcher::sizeToString(size), cover);
+    m_cache.insert(artist + "|" + albumName + "|" + LastFMFetcher::sizeToString(size), cover);
 
     setData(artist + "|" + albumName,
             LastFMFetcher::sizeToString(size), cover);
