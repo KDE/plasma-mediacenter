@@ -346,12 +346,11 @@ void PictureState::updateInfoDisplay()
 
     //Update rating
     if (list.size() > 1) {
-        QString number = QString::number(list.size());
-        m_selectedMediasLabel->setText("Rating of " + number + " selected pictures");
+        m_selectedMediasLabel->setText(i18np("Rating of %1 selected picture", "Rating of %1 selected pictures", list.size()));
         m_ratingWidget->setEnabled(true);
     }
     if (list.size() == 1) {
-        m_selectedMediasLabel->setText("Rating of selected picture");
+        m_selectedMediasLabel->setText(i18n("Rating of selected picture"));
         m_ratingWidget->setEnabled(true);
         m_resource = new Nepomuk::Resource(list[0].second);
         m_ratingWidget->setRating(m_resource->rating());
@@ -360,7 +359,7 @@ void PictureState::updateInfoDisplay()
         if (m_player->picturePlayerPlaybackState() == MediaCenter::PausedState ||
             m_player->picturePlayerPlaybackState() == MediaCenter::PlayingState ||
             m_player->picturePlayerPlaybackState() == MediaCenter::SinglePictureState) {
-            m_selectedMediasLabel->setText("Rating of active picture");
+            m_selectedMediasLabel->setText(i18n("Rating of active picture"));
             m_ratingWidget->setEnabled(true);
             m_resource = new Nepomuk::Resource(m_pictureMedia.second);
             m_ratingWidget->setRating(m_resource->rating());

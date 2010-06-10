@@ -274,8 +274,7 @@ void MusicState::updateInfoDisplay()
 
     //Update rating
     if (list.size() > 1) {
-        QString number = QString::number(list.size());
-        m_selectedMediasLabel->setText(i18n("Rating of %1 selected items", number ));
+        m_selectedMediasLabel->setText(i18np("Rating of %1 selected item", "Rating of %1 selected items", list.size()));
         m_ratingWidget->setEnabled(true);
     }
     if (list.size() == 1) {
@@ -305,18 +304,21 @@ void MusicState::updateInfoDisplay()
     //TODO: Check for file here
     TagLib::FileRef ref(file.toLatin1());
     QString label = ref.isNull() ? QFileInfo(file).fileName() :
-                  ref.tag()->title().toCString(true) + QString(" from ") +
-                  ref.tag()->artist().toCString(true) + QString(" (") +
-                  ref.tag()->album().toCString(true) + QString(")");
+                  i18nc("'Track title' from 'track author' (track album)",
+                        "%1 from %2 (%3)",
+                        ref.tag()->title().toCString(true),
+                        ref.tag()->artist().toCString(true),
+                        ref.tag()->album().toCString(true)
+                  );
 
     if (m_player->musicPlayerPlaybackState() == MediaCenter::PlayingState) {
         m_currentlyPlayingLabel->setText(label);
     }
     if (m_player->musicPlayerPlaybackState() == MediaCenter::PausedState) {
-        m_currentlyPlayingLabel->setText("(Paused) " + label);
+        m_currentlyPlayingLabel->setText(i18n("(Paused) %1", label));
     }
     if (m_player->musicPlayerPlaybackState() == MediaCenter::StoppedState) {
-        m_currentlyPlayingLabel->setText("No music playing");
+        m_currentlyPlayingLabel->setText(i18n("No music playing"));
     }
 }
 

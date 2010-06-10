@@ -280,12 +280,11 @@ void VideoState::updateInfoDisplay()
 
     //Update rating
     if (list.size() > 1) {
-        QString number = QString::number(list.size());
-        m_selectedMediasLabel->setText("Rating of " + number + " selected items");
+        m_selectedMediasLabel->setText(i18np("Rating of %1 selected item", "Rating of %1 selected items", list.size()));
         m_ratingWidget->setEnabled(true);
     }
     if (list.size() == 1) {
-        m_selectedMediasLabel->setText("Rating of selected item");
+        m_selectedMediasLabel->setText(i18n("Rating of selected item"));
         m_ratingWidget->setEnabled(true);
         m_resource = new Nepomuk::Resource(list[0].second);
         m_ratingWidget->setRating(m_resource->rating());
@@ -293,7 +292,7 @@ void VideoState::updateInfoDisplay()
     if (list.isEmpty()) {
         if (m_player->videoPlayerPlaybackState() == MediaCenter::PausedState ||
             m_player->videoPlayerPlaybackState() == MediaCenter::PlayingState) {
-            m_selectedMediasLabel->setText("Rating of active item");
+            m_selectedMediasLabel->setText(i18n("Rating of active item"));
             m_ratingWidget->setEnabled(true);
             m_resource = new Nepomuk::Resource(m_videoMedia.second);
             m_ratingWidget->setRating(m_resource->rating());
