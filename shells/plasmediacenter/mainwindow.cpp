@@ -90,6 +90,7 @@ m_infobar(0)
     if (args->isSet("fullscreen")) {
         toggleFullScreen();
     }
+    args->clear();
 }
 
 MainWindow::~MainWindow()
