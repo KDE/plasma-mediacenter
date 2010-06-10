@@ -58,10 +58,10 @@ Q_SIGNALS:
     void mediasActivated(const QList<MediaCenter::Media> &);
 
     /**
-     * This signal should emit a list of all the Media in the Current directory. Useful for picture slideshow
-     * and brwosing single pictures (next/previous)
+     * This signal should be emitted whenever the current list
+     * of shown medias in the browser changes
      */
-    void mediasListInDirectory(const QList<MediaCenter::Media> &);
+    void mediasListChanged(const QList<MediaCenter::Media> &);
     void mediaActivated(const MediaCenter::Media &);
 
     /**

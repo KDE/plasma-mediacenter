@@ -117,7 +117,6 @@ private:
     class AbstractBrowsingBackendPrivate;
     AbstractBrowsingBackendPrivate *d;
 
-    MediaCenter::MediaTypes m_allowedMediaTypes;
 };
 
 #endif // MODELPACKAGE_H

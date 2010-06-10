@@ -1,17 +1,12 @@
-find_package(SharedDesktopOntologies REQUIRED)
-find_package(Soprano REQUIRED)
-find_package(Nepomuk REQUIRED)
-
-include(SopranoAddOntology)
-
 set(localpicturesbackend_SRCS
+    ../localfilesabstractbackend.cpp
     localpicturesbackend.cpp
 )
-
 soprano_add_ontology(localpicturesbackend_SRCS ${SHAREDDESKTOPONTOLOGIES_ROOT_DIR}/nie/nfo.trig "NFO" "Vocabulary" "trig")
 soprano_add_ontology(localpicturesbackend_SRCS ${SHAREDDESKTOPONTOLOGIES_ROOT_DIR}/nie/nie.trig "NIE" "Vocabulary" "trig")
 
-kde4_add_ui_files(localpicturesbackend_SRCS localpicturesconfig.ui)
+kde4_add_ui_files(localpicturesbackend_SRCS ../configbase.ui)
+
 kde4_add_plugin(pmc_localpictures ${localpicturesbackend_SRCS})
 target_link_libraries(pmc_localpictures
 mediabrowserlibs

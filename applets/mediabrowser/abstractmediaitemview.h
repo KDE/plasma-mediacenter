@@ -145,7 +145,7 @@ private slots:
 signals:
     void scrollOffsetChanged(int);
     void mediasActivated(const QList<MediaCenter::Media> &);
-    void mediasListInDirectory(const QList<MediaCenter::Media> &);
+    void mediasListChanged(const QList<MediaCenter::Media> &);
     void mediaActivated(const MediaCenter::Media &);
     void indexActivated(const QModelIndex &);
     void mediaSelected(const MediaCenter::Media);

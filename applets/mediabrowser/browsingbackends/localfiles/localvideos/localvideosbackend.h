@@ -16,49 +16,20 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#ifndef LOCALPICTURESPACKAGE_H
-#define LOCALPICTURESPACKAGE_H
+#ifndef LOCALVIDEOSPACKAGE_H
+#define LOCALVIDEOSPACKAGE_H
 
-#include <mediabrowserlibs/abstractbrowsingbackend.h>
+#include "../localfilesabstractbackend.h"
 
-#include "ui_localpicturesconfig.h"
-
-class QAbstractItemModel;
-class KConfigDialog;
-class KDirModel;
-
-class LocalPicturesBackend : public AbstractBrowsingBackend
+class LocalVideosBackend : public LocalFilesAbstractBackend
 {
     Q_OBJECT
 public:
-    LocalPicturesBackend(QObject *parent, const QVariantList &args);
-    ~LocalPicturesBackend();
+    LocalVideosBackend(QObject *parent, const QVariantList &args);
+    ~LocalVideosBackend();
 
-    QAbstractItemModel *model();
     AbstractBrowsingBackend::BrowsingType browsingType() const;
 
-    void createConfigurationInterface(KConfigDialog *parent);
-
-    void init();
-
-private slots:
-    void configAccepted();
-    void getWatchedDirsList();
-    void removeItem();
-    void initModel();
-
-private:
-    Ui::LocalPicturesConfig uiLocal;
-    bool m_fromPlaces;
-    bool m_folderNavigation;
-    bool m_useNepomuk;
-    KUrl m_localUrl;
-    QStringList m_mimeTypes;
-    QStringList m_watchedDirs;
-    KDirModel *m_model;
-
-private:
-    void setFolderNavigation();
 };
 
-#endif // LOCALPICTURESPACKAGE_H
+#endif // LOCALVIDEOSPACKAGE_H

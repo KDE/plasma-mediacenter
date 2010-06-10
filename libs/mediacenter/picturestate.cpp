@@ -193,8 +193,8 @@ void PictureState::initConnections()
     connect (m_player, SIGNAL(lastPictureShown()), m_pictureToBrowser, SIGNAL(clicked()));
     connect (m_slideshowTimeSlider, SIGNAL(valueChanged(int)), this, SLOT (updateSLideshowInterval(int)));
     connect (m_startSlideshow, SIGNAL (clicked()), this, SLOT (enterSlideshowState()));
-    connect (m_browser, SIGNAL (mediasListInDirectory(QList<MediaCenter::Media>)), m_player, SLOT (clearPictureQueue()));
-    connect (m_browser, SIGNAL (mediasListInDirectory(QList<MediaCenter::Media>)), m_player, SLOT (enqueuePictures(QList<MediaCenter::Media>)));
+    connect (m_browser, SIGNAL (mediasListChanged(QList<MediaCenter::Media>)), m_player, SLOT (clearPictureQueue()));
+    connect (m_browser, SIGNAL (mediasListChanged(QList<MediaCenter::Media>)), m_player, SLOT (enqueuePictures(QList<MediaCenter::Media>)));
     connect (m_previousPicture, SIGNAL(clicked()), m_player, SLOT(skipPictureBackward()));
     connect (m_nextPicture, SIGNAL(clicked()), m_player, SLOT(skipPictureForward()));
     connect (m_previousPicture, SIGNAL(clicked()), this, SLOT(pauseOnSkip()));

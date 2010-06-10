@@ -16,65 +16,25 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#include "abstractbrowsingbackend.h"
+#include "localpicturesbackend.h"
 
-#include <KGlobal>
-#include <KDebug>
+#include <mediabrowserlibs/mediabrowser_export.h>
 
-class AbstractBrowsingBackend::AbstractBrowsingBackendPrivate
+
+MEDIABROWSER_BACKEND_EXPORT(LocalPicturesBackend)
+
+LocalPicturesBackend::LocalPicturesBackend(QObject *parent, const QVariantList &args) :
+LocalFilesAbstractBackend("LocalPictures", parent, args)
 {
-public:
-    AbstractBrowsingBackendPrivate(AbstractBrowsingBackend *q) : q(q),
-    cfInterface(false)
-    {}
-
-    AbstractBrowsingBackend *q;
-    bool cfInterface;
-
-    MediaCenter::MediaTypes allowedMediaTypes;
-};
-
-AbstractBrowsingBackend::AbstractBrowsingBackend(QObject *parent, const QVariantList &args) : QObject(parent),
-d(new AbstractBrowsingBackendPrivate(this))
-{
-    Q_UNUSED(args);
+    m_acceptedMimePrefix = "image/";
+    setAllowedMediaTypes(MediaCenter::Picture);
 }
 
-AbstractBrowsingBackend::~AbstractBrowsingBackend()
-{
-}
-
-bool AbstractBrowsingBackend::hasConfigurationInterface()
-{
-    return d->cfInterface;
-}
-
-void AbstractBrowsingBackend::setHasConfigurationInterface(bool hasInterface)
-{
-    d->cfInterface = hasInterface;
-}
-
-void AbstractBrowsingBackend::createConfigurationInterface(KConfigDialog *parent)
-{
-    Q_UNUSED(parent);
-}
-
-KConfigGroup AbstractBrowsingBackend::config()
-{
-    kDebug() << KGlobal::config()->name();
-    return KConfigGroup(KGlobal::config(), "BrowsingBackends");
-}
-
-void AbstractBrowsingBackend::init()
+LocalPicturesBackend::~LocalPicturesBackend()
 {}
 
-void AbstractBrowsingBackend::setAllowedMediaTypes(const MediaCenter::MediaTypes &type)
+AbstractBrowsingBackend::BrowsingType LocalPicturesBackend::browsingType() const
 {
-    d->allowedMediaTypes = type;
-}
-
-MediaCenter::MediaTypes AbstractBrowsingBackend::allowedMediaTypes()
-{
-    return d->allowedMediaTypes;
+    return AbstractBrowsingBackend::LocalBrowsing;
 }
 

@@ -581,16 +581,18 @@ void MediaPlayer::playMusicMedia(const MediaCenter::Media &media)
 }
 void MediaPlayer::playPictureMedia(const MediaCenter::Media &media)
 {
-    foreach (MediaCenter::Media mediaSource, m_pictureMedias)  {
+    foreach (const MediaCenter::Media &mediaSource, m_pictureMedias)  {
         if (mediaSource.second == media.second) {
             setPictureActive(true);
             //Picture
             if (media.first == MediaCenter::Picture) {
                 slideShow(media);
-            }
-            else {
+                break;
+            } else {
                 kWarning() << "MediaType unknown";
             }
+        } else {
+            kDebug() << "media not found";
         }
     }
 }
@@ -607,9 +609,10 @@ void MediaPlayer::slideShow(const MediaCenter::Media &media)
         layout->addItem(m_picture);
         setLayout(layout);
     }
-        m_picture->loadPicture(media.second);
-        m_currentPictureMedia = media;
-        emit newPictureMedia(m_currentPictureMedia);
+    kDebug() << "loading picture" << media.second;
+    m_picture->loadPicture(media.second);
+    m_currentPictureMedia = media;
+    emit newPictureMedia(m_currentPictureMedia);
 
     if (slideShowInterval() == 0 && !m_picture->isTimerActive()) {
        m_currentPicturePlaybackState = MediaCenter::SinglePictureState;

@@ -19,42 +19,17 @@
 #ifndef LOCALMUSICPACKAGE_H
 #define LOCALMUSICPACKAGE_H
 
-#include <mediabrowserlibs/abstractbrowsingbackend.h>
+#include "../localfilesabstractbackend.h"
 
-#include "ui_localmusicconfig.h"
-
-class QAbstractItemModel;
-class KConfigDialog;
-class KDirModel;
-
-class LocalMusicBackend : public AbstractBrowsingBackend
+class LocalMusicBackend : public LocalFilesAbstractBackend
 {
     Q_OBJECT
 public:
     LocalMusicBackend(QObject *parent, const QVariantList &args);
     ~LocalMusicBackend();
 
-    QAbstractItemModel *model();
     AbstractBrowsingBackend::BrowsingType browsingType() const;
 
-    void createConfigurationInterface(KConfigDialog *parent);
-
-    void init();
-
-private slots:
-    void configAccepted();
-
-private:
-    Ui::LocalMusicConfig uiLocal;
-    bool m_fromPlaces;
-    bool m_folderNavigation;
-    KUrl m_localUrl;
-    QStringList m_mimeTypes;
-
-    KDirModel *m_model;
-
-private:
-    void setFolderNavigation();
 };
 
 #endif // LOCALMUSICPACKAGE_H

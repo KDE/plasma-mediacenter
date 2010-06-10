@@ -16,45 +16,32 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#ifndef LOCALVIDEOSPACKAGE_H
-#define LOCALVIDEOSPACKAGE_H
+#include "localmusicbackend.h"
 
-#include <mediabrowserlibs/abstractbrowsingbackend.h>
+#include <mediabrowserlibs/mediabrowser_export.h>
 
-#include "ui_localvideosconfig.h"
+#include <KConfigDialog>
+#include <KDirModel>
+#include <KDirLister>
+#include <KMimeType>
+#include <KFilePlacesModel>
+#include <KLineEdit>
+#include <KDebug>
 
-class QAbstractItemModel;
-class KConfigDialog;
-class KDirModel;
+MEDIABROWSER_BACKEND_EXPORT(LocalMusicBackend)
 
-class LocalVideosBackend : public AbstractBrowsingBackend
+LocalMusicBackend::LocalMusicBackend(QObject *parent, const QVariantList &args) :
+LocalFilesAbstractBackend("LocalMusic", parent, args)
 {
-    Q_OBJECT
-public:
-    LocalVideosBackend(QObject *parent, const QVariantList &args);
-    ~LocalVideosBackend();
 
-    QAbstractItemModel *model();
-    AbstractBrowsingBackend::BrowsingType browsingType() const;
+    m_acceptedMimePrefix = "audio/";
+    setAllowedMediaTypes(MediaCenter::Audio);
+}
 
-    void createConfigurationInterface(KConfigDialog *parent);
+LocalMusicBackend::~LocalMusicBackend()
+{}
 
-    void init();
-
-private slots:
-    void configAccepted();
-
-private:
-    Ui::LocalVideosConfig uiLocal;
-    bool m_fromPlaces;
-    bool m_folderNavigation;
-    KUrl m_localUrl;
-    QStringList m_mimeTypes;
-
-    KDirModel *m_model;
-
-private:
-    void setFolderNavigation();
-};
-
-#endif // LOCALVIDEOSPACKAGE_H
+AbstractBrowsingBackend::BrowsingType LocalMusicBackend::browsingType() const
+{
+    return AbstractBrowsingBackend::LocalBrowsing;
+}

@@ -62,7 +62,7 @@ public slots:
     void clearViewModes();
 
 signals:
-    void mediasListInDirectory(const QList<MediaCenter::Media> &list);
+    void mediasListChanged(const QList<MediaCenter::Media> &list);
 
     void musicDataEngine();
     void videoDataEngine();

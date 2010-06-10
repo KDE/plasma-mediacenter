@@ -333,9 +333,9 @@ void AbstractMediaItemView::itemClickEvent(QGraphicsSceneMouseEvent *event)
             m_rootIndex = model->indexForItem(item);
             listMediaInDirectory();
             emit directoryChanged();
-        } else if (item.isLocalFile()) {
+        } else {
             MediaCenter::Media media;
-            media.first = MediaCenter::getType(item.url().path());
+            media.first = MediaCenter::getType(item.localPath());
             media.second = item.localPath();
             emit mediasActivated(QList<MediaCenter::Media>() << media);
             emit mediaActivated(media);
@@ -365,14 +365,14 @@ void AbstractMediaItemView::listMediaInDirectory()
         }
 
         foreach (const KFileItem &item, items) {
-            if (MediaCenter::getType(item.url().path()) == MediaCenter::Picture) {
-                media.first = MediaCenter::getType(item.url().path());
-                media.second = item.url().path();
+            if (MediaCenter::getType(item.localPath()) == MediaCenter::Picture) {
+                media.first = MediaCenter::getType(item.localPath());
+                media.second = item.localPath();
                 list << media;
             }
         }
         //At the moment I only want pictures. Maybe I can create a signal for each mediatype?
-        emit mediasListInDirectory(list);
+        emit mediasListChanged(list);
     }
 }
 
