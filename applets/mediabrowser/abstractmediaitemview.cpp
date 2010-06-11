@@ -396,8 +396,13 @@ void AbstractMediaItemView::tryDrag(QGraphicsSceneMouseEvent *event)
     if (item.isNull()) {
         return;
     }
-    mime->setUrls(QList<QUrl>() << item.url());
-    mime->setText(item.url().pathOrUrl());
+    bool ok;
+    KUrl url = item.mostLocalUrl(ok);
+    if (!ok) {
+        return;
+    }
+    mime->setUrls(QList<QUrl>() << url);
+    mime->setText(url.pathOrUrl());
     drag->setMimeData(mime);
 
     QPixmap pixmap(viewItem->size().toSize());
@@ -506,8 +511,8 @@ void AbstractMediaItemView::slotItemSelected()
             return;
         }
         if (!item.isDir()) {
-            media.first = MediaCenter::getType(item.url().path());
-            media.second = item.url().path();
+            media.first = MediaCenter::getType(item.localPath());
+            media.second = item.localPath();
         }
     }
     if (m_hoveredItem->isSelected()) {
