@@ -2,12 +2,14 @@
 Type=Service
 Icon=folder-image
 Name=Local Pictures browsing plugin
+Name[en_GB]=Local Pictures browsing plugin
 Name[pt]='Plugin' de Navegação nas Imagens Locais
 Name[pt_BR]=Plug-in de navegação nas imagens locais
 Name[sv]=Insticksprogram för bläddring i lokala bilder
 Name[uk]=Додаток для перегляду локальних зображень
 Name[x-test]=xxLocal Pictures browsing pluginxx
 Comment=A plugin for the mediabrowser applet that allows local file browsing
+Comment[en_GB]=A plugin for the mediabrowser applet that allows local file browsing
 Comment[pt]=Um 'plugin' para a 'applet' de leitura multimédia, que permite a navegação nos ficheiros locais.
 Comment[pt_BR]=Um plug-in para o miniaplicativo leitor multimídia, que permite a navegação nos arquivos locais
 Comment[sv]=Ett insticksprogram för miniprogrammet Mediabläddrare som tillåter bläddring i lokala filer
