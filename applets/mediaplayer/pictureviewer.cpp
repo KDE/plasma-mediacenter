@@ -32,7 +32,9 @@ PictureViewer::PictureViewer(QGraphicsItem *parent) : QGraphicsWidget(parent),
 m_picture(QImage()),
 m_showTime(3),
 m_pictureRect(QRectF()),
-m_picturePath(QString())
+m_picturePath(QString()),
+m_delayedSmoothScaling(false),
+m_emitImageLoaded(false)
 {
     m_timer.setSingleShot(true);
     connect (&m_timer, SIGNAL(timeout()), this, SIGNAL(showFinished()));
@@ -58,6 +60,7 @@ void PictureViewer::loadPicture(const QString &path)
     if (type != MediaCenter::Picture) {
         return;
     }
+    m_emitImageLoaded = true;
     m_picturePath = path;
 
     ImageLoader *loader = new ImageLoader(m_picturePath);
@@ -86,10 +89,15 @@ void PictureViewer::slotImageScaled(const QSize &s, const QImage& image)
     m_relativePictureRect = rect;
 
     update();
+    if (m_emitImageLoaded) {
+        emit imageLoaded();
+        m_emitImageLoaded = false;
+    }
 }
 
 void PictureViewer::slotDelayedResize()
 {
+    m_delayedSmoothScaling = false;
     adjustPixmapSize(size().toSize());
 }
 
@@ -100,7 +108,9 @@ void PictureViewer::resizeEvent(QGraphicsSceneResizeEvent* event)
     if (m_resizeTimer.isActive()) {
         m_resizeTimer.stop();
     }
+    m_delayedSmoothScaling = true;
     m_resizeTimer.start(200);
+    adjustPixmapSize(size().toSize());
 }
 
 void PictureViewer::adjustPixmapSize(const QSize &s)
@@ -125,15 +135,19 @@ void PictureViewer::adjustPixmapSize(const QSize &s)
     }
 
     // the image is bigger than the contents rect
-    ImageScaler *scaler = new ImageScaler(m_picture, s);
-    connect(scaler, SIGNAL(scaled(QSize,QImage)), this, SLOT(slotImageScaled(QSize, QImage)));
-    QThreadPool::globalInstance()->start(scaler);
+    if (!m_delayedSmoothScaling) {
+        ImageScaler *scaler = new ImageScaler(m_picture, s);
+        connect(scaler, SIGNAL(scaled(QSize,QImage)), this, SLOT(slotImageScaled(QSize, QImage)));
+        QThreadPool::globalInstance()->start(scaler);
+    } else {
+        slotImageScaled(s, m_picture.scaled(s, Qt::KeepAspectRatio));
+    }
 }
 
 void PictureViewer::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     Q_UNUSED(widget);
-    
+
     if (m_picture.isNull()) {
         kDebug() << "null pixmap; returning from paint";
         return;

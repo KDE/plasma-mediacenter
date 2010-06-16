@@ -23,6 +23,7 @@
 #include "player.h"
 
 #include <QGraphicsItem>
+#include <QImageReader>
 
 #include <KDebug>
 
@@ -65,9 +66,8 @@ m_playerNewRect(QRectF())
     m_slideControlAnimation = Plasma::Animator::create(Plasma::Animator::SlideAnimation);
     m_slideInfoDisplayAnimation = Plasma::Animator::create(Plasma::Animator::SlideAnimation);
 
-    m_fadeOutPlayer = Plasma::Animator::create(Plasma::Animator::FadeAnimation);
-    m_fadeInPlayer = Plasma::Animator::create(Plasma::Animator::FadeAnimation);
-    connect(m_fadeOutPlayer,SIGNAL(finished()), this, SLOT(fadeInPlayer()));
+    m_fadeOutPlayerAnimation = Plasma::Animator::create(Plasma::Animator::FadeAnimation);
+    m_fadeInPlayerAnimation = Plasma::Animator::create(Plasma::Animator::FadeAnimation);
 
     //Some applets (i.e. playlist) change position depending on the applied theme.
     connect (Plasma::Theme::defaultTheme(), SIGNAL(themeChanged()), this, SLOT(doCompleteLayout()));
@@ -211,7 +211,7 @@ void MediaLayout::layoutBrowser()
         size = QSizeF(m_containment->size().width(), m_containment->size().height() - infoDisplayPreferredShowingRect().size().height());
     }
 
-    animateResizingApplet(m_browser,QRectF(point,size));
+    animateAppletResize(m_browser, QRectF(point,size));
 }
 
 void MediaLayout::layoutControl()
@@ -315,11 +315,12 @@ void MediaLayout::layoutPlaylist()
             size = QSizeF(playlistPreferredShowingRect().size());
         }
     }
-    animateResizingApplet(m_playlist, QRectF(point,size));
+    animateAppletResize(m_playlist, QRectF(point,size));
 }
 
 void MediaLayout::layoutPlayer()
 {
+    kDebug() << "changing player layout to" << m_infoDisplayMode;
     m_player->setMinimumSize(50,50);
 
     QPointF point;
@@ -329,16 +330,21 @@ void MediaLayout::layoutPlayer()
         point = QPointF(0,0);
         size = QSizeF(m_containment->size());
         m_player->setGeometry(QRectF(point,size));
+        disconnect(m_player, SIGNAL(newMedia(MediaCenter::Media)), this, SLOT(fadeInPlayer()));
         return;
     }
 
     if (m_infoDisplayMode == MediaCenter::InfoDisplayFloating) {
         MediaCenter::Player *player = qobject_cast<MediaCenter::Player*>(m_player);
 
-        //Calling pictureRect from the player gives the size of the previous picture ?
-        // So I just ask again what size the current picture is
-        QImage *picture = new QImage(player->currentPictureMedia().second);
-        QRectF pictureRect = QRectF(0,0, picture->width(), picture->height());
+        if (!player) {
+            return;
+        }
+        connect(player, SIGNAL(newMedia(MediaCenter::Media)), this, SLOT(fadeInPlayer()));
+        connect(m_fadeOutPlayerAnimation, SIGNAL(finished()), this, SLOT(fadeInPlayer()));
+
+        const QSize pictureSize =  QImageReader(player->currentMedia(MediaCenter::PictureMode).second).size();
+        QRectF pictureRect = QRectF(0,0, pictureSize.width(), pictureSize.height());
 
         qreal availableWidth = m_containment->rect().width() - infoDisplayPreferredShowingRect().width();
         qreal availableHeight = m_containment->rect().height() - controllerPreferredShowingRect().height();
@@ -388,9 +394,10 @@ void MediaLayout::layoutPlayer()
 
     m_playerNewRect = QRectF(point,size);
 
-    m_fadeOutPlayer->setProperty("targetOpacity",0); //FIXME:Fade in works, but fade out doesn't. Why ?
-    m_fadeOutPlayer->setTargetWidget(m_player);
-    m_fadeOutPlayer->start();
+    m_fadeOutPlayerAnimation->setProperty("startOpacity", 1); //FIXME:Fade in works, but fade out doesn't. Why ?
+    m_fadeOutPlayerAnimation->setProperty("targetOpacity", 0);
+    m_fadeOutPlayerAnimation->setTargetWidget(m_player);
+    m_fadeOutPlayerAnimation->start();
 }
 
 bool MediaLayout::eventFilter(QObject *o, QEvent *e)
@@ -537,7 +544,7 @@ void MediaLayout::animateShowingApplet(Plasma::Applet *applet)
     }
 }
 
-void MediaCenter::MediaLayout::animateResizingApplet(Plasma::Applet *applet, QRectF target)
+void MediaCenter::MediaLayout::animateAppletResize(Plasma::Applet *applet, QRectF target)
 {
     if (applet == m_browser) {
         if (m_resizeBrowserAnimation->state() == Plasma::Animation::Running) {
@@ -764,8 +771,10 @@ MediaCenter::InfoDisplayMode MediaLayout::infoDisplayMode() const
 void MediaLayout::fadeInPlayer()
 {
     m_player->setGeometry(m_playerNewRect);
+    disconnect(m_fadeOutPlayerAnimation, SIGNAL(finished()), this, SLOT(fadeInPlayer()));
 
-    m_fadeInPlayer->setProperty("targetOpacity", 1);
-    m_fadeInPlayer->setTargetWidget(m_player);
-    m_fadeInPlayer->start();
+    m_fadeInPlayerAnimation->setProperty("startOpacity", 0);
+    m_fadeInPlayerAnimation->setProperty("targetOpacity", 1);
+    m_fadeInPlayerAnimation->setTargetWidget(m_player);
+    m_fadeInPlayerAnimation->start();
 }

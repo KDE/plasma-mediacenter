@@ -65,7 +65,6 @@ private:
 
     KUrl m_lastDirectory;
 
-    Nepomuk::Resource *m_resource;
     KRatingWidget *m_ratingWidget;
     QGraphicsProxyWidget *m_ratingProxyWidget;
     bool m_nepomuk;

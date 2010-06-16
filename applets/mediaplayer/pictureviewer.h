@@ -59,6 +59,7 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void showFinished();
+    void imageLoaded();
 
 private Q_SLOTS:
     void slotImageLoaded(const QImage &image);
@@ -74,6 +75,8 @@ private:
     QString m_picturePath;
     QRect m_relativePictureRect;
     QTimer m_resizeTimer;
+    bool m_delayedSmoothScaling : 1;
+    bool m_emitImageLoaded : 1;
 
 private:
     void adjustPixmapSize(const QSize &);

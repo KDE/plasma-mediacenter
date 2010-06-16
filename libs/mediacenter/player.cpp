@@ -18,23 +18,21 @@
  ***************************************************************************/
 #include "player.h"
 
+#include <QHash>
+
 using namespace MediaCenter;
 
 class Player::PlayerPrivate
 {
 public:
     PlayerPrivate(Player *q) : q(q),
-    sshowTime(3),
-    activeVideo(false),
-    activeMusic(false),
-    activePicture(false)
+    sshowTime(3)
     {}
 
     Player *q;
     qint64 sshowTime;
-    bool activeVideo;
-    bool activeMusic;
-    bool activePicture;
+    QHash<Mode, bool> activeModes;
+    QHash<Mode, Media> currentMedias;
 };
 
 Player::Player(QObject *parent, const QVariantList &args) : Plasma::Applet(parent, args), d(new PlayerPrivate(this))
@@ -45,19 +43,14 @@ Player::~Player()
     delete d;
 }
 
-Media Player::currentVideoMedia() const
+Media Player::currentMedia(Mode mode) const
 {
-    return Media();
+    return d->currentMedias.value(mode);
 }
 
-Media Player::currentMusicMedia() const
+void Player::setCurrentMedia(const MediaCenter::Media& media, Mode mode)
 {
-    return Media();
-}
-
-Media Player::currentPictureMedia() const
-{
-    return Media();
+    d->currentMedias.insert(mode, media);
 }
 
 void Player::setVideoQueue(const QList<Media> &sources)
@@ -131,49 +124,23 @@ void Player::playMusicMedia(const MediaCenter::Media &media)
 void Player::playAllMusicMedia()
 {}
 
-bool Player::isVideoActive()
+bool Player::isModeActive(Mode mode) const
 {
-    return d->activeVideo;
+    if (!d->activeModes.contains(mode)) {
+        return false;
+    }
+
+    return d->activeModes.value(mode);
 }
 
-void Player::setVideoActive(const bool set)
+void Player::setModeActive(Mode mode, bool set)
 {
-    if (d->activeVideo == set) {
+    if (d->activeModes.contains(mode) && d->activeModes.value(mode) == set) {
         return;
     }
 
-    d->activeVideo = set;
-    emit activeVideoStateChanged(d->activeVideo);
-}
-
-bool Player::isMusicActive()
-{
-    return d->activeMusic;
-}
-
-void Player::setMusicActive(const bool set)
-{
-    if (d->activeMusic == set) {
-        return;
-    }
-
-    d->activeMusic = set;
-    emit activeMusicStateChanged(d->activeMusic);
-}
-
-bool Player::isPictureActive()
-{
-    return d->activePicture;
-}
-
-void Player::setPictureActive(const bool set)
-{
-    if (d->activePicture == set) {
-        return;
-    }
-
-    d->activePicture = set;
-    emit activePictureStateChanged(d->activePicture);
+    d->activeModes.insert(mode, set);
+    emit activeModeChanged(mode, set);
 }
 
 void Player::setPlayerType(const MediaType &type)

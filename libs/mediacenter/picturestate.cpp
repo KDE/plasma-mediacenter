@@ -44,11 +44,10 @@ PictureState::PictureState (QState *parent)
     m_slideshowLabel(new Plasma::IconWidget()),
     m_nextPicture(new Plasma::IconWidget()),
     m_previousPicture(new Plasma::IconWidget()),
-    m_selectedMediasLabel(new Plasma::IconWidget("")),
+    m_selectedMediasLabel(new Plasma::IconWidget()),
     m_currentlyPlayingLabel(new Plasma::IconWidget()),
     m_switchDisplayMode(new Plasma::IconWidget()),
     m_lastDirectory(KUrl()),
-    m_resource(0),
     m_ratingWidget(new KRatingWidget()),
     m_ratingProxyWidget(new QGraphicsProxyWidget()),
     m_nepomuk(false)
@@ -109,8 +108,7 @@ void PictureState::onEntry(QEvent *event)
 
     if (SharedLayoutComponentsManager::self()->isBackgroundPictureMode()) {
         enterSlideshowState();
-    }
-    if (!SharedLayoutComponentsManager::self()->isBackgroundPictureMode()) {
+    } else {
         enterBrowsingState();
     }
 }
@@ -150,7 +148,6 @@ QList<QGraphicsWidget*> PictureState::subComponents() const
     m_control->addToLayout(m_switchDisplayMode, MediaCenter::RightZone);
 
 
-
     list << m_currentlyPlayingLabel;
     m_currentlyPlayingLabel->setMinimumSize(230,20);
     m_currentlyPlayingLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
@@ -176,9 +173,9 @@ void PictureState::configure()
     m_playlist->setVisible(false);
 
     m_browser->clearViewModes();
-    m_browser->addViewMode("Picturemode 1");
-    m_browser->addViewMode("Picturemode 2");
-    m_browser->addViewMode("Picturemode 3");
+    m_browser->addViewMode(i18n("Picturemode 1"));
+    m_browser->addViewMode(i18n("Picturemode 2"));
+    m_browser->addViewMode(i18n("Picturemode 3"));
     m_browser->setShowingBrowsingWidgets(true);
 
     m_player->setPlayerType(MediaCenter::Picture);
@@ -201,7 +198,7 @@ void PictureState::initConnections()
     connect (m_nextPicture, SIGNAL(clicked()), this, SLOT(pauseOnSkip()));
     connect (m_player, SIGNAL(picturePlaybackStateChanged(MediaCenter::PlaybackState)), this, SLOT(onPlaybackStateChanged(MediaCenter::PlaybackState)));
     connect (m_ratingWidget, SIGNAL(ratingChanged(int)), this, SLOT(slotRatingChanged(int)));
-    connect (m_player, SIGNAL(newPictureMedia(MediaCenter::Media)), this, SLOT(setMedia(MediaCenter::Media)));
+    connect (m_player, SIGNAL(newMedia(MediaCenter::Media)), this, SLOT(setMedia(MediaCenter::Media)));
     connect (m_switchDisplayMode, SIGNAL(clicked()), this, SLOT(toggleFloatingState()));
 }
 
@@ -310,12 +307,9 @@ void PictureState::onPlaybackStateChanged(const MediaCenter::PlaybackState &stat
         m_startSlideshow->setIcon("media-playback-pause");
         return;
     }
-    if (state == MediaCenter::PausedState) {
-        m_startSlideshow->setIcon("media-playback-start");
-        return;
-    } else {
-        m_startSlideshow->setIcon("media-playback-start");
-    }
+
+    m_startSlideshow->setIcon("media-playback-start");
+
 }
 
 void MediaCenter::PictureState::pauseOnSkip()
@@ -327,6 +321,9 @@ void MediaCenter::PictureState::pauseOnSkip()
 
 void PictureState::setMedia(const MediaCenter::Media &media)
 {
+    if (media.first != MediaCenter::Picture) {
+        return;
+    }
     m_pictureMedia = media;
     updateInfoDisplay();
 
@@ -337,6 +334,7 @@ void PictureState::setMedia(const MediaCenter::Media &media)
 
 void PictureState::selectedMediasChanged(const QList<MediaCenter::Media > &list)
 {
+    Q_UNUSED(list)
     updateInfoDisplay();
 }
 
@@ -352,8 +350,8 @@ void PictureState::updateInfoDisplay()
     if (list.size() == 1) {
         m_selectedMediasLabel->setText(i18n("Rating of selected picture"));
         m_ratingWidget->setEnabled(true);
-        m_resource = new Nepomuk::Resource(list[0].second);
-        m_ratingWidget->setRating(m_resource->rating());
+        Nepomuk::Resource resource(list[0].second);
+        m_ratingWidget->setRating(resource.rating());
     }
     if (list.isEmpty()) {
         if (m_player->picturePlayerPlaybackState() == MediaCenter::PausedState ||
@@ -361,8 +359,8 @@ void PictureState::updateInfoDisplay()
             m_player->picturePlayerPlaybackState() == MediaCenter::SinglePictureState) {
             m_selectedMediasLabel->setText(i18n("Rating of active picture"));
             m_ratingWidget->setEnabled(true);
-            m_resource = new Nepomuk::Resource(m_pictureMedia.second);
-            m_ratingWidget->setRating(m_resource->rating());
+            Nepomuk::Resource resource(m_pictureMedia.second);
+            m_ratingWidget->setRating(resource.rating());
         }
         if (m_player->picturePlayerPlaybackState() == MediaCenter::StoppedState) {
             m_selectedMediasLabel->setText("");
@@ -394,22 +392,17 @@ void PictureState::slotRatingChanged(const int rating)
 {
     QList<MediaCenter::Media> list = m_browser->selectedMedias();
 
-    if (list.size() > 1) {
-        foreach (MediaCenter::Media media, list) {
-            m_resource = new Nepomuk::Resource(media.second);
-            m_resource->setRating(rating);
-        }
+    foreach (MediaCenter::Media media, list) {
+        Nepomuk::Resource resource(media.second);
+        resource.setRating(rating);
     }
-    if (list.size() == 1) {
-        m_resource = new Nepomuk::Resource(list[0].second);
-        m_resource->setRating(rating);
-    }
+
     if (list.isEmpty()) {
         if (m_player->picturePlayerPlaybackState() == MediaCenter::PausedState ||
             m_player->picturePlayerPlaybackState() == MediaCenter::PlayingState ||
             m_player->picturePlayerPlaybackState() == MediaCenter::SinglePictureState) {
-            m_resource = new Nepomuk::Resource(m_pictureMedia.second);
-            m_resource->setRating(rating);
+            Nepomuk::Resource resource(m_pictureMedia.second);
+            resource.setRating(rating);
         }
     }
 }
@@ -418,11 +411,8 @@ void PictureState::toggleFloatingState()
 {
     if (m_layout->infoDisplayMode() == MediaCenter::InfoDisplayBottom) {
         enterPictureFloatingState();
-        return;
-    }
-    if (m_layout->infoDisplayMode() == MediaCenter::InfoDisplayFloating) {
+    } else {
         enterSinglePictureFullscreenState();
-        return;
     }
 }
 

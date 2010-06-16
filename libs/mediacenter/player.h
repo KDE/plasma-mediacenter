@@ -23,6 +23,7 @@
 
 #include <Plasma/Applet>
 
+#include <mediacenter/mediacenterstate.h>
 #include <mediacenter/mediacenter.h>
 
 namespace Phonon {
@@ -61,17 +62,15 @@ public:
     virtual Phonon::MediaObject *mediaObject() = 0;
 
     /**
-     * Reimplement this function in order to return the current
-     * path to the current reproducing media. If the current media
-     * is a MediaCenter::OpticalDisc just return
-     * the device name containing the media. Use Solid in order to retrieve it.
+     * @return the current media for the given @param mode
+     * or an invalid media if no current media is found.
      */
-    virtual Media currentVideoMedia() const;
-    virtual void setCurrentVideoMedia(const Media &media) = 0;
-    virtual Media currentPictureMedia() const;
-    virtual void setCurrentPictureMedia(const Media &media) = 0;
-    virtual Media currentMusicMedia() const;
-    virtual void setCurrentMusicMedia(const Media &media) = 0;
+    Media currentMedia(MediaCenter::Mode) const;
+
+    /**
+     * Sets the current media for the given @param mode
+     */
+    virtual void setCurrentMedia(const Media &media, MediaCenter::Mode mode);
 
     /**
      * Use this method on each state entry to inform the player which type the user wants
@@ -89,11 +88,9 @@ public:
     /**
      * @return the current state of the player.
      * @internal
-     * @see setActive()
+     * @see setActiveMode()
      */
-    virtual bool isVideoActive();
-    virtual bool isMusicActive();
-    virtual bool isPictureActive();
+    virtual bool isModeActive(MediaCenter::Mode) const;
 
     /**
      * This should return the current PLaybackstate of the playerPlaybackState
@@ -132,9 +129,7 @@ Q_SIGNALS:
     /**
      * This signal is emitted whenever the active state changes.
      */
-    void activeVideoStateChanged(const bool active);
-    void activePictureStateChanged(const bool active);
-    void activeMusicStateChanged(const bool active);
+    void activeModeChanged(MediaCenter::Mode mode, bool active);
 
     /**
      * Emit this signal when the medialist is empty to prevent
@@ -158,9 +153,8 @@ Q_SIGNALS:
      * to update for example the playPause icon or the sliders but also
      * to keep the player uptodate on the current media player wanted
      */
-    void newMusicMedia(const MediaCenter::Media &media);
-    void newVideoMedia(const MediaCenter::Media &media);
-    void newPictureMedia(const MediaCenter::Media &media);
+    void newMedia(const MediaCenter::Media &media);
+
     void newMusicObject(Phonon::MediaObject *object);
     void newVideoObject(Phonon::MediaObject *object);
 
@@ -254,9 +248,7 @@ protected:
      * paused. Set false when the player is not used, when the queue is empty
      * or when the reproduction is stopped.
      */
-    virtual void setVideoActive(const bool set);
-    virtual void setMusicActive(const bool set);
-    virtual void setPictureActive(const bool set);
+    void setModeActive(MediaCenter::Mode mode, bool set);
 
 private:
     class PlayerPrivate;

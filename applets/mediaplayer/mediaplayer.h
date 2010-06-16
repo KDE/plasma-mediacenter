@@ -65,13 +65,6 @@ public:
 
     bool eventFilter(QObject *o, QEvent *e);
 
-    virtual MediaCenter::Media currentVideoMedia() const;
-    virtual void setCurrentVideoMedia(const MediaCenter::Media &media);
-    virtual MediaCenter::Media currentMusicMedia() const;
-    virtual void setCurrentMusicMedia(const MediaCenter::Media &media);
-    virtual MediaCenter::Media currentPictureMedia() const;
-    virtual void setCurrentPictureMedia(const MediaCenter::Media &media);
-
     virtual void setPlayerType(const MediaCenter::MediaType &type);
 
     virtual MediaCenter::PlaybackState videoPlayerPlaybackState() const;
@@ -131,6 +124,7 @@ private slots:
     void playNextMusicMedia();
     void playNextVideoMedia();
     void returnToFirstPicture();
+    void slotEmitNewMedia();
 
 private:
     void loadConfig();
@@ -157,10 +151,6 @@ private:
     bool m_fullScreen;
     qint64 m_sshowTime;
     PictureViewer *m_picture;
-
-    MediaCenter::Media m_currentVideoMedia;
-    MediaCenter::Media m_currentMusicMedia;
-    MediaCenter::Media m_currentPictureMedia;
 
     MediaCenter::PlaybackState m_currentVideoPlaybackState;
     MediaCenter::PlaybackState m_currentPicturePlaybackState;

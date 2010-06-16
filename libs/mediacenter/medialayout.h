@@ -134,8 +134,8 @@ private:
     Plasma::Animation *m_slideControlAnimation;
     Plasma::Animation *m_slideInfoDisplayAnimation;
 
-    Plasma::Animation *m_fadeOutPlayer;
-    Plasma::Animation *m_fadeInPlayer;
+    Plasma::Animation *m_fadeOutPlayerAnimation;
+    Plasma::Animation *m_fadeInPlayerAnimation;
 
     QRectF m_playerNewRect;
 
@@ -145,7 +145,7 @@ private:
     void layoutInfoDisplay();
     void layoutPlaylist();
 
-    void animateResizingApplet(Plasma::Applet *applet, QRectF target);
+    void animateAppletResize(Plasma::Applet *applet, QRectF target);
 
 private slots:
     void setEnableGlowHandler(QGraphicsItem*, bool set);

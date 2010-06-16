@@ -184,7 +184,7 @@ void MusicState::configure()
     }
     m_musicVolumeSlider->setValue(int(m_player->volume()*100));
 
-    m_player->setCurrentMusicMedia(m_musicMedia);
+    m_player->setCurrentMedia(m_musicMedia, MediaCenter::MusicMode);
     m_player->setPlayerType(MediaCenter::Audio);
     m_playlist->setPlaylistMediaType(MediaCenter::Audio); //TODO: Find a better solution for playlists
     m_player->clearMusicQueue();
@@ -203,7 +203,7 @@ void MusicState::initConnections()
     connect (m_musicSkipForward, SIGNAL(clicked()), m_player, SLOT(skipMusicForward()));
     connect (m_musicSkipBack, SIGNAL(clicked()), m_player, SLOT(skipMusicBackward()));
     connect (m_musicVolumeSlider, SIGNAL(sliderMoved(int)), m_player, SLOT(setVolume(int)));
-    connect (m_player, SIGNAL(newMusicMedia(MediaCenter::Media)), this, SLOT(setMedia(MediaCenter::Media)));
+    connect (m_player, SIGNAL(newMedia(MediaCenter::Media)), this, SLOT(setMedia(MediaCenter::Media)));
     connect (m_player, SIGNAL(newMusicObject(Phonon::MediaObject*)), this, SLOT(setMediaObject(Phonon::MediaObject*)));
     connect (m_player, SIGNAL(nothingToPlay()), m_musicStop, SIGNAL(clicked()));
     connect (m_player, SIGNAL(musicPlaybackStateChanged(MediaCenter::PlaybackState)), this, SLOT(onPlaybackStateChanged(MediaCenter::PlaybackState)));
@@ -234,6 +234,9 @@ void MusicState::onPlaybackStateChanged(const MediaCenter::PlaybackState &state)
 
 void MusicState::setMedia(const MediaCenter::Media &media)
 {
+    if (media.first != MediaCenter::Audio) {
+        return;
+    }
     m_musicMedia = media;
 }
 

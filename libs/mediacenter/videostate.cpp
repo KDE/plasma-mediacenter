@@ -191,7 +191,7 @@ void VideoState::configure()
     m_videoVolumeSlider->setValue(int(m_player->volume()*100));
 
     m_player->setPlayerType(MediaCenter::Video);
-    m_player->setCurrentVideoMedia(m_videoMedia); //the player needs to know what the user wants to control with the buttons
+    m_player->setCurrentMedia(m_videoMedia, MediaCenter::VideoMode); //the player needs to know what the user wants to control with the buttons
     m_playlist->setPlaylistMediaType(MediaCenter::Video); //TODO: Find a better solution for playlists
     m_player->clearVideoQueue();
     m_player->enqueueVideos(m_playlist->medias(MediaCenter::Video));
@@ -209,7 +209,7 @@ void VideoState::initConnections()
     connect (m_videoSkipForward, SIGNAL(clicked()), m_player, SLOT(skipVideoForward()));
     connect (m_videoSkipBack, SIGNAL(clicked()), m_player, SLOT(skipVideoBackward()));
     connect (m_videoVolumeSlider, SIGNAL(sliderMoved(int)), m_player, SLOT(setVolume(int)));
-    connect (m_player, SIGNAL(newVideoMedia(MediaCenter::Media)), this, SLOT(setMedia(MediaCenter::Media)));
+    connect (m_player, SIGNAL(newMedia(MediaCenter::Media)), this, SLOT(setMedia(MediaCenter::Media)));
     connect (m_player, SIGNAL(newVideoObject(Phonon::MediaObject*)), this, SLOT(setMediaObject(Phonon::MediaObject*)));
     connect (m_player, SIGNAL(videoPlaybackStateChanged(MediaCenter::PlaybackState)), this, SLOT(onPlaybackStateChanged(MediaCenter::PlaybackState)));
     connect (m_ratingWidget, SIGNAL(ratingChanged(int)), this, SLOT(slotRatingChanged(int)));
@@ -238,6 +238,9 @@ void VideoState::onPlaybackStateChanged(const MediaCenter::PlaybackState &state)
 
 void VideoState::setMedia(const MediaCenter::Media &media)
 {
+    if (media.first != MediaCenter::Video) {
+        return;
+    }
     m_videoMedia = media;
 }
 
