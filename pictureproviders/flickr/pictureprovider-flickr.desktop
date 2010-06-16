@@ -2,6 +2,7 @@
 Type=Service
 Name=Flickr picture provider
 Name[en_GB]=Flickr picture provider
+Name[km]=ក្រុមហ៊ុន​ផ្ដល់​រូបភាព Flickr
 Name[pt]=Fornecedor de imagens do Flickr
 Name[pt_BR]=Fornecedor de imagens Flickr
 Name[sv]=Flickr-bildleverantör
@@ -12,6 +13,7 @@ Name[x-test]=xxFlickr picture providerxx
 Comment=A plugin that allows browsing through Flickr pictures
 Comment[en_GB]=A plugin that allows browsing through Flickr pictures
 Comment[es]=Un complemento que le permite navegar por imágenes de Flickr
+Comment[km]=កម្មវិធី​ជំនួយ​ដែល​អនុញ្ញាត​ឲ្យ​រក​តាមរយៈ​រូបភាព​របស់ Flickr
 Comment[pt]=Um 'plugin' que lhe permite navegar pelas imagens do Flickr
 Comment[pt_BR]=Um plug-in que lhe permite pesquisar imagens no Flickr.
 Comment[sv]=Ett insticksprogram som låter dig bläddra igenom bilder på Flickr.

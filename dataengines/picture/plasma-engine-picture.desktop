@@ -2,6 +2,7 @@
 Name=Picture Engine
 Name[en_GB]=Picture Engine
 Name[es]=Motor de imágenes
+Name[km]=ម៉ាស៊ីន​រូបភាព
 Name[pt]=Motor de Imagens
 Name[pt_BR]=Motor de imagem
 Name[sv]=Bildgränssnitt
@@ -11,6 +12,7 @@ Name[x-test]=xxPicture Enginexx
 Comment=An engine that allows you to query web services for pictures.
 Comment[en_GB]=An engine that allows you to query web services for pictures.
 Comment[es]=Un motor que le permite consultar servicios web de imágenes
+Comment[km]=ម៉ាស៊ីន​ដែល​អនុញ្ញាត​ឲ្យ​អ្នក​សួរ​សេវាបណ្តាញ​សម្រាប់​​រូបភាព ។
 Comment[pt]=Um motor que lhe permite pesquisar imagens em vários serviços na Web.
 Comment[pt_BR]=Um motor que lhe permite pesquisar imagens em vários serviços na Web.
 Comment[sv]=Ett gränssnitt som låter dig söka efter bilder på webbtjänster.

@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=flicklist
 Name[en_GB]=flicklist
+Name[km]=flicklist
 Name[pt]=flicklist
 Name[pt_BR]=flicklist
 Name[sv]=Blädderlista
@@ -8,6 +9,7 @@ Name[uk]=flicklist
 Name[x-test]=xxflicklistxx
 Comment=Plasma flicklist
 Comment[en_GB]=Plasma flicklist
+Comment[km]=Plasma flicklist
 Comment[pt]=Flicklist do Plasma
 Comment[pt_BR]=Plasma flicklist
 Comment[sv]=Plasma blädderlista
