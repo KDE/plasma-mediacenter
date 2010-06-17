@@ -64,18 +64,18 @@ void PictureState::onExit(QEvent *event)
     Q_UNUSED(event);
 
     //Pause slideshow if one is playing
-    if (m_player->picturePlayerPlaybackState() == MediaCenter::PlayingState) {
+    if (m_player->playbackState(MediaCenter::PictureMode) == MediaCenter::PlayingState) {
         m_player->playPausePicture();
     }
 
     m_lastDirectory = m_browser->directory();
 
-    if (m_player->picturePlayerPlaybackState() == MediaCenter::PausedState ||
-        m_player->picturePlayerPlaybackState() == MediaCenter::PlayingState) {
+    if (m_player->playbackState(MediaCenter::PictureMode) == MediaCenter::PausedState ||
+        m_player->playbackState(MediaCenter::PictureMode) == MediaCenter::PlayingState) {
         SharedLayoutComponentsManager::self()->setBackgroundPictureMode(true);
     }
-    if (m_player->picturePlayerPlaybackState() == MediaCenter::StoppedState ||
-        m_player->picturePlayerPlaybackState() == MediaCenter::SinglePictureState) {
+    if (m_player->playbackState(MediaCenter::PictureMode) == MediaCenter::StoppedState ||
+        m_player->playbackState(MediaCenter::PictureMode) == MediaCenter::SinglePictureState) {
         SharedLayoutComponentsManager::self()->setBackgroundPictureMode(false);
     }
 
@@ -196,7 +196,8 @@ void PictureState::initConnections()
     connect (m_nextPicture, SIGNAL(clicked()), m_player, SLOT(skipPictureForward()));
     connect (m_previousPicture, SIGNAL(clicked()), this, SLOT(pauseOnSkip()));
     connect (m_nextPicture, SIGNAL(clicked()), this, SLOT(pauseOnSkip()));
-    connect (m_player, SIGNAL(picturePlaybackStateChanged(MediaCenter::PlaybackState)), this, SLOT(onPlaybackStateChanged(MediaCenter::PlaybackState)));
+    connect (m_player, SIGNAL(playbackStateChanged(MediaCenter::PlaybackState, MediaCenter::Mode)),
+             this, SLOT(onPlaybackStateChanged(MediaCenter::PlaybackState, MediaCenter::Mode)));
     connect (m_ratingWidget, SIGNAL(ratingChanged(int)), this, SLOT(slotRatingChanged(int)));
     connect (m_player, SIGNAL(newMedia(MediaCenter::Media)), this, SLOT(setMedia(MediaCenter::Media)));
     connect (m_switchDisplayMode, SIGNAL(clicked()), this, SLOT(toggleFloatingState()));
@@ -257,10 +258,10 @@ void MediaCenter::PictureState::enterSlideshowState()
 
     m_layout->showPlayer();
 
-    if (m_player->picturePlayerPlaybackState() == MediaCenter::PausedState) {
+    if (m_player->playbackState(MediaCenter::PictureMode) == MediaCenter::PausedState) {
         m_layout->controlAutohideOff();
     }
-    if (m_player->picturePlayerPlaybackState() == MediaCenter::PlayingState) {
+    if (m_player->playbackState(MediaCenter::PictureMode) == MediaCenter::PlayingState) {
         m_layout->controlAutohideOn();
     }
 
@@ -299,8 +300,11 @@ void PictureState::enterSinglePictureFullscreenState()
     m_layout->layoutPlayer();
 }
 
-void PictureState::onPlaybackStateChanged(const MediaCenter::PlaybackState &state)
+void PictureState::onPlaybackStateChanged(MediaCenter::PlaybackState state, MediaCenter::Mode mode)
 {
+    if (mode != MediaCenter::PictureMode) {
+        return;
+    }
     updateInfoDisplay();
 
     if (state == MediaCenter::PlayingState) {
@@ -314,7 +318,7 @@ void PictureState::onPlaybackStateChanged(const MediaCenter::PlaybackState &stat
 
 void MediaCenter::PictureState::pauseOnSkip()
 {
-    if (m_player->picturePlayerPlaybackState() == MediaCenter::PlayingState) {
+    if (m_player->playbackState(MediaCenter::PictureMode) == MediaCenter::PlayingState) {
         m_player->playPausePicture();
     }
 }
@@ -354,15 +358,15 @@ void PictureState::updateInfoDisplay()
         m_ratingWidget->setRating(resource.rating());
     }
     if (list.isEmpty()) {
-        if (m_player->picturePlayerPlaybackState() == MediaCenter::PausedState ||
-            m_player->picturePlayerPlaybackState() == MediaCenter::PlayingState ||
-            m_player->picturePlayerPlaybackState() == MediaCenter::SinglePictureState) {
+        if (m_player->playbackState(MediaCenter::PictureMode) == MediaCenter::PausedState ||
+            m_player->playbackState(MediaCenter::PictureMode) == MediaCenter::PlayingState ||
+            m_player->playbackState(MediaCenter::PictureMode) == MediaCenter::SinglePictureState) {
             m_selectedMediasLabel->setText(i18n("Rating of active picture"));
             m_ratingWidget->setEnabled(true);
             Nepomuk::Resource resource(m_pictureMedia.second);
             m_ratingWidget->setRating(resource.rating());
         }
-        if (m_player->picturePlayerPlaybackState() == MediaCenter::StoppedState) {
+        if (m_player->playbackState(MediaCenter::PictureMode) == MediaCenter::StoppedState) {
             m_selectedMediasLabel->setText("");
             m_ratingWidget->setRating(0);
             m_ratingWidget->setEnabled(false);
@@ -374,16 +378,16 @@ void PictureState::updateInfoDisplay()
     //TODO:Check for file
     QString label = QFileInfo(file).fileName();
 
-    if (m_player->picturePlayerPlaybackState() == MediaCenter::PlayingState) {
+    if (m_player->playbackState(MediaCenter::PictureMode) == MediaCenter::PlayingState) {
         m_currentlyPlayingLabel->setText(label);
     }
-    if (m_player->picturePlayerPlaybackState() == MediaCenter::PausedState) {
+    if (m_player->playbackState(MediaCenter::PictureMode) == MediaCenter::PausedState) {
         m_currentlyPlayingLabel->setText(i18n("(Paused) %1",label ));
     }
-    if (m_player->picturePlayerPlaybackState() == MediaCenter::SinglePictureState) {
+    if (m_player->playbackState(MediaCenter::PictureMode) == MediaCenter::SinglePictureState) {
         m_currentlyPlayingLabel->setText(i18n("(Single picture) %1",label ));
     }
-    if (m_player->picturePlayerPlaybackState() == MediaCenter::StoppedState) {
+    if (m_player->playbackState(MediaCenter::PictureMode) == MediaCenter::StoppedState) {
         m_currentlyPlayingLabel->setText(i18n("No picture shown"));
     }
 }
@@ -398,9 +402,9 @@ void PictureState::slotRatingChanged(const int rating)
     }
 
     if (list.isEmpty()) {
-        if (m_player->picturePlayerPlaybackState() == MediaCenter::PausedState ||
-            m_player->picturePlayerPlaybackState() == MediaCenter::PlayingState ||
-            m_player->picturePlayerPlaybackState() == MediaCenter::SinglePictureState) {
+        if (m_player->playbackState(MediaCenter::PictureMode) == MediaCenter::PausedState ||
+            m_player->playbackState(MediaCenter::PictureMode) == MediaCenter::PlayingState ||
+            m_player->playbackState(MediaCenter::PictureMode) == MediaCenter::SinglePictureState) {
             Nepomuk::Resource resource(m_pictureMedia.second);
             resource.setRating(rating);
         }
@@ -426,7 +430,7 @@ void PictureState::enterPictureFloatingState()
 
     m_layout->controlAutohideOff();
 
-    if (m_player->picturePlayerPlaybackState() == MediaCenter::PlayingState) {
+    if (m_player->playbackState(MediaCenter::PictureMode) == MediaCenter::PlayingState) {
         m_player->playPausePicture();
     }
 }

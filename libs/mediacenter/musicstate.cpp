@@ -71,11 +71,11 @@ void MusicState::onExit(QEvent* event)
 
     m_lastDirectory = m_browser->directory();
 
-    if (m_player->musicPlayerPlaybackState() == MediaCenter::PlayingState) {
+    if (m_player->playbackState(MediaCenter::MusicMode) == MediaCenter::PlayingState) {
         SharedLayoutComponentsManager::self()->setBackgroundMusicMode(true);
     }
-    if (m_player->musicPlayerPlaybackState() == MediaCenter::StoppedState||
-        m_player->musicPlayerPlaybackState() == MediaCenter::PausedState) {
+    if (m_player->playbackState(MediaCenter::MusicMode) == MediaCenter::StoppedState||
+        m_player->playbackState(MediaCenter::MusicMode) == MediaCenter::PausedState) {
         SharedLayoutComponentsManager::self()->setBackgroundMusicMode(false);
     }
 
@@ -206,7 +206,8 @@ void MusicState::initConnections()
     connect (m_player, SIGNAL(newMedia(MediaCenter::Media)), this, SLOT(setMedia(MediaCenter::Media)));
     connect (m_player, SIGNAL(newMusicObject(Phonon::MediaObject*)), this, SLOT(setMediaObject(Phonon::MediaObject*)));
     connect (m_player, SIGNAL(nothingToPlay()), m_musicStop, SIGNAL(clicked()));
-    connect (m_player, SIGNAL(musicPlaybackStateChanged(MediaCenter::PlaybackState)), this, SLOT(onPlaybackStateChanged(MediaCenter::PlaybackState)));
+    connect (m_player, SIGNAL(playbackStateChanged(MediaCenter::PlaybackState, MediaCenter::Mode)),
+             this, SLOT(onPlaybackStateChanged(MediaCenter::PlaybackState, MediaCenter::Mode)));
     connect (m_ratingWidget, SIGNAL(ratingChanged(int)), this, SLOT(slotRatingChanged(int)));
 }
 
@@ -220,8 +221,11 @@ void MusicState::updateCurrentTick(const qint64 time)
     m_musicSeekSlider->setValue(time);
 }
 
-void MusicState::onPlaybackStateChanged(const MediaCenter::PlaybackState &state)
+void MusicState::onPlaybackStateChanged(MediaCenter::PlaybackState state, MediaCenter::Mode mode)
 {
+    if (mode != MediaCenter::MusicMode) {
+        return;
+    }
     updateInfoDisplay();
 
     if (state == MediaCenter::PlayingState) {
@@ -261,7 +265,7 @@ void MusicState::receivedMediaObject() const
     connect (mediaObject(), SIGNAL(totalTimeChanged(qint64)), this, SLOT(updateTotalTime(qint64)));
     connect (mediaObject(), SIGNAL(tick(qint64)), this, SLOT(updateCurrentTick(qint64)));
 
-    if (m_player->musicPlayerPlaybackState() == MediaCenter::PlayingState) {
+    if (m_player->playbackState(MediaCenter::MusicMode) == MediaCenter::PlayingState) {
         m_musicPlayPause->setIcon("media-playback-pause");
     }
 }
@@ -287,14 +291,14 @@ void MusicState::updateInfoDisplay()
         m_ratingWidget->setRating(m_resource->rating());
     }
     if (list.isEmpty()) {
-        if (m_player->musicPlayerPlaybackState() == MediaCenter::PausedState ||
-            m_player->musicPlayerPlaybackState() == MediaCenter::PlayingState) {
+        if (m_player->playbackState(MediaCenter::MusicMode) == MediaCenter::PausedState ||
+            m_player->playbackState(MediaCenter::MusicMode) == MediaCenter::PlayingState) {
             m_selectedMediasLabel->setText(i18n("Rating of active item"));
             m_ratingWidget->setEnabled(true);
             m_resource = new Nepomuk::Resource(m_musicMedia.second);
             m_ratingWidget->setRating(m_resource->rating());
         }
-        if (m_player->musicPlayerPlaybackState() == MediaCenter::StoppedState) {
+        if (m_player->playbackState(MediaCenter::MusicMode) == MediaCenter::StoppedState) {
             m_selectedMediasLabel->setText("");
             m_ratingWidget->setRating(0);
             m_ratingWidget->setEnabled(false);
@@ -314,13 +318,13 @@ void MusicState::updateInfoDisplay()
                         ref.tag()->album().toCString(true)
                   );
 
-    if (m_player->musicPlayerPlaybackState() == MediaCenter::PlayingState) {
+    if (m_player->playbackState(MediaCenter::MusicMode) == MediaCenter::PlayingState) {
         m_currentlyPlayingLabel->setText(label);
     }
-    if (m_player->musicPlayerPlaybackState() == MediaCenter::PausedState) {
+    if (m_player->playbackState(MediaCenter::MusicMode) == MediaCenter::PausedState) {
         m_currentlyPlayingLabel->setText(i18n("(Paused) %1", label));
     }
-    if (m_player->musicPlayerPlaybackState() == MediaCenter::StoppedState) {
+    if (m_player->playbackState(MediaCenter::MusicMode) == MediaCenter::StoppedState) {
         m_currentlyPlayingLabel->setText(i18n("No music playing"));
     }
 }
@@ -340,8 +344,8 @@ void MusicState::slotRatingChanged(const int rating)
         m_resource->setRating(rating);
     }
     if (list.isEmpty()) {
-        if (m_player->musicPlayerPlaybackState() == MediaCenter::PausedState ||
-            m_player->musicPlayerPlaybackState() == MediaCenter::PlayingState) {
+        if (m_player->playbackState(MediaCenter::MusicMode) == MediaCenter::PausedState ||
+            m_player->playbackState(MediaCenter::MusicMode) == MediaCenter::PlayingState) {
             m_resource = new Nepomuk::Resource(m_musicMedia.second);
             m_resource->setRating(rating);
         }

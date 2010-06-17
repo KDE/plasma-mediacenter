@@ -65,7 +65,7 @@ private slots:
      * Use this slot in order to update the controller status according
      * to the right playing state.
      */
-    virtual void onPlaybackStateChanged(const MediaCenter::PlaybackState &state);
+    virtual void onPlaybackStateChanged(MediaCenter::PlaybackState, MediaCenter::Mode);
 
     void setMedia(const MediaCenter::Media &media);
 

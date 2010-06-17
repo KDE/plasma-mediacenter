@@ -150,10 +150,10 @@ void MediaPlayer::playNextPictureMedia()
         setModeActive(MediaCenter::PictureMode, false);
         return;
     }
-    if (m_currentPicturePlaybackState == MediaCenter::PlayingState ||
-        m_currentPicturePlaybackState == MediaCenter::StoppedState ||
-        m_currentPicturePlaybackState == MediaCenter::PausedState ||
-        m_currentPicturePlaybackState == MediaCenter::SinglePictureState) {
+    if (playbackState(MediaCenter::PictureMode) == MediaCenter::PlayingState ||
+        playbackState(MediaCenter::PictureMode) == MediaCenter::StoppedState ||
+        playbackState(MediaCenter::PictureMode) == MediaCenter::PausedState ||
+        playbackState(MediaCenter::PictureMode) == MediaCenter::SinglePictureState) {
         playPictureMedia(m_pictureMedias[nextMedia]);
     }
 }
@@ -165,7 +165,7 @@ void MediaPlayer::playNextVideoMedia()
         setModeActive(MediaCenter::VideoMode, false);
         return;
     }
-    if (m_currentVideoPlaybackState == MediaCenter::PlayingState) {
+    if (playbackState(MediaCenter::VideoMode) == MediaCenter::PlayingState) {
         playVideoMedia(m_videoMedias[nextMedia]);
     }
 }
@@ -177,7 +177,7 @@ void MediaPlayer::playNextMusicMedia()
         setModeActive(MediaCenter::MusicMode, false);
         return;
     }
-    if (m_currentMusicPlaybackState == MediaCenter::PlayingState) {
+    if (playbackState(MediaCenter::MusicMode) == MediaCenter::PlayingState) {
         playMusicMedia(m_musicMedias[nextMedia]);
     }
 }
@@ -211,49 +211,42 @@ void MediaPlayer::playPauseVideo()
     Phonon::MediaObject *media = m_video->mediaObject();
     if (media->state() == Phonon::PlayingState) {
         media->pause();
-        m_currentVideoPlaybackState = MediaCenter::PausedState;
-        emit videoPlaybackStateChanged(MediaCenter::PausedState);
+        setPlaybackState(MediaCenter::PausedState, MediaCenter::VideoMode);
     } else {
         media->play();
-        m_currentVideoPlaybackState = MediaCenter::PlayingState;
-        emit videoPlaybackStateChanged(MediaCenter::PlayingState);
+        setPlaybackState(MediaCenter::PlayingState, MediaCenter::VideoMode);
     }
 }
 
 void MediaPlayer::playPauseMusic()
 {
-    Phonon::MediaObject *media = m_music->mediaObject();
-    if (media->state() == Phonon::PlayingState) {
-        media->pause();
-        m_currentMusicPlaybackState = MediaCenter::PausedState;
-        emit musicPlaybackStateChanged(MediaCenter::PausedState);
+    Phonon::MediaObject *mediaObject = m_music->mediaObject();
+    if (mediaObject->state() == Phonon::PlayingState) {
+        mediaObject->pause();
+        setPlaybackState(MediaCenter::PausedState, MediaCenter::MusicMode);
     } else {
-        media->play();
-        m_currentMusicPlaybackState = MediaCenter::PlayingState;
-        emit musicPlaybackStateChanged(MediaCenter::PlayingState);
+        mediaObject->play();
+        setPlaybackState(MediaCenter::PlayingState, MediaCenter::MusicMode);
     }
 }
 
 void MediaPlayer::playPausePicture()
 {
-    if (m_currentPicturePlaybackState == MediaCenter::SinglePictureState) {
+    if (playbackState(MediaCenter::PictureMode) == MediaCenter::StoppedState) {
         m_picture->startTimer();
-        m_currentPicturePlaybackState = MediaCenter::PlayingState;
-        emit picturePlaybackStateChanged(MediaCenter::PlayingState);
+        setPlaybackState(MediaCenter::PlayingState, MediaCenter::PictureMode);
         playPictureMedia(currentMedia(MediaCenter::PictureMode));
         return;
     }
     if (m_picture->isTimerActive()) {
         m_picture->stopTimer();
-        m_currentPicturePlaybackState = MediaCenter::PausedState;
-        emit picturePlaybackStateChanged(MediaCenter::PausedState);
+        setPlaybackState(MediaCenter::PausedState, MediaCenter::PictureMode);
         return;
     }
     if (!m_picture->isTimerActive() ||
-        m_currentPicturePlaybackState == MediaCenter::SinglePictureState) {
+        playbackState(MediaCenter::PictureMode) == MediaCenter::StoppedState) {
         m_picture->startTimer();
-        m_currentPicturePlaybackState = MediaCenter::PlayingState;
-        emit picturePlaybackStateChanged(MediaCenter::PlayingState);
+        setPlaybackState(MediaCenter::PlayingState, MediaCenter::PictureMode);
     }
 }
 
@@ -427,8 +420,7 @@ void MediaPlayer::stopVideo()
 {
     if (m_currentStateType == MediaCenter::Video) {
         m_video->mediaObject()->stop();
-        m_currentVideoPlaybackState = MediaCenter::StoppedState;
-        emit videoPlaybackStateChanged(MediaCenter::StoppedState);
+        setPlaybackState(MediaCenter::StoppedState, MediaCenter::VideoMode);
     }
     setModeActive(MediaCenter::VideoMode, false);
 }
@@ -437,8 +429,7 @@ void MediaPlayer::stopMusic()
 {
     if (m_currentStateType == MediaCenter::Audio) {
         m_music->mediaObject()->stop();
-        m_currentMusicPlaybackState = MediaCenter::StoppedState;
-        emit musicPlaybackStateChanged(MediaCenter::StoppedState);
+        setPlaybackState(MediaCenter::StoppedState, MediaCenter::MusicMode);
     }
     setModeActive(MediaCenter::MusicMode, false);
 }
@@ -448,8 +439,7 @@ void MediaPlayer::stopPicture()
     if (m_currentStateType == MediaCenter::Picture) {
         m_picture->clearImage();
         m_picture->stopTimer();
-        m_currentPicturePlaybackState = MediaCenter::StoppedState;
-        emit picturePlaybackStateChanged(MediaCenter::StoppedState);
+        setPlaybackState(MediaCenter::StoppedState, MediaCenter::PictureMode);
     }
     setModeActive(MediaCenter::PictureMode, false);
 }
@@ -471,7 +461,7 @@ void MediaPlayer::skipVideoBackward()
     if (previous < 0) {
         return;
     }
-    if (m_currentVideoPlaybackState == MediaCenter::PlayingState) {
+    if (playbackState(MediaCenter::VideoMode) == MediaCenter::PlayingState) {
         playVideoMedia(m_videoMedias[previous]);
     }
 }
@@ -487,7 +477,7 @@ void MediaPlayer::skipMusicBackward()
     if (previous < 0) {
         return;
     }
-    if (m_currentMusicPlaybackState == MediaCenter::PlayingState) {
+    if (playbackState(MediaCenter::MusicMode) == MediaCenter::PlayingState) {
         playMusicMedia(m_musicMedias[previous]);
     }
 }
@@ -503,11 +493,7 @@ void MediaPlayer::skipPictureBackward()
     if (previous < 0) {
         return;
     }
-    if (m_currentPicturePlaybackState == MediaCenter::PlayingState ||
-        m_currentPicturePlaybackState == MediaCenter::PausedState ||
-        m_currentPicturePlaybackState == MediaCenter::SinglePictureState) {
-        playPictureMedia(m_pictureMedias[previous]);
-    }
+    playPictureMedia(m_pictureMedias[previous]);
 }
 
 void MediaPlayer::skipPictureForward()
@@ -614,17 +600,16 @@ void MediaPlayer::slideShow(const MediaCenter::Media &media)
     setCurrentMedia(media, MediaCenter::PictureMode);
 
     if (slideShowInterval() == 0 && !m_picture->isTimerActive()) {
-       m_currentPicturePlaybackState = MediaCenter::SinglePictureState;
-       emit picturePlaybackStateChanged(MediaCenter::SinglePictureState);
+        setPlaybackState(MediaCenter::StoppedState, MediaCenter::PictureMode);
     }
 
     if (slideShowInterval() > 0 || m_picture->isTimerActive()) {
-        if (m_currentPicturePlaybackState == MediaCenter::PlayingState) {
+        if (playbackState(MediaCenter::PictureMode) == MediaCenter::PlayingState) {
             m_picture->startTimer();
             disconnect(m_picture, SIGNAL(showFinished()), this, SIGNAL(lastPictureShown()));
             disconnect(this, SIGNAL(lastPictureShown()), this, SLOT(returnToFirstPicture()));
 
-            if (m_pictureMedias.indexOf(media) == m_pictureMedias.size() -1 ) {
+            if (m_pictureMedias.indexOf(media) == m_pictureMedias.size() - 1) {
                 //The picture state exits slideshow to return to the nrowser
                 //after receiving this signal, also, if the user starts a new slideshow
                 //it will start again from the first picture
@@ -725,7 +710,7 @@ void MediaPlayer::playAllVideoMedia()
         return;
     }
 
-    if (m_currentVideoPlaybackState == MediaCenter::PlayingState) {
+    if (playbackState(MediaCenter::VideoMode) == MediaCenter::PlayingState) {
         playPauseVideo();
         return;
     }
@@ -738,11 +723,11 @@ void MediaPlayer::playAllVideoMedia()
     }
 
     if (m_currentStateType == MediaCenter::Video) {
-        if (m_currentVideoPlaybackState == MediaCenter::PausedState) {
+        if (playbackState(MediaCenter::VideoMode) == MediaCenter::PausedState) {
             playPauseVideo();
             return;
         }
-        if (m_currentVideoPlaybackState == MediaCenter::StoppedState) {
+        if (playbackState(MediaCenter::VideoMode) == MediaCenter::StoppedState) {
             playVideoMedia(media);
             playPauseVideo();
             return;
@@ -759,7 +744,7 @@ void MediaPlayer::playAllMusicMedia()
         return;
     }
 
-    if (m_currentMusicPlaybackState == MediaCenter::PlayingState) {
+    if (playbackState(MediaCenter::MusicMode) == MediaCenter::PlayingState) {
         playPauseMusic();
         return;
     }
@@ -772,11 +757,11 @@ void MediaPlayer::playAllMusicMedia()
     }
 
     if (m_currentStateType == MediaCenter::Audio) {
-        if (m_currentMusicPlaybackState == MediaCenter::PausedState) {
+        if (playbackState(MediaCenter::MusicMode) == MediaCenter::PausedState) {
             playPauseMusic();
             return;
         }
-        if (m_currentMusicPlaybackState == MediaCenter::StoppedState) {
+        if (playbackState(MediaCenter::MusicMode) == MediaCenter::StoppedState) {
             playMusicMedia(media);
             playPauseMusic();
             return;
@@ -793,7 +778,7 @@ void MediaPlayer::playAllPictureMedia()
         return;
     }
 
-    if (m_currentPicturePlaybackState == MediaCenter::PlayingState) {
+    if (playbackState(MediaCenter::PictureMode) == MediaCenter::PlayingState) {
         playPausePicture();
         return;
     }
@@ -806,13 +791,13 @@ void MediaPlayer::playAllPictureMedia()
     }
 
     if (m_currentStateType == MediaCenter::Picture) {
-        if (m_currentPicturePlaybackState == MediaCenter::PausedState) {
+        if (playbackState(MediaCenter::PictureMode) == MediaCenter::PausedState) {
             playPictureMedia(currentMedia(MediaCenter::PictureMode));
             playPausePicture();
             return;
         }
-        if (m_currentPicturePlaybackState == MediaCenter::StoppedState ||
-            m_currentPicturePlaybackState == MediaCenter::SinglePictureState) {
+        if (playbackState(MediaCenter::PictureMode) == MediaCenter::StoppedState ||
+            playbackState(MediaCenter::PictureMode) == MediaCenter::SinglePictureState) {
             playPictureMedia(media);
             playPausePicture();
             return;

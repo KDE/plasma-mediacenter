@@ -66,7 +66,7 @@ void VideoState::onExit(QEvent* event)
 
     m_lastDirectory = m_browser->directory();
 
-    if (m_player->videoPlayerPlaybackState() == MediaCenter::PlayingState) {
+    if (m_player->playbackState(MediaCenter::VideoMode) == MediaCenter::PlayingState) {
         SharedLayoutComponentsManager::self()->setBackgroundVideoMode(true);
     } else {
         SharedLayoutComponentsManager::self()->setBackgroundVideoMode(false);;
@@ -160,7 +160,7 @@ void VideoState::configure()
     //Show/hide correct applets
     m_control->setVisible(true);
     m_infoDisplay->setVisible(true);
-    if (m_player->videoPlayerPlaybackState() != MediaCenter::PlayingState) {
+    if (m_player->playbackState(MediaCenter::VideoMode) != MediaCenter::PlayingState) {
         m_player->setVisible(false);
         m_playlist->setVisible(true);
         m_browser->setVisible(true);
@@ -211,7 +211,8 @@ void VideoState::initConnections()
     connect (m_videoVolumeSlider, SIGNAL(sliderMoved(int)), m_player, SLOT(setVolume(int)));
     connect (m_player, SIGNAL(newMedia(MediaCenter::Media)), this, SLOT(setMedia(MediaCenter::Media)));
     connect (m_player, SIGNAL(newVideoObject(Phonon::MediaObject*)), this, SLOT(setMediaObject(Phonon::MediaObject*)));
-    connect (m_player, SIGNAL(videoPlaybackStateChanged(MediaCenter::PlaybackState)), this, SLOT(onPlaybackStateChanged(MediaCenter::PlaybackState)));
+    connect (m_player, SIGNAL(playbackStateChanged(MediaCenter::PlaybackState, MediaCenter::Mode)),
+             this, SLOT(onPlaybackStateChanged(MediaCenter::PlaybackState, MediaCenter::Mode)));
     connect (m_ratingWidget, SIGNAL(ratingChanged(int)), this, SLOT(slotRatingChanged(int)));
 }
 
@@ -225,8 +226,11 @@ void VideoState::updateCurrentTick(const qint64 time)
     m_videoSeekSlider->setValue(time);
 }
 
-void VideoState::onPlaybackStateChanged(const MediaCenter::PlaybackState &state)
+void VideoState::onPlaybackStateChanged(MediaCenter::PlaybackState state, MediaCenter::Mode mode)
 {
+    if (mode != MediaCenter::VideoMode) {
+        return;
+    }
     updateInfoDisplay();
 
     if (state == MediaCenter::PlayingState) {
@@ -265,7 +269,7 @@ void VideoState::receivedMediaObject() const
     connect (mediaObject(), SIGNAL(totalTimeChanged(const qint64)), this, SLOT(updateTotalTime(const qint64)));
     connect (mediaObject(), SIGNAL(tick(const qint64)), this, SLOT(updateCurrentTick(const qint64)));
 
-    if (m_player->videoPlayerPlaybackState() == MediaCenter::PlayingState) {
+    if (m_player->playbackState(MediaCenter::VideoMode) == MediaCenter::PlayingState) {
         m_videoPlayPause->setIcon("media-playback-pause");
     }
 }
@@ -293,14 +297,14 @@ void VideoState::updateInfoDisplay()
         m_ratingWidget->setRating(m_resource->rating());
     }
     if (list.isEmpty()) {
-        if (m_player->videoPlayerPlaybackState() == MediaCenter::PausedState ||
-            m_player->videoPlayerPlaybackState() == MediaCenter::PlayingState) {
+        if (m_player->playbackState(MediaCenter::VideoMode) == MediaCenter::PausedState ||
+            m_player->playbackState(MediaCenter::VideoMode) == MediaCenter::PlayingState) {
             m_selectedMediasLabel->setText(i18n("Rating of active item"));
             m_ratingWidget->setEnabled(true);
             m_resource = new Nepomuk::Resource(m_videoMedia.second);
             m_ratingWidget->setRating(m_resource->rating());
         }
-        if (m_player->videoPlayerPlaybackState() == MediaCenter::StoppedState) {
+        if (m_player->playbackState(MediaCenter::VideoMode) == MediaCenter::StoppedState) {
             m_selectedMediasLabel->setText("");
             m_ratingWidget->setRating(0);
             m_ratingWidget->setEnabled(false);
@@ -312,13 +316,13 @@ void VideoState::updateInfoDisplay()
     //TODO: check if we really have a file
     QString label = QFileInfo(file).fileName();
 
-    if (m_player->videoPlayerPlaybackState() == MediaCenter::PlayingState) {
+    if (m_player->playbackState(MediaCenter::VideoMode) == MediaCenter::PlayingState) {
         m_currentlyPlayingLabel->setText(label);
     }
-    if (m_player->videoPlayerPlaybackState() == MediaCenter::PausedState) {
+    if (m_player->playbackState(MediaCenter::VideoMode) == MediaCenter::PausedState) {
         m_currentlyPlayingLabel->setText(i18n( "(Paused) %1",label ));
     }
-    if (m_player->videoPlayerPlaybackState() == MediaCenter::StoppedState) {
+    if (m_player->playbackState(MediaCenter::VideoMode) == MediaCenter::StoppedState) {
         m_currentlyPlayingLabel->setText(i18n("No video playing"));
     }
 }
@@ -338,8 +342,8 @@ void VideoState::slotRatingChanged(const int rating)
         m_resource->setRating(rating);
     }
     if (list.isEmpty()) {
-        if (m_player->videoPlayerPlaybackState() == MediaCenter::PausedState ||
-            m_player->videoPlayerPlaybackState() == MediaCenter::PlayingState) {
+        if (m_player->playbackState(MediaCenter::VideoMode) == MediaCenter::PausedState ||
+            m_player->playbackState(MediaCenter::VideoMode) == MediaCenter::PlayingState) {
             m_resource = new Nepomuk::Resource(m_videoMedia.second);
             m_resource->setRating(rating);
         }
@@ -363,8 +367,8 @@ void VideoState::enterPlayingState() const
     //This function is called every time the play/pause button is clicked
     //We only want to turn autohide on, and hide buttons when the user enters fullscreen player,
     //not when he only pauses or plays when previously paused
-    if (m_player->videoPlayerPlaybackState() == MediaCenter::PlayingState ||
-        m_player->videoPlayerPlaybackState() == MediaCenter::StoppedState) {
+    if (m_player->playbackState(MediaCenter::VideoMode) == MediaCenter::PlayingState ||
+        m_player->playbackState(MediaCenter::VideoMode) == MediaCenter::StoppedState) {
         m_layout->controlAutohideOn();
         m_layout->hidePlaylist();
         m_layout->showPlayer();

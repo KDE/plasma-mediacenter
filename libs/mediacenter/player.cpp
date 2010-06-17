@@ -33,6 +33,7 @@ public:
     qint64 sshowTime;
     QHash<Mode, bool> activeModes;
     QHash<Mode, Media> currentMedias;
+    QHash<Mode, PlaybackState> playbackStates;
 };
 
 Player::Player(QObject *parent, const QVariantList &args) : Plasma::Applet(parent, args), d(new PlayerPrivate(this))
@@ -123,6 +124,24 @@ void Player::playMusicMedia(const MediaCenter::Media &media)
 
 void Player::playAllMusicMedia()
 {}
+
+PlaybackState Player::playbackState(Mode mode) const
+{
+    if (!d->playbackStates.contains(mode)) {
+        return MediaCenter::StoppedState;
+    }
+
+    return d->playbackStates.value(mode);
+}
+
+void Player::setPlaybackState(PlaybackState state, Mode mode)
+{
+    if (playbackState(mode) == state) {
+        return;
+    }
+    d->playbackStates.insert(mode, state);
+    emit playbackStateChanged(state, mode);
+}
 
 bool Player::isModeActive(Mode mode) const
 {

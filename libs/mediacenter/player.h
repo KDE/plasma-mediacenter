@@ -93,11 +93,17 @@ public:
     virtual bool isModeActive(MediaCenter::Mode) const;
 
     /**
-     * This should return the current PLaybackstate of the playerPlaybackState
+     * @return the playback state for the given @param mode
      */
-    virtual MediaCenter::PlaybackState videoPlayerPlaybackState() const = 0;
-    virtual MediaCenter::PlaybackState picturePlayerPlaybackState() const = 0;
-    virtual MediaCenter::PlaybackState musicPlayerPlaybackState() const = 0;
+    //virtual MediaCenter::PlaybackState videoPlayerPlaybackState() const = 0;
+    //virtual MediaCenter::PlaybackState picturePlayerPlaybackState() const = 0;
+    //virtual MediaCenter::PlaybackState musicPlayerPlaybackState() const = 0;
+    MediaCenter::PlaybackState playbackState(MediaCenter::Mode mode) const;
+
+    /**
+     * Sets the playback state to @param state for the given @param mode
+     */
+    void setPlaybackState(MediaCenter::PlaybackState state, MediaCenter::Mode mode);
 
 Q_SIGNALS:
     /**
@@ -138,12 +144,12 @@ Q_SIGNALS:
     void nothingToPlay();
 
     /**
-     * This signal should be emitted whenever the playback state
-     * changes.
+     * This signal is emitted each time the state for the specific mode changes.
      */
-    void videoPlaybackStateChanged(const MediaCenter::PlaybackState);
-    void musicPlaybackStateChanged(const MediaCenter::PlaybackState);
-    void picturePlaybackStateChanged(const MediaCenter::PlaybackState);
+    //void videoPlaybackStateChanged(const MediaCenter::PlaybackState);
+    //void musicPlaybackStateChanged(const MediaCenter::PlaybackState);
+    //void picturePlaybackStateChanged(const MediaCenter::PlaybackState);
+    void playbackStateChanged(MediaCenter::PlaybackState, MediaCenter::Mode);
 
     void lastPictureShown();
 
