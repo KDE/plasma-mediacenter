@@ -19,6 +19,8 @@
 
 #include "mainwindow.h"
 
+#include <mediacenter/gesturerecognizer.h>
+
 #include <QGraphicsView>
 #include <QKeyEvent>
 #include <QWheelEvent>
@@ -105,6 +107,7 @@ void MainWindow::loadMediaCenter()
     }
 
     m_containment->resize(m_view->size());
+
     m_view->setSceneRect(m_containment->geometry());
 
     m_browser = m_containment->addApplet("mediabrowser");
@@ -203,12 +206,12 @@ void MainWindow::applyConfig()
         KConfigGroup cfg = wallpaperConfig(m_containment, currentWallpaper->pluginName());
         currentWallpaper->save(cfg);
     }
-    KConfigGroup cfg = wallpaperConfig(m_containment, "image");
-    cfg.writeEntry("wallpaper", m_wallpaper);
-    //cfg.writeEntry("wallpapercolor", (color.isEmpty() ? "0,0,0" : color));
-    //cfg.writeEntry("wallpaperposition", position);
-    cfg.sync();
-    m_containment->setWallpaper("image", "SingleImage");
+//    KConfigGroup cfg = wallpaperConfig(m_containment, "image");
+//    cfg.writeEntry("wallpaper", m_wallpaper);
+//    //cfg.writeEntry("wallpapercolor", (color.isEmpty() ? "0,0,0" : color));
+//    //cfg.writeEntry("wallpaperposition", position);
+//    cfg.sync();
+//    m_containment->setWallpaper("image", "SingleImage");
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event)
@@ -222,6 +225,11 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     m_view->setSceneRect(m_containment->geometry());
 }
 
+void MainWindow::moveEvent(QMoveEvent *event)
+{
+    KMainWindow::moveEvent(event);
+}
+
 KConfigGroup MainWindow::wallpaperConfig(Plasma::Containment * containment, const QString &plugin)
 {
     Q_ASSERT(containment);
@@ -232,5 +240,3 @@ KConfigGroup MainWindow::wallpaperConfig(Plasma::Containment * containment, cons
     cfg = KConfigGroup(&cfg, "Wallpaper");
     return KConfigGroup(&cfg, plugin);
 }
-
-

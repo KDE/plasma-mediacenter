@@ -13,6 +13,8 @@ videostate.cpp
 musicstate.cpp
 homestate.cpp
 medialayout.cpp
+gesturerecognizer.cpp
+playbackgesture.cpp
 private/mediahandler.cpp
 private/sharedlayoutcomponentsmanager.cpp
 )
@@ -35,6 +37,8 @@ set (mediacenterlibs_HDRS
     musicstate.h
     homestate.h
     medialayout.h
+    gesturerecognizer.h
+    playbackgesture.h
 )
 
 install (FILES ${mediacenterlibs_HDRS} DESTINATION ${INCLUDE_INSTALL_DIR}/mediacenter COMPONENT Devel)

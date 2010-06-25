@@ -28,8 +28,8 @@ set(mediaplayer_SRCS
 #                     dbus/tracklistdbushandler.h TrackListDBusHandler tracklistadaptor TrackListAdaptor)
 
 #DBus interface for operations not supported by org.mpris stuff
-QT4_ADD_DBUS_ADAPTOR(mediaplayer_SRCS org.kde.PlasmaMediaPlayer.xml
-                     mediaplayer.h MediaPlayer)
+#QT4_ADD_DBUS_ADAPTOR(mediaplayer_SRCS org.kde.PlasmaMediaPlayer.xml
+#                     mediaplayer.h MediaPlayer)
 
 # Now make sure all files get to the right place
 kde4_add_ui_files(mediaplayer_SRCS config.ui)

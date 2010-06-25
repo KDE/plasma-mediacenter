@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright 2009 by Alessandro Diaferia <alediaferia@gmail.com>         *
+ *   Copyright 2010 by Alessandro Diaferia <alediaferia@gmail.com>         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,67 +16,45 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#include "playbackgesture.h"
 
-#include <KMainWindow>
+#include <mediacenter/mediacenter.h>
 
-#include "ui_theme.h"
-#include "ui_backgrounddialog.h"
+using namespace MediaCenter;
 
-
-class QGraphicsView;
-namespace Plasma {
-    class Corona;
-    class Containment;
-    class Applet;
-}
-
-namespace Phonon {
-    class VideoWidget;
-}
-
-class KConfigSkeleton;
-
-class MainWindow : public KMainWindow
+PlaybackGesture::PlaybackGesture(QObject *parent) :
+    QGesture(parent)
 {
-    Q_OBJECT
-public:
-    MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+}
 
-    bool eventFilter(QObject *o, QEvent *e);
+qreal PlaybackGesture::volumeLevel() const
+{
+    return m_volumeLevel;
+}
 
-    void loadMediaCenter();
+PlaybackGesture::ControlAction PlaybackGesture::activeAction() const
+{
+    return m_activeAction;
+}
 
-public slots:
-    void createConfigurationInterface();
+void PlaybackGesture::increaseVolume(int factor)
+{
+    qreal realFactor = factor / 10;
+    if (m_volumeLevel + realFactor > 1) {
+        m_volumeLevel = 1;
+        return;
+    }
 
-protected:
-    void resizeEvent(QResizeEvent *event);
-    void moveEvent(QMoveEvent *);
+    m_volumeLevel += realFactor;
+}
 
-protected slots:
-    void toggleFullScreen();
-    void applyConfig();
+void PlaybackGesture::decreaseVolume(int factor)
+{
+    qreal realFactor = factor / 10;
+    if (m_volumeLevel - realFactor < 0) {
+        m_volumeLevel = 0;
+        return;
+    }
 
-private:
-    KConfigGroup wallpaperConfig(Plasma::Containment * containment, const QString &plugin);
-    QGraphicsView *m_view;
-    Plasma::Corona *m_corona;
-    Plasma::Containment *m_containment;
-    KConfigSkeleton *m_cfskeleton;
-
-    Plasma::Applet *m_browser;
-    Plasma::Applet *m_controller;
-    Plasma::Applet *m_playlist;
-    Plasma::Applet *m_player;
-    Plasma::Applet *m_infobar;
-
-    KUrl m_wallpaper;
-
-    Ui::Theme m_theme;
-    Ui::BackgroundDialog m_background;
-};
-
-#endif // MAINWINDOW_H
+    m_volumeLevel -= realFactor;
+}

@@ -46,8 +46,6 @@ public:
     virtual void configure();
     virtual void initConnections();
 
-    Phonon::MediaObject *mediaObject() const;
-
 protected:
     virtual void onExit(QEvent* event);
     virtual void onEntry(QEvent* event);
@@ -59,13 +57,23 @@ private slots:
     virtual void onPlaybackStateChanged(MediaCenter::PlaybackState state, MediaCenter::Mode);
 
     void setMedia(const MediaCenter::Media &media);
-    void setMediaObject(Phonon::MediaObject *object);
 
     void selectedMediasChanged(const QList<MediaCenter::Media> &list);
     void slotRatingChanged(const int rating);
 
+    void enqueueMusicMedia(const QList<MediaCenter::Media> &medias);
+
+    void stopMusic();
+
+    void playPauseMusicQueue();
+    void seekMusic(int);
+    void skipMusicForward();
+    void skipMusicBackward();
+    void clearMusicQueue();
+    void setMusicVolume(int);
+
 private:
-    void receivedMediaObject() const;
+    void setupMediaObject();
     void updateInfoDisplay();
 
     Plasma::Slider *m_musicVolumeSlider;

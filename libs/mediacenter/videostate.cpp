@@ -46,7 +46,7 @@ VideoState::VideoState (QState *parent)
     m_videoTogglePlaylist(new Plasma::IconWidget()),
     m_selectedMediasLabel(new Plasma::IconWidget()),
     m_currentlyPlayingLabel(new Plasma::IconWidget()),
-    m_videoObject(new Phonon::MediaObject()),
+    m_videoObject(0),
     m_lastDirectory(KUrl()),
     m_resource(0),
     m_ratingWidget(new KRatingWidget()),
@@ -184,17 +184,17 @@ void VideoState::configure()
     m_browser->setShowingBrowsingWidgets(true);
 
     //connect seek slider to media object
-    receivedMediaObject();
+    setupMediaObject();
     if (m_videoObject) {
         m_videoSeekSlider->setValue(m_videoObject->currentTime());
     }
-    m_videoVolumeSlider->setValue(int(m_player->volume()*100));
+    m_videoVolumeSlider->setValue(int(m_player->volume(MediaCenter::VideoMode)*100));
 
-    m_player->setPlayerType(MediaCenter::Video);
+    m_player->setCurrentMode(MediaCenter::VideoMode);
     m_player->setCurrentMedia(m_videoMedia, MediaCenter::VideoMode); //the player needs to know what the user wants to control with the buttons
     m_playlist->setPlaylistMediaType(MediaCenter::Video); //TODO: Find a better solution for playlists
-    m_player->clearVideoQueue();
-    m_player->enqueueVideos(m_playlist->medias(MediaCenter::Video));
+    clearVideoQueue();
+    m_player->enqueueMedia(MediaCenter::VideoMode, m_playlist->medias(MediaCenter::Video));
 
     m_browser->clearSelectedMedias();
     updateInfoDisplay();
@@ -203,17 +203,41 @@ void VideoState::configure()
 void VideoState::initConnections()
 {
     connect (m_videoTogglePlaylist, SIGNAL(clicked()), m_layout, SLOT(togglePlaylistVisible()));
-    connect (m_videoSeekSlider, SIGNAL(sliderMoved(int)), m_player, SLOT(seekVideo(int)));
+    connect (m_videoSeekSlider, SIGNAL(sliderMoved(int)), this, SLOT(seekVideo(int)));
     connect (m_videoStop, SIGNAL(clicked()), this, SLOT(enterBrowsingState()));
     connect (m_videoPlayPause, SIGNAL(clicked()), this, SLOT(enterPlayingState()));
-    connect (m_videoSkipForward, SIGNAL(clicked()), m_player, SLOT(skipVideoForward()));
-    connect (m_videoSkipBack, SIGNAL(clicked()), m_player, SLOT(skipVideoBackward()));
-    connect (m_videoVolumeSlider, SIGNAL(sliderMoved(int)), m_player, SLOT(setVolume(int)));
+    connect (m_videoSkipForward, SIGNAL(clicked()), this, SLOT(skipVideoForward()));
+    connect (m_videoSkipBack, SIGNAL(clicked()), this, SLOT(skipVideoBackward()));
+    connect (m_videoVolumeSlider, SIGNAL(sliderMoved(int)), this, SLOT(setVideoVolume(int)));
     connect (m_player, SIGNAL(newMedia(MediaCenter::Media)), this, SLOT(setMedia(MediaCenter::Media)));
-    connect (m_player, SIGNAL(newVideoObject(Phonon::MediaObject*)), this, SLOT(setMediaObject(Phonon::MediaObject*)));
     connect (m_player, SIGNAL(playbackStateChanged(MediaCenter::PlaybackState, MediaCenter::Mode)),
              this, SLOT(onPlaybackStateChanged(MediaCenter::PlaybackState, MediaCenter::Mode)));
     connect (m_ratingWidget, SIGNAL(ratingChanged(int)), this, SLOT(slotRatingChanged(int)));
+}
+
+void VideoState::clearVideoQueue()
+{
+    m_player->setMediaQueue(MediaCenter::VideoMode, QList<Media>());
+}
+
+void VideoState::seekVideo(int time)
+{
+    m_player->seek(MediaCenter::VideoMode, (qint64)time);
+}
+
+void VideoState::skipVideoBackward()
+{
+    m_player->skipBackward(MediaCenter::VideoMode);
+}
+
+void VideoState::skipVideoForward()
+{
+    m_player->skipForward(MediaCenter::VideoMode);
+}
+
+void VideoState::setVideoVolume(int volume)
+{
+    m_player->setVolume(MediaCenter::VideoMode, volume);
 }
 
 void VideoState::updateTotalTime(const qint64 time)
@@ -248,26 +272,16 @@ void VideoState::setMedia(const MediaCenter::Media &media)
     m_videoMedia = media;
 }
 
-void VideoState::setMediaObject(Phonon::MediaObject *object)
+void VideoState::setupMediaObject()
 {
-    m_videoObject = object;
-    receivedMediaObject();
-}
-
-Phonon::MediaObject* VideoState::mediaObject() const
-{
-    return m_videoObject;
-}
-
-void VideoState::receivedMediaObject() const
-{
-    if (!mediaObject()) {
+    m_videoObject = m_player->mediaObject(MediaCenter::VideoMode);
+    if (!m_videoObject) {
         kDebug() << "Media object error in VideoState";
         return;
     }
-    m_videoSeekSlider->setRange(0, mediaObject()->totalTime());
-    connect (mediaObject(), SIGNAL(totalTimeChanged(const qint64)), this, SLOT(updateTotalTime(const qint64)));
-    connect (mediaObject(), SIGNAL(tick(const qint64)), this, SLOT(updateCurrentTick(const qint64)));
+    m_videoSeekSlider->setRange(0, m_videoObject->totalTime());
+    connect (m_videoObject, SIGNAL(totalTimeChanged(const qint64)), this, SLOT(updateTotalTime(const qint64)));
+    connect (m_videoObject, SIGNAL(tick(const qint64)), this, SLOT(updateCurrentTick(const qint64)));
 
     if (m_player->playbackState(MediaCenter::VideoMode) == MediaCenter::PlayingState) {
         m_videoPlayPause->setIcon("media-playback-pause");
@@ -352,7 +366,7 @@ void VideoState::slotRatingChanged(const int rating)
 
 void VideoState::enterBrowsingState() const
 {
-    m_player->stopVideo();
+    m_player->stop(MediaCenter::VideoMode);
     m_layout->showBrowser();
     m_layout->controlAutohideOff();
     m_layout->showPlaylist();
@@ -361,7 +375,7 @@ void VideoState::enterBrowsingState() const
 void VideoState::enterPlayingState() const
 {
     if (!SharedLayoutComponentsManager::self()->isBackgroundVideoMode()) {
-        m_player->playAllVideoMedia();
+        m_player->playPause(MediaCenter::VideoMode);
     }
 
     //This function is called every time the play/pause button is clicked

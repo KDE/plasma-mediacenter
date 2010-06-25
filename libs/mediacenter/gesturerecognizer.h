@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright 2009 by Alessandro Diaferia <alediaferia@gmail.com>         *
+ *   Copyright 2010 by Alessandro Diaferia <alediaferia@gmail.com>         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,67 +16,21 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef GESTURERECOGNIZER_H
+#define GESTURERECOGNIZER_H
 
-#include <KMainWindow>
+#include <QGestureRecognizer>
 
-#include "ui_theme.h"
-#include "ui_backgrounddialog.h"
-
-
-class QGraphicsView;
-namespace Plasma {
-    class Corona;
-    class Containment;
-    class Applet;
-}
-
-namespace Phonon {
-    class VideoWidget;
-}
-
-class KConfigSkeleton;
-
-class MainWindow : public KMainWindow
+namespace MediaCenter {
+class GestureRecognizer : public QGestureRecognizer
 {
-    Q_OBJECT
 public:
-    MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    GestureRecognizer();
 
-    bool eventFilter(QObject *o, QEvent *e);
-
-    void loadMediaCenter();
-
-public slots:
-    void createConfigurationInterface();
-
-protected:
-    void resizeEvent(QResizeEvent *event);
-    void moveEvent(QMoveEvent *);
-
-protected slots:
-    void toggleFullScreen();
-    void applyConfig();
-
-private:
-    KConfigGroup wallpaperConfig(Plasma::Containment * containment, const QString &plugin);
-    QGraphicsView *m_view;
-    Plasma::Corona *m_corona;
-    Plasma::Containment *m_containment;
-    KConfigSkeleton *m_cfskeleton;
-
-    Plasma::Applet *m_browser;
-    Plasma::Applet *m_controller;
-    Plasma::Applet *m_playlist;
-    Plasma::Applet *m_player;
-    Plasma::Applet *m_infobar;
-
-    KUrl m_wallpaper;
-
-    Ui::Theme m_theme;
-    Ui::BackgroundDialog m_background;
+    QGesture* create(QObject *target);
+    QGestureRecognizer::Result recognize(QGesture *state, QObject *watched, QEvent *event);
+    void reset(QGesture *);
 };
 
-#endif // MAINWINDOW_H
+} // namespace MediaCenter
+#endif // GESTURERECOGNIZER_H

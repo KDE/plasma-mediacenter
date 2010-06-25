@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright 2009 by Alessandro Diaferia <alediaferia@gmail.com>         *
+ *   Copyright 2009-2010 by Alessandro Diaferia <alediaferia@gmail.com>    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,6 +20,10 @@
 
 #include <QHash>
 
+#include <Phonon/MediaObject>
+#include <Phonon/AudioOutput>
+#include <Phonon/Path>
+
 using namespace MediaCenter;
 
 class Player::PlayerPrivate
@@ -34,6 +38,10 @@ public:
     QHash<Mode, bool> activeModes;
     QHash<Mode, Media> currentMedias;
     QHash<Mode, PlaybackState> playbackStates;
+    QHash<Mode, QList<Media> > medias;
+    QHash<Mode, Phonon::MediaObject*> mediaObjects;
+    QHash<Mode, Phonon::AudioOutput*> audioOutputs;
+    MediaCenter::Mode currentMode;
 };
 
 Player::Player(QObject *parent, const QVariantList &args) : Plasma::Applet(parent, args), d(new PlayerPrivate(this))
@@ -42,6 +50,62 @@ Player::Player(QObject *parent, const QVariantList &args) : Plasma::Applet(paren
 Player::~Player()
 {
     delete d;
+}
+
+void Player::setCurrentMode(MediaCenter::Mode mode)
+{
+    d->currentMode = mode;
+}
+
+MediaCenter::Mode Player::currentMode() const
+{
+    return d->currentMode;
+}
+
+Phonon::MediaObject* Player::mediaObject(MediaCenter::Mode mode)
+{
+    if (mode == MediaCenter::PictureMode) {
+        return 0;
+    }
+
+    if (!d->mediaObjects.contains(mode)) {
+        Phonon::MediaObject *mediaObject = new Phonon::MediaObject(this);
+        Phonon::createPath(mediaObject, audioOutput(mode));
+        d->mediaObjects.insert(mode, mediaObject);
+    }
+
+    return d->mediaObjects.value(mode);
+}
+
+Phonon::AudioOutput* Player::audioOutput(MediaCenter::Mode mode)
+{
+    if (mode == MediaCenter::PictureMode) {
+        return 0;
+    }
+
+    if (!d->audioOutputs.contains(mode)) {
+        Phonon::Category category = Phonon::NoCategory;
+        if (mode == MediaCenter::MusicMode) {
+            category = Phonon::MusicCategory;
+        } else if (mode == MediaCenter::VideoMode) {
+            category = Phonon::VideoCategory;
+        }
+
+        Phonon::AudioOutput *audioOutput = new Phonon::AudioOutput(category, this);
+        d->audioOutputs.insert(mode, audioOutput);
+    }
+
+    return d->audioOutputs.value(mode);
+}
+
+void Player::seek(MediaCenter::Mode mode, qint64 time)
+{
+    Phonon::MediaObject *mediaObject = this->mediaObject(mode);
+    if (!mediaObject) {
+        return;
+    }
+
+    mediaObject->seek(time);
 }
 
 Media Player::currentMedia(Mode mode) const
@@ -54,41 +118,28 @@ void Player::setCurrentMedia(const MediaCenter::Media& media, Mode mode)
     d->currentMedias.insert(mode, media);
 }
 
-void Player::setVideoQueue(const QList<Media> &sources)
+void Player::setMediaQueue(MediaCenter::Mode mode, const QList<Media> &medias)
 {
-    Q_UNUSED(sources);
+    d->medias.insert(mode, medias);
 }
 
-void Player::enqueueVideos(const QList<Media> &sources)
+void Player::clearQueue(MediaCenter::Mode mode)
 {
-    Q_UNUSED(sources);
+    stop(mode);
+    setMediaQueue(mode, QList<Media>());
 }
 
-void Player::setMusicQueue(const QList<Media> &sources)
+void Player::enqueueMedia(MediaCenter::Mode mode, const QList<Media> &medias)
 {
-    Q_UNUSED(sources);
+    QList<Media> storedMedias = d->medias.value(mode);
+    storedMedias.append(medias);
+    d->medias.insert(mode, storedMedias);
 }
 
-void Player::enqueueMusic(const QList<Media> &sources)
+QList<Media> Player::mediaQueue(MediaCenter::Mode mode) const
 {
-    Q_UNUSED(sources);
+    return d->medias.value(mode);
 }
-
-void Player::setPictureQueue(const QList<Media> &sources)
-{
-    Q_UNUSED(sources);
-}
-
-void Player::enqueuePictures(const QList<Media> &sources)
-{
-    Q_UNUSED(sources);
-}
-//
-//void Player::enqueue(int index, const QList<Media> &sources)
-//{
-//    Q_UNUSED(index);
-//    Q_UNUSED(sources);
-//}
 
 void Player::setSlideshowInterval(const qint64 time)
 {
@@ -100,30 +151,6 @@ qint64 Player::slideShowInterval() const
 {
     return d->sshowTime;
 }
-
-void Player::playVideoMedia(const MediaCenter::Media &media)
-{
-    Q_UNUSED(media);
-}
-
-void Player::playAllVideoMedia()
-{}
-
-void Player::playPictureMedia(const MediaCenter::Media &media)
-{
-    Q_UNUSED(media);
-}
-
-void Player::playAllPictureMedia()
-{}
-
-void Player::playMusicMedia(const MediaCenter::Media &media)
-{
-    Q_UNUSED(media);
-}
-
-void Player::playAllMusicMedia()
-{}
 
 PlaybackState Player::playbackState(Mode mode) const
 {
@@ -162,7 +189,22 @@ void Player::setModeActive(Mode mode, bool set)
     emit activeModeChanged(mode, set);
 }
 
-void Player::setPlayerType(const MediaType &type)
+void Player::setVolume(MediaCenter::Mode mode, int volume)
 {
-    Q_UNUSED(type);
+    Phonon::AudioOutput *audioOutput = this->audioOutput(mode);
+    if (!audioOutput) {
+        return;
+    }
+
+    audioOutput->setVolume(volume / 100);
+}
+
+qreal Player::volume(MediaCenter::Mode mode)
+{
+    Phonon::AudioOutput *audioOutput = this->audioOutput(mode);
+    if (!audioOutput) {
+        return 0;
+    }
+
+    return audioOutput->volume();
 }

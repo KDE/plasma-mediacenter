@@ -55,11 +55,6 @@ LocalFilesAbstractBackend::~LocalFilesAbstractBackend()
 
 QAbstractItemModel* LocalFilesAbstractBackend::model()
 {
-    if (!m_model) {
-        m_model = new KDirModel(this);
-        initModel();
-    }
-
     return m_model;
 }
 
@@ -118,6 +113,11 @@ void LocalFilesAbstractBackend::init()
     m_folderNavigation = cf.readEntry(m_backendName + "FolderNavigation", true);
     m_useNepomuk = cf.readEntry(m_backendName + "Nepomuk", true);
     m_watchedDirs = cf.readEntry(m_backendName + "WatchedFolders", QStringList());
+
+    if (!m_model) {
+        m_model = new KDirModel(this);
+        initModel();
+    }
 }
 
 void LocalFilesAbstractBackend::getWatchedDirsList()

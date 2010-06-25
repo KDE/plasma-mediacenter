@@ -65,7 +65,7 @@ void PictureState::onExit(QEvent *event)
 
     //Pause slideshow if one is playing
     if (m_player->playbackState(MediaCenter::PictureMode) == MediaCenter::PlayingState) {
-        m_player->playPausePicture();
+        m_player->playPause(MediaCenter::PictureMode);
     }
 
     m_lastDirectory = m_browser->directory();
@@ -81,10 +81,15 @@ void PictureState::onExit(QEvent *event)
 
     enterBrowsingState();
 
-    disconnect (m_browser, SIGNAL(mediaActivated(const MediaCenter::Media&)), m_player, SLOT(playPictureMedia(const MediaCenter::Media&)));
+    disconnect (m_browser, SIGNAL(mediaActivated(const MediaCenter::Media&)), this, SLOT(playPictureMedia(const MediaCenter::Media&)));
     disconnect (m_browser, SIGNAL(mediaActivated(const MediaCenter::Media&)), m_layout, SLOT(showPlayer()));
     disconnect (m_browser, SIGNAL(mediaActivated(const MediaCenter::Media&)), this, SLOT(enterSinglePictureFullscreenState()));
     disconnect (m_browser, SIGNAL (selectedMediasChanged(QList<MediaCenter::Media>)), this, SLOT(selectedMediasChanged(QList<MediaCenter::Media>)));
+}
+
+void PictureState::playPictureMedia(const MediaCenter::Media &media)
+{
+    m_player->playMedia(MediaCenter::PictureMode, media);
 }
 
 void PictureState::onEntry(QEvent *event)
@@ -102,7 +107,7 @@ void PictureState::onEntry(QEvent *event)
     }
 
     connect (m_browser, SIGNAL(mediaActivated(const MediaCenter::Media&)), this, SLOT(enterSinglePictureFullscreenState()));
-    connect (m_browser, SIGNAL(mediaActivated(const MediaCenter::Media&)), m_player, SLOT(playPictureMedia(const MediaCenter::Media&)));
+    connect (m_browser, SIGNAL(mediaActivated(const MediaCenter::Media&)), this, SLOT(playPictureMedia(const MediaCenter::Media&)));
     connect (m_browser, SIGNAL(mediaActivated(const MediaCenter::Media&)), m_layout, SLOT(showPlayer()));
     connect (m_browser, SIGNAL (selectedMediasChanged(QList<MediaCenter::Media>)), this, SLOT(selectedMediasChanged(QList<MediaCenter::Media>)));
 
@@ -178,22 +183,22 @@ void PictureState::configure()
     m_browser->addViewMode(i18n("Picturemode 3"));
     m_browser->setShowingBrowsingWidgets(true);
 
-    m_player->setPlayerType(MediaCenter::Picture);
-    m_player->clearPictureQueue();
+    m_player->setCurrentMode(MediaCenter::PictureMode);
+    clearPictureQueue();
     m_browser->listMediaInDirectory();
 }
 
 void PictureState::initConnections()
 {
     connect (m_pictureToBrowser, SIGNAL (clicked()), this, SLOT (enterBrowsingState()));
-    connect (m_pictureToBrowser, SIGNAL (clicked()), m_player, SLOT (stopPicture()));
+    connect (m_pictureToBrowser, SIGNAL (clicked()), this, SLOT (stopPicture()));
     connect (m_player, SIGNAL(lastPictureShown()), m_pictureToBrowser, SIGNAL(clicked()));
     connect (m_slideshowTimeSlider, SIGNAL(valueChanged(int)), this, SLOT (updateSLideshowInterval(int)));
     connect (m_startSlideshow, SIGNAL (clicked()), this, SLOT (enterSlideshowState()));
-    connect (m_browser, SIGNAL (mediasListChanged(QList<MediaCenter::Media>)), m_player, SLOT (clearPictureQueue()));
-    connect (m_browser, SIGNAL (mediasListChanged(QList<MediaCenter::Media>)), m_player, SLOT (enqueuePictures(QList<MediaCenter::Media>)));
-    connect (m_previousPicture, SIGNAL(clicked()), m_player, SLOT(skipPictureBackward()));
-    connect (m_nextPicture, SIGNAL(clicked()), m_player, SLOT(skipPictureForward()));
+    connect (m_browser, SIGNAL (mediasListChanged(QList<MediaCenter::Media>)), this, SLOT (clearPictureQueue()));
+    connect (m_browser, SIGNAL (mediasListChanged(QList<MediaCenter::Media>)), this, SLOT (enqueuePictures(QList<MediaCenter::Media>)));
+    connect (m_previousPicture, SIGNAL(clicked()), this, SLOT(skipPictureBackward()));
+    connect (m_nextPicture, SIGNAL(clicked()), this, SLOT(skipPictureForward()));
     connect (m_previousPicture, SIGNAL(clicked()), this, SLOT(pauseOnSkip()));
     connect (m_nextPicture, SIGNAL(clicked()), this, SLOT(pauseOnSkip()));
     connect (m_player, SIGNAL(playbackStateChanged(MediaCenter::PlaybackState, MediaCenter::Mode)),
@@ -203,7 +208,27 @@ void PictureState::initConnections()
     connect (m_switchDisplayMode, SIGNAL(clicked()), this, SLOT(toggleFloatingState()));
 }
 
-void MediaCenter::PictureState::updateSLideshowInterval(const int &time)
+void PictureState::skipPictureBackward()
+{
+    m_player->skipBackward(MediaCenter::PictureMode);
+}
+
+void PictureState::skipPictureForward()
+{
+    m_player->skipForward(MediaCenter::PictureMode);
+}
+
+void PictureState::clearPictureQueue()
+{
+    m_player->setMediaQueue(MediaCenter::PictureMode, QList<Media>());
+}
+
+void PictureState::enqueuePictures(const QList<MediaCenter::Media> &pictures)
+{
+    m_player->enqueueMedia(MediaCenter::PictureMode, pictures);
+}
+
+void PictureState::updateSLideshowInterval(const int &time)
 {
     m_slideshowLabel->setText(QString::number(time));
     m_player->setSlideshowInterval(qint64(time));
@@ -242,7 +267,7 @@ void MediaCenter::PictureState::enterSlideshowState()
 
     if (m_layout->infoDisplayMode() == MediaCenter::InfoDisplayBottom &&
         !SharedLayoutComponentsManager::self()->isBackgroundPictureMode()) {
-         m_player->playAllPictureMedia();
+        m_player->playPause(MediaCenter::PictureMode);
          //If I playAll at end of this function the player does not resize 
          //after clicking play in the browser (=infodisplaybottom mode)
          //thus, I start playing here
@@ -270,7 +295,7 @@ void MediaCenter::PictureState::enterSlideshowState()
 
     if (m_layout->infoDisplayMode() == MediaCenter::InfoDisplayFloating &&
         !SharedLayoutComponentsManager::self()->isBackgroundPictureMode()) {
-      m_player->playAllPictureMedia();
+        m_player->playPause(MediaCenter::PictureMode);
       //This playAll is needed to resize player when starting slideshow from floating mode
       //If I put it at the beginning of this function, the player does not resize correctly
       //when starting a slideshow while in floating mode
@@ -319,7 +344,7 @@ void PictureState::onPlaybackStateChanged(MediaCenter::PlaybackState state, Medi
 void MediaCenter::PictureState::pauseOnSkip()
 {
     if (m_player->playbackState(MediaCenter::PictureMode) == MediaCenter::PlayingState) {
-        m_player->playPausePicture();
+        m_player->playPause(MediaCenter::PictureMode);
     }
 }
 
@@ -420,6 +445,15 @@ void PictureState::toggleFloatingState()
     }
 }
 
+void PictureState::stopPicture()
+{
+    if (!m_player) {
+        return;
+    }
+
+    m_player->stop(MediaCenter::PictureMode);
+}
+
 void PictureState::enterPictureFloatingState()
 {
     SharedLayoutComponentsManager::self()->barAutohideControlWidget()->setVisible(false);
@@ -431,6 +465,6 @@ void PictureState::enterPictureFloatingState()
     m_layout->controlAutohideOff();
 
     if (m_player->playbackState(MediaCenter::PictureMode) == MediaCenter::PlayingState) {
-        m_player->playPausePicture();
+        m_player->playPause(MediaCenter::PictureMode);
     }
 }

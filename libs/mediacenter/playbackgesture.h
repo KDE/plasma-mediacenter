@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright 2009 by Alessandro Diaferia <alediaferia@gmail.com>         *
+ *   Copyright 2010 by Alessandro Diaferia <alediaferia@gmail.com>         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,67 +16,58 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef PLAYBACKGESTURE_H
+#define PLAYBACKGESTURE_H
 
-#include <KMainWindow>
+#include <QGesture>
 
-#include "ui_theme.h"
-#include "ui_backgrounddialog.h"
-
-
-class QGraphicsView;
-namespace Plasma {
-    class Corona;
-    class Containment;
-    class Applet;
-}
-
-namespace Phonon {
-    class VideoWidget;
-}
-
-class KConfigSkeleton;
-
-class MainWindow : public KMainWindow
+namespace MediaCenter {
+class PlaybackGesture : public QGesture
 {
     Q_OBJECT
+
+    Q_PROPERTY(ControlAction activeAction READ activeAction);
+    Q_PROPERTY(qreal volumeLevel READ volumeLevel);
+
+    enum ControlAction {
+        NoAction,
+        PlayPauseAction,
+        SkipBackward,
+        SkipForward,
+        StopAction,
+        FastForwardAction,
+        RewindAction
+    };
+
 public:
-    MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    explicit PlaybackGesture(QObject *parent = 0);
 
-    bool eventFilter(QObject *o, QEvent *e);
-
-    void loadMediaCenter();
-
-public slots:
-    void createConfigurationInterface();
-
-protected:
-    void resizeEvent(QResizeEvent *event);
-    void moveEvent(QMoveEvent *);
-
-protected slots:
-    void toggleFullScreen();
-    void applyConfig();
+    qreal volumeLevel() const;
+    ControlAction activeAction() const;
 
 private:
-    KConfigGroup wallpaperConfig(Plasma::Containment * containment, const QString &plugin);
-    QGraphicsView *m_view;
-    Plasma::Corona *m_corona;
-    Plasma::Containment *m_containment;
-    KConfigSkeleton *m_cfskeleton;
+    friend class GestureRecognizer;
 
-    Plasma::Applet *m_browser;
-    Plasma::Applet *m_controller;
-    Plasma::Applet *m_playlist;
-    Plasma::Applet *m_player;
-    Plasma::Applet *m_infobar;
+    /**
+     * Convenient function to increase volume.
+     * The volume is increased by the given @param factor
+     * divided by 10.
+     * volumLevel will never be higher than 1
+     * @internal
+     */
+    void increaseVolume(int factor = 1);
 
-    KUrl m_wallpaper;
+    /**
+     * Convenient function to decrease volume.
+     * The volume is decreased by the given @param factor
+     * divided by 10.
+     * volumeLevel will never be less than 0
+     */
+    void decreaseVolume(int factor = 1);
 
-    Ui::Theme m_theme;
-    Ui::BackgroundDialog m_background;
+    ControlAction m_activeAction;
+    qreal m_volumeLevel;
+
 };
-
-#endif // MAINWINDOW_H
+}
+#endif // PLAYBACKGESTURE_H

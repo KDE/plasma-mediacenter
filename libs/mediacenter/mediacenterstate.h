@@ -116,7 +116,6 @@ protected:
      */
     void showBackgroundStates();
 
-
 protected:
     MediaCenter::Browser *m_browser;
     MediaCenter::Player *m_player;

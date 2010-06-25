@@ -85,6 +85,15 @@ private slots:
     void pauseOnSkip();
     void toggleFloatingState();
 
+    void stopPicture();
+
+    void clearPictureQueue();
+    void enqueuePictures(const QList<MediaCenter::Media> &pictures);
+
+    void skipPictureBackward();
+    void skipPictureForward();
+    void playPictureMedia(const MediaCenter::Media &media);
+
 };
 
 } //namespace end

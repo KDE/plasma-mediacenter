@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright 2009 by Alessandro Diaferia <alediaferia@gmail.com>         *
+ *   Copyright 2009-2010 by Alessandro Diaferia <alediaferia@gmail.com>    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -28,6 +28,7 @@
 
 namespace Phonon {
     class MediaObject;
+    class AudioOutput;
 }
 
 namespace MediaCenter {
@@ -49,17 +50,15 @@ public:
     virtual ~Player();
 
     /**
-     * You must reimplement this method in order to return the
-     * correct Phonon::MediaObject used to reproduce audio/video
-     * content passed to the applet by the MediaContainment that will
-     * host it.
+     * @return the Phonon::MediaObject for the given @param mode.
+     * If no MediaObject is used for the given @param mode this method
+     * returns 0.
      *
-     * @note: Note that due to some Phonon limitations you will always
-     * have to notify when the current reproduced media type changes to
-     * one Phonon does not support, for example a picture (MediaCenter::Picture).
-     * The notification should be done via currentTypeChanged(MediaCenter::MediaType) signal.
+     * @note: Note that due to the internal design you'll always have to
+     * notify when the current media type changes.
+     * This should be done via currentTypeChanged(MediaCenter::MediaType) signal.
      */
-    virtual Phonon::MediaObject *mediaObject() = 0;
+    virtual Phonon::MediaObject *mediaObject(MediaCenter::Mode);
 
     /**
      * @return the current media for the given @param mode
@@ -73,9 +72,13 @@ public:
     virtual void setCurrentMedia(const Media &media, MediaCenter::Mode mode);
 
     /**
-     * Use this method on each state entry to inform the player which type the user wants
+     * Use this method on each state entry to inform the player
+     * which type of media control are currently available for.
      */
-    virtual void setPlayerType(const MediaCenter::MediaType &type);
+    virtual void setCurrentMode(MediaCenter::Mode mode);
+
+    MediaCenter::Mode currentMode() const;
+
     /**
      * This method is used to set the slideshow interval when
      * showing queues of pictures.
@@ -95,15 +98,17 @@ public:
     /**
      * @return the playback state for the given @param mode
      */
-    //virtual MediaCenter::PlaybackState videoPlayerPlaybackState() const = 0;
-    //virtual MediaCenter::PlaybackState picturePlayerPlaybackState() const = 0;
-    //virtual MediaCenter::PlaybackState musicPlayerPlaybackState() const = 0;
     MediaCenter::PlaybackState playbackState(MediaCenter::Mode mode) const;
 
     /**
      * Sets the playback state to @param state for the given @param mode
      */
     void setPlaybackState(MediaCenter::PlaybackState state, MediaCenter::Mode mode);
+
+    /**
+     * @return the enqueued media list for the given @param mode
+     */
+    QList<Media> mediaQueue(MediaCenter::Mode mode) const;
 
 Q_SIGNALS:
     /**
@@ -146,9 +151,6 @@ Q_SIGNALS:
     /**
      * This signal is emitted each time the state for the specific mode changes.
      */
-    //void videoPlaybackStateChanged(const MediaCenter::PlaybackState);
-    //void musicPlaybackStateChanged(const MediaCenter::PlaybackState);
-    //void picturePlaybackStateChanged(const MediaCenter::PlaybackState);
     void playbackStateChanged(MediaCenter::PlaybackState, MediaCenter::Mode);
 
     void lastPictureShown();
@@ -161,41 +163,25 @@ Q_SIGNALS:
      */
     void newMedia(const MediaCenter::Media &media);
 
-    void newMusicObject(Phonon::MediaObject *object);
-    void newVideoObject(Phonon::MediaObject *object);
-
 public Q_SLOTS:
     /**
-     * You must reimplement this method in order to set the proper volume.
+     * Convenience function to set the volume.
+     * @param volume must be between 0 and 100.
      */
-    virtual void setVolume(const int volume) = 0;
-    virtual qreal volume() const = 0;
+    virtual void setVolume(MediaCenter::Mode, int volume);
+    virtual qreal volume(MediaCenter::Mode);
 
-    virtual void skipVideoForward() = 0;
-    virtual void skipVideoBackward() = 0;
+    virtual void skipForward(MediaCenter::Mode) = 0;
+    virtual void skipBackward(MediaCenter::Mode) = 0;
 
-    virtual void stopVideo() = 0;
-    virtual void playPauseVideo()= 0;
-
-    virtual void skipMusicForward() = 0;
-    virtual void skipMusicBackward() = 0;
-
-    virtual void stopMusic() = 0;
-    virtual void playPauseMusic() = 0;
-
-    virtual void skipPictureForward() = 0;
-    virtual void skipPictureBackward() = 0;
-
-    virtual void stopPicture() = 0;
-    virtual void playPausePicture() = 0;
+    virtual void stop(MediaCenter::Mode) = 0;
+    virtual void playPause(MediaCenter::Mode) = 0;
 
     /**
-     * You must reimplement this method in order to let the user
-     * seek the media. This method should do anything if the
-     * current media is a picture.
+     * This method seeks the MediaObject for the given @param mode
+     * by @param time
      */
-    virtual void seekVideo(const int time) = 0;
-    virtual void seekMusic(const int time) = 0;
+    virtual void seek(MediaCenter::Mode mode, qint64 time);
 
     /**
      * Reimplement this method in order to store and properly set the queue
@@ -203,25 +189,18 @@ public Q_SLOTS:
      *
      * @note: The default implementation does nothing.
      */
-    virtual void setVideoQueue(const QList<Media> &sources);
-    virtual void setMusicQueue(const QList<Media> &sources);
-    virtual void setPictureQueue(const QList<Media> &sources);
+    virtual void setMediaQueue(MediaCenter::Mode, const QList<Media> &medias);
 
     /**
      * Reimplement this method to let the host containment update the queue as needed.
-     *
-     * @note: The default implementation does nothing.
      */
-    virtual void enqueueMusic(const QList<Media> &sources);
-    virtual void enqueuePictures(const QList<Media> &sources);
-    virtual void enqueueVideos(const QList<Media> &sources);
+    virtual void enqueueMedia(MediaCenter::Mode, const QList<Media> &medias);
 
     /**
-     * This function can be used to clear the list of media currently enqueued
+     * This function can be used to clear the list of media currently
+     * enqueued for the given @param mode.
      */
-    virtual void clearVideoQueue() = 0;
-    virtual void clearMusicQueue() = 0;
-    virtual void clearPictureQueue() = 0;
+    virtual void clearQueue(MediaCenter::Mode mode);
 
 //    /**
 //     * This slot is called when one or more media are going to be
@@ -236,16 +215,7 @@ public Q_SLOTS:
      * @param media is the media to be played.
      * @note the default implementation does nothing.
      */
-    virtual void playPictureMedia(const MediaCenter::Media &media);
-    virtual void playVideoMedia(const MediaCenter::Media &media);
-    virtual void playMusicMedia(const MediaCenter::Media &media);
-
-    /**
-     * This function will play all media currently enqued in the playerPlaybackState
-     */
-    virtual void playAllPictureMedia();
-    virtual void playAllVideoMedia();
-    virtual void playAllMusicMedia();
+    virtual void playMedia(MediaCenter::Mode, const MediaCenter::Media &media) = 0;
 
 protected:
     /**
@@ -255,6 +225,15 @@ protected:
      * or when the reproduction is stopped.
      */
     void setModeActive(MediaCenter::Mode mode, bool set);
+
+    /**
+     * @return the Phonon::AudioOutput associated with the given
+     * @param mode
+     *
+     * @note always use Phonon::createPath with the Phonon::AudioOutput
+     * returned by this function.
+     */
+    Phonon::AudioOutput *audioOutput(MediaCenter::Mode mode);
 
 private:
     class PlayerPrivate;

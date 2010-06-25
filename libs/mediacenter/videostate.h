@@ -46,12 +46,6 @@ public:
     virtual void configure();
     virtual void initConnections();
 
-    /**
-     * Use this method to get the current Phonon::MediaObject used in the player of that state.
-     * We use this object to update the seek slider
-     */
-    Phonon::MediaObject* mediaObject() const;
-
 protected:
     virtual void onExit(QEvent* event);
     virtual void onEntry(QEvent* event);
@@ -68,12 +62,6 @@ private slots:
     virtual void onPlaybackStateChanged(MediaCenter::PlaybackState, MediaCenter::Mode);
 
     void setMedia(const MediaCenter::Media &media);
-
-   /**
-     * This method is connected to the player and updates
-     * the mediaObject currently active in the state
-     */
-    void setMediaObject(Phonon::MediaObject *object);
 
     /**
      * Currently the browser emits a signal when the number of selected items changes
@@ -93,14 +81,14 @@ private slots:
      */
     void enterBrowsingState() const;
 
-private:
+    void clearVideoQueue();
+    void seekVideo(int);
+    void skipVideoForward();
+    void skipVideoBackward();
+    void setVideoVolume(int);
 
-    /**
-     * This method is called whenever a new Phonon::MediaObject is set
-     * via setMediaObject(). Use this method for internal update purposes
-     * when the MediaObject is ready.
-     */
-    void receivedMediaObject() const;
+private:
+    void setupMediaObject();
 
     void updateInfoDisplay();
 
