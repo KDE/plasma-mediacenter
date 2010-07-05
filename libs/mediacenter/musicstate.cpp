@@ -211,8 +211,8 @@ void MusicState::initConnections()
     connect (m_musicVolumeSlider, SIGNAL(sliderMoved(int)), this, SLOT(setMusicVolume(int)));
     connect (m_player, SIGNAL(newMedia(MediaCenter::Media)), this, SLOT(setMedia(MediaCenter::Media)));
     connect (m_player, SIGNAL(nothingToPlay()), m_musicStop, SIGNAL(clicked()));
-    connect (m_player, SIGNAL(playbackStateChanged(MediaCenter::PlaybackState, MediaCenter::Mode)),
-             this, SLOT(onPlaybackStateChanged(MediaCenter::PlaybackState, MediaCenter::Mode)));
+    connect (m_player, SIGNAL(playbackStateChanged(MediaCenter::PlaybackState, MediaCenter::PlaybackState, MediaCenter::Mode)),
+             this, SLOT(onPlaybackStateChanged(MediaCenter::PlaybackState, MediaCenter::PlaybackState, MediaCenter::Mode)));
     connect (m_ratingWidget, SIGNAL(ratingChanged(int)), this, SLOT(slotRatingChanged(int)));
 }
 
@@ -238,7 +238,7 @@ void MusicState::skipMusicForward()
 
 void MusicState::clearMusicQueue()
 {
-    m_player->setMediaQueue(MediaCenter::MusicMode, QList<Media>());
+    m_player->clearQueue(MediaCenter::MusicMode);
 }
 
 void MusicState::setMusicVolume(int volume)
@@ -256,8 +256,9 @@ void MusicState::updateCurrentTick(const qint64 time)
     m_musicSeekSlider->setValue(time);
 }
 
-void MusicState::onPlaybackStateChanged(MediaCenter::PlaybackState state, MediaCenter::Mode mode)
+void MusicState::onPlaybackStateChanged(MediaCenter::PlaybackState oldState, MediaCenter::PlaybackState state, MediaCenter::Mode mode)
 {
+    Q_UNUSED(oldState)
     if (mode != MediaCenter::MusicMode) {
         return;
     }

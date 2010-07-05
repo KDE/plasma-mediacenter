@@ -39,7 +39,7 @@ namespace MediaCenter {
  *
  * This class is the main class that should be reimplemented when writing
  * a mediaplayer applet for the MediaCenter. Every supported MediaCenter::MediaType
- * has to be handled by this class.
+ * has to be handled by the implementation.
  */
 
 class MEDIACENTER_EXPORT Player : public Plasma::Applet
@@ -91,9 +91,9 @@ public:
     /**
      * @return the current state of the player.
      * @internal
-     * @see setActiveMode()
+     * @see setModeActive()
      */
-    virtual bool isModeActive(MediaCenter::Mode) const;
+    bool isModeActive(MediaCenter::Mode) const;
 
     /**
      * @return the playback state for the given @param mode
@@ -151,7 +151,7 @@ Q_SIGNALS:
     /**
      * This signal is emitted each time the state for the specific mode changes.
      */
-    void playbackStateChanged(MediaCenter::PlaybackState, MediaCenter::Mode);
+    void playbackStateChanged(MediaCenter::PlaybackState oldState, MediaCenter::PlaybackState currentState, MediaCenter::Mode);
 
     void lastPictureShown();
 

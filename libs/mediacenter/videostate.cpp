@@ -74,7 +74,7 @@ void VideoState::onExit(QEvent* event)
 
     disconnect (m_browser, SIGNAL(mediasActivated(QList<MediaCenter::Media>)), m_playlist, SLOT(appendMedia(QList<MediaCenter::Media>)));
     disconnect (m_playlist, SIGNAL(mediasAppended(QList<MediaCenter::Media>)), m_player, SLOT(enqueueVideos(QList<MediaCenter::Media>)));
-    disconnect (m_playlist, SIGNAL(mediaActivated(const MediaCenter::Media&)), m_player, SLOT(playVideoMedia(MediaCenter::Media)));
+    disconnect (m_playlist, SIGNAL(mediaActivated(const MediaCenter::Media&)), this, SLOT(playVideoMedia(MediaCenter::Media)));
     disconnect (m_browser, SIGNAL (selectedMediasChanged(QList<MediaCenter::Media>)), this, SLOT(selectedMediasChanged(QList<MediaCenter::Media>)));
     disconnect (m_playlist, SIGNAL(mediaActivated(const MediaCenter::Media&)), this, SLOT(enterPlayingState()));
 }
@@ -95,10 +95,20 @@ void VideoState::onEntry(QEvent* event)
     }
 
     connect (m_browser, SIGNAL(mediasActivated(QList<MediaCenter::Media>)), m_playlist, SLOT(appendMedia(QList<MediaCenter::Media>)));
-    connect (m_playlist, SIGNAL(mediasAppended(QList<MediaCenter::Media>)), m_player, SLOT(enqueueVideos(QList<MediaCenter::Media>)));
-    connect (m_playlist, SIGNAL(mediaActivated(const MediaCenter::Media&)), m_player, SLOT(playVideoMedia(const MediaCenter::Media&)));
+    connect (m_playlist, SIGNAL(mediasAppended(QList<MediaCenter::Media>)), this, SLOT(enqueueVideos(QList<MediaCenter::Media>)));
     connect (m_browser, SIGNAL (selectedMediasChanged(QList<MediaCenter::Media>)), this, SLOT(selectedMediasChanged(QList<MediaCenter::Media>)));
     connect (m_playlist, SIGNAL(mediaActivated(const MediaCenter::Media&)), this, SLOT(enterPlayingState()));
+    connect (m_playlist, SIGNAL(mediaActivated(const MediaCenter::Media&)), this, SLOT(playVideoMedia(const MediaCenter::Media&)));
+}
+
+void VideoState::playVideoMedia(const MediaCenter::Media &video)
+{
+    m_player->playMedia(MediaCenter::VideoMode, video);
+}
+
+void VideoState::enqueueVideos(const QList<MediaCenter::Media> &videos)
+{
+    m_player->enqueueMedia(MediaCenter::VideoMode, videos);
 }
 
 QList<QGraphicsWidget*> VideoState::subComponents() const
@@ -205,19 +215,19 @@ void VideoState::initConnections()
     connect (m_videoTogglePlaylist, SIGNAL(clicked()), m_layout, SLOT(togglePlaylistVisible()));
     connect (m_videoSeekSlider, SIGNAL(sliderMoved(int)), this, SLOT(seekVideo(int)));
     connect (m_videoStop, SIGNAL(clicked()), this, SLOT(enterBrowsingState()));
-    connect (m_videoPlayPause, SIGNAL(clicked()), this, SLOT(enterPlayingState()));
+    connect (m_videoPlayPause, SIGNAL(clicked()), this, SLOT(playPauseVideo()));
     connect (m_videoSkipForward, SIGNAL(clicked()), this, SLOT(skipVideoForward()));
     connect (m_videoSkipBack, SIGNAL(clicked()), this, SLOT(skipVideoBackward()));
     connect (m_videoVolumeSlider, SIGNAL(sliderMoved(int)), this, SLOT(setVideoVolume(int)));
     connect (m_player, SIGNAL(newMedia(MediaCenter::Media)), this, SLOT(setMedia(MediaCenter::Media)));
-    connect (m_player, SIGNAL(playbackStateChanged(MediaCenter::PlaybackState, MediaCenter::Mode)),
-             this, SLOT(onPlaybackStateChanged(MediaCenter::PlaybackState, MediaCenter::Mode)));
+    connect (m_player, SIGNAL(playbackStateChanged(MediaCenter::PlaybackState, MediaCenter::PlaybackState, MediaCenter::Mode)),
+             this, SLOT(onPlaybackStateChanged(MediaCenter::PlaybackState, MediaCenter::PlaybackState, MediaCenter::Mode)));
     connect (m_ratingWidget, SIGNAL(ratingChanged(int)), this, SLOT(slotRatingChanged(int)));
 }
 
 void VideoState::clearVideoQueue()
 {
-    m_player->setMediaQueue(MediaCenter::VideoMode, QList<Media>());
+    m_player->clearQueue(MediaCenter::VideoMode);
 }
 
 void VideoState::seekVideo(int time)
@@ -250,8 +260,9 @@ void VideoState::updateCurrentTick(const qint64 time)
     m_videoSeekSlider->setValue(time);
 }
 
-void VideoState::onPlaybackStateChanged(MediaCenter::PlaybackState state, MediaCenter::Mode mode)
+void VideoState::onPlaybackStateChanged(MediaCenter::PlaybackState oldState, MediaCenter::PlaybackState state, MediaCenter::Mode mode)
 {
+    Q_UNUSED(oldState)
     if (mode != MediaCenter::VideoMode) {
         return;
     }
@@ -276,7 +287,7 @@ void VideoState::setupMediaObject()
 {
     m_videoObject = m_player->mediaObject(MediaCenter::VideoMode);
     if (!m_videoObject) {
-        kDebug() << "Media object error in VideoState";
+        kDebug() << "!!!!!!!!!Media object error in VideoState";
         return;
     }
     m_videoSeekSlider->setRange(0, m_videoObject->totalTime());
@@ -374,10 +385,6 @@ void VideoState::enterBrowsingState() const
 
 void VideoState::enterPlayingState() const
 {
-    if (!SharedLayoutComponentsManager::self()->isBackgroundVideoMode()) {
-        m_player->playPause(MediaCenter::VideoMode);
-    }
-
     //This function is called every time the play/pause button is clicked
     //We only want to turn autohide on, and hide buttons when the user enters fullscreen player,
     //not when he only pauses or plays when previously paused
@@ -388,4 +395,12 @@ void VideoState::enterPlayingState() const
         m_layout->showPlayer();
     }
     m_layout->layoutPlayer();
+}
+
+void VideoState::playPauseVideo()
+{
+    if (m_player->playbackState(MediaCenter::VideoMode) == MediaCenter::StoppedState) {
+        enterPlayingState();
+    }
+    m_player->playPause(MediaCenter::VideoMode);
 }

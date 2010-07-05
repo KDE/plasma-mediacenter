@@ -67,6 +67,8 @@ private:
 
     ControlAction m_activeAction;
     qreal m_volumeLevel;
+    bool m_skipForward;
+    bool m_skipBackward;
 
 };
 }

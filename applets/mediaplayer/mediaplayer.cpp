@@ -20,10 +20,6 @@
 
 #include "mediaplayer.h"
 #include "pictureviewer.h"
-//#include "plasmamediaplayeradaptor.h"
-//#include "dbus/playerdbushandler.h"
-//#include "dbus/rootdbushandler.h"
-//#include "dbus/tracklistdbushandler.h"
 
 #include <QGraphicsProxyWidget>
 #include <QGraphicsLinearLayout>
@@ -32,10 +28,13 @@
 #include <QTimer>
 #include <QApplication>
 #include <QDesktopWidget>
+#include <QMainWindow>
+#include <QGraphicsView>
 
 #include <KMimeType>
 #include <KFileDialog>
 #include <KConfigDialog>
+#include <KWindowSystem>
 
 #include <phonon/audiooutput.h>
 #include <phonon/videowidget.h>
@@ -44,6 +43,8 @@
 #include <plasma/widgets/slider.h>
 #include <plasma/widgets/videowidget.h>
 #include <Plasma/Containment>
+#include <Plasma/Wallpaper>
+#include <Plasma/WindowEffects>
 
 MediaPlayer::MediaPlayer(QObject *parent, const QVariantList &args)
     : MediaCenter::Player(parent, args),
@@ -51,9 +52,12 @@ MediaPlayer::MediaPlayer(QObject *parent, const QVariantList &args)
       m_raised(false),
       m_fullScreen(false),
       m_sshowTime(3),
-      m_picture(new PictureViewer(this))
+      m_picture(new PictureViewer(this)),
+      m_mainWidget(0),
+      m_videoProxy(new QGraphicsProxyWidget(this))
 {
     connect(m_picture, SIGNAL(imageLoaded()), this, SLOT(slotEmitNewMedia()));
+    connect(KWindowSystem::self(), SIGNAL(activeWindowChanged(WId)), this, SLOT(adjustActiveWindow(WId)));
     m_picture->hide();
     setAcceptDrops(true);
     setHasConfigurationInterface(true);
@@ -64,7 +68,6 @@ MediaPlayer::MediaPlayer(QObject *parent, const QVariantList &args)
         m_currentUrl = args.value(0).toString();
     }
 }
-
 
 MediaPlayer::~MediaPlayer()
 {
@@ -107,14 +110,29 @@ void MediaPlayer::init()
 {
     loadConfig();
 
+
+    view()->installEventFilter(this);
+
+    // let's try to find the main window
+    QObject *parent = view()->parent();
+    while (1) {
+        if (parent->parent()) {
+            parent = parent->parent();
+            continue;
+        }
+        break;
+    }
+    parent->installEventFilter(this);
+    m_mainWidget = qobject_cast<QWidget*>(parent);
+
     m_layout = new QGraphicsLinearLayout(Qt::Vertical, this);
     m_layout->setContentsMargins(0, 0, 0, 0);
 
-    m_video = new Plasma::VideoWidget(this);
-    Phonon::createPath(mediaObject(MediaCenter::VideoMode), m_video->nativeWidget());
-    m_video->setAcceptDrops(false);
+    m_video = new Phonon::VideoWidget;
+    m_videoProxy->setWidget(m_video);
+    m_video->hide();
 
-    m_layout->addItem(m_video);
+    Phonon::createPath(mediaObject(MediaCenter::VideoMode), m_video);
 
     m_music = mediaObject(MediaCenter::MusicMode);
 
@@ -125,6 +143,8 @@ void MediaPlayer::init()
     connect (mediaObject(MediaCenter::VideoMode), SIGNAL(finished()), this, SLOT(playNextVideoMedia()));
     connect (m_music, SIGNAL(finished()), this, SLOT(playNextMusicMedia()));
     connect (m_picture, SIGNAL(showFinished()), this, SLOT(playNextPictureMedia()));
+    connect(this, SIGNAL(playbackStateChanged(MediaCenter::PlaybackState, MediaCenter::PlaybackState,MediaCenter::Mode)),
+            SLOT(reactToStateChange(MediaCenter::PlaybackState, MediaCenter::PlaybackState,MediaCenter::Mode)));
 
     m_picture->setShowTime(slideShowInterval());
     connect (this, SIGNAL(slideShowTimeChanged(qint64)), m_picture, SLOT(setShowTime(qint64)));
@@ -166,12 +186,16 @@ void MediaPlayer::constraintsEvent(Plasma::Constraints constraints)
 void MediaPlayer::playPause(MediaCenter::Mode mode)
 {
     if (mode == MediaCenter::VideoMode) {
-        if (mediaObject(MediaCenter::VideoMode)->state() == Phonon::PlayingState) {
+        if (playbackState(MediaCenter::VideoMode) == MediaCenter::PlayingState) {
             mediaObject(MediaCenter::VideoMode)->pause();
             setPlaybackState(MediaCenter::PausedState, mode);
-        } else if (mediaObject(MediaCenter::VideoMode)->state() == Phonon::PausedState) {
+        } else if (playbackState(MediaCenter::VideoMode) == MediaCenter::PausedState){
             mediaObject(MediaCenter::VideoMode)->play();
             setPlaybackState(MediaCenter::PlayingState, mode);
+        } else {
+            mediaObject(MediaCenter::VideoMode)->setCurrentSource(currentMedia(MediaCenter::VideoMode).second);
+            mediaObject(MediaCenter::VideoMode)->play();
+            setPlaybackState(MediaCenter::PlayingState, MediaCenter::VideoMode);
         }
     } else if (mode == MediaCenter::MusicMode) {
         if (m_music->state() == Phonon::PlayingState) {
@@ -244,18 +268,6 @@ void MediaPlayer::dropEvent(QGraphicsSceneDragDropEvent *event)
     emit mediaReceived(medias);
 }
 
-void MediaPlayer::ShowOpenFileDialog()
-{
-    OpenUrl(KFileDialog::getOpenFileName());
-}
-
-void MediaPlayer::OpenUrl(const QString &url)
-{
-    m_currentUrl = url;
-    m_video->setUrl(m_currentUrl);
-    mediaObject(MediaCenter::VideoMode)->play();
-}
-
 void MediaPlayer::keyPressEvent(QKeyEvent *event)
 {
     Phonon::MediaObject *media = mediaObject(currentMode());
@@ -307,14 +319,8 @@ void MediaPlayer::keyPressEvent(QKeyEvent *event)
 
 bool MediaPlayer::eventFilter(QObject *o, QEvent *e)
 {
-    Q_UNUSED(o);
-
-    if (e->type() == QEvent::KeyPress) {
-        QKeyEvent *keyEvent = static_cast<QKeyEvent*>(e);
-        if (keyEvent->key() == Qt::Key_Escape) {
-            m_fullScreen = false;
-            return true;
-        }
+    if (e->type() == QEvent::Resize || e->type() == QEvent::Move) {
+        updateVideoWidgetGeometry();
     }
     return false;
 }
@@ -322,7 +328,7 @@ bool MediaPlayer::eventFilter(QObject *o, QEvent *e)
 void MediaPlayer::stop(MediaCenter::Mode mode)
 {
     if (mode == MediaCenter::VideoMode) {
-        m_video->stop();
+        mediaObject(mode)->stop();
         setPlaybackState(MediaCenter::StoppedState, MediaCenter::VideoMode);
         setModeActive(MediaCenter::VideoMode, false);
     } else if (mode == MediaCenter::MusicMode) {
@@ -360,14 +366,15 @@ void MediaPlayer::playMedia(MediaCenter::Mode mode, const MediaCenter::Media &me
         setModeActive(MediaCenter::PictureMode, true);
         if (!m_picture->isVisible()) {
             QGraphicsLinearLayout *layout = static_cast<QGraphicsLinearLayout*>(this->layout());
-            layout->removeItem(m_video);
             m_video->hide();
             m_picture->show();
             layout->addItem(m_picture);
+            layout->removeItem(m_videoProxy);
             setLayout(layout);
         }
         slideShow(media);
     } else if (mode == MediaCenter::MusicMode) {
+        m_video->hide();
         setModeActive(MediaCenter::MusicMode, true);
         m_music->setCurrentSource(media.second);
 
@@ -378,14 +385,12 @@ void MediaPlayer::playMedia(MediaCenter::Mode mode, const MediaCenter::Media &me
         }
     } else if (mode == MediaCenter::VideoMode) {
         setModeActive(MediaCenter::VideoMode, true);
-        if (!m_video->isVisible()) {
-            QGraphicsLinearLayout *layout = static_cast<QGraphicsLinearLayout*>(this->layout());
-            layout->removeItem(m_picture);
-            m_video->show();
-            m_picture->hide();
-            layout->addItem(m_video);
-            setLayout(layout);
-        }
+        QGraphicsLinearLayout *layout = static_cast<QGraphicsLinearLayout*>(this->layout());
+        layout->removeItem(m_picture);
+        layout->addItem(m_videoProxy);
+        m_video->show();
+        m_picture->hide();
+        setLayout(layout);
         mediaObject(MediaCenter::VideoMode)->setCurrentSource(media.second);
 
         if (mediaObject(MediaCenter::VideoMode)->state() != Phonon::PlayingState) {
@@ -398,14 +403,6 @@ void MediaPlayer::playMedia(MediaCenter::Mode mode, const MediaCenter::Media &me
 
 void MediaPlayer::slideShow(const MediaCenter::Media &media)
 {
-    if (!m_picture->isVisible()) {
-        QGraphicsLinearLayout *layout = static_cast<QGraphicsLinearLayout*>(this->layout());
-        layout->removeItem(m_video);
-        m_video->hide();
-        m_picture->show();
-        layout->addItem(m_picture);
-        setLayout(layout);
-    }
     kDebug() << "loading picture" << media.second;
     m_picture->loadPicture(media.second);
     setCurrentMedia(media, MediaCenter::PictureMode);
@@ -461,6 +458,74 @@ void MediaPlayer::returnToFirstPicture()
 void MediaPlayer::slotEmitNewMedia()
 {
     emit newMedia(currentMedia(MediaCenter::PictureMode));
+}
+
+void MediaPlayer::adjustActiveWindow(WId id)
+{
+    if (!m_video->isVisible()) {
+        return;
+    }
+
+    if (id == m_video->winId()) {
+        view()->activateWindow();
+        view()->raise();
+    }
+}
+
+void MediaPlayer::updateVideoWidgetGeometry()
+{
+    if (!m_video || m_videoProxy->widget() || !m_video->isVisible()) {
+        return;
+    }
+
+    m_video->setGeometry(view()->geometry());
+    m_video->move(view()->mapToGlobal(view()->pos()));
+}
+
+void MediaPlayer::setupForVideoWidget(bool restore)
+{
+    WId mainWindowId = m_mainWidget->winId();
+
+    if (restore) {
+        containment()->setWallpaper(m_previousWallpaperPlugin);
+
+        view()->setPalette(QPalette());
+        m_video->hide();
+        Plasma::WindowEffects::overrideShadow(mainWindowId, false);
+    } else {
+        if (m_mainWidget->isFullScreen()) {
+            m_videoProxy->setWidget(0);
+            m_video->setParent(0);
+            m_video->setWindowFlags(Qt::FramelessWindowHint);
+            KWindowSystem::setState(m_video->winId(), NET::KeepAbove | NET::StaysOnTop);
+            if (containment()->wallpaper()) {
+                m_previousWallpaperPlugin = containment()->wallpaper()->name();
+            }
+            // we don't want any wallpaper plugin to be set
+            containment()->setWallpaper("");
+            QPalette p = view()->palette();
+            p.setColor(QPalette::Base, Qt::transparent);
+            view()->setPalette(p);
+            Plasma::WindowEffects::overrideShadow(mainWindowId, true);
+            m_video->show();
+            updateVideoWidgetGeometry();
+        } else {
+            if (m_videoProxy->widget() != m_video) {
+                m_videoProxy->setWidget(m_video);
+            }
+        }
+    }
+}
+
+void MediaPlayer::reactToStateChange(MediaCenter::PlaybackState oldState, MediaCenter::PlaybackState state, MediaCenter::Mode mode)
+{
+    if (mode == MediaCenter::VideoMode) {
+        if (state == MediaCenter::PlayingState && oldState != MediaCenter::PausedState) {
+            setupForVideoWidget();
+        } else if (state == MediaCenter::StoppedState) {
+            setupForVideoWidget(true);
+        }
+    }
 }
 
 K_EXPORT_PLASMA_APPLET(mcplayer, MediaPlayer)

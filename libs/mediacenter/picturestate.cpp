@@ -201,8 +201,8 @@ void PictureState::initConnections()
     connect (m_nextPicture, SIGNAL(clicked()), this, SLOT(skipPictureForward()));
     connect (m_previousPicture, SIGNAL(clicked()), this, SLOT(pauseOnSkip()));
     connect (m_nextPicture, SIGNAL(clicked()), this, SLOT(pauseOnSkip()));
-    connect (m_player, SIGNAL(playbackStateChanged(MediaCenter::PlaybackState, MediaCenter::Mode)),
-             this, SLOT(onPlaybackStateChanged(MediaCenter::PlaybackState, MediaCenter::Mode)));
+    connect (m_player, SIGNAL(playbackStateChanged(MediaCenter::PlaybackState, MediaCenter::PlaybackState, MediaCenter::Mode)),
+             this, SLOT(onPlaybackStateChanged(MediaCenter::PlaybackState, MediaCenter::PlaybackState, MediaCenter::Mode)));
     connect (m_ratingWidget, SIGNAL(ratingChanged(int)), this, SLOT(slotRatingChanged(int)));
     connect (m_player, SIGNAL(newMedia(MediaCenter::Media)), this, SLOT(setMedia(MediaCenter::Media)));
     connect (m_switchDisplayMode, SIGNAL(clicked()), this, SLOT(toggleFloatingState()));
@@ -220,7 +220,7 @@ void PictureState::skipPictureForward()
 
 void PictureState::clearPictureQueue()
 {
-    m_player->setMediaQueue(MediaCenter::PictureMode, QList<Media>());
+    m_player->clearQueue(MediaCenter::PictureMode);
 }
 
 void PictureState::enqueuePictures(const QList<MediaCenter::Media> &pictures)
@@ -325,8 +325,9 @@ void PictureState::enterSinglePictureFullscreenState()
     m_layout->layoutPlayer();
 }
 
-void PictureState::onPlaybackStateChanged(MediaCenter::PlaybackState state, MediaCenter::Mode mode)
+void PictureState::onPlaybackStateChanged(MediaCenter::PlaybackState oldState, MediaCenter::PlaybackState state, MediaCenter::Mode mode)
 {
+    Q_UNUSED(oldState)
     if (mode != MediaCenter::PictureMode) {
         return;
     }

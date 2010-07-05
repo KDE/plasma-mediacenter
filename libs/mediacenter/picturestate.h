@@ -76,7 +76,7 @@ private slots:
     void enterSlideshowState();
 
     void updateSLideshowInterval(const int &time);
-    void onPlaybackStateChanged(MediaCenter::PlaybackState, MediaCenter::Mode);
+    void onPlaybackStateChanged(MediaCenter::PlaybackState, MediaCenter::PlaybackState, MediaCenter::Mode);
     void setMedia(const MediaCenter::Media &media);
 
     void selectedMediasChanged(const QList<MediaCenter::Media> &list);

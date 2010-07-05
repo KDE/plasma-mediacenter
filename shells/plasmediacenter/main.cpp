@@ -55,8 +55,8 @@ int main(int argc, char *argv[])
     Plasma::Theme::defaultTheme()->setUseGlobalSettings(false);
 
     MainWindow *mw = new MainWindow;
-    mw->loadMediaCenter();
     mw->show();
+    mw->loadMediaCenter();
     return app.exec();
 
 }

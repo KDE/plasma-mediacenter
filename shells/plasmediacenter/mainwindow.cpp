@@ -93,6 +93,8 @@ m_infobar(0)
         toggleFullScreen();
     }
     args->clear();
+
+    setAttribute(Qt::WA_TranslucentBackground);
 }
 
 MainWindow::~MainWindow()
@@ -206,12 +208,12 @@ void MainWindow::applyConfig()
         KConfigGroup cfg = wallpaperConfig(m_containment, currentWallpaper->pluginName());
         currentWallpaper->save(cfg);
     }
-//    KConfigGroup cfg = wallpaperConfig(m_containment, "image");
-//    cfg.writeEntry("wallpaper", m_wallpaper);
-//    //cfg.writeEntry("wallpapercolor", (color.isEmpty() ? "0,0,0" : color));
-//    //cfg.writeEntry("wallpaperposition", position);
-//    cfg.sync();
-//    m_containment->setWallpaper("image", "SingleImage");
+    KConfigGroup cfg = wallpaperConfig(m_containment, "image");
+    cfg.writeEntry("wallpaper", m_wallpaper);
+    //cfg.writeEntry("wallpapercolor", (color.isEmpty() ? "0,0,0" : color));
+    //cfg.writeEntry("wallpaperposition", position);
+    cfg.sync();
+    m_containment->setWallpaper("image", "SingleImage");
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event)

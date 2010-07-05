@@ -54,7 +54,7 @@ private slots:
     void updateTotalTime(const qint64 time);
     void updateCurrentTick(const qint64 time);
 
-    virtual void onPlaybackStateChanged(MediaCenter::PlaybackState state, MediaCenter::Mode);
+    virtual void onPlaybackStateChanged(MediaCenter::PlaybackState oldState, MediaCenter::PlaybackState state, MediaCenter::Mode);
 
     void setMedia(const MediaCenter::Media &media);
 

@@ -70,9 +70,6 @@ public slots:
     void Raise();
     void Lower();
 
-    void ShowOpenFileDialog();
-    void OpenUrl(const QString &path);
-
     void stop(MediaCenter::Mode);
 
     void skipForward(MediaCenter::Mode);
@@ -94,23 +91,32 @@ private slots:
     void playNextVideoMedia();
     void playNextPictureMedia();
     void playNextMusicMedia();
+    void adjustActiveWindow(WId id);
+    void reactToStateChange(MediaCenter::PlaybackState, MediaCenter::PlaybackState, MediaCenter::Mode);
 
 private:
     void loadConfig();
     void applyConfig();
 
+    void updateVideoWidgetGeometry();
+    void setupForVideoWidget(bool restore = false);
+
 private:
     QGraphicsLinearLayout *m_layout;
     QString m_currentUrl;
-    Plasma::VideoWidget *m_video;
+    Phonon::VideoWidget *m_video;
     Phonon::MediaObject *m_music;
     QTimer *m_hideTimer;
+    QString m_previousWallpaperPlugin;
 
     bool m_raised;
 
     bool m_fullScreen;
     qint64 m_sshowTime;
     PictureViewer *m_picture;
+
+    QWidget *m_mainWidget;
+    QGraphicsProxyWidget *m_videoProxy;
 
     Ui::Config ui;
 };

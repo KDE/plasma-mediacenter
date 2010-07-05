@@ -59,7 +59,7 @@ private slots:
      * Use this slot in order to update the controller status according
      * to the right playing state.
      */
-    virtual void onPlaybackStateChanged(MediaCenter::PlaybackState, MediaCenter::Mode);
+    virtual void onPlaybackStateChanged(MediaCenter::PlaybackState, MediaCenter::PlaybackState, MediaCenter::Mode);
 
     void setMedia(const MediaCenter::Media &media);
 
@@ -86,6 +86,9 @@ private slots:
     void skipVideoForward();
     void skipVideoBackward();
     void setVideoVolume(int);
+    void playVideoMedia(const MediaCenter::Media &video);
+    void enqueueVideos(const QList<MediaCenter::Media> &videos);
+    void playPauseVideo();
 
 private:
     void setupMediaObject();

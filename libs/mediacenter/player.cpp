@@ -24,6 +24,8 @@
 #include <Phonon/AudioOutput>
 #include <Phonon/Path>
 
+#include <KDebug>
+
 using namespace MediaCenter;
 
 class Player::PlayerPrivate
@@ -166,8 +168,9 @@ void Player::setPlaybackState(PlaybackState state, Mode mode)
     if (playbackState(mode) == state) {
         return;
     }
+    PlaybackState oldState = d->playbackStates.value(mode);
     d->playbackStates.insert(mode, state);
-    emit playbackStateChanged(state, mode);
+    emit playbackStateChanged(oldState, state, mode);
 }
 
 bool Player::isModeActive(Mode mode) const
