@@ -61,6 +61,9 @@ public slots:
 
     void clearViewModes();
 
+protected:
+    void gestureEvent(MediaCenter::BrowserGesture *);
+
 signals:
     void mediasListChanged(const QList<MediaCenter::Media> &list);
 

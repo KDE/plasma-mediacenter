@@ -27,6 +27,8 @@
 
 namespace MediaCenter {
 
+class BrowserGesture;
+
 class MEDIACENTER_EXPORT Browser : public Plasma::Applet
 {
     Q_OBJECT
@@ -44,6 +46,12 @@ public:
     virtual QList<MediaCenter::Media> selectedMedias() const = 0;
 
     virtual KUrl directory() const = 0;
+
+    /**
+     * This method should only be used by the main application to
+     * set the gesture type to handle.
+     */
+    void setGestureType(Qt::GestureType);
 
 public Q_SLOTS:
     virtual void openDirectory(const KUrl &url) = 0;
@@ -79,6 +87,13 @@ Q_SIGNALS:
     //TODO: Replace these with one signal that contains a pointer to the engine
     //This pointer we can then use in the states (useful for example when we enter a state via the background buttons
     //to load the last engine). But we need to have the modelpackage library in the general libraries.
+
+protected:
+    virtual bool sceneEvent(QEvent *event);
+    virtual void gestureEvent(MediaCenter::BrowserGesture *);
+
+private:
+    Qt::GestureType m_gestureType;
 };
 
 } // namespace MediaCenter

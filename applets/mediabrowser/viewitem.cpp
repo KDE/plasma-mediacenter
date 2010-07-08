@@ -17,6 +17,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 #include "viewitem.h"
+#include "blur.cpp"
 
 #include <QAbstractItemModel>
 #include <QAbstractItemDelegate>
@@ -276,11 +277,17 @@ void ViewItem::drawReflection(QPainter *painter, const QRect &reflectionRect, co
     p.scale(1, -1);
     p.setCompositionMode(QPainter::CompositionMode_SourceIn);
 
+    p.setOpacity(0.7);
     p.drawPixmap(QRect(0, -reflectionRect.height(), reflectionRect.width(), reflectionRect.height()),
                  pm,
                  QRect(0, pm.height() - reflectionRect.height(), reflectionRect.width(), reflectionRect.height()));
-
     p.end();
+
+    // here we add the blur to the reflection
+    QImage img = m_reflection.toImage();
+    expblur<5,5>(img, 5);
+    m_reflection = QPixmap::fromImage(img);
+
     painter->drawPixmap(reflectionRect, m_reflection);
 }
 
@@ -290,9 +297,6 @@ void ViewItem::askForFilePreview()
     // if the model is a KDirModel ask for previews
     if (!m_index.data(KDirModel::FileItemRole).isNull()) {
         KFileItem item = m_index.data(KDirModel::FileItemRole).value<KFileItem>();
-        if (!item.mimetype().startsWith("image/")) {
-            return;
-        }
 
         bool ok;
         KUrl url = item.mostLocalUrl(ok);
@@ -381,7 +385,8 @@ void ViewItem::updateHoverRating(const QPoint &pos)
         return;
     }
 
-    //m_hoverRating = KRatingPainter::getRatingFromPosition(ratingRect(contentsRect().toRect()), Qt::AlignLeft | Qt::AlignVCenter, Qt::LeftToRight, pos);
+    //m_hoverRating = KRatingPainter::getRatingFromPosition(ratingRect(contentsRect().toRect()),
+    //Qt::AlignLeft | Qt::AlignVCenter, Qt::LeftToRight, pos);
     if (m_hoverRating == -1) {
         m_hoverRating = 0;
     }
@@ -445,7 +450,7 @@ void ViewItem::setSelected(bool set)
 
 void ViewItem::showCornerIcons(bool set)
 {
-    //TODO: Find a way to turn of the actions in the item corners for touch based devices
+    //TODO: Find a way to turn off the actions in the item corners for touch based devices
 }
 
 void ViewItem::setIsNotFile(bool set)

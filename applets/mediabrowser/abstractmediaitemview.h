@@ -101,6 +101,7 @@ protected:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
+    void itemActivateEvent(ViewItem *item);
     ViewItem* itemFromPos(const QPointF &);
 
 protected slots:
@@ -154,7 +155,6 @@ signals:
 
 private:
     void tryDrag(QGraphicsSceneMouseEvent *);
-    void itemClickEvent(QGraphicsSceneMouseEvent *);
     KUrl::List m_history;
     AbstractBrowsingBackend::BrowsingType m_browsingType;
 

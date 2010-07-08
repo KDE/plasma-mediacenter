@@ -230,5 +230,8 @@ void GridView::keyPressEvent(QKeyEvent *event)
                 updateHoveredItem(m_items.last());
             }
         }
+    } else if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return) {
+        QPointF currentPoint = m_hoveredItem->pos() + QPointF(1, 1);
+        itemActivateEvent(itemFromPos(currentPoint));
     }
 }

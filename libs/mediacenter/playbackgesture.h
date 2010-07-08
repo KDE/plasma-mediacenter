@@ -21,14 +21,17 @@
 
 #include <QGesture>
 
+#include "mediacenter_export.h"
+
 namespace MediaCenter {
-class PlaybackGesture : public QGesture
+class MEDIACENTER_EXPORT PlaybackGesture : public QGesture
 {
     Q_OBJECT
 
     Q_PROPERTY(ControlAction activeAction READ activeAction);
     Q_PROPERTY(qreal volumeLevel READ volumeLevel);
 
+public:
     enum ControlAction {
         NoAction,
         PlayPauseAction,
@@ -36,10 +39,10 @@ class PlaybackGesture : public QGesture
         SkipForward,
         StopAction,
         FastForwardAction,
-        RewindAction
+        RewindAction,
+        VolumeAction
     };
 
-public:
     explicit PlaybackGesture(QObject *parent = 0);
 
     qreal volumeLevel() const;
@@ -67,8 +70,6 @@ private:
 
     ControlAction m_activeAction;
     qreal m_volumeLevel;
-    bool m_skipForward;
-    bool m_skipBackward;
 
 };
 }

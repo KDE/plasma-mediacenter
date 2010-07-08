@@ -1,6 +1,9 @@
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}
-)
+#include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
 set (mediacenterlibs_SRCS
+gesturerecognizer.cpp
+playbackgesture.cpp
+browsergesture.cpp
 browser.cpp
 playbackcontrol.cpp
 infodisplay.cpp
@@ -13,8 +16,6 @@ videostate.cpp
 musicstate.cpp
 homestate.cpp
 medialayout.cpp
-gesturerecognizer.cpp
-playbackgesture.cpp
 private/mediahandler.cpp
 private/sharedlayoutcomponentsmanager.cpp
 )
@@ -39,6 +40,7 @@ set (mediacenterlibs_HDRS
     medialayout.h
     gesturerecognizer.h
     playbackgesture.h
+    browsergesture.h
 )
 
 install (FILES ${mediacenterlibs_HDRS} DESTINATION ${INCLUDE_INSTALL_DIR}/mediacenter COMPONENT Devel)

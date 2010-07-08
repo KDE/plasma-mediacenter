@@ -296,7 +296,7 @@ void AbstractMediaItemView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void AbstractMediaItemView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     if (KGlobalSettings::singleClick()) {
-        itemClickEvent(event);
+        itemActivateEvent(itemFromPos(event->pos()));
     }
 }
 
@@ -306,17 +306,14 @@ void AbstractMediaItemView::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *even
         return;
     }
 
-    itemClickEvent(event);
+    itemActivateEvent(itemFromPos(event->pos()));
 }
 
-void AbstractMediaItemView::itemClickEvent(QGraphicsSceneMouseEvent *event)
+void AbstractMediaItemView::itemActivateEvent(ViewItem *viewItem)
 {
-    ViewItem *viewItem = itemFromPos(event->pos());
     if (!viewItem) {
         return;
     }
-
-
     QModelIndex index = viewItem->index();
 
     KDirModel *model = qobject_cast<KDirModel*>(m_model);

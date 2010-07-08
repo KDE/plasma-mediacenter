@@ -1,14 +1,7 @@
 [Desktop Entry]
 Type=Service
 Icon=folder-video
-Name=Local Videos browsing plugin
-Name[en_GB]=Local Videos browsing plugin
-Name[km]=កម្មវិធី​ជំនួយ​ក្នុង​ការ​រុក​រក​វីដេអូ​មូលដ្ឋាន ។
-Name[pt]='Plugin' de Navegação nos Vídeos Locais
-Name[pt_BR]=Plug-in de navegação nos vídeos locais
-Name[sv]=Insticksprogram för bläddring i lokala videor
-Name[uk]=Додаток для перегляду локальних відеофайлів
-Name[x-test]=xxLocal Videos browsing pluginxx
+Name=Local videos
 Comment=A plugin for the mediabrowser applet that allows local file browsing
 Comment[en_GB]=A plugin for the mediabrowser applet that allows local file browsing
 Comment[km]=កម្មវិធី​ជំនួយសម្រាប់​អាប់​ភ្លេត​ mediabrowser ​ដែល​អនុញ្ញាត​ឲ្យ​មាន​ការរុករក​ឯកសារ​មូលដ្ឋាន ។

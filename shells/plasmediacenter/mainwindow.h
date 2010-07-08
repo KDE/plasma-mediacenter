@@ -36,6 +36,10 @@ namespace Phonon {
     class VideoWidget;
 }
 
+namespace MediaCenter {
+    class GestureRecognizer;
+}
+
 class KConfigSkeleton;
 
 class MainWindow : public KMainWindow
@@ -72,6 +76,9 @@ private:
     Plasma::Applet *m_playlist;
     Plasma::Applet *m_player;
     Plasma::Applet *m_infobar;
+
+    MediaCenter::GestureRecognizer *m_recognizer;
+    Qt::GestureType m_gestureType;
 
     KUrl m_wallpaper;
 

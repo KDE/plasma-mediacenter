@@ -25,6 +25,7 @@
 #include <KDirModel>
 #include <KLineEdit>
 #include <KConfigDialog>
+#include <KDebug>
 
 #include <QDir>
 
@@ -107,11 +108,11 @@ void LocalFilesAbstractBackend::init()
 {
     KConfigGroup cf = config();
 
-    m_localUrl = KUrl(cf.readEntry(m_backendName + "Url", QDir::homePath()));
-    m_fromPlaces = cf.readEntry(m_backendName + "FromPlaces", true);
-    m_folderNavigation = cf.readEntry(m_backendName + "FolderNavigation", true);
-    m_useNepomuk = cf.readEntry(m_backendName + "Nepomuk", true);
-    m_watchedDirs = cf.readEntry(m_backendName + "WatchedFolders", QStringList());
+    m_localUrl = KUrl(cf.readEntry("Url", QDir::homePath()));
+    m_fromPlaces = cf.readEntry("FromPlaces", true);
+    m_folderNavigation = cf.readEntry("FolderNavigation", true);
+    m_useNepomuk = cf.readEntry("Nepomuk", true);
+    m_watchedDirs = cf.readEntry("WatchedFolders", QStringList());
 
     if (!m_model) {
         m_model = new KDirModel(this);
@@ -148,27 +149,27 @@ void LocalFilesAbstractBackend::configAccepted()
         }
         m_watchedDirs = watchedDirs;
 
-        cf.writeEntry(m_backendName + "WatchedFolders", m_watchedDirs);
+        cf.writeEntry("WatchedFolders", m_watchedDirs);
     } else {
         m_fromPlaces = ui.showPlace->isChecked();
         m_localUrl = m_fromPlaces ? ui.placesCombo->model()->index(ui.placesCombo->currentIndex(), 0).data(KFilePlacesModel::UrlRole).value<QUrl>()
                                     : ui.urlRequester->url();
         qobject_cast<KDirLister*>(m_model->dirLister())->openUrl(m_localUrl);
 
-        cf.writeEntry(m_backendName + "Url", m_localUrl);
-        cf.writeEntry(m_backendName + "FromPlaces", m_fromPlaces);
+        cf.writeEntry("Url", m_localUrl);
+        cf.writeEntry("FromPlaces", m_fromPlaces);
 
         bool folderNavigation = ui.folderNavigationCheckBox->isChecked();
         if (m_folderNavigation != folderNavigation) {
             m_folderNavigation = folderNavigation;
-            cf.writeEntry(m_backendName + "FolderNavigation", m_folderNavigation);
+            cf.writeEntry("FolderNavigation", m_folderNavigation);
             setFolderNavigation();
         }
     }
 
     if (useNepomuk != m_useNepomuk) {
         m_useNepomuk = useNepomuk;
-        cf.writeEntry(m_backendName + "Nepomuk", m_useNepomuk);
+        cf.writeEntry("Nepomuk", m_useNepomuk);
     }
     cf.sync();
     initModel();
@@ -187,6 +188,7 @@ void LocalFilesAbstractBackend::initModel()
 
         m_model->dirLister()->stop();
         m_model->dirLister()->openUrl(query.toSearchUrl());
+
     } else {
         KMimeType::List mimeList = KMimeType::allMimeTypes();
 

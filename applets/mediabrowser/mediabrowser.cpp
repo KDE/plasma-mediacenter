@@ -23,8 +23,10 @@
 #include "startupmodel.h"
 
 #include <mediabrowserlibs/abstractbrowsingbackend.h>
+#include <mediacenter/browsergesture.h>
 
 #include <QWidget>
+#include <QKeyEvent>
 
 #include <KDirModel>
 #include <KDirLister>
@@ -50,6 +52,7 @@ MediaBrowser::MediaBrowser(QObject *parent, const QVariantList &args)
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
     m_browsingWidget->setNavigationControls(BrowsingWidget::BackwardControl | BrowsingWidget::ViewModeControl);
     setLayout(m_layout);
+    setFiltersChildEvents(true);
 }
 
 MediaBrowser::~MediaBrowser()
@@ -288,6 +291,30 @@ QStringList MediaBrowser::viewModes() const
 void MediaBrowser::clearViewModes()
 {
     m_browsingWidget->clearViewModes();
+}
+
+void MediaBrowser::gestureEvent(MediaCenter::BrowserGesture *bGesture)
+{
+    if (!bGesture) {
+        return;
+    }
+
+    if (bGesture->activeAction() == MediaCenter::BrowserGesture::BrowseLeftAction) {
+        QKeyEvent keyEvent(QEvent::KeyPress, Qt::Key_Left, Qt::NoModifier);
+        qApp->sendEvent(m_view, &keyEvent);
+    } else if (bGesture->activeAction() == MediaCenter::BrowserGesture::BrowseRightAction) {
+        QKeyEvent keyEvent(QEvent::KeyPress, Qt::Key_Right, Qt::NoModifier);
+        qApp->sendEvent(m_view, &keyEvent);
+    } else if (bGesture->activeAction() == MediaCenter::BrowserGesture::BrowseUpAction) {
+        QKeyEvent keyEvent(QEvent::KeyPress, Qt::Key_Up, Qt::NoModifier);
+        qApp->sendEvent(m_view, &keyEvent);
+    } else if (bGesture->activeAction() == MediaCenter::BrowserGesture::BrowseDownAction) {
+        QKeyEvent keyEvent(QEvent::KeyPress, Qt::Key_Down, Qt::NoModifier);
+        qApp->sendEvent(m_view, &keyEvent);
+    } else if (bGesture->activeAction() == MediaCenter::BrowserGesture::ActivateAction) {
+        QKeyEvent keyEvent(QKeyEvent::KeyPress, Qt::Key_Return, Qt::NoModifier);
+        qApp->sendEvent(m_view, &keyEvent);
+    }
 }
 
 

@@ -17,6 +17,11 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 #include "browser.h"
+#include <mediacenter/browsergesture.h>
+
+#include <QGestureEvent>
+
+#include <KDebug>
 
 using namespace MediaCenter;
 
@@ -26,3 +31,28 @@ Browser::Browser(QObject *parent, const QVariantList &args) : Plasma::Applet(par
 
 Browser::~Browser()
 {}
+
+bool Browser::sceneEvent(QEvent *event)
+{
+    if (event->type() == QEvent::Gesture) {
+        QGestureEvent *gEvent = static_cast<QGestureEvent*>(event);
+        MediaCenter::BrowserGesture *bGesture = qobject_cast<MediaCenter::BrowserGesture*>(gEvent->gesture(m_gestureType));
+
+        Q_ASSERT(bGesture);
+
+        gestureEvent(bGesture);
+        return true;
+    }
+
+    return Plasma::Applet::sceneEvent(event);
+}
+
+void Browser::gestureEvent(MediaCenter::BrowserGesture *gesture)
+{
+    Q_UNUSED(gesture)
+}
+
+void Browser::setGestureType(Qt::GestureType type)
+{
+    m_gestureType = type;
+}

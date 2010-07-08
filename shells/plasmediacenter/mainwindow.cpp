@@ -20,6 +20,7 @@
 #include "mainwindow.h"
 
 #include <mediacenter/gesturerecognizer.h>
+#include <mediacenter/browser.h>
 
 #include <QGraphicsView>
 #include <QKeyEvent>
@@ -53,7 +54,8 @@ m_browser(0),
 m_controller(0),
 m_playlist(0),
 m_player(0),
-m_infobar(0)
+m_infobar(0),
+m_recognizer(0)
 {
     setCentralWidget(m_view);
 
@@ -95,13 +97,19 @@ m_infobar(0)
     args->clear();
 
     setAttribute(Qt::WA_TranslucentBackground);
+    m_recognizer = new MediaCenter::GestureRecognizer;
 }
 
 MainWindow::~MainWindow()
-{}
+{
+    QGestureRecognizer::unregisterRecognizer(m_gestureType);
+}
 
 void MainWindow::loadMediaCenter()
 {
+
+    m_gestureType = QGestureRecognizer::registerRecognizer(m_recognizer);
+
     m_containment = m_corona->addContainment("mediacontainment");
     if (!m_containment) {
         kDebug() << "unable to load mediacontaiment";
@@ -117,6 +125,9 @@ void MainWindow::loadMediaCenter()
     m_player = m_containment->addApplet("mcplayer");
     m_infobar = m_containment->addApplet("mediainfobar");
     m_controller = m_containment->addApplet("mediacontroller"); //Keep the controller last
+
+    qobject_cast<MediaCenter::Browser*>(m_browser)->setGestureType(m_gestureType);
+    m_browser->grabGesture(m_gestureType);
 }
 
 bool MainWindow::eventFilter(QObject *o, QEvent *e)

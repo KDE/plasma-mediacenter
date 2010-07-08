@@ -16,25 +16,39 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#ifndef GESTURERECOGNIZER_H
-#define GESTURERECOGNIZER_H
+#ifndef BROWSERGESTURE_H
+#define BROWSERGESTURE_H
 
-#include <QGestureRecognizer>
+#include <QGesture>
 
 #include "mediacenter_export.h"
-#include <mediacenter/mediacenter.h>
 
 namespace MediaCenter {
-class MEDIACENTER_EXPORT GestureRecognizer : public QGestureRecognizer
+class MEDIACENTER_EXPORT BrowserGesture : public QGesture
 {
+    Q_OBJECT
+
+    Q_PROPERTY(BrowserAction activeAction READ activeAction);
+
 public:
-    GestureRecognizer();
-    virtual ~GestureRecognizer();
+    enum BrowserAction {
+        BrowseLeftAction,
+        BrowseRightAction,
+        BrowseUpAction,
+        BrowseDownAction,
+        ActivateAction
+    };
 
-    QGesture* create(QObject *target);
-    QGestureRecognizer::Result recognize(QGesture *state, QObject *watched, QEvent *event);
-    void reset(QGesture *);
+    explicit BrowserGesture(QObject *parent = 0);
+
+    BrowserAction activeAction() const;
+
+private:
+    friend class GestureRecognizer;
+
+    BrowserAction m_activeAction;
+
 };
+} // MediaCenter namespace
 
-} // namespace MediaCenter
-#endif // GESTURERECOGNIZER_H
+#endif // BROWSERGESTURE_H
