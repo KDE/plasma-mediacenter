@@ -2,6 +2,7 @@
 Type=Service
 Icon=folder-video
 Name=Local videos
+Name[x-test]=xxLocal videosxx
 Comment=A plugin for the mediabrowser applet that allows local file browsing
 Comment[en_GB]=A plugin for the mediabrowser applet that allows local file browsing
 Comment[km]=កម្មវិធី​ជំនួយសម្រាប់​អាប់​ភ្លេត​ mediabrowser ​ដែល​អនុញ្ញាត​ឲ្យ​មាន​ការរុករក​ឯកសារ​មូលដ្ឋាន ។
