@@ -2,6 +2,10 @@
 Type=Service
 Icon=folder-video
 Name=Local videos
+Name[pt]=Vídeos locais
+Name[pt_BR]=Vídeos locais
+Name[sv]=Lokala videor
+Name[uk]=Локальні відеофайли
 Name[x-test]=xxLocal videosxx
 Comment=A plugin for the mediabrowser applet that allows local file browsing
 Comment[en_GB]=A plugin for the mediabrowser applet that allows local file browsing
