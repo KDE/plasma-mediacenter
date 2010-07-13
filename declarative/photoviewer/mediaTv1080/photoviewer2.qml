@@ -25,18 +25,20 @@ Rectangle {
     }
     
     Rectangle {
-        color: "black";
-        width: photoviewer.width; height: photoviewer.height;
+        color: "#00FFFFFF";
+        x: 200; y: 200;
+        property int numColumns: 5;
+        width: pictureGrid.cellWidth * numColumns; height: photoviewer.height-400;
         
-        ListView {
+        GridView {
+            id: pictureGrid;
             width: parent.width; height: parent.height;
-            orientation: Qt.Horizontal;
             model: testData;
-            delegate: PhotoDelegate {}
-            interactive: true;
+            cellWidth: 160; cellHeight: 160; //delegate height + 10px margin;
+            delegate: PhotoDelegate2 {}
+            focus: true;
+            //highlight: Rectangle { width: 200; height: 200; color: "black"; radius: 5 }
             onCurrentIndexChanged: positionViewAtIndex(currentIndex, GridView.Contain);
-            highlightRangeMode: ListView.StrictlyEnforceRange; 
-            snapMode: ListView.SnapOneItem;
-        }
+        }        
     }
 }
