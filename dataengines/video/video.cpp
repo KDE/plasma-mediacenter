@@ -25,6 +25,7 @@
 #include <KService>
 #include <KPixmapCache>
 #include <kio/job.h>
+#include <kdebug.h>
 
 Video::Video(QObject *parent, const QVariantList &args) : Plasma::DataEngine(parent, args),
 m_currentProvider(0),
@@ -38,6 +39,7 @@ Video::~Video()
 
 bool Video::sourceRequestEvent(const QString &source)
 {
+    qDebug() << "Hello I am the video provider";
     if (source == "providers") {
         KService::List offers = KServiceTypeTrader::self()->query("Plasma/MediaCenter/VideoProvider");
         QStringList providers;
