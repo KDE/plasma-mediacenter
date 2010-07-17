@@ -20,6 +20,7 @@
 
 #include <mediabrowserlibs/mediabrowser_export.h>
 #include "nfo.h"
+#include <mediacenter/mediacenterstate.h>
 
 #include <Nepomuk/Query/ResourceTypeTerm>
 
@@ -30,14 +31,8 @@ LocalFilesAbstractBackend("LocalVideosBackend", parent, args)
 {
     m_acceptedMimePrefix = "video/";
     m_term = Nepomuk::Query::ResourceTypeTerm(Vocabulary::NFO::Video());
-    setAllowedMediaTypes(MediaCenter::Video);
+    setRequiredMode(MediaCenter::VideoMode);
 }
 
 LocalVideosBackend::~LocalVideosBackend()
 {}
-
-AbstractBrowsingBackend::BrowsingType LocalVideosBackend::browsingType() const
-{
-    return AbstractBrowsingBackend::LocalBrowsing;
-}
-

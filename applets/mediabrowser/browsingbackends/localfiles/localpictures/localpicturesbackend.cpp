@@ -19,6 +19,7 @@
 #include "localpicturesbackend.h"
 
 #include <mediabrowserlibs/mediabrowser_export.h>
+#include <mediacenter/mediacenterstate.h>
 #include "nfo.h"
 #include <Nepomuk/Query/ResourceTypeTerm>
 
@@ -29,14 +30,8 @@ LocalFilesAbstractBackend("LocalPictures", parent, args)
 {
     m_acceptedMimePrefix = "image/";
     m_term = Nepomuk::Query::ResourceTypeTerm(Vocabulary::NFO::Image());
-    setAllowedMediaTypes(MediaCenter::Picture);
+    setRequiredMode(MediaCenter::MusicMode);
 }
 
 LocalPicturesBackend::~LocalPicturesBackend()
 {}
-
-AbstractBrowsingBackend::BrowsingType LocalPicturesBackend::browsingType() const
-{
-    return AbstractBrowsingBackend::LocalBrowsing;
-}
-

@@ -28,8 +28,6 @@ public:
     LocalMusicBackend(QObject *parent, const QVariantList &args);
     ~LocalMusicBackend();
 
-    AbstractBrowsingBackend::BrowsingType browsingType() const;
-
 };
 
 #endif // LOCALMUSICPACKAGE_H

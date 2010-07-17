@@ -34,7 +34,6 @@ public:
     LocalFilesAbstractBackend(const QString &name, QObject* parent, const QVariantList& args);
     virtual ~LocalFilesAbstractBackend();
 
-    virtual AbstractBrowsingBackend::BrowsingType browsingType() const = 0;
     QAbstractItemModel* model();
     virtual void createConfigurationInterface(KConfigDialog* parent);
     virtual void init();

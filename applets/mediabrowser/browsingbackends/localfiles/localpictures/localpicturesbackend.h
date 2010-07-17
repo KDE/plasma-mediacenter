@@ -28,8 +28,6 @@ public:
     LocalPicturesBackend(QObject *parent, const QVariantList &args);
     ~LocalPicturesBackend();
 
-    AbstractBrowsingBackend::BrowsingType browsingType() const;
-
 };
 
 #endif // LOCALPICTURESPACKAGE_H

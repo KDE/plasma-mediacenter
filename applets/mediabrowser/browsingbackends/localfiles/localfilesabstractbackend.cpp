@@ -46,6 +46,7 @@ m_useNepomuk(false)
 {
     Nepomuk::ResourceManager::instance()->init();
     setHasConfigurationInterface(true);
+    setBrowsingType(AbstractBrowsingBackend::LocalBrowsing);
 }
 
 LocalFilesAbstractBackend::~LocalFilesAbstractBackend()

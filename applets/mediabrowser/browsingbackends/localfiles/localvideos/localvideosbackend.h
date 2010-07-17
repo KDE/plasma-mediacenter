@@ -28,8 +28,6 @@ public:
     LocalVideosBackend(QObject *parent, const QVariantList &args);
     ~LocalVideosBackend();
 
-    AbstractBrowsingBackend::BrowsingType browsingType() const;
-
 };
 
 #endif // LOCALVIDEOSPACKAGE_H

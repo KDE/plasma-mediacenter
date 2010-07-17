@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright 2009 by Alessandro Diaferia <alediaferia@gmail.com>         *
+ *   Copyright 2009-2010 by Alessandro Diaferia <alediaferia@gmail.com>    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,9 +21,12 @@
 
 #include <QObject>
 #include <QVariantList>
+#include <QFlags>
+
 #include <KConfigGroup>
 #include "mediabrowser_export.h"
 #include "mediacenter/mediacenter.h"
+#include "mediacenter/mediacenterstate.h"
 #include <kservice.h>
 
 class QAbstractItemModel;
@@ -55,6 +58,26 @@ public:
     };
 
     /**
+     * Defines the search modes the backend is
+     * capable of.
+     */
+    enum SearchMode {
+        /** The backend cannot filter its content nor searching for new content. */
+        NoSearchMode = 0x0,
+        /** The backend can filter existing content. */
+        FilterSearchMode = 0x1,
+        /**
+         * The backend can search for new content.
+         * This is particuarly useful when implementing remote content
+         * models capable of searching for new content.
+         */
+        NewContentSearchMode = 0x2,
+        /** The model can both search for new content and filter existing one */
+        AllSearchModes = 0x3
+    };
+    Q_DECLARE_FLAGS(SearchModes, SearchMode)
+
+    /**
      * Used to load a backend instance via a plugin loader through KService.
      * The first argument of @param args must be the unique serviceID of the service.
      * */
@@ -64,6 +87,7 @@ public:
     /**
      * This method must be reimplemented in order to provide the model to be
      * used by the view.
+     * @note When LocalBrowsing is set it is highly recommended to use a KDirModel.
      * If the package is set to RemoteBrowsing the model
      * must provide an url that points to the media content for each
      * QModelIndex. It must make use of MediaRole role to accomplish this.
@@ -80,7 +104,7 @@ public:
      * that allow actions like "go backward", "go forward", "go uplevel" that generally change
      * their meaning if the browsing type is local or remote.
      */
-    virtual BrowsingType browsingType() const = 0;
+    BrowsingType browsingType() const;
 
     bool hasConfigurationInterface();
 
@@ -107,9 +131,31 @@ public:
      */
     virtual void init();
 
-    MediaCenter::MediaTypes allowedMediaTypes();
+    /**
+     * @return the proper mode needed to play the files exposed
+     * by the model in this backend
+     */
+    MediaCenter::Mode requiredMode();
 
     QString name() const;
+
+    SearchModes availableSearchModes() const;
+
+public slots:
+    /**
+     * This slot must be reimplemented if browsingType returns
+     * LocalBrowsing. This method will be used to list the media
+     * resources in location specified by @param url
+     */
+    virtual void openUrl(const KUrl &url);
+
+    /**
+     * This slot must be reimplemented if browsingType returns
+     * RemoteBrowsing. This method will be used to perform searches
+     * for new medias to show in the browsing applet.
+     */
+    virtual void searchForMedia(const QString &name);
+
 protected:
     /**
      * As from Plasma::Applet this method should be used in order
@@ -117,12 +163,17 @@ protected:
      * the model.
      */
     void setHasConfigurationInterface(bool hasInterface);
-    void setAllowedMediaTypes(const MediaCenter::MediaTypes &type);
+    void setRequiredMode(MediaCenter::Mode);
+
+    void setAvailableSearchModes(SearchModes);
+    void setBrowsingType(BrowsingType);
 
 private:
     class AbstractBrowsingBackendPrivate;
     AbstractBrowsingBackendPrivate *d;
 
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(AbstractBrowsingBackend::SearchModes)
 
 #endif // MODELPACKAGE_H

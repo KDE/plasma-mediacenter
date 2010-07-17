@@ -35,7 +35,9 @@ public:
     AbstractBrowsingBackend *q;
     bool cfInterface;
     KPluginInfo backendInfo;
-    MediaCenter::MediaTypes allowedMediaTypes;
+    MediaCenter::Mode requiredMode;
+    SearchModes searchModes;
+    BrowsingType browsingType;
 };
 
 AbstractBrowsingBackend::AbstractBrowsingBackend(QObject *parent, const QVariantList &args) : QObject(parent),
@@ -65,21 +67,20 @@ void AbstractBrowsingBackend::createConfigurationInterface(KConfigDialog *parent
 
 KConfigGroup AbstractBrowsingBackend::config()
 {
-    kDebug() << KGlobal::config()->name();
     return KConfigGroup(KGlobal::config(), name());
 }
 
 void AbstractBrowsingBackend::init()
 {}
 
-void AbstractBrowsingBackend::setAllowedMediaTypes(const MediaCenter::MediaTypes &type)
+void AbstractBrowsingBackend::setRequiredMode(MediaCenter::Mode mode)
 {
-    d->allowedMediaTypes = type;
+    d->requiredMode = mode;
 }
 
-MediaCenter::MediaTypes AbstractBrowsingBackend::allowedMediaTypes()
+MediaCenter::Mode AbstractBrowsingBackend::requiredMode()
 {
-    return d->allowedMediaTypes;
+    return d->requiredMode;
 }
 
 QString AbstractBrowsingBackend::name() const
@@ -87,3 +88,32 @@ QString AbstractBrowsingBackend::name() const
     return d->backendInfo.name();
 }
 
+AbstractBrowsingBackend::SearchModes AbstractBrowsingBackend::availableSearchModes() const
+{
+    return d->searchModes;
+}
+
+void AbstractBrowsingBackend::setAvailableSearchModes(SearchModes modes)
+{
+    d->searchModes = modes;
+}
+
+AbstractBrowsingBackend::BrowsingType AbstractBrowsingBackend::browsingType() const
+{
+    return d->browsingType;
+}
+
+void AbstractBrowsingBackend::setBrowsingType(BrowsingType type)
+{
+    d->browsingType = type;
+}
+
+void AbstractBrowsingBackend::openUrl(const KUrl &url)
+{
+    Q_UNUSED(url);
+}
+
+void AbstractBrowsingBackend::searchForMedia(const QString &name)
+{
+    Q_UNUSED(name);
+}
