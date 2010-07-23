@@ -18,12 +18,11 @@
  ***************************************************************************/
 #include "localmusicbackend.h"
 
-#include <mediabrowserlibs/mediabrowser_export.h>
 #include <mediacenter/mediacenterstate.h>
 #include <Nepomuk/Query/ResourceTypeTerm>
 #include "nfo.h"
 
-MEDIABROWSER_BACKEND_EXPORT(LocalMusicBackend)
+MEDIACENTER_EXPORT_BROWSINGBACKEND(LocalMusicBackend)
 
 LocalMusicBackend::LocalMusicBackend(QObject *parent, const QVariantList &args) :
 LocalFilesAbstractBackend("LocalMusic", parent, args)

@@ -18,12 +18,11 @@
  ***************************************************************************/
 #include "localpicturesbackend.h"
 
-#include <mediabrowserlibs/mediabrowser_export.h>
 #include <mediacenter/mediacenterstate.h>
 #include "nfo.h"
 #include <Nepomuk/Query/ResourceTypeTerm>
 
-MEDIABROWSER_BACKEND_EXPORT(LocalPicturesBackend)
+MEDIACENTER_EXPORT_BROWSINGBACKEND(LocalPicturesBackend)
 
 LocalPicturesBackend::LocalPicturesBackend(QObject *parent, const QVariantList &args) :
 LocalFilesAbstractBackend("LocalPictures", parent, args)

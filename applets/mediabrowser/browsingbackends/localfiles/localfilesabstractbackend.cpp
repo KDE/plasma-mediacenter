@@ -36,7 +36,7 @@
 #include <Nepomuk/Query/FileQuery>
 
 LocalFilesAbstractBackend::LocalFilesAbstractBackend(const QString& name, QObject* parent, const QVariantList& args) :
-AbstractBrowsingBackend(parent, args),
+    MediaCenter::AbstractBrowsingBackend(parent, args),
 m_acceptedMimePrefix(QString()),
 m_backendName(name),
 m_model(0),

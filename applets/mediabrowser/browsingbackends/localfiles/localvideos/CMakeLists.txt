@@ -10,7 +10,7 @@ kde4_add_ui_files(localvideosbackend_SRCS ../configbase.ui)
 
 kde4_add_plugin(pmc_localvideos ${localvideosbackend_SRCS})
 target_link_libraries(pmc_localvideos 
-mediabrowserlibs 
+mediacenterlibs
 ${KDE4_KDECORE_LIBS}
 ${KDE4_KIO_LIBS}
 ${KDE4_KFILE_LIBS}

@@ -20,14 +20,14 @@
 #ifndef LOCALFILESABSTRACTBACKEND_H
 #define LOCALFILESABSTRACTBACKEND_H
 
-#include <mediabrowserlibs/abstractbrowsingbackend.h>
+#include <mediacenter/abstractbrowsingbackend.h>
 #include <Nepomuk/Query/Term>
 
 #include "ui_configbase.h"
 
 class KDirModel;
 
-class LocalFilesAbstractBackend : public AbstractBrowsingBackend
+class LocalFilesAbstractBackend : public MediaCenter::AbstractBrowsingBackend
 {
     Q_OBJECT
 public:

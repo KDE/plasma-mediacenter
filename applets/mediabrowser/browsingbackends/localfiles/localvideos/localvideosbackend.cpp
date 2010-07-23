@@ -18,13 +18,12 @@
  ***************************************************************************/
 #include "localvideosbackend.h"
 
-#include <mediabrowserlibs/mediabrowser_export.h>
 #include "nfo.h"
 #include <mediacenter/mediacenterstate.h>
 
 #include <Nepomuk/Query/ResourceTypeTerm>
 
-MEDIABROWSER_BACKEND_EXPORT(LocalVideosBackend)
+MEDIACENTER_EXPORT_BROWSINGBACKEND(LocalVideosBackend)
 
 LocalVideosBackend::LocalVideosBackend(QObject *parent, const QVariantList &args) :
 LocalFilesAbstractBackend("LocalVideosBackend", parent, args)
