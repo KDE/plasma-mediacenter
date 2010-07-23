@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright 2009 by Alessandro Diaferia <alediaferia@gmail.com>         *
+ *   Copyright 2009-2010 by Alessandro Diaferia <alediaferia@gmail.com>    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,44 +16,46 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#ifndef STARTUPMODEL_H
-#define STARTUPMODEL_H
+#ifndef QMLHOMEVIEW_H
+#define QMLHOMEVIEW_H
 
-#include <QAbstractItemModel>
-#include <KService>
+#include <QGraphicsWidget>
 
-namespace MediaCenter {
-class AbstractBrowsingBackend;
-}
+class QDeclarativeEngine;
+class QDeclarativeComponent;
+class QAbstractItemModel;
 
-class StartupModel : public QAbstractItemModel
+class QmlHomeView : public QGraphicsWidget
 {
     Q_OBJECT
 public:
-    StartupModel(QObject *parent = 0);
-    ~StartupModel();
-
-    virtual int columnCount ( const QModelIndex & parent = QModelIndex() ) const;
-    virtual QVariant data ( const QModelIndex & index, int role = Qt::DisplayRole ) const;
-    Q_INVOKABLE virtual QModelIndex index ( int row, int column, const QModelIndex & parent = QModelIndex() ) const;
-    virtual QModelIndex parent ( const QModelIndex & index ) const;
-    virtual int rowCount ( const QModelIndex & parent = QModelIndex() ) const;
+    QmlHomeView(QGraphicsItem *parent = 0);
+    ~QmlHomeView();
 
     /**
-     * Be aware that each time you call this method an instance of the plugin is
-     * created.
+     * always call setModel before setting the qml file path
      */
-    MediaCenter::AbstractBrowsingBackend* backendFromIndex(const QModelIndex &, QObject *parent = 0, QString *error = 0);
+    void setModel(QAbstractItemModel *model);
+    void setQmlPath(const QString &path);
 
-protected slots:
-    void init();
-    void updateModel(const QStringList &changedResources);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+
+protected:
+    void resizeEvent(QGraphicsSceneResizeEvent *event);
+
+signals:
+
+public slots:
+    void aquireRootComponent();
+    void printError();
 
 private:
-    KService::List m_modelServices;
+    QDeclarativeEngine *m_engine;
+    QDeclarativeComponent *m_mainComponent;
+    QObject *m_rootObject;
+    QAbstractItemModel *m_model;
+    QObject *m_root;
 
-    void addAvailableModels(const KService::List &modelServices);
-    KService::Ptr service(KService *) const;
 };
 
-#endif // STARTUPMODEL_H
+#endif // QMLHOMEVIEW_H

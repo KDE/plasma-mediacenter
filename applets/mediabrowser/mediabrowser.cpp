@@ -19,11 +19,13 @@
 #include "mediabrowser.h"
 #include "listview.h"
 #include "gridview.h"
-#include "browsingwidget.h"
 #include "startupmodel.h"
+#include "qmlhomeview.h"
+#include "viewitem.h"
 
-#include <mediabrowserlibs/abstractbrowsingbackend.h>
+#include <mediacenter/abstractbrowsingbackend.h>
 #include <mediacenter/browsergesture.h>
+#include <mediacenter/widgets/navigationtoolbar.h>
 
 #include <QWidget>
 #include <QKeyEvent>
@@ -37,22 +39,22 @@
 #include <KUrl>
 #include <KLineEdit>
 #include <KMimeType>
+#include <KStandardDirs>
 #include <KDebug>
-
 
 MediaBrowser::MediaBrowser(QObject *parent, const QVariantList &args)
     : MediaCenter::Browser(parent, args),
     m_view(0),
     m_model(0),
-    m_browsingWidget(new BrowsingWidget(this)),
     m_backend(0),
-    m_browsingWidgets(true),
-    m_layout(new QGraphicsLinearLayout(Qt::Vertical, this))
+    m_layout(new QGraphicsLinearLayout(Qt::Vertical))
 {
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
-    m_browsingWidget->setNavigationControls(BrowsingWidget::BackwardControl | BrowsingWidget::ViewModeControl);
     setLayout(m_layout);
     setFiltersChildEvents(true);
+
+    setEnableToolbar(true);
+    toolbar()->setNavigationControls(MediaCenter::NavigationToolbar::BackwardControl | MediaCenter::NavigationToolbar::ViewModeControl);
 }
 
 MediaBrowser::~MediaBrowser()
@@ -62,14 +64,21 @@ void MediaBrowser::showInstalledBackends()
 {
     delete m_model;
     m_model = new StartupModel(this);
-    m_view->setModel(m_model);
+    //m_view->setModel(m_model);
+
+    QmlHomeView *homeView = new QmlHomeView(this);
+    QGraphicsLinearLayout *layout = static_cast<QGraphicsLinearLayout*>(this->layout());
+    layout->addItem(homeView);
+
+    homeView->setQmlPath(KStandardDirs::locate("data", "plasma-mediacenter/declarative/homeview.qml"));
+    homeView->setModel(m_model);
 }
 
 void MediaBrowser::init()
 {
     loadConfiguration();
 
-    createView();
+    //createView();
     showInstalledBackends();
 }
 
@@ -92,7 +101,7 @@ void MediaBrowser::createView()
 //        m_view->generateItems();
     }
 
-    connect (m_browsingWidget, SIGNAL(goPrevious()), m_view, SLOT(goPrevious()));
+    connect (this, SIGNAL(browseHistoryBackRequest()), m_view, SLOT(goPrevious()));
     connect (m_view, SIGNAL(mediasActivated(QList<MediaCenter::Media>)), this, SIGNAL(mediasActivated(QList<MediaCenter::Media>)));
     connect (m_view, SIGNAL(mediasListChanged(QList<MediaCenter::Media>)), this, SIGNAL(mediasListChanged(QList<MediaCenter::Media>)));
     connect (m_view, SIGNAL(mediaActivated(const MediaCenter::Media&)), this, SIGNAL(mediaActivated(const MediaCenter::Media&)));
@@ -103,7 +112,6 @@ void MediaBrowser::createView()
 
     QGraphicsLinearLayout *layout = static_cast<QGraphicsLinearLayout*>(this->layout());
     layout->addItem(m_view);
-    setLayout(layout);
 }
 
 void MediaBrowser::createConfigurationInterface(KConfigDialog *parent)
@@ -170,74 +178,38 @@ void MediaBrowser::slotIndexActivated(const QModelIndex &index)
     StartupModel *model = qobject_cast<StartupModel*>(m_model);
     if (model) {
         QString error;
-        AbstractBrowsingBackend *backend = model->backendFromIndex(index, this, &error);
+        MediaCenter::AbstractBrowsingBackend *backend = model->backendFromIndex(index, this, &error);
         if (!error.isEmpty()) {
             kError() << error;
             return;
         }
         m_view->setModel(0);
         m_backend = backend;
-//        connect (backend, SIGNAL(modelReady()), m_view, SLOT(generateItems()));
-//        connect (backend, SIGNAL(modelReady()), m_view, SLOT(updateScrollBar()));
         backend->init();
         m_model = backend->model();
         m_view->setModel(m_model);
 
-        if (backend->allowedMediaTypes() == MediaCenter::Video) {
-            emit videoDataEngine();
-        }
-        if (backend->allowedMediaTypes() == MediaCenter::Audio) {
-            emit musicDataEngine();
-        }
-        if (backend->allowedMediaTypes() == MediaCenter::Picture) {
-            emit pictureDataEngine();
-        }
-    }
-    kDebug() << "finished";
-}
-
-void MediaBrowser::setShowingBrowsingWidgets(bool set)
-{
-    if (m_browsingWidgets == set) {
-        return;
-    }
-    m_browsingWidgets = set;
-
-    if (m_browsingWidget) {
-        if (!m_browsingWidgets) {
-            m_browsingWidget->setVisible(false);
-            m_layout->removeItem(m_browsingWidget);
-        }
-        if (m_browsingWidgets) {
-            m_layout->insertItem(0, m_browsingWidget);
-            m_browsingWidget->setVisible(true);
-        }
+        emit browsingModeChanged(backend->requiredMode());
     }
 }
-
-bool MediaBrowser::isShowingBrowsingWidgets() const
-{
-    return m_browsingWidgets;
-}
-
 
 void MediaBrowser::showStartupState()
 {
     //Calling directly showInstalledBackends makes PMC crash on startup
-    m_model = new StartupModel(this);
-    m_view->setModel(m_model);
+    //m_model = new StartupModel(this);
+    //m_view->setModel(m_model);
 }
 
-KUrl MediaBrowser::directory() const
+KUrl MediaBrowser::currentUrl() const
 {
     KDirModel *modeldir = qobject_cast<KDirModel*>(m_model);
-    if (!modeldir) {
+    if (!modeldir || !modeldir->dirLister()) {
         return KUrl();
     }
     return modeldir->dirLister()->url();
 }
 
-void MediaBrowser::openDirectory(const KUrl &url)
+void MediaBrowser::openUrl(const KUrl &url)
 {
     KDirModel *modeldir = qobject_cast<KDirModel*>(m_model);
     if (modeldir) {
@@ -277,22 +249,6 @@ void MediaBrowser::clearSelectedMedias()
     emit selectedMediasChanged(m_selectedMedias);
 }
 
-void MediaBrowser::addViewMode(const QString& title)
-{
-    m_browsingWidget->addViewMode(title);
-}
-
-QStringList MediaBrowser::viewModes() const
-{
-    return m_browsingWidget->viewModes();
-}
-
-
-void MediaBrowser::clearViewModes()
-{
-    m_browsingWidget->clearViewModes();
-}
-
 void MediaBrowser::gestureEvent(MediaCenter::BrowserGesture *bGesture)
 {
     if (!bGesture) {
@@ -316,6 +272,9 @@ void MediaBrowser::gestureEvent(MediaCenter::BrowserGesture *bGesture)
         qApp->sendEvent(m_view, &keyEvent);
     }
 }
+
+void MediaBrowser::createQmlHomeView()
+{}
 
 
 K_EXPORT_PLASMA_APPLET(mediabrowser, MediaBrowser)

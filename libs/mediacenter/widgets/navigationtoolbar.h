@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright 2009 by Alessandro Diaferia <alediaferia@gmail.com>         *
+ *   Copyright 2009-2010 by Alessandro Diaferia <alediaferia@gmail.com>    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,10 +16,11 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#ifndef BROWSINGWIDGET_H
-#define BROWSINGWIDGET_H
+#ifndef NAVIGATIONTOOLBAR_H
+#define NAVIGATIONTOOLBAR_H
 
 #include <QGraphicsWidget>
+#include "mediacenter/mediacenter_export.h"
 
 namespace Plasma {
     class ToolButton;
@@ -27,7 +28,9 @@ namespace Plasma {
     class TabBar;
 }
 
-class BrowsingWidget : public QGraphicsWidget
+namespace MediaCenter {
+
+class MEDIACENTER_EXPORT NavigationToolbar : public QGraphicsWidget
 {
     Q_OBJECT
 public:
@@ -41,8 +44,8 @@ public:
     };
     Q_DECLARE_FLAGS(NavigationControls, NavigationControl)
 
-    BrowsingWidget(QGraphicsItem *parent);
-    ~BrowsingWidget();
+    NavigationToolbar(QGraphicsItem *parent);
+    ~NavigationToolbar();
 
     void setNavigationControls(NavigationControls controls);
     NavigationControls navigationControls();
@@ -50,31 +53,19 @@ public:
     void setShowNavigationComboBox(bool set);
     bool showNavigationComboBox();
 
-    //Use this function to add (and later connect) the viewmodes
-    void addViewMode(const QString &title);
-    QStringList viewModes() const;
-
-public slots:
-    void clearViewModes();
-
 signals:
-    void navigationRequested(const QString &destination);
-    void goPrevious();
-    void goNext();
-    void goUp();
+    void browsePath(const QString &path);
+    void browseHistoryBack();
+    void browseHistoryNext();
+    void browseUp();
 
 private:
-    NavigationControls m_controls;
-    bool m_navigationCombo;
-
-    Plasma::ToolButton *m_backwardButton;
-    Plasma::ToolButton *m_forwardButton;
-    Plasma::ToolButton *m_upLevelButton;
-    Plasma::TabBar *m_viewModeControl;
-
-    Plasma::ComboBox *m_combo;
+    class NavigationToolbarPrivate;
+    NavigationToolbarPrivate *d;
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(BrowsingWidget::NavigationControls)
+Q_DECLARE_OPERATORS_FOR_FLAGS(NavigationToolbar::NavigationControls)
+
+} // MediaCenter namespace
 
 #endif // BROWSINGWIDGET_H

@@ -350,14 +350,15 @@ void AbstractMediaItemView::listMediaInDirectory()
     KFileItemList items;
     KDirModel *model = qobject_cast<KDirModel*>(m_model);
 
-    if (model) {
+    if (model && model->dirLister()) {
         if (!model->dirLister()->isFinished()) {
             KDirLister *lister = model->dirLister();
             //FIXME:This signal is emitted several times??? (Check what folerview does)
-            connect (lister, SIGNAL(completed()), this, SLOT(listMediaInDirectory()));
+            connect(lister, SIGNAL(completed()), this, SLOT(listMediaInDirectory()));
         }
 
-        if (model && model->dirLister()->isFinished()) {
+        if (model->dirLister()->isFinished()) {
+            disconnect(model->dirLister(), SIGNAL(completed()), this, SLOT(listMediaInDirectory()));
             items = model->dirLister()->itemsForDir(model->dirLister()->url(), KDirLister::AllItems);
         }
 
@@ -368,7 +369,6 @@ void AbstractMediaItemView::listMediaInDirectory()
                 list << media;
             }
         }
-        //At the moment I only want pictures. Maybe I can create a signal for each mediatype?
         emit mediasListChanged(list);
     }
 }
@@ -484,12 +484,12 @@ void AbstractMediaItemView::removeItems(const QModelIndex &parent, int start, in
     updateScrollBar();
 }
 
-void AbstractMediaItemView::setBrowsingType(const AbstractBrowsingBackend::BrowsingType &type)
+void AbstractMediaItemView::setBrowsingType(const MediaCenter::AbstractBrowsingBackend::BrowsingType &type)
 {
     m_browsingType = type;
 }
 
-AbstractBrowsingBackend::BrowsingType AbstractMediaItemView::browsingType() const
+MediaCenter::AbstractBrowsingBackend::BrowsingType AbstractMediaItemView::browsingType() const
 {
     return m_browsingType;
 }

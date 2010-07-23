@@ -18,7 +18,7 @@
  ***************************************************************************/
 #include "startupmodel.h"
 
-#include <mediabrowserlibs/abstractbrowsingbackend.h>
+#include <mediacenter/abstractbrowsingbackend.h>
 
 #include <KIcon>
 #include <KServiceTypeTrader>
@@ -101,7 +101,8 @@ QModelIndex StartupModel::index(int row, int column, const QModelIndex &parent) 
         return QModelIndex();
     }
 
-    return createIndex(row, column, (KService*)m_modelServices[row].data());
+    KService *servicePtr = m_modelServices.value(row).data();
+    return createIndex(row, column, servicePtr);
 }
 
 QModelIndex StartupModel::parent(const QModelIndex &index) const
@@ -130,14 +131,14 @@ void StartupModel::updateModel(const QStringList &changedResources)
     init();
 }
 
-AbstractBrowsingBackend* StartupModel::backendFromIndex(const QModelIndex &index, QObject *parent, QString *error)
+MediaCenter::AbstractBrowsingBackend* StartupModel::backendFromIndex(const QModelIndex &index, QObject *parent, QString *error)
 {
     if (!index.isValid()) {
         return 0;
     }
 
     KService::Ptr service = m_modelServices[index.row()];
-    return service->createInstance<AbstractBrowsingBackend>(parent, QVariantList() << service->storageId(), error);
+    return service->createInstance<MediaCenter::AbstractBrowsingBackend>(parent, QVariantList() << service->storageId(), error);
 }
 
 KService::Ptr StartupModel::service(KService *service) const

@@ -33,6 +33,7 @@
 #include <kio/job.h>
 #include <kio/previewjob.h>
 #include <KUrl>
+#include <KIconLoader>
 
 #include <Nepomuk/KRatingPainter>
 #include <Nepomuk/Resource>
@@ -49,24 +50,20 @@ static const int ITEM_VERTICAL_MARGIN = 15;
 static const float s_itemSpacing = 0.1;   //Factor of the size to be left as the margin/spacing
 
 ViewItem::ViewItem(const QStyleOptionViewItemV4 &option, QGraphicsItem *parent) : QGraphicsWidget(parent),
-m_option(option),
-m_index(QModelIndex()),
-m_type(LocalFileItem),
-m_frameSvg(new Plasma::FrameSvg(this)),
-m_preview(QPixmap()),
-m_selectIcon(QPixmap()),
-m_blurredText(QPixmap()),
 m_hoverRating(0),
 m_rating(0),
 m_resource(0),
-m_nepomuk(false),
 m_blurred(true),
 m_selectByIcon(true),
 m_isSelected(false),
 m_isNotFile(false)
 {
+    m_option = option;
+    m_decorationSize = m_option.decorationSize.width();
+
     setContentsMargins(0, 0, 0, 0);
 
+    m_frameSvg = new Plasma::FrameSvg(this);
     m_frameSvg->setImagePath("widgets/viewitem");
     m_frameSvg->setEnabledBorders(Plasma::FrameSvg::AllBorders);
     m_frameSvg->setCacheAllRenderedFrames(true);
@@ -79,6 +76,32 @@ m_isNotFile(false)
         Nepomuk::ResourceManager::instance()->initialized();
     }
 
+}
+
+ViewItem::ViewItem(QGraphicsItem *parent) : QGraphicsWidget(parent),
+    m_hoverRating(0),
+    m_rating(0),
+    m_resource(0),
+    m_blurred(true),
+    m_selectByIcon(true),
+    m_isSelected(false),
+    m_isNotFile(false)
+{
+    ViewItem::ViewItem(QStyleOptionViewItemV4(), parent);
+
+    // this ctor has no way to pass the QStyleOptionViewItemV4
+    // we create one with some convenient default values
+    m_option.palette.setColor(QPalette::Text, Plasma::Theme::defaultTheme()->color(Plasma::Theme::TextColor));
+    m_option.font = Plasma::Theme::defaultTheme()->font(Plasma::Theme::DesktopFont);
+    m_option.fontMetrics = QFontMetrics(m_option.font);
+    m_option.decorationSize = QSize(KIconLoader::SizeEnormous, KIconLoader::SizeEnormous);
+    m_option.locale = QLocale::system();
+    m_option.widget = 0;
+    m_option.state |= QStyle::State_Enabled;
+    m_option.decorationPosition = QStyleOptionViewItem::Top;
+    m_option.displayAlignment = Qt::AlignHCenter | Qt::AlignBottom;
+
+    m_decorationSize = m_option.decorationSize.width();
 }
 
 ViewItem::~ViewItem()
@@ -105,6 +128,9 @@ void ViewItem::setModelIndex(const QModelIndex &index)
 
     m_blurredText = QPixmap();
     m_index = index;
+
+    m_text = m_index.data().toString();
+    m_icon = m_index.data(Qt::DecorationRole).value<QIcon>();
 
     KFileItem item = m_index.data(KDirModel::FileItemRole).value<KFileItem>();
     if (item.isNull()) {
@@ -151,14 +177,11 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 
     }
 
-    if (!m_index.isValid()) {
-        return;
-    }
     QRect textRect;
     QRect decorationRect;
     QRect reflectionRect;
 
-    const int decorationSize = m_option.decorationSize.width();
+    const int decorationSize = m_decorationSize;
     const int reflectionHeight = decorationSize * 0.33;
 
     decorationRect.setSize(QSize(decorationSize, decorationSize));
@@ -201,19 +224,19 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
                 textRect.moveTo(reflectionRect.bottomLeft());
         }
     } else {
-        QVariant decoration = m_index.data(Qt::DecorationRole);
-        if (decoration.type() == QVariant::Icon) {
-            decoration.value<QIcon>().paint(painter, decorationRect);
-
-            drawReflection(painter, reflectionRect, decoration.value<QIcon>());
-
+        QIcon icon = m_icon;
+        if (!icon.isNull()) {
+            icon.paint(painter, decorationRect);
+            drawReflection(painter, reflectionRect, icon);
+        } else {
+            kWarning() << "invalid icon";
         }
         // TODO: QPixmap possible code
     }
 
     painter->setFont(m_option.font);
     painter->setPen(Plasma::Theme::defaultTheme()->color(Plasma::Theme::TextColor));
-    QString text = m_index.data().toString();
+    QString text = m_text;
     if (m_option.fontMetrics.width(text) > textRect.width()) {
         text = m_option.fontMetrics.elidedText(text, Qt::ElideMiddle, textRect.width());
     }
@@ -266,6 +289,7 @@ void ViewItem::drawReflection(QPainter *painter, const QRect &reflectionRect, co
     const int decorationHeight = decorationWidth;
 
     m_reflection = QPixmap(reflectionRect.width(), reflectionRect.height());
+    kDebug() << "reflection size" << m_reflection.size();
     m_reflection.fill(Qt::transparent);
 
     QLinearGradient grad(reflectionRect.width() / 2, 0, reflectionRect.width() / 2, reflectionRect.height());
@@ -325,7 +349,7 @@ QSize ViewItem::itemSizeHint() const
     if (m_option.decorationPosition == QStyleOptionViewItem::Left) {
         int decorationHeight = m_option.decorationSize.height() * (1 + 2*s_itemSpacing);
         int height = qMax(decorationHeight, m_option.fontMetrics.height());
-        int width = m_option.decorationSize.width() + m_option.fontMetrics.width(m_index.data().toString());
+        int width = m_option.decorationSize.width() + m_option.fontMetrics.width(m_text);
 
         return QSize(width, height);
     }
@@ -351,7 +375,7 @@ QSize ViewItem::textRectSize() const
         const int width = contentsRect().width();
         const int height = m_option.decorationSize.width() * 1.7;
         QRect textRect(0, 0, width, width - height);
-        QRect bounding = m_option.fontMetrics.boundingRect(textRect, m_option.decorationAlignment, m_index.data().toString());
+        QRect bounding = m_option.fontMetrics.boundingRect(textRect, m_option.decorationAlignment, m_text);
         bounding.setWidth(width);
 
         return bounding.size();
@@ -458,3 +482,32 @@ void ViewItem::setIsNotFile(bool set)
     m_isNotFile = set;
 }
 
+void ViewItem::setIcon(const QIcon &icon)
+{
+    m_icon = icon;
+}
+
+QIcon ViewItem::icon() const
+{
+    return m_icon;
+}
+
+void ViewItem::setText(const QString &text)
+{
+    m_text = text;
+}
+
+QString ViewItem::text() const
+{
+    return m_text;
+}
+
+void ViewItem::setDecorationSize(int size)
+{
+    m_decorationSize = size;
+}
+
+int ViewItem::decorationSize() const
+{
+    return m_decorationSize;
+}

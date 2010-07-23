@@ -38,6 +38,11 @@ class QPixmap;
 class ViewItem : public QGraphicsWidget
 {
     Q_OBJECT
+
+    Q_PROPERTY(QIcon icon READ icon WRITE setIcon);
+    Q_PROPERTY(QString text READ text WRITE setText);
+    Q_PROPERTY(int decorationSize READ decorationSize WRITE setDecorationSize);
+    Q_PROPERTY(QModelIndex modelIndex READ index WRITE setModelIndex);
 public:
     enum ItemType { LocalFileItem, RemoteFileItem };
 
@@ -45,6 +50,7 @@ public:
      * Each ViewItem must be created passing the option object
      * describing its appearance constraints.
      */
+    ViewItem(QGraphicsItem *parent = 0);
     ViewItem(const QStyleOptionViewItemV4 &option, QGraphicsItem *parent = 0);
     ~ViewItem();
 
@@ -72,6 +78,46 @@ public:
     void showCornerIcons(bool set);
     void setIsNotFile(bool set);
 
+    /**
+     * This method allows setting a custom icon to be shown
+     * in place of the one passed by the QStyleOptionGraphicsItem as
+     * parameter of the paint function.
+     * @note This is particularly useful when accessing
+     * the icon through the property system.
+     */
+    void setIcon(const QIcon &icon);
+
+    /**
+     * @return the icon set with the setIcon function or a
+     * null icon if none was set.
+     */
+    QIcon icon() const;
+
+    /**
+     * Overrides the text passed through the option parameter
+     * in the paint method with the @param text
+     * @note This is particularly useful when accessing
+     * the icon through the property system.
+     */
+    void setText(const QString &text);
+
+    /**
+     * @return the text set with the setText function
+     */
+    QString text() const;
+
+    /**
+     * Sets the decoration size for the item. If setStyleOption is called
+     * after this method the decorationSize specified in the given @param option
+     * will override this setting and vice versa.
+     */
+    void setDecorationSize(int size);
+
+    /**
+     * @return the currently used decoration size.
+     */
+    int decorationSize() const;
+
 public slots:
     void setSelected(bool set);
 
@@ -96,6 +142,9 @@ private:
     bool m_selectByIcon;
     bool m_isSelected;
     bool m_isNotFile;
+    QIcon m_icon;
+    QString m_text;
+    int m_decorationSize;
 
     friend class AbstractMediaItemView;
 

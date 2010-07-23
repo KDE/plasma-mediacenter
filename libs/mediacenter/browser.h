@@ -23,12 +23,24 @@
 
 #include <Plasma/Applet>
 #include <mediacenter/mediacenter.h>
+#include <mediacenter/mediacenterstate.h>
 
 
 namespace MediaCenter {
 
+class NavigationToolbar;
 class BrowserGesture;
 
+/**
+ * @class Browser
+ * @author Alessandro Diaferia
+ * @brief The base class for the browsing applet in Plasma Media Center
+ *
+ * This is the base class that has to be reimplemented in order to
+ * allow the user to browse through his media files both locally and remotely.
+ * Different browsing backends will be used to browse through different kind of
+ * media resources.
+ */
 class MEDIACENTER_EXPORT Browser : public Plasma::Applet
 {
     Q_OBJECT
@@ -36,16 +48,25 @@ public:
     Browser(QObject *parent, const QVariantList &args);
     virtual ~Browser();
 
-    virtual void setShowingBrowsingWidgets(bool) = 0;
-    virtual bool isShowingBrowsingWidgets() const = 0;
-
-    virtual void addViewMode(const QString &) = 0;
-    virtual QStringList viewModes() const = 0;
+    /**
+     * Enables a navigation toolbar inside the applet
+     * with some common actions such as "go back", "home" .."
+     * When the toolbar is enabled a vertical linear layout
+     * is set as layout to the applet and the widget is inserted
+     * at index 0. In order to preserve the layout it is highly recommended
+     * to insert other eventual widgets from index 1 on.
+     */
+    virtual void setEnableToolbar(bool);
+    virtual bool enableToolbar() const;
 
     virtual void showStartupState() = 0;
     virtual QList<MediaCenter::Media> selectedMedias() const = 0;
 
-    virtual KUrl directory() const = 0;
+    /**
+     * This method must be reimplemented in order to notify the current
+     * url for which files are currently showed.
+     */
+    virtual KUrl currentUrl() const = 0;
 
     /**
      * This method should only be used by the main application to
@@ -53,16 +74,30 @@ public:
      */
     void setGestureType(Qt::GestureType);
 
+    /**
+     * @return the toolbar widget if enableToolbar returns true
+     * otherwise 0 is returned.
+     */
+    virtual MediaCenter::NavigationToolbar *toolbar() const;
+
 public Q_SLOTS:
-    virtual void openDirectory(const KUrl &url) = 0;
+    /**
+     * This method must be reimplemented in order to allow the browsing
+     * for a location specified by @param url
+     */
+    virtual void openUrl(const KUrl &url) = 0;
+
     virtual void listMediaInDirectory() = 0;
     virtual void selectedMediasAdd(const MediaCenter::Media &) = 0;
     virtual void selectedMediasRemove(const MediaCenter::Media &) = 0;
     virtual void clearSelectedMedias() = 0;
 
-    virtual void clearViewModes() = 0;
-
 Q_SIGNALS:
+    void browseUpRequest();
+    void browseHistoryBackRequest();
+    void browseHistoryNextRequest();
+    void browsePathRequest(const QString &path);
+
     void mediasActivated(const QList<MediaCenter::Media> &);
 
     /**
@@ -81,19 +116,15 @@ Q_SIGNALS:
     * The browser should emit these signals when a certain dataengine type is selected
     * to inform the state machine to switch to the corresponding state.
     */
-    void musicDataEngine();
-    void videoDataEngine();
-    void pictureDataEngine();
-    //TODO: Replace these with one signal that contains a pointer to the engine
-    //This pointer we can then use in the states (useful for example when we enter a state via the background buttons
-    //to load the last engine). But we need to have the modelpackage library in the general libraries.
+    void browsingModeChanged(MediaCenter::Mode);
 
 protected:
     virtual bool sceneEvent(QEvent *event);
     virtual void gestureEvent(MediaCenter::BrowserGesture *);
 
 private:
-    Qt::GestureType m_gestureType;
+    class BrowserPrivate;
+    BrowserPrivate *d;
 };
 
 } // namespace MediaCenter

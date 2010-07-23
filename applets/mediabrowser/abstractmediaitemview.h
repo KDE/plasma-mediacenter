@@ -23,7 +23,7 @@
 #include <QStyleOptionViewItemV4>
 #include <KUrl>
 #include <mediacenter/mediacenter.h>
-#include <mediabrowserlibs/abstractbrowsingbackend.h>
+#include <mediacenter/abstractbrowsingbackend.h>
 
 class QAbstractItemModel;
 
@@ -68,8 +68,8 @@ public:
     void setDrawBlurredText(bool set);
     bool drawBlurredText();
 
-    void setBrowsingType(const AbstractBrowsingBackend::BrowsingType &);
-    AbstractBrowsingBackend::BrowsingType browsingType() const;
+    void setBrowsingType(const MediaCenter::AbstractBrowsingBackend::BrowsingType &);
+    MediaCenter::AbstractBrowsingBackend::BrowsingType browsingType() const;
 
     /**
      * Call this method whenever events like model resetting occur.
@@ -156,7 +156,7 @@ signals:
 private:
     void tryDrag(QGraphicsSceneMouseEvent *);
     KUrl::List m_history;
-    AbstractBrowsingBackend::BrowsingType m_browsingType;
+    MediaCenter::AbstractBrowsingBackend::BrowsingType m_browsingType;
 
 protected:
     int m_iconSize;

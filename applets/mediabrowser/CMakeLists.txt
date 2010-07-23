@@ -4,8 +4,8 @@ abstractmediaitemview.cpp
 listview.cpp
 gridview.cpp
 viewitem.cpp
-browsingwidget.cpp
 startupmodel.cpp
+qmlhomeview.cpp
 )
 
 # Now make sure all files get to the right place
@@ -16,8 +16,8 @@ target_link_libraries(plasma_applet_mediabrowser
                       ${KDE4_KIO_LIBS}
 		      ${KDE4_KFILE_LIBS}
                       ${KDE4_NEPOMUK_LIBS}
+                      ${QT_QTDECLARATIVE_LIBRARY}
                       mediacenterlibs
-                      mediabrowserlibs
                         )
  
 install(TARGETS plasma_applet_mediabrowser
@@ -26,5 +26,8 @@ install(TARGETS plasma_applet_mediabrowser
 install(FILES plasma-applet-mediabrowser.desktop
         DESTINATION ${SERVICES_INSTALL_DIR})
 
-add_subdirectory(mediabrowserlibs)
+install(FILES
+homeview.qml
+DESTINATION ${DATA_INSTALL_DIR}/plasma-mediacenter/declarative/)
+
 add_subdirectory(browsingbackends)

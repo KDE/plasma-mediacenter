@@ -26,8 +26,10 @@
 
 #include <QGraphicsLinearLayout>
 
-class BrowsingWidget;
+namespace MediaCenter {
 class AbstractBrowsingBackend;
+class NavigationToolbar;
+}
 
 class MediaBrowser : public MediaCenter::Browser
 {
@@ -40,26 +42,18 @@ public:
     void init();
     void createConfigurationInterface(KConfigDialog *parent);
 
-    void setShowingBrowsingWidgets(bool);
-    bool isShowingBrowsingWidgets() const;
-
     void showStartupState();
-
-    void addViewMode(const QString &title);
-    QStringList viewModes() const;
 
     QList<MediaCenter::Media> selectedMedias() const;
 
-    KUrl directory() const;
+    KUrl currentUrl() const;
 
 public slots:
-    void openDirectory(const KUrl &url);
+    void openUrl(const KUrl &url);
     void listMediaInDirectory();
     void selectedMediasAdd(const MediaCenter::Media &media);
     void selectedMediasRemove(const MediaCenter::Media &media);
     void clearSelectedMedias();
-
-    void clearViewModes();
 
 protected:
     void gestureEvent(MediaCenter::BrowserGesture *);
@@ -79,9 +73,7 @@ private:
 
     bool m_blurred;
     QString m_viewType;
-    BrowsingWidget *m_browsingWidget;
-    bool m_browsingWidgets;
-    AbstractBrowsingBackend *m_backend;
+    MediaCenter::AbstractBrowsingBackend *m_backend;
     QList<MediaCenter::Media> m_selectedMedias;
 
     QGraphicsLinearLayout *m_layout;
@@ -94,6 +86,7 @@ private slots:
     void loadConfiguration();
     void configAccepted();
     void slotIndexActivated(const QModelIndex &);
+    void createQmlHomeView();
 
 };
 
