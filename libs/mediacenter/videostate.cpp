@@ -64,7 +64,7 @@ void VideoState::onExit(QEvent* event)
 {
     Q_UNUSED(event);
 
-    m_lastDirectory = m_browser->directory();
+    m_lastDirectory = m_browser->currentUrl();
 
     if (m_player->playbackState(MediaCenter::VideoMode) == MediaCenter::PlayingState) {
         SharedLayoutComponentsManager::self()->setBackgroundVideoMode(true);
@@ -90,7 +90,7 @@ void VideoState::onEntry(QEvent* event)
     SharedLayoutComponentsManager::self()->backgroundVideoWidget()->setVisible(false);
 
     if (m_lastDirectory.hasPath()) {
-         m_browser->openDirectory(m_lastDirectory);
+         m_browser->openUrl(m_lastDirectory);
          //TODO: Have the browser load the correct modelpackage
     }
 
@@ -188,10 +188,7 @@ void VideoState::configure()
         enterPlayingState();
     }
 
-    m_browser->clearViewModes();
-    m_browser->addViewMode("Videomode 1");
-    m_browser->addViewMode("Videomode 2");
-    m_browser->setShowingBrowsingWidgets(true);
+    m_browser->setEnableToolbar(true);
 
     //connect seek slider to media object
     setupMediaObject();

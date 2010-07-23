@@ -69,7 +69,7 @@ void MusicState::onExit(QEvent* event)
 {
     Q_UNUSED(event);
 
-    m_lastDirectory = m_browser->directory();
+    m_lastDirectory = m_browser->currentUrl();
 
     if (m_player->playbackState(MediaCenter::MusicMode) == MediaCenter::PlayingState) {
         SharedLayoutComponentsManager::self()->setBackgroundMusicMode(true);
@@ -104,7 +104,7 @@ void MusicState::onEntry(QEvent* event)
     SharedLayoutComponentsManager::self()->backgroundMusicWidget()->setVisible(false);
 
     if (m_lastDirectory.hasPath()) {
-        m_browser->openDirectory(m_lastDirectory);
+        m_browser->openUrl(m_lastDirectory);
     }
 
     connect (m_browser, SIGNAL(mediasActivated(QList<MediaCenter::Media>)), m_playlist, SLOT(appendMedia(QList<MediaCenter::Media>)));
@@ -179,10 +179,7 @@ void MusicState::configure()
 
     m_layout->controlAutohideOff();
 
-    m_browser->clearViewModes();
-    m_browser->addViewMode("Musicmode 1");
-    m_browser->addViewMode("Musicmode 2");
-    m_browser->setShowingBrowsingWidgets(true);
+    m_browser->setEnableToolbar(true);
 
     setupMediaObject();
     if (m_musicObject) {

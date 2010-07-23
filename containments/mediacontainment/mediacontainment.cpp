@@ -83,18 +83,18 @@ void MediaContainment::startStateMachine()
     m_musicState = new MediaCenter::MusicState(machine);
 
     //Define state change buttons
-    m_videoState->addTransition(m_mediaCenterState, SIGNAL(layoutToPictureState()), m_pictureState);
-    m_videoState->addTransition(m_mediaCenterState, SIGNAL(layoutToMusicState()), m_musicState);
-    m_videoState->addTransition(m_mediaCenterState, SIGNAL(layoutToHomeState()), m_homeState);
-    m_pictureState->addTransition(m_mediaCenterState, SIGNAL(layoutToVideoState()), m_videoState);
-    m_pictureState->addTransition(m_mediaCenterState, SIGNAL(layoutToMusicState()), m_musicState);
-    m_pictureState->addTransition(m_mediaCenterState, SIGNAL(layoutToHomeState()), m_homeState);
-    m_musicState->addTransition(m_mediaCenterState, SIGNAL(layoutToVideoState()), m_videoState);
-    m_musicState->addTransition(m_mediaCenterState, SIGNAL(layoutToPictureState()), m_pictureState);
-    m_musicState->addTransition(m_mediaCenterState, SIGNAL(layoutToHomeState()), m_homeState);
-    m_homeState->addTransition(m_mediaCenterState, SIGNAL(layoutToVideoState()), m_videoState);
-    m_homeState->addTransition(m_mediaCenterState, SIGNAL(layoutToPictureState()), m_pictureState);
-    m_homeState->addTransition(m_mediaCenterState, SIGNAL(layoutToMusicState()), m_musicState);
+    m_videoState->addTransition(m_mediaCenterState, SIGNAL(pictureModeRequired()), m_pictureState);
+    m_videoState->addTransition(m_mediaCenterState, SIGNAL(pictureModeRequired()), m_musicState);
+    m_videoState->addTransition(m_mediaCenterState, SIGNAL(homeModeRequired()), m_homeState);
+    m_pictureState->addTransition(m_mediaCenterState, SIGNAL(videoModeRequired()), m_videoState);
+    m_pictureState->addTransition(m_mediaCenterState, SIGNAL(pictureModeRequired()), m_musicState);
+    m_pictureState->addTransition(m_mediaCenterState, SIGNAL(homeModeRequired()), m_homeState);
+    m_musicState->addTransition(m_mediaCenterState, SIGNAL(videoModeRequired()), m_videoState);
+    m_musicState->addTransition(m_mediaCenterState, SIGNAL(pictureModeRequired()), m_pictureState);
+    m_musicState->addTransition(m_mediaCenterState, SIGNAL(homeModeRequired()), m_homeState);
+    m_homeState->addTransition(m_mediaCenterState, SIGNAL(videoModeRequired()), m_videoState);
+    m_homeState->addTransition(m_mediaCenterState, SIGNAL(pictureModeRequired()), m_pictureState);
+    m_homeState->addTransition(m_mediaCenterState, SIGNAL(pictureModeRequired()), m_musicState);
 
     //I use these signals to tell the mediacontainment to do an actual state switch
     connect(m_videoState, SIGNAL(state(const MediaCenter::Mode)), this, SLOT(switchState(const MediaCenter::Mode)));

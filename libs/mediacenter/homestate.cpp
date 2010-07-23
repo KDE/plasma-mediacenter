@@ -88,8 +88,7 @@ void HomeState::configure()
         m_control->setVisible(true);
     }
 
-    m_browser->clearViewModes();
-    m_browser->setShowingBrowsingWidgets(false);
+    m_browser->setEnableToolbar(false);
 
     m_layout->setPlaylistVisible(false);
     m_layout->setInfoDisplayOnly(true);

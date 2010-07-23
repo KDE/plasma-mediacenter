@@ -89,15 +89,30 @@ QList<QGraphicsWidget*> MediaCenterState::mainSubComponents() const
 void MediaCenterState::initConnections()
 {
     connect (SharedLayoutComponentsManager::self()->barAutohideControlWidget(), SIGNAL(clicked()), m_layout, SLOT(toggleControlAutohide()));
-    connect (SharedLayoutComponentsManager::self()->homeWidget(), SIGNAL(clicked()), this, SIGNAL(layoutToHomeState()));
+    connect (SharedLayoutComponentsManager::self()->homeWidget(), SIGNAL(clicked()), this, SIGNAL(homeModeRequired()));
 
-    connect (m_browser, SIGNAL(pictureDataEngine()), this, SIGNAL(layoutToPictureState()));
-    connect (m_browser, SIGNAL(videoDataEngine()), this, SIGNAL(layoutToVideoState()));
-    connect (m_browser, SIGNAL(musicDataEngine()), this, SIGNAL(layoutToMusicState()));
+    connect (m_browser, SIGNAL(browsingModeChanged(MediaCenter::Mode)), this, SLOT(modeChangeRequired(MediaCenter::Mode)));
 
-    connect (SharedLayoutComponentsManager::self()->backgroundMusicWidget(), SIGNAL (clicked()), this, SIGNAL(layoutToMusicState()));
-    connect (SharedLayoutComponentsManager::self()->backgroundVideoWidget(), SIGNAL (clicked()), this, SIGNAL(layoutToVideoState()));
-    connect (SharedLayoutComponentsManager::self()->backgroundPictureWidget(), SIGNAL (clicked()), this, SIGNAL(layoutToPictureState()));
+    connect (SharedLayoutComponentsManager::self()->backgroundMusicWidget(), SIGNAL (clicked()), this, SIGNAL(musicModeRequired()));
+    connect (SharedLayoutComponentsManager::self()->backgroundVideoWidget(), SIGNAL (clicked()), this, SIGNAL(videoModeRequired()));
+    connect (SharedLayoutComponentsManager::self()->backgroundPictureWidget(), SIGNAL (clicked()), this, SIGNAL(pictureModeRequired()));
+}
+
+void MediaCenterState::modeChangeRequired(MediaCenter::Mode mode)
+{
+    switch (mode) {
+    case MediaCenter::PictureMode:
+        emit pictureModeRequired();
+        break;
+    case MediaCenter::VideoMode:
+        emit videoModeRequired();
+        break;
+    case MediaCenter::MusicMode:
+        emit musicModeRequired();
+        break;
+    default:
+        ;
+    }
 }
 
 void MediaCenterState::configure()

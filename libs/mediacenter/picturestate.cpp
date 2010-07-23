@@ -68,7 +68,7 @@ void PictureState::onExit(QEvent *event)
         m_player->playPause(MediaCenter::PictureMode);
     }
 
-    m_lastDirectory = m_browser->directory();
+    m_lastDirectory = m_browser->currentUrl();
 
     if (m_player->playbackState(MediaCenter::PictureMode) == MediaCenter::PausedState ||
         m_player->playbackState(MediaCenter::PictureMode) == MediaCenter::PlayingState) {
@@ -102,7 +102,7 @@ void PictureState::onEntry(QEvent *event)
     SharedLayoutComponentsManager::self()->backgroundPictureWidget()->setVisible(false);
 
     if (m_lastDirectory.hasPath()) {
-        m_browser->openDirectory(m_lastDirectory);
+        m_browser->openUrl(m_lastDirectory);
         m_browser->listMediaInDirectory();
     }
 
@@ -177,11 +177,7 @@ void PictureState::configure()
     m_layout->setPlaylistVisible(false);
     m_playlist->setVisible(false);
 
-    m_browser->clearViewModes();
-    m_browser->addViewMode(i18n("Picturemode 1"));
-    m_browser->addViewMode(i18n("Picturemode 2"));
-    m_browser->addViewMode(i18n("Picturemode 3"));
-    m_browser->setShowingBrowsingWidgets(true);
+    m_browser->setEnableToolbar(true);
 
     m_player->setCurrentMode(MediaCenter::PictureMode);
     clearPictureQueue();

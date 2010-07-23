@@ -99,10 +99,10 @@ Q_SIGNALS:
      * These signals are the actual state switch initiators. They are connected to the state machine
      * in the containment
      */
-    void layoutToPictureState();
-    void layoutToVideoState();
-    void layoutToMusicState();
-    void layoutToHomeState();
+    void pictureModeRequired();
+    void videoModeRequired();
+    void musicModeRequired();
+    void homeModeRequired();
 
 protected:
     virtual void onExit(QEvent *event);
@@ -132,6 +132,7 @@ protected Q_SLOTS:
 
 private Q_SLOTS:
     void slotSetCurrentState(const MediaCenter::Mode &mode);
+    void modeChangeRequired(MediaCenter::Mode);
 
 };
 
