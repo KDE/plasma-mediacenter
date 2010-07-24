@@ -22,6 +22,7 @@
 #include "startupmodel.h"
 #include "qmlhomeview.h"
 #include "viewitem.h"
+#include "abstractmediaitemview.h"
 
 #include <mediacenter/abstractbrowsingbackend.h>
 #include <mediacenter/browsergesture.h>
@@ -29,6 +30,7 @@
 
 #include <QWidget>
 #include <QKeyEvent>
+#include <QGraphicsLinearLayout>
 
 #include <KDirModel>
 #include <KDirLister>
@@ -46,7 +48,6 @@ MediaBrowser::MediaBrowser(QObject *parent, const QVariantList &args)
     : MediaCenter::Browser(parent, args),
     m_view(0),
     m_model(0),
-    m_backend(0),
     m_layout(new QGraphicsLinearLayout(Qt::Vertical))
 {
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
@@ -105,7 +106,7 @@ void MediaBrowser::createView()
     connect (m_view, SIGNAL(mediasActivated(QList<MediaCenter::Media>)), this, SIGNAL(mediasActivated(QList<MediaCenter::Media>)));
     connect (m_view, SIGNAL(mediasListChanged(QList<MediaCenter::Media>)), this, SIGNAL(mediasListChanged(QList<MediaCenter::Media>)));
     connect (m_view, SIGNAL(mediaActivated(const MediaCenter::Media&)), this, SIGNAL(mediaActivated(const MediaCenter::Media&)));
-    connect (m_view, SIGNAL(indexActivated(QModelIndex)), this, SLOT(slotIndexActivated(QModelIndex)));
+    //connect (m_view, SIGNAL(indexActivated(QModelIndex)), this, SLOT(slotIndexActivated(QModelIndex)));
     connect (m_view, SIGNAL(mediaSelected(MediaCenter::Media)), this, SLOT(selectedMediasAdd(MediaCenter::Media)));
     connect (m_view, SIGNAL(mediaUnselected(MediaCenter::Media)), this, SLOT(selectedMediasRemove(MediaCenter::Media)));
     connect (m_view, SIGNAL(directoryChanged()), this, SLOT(clearSelectedMedias()));
@@ -128,9 +129,9 @@ void MediaBrowser::createConfigurationInterface(KConfigDialog *parent)
 
     uiGeneral.blurredTextCheckBox->setChecked(m_blurred);
 
-    if (m_backend) {
-        if (m_backend->hasConfigurationInterface()) {
-            m_backend->createConfigurationInterface(parent);
+    if (currentBrowsingBackend()) {
+        if (currentBrowsingBackend()->hasConfigurationInterface()) {
+            currentBrowsingBackend()->createConfigurationInterface(parent);
         }
     }
 
@@ -172,25 +173,14 @@ void MediaBrowser::configAccepted()
 
 }
 
-void MediaBrowser::slotIndexActivated(const QModelIndex &index)
+void MediaBrowser::loadBrowsingBackend(MediaCenter::AbstractBrowsingBackend *backend)
 {
-    // let's see whether we are loading a plugin or not..
-    StartupModel *model = qobject_cast<StartupModel*>(m_model);
-    if (model) {
-        QString error;
-        MediaCenter::AbstractBrowsingBackend *backend = model->backendFromIndex(index, this, &error);
-        if (!error.isEmpty()) {
-            kError() << error;
-            return;
-        }
-        m_view->setModel(0);
-        m_backend = backend;
-        backend->init();
-        m_model = backend->model();
-        m_view->setModel(m_model);
+    m_view->setModel ( 0 );
+    backend->init();
+    m_model = backend->model();
+    m_view->setModel ( m_model );
 
-        emit browsingModeChanged(backend->requiredMode());
-    }
+    emit browsingModeChanged ( backend->requiredMode() );
 }
 
 void MediaBrowser::showStartupState()

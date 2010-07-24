@@ -27,7 +27,7 @@
 #include "mediacenter_export.h"
 #include "mediacenter/mediacenter.h"
 #include "mediacenter/mediacenterstate.h"
-#include <kservice.h>
+#include <KService>
 
 class QAbstractItemModel;
 class KConfigDialog;
@@ -88,7 +88,7 @@ public:
      */
     BrowsingType browsingType() const;
 
-    bool hasConfigurationInterface();
+    bool hasConfigurationInterface() const;
 
     /**
      * As from Plasma::Applet this method should be reimplemented
@@ -117,9 +117,15 @@ public:
      * @return the proper mode needed to play the files exposed
      * by the model in this backend
      */
-    MediaCenter::Mode requiredMode();
+    MediaCenter::Mode requiredMode() const;
 
     QString name() const;
+    
+    /**
+     * Convenience function that returns the list of
+     * available browsing backends found.
+     */
+    static KService::List availableBackends();
 
 public slots:
     /**

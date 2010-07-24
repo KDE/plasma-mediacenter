@@ -17,8 +17,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 #include "browser.h"
-#include <mediacenter/browsergesture.h>
-
+#include "browsergesture.h"
+#include "abstractbrowsingbackend.h"
 #include "widgets/navigationtoolbar.h"
 
 #include <QGestureEvent>
@@ -33,13 +33,16 @@ class Browser::BrowserPrivate
 public:
     BrowserPrivate(Browser *q) :
         q(q),
-        toolbar(0)
+        toolbar(0),
+        enableToolbar(false),
+        currentBackend(0)
     {}
 
     Browser *q;
     Qt::GestureType gestureType;
     NavigationToolbar *toolbar;
-    bool enableToolbar;
+    bool enableToolbar : 1;
+    AbstractBrowsingBackend *currentBackend;
 };
 
 Browser::Browser(QObject *parent, const QVariantList &args) : Plasma::Applet(parent, args),
@@ -131,3 +134,18 @@ bool Browser::enableToolbar() const
 {
     return d->enableToolbar;
 }
+
+AbstractBrowsingBackend* Browser::currentBrowsingBackend() const
+{
+    return d->currentBackend;
+}
+
+void Browser::setCurrentBrowsingBackend(AbstractBrowsingBackend *backend)
+{
+    if (d->currentBackend == backend) {
+        return;
+    }
+    d->currentBackend = backend;
+    loadBrowsingBackend(d->currentBackend);
+}
+

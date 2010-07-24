@@ -22,9 +22,9 @@
 #include <mediacenter/browser.h>
 
 #include "ui_general.h"
-#include "abstractmediaitemview.h"
 
-#include <QGraphicsLinearLayout>
+class QGraphicsLinearLayout;
+class AbstractMediaItemView;
 
 namespace MediaCenter {
 class AbstractBrowsingBackend;
@@ -47,6 +47,8 @@ public:
     QList<MediaCenter::Media> selectedMedias() const;
 
     KUrl currentUrl() const;
+
+    void loadBrowsingBackend(MediaCenter::AbstractBrowsingBackend*);
 
 public slots:
     void openUrl(const KUrl &url);
@@ -73,7 +75,6 @@ private:
 
     bool m_blurred;
     QString m_viewType;
-    MediaCenter::AbstractBrowsingBackend *m_backend;
     QList<MediaCenter::Media> m_selectedMedias;
 
     QGraphicsLinearLayout *m_layout;
@@ -85,7 +86,7 @@ private:
 private slots:
     void loadConfiguration();
     void configAccepted();
-    void slotIndexActivated(const QModelIndex &);
+    //void slotIndexActivated(const QModelIndex &);
     void createQmlHomeView();
 
 };

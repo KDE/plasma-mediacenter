@@ -22,6 +22,7 @@
 #include <KService>
 #include <KPluginInfo>
 #include <KDebug>
+#include <KServiceTypeTrader>
 
 using namespace MediaCenter;
 
@@ -51,7 +52,7 @@ AbstractBrowsingBackend::~AbstractBrowsingBackend()
 {
 }
 
-bool AbstractBrowsingBackend::hasConfigurationInterface()
+bool AbstractBrowsingBackend::hasConfigurationInterface() const
 {
     return d->cfInterface;
 }
@@ -79,7 +80,7 @@ void AbstractBrowsingBackend::setRequiredMode(MediaCenter::Mode mode)
     d->requiredMode = mode;
 }
 
-MediaCenter::Mode AbstractBrowsingBackend::requiredMode()
+MediaCenter::Mode AbstractBrowsingBackend::requiredMode() const
 {
     return d->requiredMode;
 }
@@ -107,4 +108,13 @@ void AbstractBrowsingBackend::openUrl(const KUrl &url)
 void AbstractBrowsingBackend::searchForMedia(const QString &name)
 {
     Q_UNUSED(name);
+}
+
+KService::List AbstractBrowsingBackend::availableBackends()
+{
+    KService::List plugins = KServiceTypeTrader::self()->query("Plasma/MediaCenter/BrowsingBackend");
+    if (plugins.isEmpty()) {
+        kWarning() << "no available browsing backend";
+    }
+    return plugins;
 }

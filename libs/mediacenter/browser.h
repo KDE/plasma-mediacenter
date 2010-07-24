@@ -30,6 +30,7 @@ namespace MediaCenter {
 
 class NavigationToolbar;
 class BrowserGesture;
+class AbstractBrowsingBackend;
 
 /**
  * @class Browser
@@ -56,8 +57,8 @@ public:
      * at index 0. In order to preserve the layout it is highly recommended
      * to insert other eventual widgets from index 1 on.
      */
-    virtual void setEnableToolbar(bool);
-    virtual bool enableToolbar() const;
+    void setEnableToolbar(bool);
+    bool enableToolbar() const;
 
     virtual void showStartupState() = 0;
     virtual QList<MediaCenter::Media> selectedMedias() const = 0;
@@ -79,6 +80,19 @@ public:
      * otherwise 0 is returned.
      */
     virtual MediaCenter::NavigationToolbar *toolbar() const;
+    
+    /**
+     * This method must be reimplemented in order to load the browsing backend
+     * and reflects the changes in the applet.
+     * The most common implementation consists in applying the model supplied by
+     * the backend to a view in the applet.
+     */
+    virtual void loadBrowsingBackend(MediaCenter::AbstractBrowsingBackend *) = 0;
+    
+    /**
+     * This function is used to retrieve the current browsing backend in use.
+     */
+    MediaCenter::AbstractBrowsingBackend* currentBrowsingBackend() const;
 
 public Q_SLOTS:
     /**
@@ -91,6 +105,11 @@ public Q_SLOTS:
     virtual void selectedMediasAdd(const MediaCenter::Media &) = 0;
     virtual void selectedMediasRemove(const MediaCenter::Media &) = 0;
     virtual void clearSelectedMedias() = 0;
+
+    /**
+     * @internal no need to call this function manually
+     */
+    void setCurrentBrowsingBackend(MediaCenter::AbstractBrowsingBackend*);
 
 Q_SIGNALS:
     void browseUpRequest();
