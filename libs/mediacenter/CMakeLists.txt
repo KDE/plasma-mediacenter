@@ -17,6 +17,7 @@ musicstate.cpp
 homestate.cpp
 medialayout.cpp
 abstractbrowsingbackend.cpp
+homeapplet.cpp
 
 # private stuff
 private/mediahandler.cpp
@@ -24,6 +25,7 @@ private/sharedlayoutcomponentsmanager.cpp
 
 # widgets
 widgets/navigationtoolbar.cpp
+widgets/viewitem.cpp
 )
 
 kde4_add_library(mediacenterlibs SHARED ${mediacenterlibs_SRCS})
@@ -48,10 +50,12 @@ set (mediacenterlibs_HDRS
     playbackgesture.h
     browsergesture.h
     abstractbrowsingbackend.h
+    homeapplet.h
 )
 
 set (mediacenterlibs_WIDGETS_HDRS
     widgets/navigationtoolbar.h
+    widgets/viewitem.h
 )
 
 install (FILES ${mediacenterlibs_HDRS} DESTINATION ${INCLUDE_INSTALL_DIR}/mediacenter COMPONENT Devel)

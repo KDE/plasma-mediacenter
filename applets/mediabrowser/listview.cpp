@@ -17,7 +17,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 #include "listview.h"
-#include "viewitem.h"
+#include "fileviewitem.h"
 
 // Qt
 #include <QPainter>
@@ -93,7 +93,7 @@ void ListView::generateItems(const QModelIndex &parent, int start, int end)
     }
 
     for (int i = start; i <= end; ++i) {
-        ViewItem *item = new ViewItem(m_option, this);
+        FileViewItem *item = new FileViewItem(m_option, this);
         item->setModelIndex(m_model->index(i, 0, m_rootIndex));
         item->setDrawBlurredText(m_blurred);
         m_items.insert(i, item);

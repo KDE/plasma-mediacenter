@@ -24,28 +24,27 @@
 #include <QStyleOptionViewItemV4>
 #include <QModelIndex>
 
+#include "mediacenter/mediacenter_export.h"
+
 namespace Plasma {
     class FrameSvg;
 }
 
-namespace Nepomuk {
-    class Resource;
-}
-
-class KFileItem;
 class QPixmap;
 
-class ViewItem : public QGraphicsWidget
+namespace MediaCenter {
+
+class MEDIACENTER_EXPORT ViewItem : public QGraphicsWidget
 {
     Q_OBJECT
 
     Q_PROPERTY(QIcon icon READ icon WRITE setIcon);
+    Q_PROPERTY(QPixmap pixmap READ pixmap WRITE setPixmap);
     Q_PROPERTY(QString text READ text WRITE setText);
     Q_PROPERTY(int decorationSize READ decorationSize WRITE setDecorationSize);
-    Q_PROPERTY(QModelIndex modelIndex READ index WRITE setModelIndex);
+    Q_PROPERTY(QModelIndex modelIndex READ modelIndex WRITE setModelIndex);
+    Q_PROPERTY(QSize itemSizeHint READ itemSizeHint);
 public:
-    enum ItemType { LocalFileItem, RemoteFileItem };
-
     /**
      * Each ViewItem must be created passing the option object
      * describing its appearance constraints.
@@ -54,44 +53,26 @@ public:
     ViewItem(const QStyleOptionViewItemV4 &option, QGraphicsItem *parent = 0);
     ~ViewItem();
 
-    void setStyleOption(const QStyleOptionViewItemV4 &);
+    virtual void setStyleOption(const QStyleOptionViewItemV4 &);
     QStyleOptionViewItemV4 styleOption() const;
 
-    void setModelIndex(const QModelIndex &index);
-    QModelIndex index() const;
+    virtual void setModelIndex(const QModelIndex &index);
+    QModelIndex modelIndex() const;
 
-    void setItemType(ItemType);
-
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
     QSize itemSizeHint() const;
 
-    void updateHoverRating(const QPoint &pos);
-
-    void setRating(int rating);
-
-    void setDrawBlurredText(bool set);
+    virtual void setDrawBlurredText(bool set);
     bool drawBlurredText();
-
-    bool isSelected();
-
-    void showCornerIcons(bool set);
-    void setIsNotFile(bool set);
-
-    /**
-     * This method allows setting a custom icon to be shown
-     * in place of the one passed by the QStyleOptionGraphicsItem as
-     * parameter of the paint function.
-     * @note This is particularly useful when accessing
-     * the icon through the property system.
-     */
-    void setIcon(const QIcon &icon);
 
     /**
      * @return the icon set with the setIcon function or a
      * null icon if none was set.
      */
     QIcon icon() const;
+
+    QPixmap pixmap() const;
 
     /**
      * Overrides the text passed through the option parameter
@@ -119,52 +100,32 @@ public:
     int decorationSize() const;
 
 public slots:
-    void setSelected(bool set);
+    void setPixmap(const QPixmap &pixmap);
+
+    /**
+     * This method allows setting a custom icon to be shown
+     * in place of the one passed by the index as
+     * parameter of the paint function.
+     * @note This is particularly useful when accessing
+     * the icon through the property system.
+     */
+    void setIcon(const QIcon &icon);
 
 protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void keyPressEvent(QKeyEvent *event);
+    virtual void keyPressEvent(QKeyEvent *event);
 
 private:
-    QStyleOptionViewItemV4 m_option;
-    QModelIndex m_index;
-    ItemType m_type;
-    Plasma::FrameSvg *m_frameSvg;
-    QPixmap m_preview;
-    QPixmap m_selectIcon;
-    QPixmap m_blurredText;
-    QPixmap m_reflection;
-    int m_hoverRating;
-    int m_rating;
-    Nepomuk::Resource *m_resource;
-    bool m_nepomuk;
-    bool m_blurred;
-    bool m_selectByIcon;
-    bool m_isSelected;
-    bool m_isNotFile;
-    QIcon m_icon;
-    QString m_text;
-    int m_decorationSize;
-
-    friend class AbstractMediaItemView;
+    class ViewItemPrivate;
+    ViewItemPrivate *d;
 
 private:
     void drawReflection(QPainter *painter, const QRect &reflectionRect, const QIcon &icon);
     void drawReflection(QPainter *painter, const QRect &reflectionRect, const QPixmap &pm);
-    void drawSelectIcon(QPainter *painter, const QStyleOptionGraphicsItem *option);
-    void askForFilePreview();
 
-    QRect ratingRect(const QRect &contentsRect) const;
-    QRect selectRect(const QRect &contentsRect) const;
     QSize textRectSize() const;
 
-private slots:
-    void slotGotPreview(const KFileItem &item, const QPixmap &preview);
-
-signals:
-    void ratingActivated(int);
-    void itemSelected();
-
 };
+
+} // namespace MediaCenter
 
 #endif // VIEWITEM_H

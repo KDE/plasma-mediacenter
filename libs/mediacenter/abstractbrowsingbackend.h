@@ -37,7 +37,7 @@ namespace MediaCenter {
 /**
  * @class AbstractBrowsingBackend @author Alessandro Diaferia
  * @brief A useful class to build custom plugins for the mediabrowser.
- *
+ * 
  * This class allows you to write custom models to use with the mediabrowser applet.
  * Custom models are useful to implement custom navigations such as navigation
  * through services available through the web, see YouTube.
@@ -56,7 +56,7 @@ public:
     };
 
     enum AdditionalRoles {
-    	MediaRole
+        MediaRole
     };
 
     /**

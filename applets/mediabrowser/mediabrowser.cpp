@@ -19,9 +19,6 @@
 #include "mediabrowser.h"
 #include "listview.h"
 #include "gridview.h"
-#include "startupmodel.h"
-#include "qmlhomeview.h"
-#include "viewitem.h"
 #include "abstractmediaitemview.h"
 
 #include <mediacenter/abstractbrowsingbackend.h>
@@ -63,23 +60,23 @@ MediaBrowser::~MediaBrowser()
 
 void MediaBrowser::showInstalledBackends()
 {
-    delete m_model;
-    m_model = new StartupModel(this);
-    //m_view->setModel(m_model);
+//    delete m_model;
+//    m_model = new StartupModel(this);
+//    m_view->setModel(m_model);
 
-    QmlHomeView *homeView = new QmlHomeView(this);
-    QGraphicsLinearLayout *layout = static_cast<QGraphicsLinearLayout*>(this->layout());
-    layout->addItem(homeView);
+//    QmlHomeView *homeView = new QmlHomeView(this);
+//    QGraphicsLinearLayout *layout = static_cast<QGraphicsLinearLayout*>(this->layout());
+//    layout->addItem(homeView);
 
-    homeView->setQmlPath(KStandardDirs::locate("data", "plasma-mediacenter/declarative/homeview.qml"));
-    homeView->setModel(m_model);
+//    homeView->setQmlPath(KStandardDirs::locate("data", "plasma-mediacenter/declarative/homeview.qml"));
+//    homeView->setModel(m_model);
 }
 
 void MediaBrowser::init()
 {
     loadConfiguration();
 
-    //createView();
+    createView();
     showInstalledBackends();
 }
 

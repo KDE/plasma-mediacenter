@@ -16,60 +16,53 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#ifndef GRIDVIEW_H
-#define GRIDVIEW_H
 
-#include "abstractmediaitemview.h"
+#ifndef FILEVIEWITEM_H
+#define FILEVIEWITEM_H
 
-class ViewItem;
-class QTimer;
+#include <mediacenter/widgets/viewitem.h>
 
-class GridView : public AbstractMediaItemView
+class KFileItem;
+
+class FileViewItem : public MediaCenter::ViewItem
 {
     Q_OBJECT
 public:
-    GridView(QGraphicsItem *parent = 0);
-    ~GridView();
+    enum ItemType {GenericItem, LocalFileItem, RemoteFileItem};
 
-    void setupOptions();
+    FileViewItem(const QStyleOptionViewItemV4 &option, QGraphicsItem *parent = 0);
+
+    void setItemType(ItemType);
+    ItemType itemType() const;
+
+    bool itemSelected() const;
+
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    void setModelIndex(const QModelIndex &index);
 
 public slots:
-    void generateItems(const QModelIndex &parent, int start, int end);
-    void updateScrollBar();
-
-protected:
-    void layoutItems();
-    void resizeEvent(QGraphicsSceneResizeEvent *event);
-
-    void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
-    void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
-    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
-
-    void keyPressEvent(QKeyEvent *event);
+    void setItemSelected(bool set);
 
 private:
-    int m_itemRows;
-    QTimer *m_timer;
-
-    ViewItem *m_lastHoveredItem;
-    bool m_highlighting;
+    ItemType m_type;
+    QPoint m_pressPoint;
 
 private:
-    /**
-     * Makes all items less opaque excepting
-     * the given item;
-     */
-    void fadeOutItems(FileViewItem *exception);
-
-    /**
-     * Restores items' opacity.
-     */
-    void restoreItems();
+    void drawSelectionIcon(QPainter *painter, const QStyleOptionGraphicsItem *option);
+    QRect selectionIconRect(const QRect &contentsRect) const;
+    void askForFilePreview();
 
 private slots:
-    void highlightHoveredItem();
-    void highlightAnimation(qreal value);
-//    void slotAnimationFinished(QGraphicsItem *item, Plasma::Animator::Animation);
+    void slotGotPreview(const KFileItem &item, const QPixmap &preview);
+
+signals:
+    void selectionEmblemToggled();
+
+protected:
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+
+
 };
 
-#endif // GRIDVIEW_H
+#endif // FILEVIEWITEM_H

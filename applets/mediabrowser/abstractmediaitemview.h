@@ -30,7 +30,7 @@ class QAbstractItemModel;
 namespace Plasma {
     class ScrollBar;
 }
-class ViewItem;
+class FileViewItem;
 class QScrollBar;
 
 class AbstractMediaItemView : public QGraphicsWidget
@@ -90,7 +90,7 @@ protected:
      */
     virtual void setupOptions();
 
-    virtual void updateHoveredItem(ViewItem *item);
+    virtual void updateHoveredItem(FileViewItem *item);
 
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
@@ -101,8 +101,8 @@ protected:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
-    void itemActivateEvent(ViewItem *item);
-    ViewItem* itemFromPos(const QPointF &);
+    void itemActivateEvent(FileViewItem *item);
+    FileViewItem* itemFromPos(const QPointF &);
 
 protected slots:
     /**
@@ -122,8 +122,8 @@ public slots:
      * the code for items generations. Items must be collected
      * in the m_items list. You just need to call this once for
      * each rootIndex change in the model.
-     * A ViewItem with this view as parent has to be created for each QModelIndex
-     * that has to be shown. Each ViewItem must be updated with the QModelIndex it is
+     * A FileViewItem with this view as parent has to be created for each QModelIndex
+     * that has to be shown. Each FileViewItem must be updated with the QModelIndex it is
      * in charge of and the current model in use.
      */
     virtual void generateItems(const QModelIndex &parent, int start, int end) = 0;
@@ -140,7 +140,6 @@ public slots:
     void listMediaInDirectory();
 
 private slots:
-    void setRating(int);
     void slotItemSelected();
 
 signals:
@@ -167,10 +166,10 @@ protected:
     ScrollMode m_scrollMode;
     bool m_blurred;
 
-    QList<ViewItem*> m_items;
+    QList<FileViewItem*> m_items;
 
-    ViewItem *m_hoveredItem;
-    ViewItem *m_hoverIndicator;
+    FileViewItem *m_hoveredItem;
+    FileViewItem *m_hoverIndicator;
 };
 
 #endif

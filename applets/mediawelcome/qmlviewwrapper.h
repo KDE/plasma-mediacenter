@@ -16,8 +16,8 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#ifndef QMLHOMEVIEW_H
-#define QMLHOMEVIEW_H
+#ifndef QMLVIEWWRAPPER_H
+#define QMLVIEWWRAPPER_H
 
 #include <QGraphicsWidget>
 
@@ -25,12 +25,12 @@ class QDeclarativeEngine;
 class QDeclarativeComponent;
 class QAbstractItemModel;
 
-class QmlHomeView : public QGraphicsWidget
+class QmlViewWrapper : public QGraphicsWidget
 {
     Q_OBJECT
 public:
-    QmlHomeView(QGraphicsItem *parent = 0);
-    ~QmlHomeView();
+    QmlViewWrapper(QGraphicsItem *parent = 0);
+    ~QmlViewWrapper();
 
     /**
      * always call setModel before setting the qml file path
@@ -58,4 +58,4 @@ private:
 
 };
 
-#endif // QMLHOMEVIEW_H
+#endif // QMLVIEWWRAPPER_H

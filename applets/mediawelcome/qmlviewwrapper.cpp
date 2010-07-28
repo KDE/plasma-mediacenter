@@ -16,8 +16,8 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#include "qmlhomeview.h"
-#include "viewitem.h"
+#include "qmlviewwrapper.h"
+#include <mediacenter/widgets/viewitem.h>
 
 #include <QAbstractItemModel>
 #include <QFile>
@@ -33,24 +33,24 @@
 
 #include <KDebug>
 
-QML_DECLARE_TYPE(ViewItem)
+QML_DECLARE_TYPE(MediaCenter::ViewItem)
 
-QmlHomeView::QmlHomeView(QGraphicsItem *parent) :
+QmlViewWrapper::QmlViewWrapper(QGraphicsItem *parent) :
     QGraphicsWidget(parent),
     m_engine(0),
     m_mainComponent(0),
     m_model(0),
     m_root(0)
 {
-    qmlRegisterType<ViewItem>("MediaBrowser", 0, 1, "ViewItem");
+    qmlRegisterType<MediaCenter::ViewItem>("MediaBrowser", 0, 1, "ViewItem");
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
     setLayout(layout);
 }
 
-QmlHomeView::~QmlHomeView()
+QmlViewWrapper::~QmlViewWrapper()
 {}
 
-void QmlHomeView::setModel(QAbstractItemModel *model)
+void QmlViewWrapper::setModel(QAbstractItemModel *model)
 {
     if (!m_engine) {
         return;
@@ -59,7 +59,7 @@ void QmlHomeView::setModel(QAbstractItemModel *model)
     m_engine->rootContext()->setContextProperty("homeModel", m_model);
 }
 
-void QmlHomeView::setQmlPath(const QString &path)
+void QmlViewWrapper::setQmlPath(const QString &path)
 {
     kDebug() << "loading qml" << path;
     if (!QFile::exists(path)) {
@@ -83,19 +83,19 @@ void QmlHomeView::setQmlPath(const QString &path)
     }
 }
 
-void QmlHomeView::printError()
+void QmlViewWrapper::printError()
 {
     foreach (const QDeclarativeError &error, m_mainComponent->errors()) {
         kDebug() << error.toString();
     }
 }
 
-void QmlHomeView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void QmlViewWrapper::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     QGraphicsWidget::paint(painter, option, widget);
 }
 
-void QmlHomeView::aquireRootComponent()
+void QmlViewWrapper::aquireRootComponent()
 {
     if (m_mainComponent->status() == QDeclarativeComponent::Error) {
         return;
@@ -123,7 +123,7 @@ void QmlHomeView::aquireRootComponent()
     }
 }
 
-void QmlHomeView::resizeEvent(QGraphicsSceneResizeEvent *event)
+void QmlViewWrapper::resizeEvent(QGraphicsSceneResizeEvent *event)
 {
     QGraphicsWidget::resizeEvent(event);
 

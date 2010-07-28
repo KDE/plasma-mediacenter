@@ -16,8 +16,8 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#ifndef STARTUPMODEL_H
-#define STARTUPMODEL_H
+#ifndef BACKENDMODEL_H
+#define BACKENDMODEL_H
 
 #include <QAbstractItemModel>
 #include <KService>
@@ -26,12 +26,12 @@ namespace MediaCenter {
 class AbstractBrowsingBackend;
 }
 
-class StartupModel : public QAbstractItemModel
+class BackendModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
-    StartupModel(QObject *parent = 0);
-    ~StartupModel();
+    BackendModel(QObject *parent = 0);
+    ~BackendModel();
 
     virtual int columnCount ( const QModelIndex & parent = QModelIndex() ) const;
     virtual QVariant data ( const QModelIndex & index, int role = Qt::DisplayRole ) const;
@@ -39,21 +39,10 @@ public:
     virtual QModelIndex parent ( const QModelIndex & index ) const;
     virtual int rowCount ( const QModelIndex & parent = QModelIndex() ) const;
 
-    /**
-     * Be aware that each time you call this method an instance of the plugin is
-     * created.
-     */
-    MediaCenter::AbstractBrowsingBackend* backendFromIndex(const QModelIndex &, QObject *parent = 0, QString *error = 0);
-
-protected slots:
-    void init();
-    void updateModel(const QStringList &changedResources);
+    void setModelServices(const KService::List &services);
 
 private:
     KService::List m_modelServices;
-
-    void addAvailableModels(const KService::List &modelServices);
-    KService::Ptr service(KService *) const;
 };
 
-#endif // STARTUPMODEL_H
+#endif // BACKENDMODEL_H

@@ -21,6 +21,11 @@
 
 #include <Plasma/Applet>
 
+#include "mediacenter_export.h"
+
+namespace MediaCenter {
+class AbstractBrowsingBackend;
+
 /**
  * @class HomeApplet
  * @author Alessandro Diaferia
@@ -31,16 +36,36 @@
  * In the Home Applet are shown the available browsing backends for the Browser applet.
  * This way the user can choose which media content to manage.
  */
-class HomeApplet : public Plasma::Applet
+class MEDIACENTER_EXPORT HomeApplet : public Plasma::Applet
 {
     Q_OBJECT
 public:
-    explicit HomeApplet(QObject *parent = 0);
+    HomeApplet(QObject *parent, const QVariantList &args);
+    virtual ~HomeApplet();
+
+    /**
+     * Reimplement this function in order to present to the user
+     * the available backends.
+     */
+    virtual void init(const KService::List &availableBackends) = 0;
 
 signals:
+    /**
+     * When one of the available backends is activated the applet
+     * should create the respective instance of AbstractBrowsingBackend
+     * and emit this signal in order for the browser applet to properly
+     * load it.
+     */
+    void browsingBackendActivated(AbstractBrowsingBackend *backend);
 
-public slots:
+    void quitRequest();
+    void showSettingsRequest();
+
+private:
+    class HomeAppletPrivate;
+    HomeAppletPrivate *d;
 
 };
+} // namespace MediaCenter
 
 #endif // HOMEAPPLET_H

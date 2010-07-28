@@ -17,7 +17,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 #include "abstractmediaitemview.h"
-#include "viewitem.h"
+#include "fileviewitem.h"
 
 // Plasma
 #include <Plasma/ScrollBar>
@@ -58,13 +58,12 @@ m_blurred(true)
 
     QStyleOptionViewItemV4 opt = m_option;
     opt.state |= QStyle::State_MouseOver;
-    m_hoverIndicator = new ViewItem(opt, this);
+    m_hoverIndicator = new FileViewItem(opt, this);
     m_hoverIndicator->setZValue(-1000);
     m_hoverIndicator->setPos(0, -100);
 
     m_hoverIndicator->setAcceptedMouseButtons(Qt::LeftButton);
-    connect (m_hoverIndicator, SIGNAL(ratingActivated(int)), this, SLOT(setRating(int)));
-    connect (m_hoverIndicator, SIGNAL(itemSelected()), this, SLOT(slotItemSelected()));
+    connect (m_hoverIndicator, SIGNAL(selectionEmblemToggled()), this, SLOT(slotItemSelected()));
 }
 
 AbstractMediaItemView::~AbstractMediaItemView()
@@ -183,13 +182,10 @@ void AbstractMediaItemView::invalidate()
     m_items.clear();
 }
 
-void AbstractMediaItemView::updateHoveredItem(ViewItem *item)
+void AbstractMediaItemView::updateHoveredItem(FileViewItem *item)
 {
     if (!item || !m_items.contains(item)) {
         m_hoverIndicator->hide();
-        if (m_hoverIndicator->m_nepomuk) {
-            m_hoverIndicator->updateHoverRating(QPoint(-1, -1));
-        }
         if (m_hoveredItem) {
             update();
         }
@@ -197,17 +193,8 @@ void AbstractMediaItemView::updateHoveredItem(ViewItem *item)
         return;
     }
 
-    QModelIndex index = item->index();
-    KFileItem file = index.isValid() ? index.data(KDirModel::FileItemRole).value<KFileItem>() : KFileItem();
-    if (file.isNull() || file.isDir()) {
-        m_hoverIndicator->setIsNotFile(true);
-    } else {
-        m_hoverIndicator->setIsNotFile(false);
-    }
-
     m_hoveredItem = item;
-    m_hoverIndicator->setSelected(m_hoveredItem->isSelected());
-    m_hoverIndicator->m_nepomuk = item->m_nepomuk;
+    m_hoverIndicator->setItemSelected(m_hoveredItem->itemSelected());
     m_hoverIndicator->show();
 
     if (m_hoveredItem->size() != m_hoverIndicator->size()) {
@@ -220,24 +207,11 @@ void AbstractMediaItemView::updateHoveredItem(ViewItem *item)
 void AbstractMediaItemView::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
     updateHoveredItem(itemFromPos(event->pos()));
-    if (m_hoveredItem) {
-        m_hoverIndicator->m_rating = m_hoveredItem->m_nepomuk ? m_hoveredItem->m_resource->rating() : 0;
-    }
-
-    if (m_hoverIndicator->m_nepomuk) {
-        m_hoverIndicator->updateHoverRating(mapToItem(m_hoverIndicator, event->pos()).toPoint());
-    }
 }
 
 void AbstractMediaItemView::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
 {
     updateHoveredItem(itemFromPos(event->pos()));
-    if (m_hoveredItem) {
-        m_hoverIndicator->m_rating = m_hoveredItem->m_nepomuk ? m_hoveredItem->m_resource->rating() : 0;
-    }
-    if (m_hoverIndicator->m_nepomuk) {
-        m_hoverIndicator->updateHoverRating(mapToItem(m_hoverIndicator, event->pos()).toPoint());
-    }
 }
 
 void AbstractMediaItemView::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
@@ -246,27 +220,18 @@ void AbstractMediaItemView::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
     updateHoveredItem(0);
 }
 
-void AbstractMediaItemView::setRating(int rating)
-{
-    if (!m_hoveredItem) {
-        return;
-    }
-
-    m_hoveredItem->m_resource->setRating(rating);
-}
-
 QModelIndex AbstractMediaItemView::indexFromPos(const QPointF &pos)
 {
-    ViewItem *item = itemFromPos(pos);
+    FileViewItem *item = itemFromPos(pos);
     if (item) {
-        return item->index();
+        return item->modelIndex();
     }
     return QModelIndex();
 }
 
-ViewItem* AbstractMediaItemView::itemFromPos(const QPointF &pos)
+FileViewItem* AbstractMediaItemView::itemFromPos(const QPointF &pos)
 {
-    foreach (ViewItem *item, m_items) {
+    foreach (FileViewItem *item, m_items) {
         if (item->geometry().contains(pos)) {
             return item;
         }
@@ -309,12 +274,12 @@ void AbstractMediaItemView::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *even
     itemActivateEvent(itemFromPos(event->pos()));
 }
 
-void AbstractMediaItemView::itemActivateEvent(ViewItem *viewItem)
+void AbstractMediaItemView::itemActivateEvent(FileViewItem *viewItem)
 {
     if (!viewItem) {
         return;
     }
-    QModelIndex index = viewItem->index();
+    QModelIndex index = viewItem->modelIndex();
 
     KDirModel *model = qobject_cast<KDirModel*>(m_model);
     if (model && model->dirLister()->isFinished()) {
@@ -380,12 +345,12 @@ void AbstractMediaItemView::tryDrag(QGraphicsSceneMouseEvent *event)
 
     // NOTE: for drag to work a KDirModel::FileItemRole is needed.
     //       if none is found no drag can occur.
-    ViewItem *viewItem = itemFromPos(event->pos());
+    FileViewItem *viewItem = itemFromPos(event->pos());
     if (!viewItem) {
         return;
     }
 
-    QModelIndex index = viewItem->index();
+    QModelIndex index = viewItem->modelIndex();
     if (!index.isValid()) {
         return;
     }
@@ -445,7 +410,7 @@ void AbstractMediaItemView::setDrawBlurredText(bool set)
 
     kDebug() << "setting blurred text to" << set;
     m_blurred = set;
-    foreach (ViewItem *item, m_items) {
+    foreach (FileViewItem *item, m_items) {
         item->setDrawBlurredText(set);
     }
 }
@@ -472,8 +437,8 @@ void AbstractMediaItemView::removeItems(const QModelIndex &parent, int start, in
         return;
     }
     m_hoveredItem = 0;
-    QList<ViewItem*>::iterator startIt = m_items.begin();
-    QList<ViewItem*>::iterator endIt = m_items.begin();
+    QList<FileViewItem*>::iterator startIt = m_items.begin();
+    QList<FileViewItem*>::iterator endIt = m_items.begin();
     startIt += (start);
     endIt += (end);
     for (; startIt <= endIt; ++startIt) {
@@ -496,7 +461,7 @@ MediaCenter::AbstractBrowsingBackend::BrowsingType AbstractMediaItemView::browsi
 
 void AbstractMediaItemView::slotItemSelected()
 {
-    QModelIndex index = m_hoveredItem->index();
+    QModelIndex index = m_hoveredItem->modelIndex();
     MediaCenter::Media media;
     KDirModel *model = qobject_cast<KDirModel*>(m_model);
     if (model && model->dirLister()->isFinished()) {
@@ -512,13 +477,13 @@ void AbstractMediaItemView::slotItemSelected()
             media.second = item.localPath();
         }
     }
-    if (m_hoveredItem->isSelected()) {
-        m_hoveredItem->setSelected(false);
+    if (m_hoveredItem->itemSelected()) {
+        m_hoveredItem->setItemSelected(false);
         emit mediaUnselected(media);
         return;
     }
-    if (!m_hoveredItem->isSelected()) {
-        m_hoveredItem->setSelected(true);
+    if (!m_hoveredItem->itemSelected()) {
+        m_hoveredItem->setItemSelected(true);
         emit mediaSelected(media);
         return;
     }
