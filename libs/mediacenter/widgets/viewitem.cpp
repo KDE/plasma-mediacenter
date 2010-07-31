@@ -100,7 +100,7 @@ ViewItem::ViewItem(const QStyleOptionViewItemV4 &option, QGraphicsItem *parent) 
 ViewItem::ViewItem(QGraphicsItem *parent) : QGraphicsWidget(parent),
     d(new ViewItemPrivate(this))
 {
-    ViewItem::ViewItem(QStyleOptionViewItemV4(), parent);
+    ViewItem(QStyleOptionViewItemV4(), parent);
 
     // this ctor has no way to pass the QStyleOptionViewItemV4
     // we create one with some convenient default values
