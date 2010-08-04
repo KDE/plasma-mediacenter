@@ -1,9 +1,8 @@
 [Desktop Entry]
 Name=Webmedia Engine
+Name[x-test]=xxWebmedia Enginexx
 
-Name[x-test]=xxWebMedia Enginexx
 Comment=An engine that allows you to query web services for media.
-Comment[en_GB]=An engine that allows you to query web services for media.
 Comment[x-test]=xxAn engine that allows you to query web services for media.xx
 
 X-KDE-ServiceTypes=Plasma/DataEngine
