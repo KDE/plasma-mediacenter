@@ -125,9 +125,6 @@ function addonCreated(addon)
 {
   print("new addon: " + addon)
   mediaEngine.Addons.push(addon);
-  for (i in addon) {
-      print(i);
-  }
 }
 
 var mediaEngine = new WebMediaDataEngine();
