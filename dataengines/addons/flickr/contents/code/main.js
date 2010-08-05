@@ -24,9 +24,6 @@ function Flickr()
   this.baseUrl = "http://www.flickr.com/services/rest/";
   this.apiKey = "api_key=df52d83b7fe03f1de079da2c300f3203";
   this.mediaengine = webmediaengine();
-  for (i in this) {
-      print(i);
-  }
 }
 
 Flickr.prototype.searchMedia = function(queryParams)
