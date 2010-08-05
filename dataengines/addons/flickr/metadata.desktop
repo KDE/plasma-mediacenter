@@ -1,0 +1,22 @@
+[Desktop Entry]
+Name=Flickr
+
+Name[x-test]=xxWebMedia Enginexx
+Comment=An engine that allows you to query web services for media.
+Comment[en_GB]=An engine that allows you to query web services for media.
+Comment[x-test]=xxAn engine that allows you to query web services for media.xx
+
+X-KDE-ServiceTypes=Plasma/JavascriptAddon
+Type=Service
+X-Plasma-API=javascript
+
+X-KDE-Library=plasma_engine_webmedia
+X-KDE-PluginInfo-Author=Onur-Hayri Bakici
+X-KDE-PluginInfo-Email=thehayro@gmail.com
+X-KDE-PluginInfo-Name=org.kde.plasma.dataengine.webmedia.flickr
+X-KDE-PluginInfo-Version=0.1
+X-KDE-PluginInfo-Website=http://plasma.kde.org/
+X-KDE-PluginInfo-Category=org.kde.plasma.dataengine.webmedia
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=LGPL
+X-KDE-PluginInfo-EnabledByDefault=true
