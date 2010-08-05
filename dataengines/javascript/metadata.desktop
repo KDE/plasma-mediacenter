@@ -17,11 +17,9 @@ X-KDE-ServiceTypes=Plasma/DataEngine
 Type=Service
 X-Plasma-API=javascript
 X-Plasma-MainScript=code/mediadataengine.js
-X-Plasma-ComponentTypes=DataEngine
 X-Plasma-RequiredExtensions=
 X-Plasma-OptionalExtensions=HTTP
 
-X-Plasma-EngineName=org.kde.webmedia
 X-KDE-Library=plasma_engine_webmedia
 X-KDE-PluginInfo-Author=Onur-Hayri Bakici
 X-KDE-PluginInfo-Email=thehayro@gmail.com

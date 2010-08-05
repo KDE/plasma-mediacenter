@@ -20,9 +20,10 @@
 engine.include('xmldom.js');
 engine.include('xmlsax.js');
 engine.include('xmlw3cdom.js');
-engine.include('flickr.js');
 engine.include('youtube.js');
 //engine.include('picasa.js');
+
+this.Addons = new Array();
 
 var MediaTypes = new Array("picture", "video");
 
@@ -110,17 +111,39 @@ function WebMediaCollection()
 //Problem: attribute, die nur bei video auftauchen: duration, embeddedHTML
 //MediaData.prototype.MediaType = MediaType;
 
-var mediaEngine = new WebMediaDataEngine();
-
 function WebMediaDataEngine()
 {
+  this.Addons = new Array()
   //temporary workaround
-  this.Addons = new Array();
-  this.Addons.push(flickrmain(engine));
+  //this.Addons.push(flickrmain(engine));
   this.Addons.push(youtubemain(engine));
  // this.Addons.push(picasamain(engine));
 }
 
+
+function addonCreated(addon)
+{
+  print("new addon: " + addon)
+  mediaEngine.Addons.push(addon);
+  for (i in addon) {
+      print(i);
+  }
+}
+
+var mediaEngine = new WebMediaDataEngine();
+engine.addEventListener("addonCreated", addonCreated)
+
+addons = engine.listAddons("org.kde.plasma.dataengine.webmedia");
+//print("number of addons: " + addons.length)
+for (i in addons) {
+  //print("Addon: " + addons[i]);
+  engine.loadAddon("org.kde.plasma.dataengine.webmedia", addons[i]);
+}
+
+function webmediaengine()
+{
+  return mediaEngine
+}
 
 // the traditional sourceRequestEvent
 engine.sourceRequestEvent = function (source)
