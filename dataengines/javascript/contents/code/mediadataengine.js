@@ -134,10 +134,10 @@ var mediaEngine = new WebMediaDataEngine();
 engine.addEventListener("addonCreated", addonCreated)
 
 addons = engine.listAddons("org.kde.plasma.dataengine.webmedia");
-//print("number of addons: " + addons.length)
+print("number of addons: " + addons.length)
 for (i in addons) {
-  //print("Addon: " + addons[i]);
-  engine.loadAddon("org.kde.plasma.dataengine.webmedia", addons[i]);
+  print("Addon: " + addons[i].name);
+  engine.loadAddon("org.kde.plasma.dataengine.webmedia", addons[i].id);
 }
 
 function webmediaengine()
