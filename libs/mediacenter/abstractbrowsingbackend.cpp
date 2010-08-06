@@ -50,6 +50,7 @@ d(new AbstractBrowsingBackendPrivate(KService::serviceByStorageId(args.count() ?
 
 AbstractBrowsingBackend::~AbstractBrowsingBackend()
 {
+    delete d;
 }
 
 bool AbstractBrowsingBackend::hasConfigurationInterface() const
