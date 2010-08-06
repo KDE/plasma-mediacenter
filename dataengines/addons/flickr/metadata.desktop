@@ -1,9 +1,12 @@
 [Desktop Entry]
 Name=Flickr
+Name[x-test]=xxFlickrxx
 
-Name[x-test]=xxWebMedia Enginexx
 Comment=An engine that allows you to query web services for media.
-Comment[en_GB]=An engine that allows you to query web services for media.
+Comment[pt]=Um motor que lhe permite pesquisar conteúdos multimédia em vários serviços na Web.
+Comment[pt_BR]=Um motor que lhe permite pesquisar conteúdos multimídia em vários serviços na Web.
+Comment[sv]=Ett gränssnitt som låter dig söka efter media på webbtjänster.
+Comment[uk]=Рушій, який надасть вам змогу звантажувати мультимедійні дані зі служб у мережі.
 Comment[x-test]=xxAn engine that allows you to query web services for media.xx
 
 X-KDE-ServiceTypes=Plasma/JavascriptAddon
