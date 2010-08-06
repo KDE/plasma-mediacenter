@@ -30,9 +30,7 @@
 #include <QFontMetrics>
 
 // KDE
-#include <KMimeType>
 #include <KIconLoader>
-#include <KApplication>
 #include <KDebug>
 
 // Plasma

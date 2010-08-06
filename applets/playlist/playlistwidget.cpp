@@ -28,10 +28,6 @@
 #include <QStandardItemModel>
 #include <QStandardItem>
 #include <QVariant>
-#include <QTreeView>
-#include <QIcon>
-#include <QMimeData>
-#include <QPalette>
 #include <QFileInfo>
 
 // QtDBus
@@ -42,9 +38,6 @@
 #include <KDebug>
 #include <KConfigGroup>
 #include <KComboBox>
-#include <KMimeType>
-#include <KGlobalSettings>
-
 // Plasma
 #include <Plasma/TreeView>
 #include <Plasma/DataEngine>
