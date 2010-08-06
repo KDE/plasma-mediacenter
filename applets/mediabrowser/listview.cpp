@@ -22,20 +22,11 @@
 // Qt
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
-#include <QDir>
-#include <QScrollBar>
 #include <QGraphicsSceneResizeEvent>
 #include <QGraphicsSceneHoverEvent>
-#include <QDrag>
-#include <QApplication>
-#include <QMimeData>
 #include <QKeyEvent>
-
+#include <QScrollBar>
 // KDE
-#include <KDirModel>
-#include <KDirLister>
-#include <KUrl>
-#include <KFileItem>
 #include <KDebug>
 
 // Plasma

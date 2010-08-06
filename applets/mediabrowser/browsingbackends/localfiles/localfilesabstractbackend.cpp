@@ -23,9 +23,9 @@
 #include <KFileDialog>
 #include <KDirLister>
 #include <KDirModel>
-#include <KLineEdit>
 #include <KConfigDialog>
 #include <KDebug>
+#include <KLineEdit>
 
 #include <QDir>
 

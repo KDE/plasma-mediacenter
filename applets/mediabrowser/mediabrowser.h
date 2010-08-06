@@ -28,7 +28,6 @@ class AbstractMediaItemView;
 
 namespace MediaCenter {
 class AbstractBrowsingBackend;
-class NavigationToolbar;
 }
 
 class MediaBrowser : public MediaCenter::Browser

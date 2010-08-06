@@ -20,7 +20,6 @@
 #define LISTVIEW_H
 
 #include "abstractmediaitemview.h"
-#include <QList>
 
 class QPainter;
 class QStyleOptionGraphicsItem;

@@ -19,7 +19,6 @@
 #include "gridview.h"
 #include "fileviewitem.h"
 
-#include <QScrollBar>
 #include <QTimer>
 #include <QKeyEvent>
 

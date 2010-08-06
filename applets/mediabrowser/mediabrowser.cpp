@@ -30,16 +30,12 @@
 #include <QGraphicsLinearLayout>
 
 #include <KDirModel>
-#include <KDirLister>
-#include <KIcon>
 #include <KConfigDialog>
 #include <KConfigGroup>
-#include <KFilePlacesModel>
 #include <KUrl>
-#include <KLineEdit>
-#include <KMimeType>
 #include <KStandardDirs>
 #include <KDebug>
+#include <KDirLister>
 
 MediaBrowser::MediaBrowser(QObject *parent, const QVariantList &args)
     : MediaCenter::Browser(parent, args),
