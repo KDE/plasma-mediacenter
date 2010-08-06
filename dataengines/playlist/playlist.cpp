@@ -22,7 +22,6 @@
 #include "playlistservice.h"
 
 #include <KDebug>
-#include <KGlobal>
 #include <KConfig>
 #include <KConfigGroup>
 
