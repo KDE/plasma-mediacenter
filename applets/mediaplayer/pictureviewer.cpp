@@ -22,8 +22,6 @@
 
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
-#include <QTimer>
-#include <QImageReader>
 #include <QThreadPool>
 
 #include <KDebug>

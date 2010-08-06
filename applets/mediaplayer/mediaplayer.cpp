@@ -24,15 +24,10 @@
 #include <QGraphicsProxyWidget>
 #include <QGraphicsLinearLayout>
 #include <QGraphicsSceneDragDropEvent>
-#include <QDBusConnection>
 #include <QTimer>
-#include <QApplication>
-#include <QDesktopWidget>
-#include <QMainWindow>
 #include <QGraphicsView>
+#include <QFile>
 
-#include <KMimeType>
-#include <KFileDialog>
 #include <KConfigDialog>
 #include <KWindowSystem>
 
