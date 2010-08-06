@@ -24,7 +24,6 @@
 #include <QStyleOptionGraphicsItem>
 #include <QPainter>
 
-#include <KIcon>
 #include <KDebug>
 
 // Plasma
