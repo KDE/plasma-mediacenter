@@ -40,6 +40,9 @@ public:
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
+    QObject *rootObject() const;
+    QDeclarativeEngine *engine() const;
+
 protected:
     void resizeEvent(QGraphicsSceneResizeEvent *event);
 
@@ -52,7 +55,6 @@ public slots:
 private:
     QDeclarativeEngine *m_engine;
     QDeclarativeComponent *m_mainComponent;
-    QObject *m_rootObject;
     QAbstractItemModel *m_model;
     QObject *m_root;
 

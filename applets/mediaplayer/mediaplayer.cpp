@@ -43,6 +43,8 @@
 
 MediaPlayer::MediaPlayer(QObject *parent, const QVariantList &args)
     : MediaCenter::Player(parent, args),
+      m_video(0),
+      m_music(0),
       m_hideTimer(new QTimer(this)),
       m_raised(false),
       m_fullScreen(false),
@@ -52,7 +54,6 @@ MediaPlayer::MediaPlayer(QObject *parent, const QVariantList &args)
       m_videoProxy(new QGraphicsProxyWidget(this))
 {
     connect(m_picture, SIGNAL(imageLoaded()), this, SLOT(slotEmitNewMedia()));
-    connect(KWindowSystem::self(), SIGNAL(activeWindowChanged(WId)), this, SLOT(adjustActiveWindow(WId)));
     m_picture->hide();
     setAcceptDrops(true);
     setHasConfigurationInterface(true);
@@ -143,6 +144,7 @@ void MediaPlayer::init()
 
     m_picture->setShowTime(slideShowInterval());
     connect (this, SIGNAL(slideShowTimeChanged(qint64)), m_picture, SLOT(setShowTime(qint64)));
+    connect(KWindowSystem::self(), SIGNAL(activeWindowChanged(WId)), this, SLOT(adjustActiveWindow(WId)));
 }
 
 void MediaPlayer::playNextMusicMedia()

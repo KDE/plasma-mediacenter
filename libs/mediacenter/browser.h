@@ -107,7 +107,7 @@ public Q_SLOTS:
     virtual void clearSelectedMedias() = 0;
 
     /**
-     * @internal no need to call this function manually
+     * sets the current browsing backend and then calls loadBrowsingBackend.
      */
     void setCurrentBrowsingBackend(MediaCenter::AbstractBrowsingBackend*);
 

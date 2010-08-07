@@ -55,6 +55,7 @@ m_controller(0),
 m_playlist(0),
 m_player(0),
 m_infobar(0),
+m_welcome(0),
 m_recognizer(0)
 {
     setCentralWidget(m_view);
@@ -124,6 +125,7 @@ void MainWindow::loadMediaCenter()
     m_playlist = m_containment->addApplet("playlist");
     m_player = m_containment->addApplet("mcplayer");
     m_infobar = m_containment->addApplet("mediainfobar");
+    m_welcome = m_containment->addApplet("mediawelcome");
     m_controller = m_containment->addApplet("mediacontroller"); //Keep the controller last
 
     qobject_cast<MediaCenter::Browser*>(m_browser)->setGestureType(m_gestureType);
@@ -201,6 +203,9 @@ void MainWindow::createConfigurationInterface()
     }
     if (m_infobar) {
         m_infobar->createConfigurationInterface(dialog);
+    }
+    if (m_welcome) {
+        m_welcome->createConfigurationInterface(dialog);
     }
 
     connect (dialog, SIGNAL(accepted()), this, SLOT(applyConfig()));

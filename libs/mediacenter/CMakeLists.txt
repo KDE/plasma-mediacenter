@@ -1,5 +1,3 @@
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-
 set (mediacenterlibs_SRCS
 gesturerecognizer.cpp
 playbackgesture.cpp
@@ -58,6 +56,6 @@ set (mediacenterlibs_WIDGETS_HDRS
     widgets/viewitem.h
 )
 
-install (FILES ${mediacenterlibs_HDRS} DESTINATION ${INCLUDE_INSTALL_DIR}/mediacenter COMPONENT Devel)
-install (FILES ${mediacenterlibs_WIDGETS_HDRS} DESTINATION ${INCLUDE_INSTALL_DIR}/mediacenter/widgets COMPONENT Devel)
+install(FILES ${mediacenterlibs_HDRS} DESTINATION ${INCLUDE_INSTALL_DIR}/mediacenter COMPONENT Devel)
+install(FILES ${mediacenterlibs_WIDGETS_HDRS} DESTINATION ${INCLUDE_INSTALL_DIR}/mediacenter/widgets COMPONENT Devel)
 install(FILES data/servicetypes/pmc_browsingbackend.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})

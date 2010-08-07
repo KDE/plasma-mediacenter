@@ -61,7 +61,7 @@ public:
 
     /**
      * Used to load a backend instance via a plugin loader through KService.
-     * The first argument of @param args must be the unique serviceID of the service.
+     * The first argument of @param args must be the unique storageID of the service.
      * */
     AbstractBrowsingBackend(QObject *parent, const QVariantList &args);
     virtual ~AbstractBrowsingBackend();

@@ -48,6 +48,7 @@ class PlaybackControl;
 class Playlist;
 class Browser;
 class InfoDisplay;
+class HomeApplet;
 
 class MEDIACENTER_EXPORT MediaCenterState : public QState
 {
@@ -122,6 +123,7 @@ protected:
     MediaCenter::PlaybackControl *m_control;
     MediaCenter::Playlist *m_playlist;
     MediaCenter::InfoDisplay *m_infoDisplay;
+    MediaCenter::HomeApplet *m_home;
     MediaCenter::MediaLayout *m_layout;
 
 private:

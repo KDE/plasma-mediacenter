@@ -18,11 +18,12 @@
  ***************************************************************************/
 
 import Qt 4.7
-import MediaBrowser 0.1
+import MediaCenter 0.1
 
 PathView {
     id: view
     model: homeModel
+    signal clicked
     delegate:     Component {
         Item {
             id: wrapper
@@ -34,6 +35,14 @@ PathView {
                 modelIndex: homeModel.index(index, 0)
                 scale: PathView.scale
                 opacity: PathView.opacity
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    view.currentIndex = index
+                    view.clicked()
+                }
             }
         }
     }

@@ -43,6 +43,7 @@ m_control(0),
 m_playlist(0),
 m_player(0),
 m_infoDisplay(0),
+m_homeApplet(0),
 m_showAll(false),
 m_playlistVisible(false),
 m_controlAutohide(false),
@@ -117,6 +118,13 @@ void MediaLayout::setPlayer(Plasma::Applet *player)
     m_needLayouting << m_player;
 }
 
+void MediaLayout::setHomeApplet(Plasma::Applet *home)
+{
+    m_homeApplet = home;
+    m_homeApplet->setZValue(5000);
+    m_needLayouting << m_homeApplet;
+}
+
 void MediaLayout::invalidate()
 {
     if (m_needLayouting.isEmpty()) {
@@ -134,9 +142,11 @@ void MediaLayout::invalidate()
             layoutPlayer();
         } else if (applet == m_infoDisplay) {
             layoutInfoDisplay();
+        } else if (applet == m_homeApplet) {
+            layoutHomeApplet();
         }
-        m_needLayouting.removeAll(applet);
      }
+     m_needLayouting.clear();
 }
 
 void MediaLayout::doCompleteLayout()
@@ -155,6 +165,9 @@ void MediaLayout::doCompleteLayout()
     }
     if (m_infoDisplay) {
         layoutInfoDisplay();
+    }
+    if (m_homeApplet) {
+        layoutHomeApplet();
     }
 }
 
@@ -304,7 +317,7 @@ void MediaLayout::layoutPlaylist()
                 size = QSizeF(playlistPreferredShowingRect().size());
             }
             if (!m_infoDisplayOnly) {
-                point = QPointF(playlistPreferredShowingRect().right(), controllerPreferredShowingRect().bottom() - top/2) ;
+                point = QPointF(playlistPreferredShowingRect().right(), controllerPreferredShowingRect().bottom() - top/2);
                 size = QSizeF(playlistPreferredShowingRect().size().width(), playlistPreferredShowingRect().size().height() -
                              infoDisplayPreferredShowingRect().size().height() - controllerPreferredShowingRect().size().height()  + bottom/2 + top/2);
             }
@@ -400,6 +413,11 @@ void MediaLayout::layoutPlayer()
     m_fadeOutPlayerAnimation->start();
 }
 
+void MediaLayout::layoutHomeApplet()
+{
+    m_homeApplet->setGeometry(homeAppletPreferredShowingRect());
+}
+
 bool MediaLayout::eventFilter(QObject *o, QEvent *e)
 {
     if (o == m_containment && e->type() == QEvent::GraphicsSceneResize) {
@@ -461,6 +479,15 @@ QRectF MediaLayout::playlistPreferredShowingRect() const
     return QRectF(QPointF(m_containment->size().width() - (m_containment->size().width() / PLAYLISTSIZEFACTOR),
                            controllerPreferredShowingRect().size().height()),
                            QSizeF(m_containment->size().width() / PLAYLISTSIZEFACTOR, m_containment->size().height()));
+}
+
+QRectF MediaLayout::homeAppletPreferredShowingRect() const
+{
+    if (!m_homeApplet) {
+        return QRectF();
+    }
+
+    return m_containment->rect();
 }
 
 void MediaLayout::animateHidingApplet(Plasma::Applet *applet)

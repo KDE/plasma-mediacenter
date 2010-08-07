@@ -76,6 +76,7 @@ private:
     Plasma::Applet *m_playlist;
     Plasma::Applet *m_player;
     Plasma::Applet *m_infobar;
+    Plasma::Applet *m_welcome;
 
     MediaCenter::GestureRecognizer *m_recognizer;
     Qt::GestureType m_gestureType;

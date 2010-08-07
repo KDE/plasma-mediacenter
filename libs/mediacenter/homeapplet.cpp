@@ -39,8 +39,3 @@ HomeApplet::~HomeApplet()
 {
     delete d;
 }
-
-void HomeApplet::init(const KService::List &availableBackends)
-{
-    Q_UNUSED(availableBackends);
-}

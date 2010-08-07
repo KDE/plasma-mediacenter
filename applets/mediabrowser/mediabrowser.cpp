@@ -45,7 +45,6 @@ MediaBrowser::MediaBrowser(QObject *parent, const QVariantList &args)
 {
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
     setLayout(m_layout);
-    setFiltersChildEvents(true);
 
     setEnableToolbar(true);
     toolbar()->setNavigationControls(MediaCenter::NavigationToolbar::BackwardControl | MediaCenter::NavigationToolbar::ViewModeControl);
@@ -168,12 +167,15 @@ void MediaBrowser::configAccepted()
 
 void MediaBrowser::loadBrowsingBackend(MediaCenter::AbstractBrowsingBackend *backend)
 {
-    m_view->setModel ( 0 );
+    kDebug() << "loading browsing backend";
+
+    m_view->setModel( 0 );
+    backend->setParent(this);
     backend->init();
     m_model = backend->model();
-    m_view->setModel ( m_model );
+    m_view->setModel( m_model );
 
-    emit browsingModeChanged ( backend->requiredMode() );
+    emit browsingModeChanged( backend->requiredMode() );
 }
 
 void MediaBrowser::showStartupState()

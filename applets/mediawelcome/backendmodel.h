@@ -22,6 +22,9 @@
 #include <QAbstractItemModel>
 #include <KService>
 
+
+Q_DECLARE_METATYPE(KService*)
+
 namespace MediaCenter {
 class AbstractBrowsingBackend;
 }
@@ -30,6 +33,7 @@ class BackendModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
+    enum BackendRoles { ServiceRole = Qt::UserRole + 1 };
     BackendModel(QObject *parent = 0);
     ~BackendModel();
 

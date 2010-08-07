@@ -27,6 +27,7 @@
 #include <mediacenter/player.h>
 #include <mediacenter/medialayout.h>
 #include <mediacenter/infodisplay.h>
+#include <mediacenter/homeapplet.h>
 
 #include <mediacenter/mediacenterstate.h>
 #include <mediacenter/videostate.h>
@@ -52,6 +53,7 @@ m_control(0),
 m_playlist(0),
 m_player(0),
 m_infoDisplay(0),
+m_home(0),
 m_homeState(0),
 m_currentState(MediaCenter::HomeMode),
 m_previousState(MediaCenter::HomeMode),
@@ -227,6 +229,22 @@ void MediaContainment::slotAppletAdded(Plasma::Applet *applet, const QPointF &po
         }
         return;
     }
+
+    MediaCenter::HomeApplet *home = qobject_cast<MediaCenter::HomeApplet*>(applet);
+    if (home) {
+        if (m_home) {
+            KNotification::event(KNotification::Error, i18n("A home applet for the Media Center is already loaded. "
+                                                            "Remove that one before loading a new one please."));
+            kDebug() << "destroying applet";
+            applet->deleteLater();
+        } else {
+            m_home = home;
+            m_layout->setHomeApplet(m_home);
+            m_layout->invalidate();
+            m_currentUIComponents << m_home;
+        }
+        return;
+    }
 }
 
 void MediaContainment::slotAppletRemoved(Plasma::Applet *applet)
@@ -241,6 +259,8 @@ void MediaContainment::slotAppletRemoved(Plasma::Applet *applet)
         m_control = 0;
     } else if (applet == m_infoDisplay) {
         m_infoDisplay = 0;
+    } else if (applet == m_home) {
+        m_home = 0;
     }
 }
 

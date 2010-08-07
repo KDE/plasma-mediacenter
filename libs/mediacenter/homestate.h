@@ -42,6 +42,8 @@ protected:
     virtual void onExit(QEvent* event);
     virtual void onEntry(QEvent* event);
 
+private slots:
+    void hideHomeApplet();
 private:
     Plasma::IconWidget *m_quit;
 

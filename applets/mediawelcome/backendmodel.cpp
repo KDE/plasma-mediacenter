@@ -68,7 +68,8 @@ QVariant BackendModel::data(const QModelIndex &index, int role) const
     } else if (role == Qt::DecorationRole) {
         const KService *service = static_cast<KService*>(index.internalPointer());
         data = KIcon(service->icon());
-
+    } else if (role == BackendModel::ServiceRole) {
+        data = QVariant::fromValue(static_cast<KService*>(index.internalPointer()));
     }
 
     return data;
@@ -99,13 +100,3 @@ void BackendModel::setModelServices(const KService::List &services)
     m_modelServices = services;
     reset();
 }
-
-//MediaCenter::AbstractBrowsingBackend* BackendModel::backendFromIndex(const QModelIndex &index, QObject *parent, QString *error)
-//{
-//    if (!index.isValid()) {
-//        return 0;
-//    }
-
-//    KService::Ptr service = m_modelServices[index.row()];
-//    return service->createInstance<MediaCenter::AbstractBrowsingBackend>(parent, QVariantList() << service->storageId(), error);
-//}

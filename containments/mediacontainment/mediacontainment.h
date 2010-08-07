@@ -38,6 +38,7 @@ namespace MediaCenter {
     class VideoState;
     class MusicState;
     class HomeState;
+    class HomeApplet;
 }
 
 class MediaLayout;
@@ -75,6 +76,7 @@ private:
     MediaCenter::Playlist *m_playlist;
     MediaCenter::Player *m_player;
     MediaCenter::InfoDisplay *m_infoDisplay;
+    MediaCenter::HomeApplet *m_home;
 
     MediaCenter::Mode m_currentState;
     MediaCenter::Mode m_previousState;

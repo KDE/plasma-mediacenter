@@ -42,7 +42,7 @@ QmlViewWrapper::QmlViewWrapper(QGraphicsItem *parent) :
     m_model(0),
     m_root(0)
 {
-    qmlRegisterType<MediaCenter::ViewItem>("MediaBrowser", 0, 1, "ViewItem");
+    qmlRegisterType<MediaCenter::ViewItem>("MediaCenter", 0, 1, "ViewItem");
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
     setLayout(layout);
 }
@@ -131,4 +131,14 @@ void QmlViewWrapper::resizeEvent(QGraphicsSceneResizeEvent *event)
         m_root->setProperty("width", size().width());
         m_root->setProperty("height", size().height());
     }
+}
+
+QObject* QmlViewWrapper::rootObject() const
+{
+    return m_root;
+}
+
+QDeclarativeEngine* QmlViewWrapper::engine() const
+{
+    return m_engine;
 }

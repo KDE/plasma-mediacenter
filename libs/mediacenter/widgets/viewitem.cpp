@@ -33,11 +33,6 @@
 #include <KUrl>
 #include <KIconLoader>
 
-#include <Nepomuk/KRatingPainter>
-#include <Nepomuk/Resource>
-#include <Nepomuk/ResourceManager>
-#include <nepomuk/kratingwidget.h>
-
 #include <KDebug>
 
 #include <Plasma/FrameSvg>
@@ -54,9 +49,7 @@ class ViewItem::ViewItemPrivate
 public:
     ViewItemPrivate(ViewItem *q) : q(q),
         frameSvg(0),
-        blurred(true),
-        selectByIcon(false),
-        selected(false)
+        blurred(true)
     {}
 
     ViewItem *q;
@@ -64,12 +57,9 @@ public:
     QModelIndex index;
     Plasma::FrameSvg *frameSvg;
     QPixmap pixmap;
-    QPixmap selectIcon;
     QPixmap blurredText;
     QPixmap reflection;
     bool blurred;
-    bool selectByIcon;
-    bool selected;
     QIcon icon;
     QString text;
     int decorationSize;
@@ -90,10 +80,6 @@ ViewItem::ViewItem(const QStyleOptionViewItemV4 &option, QGraphicsItem *parent) 
     d->frameSvg->setElementPrefix("hover");
 
     setAcceptedMouseButtons(0);
-
-    if (!d->selectByIcon) {
-        Nepomuk::ResourceManager::instance()->initialized();
-    }
 
 }
 
@@ -212,9 +198,7 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
         if (!icon.isNull()) {
             icon.paint(painter, decorationRect);
             drawReflection(painter, reflectionRect, icon);
-        } else {
-            kWarning() << "invalid icon";
-        }
+        } // else no icon is set
     }
 
     painter->setFont(d->option.font);

@@ -26,6 +26,7 @@
 #include <mediacenter/infodisplay.h>
 #include <mediacenter/medialayout.h>
 #include <mediacenter/private/sharedlayoutcomponentsmanager.h>
+#include <mediacenter/homeapplet.h>
 
 #include <KApplication>
 
@@ -76,12 +77,15 @@ QList<QGraphicsWidget*> HomeState::subComponents() const
 
 void HomeState::configure()
 {
+    connect(m_home, SIGNAL(browsingBackendActivated(MediaCenter::AbstractBrowsingBackend*)), this, SLOT(hideHomeApplet()));
+    connect(m_home, SIGNAL(browsingBackendActivated(MediaCenter::AbstractBrowsingBackend*)), m_browser, SLOT(setCurrentBrowsingBackend(MediaCenter::AbstractBrowsingBackend*)));
     m_browser->showStartupState();
 
     m_browser->setVisible(true);
     m_player->setVisible(false);
     m_playlist->setVisible(false);
     m_control->setVisible(false);
+    m_home->setVisible(true);
     if (SharedLayoutComponentsManager::self()->isBackgroundMusicMode() ||
         SharedLayoutComponentsManager::self()->isBackgroundVideoMode() ||
         SharedLayoutComponentsManager::self()->isBackgroundPictureMode()) {
@@ -97,4 +101,9 @@ void HomeState::configure()
 void HomeState::initConnections()
 {
     connect (m_quit, SIGNAL(clicked()), kapp, SLOT(quit()));
+}
+
+void HomeState::hideHomeApplet()
+{
+    m_home->hide();
 }

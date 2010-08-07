@@ -58,6 +58,7 @@ public:
     void setPlaylist(Plasma::Applet *playlist);
     void setPlayer(Plasma::Applet *player);
     void setInfoDisplay(Plasma::Applet *infoDisplay);
+    void setHomeApplet(Plasma::Applet *);
 
     /**
      * Calling this function makes the layout relayouting
@@ -78,6 +79,7 @@ public:
     QRectF controllerPreferredShowingRect() const;
     QRectF playlistPreferredShowingRect() const;
     QRectF infoDisplayPreferredShowingRect() const;
+    QRectF homeAppletPreferredShowingRect() const;
 
     MediaCenter::InfoDisplayMode infoDisplayMode() const;
 
@@ -108,6 +110,7 @@ private:
     Plasma::Applet *m_playlist;
     Plasma::Applet *m_player;
     Plasma::Applet *m_infoDisplay;
+    Plasma::Applet *m_homeApplet;
 
     Plasma::Applet::BackgroundHints m_browserBackgroundHints;
 
@@ -144,6 +147,7 @@ private:
     void layoutControl();
     void layoutInfoDisplay();
     void layoutPlaylist();
+    void layoutHomeApplet();
 
     void animateAppletResize(Plasma::Applet *applet, QRectF target);
 

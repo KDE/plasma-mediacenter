@@ -25,6 +25,7 @@
 #include <mediacenter/player.h>
 #include <mediacenter/infodisplay.h>
 #include <mediacenter/medialayout.h>
+#include <mediacenter/homeapplet.h>
 #include <mediacenter/private/sharedlayoutcomponentsmanager.h>
 
 
@@ -36,6 +37,7 @@ MediaCenterState::MediaCenterState (QState *parent) : QState(parent),
     m_control(0),
     m_playlist(0),
     m_infoDisplay(0),
+    m_home(0),
     m_layout(0)
 {
     connect(this, SIGNAL(state(const MediaCenter::Mode)), this, SLOT(slotSetCurrentState(const MediaCenter::Mode)));
@@ -145,6 +147,10 @@ void MediaCenterState::init(MediaCenter::MediaLayout* &layout, QList< Plasma::Ap
         MediaCenter::InfoDisplay *infoDisplay = qobject_cast<MediaCenter::InfoDisplay*>(applet);
         if (infoDisplay) {
             m_infoDisplay = infoDisplay;
+        }
+        MediaCenter::HomeApplet *homeApplet = qobject_cast<MediaCenter::HomeApplet*>(applet);
+        if (homeApplet) {
+            m_home = homeApplet;
         }
     }
     m_layout = layout;

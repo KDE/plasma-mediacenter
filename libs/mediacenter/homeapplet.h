@@ -35,6 +35,9 @@ class AbstractBrowsingBackend;
  * to the user and some common home actions like Quit, Preferences..
  * In the Home Applet are shown the available browsing backends for the Browser applet.
  * This way the user can choose which media content to manage.
+ * It is recommended to reimplement the init function and make it
+ * show the available backends fetched through the availableBackends method
+ * from the AbstractBrowsingBackend class.
  */
 class MEDIACENTER_EXPORT HomeApplet : public Plasma::Applet
 {
@@ -43,12 +46,6 @@ public:
     HomeApplet(QObject *parent, const QVariantList &args);
     virtual ~HomeApplet();
 
-    /**
-     * Reimplement this function in order to present to the user
-     * the available backends.
-     */
-    virtual void init(const KService::List &availableBackends) = 0;
-
 signals:
     /**
      * When one of the available backends is activated the applet
@@ -56,7 +53,7 @@ signals:
      * and emit this signal in order for the browser applet to properly
      * load it.
      */
-    void browsingBackendActivated(AbstractBrowsingBackend *backend);
+    void browsingBackendActivated(MediaCenter::AbstractBrowsingBackend *backend);
 
     void quitRequest();
     void showSettingsRequest();

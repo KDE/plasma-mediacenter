@@ -18,16 +18,53 @@
  ***************************************************************************/
 #include "mediawelcome.h"
 
-MediaWelcome::MediaWelcome(QObject *parent, const QVariantList &args) : MediaCenter::HomeApplet(parent, args)
+#include "qmlviewwrapper.h"
+#include "backendmodel.h"
+
+#include <mediacenter/abstractbrowsingbackend.h>
+
+#include <QGraphicsLinearLayout>
+#include <QDeclarativeItem>
+
+#include <KStandardDirs>
+#include <KService>
+#include <KDebug>
+
+MediaWelcome::MediaWelcome(QObject *parent, const QVariantList &args) : MediaCenter::HomeApplet(parent, args),
+    m_model(0),
+    m_view(0)
 {
+    setAcceptedMouseButtons(Qt::NoButton);
 }
 
 MediaWelcome::~MediaWelcome()
 {}
 
-void MediaWelcome::init(const KService::List &availableBackends)
+void MediaWelcome::init()
 {
-    Q_UNUSED(availableBackends);
+    m_model = new BackendModel(this);
+    m_model->setModelServices(MediaCenter::AbstractBrowsingBackend::availableBackends());
+
+    m_view = new QmlViewWrapper(this);
+    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
+    layout->addItem(m_view);
+    setLayout(layout);
+
+    m_view->setQmlPath(KStandardDirs::locate("data", "plasma-mediacenter/declarative/homeview.qml"));
+    m_view->setModel(m_model);
+
+    QDeclarativeItem *item = qobject_cast<QDeclarativeItem*>(m_view->rootObject());
+    connect(item, SIGNAL(clicked()), this, SLOT(itemActivated()));
+}
+
+void MediaWelcome::itemActivated()
+{
+    QDeclarativeItem *item = qobject_cast<QDeclarativeItem*>(m_view->rootObject());
+    KService *service = m_model->index(item->property("currentIndex").toInt(), 0).data(BackendModel::ServiceRole).value<KService*>();
+    MediaCenter::AbstractBrowsingBackend *backend = service->createInstance<MediaCenter::AbstractBrowsingBackend>(0, QVariantList() << service->storageId());
+
+    kDebug() << "browsing backend chosen";
+    emit browsingBackendActivated(backend);
 }
 
 K_EXPORT_PLASMA_APPLET(mediawelcome, MediaWelcome)
