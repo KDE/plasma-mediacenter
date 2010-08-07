@@ -1,5 +1,9 @@
 [Desktop Entry]
 Name=Flickr
+Name[pt]=Flickr
+Name[pt_BR]=Flickr
+Name[sv]=Flickr
+Name[uk]=Flickr
 Name[x-test]=xxFlickrxx
 
 Comment=An engine that allows you to query web services for media.
