@@ -1,6 +1,8 @@
 [Desktop Entry]
 Name=MediaWelcome
+Name[x-test]=xxMediaWelcomexx
 Comment=Plasma Media Center welcome applet
+Comment[x-test]=xxPlasma Media Center welcome appletxx
 Type=Service
 
 X-KDE-ServiceTypes=Plasma/Applet
