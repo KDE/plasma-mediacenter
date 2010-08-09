@@ -1,7 +1,11 @@
 [Desktop Entry]
 Name=MediaWelcome
+Name[pt]=MediaWelcome
+Name[uk]=Медіа-вітання
 Name[x-test]=xxMediaWelcomexx
 Comment=Plasma Media Center welcome applet
+Comment[pt]='Applet' de boas-vindas do Centro Multimédia do Plasma
+Comment[uk]=Аплет вітання медіа-центру Плазми
 Comment[x-test]=xxPlasma Media Center welcome appletxx
 Type=Service
 
