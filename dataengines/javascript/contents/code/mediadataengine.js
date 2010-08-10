@@ -20,12 +20,12 @@
 engine.include('xmldom.js');
 engine.include('xmlsax.js');
 engine.include('xmlw3cdom.js');
-engine.include('youtube.js');
+//engine.include('youtube.js');
+engine.include('sha1.js');
+engine.include('stdutils.js');
 //engine.include('picasa.js');
 
-this.Addons = new Array();
-
-var MediaTypes = new Array("picture", "video");
+var MediaType = {"photo":0, "video":1};
 
 //The media interface
 var nl = '\n';
@@ -45,7 +45,8 @@ function WebMedia()
   this.size = null;
   //this.collection = null;
   this.thumbnailLink = null;
-  this.collectionID = null;
+//  this.collectionID = null;
+  
   this.toString = function()
   {
     var res = this.type + nl +
@@ -67,9 +68,10 @@ function WebMedia()
   this.toArray = function()
   {
     var array = new Array();
-    array['type'] = this.type;
+    array['type'] = MediaTypeToString(this.type);
     array['id'] = this.id;
     array['title'] = this.title;
+    array['author'] = this.author;
     array['description'] = this.description;    
     array['keywords'] = this.keywords;
     array['updated'] = this.updated;
@@ -79,13 +81,22 @@ function WebMedia()
     array['height'] = this.height;
     array['size'] = this.size;
     array['thumbnailLink'] = this.thumbnailLink;
-    array['collectionID'] = this.collectionID;
     return array;
   }
   //rating?
   //comments?
 }
 
+
+function MediaTypeToString(mediaType)
+{
+  switch(mediaType)
+  {
+    case 0: return "photo";
+    case 1: return "video";
+    default: return "undefined";
+  }
+}
 //albums and playlists
 function WebMediaCollection()
 {
@@ -93,6 +104,9 @@ function WebMediaCollection()
   this.title = null;
   this.author = null;
   this.description = null;
+  this.updated = null;
+  this.published = null;
+  this.link = null;
   this.webmedia = new Array();
   
   this.toArray = function()
@@ -100,46 +114,43 @@ function WebMediaCollection()
     var arr = new Array()
     arr['id'] = this.id;
     arr['title'] = this.title;
-    arr['description'] = this.description;
     arr['author'] = this.author;
+    arr['description'] = this.description;
+    arr['published'] = this.published;
+    arr['updated'] = this.updated;
+    arr['link'] = this.link;
     return arr;
   }
 }
 
+//attributes that only appear in videos: duration, embeddedHTML, resolution, 
 
 
-//Problem: attribute, die nur bei video auftauchen: duration, embeddedHTML
-//MediaData.prototype.MediaType = MediaType;
+var mediaEngine = new WebMediaDataEngine();
 
 function WebMediaDataEngine()
 {
-  this.Addons = new Array()
-  //temporary workaround
-  //this.Addons.push(flickrmain(engine));
-  this.Addons.push(youtubemain(engine));
- // this.Addons.push(picasamain(engine));
+  this.addons = new Array();
 }
-
 
 function addonCreated(addon)
 {
   print("new addon: " + addon)
-  mediaEngine.Addons.push(addon);
+  mediaEngine.addons.push(addon);
 }
 
-var mediaEngine = new WebMediaDataEngine();
 engine.addEventListener("addonCreated", addonCreated)
-
 addons = engine.listAddons("org.kde.plasma.dataengine.webmedia");
-print("number of addons: " + addons.length)
-for (i in addons) {
+print("number of addons: " + addons.length);
+for (i in addons) 
+{
   print("Addon: " + addons[i].name);
   engine.loadAddon("org.kde.plasma.dataengine.webmedia", addons[i].id);
 }
 
-function webmediaengine()
+function GetWebMediaEngine()
 {
-  return mediaEngine
+  return mediaEngine;
 }
 
 // the traditional sourceRequestEvent
@@ -147,9 +158,9 @@ engine.sourceRequestEvent = function (source)
 {
  if (source == "providers")
  {
-  for (var i = 0; i < mediaEngine.Addons.length; i++)
+  for (var i = 0; i < mediaEngine.addons.length; i++)
   {
-    setData(mediaEngine.Addons[i].toString(), "");
+    setData(mediaEngine.addons[i].toString(), "");
   }
   return;
  }
@@ -176,19 +187,18 @@ engine.sourceRequestEvent = function (source)
  // params[0] is provider:media
  var p = params[0].split(":");
  
- for (var i = 0; i < mediaEngine.Addons.length; i++)
+ for (var i = 0; i < mediaEngine.addons.length; i++)
  {
-  var provider = mediaEngine.Addons[i];
+  var provider = mediaEngine.addons[i];
   if (p[0] == "all")
   {
-    
     print("Its " + provider.toString());
     
-    if (p[1] == "media"){
+    if (p[1].toLowerCase() == "media"){
       provider.searchMedia(queryParams);
       continue;
     }
-    if (p[1] == "mediaCollection".toLowerCase())
+    if (p[1].toLowerCase() == "mediacollection")
     {
      if (provider.searchCollection)
        provider.searchCollection(queryParams);
@@ -216,30 +226,4 @@ engine.sourceRequestEvent = function (source)
 engine.updateSourceEvent = function(source)
 {
   return true;
-}
-
-//function to convert W3C Dateformat in javascript date format
-Date.prototype.setISO8601 = function (string) {
-    var regexp = "([0-9]{4})(-([0-9]{2})(-([0-9]{2})" +
-        "(T([0-9]{2}):([0-9]{2})(:([0-9]{2})(\.([0-9]+))?)?" +
-        "(Z|(([-+])([0-9]{2}):([0-9]{2})))?)?)?)?";
-    var d = string.match(new RegExp(regexp));
-
-    var offset = 0;
-    var date = new Date(d[1], 0, 1);
-
-    if (d[3]) { date.setMonth(d[3] - 1); }
-    if (d[5]) { date.setDate(d[5]); }
-    if (d[7]) { date.setHours(d[7]); }
-    if (d[8]) { date.setMinutes(d[8]); }
-    if (d[10]) { date.setSeconds(d[10]); }
-    if (d[12]) { date.setMilliseconds(Number("0." + d[12]) * 1000); }
-    if (d[14]) {
-        offset = (Number(d[16]) * 60) + Number(d[17]);
-        offset *= ((d[15] == '-') ? 1 : -1);
-    }
-
-    offset -= date.getTimezoneOffset();
-    time = (Number(date) + (offset * 60 * 1000));
-    this.setTime(Number(time));
 }
