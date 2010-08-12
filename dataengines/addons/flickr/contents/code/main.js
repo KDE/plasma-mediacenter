@@ -25,7 +25,6 @@ function Flickr()
   this.baseUrl = "http://www.flickr.com/services/rest/";
   this.apiKey = "df52d83b7fe03f1de079da2c300f3203";
   flickrObject = this;
-  this.mediaengine = GetWebMediaEngine();
 }
 
 Flickr.prototype.searchMedia = function(queryParams)
@@ -67,15 +66,17 @@ Flickr.prototype.searchMedia = function(queryParams)
     function(job)
     {
       try{
-	print("Job done");
-	print("Parsing...");
 	var objDom = new XMLDoc(result, xmlError);
 	var objDomTree = objDom.docNode;
-	
+	// we cannot access the this object. we have to access it indirectly
+	if (flickrObject.isErrorMessage(objDomTree))
+	  return;
 	var photoNodes = objDomTree.getElements("photos")[0].getElements("photo");
 	if (photoNodes.length == 0)
-	  print("photonodes is empty");
-	
+	{
+	  setData(flickrObject.toString(), "Error", "No results for " + query + " found");
+	  return;
+	}
 	print(photoNodes.length);
 	
 	for (var i = 0; i < photoNodes.length; i++)
@@ -139,10 +140,10 @@ Flickr.prototype.searchCollection = function(queryParams)
     function(job)
     {
       try{
-	print("Job finished");
 	var objDom = new XMLDoc(result, xmlError);
 	var objDomTree = objDom.docNode;
-	
+	if (flickrObject.isErrorMessage(objDomTree))
+	  return;
 	nsid = objDomTree.getElements("user")[0].getAttribute("nsid");
 	print(nsid);
 	
@@ -166,6 +167,9 @@ Flickr.prototype.searchCollection = function(queryParams)
 	    try{
 	      var objDom = new XMLDoc(result, xmlError);
 	      var objDomTree = objDom.docNode;
+	      
+	      if (flickrObject.isErrorMessage(result))
+		return;
 	      
 	      var photosetNodes = objDomTree.getElements("photosets")[0].getElements("photoset");
 	      if (typeof(photosetNodes) === "undefined" || photosetNodes == null || photosetNodes.length == 0)
@@ -211,6 +215,17 @@ Flickr.prototype.toString = function()
   return "Flickr";
 }
 
+Flickr.prototype.isErrorMessage = function(objDomTree)
+{
+  if (objDomTree.getAttribute("stat") == "fail")
+  {
+    var msg = objDomTree.getElements("err")[0].getAttribute("msg");
+    setData(this.toString(), "Error", msg);
+    return true;
+  }
+  return false;
+}
+
 
 
 function xmlError(e)
@@ -226,4 +241,3 @@ function UnixToDate(unixTimeStamp)
 }
 
 registerAddon(Flickr)
-
