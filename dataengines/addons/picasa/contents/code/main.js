@@ -21,7 +21,6 @@ function Picasa()
 {
   print("Hello picasa");
   this.baseUrl = "http://picasaweb.google.com/data/feed/api/";
-  this.mediaengine = GetWebMediaEngine();
 }
 
 Picasa.prototype.searchMedia = function(queryParams)

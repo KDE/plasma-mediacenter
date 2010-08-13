@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE kcfg SYSTEM
+    "http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+<kcfg>
+  <group name="searchMedia">
+    <entry name="text" type="string"/>
+    <entry name="max-results" type="string"/>
+    <entry name="min-results" type="string"/>
+    <entry name="user" type="string"/>
+    <entry name="tags" type="string"/>
+  </group>
+  <group name="searchCollection">
+    <entry name="user" type="string"/>
+  </group>
+</kcfg>
