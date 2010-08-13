@@ -1,10 +1,6 @@
 [Desktop Entry]
 Name=Youtube
-Name[pt]=Youtube
-Name[pt_BR]=Youtube
-Name[sv]=Youtube
-Name[uk]=Youtube
-Name[x-test]=xxYoutuberxx
+Name[x-test]=xxYoutubexx
 
 Comment=An engine that allows you to query web services for media.
 Comment[pt]=Um motor que lhe permite pesquisar conteúdos multimédia em vários serviços na Web.

@@ -1,9 +1,5 @@
 [Desktop Entry]
 Name=Blip
-Name[pt]=Blip
-Name[pt_BR]=Blip
-Name[sv]=Blip
-Name[uk]=Blip
 Name[x-test]=xxBlipxx
 
 Comment=An engine that allows you to query web services for media.
