@@ -1,5 +1,8 @@
 [Desktop Entry]
 Name=Metacafe
+Name[pt]=Metacafe
+Name[sv]=Metacafe
+Name[uk]=Metacafe
 Name[x-test]=xxMetacafexx
 
 Comment=An engine that allows you to query web services for media.

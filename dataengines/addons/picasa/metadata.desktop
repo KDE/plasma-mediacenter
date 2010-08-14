@@ -1,5 +1,8 @@
 [Desktop Entry]
 Name=Picasa
+Name[pt]=Picasa
+Name[sv]=Picasa
+Name[uk]=Picasa
 Name[x-test]=xxPicasaxx
 
 Comment=An engine that allows you to query web services for media.

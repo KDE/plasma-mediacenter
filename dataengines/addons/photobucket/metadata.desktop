@@ -1,5 +1,8 @@
 [Desktop Entry]
 Name=Photobucket
+Name[pt]=Photobucket
+Name[sv]=Photobucket
+Name[uk]=Photobucket
 Name[x-test]=xxPhotobucketxx
 
 Comment=An engine that allows you to query web services for media.

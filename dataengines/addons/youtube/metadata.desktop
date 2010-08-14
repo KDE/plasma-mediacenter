@@ -1,5 +1,8 @@
 [Desktop Entry]
 Name=Youtube
+Name[pt]=Youtube
+Name[sv]=Youtube
+Name[uk]=Youtube
 Name[x-test]=xxYoutubexx
 
 Comment=An engine that allows you to query web services for media.
