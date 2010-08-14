@@ -21,7 +21,6 @@ function Youtube()
 {
   print("Hello youtube");
   this.baseUrl = "http://gdata.youtube.com/feeds/api/";
-  this.mediaengine = GetWebMediaEngine();
 }
 
 Youtube.prototype.searchMedia = function(queryParams)

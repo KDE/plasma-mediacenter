@@ -245,6 +245,24 @@ Photobucket.prototype.isErrorMessage = function(objDomTree)
   return false;
 }
 
+Photobucket.prototype.buildParams = function(queryParams)
+{
+  var params = "";
+  if (queryParams['text'] != null)
+    params += "text=" + queryParams['text'];
+  if (queryParams['max-results'] != null)
+    params += "per-page=" + queryParams['max-results'];
+  if (queryParams['min-results'] != null)
+    params += queryParams['min-results'];
+  if (queryParams['user'] != null)
+    //params += queryParams['user'];
+    print("Parameter user for flickr not supported yet");
+  if (queryParams['tags'] != null)
+    print("Parameter tags for photobucket not supported");
+  if (queryParams['page'] != null)
+    params += "page=" + queryParams['page'];
+  return params;
+}
 
 function getSignature(key, baseString) {
   b64pad = '=';

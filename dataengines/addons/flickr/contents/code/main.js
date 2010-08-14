@@ -226,8 +226,6 @@ Flickr.prototype.isErrorMessage = function(objDomTree)
   return false;
 }
 
-
-
 function xmlError(e)
 {
   print(e);

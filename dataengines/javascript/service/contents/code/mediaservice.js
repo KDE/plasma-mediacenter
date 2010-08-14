@@ -132,6 +132,7 @@ function addonCreated(addon)
 {
   print("new addon: " + addon)
   addons.push(addon);
+  setData(addonsObject[i].name, 'text', '');
   print(addons.length);
 }
 
@@ -142,13 +143,11 @@ print("number of addons: " + addonsObject.length);
 for (i in addonsObject) 
 {
   print("Addon: " + addonsObject[i].name);
-  setData(addonsObject[i].name, 'text', '');
   engine.loadAddon("org.kde.plasma.dataengine.webmedia", addonsObject[i].id);
 }
 
 function GetAddon(name)
 {
-  print("Here: " + name);
   for (var i = 0; i < addons.length; i++)
   {
     if (addons[i] == name)
@@ -162,9 +161,9 @@ function GetAddon(name)
 
 function setupJob(job)
 {
+  job.addon = selectedAddon;
   if (job.operationName == 'searchMedia')
   {
-    job.addon = selectedAddon;
     job.start = function()
     {
       print("Service starts a request to " + this.addon + " with " + this.parameters.length + " parameters");
@@ -176,7 +175,7 @@ function setupJob(job)
   {
       job.start = function()
       {
-	print("And I am starting a request of " + this.parameters['text']);
+	print("Service starts a request to " + this.addon + " with " + this.parameters.length + " parameters");
 	this.addon.searchCollection(this.parameters);
 	this.result = true;
       };
@@ -192,60 +191,4 @@ engine.serviceForSource = function(source)
     service.setupJob = setupJob;
     return service;
  }
- 
- /*
-  queries look like this:
-  all:media&text=searchstring searches all providers for searchstring
-  provider:media&text=searchstring searches a specific provider for searchstring
- */
- /*if (source.indexOf(":") == -1)
-   return;
- var queryParams = new Array();
- var params = source.split("&");
- for (var i = 0; i < params.length; i++)
- {
-  var pos = params[i].indexOf("=");
-  if (pos > 0)
-  {
-    var key = params[i].substring(0, pos);
-    var val = params[i].substring(pos + 1);
-    queryParams[key] = val;
-  }
- }
- // params[0] is provider:media
- var p = params[0].split(":");
- var service = null;
- for (var i = 0; i < mediaEngine.addons.length; i++)
- {
-  var provider = mediaEngine.addons[i];
-  if (p[0] == "all")
-  {
-    print("Its " + provider.toString());
-    
-    if (p[1].toLowerCase() == "media"){
-      provider.searchMedia(queryParams);
-      continue;
-    }
-    if (p[1].toLowerCase() == "mediacollection")
-    {
-     if (provider.searchCollection)
-       provider.searchCollection(queryParams);
-    continue;
-    }
-    continue;
-  }
-  if (p[0] == provider.toString().toLowerCase())
-  {
-    if (p[1] == "media"){
-      provider.searchMedia(queryParams);
-      return;
-    }
-    if (p[1] == "mediaCollection".toLowerCase())
-    {
-    if (provider.searchCollection)
-       provider.searchCollection(queryParams);
-    return;
-    }
-  }
- }*/
 }

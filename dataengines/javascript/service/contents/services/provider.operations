@@ -10,6 +10,7 @@
     <entry name="tags" type="string"/>
   </group>
   <group name="searchCollection">
+    <entry name="text" type="string"/>
     <entry name="user" type="string"/>
   </group>
 </kcfg>
