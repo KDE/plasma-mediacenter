@@ -2,6 +2,7 @@
 Type=Service
 Icon=folder-sound
 Name=Local music
+Name[es]=Música local
 Name[pt]=Música local
 Name[pt_BR]=Música local
 Name[sv]=Lokal musik
