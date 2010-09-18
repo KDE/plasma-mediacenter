@@ -128,8 +128,16 @@ void MainWindow::loadMediaCenter()
     m_welcome = m_containment->addApplet("mediawelcome");
     m_controller = m_containment->addApplet("mediacontroller"); //Keep the controller last
 
-    qobject_cast<MediaCenter::Browser*>(m_browser)->setGestureType(m_gestureType);
-    m_browser->grabGesture(m_gestureType);
+    if (m_browser) {
+        MediaCenter::Browser *browser = qobject_cast<MediaCenter::Browser *>(m_browser);
+        if (browser) {
+            browser->setGestureType(m_gestureType);
+        } else {
+            kWarning() << "expecting MedicaCenter::Browser for the browser, but didn't get one!";
+        }
+
+        m_browser->grabGesture(m_gestureType);
+    }
 }
 
 bool MainWindow::eventFilter(QObject *o, QEvent *e)
