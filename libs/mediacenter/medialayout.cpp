@@ -468,6 +468,8 @@ QRectF MediaLayout::infoDisplayPreferredShowingRect() const
         const int height = m_containment->size().height() - controllerPreferredShowingRect().size().height() - (controllerPreferredShowingRect().size().height() / 6);
         return QRectF(QPointF(leftMargin , controllerPreferredShowingRect().height() + (controllerPreferredShowingRect().height() / 6)), QSizeF(width, height));
     }
+
+    return QRectF();
 }
 
 QRectF MediaLayout::playlistPreferredShowingRect() const
