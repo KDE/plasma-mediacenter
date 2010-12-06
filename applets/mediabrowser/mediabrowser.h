@@ -20,9 +20,8 @@
 #define MEDIABROWSER_H
 
 #include <mediacenter/browser.h>
-#include <plasma/widgets/declarativewidget.h>
 
-//#include "ui_general.h"
+#include "ui_general.h"
 
 class QGraphicsLinearLayout;
 class AbstractMediaItemView;
@@ -68,10 +67,10 @@ signals:
     void pictureDataEngine();
 
 private:
-    Plasma::DeclarativeWidget * m_view;
-    //Ui::General uiGeneral;
+    AbstractMediaItemView *m_view;
+    Ui::General uiGeneral;
 
-    MediaCenter::AbstractBrowsingBackend *m_backend;
+    QAbstractItemModel *m_model;
 
     bool m_blurred;
     QString m_viewType;

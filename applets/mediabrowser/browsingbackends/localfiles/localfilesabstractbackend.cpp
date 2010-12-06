@@ -54,6 +54,11 @@ LocalFilesAbstractBackend::~LocalFilesAbstractBackend()
 
 }
 
+QAbstractItemModel* LocalFilesAbstractBackend::model()
+{
+    return m_model;
+}
+
 void LocalFilesAbstractBackend::setBackendName(const QString& name)
 {
     m_backendName = name;
@@ -85,7 +90,7 @@ void LocalFilesAbstractBackend::createConfigurationInterface(KConfigDialog* pare
     ui.folderNavigationCheckBox->setChecked(m_folderNavigation);
     ui.urlRequester->setMode(KFile::Directory);
 
-    connect(parent, SIGNAL(accepted()), this, SLOT(configAccepted()));
+    connect (parent, SIGNAL(accepted()), this, SLOT(configAccepted()));
     connect(ui.nepomukBox, SIGNAL(toggled(bool)), ui.tab2, SLOT(setDisabled(bool)));
     connect(ui.addFoldersButton, SIGNAL(clicked()), this, SLOT(getWatchedDirsList()));
     connect(ui.removeFoldersButton, SIGNAL(clicked()), this, SLOT(removeItem()));
@@ -112,17 +117,8 @@ void LocalFilesAbstractBackend::init()
 
     if (!m_model) {
         m_model = new KDirModel(this);
-	connect(m_model->dirLister(), SIGNAL(completed()), SLOT(resetModel()));
-        setModel(m_model);
         initModel();
     }
-}
-
-void LocalFilesAbstractBackend::resetModel()
-{
-    kDebug() << "Reset the model" << m_model->rowCount();
-    setModel(0);
-    setModel(m_model);
 }
 
 void LocalFilesAbstractBackend::getWatchedDirsList()

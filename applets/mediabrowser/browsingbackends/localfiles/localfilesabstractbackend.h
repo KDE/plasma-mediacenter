@@ -34,6 +34,7 @@ public:
     LocalFilesAbstractBackend(const QString &name, QObject* parent, const QVariantList& args);
     virtual ~LocalFilesAbstractBackend();
 
+    QAbstractItemModel* model();
     virtual void createConfigurationInterface(KConfigDialog* parent);
     virtual void init();
 
@@ -44,7 +45,6 @@ private slots:
     void configAccepted();
     void getWatchedDirsList();
     void removeItem();
-    void resetModel();
 
 private:
     void setBackendName(const QString &name);

@@ -49,8 +49,6 @@ namespace MediaCenter {
 class MEDIACENTER_EXPORT AbstractBrowsingBackend : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QObject* backendModel READ model/* WRITE setModel*/ NOTIFY modelChanged)
-
 public:
     enum BrowsingType {
         LocalBrowsing,
@@ -66,13 +64,18 @@ public:
      * The first argument of @param args must be the unique storageID of the service.
      * */
     AbstractBrowsingBackend(QObject *parent, const QVariantList &args);
-    AbstractBrowsingBackend(QObject *parent = 0);
     virtual ~AbstractBrowsingBackend();
 
     /**
-     * @returns the model of the browsing backend
+     * This method must be reimplemented in order to provide the model to be
+     * used by the view.
+     * @note When LocalBrowsing is set it is highly recommended to use a KDirModel.
+     * If the package is set to RemoteBrowsing the model
+     * must provide an url that points to the media content for each
+     * QModelIndex. It must make use of MediaRole role to accomplish this.
+     * @see MediaRole
      */
-    QObject *model();
+    virtual QAbstractItemModel *model() = 0;
 
     /**
      * @return the browsing type of the model. Typically a remote browsing type
@@ -124,6 +127,7 @@ public:
      */
     static KService::List availableBackends();
 
+public slots:
     /**
      * This slot must be reimplemented if browsingType returns
      * LocalBrowsing. This method will be used to list the media
@@ -137,22 +141,8 @@ public:
      * for new medias to show in the browsing applet.
      */
     virtual void searchForMedia(const QString &name);
-    
-signals:
-    void modelChanged(QAbstractItemModel * model);
 
 protected:
-    /**
-     * This method must be set in order to provide the model to be
-     * used by the view.
-     * @note When LocalBrowsing is set it is highly recommended to use a KDirModel.
-     * If the package is set to RemoteBrowsing the model
-     * must provide an url that points to the media content for each
-     * QModelIndex. It must make use of MediaRole role to accomplish this.
-     * @see MediaRole
-     */
-    void setModel(QAbstractItemModel * model);
-    
     /**
      * As from Plasma::Applet this method should be used in order
      * to inform about the availability of a configuration interface for

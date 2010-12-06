@@ -28,10 +28,6 @@
 #include <QWidget>
 #include <QKeyEvent>
 #include <QGraphicsLinearLayout>
-#include <QtDeclarative/QDeclarativeEngine>
-#include <QtDeclarative/QDeclarativeComponent>
-#include <QtDeclarative/QDeclarativeContext>
-#include <QtDeclarative/qdeclarative.h>
 
 #include <KDirModel>
 #include <KConfigDialog>
@@ -41,12 +37,10 @@
 #include <KDebug>
 #include <KDirLister>
 
-QML_DECLARE_TYPE(MediaCenter::AbstractBrowsingBackend)
-
 MediaBrowser::MediaBrowser(QObject *parent, const QVariantList &args)
     : MediaCenter::Browser(parent, args),
     m_view(0),
-    m_backend(0),
+    m_model(0),
     m_layout(new QGraphicsLinearLayout(Qt::Vertical))
 {
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
@@ -54,8 +48,6 @@ MediaBrowser::MediaBrowser(QObject *parent, const QVariantList &args)
 
     setEnableToolbar(true);
     toolbar()->setNavigationControls(MediaCenter::NavigationToolbar::BackwardControl | MediaCenter::NavigationToolbar::ViewModeControl);
-    
-    qmlRegisterType<MediaCenter::AbstractBrowsingBackend>("MediaCenter", 0, 1, "AbstractBrowsingBackend");
 }
 
 MediaBrowser::~MediaBrowser()
@@ -63,16 +55,16 @@ MediaBrowser::~MediaBrowser()
 
 void MediaBrowser::showInstalledBackends()
 {
-//    delete m_backend->model();
+//    delete m_model;
 //    m_model = new StartupModel(this);
-//    m_view->setModel(m_backend->model());
+//    m_view->setModel(m_model);
 
 //    QmlHomeView *homeView = new QmlHomeView(this);
 //    QGraphicsLinearLayout *layout = static_cast<QGraphicsLinearLayout*>(this->layout());
 //    layout->addItem(homeView);
 
 //    homeView->setQmlPath(KStandardDirs::locate("data", "plasma-mediacenter/declarative/homeview.qml"));
-//    homeView->setModel(m_backend->model());
+//    homeView->setModel(m_model);
 }
 
 void MediaBrowser::init()
@@ -86,14 +78,23 @@ void MediaBrowser::init()
 void MediaBrowser::createView()
 {
     delete m_view;
-    m_view = new Plasma::DeclarativeWidget(this);
-    
-    m_view->setQmlPath(KStandardDirs::locate("data", "plasma-mediacenter/declarative/filegrid.qml"));
+    kDebug() << "view deleted";
 
-    if (m_backend) {
-        m_view->engine()->rootContext()->setContextProperty("fileBackend", m_backend);
+    if (m_viewType == "list") {
+        m_view = new ListView(this);
+    } else {
+        m_view = new GridView(this);
     }
-    /*connect (this, SIGNAL(browseHistoryBackRequest()), m_view, SLOT(goPrevious()));
+
+    m_view->setDrawBlurredText(m_blurred);
+    m_view->setFocus(Qt::OtherFocusReason);
+
+    if (m_model) {
+        m_view->setModel(m_model);
+//        m_view->generateItems();
+    }
+
+    connect (this, SIGNAL(browseHistoryBackRequest()), m_view, SLOT(goPrevious()));
     connect (m_view, SIGNAL(mediasActivated(QList<MediaCenter::Media>)), this, SIGNAL(mediasActivated(QList<MediaCenter::Media>)));
     connect (m_view, SIGNAL(mediasListChanged(QList<MediaCenter::Media>)), this, SIGNAL(mediasListChanged(QList<MediaCenter::Media>)));
     connect (m_view, SIGNAL(mediaActivated(const MediaCenter::Media&)), this, SIGNAL(mediaActivated(const MediaCenter::Media&)));
@@ -101,7 +102,6 @@ void MediaBrowser::createView()
     connect (m_view, SIGNAL(mediaSelected(MediaCenter::Media)), this, SLOT(selectedMediasAdd(MediaCenter::Media)));
     connect (m_view, SIGNAL(mediaUnselected(MediaCenter::Media)), this, SLOT(selectedMediasRemove(MediaCenter::Media)));
     connect (m_view, SIGNAL(directoryChanged()), this, SLOT(clearSelectedMedias()));
-// //     */
 
     QGraphicsLinearLayout *layout = static_cast<QGraphicsLinearLayout*>(this->layout());
     layout->addItem(m_view);
@@ -109,7 +109,7 @@ void MediaBrowser::createView()
 
 void MediaBrowser::createConfigurationInterface(KConfigDialog *parent)
 {
-    /*QWidget *generalConfig = new QWidget(parent);
+    QWidget *generalConfig = new QWidget(parent);
     uiGeneral.setupUi(generalConfig);
 
     parent->addPage(generalConfig, i18n("Browser appearance"), "preferences-desktop-display");
@@ -119,7 +119,7 @@ void MediaBrowser::createConfigurationInterface(KConfigDialog *parent)
         uiGeneral.gridRadio->setChecked(true);
     }
 
-    uiGeneral.blurredTextCheckBox->setChecked(m_blurred);*/
+    uiGeneral.blurredTextCheckBox->setChecked(m_blurred);
 
     if (currentBrowsingBackend()) {
         if (currentBrowsingBackend()->hasConfigurationInterface()) {
@@ -127,20 +127,20 @@ void MediaBrowser::createConfigurationInterface(KConfigDialog *parent)
         }
     }
 
-    connect(parent, SIGNAL(accepted()), this, SLOT(configAccepted()));
+    connect (parent, SIGNAL(accepted()), this, SLOT(configAccepted()));
 }
 
 void MediaBrowser::loadConfiguration()
 {
-    //KConfigGroup cf = config();
+    KConfigGroup cf = config();
 
-    //m_viewType = cf.readEntry("ViewType", "list");
-    //m_blurred = cf.readEntry("BlurredText", true);
+    m_viewType = cf.readEntry("ViewType", "list");
+    m_blurred = cf.readEntry("BlurredText", true);
 }
 
 void MediaBrowser::configAccepted()
 {
-   /*KConfigGroup cf = config();
+    KConfigGroup cf = config();
     kDebug() << cf.name();
 
     QString type;
@@ -159,33 +159,35 @@ void MediaBrowser::configAccepted()
     bool blurred = uiGeneral.blurredTextCheckBox->isChecked();
     if (blurred != m_blurred) {
         m_blurred = blurred;
-        //m_view->setDrawBlurredText(m_blurred);
+        m_view->setDrawBlurredText(m_blurred);
         cf.writeEntry("BlurredText", m_blurred);
-    }*/
+    }
 
 }
 
 void MediaBrowser::loadBrowsingBackend(MediaCenter::AbstractBrowsingBackend *backend)
 {
     kDebug() << "loading browsing backend";
-    
-    m_backend = backend;
 
-    m_backend->setParent(this);
-    m_backend->init();
-    m_view->engine()->rootContext()->setContextProperty("fileBackend", m_backend);
-    //m_view->engine()->rootContext()->setContextProperty("fileModel", m_backend->model());
+    m_view->setModel( 0 );
+    backend->setParent(this);
+    backend->init();
+    m_model = backend->model();
+    m_view->setModel( m_model );
 
-    emit browsingModeChanged( m_backend->requiredMode() );
+    emit browsingModeChanged( backend->requiredMode() );
 }
 
 void MediaBrowser::showStartupState()
 {
+    //Calling directly showInstalledBackends makes PMC crash on startup
+    //m_model = new StartupModel(this);
+    //m_view->setModel(m_model);
 }
 
 KUrl MediaBrowser::currentUrl() const
 {
-    KDirModel *modeldir = qobject_cast<KDirModel*>(m_backend->model());
+    KDirModel *modeldir = qobject_cast<KDirModel*>(m_model);
     if (!modeldir || !modeldir->dirLister()) {
         return KUrl();
     }
@@ -194,7 +196,7 @@ KUrl MediaBrowser::currentUrl() const
 
 void MediaBrowser::openUrl(const KUrl &url)
 {
-    KDirModel *modeldir = qobject_cast<KDirModel*>(m_backend->model());
+    KDirModel *modeldir = qobject_cast<KDirModel*>(m_model);
     if (modeldir) {
         modeldir->dirLister()->openUrl(url);
     }
@@ -202,7 +204,7 @@ void MediaBrowser::openUrl(const KUrl &url)
 
 void MediaBrowser::listMediaInDirectory()
 {
-    //m_view->listMediaInDirectory();
+    m_view->listMediaInDirectory();
 }
 
 void MediaBrowser::selectedMediasAdd(const MediaCenter::Media &media)
@@ -234,7 +236,7 @@ void MediaBrowser::clearSelectedMedias()
 
 void MediaBrowser::gestureEvent(MediaCenter::BrowserGesture *bGesture)
 {
-    /*if (!bGesture) {
+    if (!bGesture) {
         return;
     }
 
@@ -253,7 +255,7 @@ void MediaBrowser::gestureEvent(MediaCenter::BrowserGesture *bGesture)
     } else if (bGesture->activeAction() == MediaCenter::BrowserGesture::ActivateAction) {
         QKeyEvent keyEvent(QKeyEvent::KeyPress, Qt::Key_Return, Qt::NoModifier);
         qApp->sendEvent(m_view, &keyEvent);
-    }*/
+    }
 }
 
 void MediaBrowser::createQmlHomeView()
