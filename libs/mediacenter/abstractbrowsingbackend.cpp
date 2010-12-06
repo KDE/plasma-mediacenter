@@ -32,7 +32,8 @@ public:
     AbstractBrowsingBackendPrivate(KService::Ptr service, AbstractBrowsingBackend *q) :
     backendInfo(service),
     q(q),
-    cfInterface(false)
+    cfInterface(false),
+    model(0)
     {}
 
     AbstractBrowsingBackend *q;
@@ -40,17 +41,36 @@ public:
     KPluginInfo backendInfo;
     MediaCenter::Mode requiredMode;
     BrowsingType browsingType;
+    QAbstractItemModel * model;
 };
 
 AbstractBrowsingBackend::AbstractBrowsingBackend(QObject *parent, const QVariantList &args) : QObject(parent),
 d(new AbstractBrowsingBackendPrivate(KService::serviceByStorageId(args.count() ? args.first().toString() : QString()), this))
 {
     Q_UNUSED(args);
+    qRegisterMetaType<QAbstractItemModel*>("QAbstractItemModel*");
+}
+
+AbstractBrowsingBackend::AbstractBrowsingBackend(QObject * parent)
+  : QObject(parent),
+    d(new AbstractBrowsingBackendPrivate(KService::serviceByStorageId(QString()), this))
+{
 }
 
 AbstractBrowsingBackend::~AbstractBrowsingBackend()
 {
     delete d;
+}
+
+void AbstractBrowsingBackend::setModel(QAbstractItemModel * model)
+{
+    d->model = model;
+    emit modelChanged(d->model);
+}
+
+QObject * AbstractBrowsingBackend::model()
+{
+    return (QObject*)(d->model);
 }
 
 bool AbstractBrowsingBackend::hasConfigurationInterface() const

@@ -34,7 +34,6 @@ public:
     LocalFilesAbstractBackend(const QString &name, QObject* parent, const QVariantList& args);
     virtual ~LocalFilesAbstractBackend();
 
-    QAbstractItemModel* model();
     virtual void createConfigurationInterface(KConfigDialog* parent);
     virtual void init();
 

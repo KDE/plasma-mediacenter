@@ -20,8 +20,9 @@
 #define MEDIABROWSER_H
 
 #include <mediacenter/browser.h>
+#include <plasma/widgets/declarativewidget.h>
 
-#include "ui_general.h"
+//#include "ui_general.h"
 
 class QGraphicsLinearLayout;
 class AbstractMediaItemView;
@@ -56,9 +57,6 @@ public slots:
     void selectedMediasRemove(const MediaCenter::Media &media);
     void clearSelectedMedias();
 
-protected:
-    void gestureEvent(MediaCenter::BrowserGesture *);
-
 signals:
     void mediasListChanged(const QList<MediaCenter::Media> &list);
 
@@ -67,10 +65,10 @@ signals:
     void pictureDataEngine();
 
 private:
-    AbstractMediaItemView *m_view;
-    Ui::General uiGeneral;
+    Plasma::DeclarativeWidget * m_view;
+    //Ui::General uiGeneral;
 
-    QAbstractItemModel *m_model;
+    MediaCenter::AbstractBrowsingBackend *m_backend;
 
     bool m_blurred;
     QString m_viewType;
@@ -86,7 +84,6 @@ private slots:
     void loadConfiguration();
     void configAccepted();
     //void slotIndexActivated(const QModelIndex &);
-    void createQmlHomeView();
 
 };
 
