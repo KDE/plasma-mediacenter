@@ -2,6 +2,7 @@
 Name=Flickr
 Name[es]=Flickr
 Name[ja]=Flickr
+Name[km]=Flickr
 Name[pt]=Flickr
 Name[pt_BR]=Flickr
 Name[sv]=Flickr
@@ -9,6 +10,7 @@ Name[uk]=Flickr
 Name[x-test]=xxFlickrxx
 
 Comment=An engine that allows you to query web services for media.
+Comment[km]=ម៉ាស៊ីន​ដែល​អនុញ្ញាត​ឲ្យ​អ្នក​សួរ​សេវា​បណ្ដាញ​រក​មេឌៀ ។
 Comment[pt]=Um motor que lhe permite pesquisar conteúdos multimédia em vários serviços na Web.
 Comment[pt_BR]=Um motor que lhe permite pesquisar conteúdos multimídia em vários serviços na Web.
 Comment[sv]=Ett gränssnitt som låter dig söka efter media på webbtjänster.
