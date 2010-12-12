@@ -11,6 +11,7 @@ Name[pa]=ਫਲਿੱਕਰ ਇੰਜਣ
 Name[pt]=Motor do Flickr
 Name[pt_BR]=Motor do Flickr
 Name[sv]=Flickr-gränssnitt
+Name[th]=กลไก Flickr
 Name[uk]=Рушій Flickr
 Name[x-test]=xxFlickr Enginexx
 
@@ -23,6 +24,7 @@ Comment[km]=ម៉ាស៊ីន​ដែល​អនុញ្ញាត​ឲ�
 Comment[pt]=Um motor que lhe permite efectuar consultas no Flickr.
 Comment[pt_BR]=Um motor que lhe permite efetuar consultas no Flickr.
 Comment[sv]=Ett gränssnitt som låter dig söka på Flickr.
+Comment[th]=กลไกที่ทำให้ดึงข้อมูลจาก Flickr
 Comment[uk]=Рушій, який надасть вам змогу надсилати запити до Flickr.
 Comment[x-test]=xxAn engine that allows you to query Flickr.xx
 

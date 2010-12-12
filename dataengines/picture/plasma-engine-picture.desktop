@@ -6,6 +6,7 @@ Name[km]=ម៉ាស៊ីន​រូបភាព
 Name[pt]=Motor de Imagens
 Name[pt_BR]=Motor de imagem
 Name[sv]=Bildgränssnitt
+Name[th]=กลไกรูปภาพ
 Name[uk]=Рушій зображень
 Name[x-test]=xxPicture Enginexx
 
@@ -16,6 +17,7 @@ Comment[km]=ម៉ាស៊ីន​ដែល​អនុញ្ញាត​ឲ�
 Comment[pt]=Um motor que lhe permite pesquisar imagens em vários serviços na Web.
 Comment[pt_BR]=Um motor que lhe permite pesquisar imagens em vários serviços na Web.
 Comment[sv]=Ett gränssnitt som låter dig söka efter bilder på webbtjänster.
+Comment[th]=กลไกที่ทำให้สอบถามข้อมูลรูปภาพจากบริการเว็บ
 Comment[uk]=Рушій, який надасть вам змогу шукати зображення за допомогою веб-служб.
 Comment[x-test]=xxAn engine that allows you to query web services for pictures.xx
 Type=Service

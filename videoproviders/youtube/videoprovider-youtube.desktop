@@ -10,6 +10,7 @@ Name[pa]=ਯੂਟਿਊਬ ਵਿਡੀਓ ਪਰੋਵਾਇਡਰ ਹੈ।
 Name[pt]=Fornecedor de vídeos do YouTube.
 Name[pt_BR]=Fornecedor de vídeos do YouTube.
 Name[sv]=YouTube videoleverantör.
+Name[th]=ผู้ให้บริการวิดีโอ YouTube
 Name[uk]=Показ відео YouTube.
 Name[x-test]=xxYouTube video provider.xx
 Comment=A plugin that allows browsing through YouTube videos.
@@ -22,6 +23,7 @@ Comment[pa]=ਯੂਟਿਊਬ ਵਿਡੀਓ ਬਰਾਊਜ਼ਰ ਕਰਨ �
 Comment[pt]=Um 'plugin' que lhe permite pesquisar vídeos no YouTube.
 Comment[pt_BR]=Um plugin que lhe permite pesquisar vídeos no YouTube.
 Comment[sv]=Ett insticksprogram som låter dig bläddra igenom videor på YouTube.
+Comment[th]=ปลั๊กอินที่ทำให้ดูวิดีจาก YouTube
 Comment[uk]=Додаток, за допомогою якого ви зможете переглядати відеоматеріали з YouTube.
 Comment[x-test]=xxA plugin that allows browsing through YouTube videos.xx
 
