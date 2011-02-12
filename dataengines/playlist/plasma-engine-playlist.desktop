@@ -1,33 +1,6 @@
 [Desktop Entry]
 Name=Playlist Engine
-Name[en_GB]=Playlist Engine
-Name[es]=Motor de listas de reproducción
-Name[et]=Esitusnimekirja mootor
-Name[fr]=Moteur de liste de lecture
-Name[hr]=Podrška za Playlist
-Name[ja]=プレイリストエンジン
-Name[km]=ម៉ាស៊ីន​បញ្ជី​ចាក់
-Name[pa]=ਪਲੇਅਲਿਸਟ ਇੰਜਣ
-Name[pt]=Motor da Lista de Reprodução
-Name[pt_BR]=Motor da Lista de Reprodução
-Name[sv]=Spellistegränssnitt
-Name[th]=กลไกรายการเล่น
-Name[tr]=Parça Listesi Motoru
-Name[uk]=Рушій списків відтворення
-Name[x-test]=xxPlaylist Enginexx
 Comment=A playlist engine useful for Media Center components.
-Comment[en_GB]=A playlist engine useful for Media Centre components.
-Comment[es]=Un motor de listas de reproducción, útil para componentes Media Center.
-Comment[et]=Esitusnimekirja mootor meediakeskuse komponentidele.
-Comment[fr]=Un moteur de liste de lecture bien util pour les composants de Media Center
-Comment[hr]=Podrška za playliste korisna kod komponenti Media Centra.
-Comment[km]=ម៉ាស៊ីន​បញ្ជីចាក់​មានប្រយោជន៍​សម្រាប់​សមាសភាគ​មជ្ឈមណ្ឌល​មេឌៀ ។
-Comment[pt]=Um motor de listas de reprodução, útil para componentes de Centros Multimédia.
-Comment[pt_BR]=Um motor de listas de reprodução, útil para componentes de Centros Multimídia.
-Comment[sv]=Ett spellistegränssnitt användbart för komponenter i mediacenter.
-Comment[th]=กลไกรายการเล่นซึ่งเป็นประโยชน์กับส่วนประกอบของศูนย์สื่อ
-Comment[uk]=Рушій списків відтворення, корисний для компонентів мультимедійного центру.
-Comment[x-test]=xxA playlist engine useful for Media Center components.xx
 Type=Service
 
 X-KDE-ServiceTypes=Plasma/DataEngine

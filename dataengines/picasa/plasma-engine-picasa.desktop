@@ -1,33 +1,7 @@
 [Desktop Entry]
 Name=Picasa Engine
-Name[en_GB]=Picasa Engine
-Name[es]=Motor Picasa
-Name[et]=Picasa mootor
-Name[fr]=Moteur Picasa
-Name[ja]=Picasa エンジン
-Name[km]=ម៉ាស៊ីន Picasa 
-Name[nl]=Picasa-engine
-Name[pa]=ਪਿਕਾਸਾ ਇੰਜਣ
-Name[pt]=Motor do Picasa
-Name[pt_BR]=Motor do Picasa
-Name[sv]=Picasa-gränssnitt
-Name[th]=กลไก Picasa
-Name[tr]=Picasa Motoru
-Name[uk]=Рушій Picasa
-Name[x-test]=xxPicasa Enginexx
 
 Comment=An engine that allows you to query Picasa.
-Comment[en_GB]=An engine that allows you to query Picasa.
-Comment[es]=Un motor que le permite consultar en Picasa.
-Comment[et]=Mootor Picasale päringute esitamiseks.
-Comment[fr]=Un moteur vous permettant de quérir des images dans Picasa
-Comment[km]=ម៉ាស៊ីន​ដែល​អនុញ្ញាត​ឲ្យ​អ្នក​សួរ​ Picasa ។
-Comment[pt]=Um motor que lhe permite efectuar consultas no Picasa.
-Comment[pt_BR]=Um motor que lhe permite efetuar consultas no Picasa.
-Comment[sv]=Ett gränssnitt som låter dig söka på Picasa.
-Comment[th]=กลไกที่ดึงข้อมูลจาก Picasa
-Comment[uk]=Рушій, який надасть вам змогу надсилати запити до Picasa.
-Comment[x-test]=xxAn engine that allows you to query Picasa.xx
 
 Type=Service
 

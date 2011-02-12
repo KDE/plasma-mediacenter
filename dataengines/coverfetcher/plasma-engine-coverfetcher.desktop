@@ -1,33 +1,6 @@
 [Desktop Entry]
 Name=Cover Fetcher Engine
-Name[en_GB]=Cover Fetcher Engine
-Name[es]=Motor de consulta de carátulas
-Name[et]=Kaanepildi tõmbamise mootor
-Name[fr]=Moteur de récupération de couverture
-Name[hr]=Podrška za dohvat omota
-Name[ja]=カバー取得エンジン
-Name[km]=ម៉ាស៊ីន​កម្មវិធីទៅយក​គម្រប
-Name[pt]=Motor de Obtenção de Capas
-Name[pt_BR]=Motor de Obtenção de Capas
-Name[sv]=Gränssnitt för omslagshämtning
-Name[th]=กลไกเก็บข้อมูลปก
-Name[tr]=Kapak Getirme Motoru
-Name[uk]=Рушій отримання обкладинок
-Name[x-test]=xxCover Fetcher Enginexx
 Comment=An Engine able to fetch covers from last.fm.
-Comment[en_GB]=An Engine able to fetch covers from last.fm.
-Comment[es]=Un motor de consulta de carátulas en last.fm.
-Comment[et]=Mootor, mis tõmbab last.fm-ist kaanepilte.
-Comment[fr]=Un moteur capable de récupérer les couvertures depuis last.fm.
-Comment[hr]=Podrška za dohvat omota s last.fm-a
-Comment[ja]=last.fm からカバーを取得するエンジン
-Comment[km]=ម៉ាស៊ីន​អាច​ទៅយក​គម្រប​ពី last.fm ។
-Comment[pt]=Um motor que consegue obter capas da Last.fm.
-Comment[pt_BR]=Um motor que consegue obter capas do Last.fm.
-Comment[sv]=Ett gränssnitt som klarar av att hämta omslag från last.fm.
-Comment[th]=กลไกที่ทำให้เก็บข้อมูลปกจาก last.fm
-Comment[uk]=Рушій, здатний отримувати обкладинки з last.fm.
-Comment[x-test]=xxAn Engine able to fetch covers from last.fm.xx
 Type=Service
 
 X-KDE-ServiceTypes=Plasma/DataEngine

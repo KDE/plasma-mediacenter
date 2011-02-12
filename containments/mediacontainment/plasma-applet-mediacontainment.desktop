@@ -1,29 +1,6 @@
 [Desktop Entry]
 Name=Media Containment
-Name[en_GB]=Media Containment
-Name[es]=Contenedor de medios
-Name[et]=Meediakonteiner
-Name[fr]=Conteneur pour média
-Name[hr]=Sadržavatelj multimedije
-Name[km]=ការ​ផ្ទុក​មេឌៀ
-Name[pt]=Contentor Multimédia
-Name[pt_BR]=Contêiner Multimídia
-Name[sv]=Mediaomgivning
-Name[uk]=Контейнер мультимедійних даних
-Name[x-test]=xxMedia Containmentxx
 Comment=A dedicated containment for your media applets.
-Comment[en_GB]=A dedicated containment for your media applets.
-Comment[es]=Un contenedor orientado a sus miniaplicaciones de medios.
-Comment[et]=Spetsiaalne konteiner meediaaplettidele.
-Comment[fr]=Un conteneur dédié à vos applets de média
-Comment[hr]=Posvećen sadržavatelj multimedijalnih programčića
-Comment[km]=ការ​ផ្ទុក​ដែល​កំណត់​ចំពោះ​អាប់​ភ្លេត​មេឌៀ​របស់​អ្នក​ ។
-Comment[pt]=Um contentor dedicado aos seus leitores multimédia.
-Comment[pt_BR]=Um contêiner dedicado aos seus leitores multimídia.
-Comment[sv]=En särskild omgivning för mediaminiprogram.
-Comment[tr]=Ortam gereçleriniz için bir kapsayıcı.
-Comment[uk]=Спеціальний контейнер для ваших мультимедійних аплетів.
-Comment[x-test]=xxA dedicated containment for your media applets.xx
 Type=Service
 NoDisplay=true
 

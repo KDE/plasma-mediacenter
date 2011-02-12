@@ -1,20 +1,6 @@
 [Desktop Entry]
 Name=MediaWelcome
-Name[ja]=MediaWelcome
-Name[km]=MediaWelcome
-Name[pt]=MediaWelcome
-Name[pt_BR]=MediaWelcome
-Name[sv]=Välkommen till Media Center
-Name[uk]=Медіа-вітання
-Name[x-test]=xxMediaWelcomexx
 Comment=Plasma Media Center welcome applet
-Comment[km]=អាប់ភ្លេត​ស្វាគមន៍​មជ្ឈមណ្ឌល​មេឌៀ​ប្លាស្មា
-Comment[pt]='Applet' de boas-vindas do Centro Multimédia do Plasma
-Comment[pt_BR]=Miniaplicativo de boas-vindas do Plasma Media Center
-Comment[sv]=Välkomstminiprogram för Plasma Media Center
-Comment[th]=แอพเพล็ตต้อนรับศูนย์สื่อของพลาสมา
-Comment[uk]=Аплет вітання медіа-центру Плазми
-Comment[x-test]=xxPlasma Media Center welcome appletxx
 Type=Service
 
 X-KDE-ServiceTypes=Plasma/Applet

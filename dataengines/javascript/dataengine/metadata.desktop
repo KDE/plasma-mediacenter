@@ -1,23 +1,7 @@
 [Desktop Entry]
 Name=Webmedia Engine
-Name[ja]=Webmedia エンジン
-Name[km]=ម៉ាស៊ីន Webmedia
-Name[nl]=Webmedia-engine
-Name[pt]=Motor de Webmédia
-Name[pt_BR]=Motor de mídia da Web
-Name[sv]=Webbmedia-gränssnitt
-Name[th]=กลไก Webmedia
-Name[uk]=Рушій Webmedia
-Name[x-test]=xxWebmedia Enginexx
 
 Comment=An engine that allows you to query web services for media.
-Comment[km]=ម៉ាស៊ីន​ដែល​អនុញ្ញាត​ឲ្យ​អ្នក​សួរ​សេវា​បណ្ដាញ​រក​មេឌៀ ។
-Comment[pt]=Um motor que lhe permite pesquisar conteúdos multimédia em vários serviços na Web.
-Comment[pt_BR]=Um motor que lhe permite pesquisar conteúdos multimídia em vários serviços na Web.
-Comment[sv]=Ett gränssnitt som låter dig söka efter media på webbtjänster.
-Comment[th]=กลไกที่ใช้สอบถามข้อมูลจากบริการเว็บสำหรับสื่อ
-Comment[uk]=Рушій, який надасть вам змогу звантажувати мультимедійні дані зі служб у мережі.
-Comment[x-test]=xxAn engine that allows you to query web services for media.xx
 
 X-KDE-ServiceTypes=Plasma/DataEngine
 Type=Service

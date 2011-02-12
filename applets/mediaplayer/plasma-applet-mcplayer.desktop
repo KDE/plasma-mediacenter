@@ -1,33 +1,6 @@
 [Desktop Entry]
 Name=Media Center Player
-Name[en_GB]=Media Centre Player
-Name[es]=Reproductor Media Center
-Name[et]=Meediakeskuse mängija
-Name[fr]=Lecteur Media Center
-Name[hr]=Media Center Player
-Name[ja]=メディアセンタープレーヤー
-Name[km]=កម្មវិធី​ចាក់​មជ្ឈមណ្ឌល​មេឌៀ
-Name[pa]=ਮੀਡਿਆ ਸੈਂਟਰ ਪਲੇਅਰ
-Name[pt]=Reprodutor Multimédia
-Name[pt_BR]=Reprodutor Multimídia
-Name[sv]=Spelare för Media Center
-Name[th]=ตัวเล่นศูนย์สื่อ
-Name[uk]=Програвач медіа-центру
-Name[x-test]=xxMedia Center Playerxx
 Comment=The playing applet for the Media Center.
-Comment[en_GB]=The playing applet for the Media Centre.
-Comment[es]=Miniaplicación de reproducción para el Media Center.
-Comment[et]=Meediakeskuse esitamisaplett
-Comment[fr]=L'applet de lecture pour Media Center
-Comment[hr]=Programčić za sviranje za Media Center.
-Comment[km]=អាប់​ភ្លេត​ដែល​បង្ហាញ​សម្រាប់​មជ្ឈមណ្ឌល​មេឌៀ ។
-Comment[pa]=ਮੀਡਿਆ ਸੈਂਟਰ ਚਲਾਉਣ ਲਈ ਚੱਲਣ ਐਪਲਿਟ।
-Comment[pt]=Uma 'applet' de reprodução para Centros Multimédia.
-Comment[pt_BR]=Um mini-aplicativo de reprodução para Centros Multimídia.
-Comment[sv]=Spelarminiprogrammet för Media Center.
-Comment[th]=แอพเพล็ตสำหรับเล่นของศูนย์สื่อ
-Comment[uk]=Аплет відтворення для медіа-центру.
-Comment[x-test]=xxThe playing applet for the Media Center.xx
 
 
 Type=Service

@@ -1,34 +1,6 @@
 [Desktop Entry]
 Name=MediaBrowser Applet
-Name[en_GB]=MediaBrowser Applet
-Name[es]=Miniaplicación MediaBrowser
-Name[et]=Meediasirvija aplett
-Name[fr]=Applet MediaBrowser
-Name[hr]=PreglednikMultiMedije Programčić
-Name[ja]=MediaBrowser アプレット
-Name[km]=អាប់ភ្លេត MediaBrowser
-Name[pa]=ਮੀਡਿਆਬਰਾਊਜ਼ਰ ਐਪਲਿਟ
-Name[pt]='Applet' de Leitura Multimédia
-Name[pt_BR]=Mini-aplicativo de Leitor Multimídia
-Name[sv]=Miniprogram för mediabläddring
-Name[tr]=Ortam Tarayıcı Programcığı
-Name[uk]=Аплет мультимедійного переглядача
-Name[x-test]=xxMediaBrowser Appletxx
 Comment=An applet to browse through your media files
-Comment[de]=Ein Applet zum Durchsuchen Ihrer Medien-Dateien
-Comment[en_GB]=An applet to browse through your media files
-Comment[es]=Miniaplicación para navegar entre sus archivos de medios
-Comment[et]=Aplett meediafailide sirvimiseks
-Comment[fr]=Une applet pour le parcourt des fichiers de média
-Comment[hr]=Programčić za pregled Vaših multimedijalnih datoteka
-Comment[km]=អាប់ភ្លេត​ត្រូវ​រកមើល​តាមរយៈ​ឯកសារ​មេឌៀ​របស់​អ្នក
-Comment[pa]=ਤੁਹਾਡੀਆਂ ਮੀਡਿਆ ਫਾਇਲਾਂ ਦੀ ਝਲਕ ਵੇਖਾਉਣ ਲਈ ਐਪਲਿਟ
-Comment[pt]=Uma 'applet' para navegar pelos seus ficheiros multimédia
-Comment[pt_BR]=Um mini-aplicativo para navegar pelos seus arquivos multimídia
-Comment[sv]=Ett miniprogram för att bläddra i dina mediafiler
-Comment[th]=แอพเพล็ตเพื่อดูแฟ้มสื่อของคุณ
-Comment[uk]=Аплет для навігації вашими мультимедійними файлами
-Comment[x-test]=xxAn applet to browse through your media filesxx
 Type=Service
 
 X-KDE-ServiceTypes=Plasma/Applet

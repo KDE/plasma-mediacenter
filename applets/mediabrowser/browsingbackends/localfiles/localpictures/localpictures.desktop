@@ -2,23 +2,7 @@
 Type=Service
 Icon=folder-image
 Name=Local pictures
-Name[es]=Imágenes locales
-Name[km]=រូបភាព​មូលដ្ឋាន
-Name[nds]=Lokaal Biller
-Name[nl]=Lokale afbeeldingen
-Name[pt]=Imagens locais
-Name[pt_BR]=Imagens locais
-Name[sv]=Lokala bilder
-Name[uk]=Локальні зображення
-Name[x-test]=xxLocal picturesxx
 Comment=A plugin for the mediabrowser applet that allows local file browsing
-Comment[en_GB]=A plugin for the mediabrowser applet that allows local file browsing
-Comment[km]=កម្មវិធី​ជំនួយសម្រាប់​អាប់​ភ្លេត​ mediabrowser ​ដែល​អនុញ្ញាត​ឲ្យ​មាន​ការរុករក​ឯកសារ​មូលដ្ឋាន ។
-Comment[pt]=Um 'plugin' para a 'applet' de leitura multimédia, que permite a navegação nos ficheiros locais.
-Comment[pt_BR]=Um plug-in para o miniaplicativo leitor multimídia, que permite a navegação nos arquivos locais
-Comment[sv]=Ett insticksprogram för miniprogrammet Mediabläddrare som tillåter bläddring i lokala filer
-Comment[uk]=Додаток до аплету переглядача носіїв, який надає змогу переглядати локальні файли
-Comment[x-test]=xxA plugin for the mediabrowser applet that allows local file browsingxx
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 

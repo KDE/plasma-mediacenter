@@ -1,31 +1,7 @@
 [Desktop Entry]
 Type=Service
 Name=YouTube video provider.
-Name[en_GB]=YouTube video provider.
-Name[es]=Proveedor de vídeo de YouTube.
-Name[et]=YouTube'i video pakkuja.
-Name[fr]=Fournisseur de vidéo pour YouTube
-Name[km]=ក្រុមហ៊ុន​ផ្តល់​វីដេ​អូ​ YouTube ។
-Name[pa]=ਯੂਟਿਊਬ ਵਿਡੀਓ ਪਰੋਵਾਇਡਰ ਹੈ।
-Name[pt]=Fornecedor de vídeos do YouTube.
-Name[pt_BR]=Fornecedor de vídeos do YouTube.
-Name[sv]=YouTube videoleverantör.
-Name[th]=ผู้ให้บริการวิดีโอ YouTube
-Name[uk]=Показ відео YouTube.
-Name[x-test]=xxYouTube video provider.xx
 Comment=A plugin that allows browsing through YouTube videos.
-Comment[en_GB]=A plugin that allows browsing through YouTube videos.
-Comment[es]=Un motor que le permite navegar entre los vídeos de YouTube.
-Comment[et]=Plugin Youtube'i videode sirvimiseks.
-Comment[fr]=Un module vous permettant de naviguer en direct parmi les vidéos de Youtube.
-Comment[km]=កម្មវិធី​ជំនួយ​ដែល​រកមើល​តាមរយៈ​វីដេអូ YouTube ។
-Comment[pa]=ਯੂਟਿਊਬ ਵਿਡੀਓ ਬਰਾਊਜ਼ਰ ਕਰਨ ਵਾਸਤੇ ਪਲੱਗਇਨ।
-Comment[pt]=Um 'plugin' que lhe permite pesquisar vídeos no YouTube.
-Comment[pt_BR]=Um plugin que lhe permite pesquisar vídeos no YouTube.
-Comment[sv]=Ett insticksprogram som låter dig bläddra igenom videor på YouTube.
-Comment[th]=ปลั๊กอินที่ทำให้ดูวิดีจาก YouTube
-Comment[uk]=Додаток, за допомогою якого ви зможете переглядати відеоматеріали з YouTube.
-Comment[x-test]=xxA plugin that allows browsing through YouTube videos.xx
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/VideoProvider
 

@@ -1,23 +1,6 @@
 [Desktop Entry]
 Name=MediaInfoBar
-Name[en_GB]=MediaInfoBar
-Name[ja]=MediaInfoBar
-Name[km]=MediaInfoBar
-Name[pt]=Barra de Informação Multimédia
-Name[pt_BR]=Barra de Informação Multimídia
-Name[sv]=Mediainformationsrad
-Name[uk]=Мультимедійні дані
-Name[x-test]=xxMediaInfoBarxx
 Comment=A simple applet to display media information
-Comment[en_GB]=A simple applet to display media information
-Comment[et]=Lihtne aplett meediateabe näitamiseks
-Comment[km]=អាប់​ភ្លេត​សាមញ្ញ​សម្រាប់​បង្ហាញ​ព័ត៌មាន​អំពីមេឌៀ
-Comment[pt]=Uma 'applet' simples para mostrar informações multimédia
-Comment[pt_BR]=Um mini-aplicativo simples para mostrar informações multimídia
-Comment[sv]=Ett enkelt miniprogram för att visa mediainformation
-Comment[th]=แอพเพล็ตอย่างง่ายเพื่อแสดงข้อมูลสื่อ
-Comment[uk]=Простий аплет, призначений для показу параметрів мультимедійних даних
-Comment[x-test]=xxA simple applet to display media informationxx
 Type=Service
 
 X-KDE-ServiceTypes=Plasma/Applet
