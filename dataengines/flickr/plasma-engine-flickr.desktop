@@ -1,7 +1,16 @@
 [Desktop Entry]
 Name=Flickr Engine
+Name[nl]=Flickr-engine
+Name[pt]=Motor do Flickr
+Name[sv]=Flickr-gränssnitt
+Name[uk]=Рушій Flickr
+Name[x-test]=xxFlickr Enginexx
 
 Comment=An engine that allows you to query Flickr.
+Comment[pt]=Um motor que lhe permite efectuar consultas no Flickr.
+Comment[sv]=Ett gränssnitt som låter dig söka på Flickr.
+Comment[uk]=Рушій, який надасть вам змогу надсилати запити до Flickr.
+Comment[x-test]=xxAn engine that allows you to query Flickr.xx
 
 Type=Service
 

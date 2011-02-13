@@ -1,6 +1,15 @@
 [Desktop Entry]
 Name=Playlist
+Name[nl]=Afspeellijst
+Name[pt]=Lista de Reprodução
+Name[sv]=Spellista
+Name[uk]=Список відтворення
+Name[x-test]=xxPlaylistxx
 Comment=Plasma Playlist Applet
+Comment[pt]='Applet' de Lista de Reprodução do Plasma
+Comment[sv]=Plasma miniprogram med spellista
+Comment[uk]=Аплет списку відтворення Плазми
+Comment[x-test]=xxPlasma Playlist Appletxx
 Type=Service
 Icon=view-media-playlist
 

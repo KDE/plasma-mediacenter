@@ -1,7 +1,16 @@
 [Desktop Entry]
 Name=Picture Engine
+Name[nl]=Afbeeldingsengine
+Name[pt]=Motor de Imagens
+Name[sv]=Bildgränssnitt
+Name[uk]=Рушій зображень
+Name[x-test]=xxPicture Enginexx
 
 Comment=An engine that allows you to query web services for pictures.
+Comment[pt]=Um motor que lhe permite pesquisar imagens em vários serviços na Web.
+Comment[sv]=Ett gränssnitt som låter dig söka efter bilder på webbtjänster.
+Comment[uk]=Рушій, який надасть вам змогу шукати зображення за допомогою веб-служб.
+Comment[x-test]=xxAn engine that allows you to query web services for pictures.xx
 Type=Service
 
 X-KDE-ServiceTypes=Plasma/DataEngine

@@ -1,6 +1,14 @@
 [Desktop Entry]
 Name=Cover Fetcher Engine
+Name[pt]=Motor de Obtenção de Capas
+Name[sv]=Gränssnitt för omslagshämtning
+Name[uk]=Рушій отримання обкладинок
+Name[x-test]=xxCover Fetcher Enginexx
 Comment=An Engine able to fetch covers from last.fm.
+Comment[pt]=Um motor que consegue obter capas da Last.fm.
+Comment[sv]=Ett gränssnitt som klarar av att hämta omslag från last.fm.
+Comment[uk]=Рушій, здатний отримувати обкладинки з last.fm.
+Comment[x-test]=xxAn Engine able to fetch covers from last.fm.xx
 Type=Service
 
 X-KDE-ServiceTypes=Plasma/DataEngine
