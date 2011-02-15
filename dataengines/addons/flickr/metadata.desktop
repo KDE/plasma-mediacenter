@@ -3,12 +3,14 @@ Name=Flickr
 Name[ja]=Flickr
 Name[nl]=Flickr
 Name[pt]=Flickr
+Name[pt_BR]=Flickr
 Name[sv]=Flickr
 Name[uk]=Flickr
 Name[x-test]=xxFlickrxx
 
 Comment=An engine that allows you to query web services for media.
 Comment[pt]=Um motor que lhe permite pesquisar conteúdos multimédia em vários serviços na Web.
+Comment[pt_BR]=Um mecanismo que lhe permite pesquisar conteúdos multimídia em vários serviços na Web.
 Comment[sv]=Ett gränssnitt som låter dig söka efter media på webbtjänster.
 Comment[uk]=Рушій, який надасть вам змогу звантажувати мультимедійні дані зі служб у мережі.
 Comment[x-test]=xxAn engine that allows you to query web services for media.xx

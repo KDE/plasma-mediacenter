@@ -2,11 +2,13 @@
 Name=MediaWelcome
 Name[ja]=MediaWelcome
 Name[pt]=MediaWelcome
+Name[pt_BR]=MediaWelcome
 Name[sv]=Välkommen till Media Center
 Name[uk]=Медіа-вітання
 Name[x-test]=xxMediaWelcomexx
 Comment=Plasma Media Center welcome applet
 Comment[pt]='Applet' de boas-vindas do Centro Multimédia do Plasma
+Comment[pt_BR]=Miniaplicativo de boas-vindas do Plasma Media Center
 Comment[sv]=Välkomstminiprogram för Plasma Media Center
 Comment[uk]=Аплет вітання медіа-центру Плазми
 Comment[x-test]=xxPlasma Media Center welcome appletxx

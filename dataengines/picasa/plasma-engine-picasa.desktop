@@ -3,12 +3,14 @@ Name=Picasa Engine
 Name[ja]=Picasa エンジン
 Name[nl]=Picasa-engine
 Name[pt]=Motor do Picasa
+Name[pt_BR]=Mecanismo do Picasa
 Name[sv]=Picasa-gränssnitt
 Name[uk]=Рушій Picasa
 Name[x-test]=xxPicasa Enginexx
 
 Comment=An engine that allows you to query Picasa.
 Comment[pt]=Um motor que lhe permite efectuar consultas no Picasa.
+Comment[pt_BR]=Um mecanismo que lhe permite efetuar consultas no Picasa.
 Comment[sv]=Ett gränssnitt som låter dig söka på Picasa.
 Comment[uk]=Рушій, який надасть вам змогу надсилати запити до Picasa.
 Comment[x-test]=xxAn engine that allows you to query Picasa.xx

@@ -2,11 +2,13 @@
 Name=MediaBrowser Applet
 Name[ja]=MediaBrowser アプレット
 Name[pt]='Applet' de Leitura Multimédia
+Name[pt_BR]=Miniaplicativo de leitura multimídia
 Name[sv]=Miniprogram för mediabläddring
 Name[uk]=Аплет мультимедійного переглядача
 Name[x-test]=xxMediaBrowser Appletxx
 Comment=An applet to browse through your media files
 Comment[pt]=Uma 'applet' para navegar pelos seus ficheiros multimédia
+Comment[pt_BR]=Um miniaplicativo para navegar pelos seus arquivos multimídia
 Comment[sv]=Ett miniprogram för att bläddra i dina mediafiler
 Comment[uk]=Аплет для навігації вашими мультимедійними файлами
 Comment[x-test]=xxAn applet to browse through your media filesxx

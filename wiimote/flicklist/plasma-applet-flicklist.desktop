@@ -1,11 +1,13 @@
 [Desktop Entry]
 Name=flicklist
 Name[pt]=flicklist
+Name[pt_BR]=flicklist
 Name[sv]=Blädderlista
 Name[uk]=flicklist
 Name[x-test]=xxflicklistxx
 Comment=Plasma flicklist
 Comment[pt]=Flicklist do Plasma
+Comment[pt_BR]=Flicklist do Plasma
 Comment[sv]=Plasma blädderlista
 Comment[uk]=Аплет Плазми flicklist
 Comment[x-test]=xxPlasma flicklistxx
