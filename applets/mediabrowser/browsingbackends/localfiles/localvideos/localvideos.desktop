@@ -2,6 +2,7 @@
 Type=Service
 Icon=folder-video
 Name=Local videos
+Name[nds]=Lokaal Videos
 Name[nl]=Lokale video's
 Name[pt]=Vídeos locais
 Name[pt_BR]=Vídeos locais
