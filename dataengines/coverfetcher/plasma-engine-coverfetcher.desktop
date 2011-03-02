@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Cover Fetcher Engine
+Name[hr]=Podrška za dohvat omota
 Name[ja]=カバー取得エンジン
 Name[pt]=Motor de Obtenção de Capas
 Name[pt_BR]=Mecanismo de obtenção de capas
@@ -7,6 +8,7 @@ Name[sv]=Gränssnitt för omslagshämtning
 Name[uk]=Рушій отримання обкладинок
 Name[x-test]=xxCover Fetcher Enginexx
 Comment=An Engine able to fetch covers from last.fm.
+Comment[hr]=Podrška za dohvat omota s last.fm-a
 Comment[ja]=last.fm からカバーを取得するエンジン
 Comment[pt]=Um motor que consegue obter capas da Last.fm.
 Comment[pt_BR]=Um mecanismo que consegue obter capas do Last.fm.
