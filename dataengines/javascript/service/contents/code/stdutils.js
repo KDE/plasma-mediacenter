@@ -1,11 +1,33 @@
+// INET HELPER FUNCTIONS
+
 function doRequest(webengine, url, onDataCallBack, onFinishedCallBack)
 {
-  print(webengine);
   var io = webengine.getUrl(url);
   io.data.connect(onDataCallBack);
   io.finished.connect(onFinishedCallBack);
 }
 
+function buildUrl(baseUrl, queryItems)
+{
+  var newUrl = "";
+  if (queryItems == null)
+    return baseUrl;
+  
+  if (baseUrl.charAt(baseUrl.length - 1) != '/')
+    baseUrl.concat("/");
+
+  // build query in the url
+  newUrl = baseUrl + "?";
+  for (var key in queryItems)
+  {
+    newUrl += key + "=" + queryItems[key] + "&";
+  }
+  if (newUrl.charAt(newUrl.length - 1) == '&')
+    newUrl = newUrl.slice(0, newUrl.length - 1);
+  return newUrl;
+}
+
+// from http://stackoverflow.com/questions/1657733/compare-two-dates-in-javascript
 //function to convert W3C Dateformat in javascript date format
 Date.prototype.setISO8601 = function(string) {
     var regexp = "([0-9]{4})(-([0-9]{2})(-([0-9]{2})" +
@@ -31,3 +53,37 @@ Date.prototype.setISO8601 = function(string) {
     time = (Number(date) + (offset * 60 * 1000));
     this.setTime(Number(time));
 }
+
+// OUTPUT FUNCTIONS
+
+
+var errorID = 0;
+
+function outputErrorMessage(provider, providerSpecificCode, identifier, message)
+{
+  setData("Error:" + errorID, 
+	  {
+	    "provider" : provider,
+	    "provider specific code" : providerSpecificCode,
+	    "identifier" : identifier,
+	    "message" : message
+	  }
+  );
+  errorID++;
+}
+
+var warningID = 0;
+
+function outputWarningMessage(provider, identifier, message)
+{
+  setData("Warning:" + warningID,
+	  {
+	    "provider" : provider,
+	    "identifier" : identifier,
+	    "message" : message
+	  }
+  );
+  warningID++;
+}
+
+

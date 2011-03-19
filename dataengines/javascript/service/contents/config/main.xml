@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+                          http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+  <kcfgfile name="mediaservicerc"/>
+  <group name="results">
+    <entry name="MaxResults" type="Int">
+      <label>Defines the maximum results per page of the fetched data.</label>
+      <default>25</default>
+      <min>1</min>
+      <max>500</max>
+    </entry>
+    <entry name="Page" type="Int">
+      <label>Defines the starting page of the results</label>
+      <default>1</default>
+      <min>1</min>
+      <max>999</max>
+    </entry>
+  </group>
+</kcfg>

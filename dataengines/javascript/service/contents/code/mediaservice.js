@@ -20,114 +20,20 @@
 engine.include('xmldom.js');
 engine.include('xmlsax.js');
 engine.include('xmlw3cdom.js');
-//engine.include('youtube.js');
 engine.include('sha1.js');
 engine.include('stdutils.js');
-//engine.include('picasa.js');
+engine.include('mediaapi.js');
 
-var MediaType = {"photo":0, "video":1};
-
-//The media interface
-var nl = '\n';
-
-function WebMedia()
-{
-  this.type = null;
-  this.id = null;
-  this.description = null;
-  this.keywords = new Array();
-  this.author = null;
-  this.updated = null;
-  this.published = null;
-  this.link = null;
-  this.width = null;
-  this.height = null;
-  this.size = null;
-  //this.collection = null;
-  this.thumbnailLink = null;
-//  this.collectionID = null;
-  
-  this.toString = function()
-  {
-    var res = this.type + nl +
-	      this.id + nl + 
-	      this.description + nl;
-	      for (var i = 0; i < this.keywords.length; i++)
-		res += this.keywords[i] + nl;
-	      res += this.author + nl +
-	      this.updated.toLocalString() + nl +
-	      this.published.toLocalString() + nl +
-	      this.link + nl + 
-	      this.width + nl +
-	      this.height + nl + 
-	      this.size + nl + 
-	      this.thumbnailLink;
-      return res;
-  }
-  
-  this.toArray = function()
-  {
-    var array = new Array();
-    array['type'] = MediaTypeToString(this.type);
-    array['id'] = this.id;
-    array['title'] = this.title;
-    array['author'] = this.author;
-    array['description'] = this.description;    
-    array['keywords'] = this.keywords;
-    array['updated'] = this.updated;
-    array['published'] = this.published;
-    array['link'] = this.link;
-    array['width'] = this.width;
-    array['height'] = this.height;
-    array['size'] = this.size;
-    array['thumbnailLink'] = this.thumbnailLink;
-    return array;
-  }
-  //rating?
-  //comments?
-}
-
-
-function MediaTypeToString(mediaType)
-{
-  switch(mediaType)
-  {
-    case 0: return "photo";
-    case 1: return "video";
-    default: return "undefined";
-  }
-}
-//albums and playlists
-function WebMediaCollection()
-{
-  this.id = null;
-  this.title = null;
-  this.author = null;
-  this.description = null;
-  this.updated = null;
-  this.published = null;
-  this.link = null;
-  this.webmedia = new Array();
-  
-  this.toArray = function()
-  {
-    var arr = new Array()
-    arr['id'] = this.id;
-    arr['title'] = this.title;
-    arr['author'] = this.author;
-    arr['description'] = this.description;
-    arr['published'] = this.published;
-    arr['updated'] = this.updated;
-    arr['link'] = this.link;
-    return arr;
-  }
-}
-
-//attributes that only appear in videos: duration, embeddedHTML, resolution, 
-
-var addons = new Array()
+var addons = new Array();
 var selectedAddon = null;
+var webmediaID = 0;
+print("Hello");
+function getID()
+{
+  return webmediaID++;
+}
 
+// callback function when addon was created
 function addonCreated(addon)
 {
   print("new addon: " + addon)
@@ -137,8 +43,8 @@ function addonCreated(addon)
 }
 
 engine.addEventListener("addonCreated", addonCreated);
+
 var addonsObject = engine.listAddons("org.kde.plasma.dataengine.webmedia");
-print("number of addons: " + addonsObject.length);
 
 for (i in addonsObject) 
 {
@@ -148,6 +54,7 @@ for (i in addonsObject)
 
 function GetAddon(name)
 {
+  print("Searching for " + name);
   for (var i = 0; i < addons.length; i++)
   {
     if (addons[i] == name)
@@ -159,6 +66,176 @@ function GetAddon(name)
   return null;
 }
 
+// PARAMETER CHECK FUNCTIONS FOR EACH FUNCTION IN THE INTERFACE
+// ALL OF THE RETURN A NEW ARRAY OF PARAMETERS
+// OPTIONAL PARAMETERS GET DEFAULT VALUES
+
+function checkSearchMediaParams(provider, params)
+{
+  // new query parameters array that holds all parameters with (default) values
+  var newParams = new Array();
+ 
+  var text = params['text'];
+  var maxResults = params['max-results'];
+  var page = params['page'];
+  var media = params['media'];
+  
+  if (text == "" || !text)
+  {
+    outputErrorMessage(provider, "", "text", ErrorTypes[NOTEXTDEFINED]);
+    return null;
+  }
+  
+  if (maxResults == "" || !maxResults)
+    // TODO set maxResults with config value
+    maxResults = 25;
+  else
+  {
+    if (isNaN(maxResults))
+    {
+      outputErrorMessage(provider, "", maxResults, ErrorTypes[INVALIDNUMBER]);
+      return null;
+    }
+    maxResults = parseInt(maxResults);
+  }
+   
+  if (page == "" || !page)
+    page = 1;
+  else{
+    if (isNaN(page))
+    {
+      outputErrorMessage(provider, "", page, ErrorTypes[INVALIDNUMBER]);
+      return null;
+    }
+    // TODO set page with config value
+    page = parseInt(page);
+  }
+  
+  if (media != "" || media)
+  {
+    // Workaround check for valid format
+    var index = 0;
+    media = media.toLowerCase();
+    for(var key in MediaTypes)
+    {
+      if (media == MediaTypes[key])
+	break;
+      index++;
+    }
+    // all keys in MediaTypes are traversed
+    if (index == MediaTypes.length - 1)
+      outputErrorMessage(provider, "", media, ErrorTypes[INVALIDFORMAT]);
+  }
+  
+  newParams['text'] = text;
+  newParams['max-results'] = maxResults;
+  newParams['page'] = page;
+  newParams['media'] = media;
+  return newParams;
+}
+
+function checkSearchCollectionParams(provider, params)
+{
+  var newParams = new Array();
+  var text = params['text'];
+  
+  if (text == "" || !text)
+  {
+    outputErrorMessage(provider, "", ErrorTypes[NOTEXTDEFINED]);
+    return null;
+  }
+  newParams['text'] = text;
+  return queryParams;
+}
+
+function checkUploadedUserMediaParams(provider, params)
+{
+  var newParams = new Array();
+  
+  var user = params['user'];
+  var maxResults = params['max-results'];
+  var page = params['page'];
+  var collectionID = params['providerCollectionID'];
+  
+  if (user == "" || !user)
+  {
+    outputErrorMessage(provider, "", user, ErrorTypes[NOUSERDEFINED]);
+    return null;
+  }
+  if (maxResults == "" || !maxResults)
+    maxResults = 25;
+  else{
+    if (isNaN(maxResults))
+    {
+      outputErrorMessage(provider, "", maxResults, ErrorTypes[INVALIDNUMBER]);
+      return null;
+    }
+    maxResults = parseInt(maxResults);
+  }
+  if (page == "" || !page)
+    page = 1;
+  else
+  {
+    if (isNaN(page))
+    {
+      outputErrorMessage(provider, "", page, ErrorTypes[INVALIDNUMBER]);
+      return null;
+    }
+    page = parseInt(page);
+  }
+  
+  newParams['user'] = user;
+  newParams['max-results'] = maxResults;
+  newParams['page'] = page;
+  newParams['providerCollectionID'] = collectionID;
+  return newParams;
+}
+
+function checkUploadedUserCollectionParams(provider, params)
+{
+  var newParams = new Array();
+  
+  var user = params['user'];
+  var maxResults = params['max-results'];
+  var page = params['page'];
+  
+  if (user == "" || !user)
+  {
+    outputErrorMessage(provider, "", user, ErrorTypes[NOUSERDEFINED]);
+    return null;
+  }
+  
+  if (maxResults == "" || !maxResults)
+    maxResults = 25;
+  else
+  {
+    if (isNaN(maxResults))
+    {
+      outputErrorMessage(provider, "", maxResults, ErrorTypes[INVALIDNUMBER]);
+      return null;
+    }
+    maxResults = parseInt(maxResults);
+  }
+  
+  if (page == "" || !page)
+    page = 1;
+  else
+  {
+    if (isNaN(page))
+    {
+      outputErrorMessage(provider, "", page, ErrorTypes[INVALIDNUMBER]);
+      return null;
+    }
+    page = parseInt(page);   
+  }
+  
+  newParams['user'] = user;
+  newParams['max-results'] = maxResults;
+  newParams['page'] = page;
+  return newParams;
+}
+
+
 function setupJob(job)
 {
   job.addon = selectedAddon;
@@ -167,28 +244,72 @@ function setupJob(job)
     job.start = function()
     {
       print("Service starts a request to " + this.addon + " with " + this.parameters.length + " parameters");
-      this.addon.searchMedia(this.parameters);
-      this.result = true;      
+      var params = checkSearchMediaParams(this.addon.name, this.parameters);
+      
+      if (params){
+	print("params not null");
+
+	this.addon.searchMedia(params);
+	this.result = true;      
+      } else
+      {
+	this.result = false;
+	print("params null");
+      }
     };
   }
   if (job.operationName == 'searchCollection')
   {
-      job.start = function()
+    job.start = function()
+    {
+      print("Service starts a request to " + this.addon + " with " + this.parameters.length + " parameters");
+      var params = checkSearchCollectionParams(this.addon.name, this.parameters);
+      if (params)
       {
-	print("Service starts a request to " + this.addon + " with " + this.parameters.length + " parameters");
-	this.addon.searchCollection(this.parameters);
+	this.addon.searchCollection(queryParams);
 	this.result = true;
-      };
+      }else
+	this.result = false;
+    };
+  }
+  if (job.operationName == 'getUploadedUserMedia')
+  {
+    job.start = function()
+    {
+      print("Service starts a request to " + this.addon + " with " + this.parameters.length + " parameters");
+      var params = checkUploadedUserMediaParams(this.addon.name, this.parameters);
+      if (params)
+      {
+	this.addon.getUploadedUserMedia(params);
+	this.result = true;
+      }
+      else
+	this.result = false;
+    };
+  }
+  if (job.operationName == 'getUploadedUserCollection')
+  {
+    job.start = function()
+    {
+      print("Service starts a request to " + this.addon + " with " + this.parameters.length + " parameters");
+      var params = checkUploadedUserCollectionParams(this.addon.name, this.parameters);
+      if (params)
+      {
+	this.addon.getUploadedUserCollection(params);
+	this.result = true;
+      }else
+	this.result = false;
+    };
   }
 }
 
 engine.serviceForSource = function(source)
 {
- selectedAddon = GetAddon(source);
- if (selectedAddon != null)
- {
-    var service = new Service('provider');
-    service.setupJob = setupJob;
-    return service;
- }
+  selectedAddon = GetAddon(source);
+  if (selectedAddon != null)
+  {
+      var service = new Service('provider');
+      service.setupJob = setupJob;
+      return service;
+  }
 }
