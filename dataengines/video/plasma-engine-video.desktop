@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Video Engine
+Name[et]=Videomootor
 Name[ja]=ビデオエンジン
 Name[nl]=Video-engine
 Name[pt]=Motor de Vídeo
@@ -8,6 +9,7 @@ Name[sv]=Videogränssnitt
 Name[uk]=Відеорушій
 Name[x-test]=xxVideo Enginexx
 Comment=An engine that allows you to query web services for videos.
+Comment[et]=Mootor veebiteenustele videode kohta päringute esitamiseks.
 Comment[pt]=Um motor que lhe permite pesquisar vídeos em vários serviços na Web.
 Comment[pt_BR]=Um mecanismo que lhe permite pesquisar vídeos em vários serviços na Web.
 Comment[sv]=Ett gränssnitt som låter dig söka efter videor på webbtjänster.

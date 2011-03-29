@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Picture Engine
+Name[et]=Pildimootor
 Name[nl]=Afbeeldingsengine
 Name[pt]=Motor de Imagens
 Name[pt_BR]=Mecanismo de imagem
@@ -8,6 +9,7 @@ Name[uk]=Рушій зображень
 Name[x-test]=xxPicture Enginexx
 
 Comment=An engine that allows you to query web services for pictures.
+Comment[et]=Mootor veebiteenustele piltide kohta päringute esitamiseks.
 Comment[pt]=Um motor que lhe permite pesquisar imagens em vários serviços na Web.
 Comment[pt_BR]=Um mecanismo que lhe permite pesquisar imagens em vários serviços na Web.
 Comment[sv]=Ett gränssnitt som låter dig söka efter bilder på webbtjänster.
