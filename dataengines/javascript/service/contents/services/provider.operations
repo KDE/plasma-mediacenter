@@ -12,7 +12,6 @@
   </group>
   <group name="getUploadedUserMedia">
     <entry name="user" type="string"/>
-    <entry name="providerCollectionID" type="string"/> <!-- Provilder specific id of a collection -->
     <entry name="max-results" type="string"/>
     <entry name="page" type="string" />
   </group>

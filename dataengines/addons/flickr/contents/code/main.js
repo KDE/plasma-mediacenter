@@ -35,9 +35,12 @@ Flickr.prototype.searchMedia = function(queryParams)
   var page = queryParams['page'];
   var media = queryParams['media'];
 
-  if (media == "" || !media)
+  // by default, we search for pictures
+  if (media == "" || !media || media == MediaTypes[PHOTO])
     media = "photos";
-  
+  if (media == MediaTypes[VIDEO])
+    media = "videos";
+    
   /*
   we can search for videos as well, with the extras=media parameter
   description: the description of this medium
@@ -50,19 +53,20 @@ Flickr.prototype.searchMedia = function(queryParams)
   url_t: the thumbnailLink
   url_o: the url of the original media link
 */  
-  
+  print("here");
+  print(media);
   var url = buildUrl(this.baseUrl, 
 		      {
 			"method" : "flickr.photos.search",
 		        "api_key" : this.apiKey,
 		        "text" : text,
+			"sort" : "relevance",
 			"media" : media,
 		        "extras" : "description,date_upload,owner_name,last_update,tags,machine_tags,o_dims,media,url_t,url_o",
-			"per_page" : max-results,
+			"per_page" : maxResults,
 			"page" : page
 		      }
-		    );
-  //print(url2);
+	    );
   print(url);
 
   var result = "";
@@ -77,7 +81,7 @@ Flickr.prototype.searchMedia = function(queryParams)
       {
 	var objDom = new XMLDoc(result, xmlError);
 	var objDomTree = objDom.docNode;
-	// we cannot access the this object. we have to access it indirectly
+	// we cannot access the "this" object. we have to access it indirectly
 	if (flickrObject.isErrorMessage(objDomTree))
 	  return;
 	var photoNodes = objDomTree.getElements("photos")[0].getElements("photo");
@@ -88,50 +92,35 @@ Flickr.prototype.searchMedia = function(queryParams)
 	}
 	for (var i = 0; i < photoNodes.length; i++)
 	{
-	  try
-	  {
-	    var webmedia = new WebMedia();
-	    if (photoNodes[i].getAttribute("media") == "photo")
-	      webmedia.type = MediaTypes[PHOTO];
-	    else
-	      webmedia.type = MediaTypes[VIDEO];
-	    
-	    webmedia.id = getID();
-	    webmedia.providerSpecificID = photoNodes[i].getAttribute("id");
-	    webmedia.title = photoNodes[i].getAttribute("title");
-	    webmedia.description = photoNodes[i].getElements("description")[0].getText();
-	    
-	    webmedia.keywords = photoNodes[i].getAttribute("tags").split(" ");
-	    
-	    webmedia.user = photoNodes[i].getAttribute("ownername");
-	    webmedia.updated = photoNodes[i].getAttribute("last_update");;
-	    webmedia.published = photoNodes[i].getAttribute("dateupload");
-	    webmedia.link = photoNodes[i].getAttribute("url_o");
-	    webmedia.height = photoNodes[i].getAttribute("height_o");
-	    webmedia.width = photoNodes[i].getAttribute("width_o");
-	    webmedia.size = "";
-	  //  webmedia.collection = "";
-	    webmedia.addThumbnail(photoNodes[i].getAttribute("url_t"),
-				  photoNodes[i].getAttribute("height_t"),
-				  photoNodes[i].getAttribute("width_t"));
-	    setData(webmedia.id, webmedia.toArray());
-	  }catch(e)
-	  {
-	    print("A problem occured while parsing: " + e.message);
-	    if (typeof e.message === "undefined")
-	      outputErrorMessage(this.name, "", result);     
-	    else
-	      outputErrorMessage(this.name, "", e.message);
-	  }
+	  var webmedia = new WebMedia();
+	  if (photoNodes[i].getAttribute("media") == "photo")
+	    webmedia.type = MediaTypes[PHOTO];
+	  else
+	    webmedia.type = MediaTypes[VIDEO];
+	  webmedia.provider = flickrObject.name;
+	  webmedia.id = getID();
+	  webmedia.providerSpecificID = photoNodes[i].getAttribute("id");
+	  webmedia.title = photoNodes[i].getAttribute("title");
+	  webmedia.description = photoNodes[i].getElements("description")[0].getText();
+	  
+	  webmedia.keywords = photoNodes[i].getAttribute("tags").split(" ");
+	  
+	  webmedia.user = photoNodes[i].getAttribute("ownername");
+	  webmedia.updated = UnixToDate(photoNodes[i].getAttribute("last_update"));
+	  webmedia.published = UnixToDate(photoNodes[i].getAttribute("dateupload"));
+	  webmedia.link = photoNodes[i].getAttribute("url_o");
+	  webmedia.height = photoNodes[i].getAttribute("height_o");
+	  webmedia.width = photoNodes[i].getAttribute("width_o");
+	  webmedia.size = "";
+	//  webmedia.collection = "";
+	  webmedia.addThumbnail(photoNodes[i].getAttribute("url_t"),
+				photoNodes[i].getAttribute("height_t"),
+				photoNodes[i].getAttribute("width_t"));
+	  setData(webmedia.id, webmedia.toArray());
 	}
-	print("Parsing done");
       }catch(e)
       {
-	print("A problem occured while parsing: " + e.message);
-	if (typeof e.message === "undefined")
-	  outputErrorMessage(this.name, "", result);     
-	else
-	  outputErrorMessage(this.name, "", e.message);
+	outputErrorMessage(flickrObject.name, "", e.message, ErrorTypes[PARSINGERROR]);
       }
     }
   );
@@ -148,10 +137,6 @@ Flickr.prototype.getUploadedUserMedia = function(queryParams)
   var user = queryParams['user'];
   var maxResults = queryParams['max-results'];
   var page = queryParams['page'];
-  var collectionID = queryParams['providerCollectionID'];
-  
-  if (collectionID)
-    outputWarningMessage(this.name, collectionID, WarningTypes[PARAMIGNORED]);
   
   var result = "";
   this.getNSID(user, 
@@ -159,7 +144,7 @@ Flickr.prototype.getUploadedUserMedia = function(queryParams)
 		{
 		  if (!nsid)
 		  {
-		    outputErrorMessage(flickrObject.name, "", "Fetching username " + user + " failed");
+		    outputErrorMessage(flickrObject.name, "", user, ErrorTypes[NOUSERFOUND]);
 		    return;
 		  }
 		  
@@ -195,49 +180,34 @@ Flickr.prototype.getUploadedUserMedia = function(queryParams)
 				  }
 				  for (var i = 0; i < photoNodes.length; i++)
 				  {
-				    try
-				    {
-				      var webmedia = new WebMedia();
-				      if (photoNodes[i].getAttribute("media") == "photo")
-					webmedia.type = MediaTypes[PHOTO];
-				      else
-					webmedia.type = MediaTypes[VIDEO];
-				      
-				      webmedia.id = getID();
-				      webmedia.providerSpecificID = photoNodes[i].getAttribute("id");
-				      webmedia.title = photoNodes[i].getAttribute("title");
-				      webmedia.description = photoNodes[i].getElements("description")[0].getText();
-				      
-				      webmedia.keywords = photoNodes[i].getAttribute("tags").split(" ");
-				      
-				      webmedia.user = photoNodes[i].getAttribute("ownername");
-				      webmedia.updated = photoNodes[i].getAttribute("last_update");;
-				      webmedia.published = photoNodes[i].getAttribute("dateupload");
-				      webmedia.link = photoNodes[i].getAttribute("url_o");
-				      webmedia.height = photoNodes[i].getAttribute("height_o");
-				      webmedia.width = photoNodes[i].getAttribute("width_o");
-				      webmedia.size = "";
-				      webmedia.addThumbnail(photoNodes[i].getAttribute("url_t"),
-							    photoNodes[i].getAttribute("height_t"),
-							    photoNodes[i].getAttribute("width_t"));
-				      setData(webmedia.id, webmedia.toArray());
-				    }catch(e)
-				    {
-				      print("A problem occured while parsing: " + e.message);
-				      if (typeof e.message === "undefined")
-					outputErrorMessage(fObj.name, "", result);     
-				      else
-					outputErrorMessage(fObj.name, "", e.message);
-				    }
+				    var webmedia = new WebMedia();
+				    if (photoNodes[i].getAttribute("media") == "photo")
+				      webmedia.type = MediaTypes[PHOTO];
+				    else
+				      webmedia.type = MediaTypes[VIDEO];
+				    
+				    webmedia.id = getID();
+				    webmedia.providerSpecificID = photoNodes[i].getAttribute("id");
+				    webmedia.title = photoNodes[i].getAttribute("title");
+				    webmedia.description = photoNodes[i].getElements("description")[0].getText();
+				    
+				    webmedia.keywords = photoNodes[i].getAttribute("tags").split(" ");
+				    
+				    webmedia.user = photoNodes[i].getAttribute("ownername");
+				    webmedia.updated = photoNodes[i].getAttribute("last_update");;
+				    webmedia.published = photoNodes[i].getAttribute("dateupload");
+				    webmedia.link = photoNodes[i].getAttribute("url_o");
+				    webmedia.height = photoNodes[i].getAttribute("height_o");
+				    webmedia.width = photoNodes[i].getAttribute("width_o");
+				    webmedia.size = "";
+				    webmedia.addThumbnail(photoNodes[i].getAttribute("url_t"),
+							  photoNodes[i].getAttribute("height_t"),
+							  photoNodes[i].getAttribute("width_t"));
+				    setData(webmedia.id, webmedia.toArray());
 				  }
-				  print("Parsing done");
 				}catch(e)
 				{
-				  print("A problem occured while parsing: " + e.message);
-				  if (typeof e.message === "undefined")
-				    outputErrorMessage(fObj.name, "", result);     
-				  else
-				    outputErrorMessage(fObj.name, "", e.message);
+				  outputErrorMessage(flickrObject.name, "", e.message, ErrorTypes[PARSINGERROR]);
 				}
 			      }
 			  );
@@ -258,6 +228,11 @@ Flickr.prototype.getUploadedUserCollection = function(queryParams)
   this.getNSID(user,
 	       function(nsid)
 	       {
+		  if (!nsid)
+		  {
+		    outputErrorMessage(flickrObject.name, "", user, ErrorTypes[NOUSERFOUND]);
+		    return;
+		  }
 		  var url = buildUrl(flickrObject.baseUrl, 
 				     {
 					"method" : "flickr.photosets.getList",
@@ -288,34 +263,20 @@ Flickr.prototype.getUploadedUserCollection = function(queryParams)
 				  }
 				  for (var i = 0; i < photosetNodes.length; ++i)
 				  {
-				    try
-				    {
-				      var webmediaCollection = new WebMediaCollection();
-				      var farm = photosetNodes[i].getAttribute("farm");
-				      var server = photosetNodes[i].getAttribute("server");
-				      webmediaCollection.id = getID();
-				      webmediaCollection.providerSpecificID = photosetNodes[i].getAttribute("id");
-				      webmediaCollection.provider = flickrObject.name;
-				      webmediaCollection.title = photosetNodes[i].getElements("title")[0].getText();
-				      webmediaCollection.description = photosetNodes[i].getElements("description")[0].getText();
-				      setData(webmediaCollection.id, webmediaCollection.toArray());
-				    }
-				    catch(e)
-				    {
-				      print("A problem occured while parsing: " + e.message);
-				      if (typeof e.message === "undefined")
-					outputErrorMessage(flickrObject.name, "", result);     
-				      else
-					outputErrorMessage(flickrObject.name, "", e.message);
-				    }
+				  
+				    var webmediaCollection = new WebMediaCollection();
+				    var farm = photosetNodes[i].getAttribute("farm");
+				    var server = photosetNodes[i].getAttribute("server");
+				    webmediaCollection.id = getID();
+				    webmediaCollection.providerSpecificID = photosetNodes[i].getAttribute("id");
+				    webmediaCollection.provider = flickrObject.name;
+				    webmediaCollection.title = photosetNodes[i].getElements("title")[0].getText();
+				    webmediaCollection.description = photosetNodes[i].getElements("description")[0].getText();
+				    setData(webmediaCollection.id, webmediaCollection.toArray());
 				  }
 				}catch(e)
 				{
-				  print("A problem occured while parsing: " + e.message);
-				  if (typeof e.message === "undefined")
-				    outputErrorMessage(flickrObject.name, "", result);     
-				  else
-				    outputErrorMessage(flickrObject.name, "", e.message);
+				  outputErrorMessage(flickrObject.name, "", e.message, ErrorTypes[PARSINGERROR]);
 				}
 			      }
 			    );
@@ -357,11 +318,7 @@ Flickr.prototype.getNSID = function(username, onNSIDRetrievedCallback)
 		onNSIDRetrievedCallback(nsid);
 	      }catch(e)
 	      {
-		print("A problem occured while parsing: " + e.message);
-		if (typeof e.message === "undefined")
-		  outputErrorMessage(this.name, "", result);     
-		else
-		  outputErrorMessage(this.name, "", e.message);
+		outputErrorMessage(flickrObject.name, "", e.message, ErrorTypes[PARSINGERROR]);
 	      }
 	    }
 	  );
@@ -369,26 +326,26 @@ Flickr.prototype.getNSID = function(username, onNSIDRetrievedCallback)
 
 Flickr.prototype.isErrorMessage = function(objDomTree)
 {
-  if (objDomTree.getAttribute("stat") == "fail")
+  try 
   {
-    var msg = objDomTree.getElements("err")[0].getAttribute("msg");
-    var code = objDomTree.getElements("err")[0].getAttribute("code");
-    outputErrorMessage(this.name, code, "Server response", msg);
-    return true;
+    if (objDomTree.getAttribute("stat") == "fail")
+    {
+      var msg = objDomTree.getElements("err")[0].getAttribute("msg");
+      var code = objDomTree.getElements("err")[0].getAttribute("code");
+      outputErrorMessage(this.name, code, "Server response", msg);
+      return true;
+    }
+    return false;
+  }catch(e)
+  {
+    outputErrorMessage(flickrObject.name, "", e.message, ErrorTypes[PARSINGERROR]);
+    return false;
   }
-  return false;
 }
 
 function xmlError(e)
 {
   print(e);
-}
-
-
-//helper function
-function UnixToDate(unixTimeStamp)
-{
-  return new Date(unixTimeStamp * 1000);
 }
 
 registerAddon(Flickr)

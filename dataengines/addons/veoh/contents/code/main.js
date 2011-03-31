@@ -24,18 +24,26 @@ function Veoh()
   print("Hello veoh");
   this.baseUrl = "http://www.veoh.com/rest/v2/execute.xml";
   this.apiKey = "A73F9B59-0A24-23C3-B376-1A57CCA2C00B";
+  this.name = "veoh";
   veohObject = this;
 }
 
 Veoh.prototype.searchMedia = function(queryParams)
 {
-  var query = queryParams['text'];
-  if (query === "" || typeof query === "undefined")
-  {
-    print("no query defined");
-    return;
-  }
-  var url = this.baseUrl + "?method=veoh.search.video&apiKey=" + this.apiKey + "&userQuery=" + query;
+  var text = queryParams['text'];
+  var maxResults = queryParams['max-results'];
+  var page = queryParams['page'];
+  
+  // zero based index
+  var offset = (maxResults  * page) - maxResults;
+  var url = buildUrl(this.baseUrl, 
+		    {
+		      "method" : "veoh.search.video",
+		      "apiKey" : this.apiKey,
+		      "userQuery" : text,
+		      "maxResults" : maxResults,
+		      "offset" : offset
+		    });
   print(url);
   var result = "";
   doRequest(engine, url, 
@@ -55,33 +63,30 @@ Veoh.prototype.searchMedia = function(queryParams)
 	
 	var videoNodes = objDomTree.getElements("videoList")[0].getElements("video");
 	if (videoNodes.length == 0)
-	  print("photonodes is empty");
-	
+	{
+	  errorMessage(veohObject.name, "", text, ErrorTypes[NORESULTS]);
+	  return;
+	}
 	for (var i = 0; i < videoNodes.length; i++)
 	{
-	  try
-	  {
-	    var webmedia = new WebMedia();
-	    
-	    webmedia.type = MediaType.video;
-	    
-	    webmedia.id = videoNodes[i].getAttribute("videoId");
-	    webmedia.title = videoNodes[i].getAttribute("title");
-	    webmedia.description = videoNodes[i].getAttribute("description");
-	    webmedia.keywords = videoNodes[i].getAttribute("tags").split(" ");
-	    webmedia.author = videoNodes[i].getAttribute("username");
-	    webmedia.published = new Date(videoNodes[i].getAttribute("dateAdded"));
-	    webmedia.link = videoNodes[i].getAttribute("previewUrl");
-	    webmedia.thumbnailLink = videoNodes[i].getAttribute("highResImage");
-	    setData(webmedia.id, webmedia.toArray());
-	  }catch(e)
-	  {
-	    print("A problem occured while parsing:" + e.message);
-	  }
+	  var webmedia = new WebMedia();
+	  
+	  webmedia.type = MediaTypes[VIDEO];
+	  
+	  webmedia.id = getID();
+	  webmedia.providerSpecificID = videoNodes[i].getAttribute("videoId");
+	  webmedia.title = videoNodes[i].getAttribute("title");
+	  webmedia.description = videoNodes[i].getAttribute("description");
+	  webmedia.keywords = videoNodes[i].getAttribute("tags").split(" ");
+	  webmedia.user = videoNodes[i].getAttribute("username");
+	  webmedia.published = new Date(videoNodes[i].getAttribute("dateAdded"));
+	  webmedia.link = videoNodes[i].getAttribute("previewUrl");
+	  webmedia.addThumbnai(videoNodes[i].getAttribute("highResImage"), 0, 0);
+	  setData(webmedia.id, webmedia.toArray());
 	}
       }catch(e)
       {
-	print("A problem occured while parsing:" + e.message);
+	outputErrorMessage(veohObject.name, "", e.message, ErrorTypes[PARSINGERROR]);
       }
     }
   );
@@ -89,10 +94,14 @@ Veoh.prototype.searchMedia = function(queryParams)
 
 Veoh.prototype.searchCollection = function(queryParams)
 {
-  var query = queryParams['text'];
-  if (query === "" || typeof(query) == "undefined")
-    return;
-  var url = this.baseUrl + "?method=veoh.search.collection&userQuery=" + query + "&apiKey=" + this.apiKey;
+  var text = queryParams['text'];
+  
+  var url = buildUrl(this.baseUrl, 
+		     {
+		       "method" : "veoh.search.collection",
+		       "userQuery" : text,
+		       "apiKey" : this.apiKey
+		     });
   var result = "";
   print(url);
   doRequest(engine, url,
@@ -108,33 +117,99 @@ Veoh.prototype.searchCollection = function(queryParams)
 	var objDomTree = objDom.docNode;
 	
 	var videosetNodes = objDomTree.getElements("collections")[0].getElements("collection");
-	if (typeof(videosetNodes) === "undefined" || videosetNodes == null || videosetNodes.length == 0)
+	if (!videosetNodes || videosetNodes.length == 0)
 	{
-	  print("No collections");
+	  outputErrorMessage(veohObject.name, "", text, ErrorTypes[NORESULTS]);
 	  return;
 	}
 	for (var i = 0; i < videosetNodes.length; ++i)
 	{
-	  try
-	  {
-	    var webmediaCollection = new WebMediaCollection();
-	    webmediaCollection.id = videosetNodes[i].getAttribute("collectionId");
-	    webmediaCollection.title = videosetNodes[i].getAttribute("title");
-	    webmediaCollection.description = videosetNodes[i].getAttribute("description");
-	    webmediaCollection.updated = videosetNodes[i].getAttribute("dateLastModified");
-	    webmediaCollection.author = videosetNodes[i].getAttribute("username");
-	    setData(webmediaCollection.id, webmediaCollection.toArray());
-	  }catch(e)
-	  {
-	    print("A problem occured while parsing: " + e.message);
-	  }
+	  var webmediaCollection = new WebMediaCollection();
+	  webmediaCollection.id = getID();
+	  webmediaCollection.providerSpecificID = videosetNodes[i].getAttribute("collectionId");
+	  webmediaCollection.title = videosetNodes[i].getAttribute("title");
+	  webmediaCollection.description = videosetNodes[i].getAttribute("description");
+	  webmediaCollection.updated = videosetNodes[i].getAttribute("dateLastModified");
+	  webmediaCollection.user = videosetNodes[i].getAttribute("username");
+	  webmediaCollection.thumbnail = videosetNodes[i].getAttribute("highResImageUrl");
+	  setData(webmediaCollection.id, webmediaCollection.toArray());
 	}
       }catch(e)
       {
-	print("A problem occured while parsing: " + e.message);
+	outputErrorMessage(veohObject.name, "", e.message, ErrorTypes[PARSINGERROR]);
       }
     }
   );
+}
+
+Veoh.prototype.getUploadedUserMedia = function(queryParams)
+{
+  var user = queryParams['user'];
+  var maxResults = queryParams['max-results'];
+  var page = queryParams['page'];
+  
+  // zero based index
+  var offset = (maxResults * page) - maxResults;
+  var url = buildUrl(this.baseUrl,
+		     {
+		       "method" : "veoh.people.getPublishedVideos",
+		       "username" : user,
+		       "maxResults" : maxResults,
+		       "offset" : offset,
+		       "apiKey" : this.apiKey
+		     }
+		  );
+  print(url);
+  var result = "";
+  doRequest(engine, url,
+	    function(job, data)
+	    {
+	      result += data.valueOf();
+	    },
+	    function(job)
+	    {
+	      try
+	      {
+		var objDom = new XMLDoc(result, xmlError);
+		var objDomTree = objDom.docNode;
+		
+		if (veohObject.isErrorMessage(objDomTree))
+		  return;
+		
+		var videoNodes = objDomTree.getElements("videoList")[0].getElements("video");
+		if (videoNodes.length == 0)
+		{
+		  errorMessage(veohObject.name, "", text, ErrorTypes[NORESULTS]);
+		  return;
+		}
+		for (var i = 0; i < videoNodes.length; i++)
+		{
+		  var webmedia = new WebMedia();
+		  
+		  webmedia.type = MediaTypes[VIDEO];
+		  
+		  webmedia.id = getID();
+		  webmedia.providerSpecificID = videoNodes[i].getAttribute("videoId");
+		  webmedia.title = videoNodes[i].getAttribute("title");
+		  webmedia.description = videoNodes[i].getAttribute("description");
+		  webmedia.keywords = videoNodes[i].getAttribute("tags").split(" ");
+		  webmedia.user = videoNodes[i].getAttribute("username");
+		  webmedia.published = new Date(videoNodes[i].getAttribute("dateAdded"));
+		  webmedia.link = videoNodes[i].getAttribute("previewUrl");
+		  webmedia.addThumbnail(videoNodes[i].getAttribute("highResImage"), 0, 0);
+		  setData(webmedia.id, webmedia.toArray());
+		}
+	      }catch(e)
+	      {
+		outputErrorMessage(veohObject.name, "", e.message, ErrorTypes[PARSINGERROR]);
+	      }
+	    }
+	  );
+}
+
+Veoh.prototype.getUploadedUserCollection = function(queryParams)
+{
+  outputErrorMessage(this.name, "", "getUploadedUserCollection", ErrorTypes[FUNCTIONNOTPROVIDED]);
 }
 
 Veoh.prototype.toString = function()
@@ -147,7 +222,7 @@ Veoh.prototype.isErrorMessage = function(objDomTree)
   if (objDomTree.getAttribute("stat") == "fail")
   {
     var msg = objDomTree.getElements("errorList")[0].getAttribute("errorMessage");
-    setData(this.toString(), "Error", msg);
+    outputErrorMessage(this.name,"", "Error", msg);
     return true;
   }
   return false;

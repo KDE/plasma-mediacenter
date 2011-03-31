@@ -1,18 +1,10 @@
 [Desktop Entry]
-Name=Youtube
-Name[de]=Youtube
-Name[ja]=Youtube
-Name[nds]=Youtube
-Name[nl]=Youtube
-Name[pt]=Youtube
-Name[pt_BR]=Youtube
-Name[sv]=Youtube
-Name[uk]=Youtube
-Name[x-test]=xxYoutubexx
+Name=Veoh
+Name[x-test]=xxVeohxx
 
 Comment=An engine that allows you to query web services for media.
 Comment[pt]=Um motor que lhe permite pesquisar conteúdos multimédia em vários serviços na Web.
-Comment[pt_BR]=Um mecanismo que lhe permite pesquisar conteúdos multimídia em vários serviços na Web.
+Comment[pt_BR]=Um motor que lhe permite pesquisar conteúdos multimídia em vários serviços na Web.
 Comment[sv]=Ett gränssnitt som låter dig söka efter media på webbtjänster.
 Comment[uk]=Рушій, який надасть вам змогу звантажувати мультимедійні дані зі служб у мережі.
 Comment[x-test]=xxAn engine that allows you to query web services for media.xx
@@ -24,7 +16,7 @@ X-Plasma-API=javascript
 X-KDE-Library=plasma_engine_webmedia
 X-KDE-PluginInfo-Author=Onur-Hayri Bakici
 X-KDE-PluginInfo-Email=thehayro@gmail.com
-X-KDE-PluginInfo-Name=org.kde.plasma.dataengine.webmedia.youtube
+X-KDE-PluginInfo-Name=org.kde.plasma.dataengine.webmedia.veoh
 X-KDE-PluginInfo-Version=0.1
 X-KDE-PluginInfo-Website=http://plasma.kde.org/
 X-KDE-PluginInfo-Category=org.kde.plasma.dataengine.webmedia

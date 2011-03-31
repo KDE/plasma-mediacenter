@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright 2010 by Onur-Hayri Bakici <thehayro@gmail.com               *
+ *   Copyright 2010, 2011 by Onur-Hayri Bakici <thehayro@gmail.com         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,20 +23,27 @@ function Blip()
 {
   print("Hello blip");
   this.baseUrl = "http://www.blip.tv/";
+  this.name = "blip";
   blipObject = this;
 }
 
 Blip.prototype.searchMedia = function(queryParams)
 {
-  var query = queryParams['text'];
-  if (query === "" || typeof query === "undefined")
-  {
-    print("no query defined");
-    return;
-  }
-  print(query);
+  var text = queryParams['text'];
+  var maxResults = queryParams['max-results'];
+  var page = queryParams['page'];
+  
+  if (maxResults != "")
+    outputWarningMessage(this.name, "max-results", WarningTypes[PARAMIGNORED]);
+  if (page != "")
+    outputWarningMessage(this.name, "page", WarningTypes[PARAMIGNORED]);
  
-  var url = this.baseUrl + "search/view/?search=" + query + "&skin=api";
+  var url = buildUrl(this.baseUrl + "search/view/",
+		     {
+		       "search" : text,
+		       "skin": "api"
+		     }
+		    );
   print(url);
 
   var result = "";
@@ -52,55 +59,64 @@ Blip.prototype.searchMedia = function(queryParams)
 	var objDom = new XMLDoc(result, xmlError);
 	var objDomTree = objDom.docNode;
 	
-	//blip tv has an inconsisten return of errors
+	//blip tv has an inconsisties return of errors
 	if (objDomTree.getElements("notice")[0] != null)
 	{
-	  setData(blipObject.toString(), "Error", objDomTree.getElements("notice")[0].getText());
+	  outputErrorMessage(blipObject.name, "", objDomTree.getElements("notice")[0].getText(), ErrorTypes[INTERNALERROR]);
 	  return;
 	}
-	/*if (blipObject.isErrorMessage(objDomTree))
-	  return;*/
+	if (blipObject.isErrorMessage(objDomTree))
+	  return;
 	var photoNodes = objDomTree.getElements("payload")[0].getElements("asset");
 	if (photoNodes.length == 0)
-	  print("photonodes is empty");	
+	{
+	  outputErrorMessage(blipObject.name, "", text, ErrorTypes[NORESULTS]);
+	  return;
+	}
 	for (var i = 0; i < photoNodes.length; i++)
 	{
-	  try{
-	    //get only the first entry of the media list
-	    var mediaItem = photoNodes[i].getElements("mediaList")[0].getElements("media")[0];
-	    var webmedia = new WebMedia();
-	    webmedia.type = MediaType.video;
-	    
-	    webmedia.id = photoNodes[i].getElements("id")[0].getText();
-	    
-	    webmedia.title = photoNodes[i].getElements("title")[0].getText();
-	    webmedia.description = photoNodes[i].getElements("description")[0].getText();
-	    
-	    var tagItems = photoNodes[i].getElements("tags")[0].getElements("string");
-	    for (var j = 0; j < tagItems.length; ++j)
-	    {
-	      webmedia.keywords[j] = tagItems[j].getText();
-	    }
-	    
-	    webmedia.author = photoNodes[i].getElements("createdBy")[0].getElements("login")[0].getText();
-	    webmedia.published = new Date(photoNodes[i].getElements("modified")[0].getText());
-	    webmedia.link = mediaItem.getElements("link")[0].getAttribute("href");
-	    webmedia.height = mediaItem.getElements("height")[0].getText();
-	    webmedia.width = mediaItem.getElements("width")[0].getText();
-	    webmedia.size = mediaItem.getElements("size")[0].getText();;
-      //     webmedia.thumbnailLink = "http://farm" + farm + ".static.flickr.com/" + server + "/" + webmedia.id + "_" + secret + "_t.jpg";
-	    //MediaDataCollection.push(webmedia);
-	    setData(webmedia.id, webmedia.toArray());
-	  }
-	  catch(e)
+	
+	  //get only the first entry of the media list
+	  var mediaItem = photoNodes[i].getElements("mediaList")[0].getElements("media");
+	  var webmedia = new WebMedia();
+	  webmedia.type = MediaTypes[VIDEO];
+	  
+	  webmedia.id = getID();
+	  webmedia.providerSpecificID = photoNodes[i].getElements("id")[0].getText();
+	  webmedia.provider = blipObject.name;
+	  webmedia.title = photoNodes[i].getElements("title")[0].getText();
+	  webmedia.description = photoNodes[i].getElements("description")[0].getText();
+	  
+	  var tagItems = photoNodes[i].getElements("tags")[0].getElements("string");
+	  for (var j = 0; j < tagItems.length; j++)
 	  {
-	    print("A problem occured while parsing:" + e.message);
+	    webmedia.keywords[j] = tagItems[j].getText();
 	  }
+	  
+	  var webRoleItem = null;
+	  // get the "web"-role from the video
+	  for (var j = 0; j < mediaItem; j++)
+	  {
+	    if (mediaItem[j].getElements("role")[0].getText() == "Web")
+	      webRoleItem = mediaItem[j];
+	  }
+	  // "web"-role not found. Taking the first one
+	  webRoleItem = mediaItem[0];
+	  webmedia.user = photoNodes[i].getElements("createdBy")[0].getElements("login")[0].getText();
+	  webmedia.published = new Date(parseInt(photoNodes[i].getElements("timestamp")[0].getText()));
+	  webmedia.updated = new Date(parseInt(photoNodes[i].getElements("modified")[0].getText()));
+	  webmedia.link = webRoleItem.getElements("link")[0].getAttribute("href");
+	  webmedia.height = webRoleItem.getElements("height")[0].getText();
+	  webmedia.width = webRoleItem.getElements("width")[0].getText();
+	  webmedia.size = webRoleItem.getElements("size")[0].getText();
+    //     webmedia.thumbnailLink = "http://farm" + farm + ".static.flickr.com/" + server + "/" + webmedia.id + "_" + secret + "_t.jpg";
+	  //MediaDataCollection.push(webmedia);
+	  setData(webmedia.id, webmedia.toArray());
 	}
       }
       catch(e)
       {
-	print("A problem occured while parsing:" + e.message);
+	outputErrorMessage(blipObject.name, "", e.message, ErrorTypes[PARSINGERROR]);
       }
     }
   );
@@ -109,7 +125,17 @@ Blip.prototype.searchMedia = function(queryParams)
 
 Blip.prototype.seachCollection = function(queryParams)
 {
-  
+  outputErrorMessage(this.name, "", "searchCollection", ErrorTypes[FUNCTIONNOTPROVIDED]);
+}
+
+Blip.prototype.getUploadedUserMedia = function(queryParams)
+{
+  outputErrorMessage(this.name, "", "getUploadedUserMedia", ErrorTypes[FUNCTIONNOTPROVIDED]);
+}
+
+Blip.prototype.getUploadedUserCollection = function(queryParams)
+{
+  outputErrorMessage(this.name, "", "getUploadedUserCollection", ErrorTypes[FUNCTIONNOTPROVIDED]);
 }
 
 Blip.prototype.toString = function()

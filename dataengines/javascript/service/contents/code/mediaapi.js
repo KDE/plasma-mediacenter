@@ -33,6 +33,9 @@ ErrorTypes[INVALIDNUMBER	= 2] = "Invalud number.";
 ErrorTypes[INVALIDFORMAT	= 3] = "Invalid format.";
 ErrorTypes[FUNCTIONNOTPROVIDED	= 4] = "Function not provided.";
 ErrorTypes[NORESULTS		= 5] = "No results found.";
+ErrorTypes[NOUSERFOUND		= 6] = "No user found.";
+ErrorTypes[PARSINGERROR		= 7] = "Error while parsing results";
+ErrorTypes[INTERNALERROR	= 8] = "Internal error occured";
 // can be continued
 
 
@@ -66,29 +69,45 @@ WebMedia = function()
   // in bytes ?
   this.size = "";
   this.thumbnails = new Array();
-  this.rating = "";
-  this.comments = "";
+  
+  //this.rating = 0.0;
+  //this.comments = "";
+  
+  // video specific attributes
+  this.videoDuration = 0;
+  this.videoFormat = "";
+  this.videoEmbedCode = "";
+  
 }
 
 WebMedia.prototype.toArray = function()
 {
   var array = new Array();
   array['type'] = this.type;
-  array['provider'] = this.provider;
+  array['provider'] = String(this.provider);
   array['id'] = this.id;
-  array['title'] = this.title;
-  array['author'] = this.author;
-  array['description'] = this.description;    
-  array['keywords'] = this.keywords;
+  array['title'] = String(this.title);
+  array['user'] = String(this.user);
+  array['description'] = String(this.description);
+  array['keywords'] = String(this.keywords);
   array['updated'] = this.updated;
   array['published'] = this.published;
-  array['link'] = this.link;
-  array['width'] = this.width;
-  array['height'] = this.height;
-  array['size'] = this.size;
+  array['link'] = String(this.link);
+  array['width'] = parseInt(this.width);
+  array['height'] = parseInt(this.height);
+  array['size'] = parseInt(this.size);
   for (var i = 0; i < this.thumbnails.length; i++)
-    array['thumbnail' + i] = this.thumbnails[i].url;
+    array['thumbnail' + i] = String(this.thumbnails[i].url);
   return array;
+}
+
+WebMedia.prototype.toArrayString = function()
+{
+  var arr = this.toArray();
+  for (var key in arr)
+  {
+    print(key + " : " + arr[key]);
+  }
 }
 
 WebMedia.prototype.addThumbnail = function(url, height, width)

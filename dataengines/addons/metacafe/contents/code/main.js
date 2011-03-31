@@ -16,22 +16,32 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
+var mcObject = null;
 
 function Metacafe()
 {
   print("Hello metacafe");
   this.baseUrl = "http://www.metacafe.com/api/videos/";
+  this.name = "metacafe";
+  mcObject = this;
 }
 
 Metacafe.prototype.searchMedia = function(queryParams)
 {
-  var query = queryParams['text'];
-  var url = this.baseUrl + "?vq=" + query;
-  if (query === "" || typeof query === "undefined")
-  {
-    print("no query defined");
-    return;
-  }
+  var text = queryParams['text'];
+  var maxResults = queryParams['max-results'];;
+  var page = queryParams['page'];
+  // zero based index
+  var startIndex = (maxResults * page) - maxResults;
+  
+  var url = buildUrl(this.baseUrl,
+		     {
+		      "q" : text,
+		      "max-results" : maxResults,
+		      "start-index" : startIndex
+		     }
+	    );
+
   print(url);
   var result = "";
   doRequest(engine, url,
@@ -42,8 +52,6 @@ Metacafe.prototype.searchMedia = function(queryParams)
 	    function(job)
 	    {    
 	      try{
-		print("Job done");
-		print("Parsing...");
 		//parse xml here
 		var mediaNS = "http://search.yahoo.com/mrss/";
 		var parser = new DOMImplementation();
@@ -55,42 +63,40 @@ Metacafe.prototype.searchMedia = function(queryParams)
 		
 		if (mediaNodes.length == 0)
 		{
-		  setData("Metacafe", "Error", "No results for " + query + " found");
+		  outputErrorMessage(mcObject.name, "", text, ErrorTypes[NORESULTS]);
 		  return;
 		}
 		for (var i = 0; i < mediaNodes.length; ++i)
 		{
-		  try{
-		    var webmedia = new WebMedia();
-		    var mediaNodesItem = mediaNodes.item(i);
-		    var contentItem = mediaNodesItem.getElementsByTagNameNS(mediaNS, "content").item(0);
-		    
-		    //potential nullable item
-		    var keywordsItem = mediaNodesItem.getElementsByTagNameNS(mediaNS, "keywords").item(0).getFirstChild();
-		    
-		    webmedia.type = MediaType.video;
-		    webmedia.id = mediaNodesItem.getElementsByTagName("id").item(0).getFirstChild().getNodeValue();
-		    webmedia.title = mediaNodesItem.getElementsByTagName("title").item(0).getFirstChild().getNodeValue();
-		    webmedia.description = mediaNodesItem.getElementsByTagNameNS(mediaNS, "description").item(0).getFirstChild().getNodeValue();
-		    
-		    if (typeof(keywordsItem) !== "undefined" && keywordsItem != null)
-		      webmedia.keywords = keywordsItem.getNodeValue().split(",");
-		    
-		    webmedia.author = mediaNodesItem.getElementsByTagName("author").item(0).getFirstChild().getNodeValue();
-		    webmedia.published = mediaNodesItem.getElementsByTagName("pubDate").item(0).getFirstChild().getNodeValue();
-		    webmedia.link = contentItem.getAttributes().getNamedItem("url").getNodeValue();
-		    webmedia.width = contentItem.getAttributes().getNamedItem("height").getNodeValue();;
-		    webmedia.height = contentItem.getAttributes().getNamedItem("width").getNodeValue();;
-		    webmedia.thumbnailLink = mediaNodesItem.getElementsByTagNameNS(mediaNS, "thumbnail").item(0).getAttributes().getNamedItem("url").getNodeValue();
-		    setData(webmedia.id, webmedia.toArray());
-		  }catch(e)
-		  {
-		    print("A problem occured while parsing:" + e.message);
-		  }
+		  var webmedia = new WebMedia();
+		  var mediaNodesItem = mediaNodes.item(i);
+		  var contentItem = mediaNodesItem.getElementsByTagNameNS(mediaNS, "content").item(0);
+		  
+		  //potential nullable item
+		  var keywordsItem = mediaNodesItem.getElementsByTagNameNS(mediaNS, "keywords").item(0).getFirstChild();
+		  
+		  webmedia.type = MediaTypes[VIDEO];
+		  webmedia.id = getID();
+		  webmedia.providerSpecificID = mediaNodesItem.getElementsByTagName("id").item(0).getFirstChild().getNodeValue();
+		  webmedia.title = mediaNodesItem.getElementsByTagName("title").item(0).getFirstChild().getNodeValue();
+		  webmedia.description = mediaNodesItem.getElementsByTagNameNS(mediaNS, "description").item(0).getFirstChild().getNodeValue();
+		  
+		  if (keywordsItem)
+		    webmedia.keywords = keywordsItem.getNodeValue().split(",");
+		  
+		  webmedia.user = mediaNodesItem.getElementsByTagName("author").item(0).getFirstChild().getNodeValue();
+		  webmedia.published = mediaNodesItem.getElementsByTagName("pubDate").item(0).getFirstChild().getNodeValue();
+		  webmedia.link = contentItem.getAttributes().getNamedItem("url").getNodeValue();
+		  webmedia.width = contentItem.getAttributes().getNamedItem("height").getNodeValue();
+		  webmedia.height = contentItem.getAttributes().getNamedItem("width").getNodeValue();
+		  webmedia.videoDuration = contentItem.getAttributes().getNamedItem("duration").getNodeValue();
+		  webmedia.videoFormat = contentItem.getAttributes().getNamedItem("type").getNodeValue();
+		  webmedia.addThumbnail(mediaNodesItem.getElementsByTagNameNS(mediaNS, "thumbnail").item(0).getAttributes().getNamedItem("url").getNodeValue(), 0, 0);
+		  setData(webmedia.id, webmedia.toArray());
 		}
 	      }catch(e)
 	      {
-		print("A problem occured while parsing:" + e.message);
+		outputErrorMessage(mcObject.name, "", e.message, ErorTypes[PARSINGERROR]);
 	      }
 	    }
   );
@@ -99,7 +105,19 @@ Metacafe.prototype.searchMedia = function(queryParams)
 
 Metacafe.prototype.searchCollection = function(queryParams)
 {
-  
+  outputErrorMessage(this.name, "", "searchCollection", ErorTypes[FUNCTIONNOTPROVIDED]);
+}
+
+Metacafe.prototype.getUploadedUserMedia = function(queryParams)
+{
+  var user = queryParams['user'];
+  var maxResults = queryParams['max-results'];
+  var page = queryParams['page'];
+}
+
+Metacafe.prototype.getUploadedUserCollection = function(queryParams)
+{
+  outputErrorMessage(this.name, "", "getUploadedUserCollection", ErorTypes[FUNCTIONNOTPROVIDED]);
 }
 
 Metacafe.prototype.toString = function()

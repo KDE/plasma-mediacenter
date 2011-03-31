@@ -27,7 +27,7 @@ engine.include('mediaapi.js');
 var addons = new Array();
 var selectedAddon = null;
 var webmediaID = 0;
-print("Hello");
+
 function getID()
 {
   return webmediaID++;
@@ -65,6 +65,12 @@ function GetAddon(name)
   }
   return null;
 }
+
+/*var cMaxResults = engine.readConfig("MaxResults");
+var cPage = engine.readConfig("Page");
+print(cMaxResults);
+print(cPage);
+*/
 
 // PARAMETER CHECK FUNCTIONS FOR EACH FUNCTION IN THE INTERFACE
 // ALL OF THE RETURN A NEW ARRAY OF PARAMETERS

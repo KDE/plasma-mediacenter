@@ -24,161 +24,314 @@ function Photobucket()
   print("Hello photobucket");
   this.consumerKey = "149830244";
   this.consumerSecret = "0549aaac2e9552d174f73835c2d1edf3";
-  this.baseUrl = "http://api.photobucket.com";
+  this.baseUrl = "http://api.photobucket.com/";
+  this.name = "photobucket";
   photobucketObject = this;
 }
 
 Photobucket.prototype.searchMedia = function(queryParams)
 {
-  var query = queryParams['text'];
-  if (query === "" || query === "undefined")
-  {
-    print("No query defined");
-    return;
-  }
-
-  var url = this.buildUrl(this.baseUrl + "/search/" + query + "/image", "format=xml");
-  print(url);
+  var text = queryParams['text'];
+  var maxResults = queryParams['max-results'];
+  var page = queryParams['page'];
+  var media = queryParams['media'];
   
-  if (url == "" || url == undefined)
-  {
-    print("No photobucket url found");
-    return;
-  }
+  if (maxResults != "")
+    outputWarningMessage(this.name, maxResults, WarningTypes[PARAMIGNORED]);
+  // set default value for media. default value is photo
+  if (!media || media == "" || media == MediaTypes[PHOTO])
+    media = "image";
+  if (media == MediaTypes[VIDEO])
+    media = "video";
   
-  var result = "";
-  
-  doRequest(engine, url,
-	    function(job, data)
-	    {
-	      result += data.valueOf();
-	    },
-	    function(job)
-	    {
-	      try{
-
-		var objDom = new XMLDoc(result, xmlError);
-		var objDomTree = objDom.docNode;
-
-		if (photobucketObject.isErrorMessage(objDomTree))
-		  return;
-		
-		var photoNodes = objDomTree.getElements("content")[0].getElements("result")[0].getElements("primary")[0].getElements("media");
-		if (photoNodes.length == 0)
-		{
-		  setData("Photobucket", "Error", "No results for " + query + " found");
-		  return;
-		}
-		print(photoNodes.length);
-
-		for (var i = 0; i < photoNodes.length; i++)
-		{
-		  try{
-		    var webmedia = new WebMedia();
-		    
-		    //potential nullable items
-		    var descriptionItem = photoNodes[i].getElements("decription")[0];
-		    
-		    webmedia.type = MediaType.photo;
-		    
-		    //in photobucket the attribute 'description_id' is somehow always an empty string
-		    webmedia.id = i;//photoNodes[i].getAttribute("description_id");
-
-		    webmedia.title = photoNodes[i].getElements("title")[0].getText();
-		    
-		    if (typeof(descriptionItem) !== "undefined" && descriptionItem != null)
-		      webmedia.description = descriptionItem.getText();
-		    
-		    webmedia.author = photoNodes[i].getAttribute("username");
-		    webmedia.published = photoNodes[i].getAttribute("uploaddate");
-		    webmedia.link = photoNodes[i].getElements("url")[0].getText();
-		    webmedia.thumbnailLink = photoNodes[i].getElements("thumb")[0].getText();
-		    setData(webmedia.id, webmedia.toArray());
-	      //       getPhotoInfo2(webmedia);
-		  }
-		  catch(e)
+  this.buildPhotobucketUrl(this.baseUrl + "search/" + text + "/" + media, 
+      {
+	"page" : page
+      },
+      function(url)
+      {
+	print(url);
+    
+	var result = "";
+	
+	doRequest(engine, url,
+		  function(job, data)
 		  {
-		    print("A problem occured while parsing: " + e.message);
+		    result += data.valueOf();
+		  },
+		  function(job)
+		  {
+		    try{
+		      print("Parsing...");
+		      print(result);
+		      var objDom = new XMLDoc(result, xmlError);
+		      var objDomTree = objDom.docNode;
+
+		      if (photobucketObject.isErrorMessage(objDomTree))
+			return;
+		      
+		      var photoNodes = objDomTree.getElements("content")[0].getElements("result")[0].getElements("primary")[0].getElements("media");
+		      if (photoNodes.length == 0)
+		      {
+			outputErrorMessage(photobucketObject.name, "", text, ErrorTypes[NORESULTS]);
+			return;
+		      }
+		      print(photoNodes.length);
+
+		      for (var i = 0; i < photoNodes.length; i++)
+		      {
+			var webmedia = new WebMedia();
+			
+			//potential nullable items
+			var descriptionItem = photoNodes[i].getElements("decription")[0];
+			
+			var typeItem = photoNodes[i].getElements("type")[0];
+			if (typeItem && typeItem.getText() == "video")
+			  webmedia.type = MediaTypes[VIDEO];
+			else
+			  webmedia.type = MediaTypes[PHOTO];
+			
+			//in photobucket the attribute 'description_id' is somehow always an empty string
+			webmedia.id = i;
+			webmedia.providerSpecificID = photoNodes[i].getAttribute("description_id");
+
+			webmedia.title = photoNodes[i].getElements("title")[0].getText();
+			
+			if (descriptionItem)
+			  webmedia.description = descriptionItem.getText();
+			
+			webmedia.user = photoNodes[i].getAttribute("username");
+			webmedia.published = UnixToDate(photoNodes[i].getAttribute("uploaddate"));
+			webmedia.link = photoNodes[i].getElements("url")[0].getText();
+			webmedia.addThumbnail(photoNodes[i].getElements("thumb")[0].getText(), "", "");
+			setData(webmedia.id, webmedia.toArray());
+		      }
+		    }
+		    catch(e)
+		    {
+		      outputErrorMessage(photobucketObject.name, "", e.message, ErrorTypes[PARSINGERROR]);
+		    }
 		  }
-		}
-	      }
-	      catch(e)
-	      {
-		print("A problem occured while parsing: " + e.message);
-	      }
-	    }
-  );  
+	  );  
+      }
+  );
+  
 }
 
 
 Photobucket.prototype.searchCollection = function(queryParams)
 {
-  var user = queryParams['user'];
-  if (user === "" || user === "undefined")
-  {
-    print("no user defined");
-    return;
-  }
-  var url = this.buildUrl(this.baseUrl + "/album/" + user, "format=xml");
-  print(url);
-  if (url == "" || url == undefined)//&view=flat&recurse=1
-  {
-    print("No photobucket url found");
-    return;
-  }
-  
+  var text = queryParams['text'];
   var result = "";
-  
-  doRequest(engine, url,
-	    function(job, data)
-	    {
-	      result += data.valueOf();
-	    },
-	    function(job)
-	    {
-	      try{
-		var objDom = new XMLDoc(result, xmlError);
-		var objDomTree = objDom.docNode;
-		
-		if (photobucketObject.isErrorMessage(objDomTree))
-		  return;
-		var albumNodes = objDomTree.getElements("content")[0].getElements("album");
-		if (albumNodes.length == 0)
-		  return;
-		for (var i = 0; i < albumNodes.length; i++)
-		{
-		  try{
-		    var webmediaColl = new WebMediaCollection();
-		    
-		    //potential nullable items
-		    var descriptionItem = albumNodes[i].getElements("decription")[0];
-		    
-		    webmediaColl.id = i;//albumNodes[i].getAttribute("description_id");
+  this.buildPhotobucketUrl(this.baseUrl + "search/" + text + "/group", 
+			   null,
+			   function(url)
+			   {
+			    doRequest(engine, url,
+				      function(job, data)
+				      {
+					result += data.valueOf();
+				      },
+				      function(job)
+				      {
+					try{
+					  var objDom = new XMLDoc(result, xmlError);
+					  var objDomTree = objDom.docNode;
+					  
+					  if (photobucketObject.isErrorMessage(objDomTree))
+					    return;
+					  var groupNodes = objDomTree.getElements("content")[0].getElements("album");
+					  if (groupNodes.length == 0)
+					  {
+					    outputErrorMessage(photobucketObject.name, "", text, ErrorTypes[NORESULTS]);
+					    return;
+					  }
+					  for (var i = 0; i < groupNodes.length; i++)
+					  {
+					    var webmediaColl = new WebMediaCollection();
+					    
+					    //potential nullable items
+					    var descriptionItem = groupNodes[i].getElements("decription")[0];
+					    
+					    webmediaColl.id = getID();//groupNodes[i].getAttribute("description_id");
+					    
+					    webmediaColl.providerSpecificID = groupNodes[i].getElements("id")[0].getText();
+					    webmediaColl.title = groupNodes[i].getAttribute("name");
+					    
+					    if (typeof(descriptionItem) !== "undefined" && descriptionItem != null)
+					      webmediaColl.description = descriptionItem.getText();
+					    
+					  //  webmediaColl.author = user;
+					//    webmediaColl.published = groupNodes[i].getAttribute("uploaddate");
+					//    webmediaColl.link = groupNodes[i].getElements("url")[0].getText();
+					//    webmediaColl.thumbnailLink = groupNodes[i].getElements("thumb")[0].getText();
+					    setData(webmediaColl.id, webmediaColl.toArray());
+				      //       getPhotoInfo2(webmedia);
+					  }
+					}
+					catch(e)
+					{
+					  outputErrorMessage(photobucketObject.name, "", e.message, ErrorTypes[PARSINGERROR]);
+					}
+				      }
+			    );
+			   }
+       );
+}
 
-		    webmediaColl.title = albumNodes[i].getAttribute("name");
-		    
-		    if (typeof(descriptionItem) !== "undefined" && descriptionItem != null)
-		      webmediaColl.description = descriptionItem.getText();
-		    
-		    webmediaColl.author = user;
-		//    webmediaColl.published = albumNodes[i].getAttribute("uploaddate");
-		//    webmediaColl.link = albumNodes[i].getElements("url")[0].getText();
-		//    webmediaColl.thumbnailLink = albumNodes[i].getElements("thumb")[0].getText();
-		    setData(webmediaColl.id, webmediaColl.toArray());
-	      //       getPhotoInfo2(webmedia);
-		  }
-		  catch(e)
-		  {
-		    print("A problem occured while parsing: " + e.message);
-		  }
-		}
-	      }
-	      catch(e)
-	      {
-		print("A problem occured while parsing: " + e.message);
-	      }
-	    }
-  );
+Photobucket.prototype.getUserUploadedMedia = function(queryParams)
+{
+  var user = queryParams['user'];
+  var maxResults = queryParams['max-results'];
+  var page = queryParams['page'];
+  
+  
+  this.buildPhotobucketUrl(this.baseUrl + "/user/" + user + "/search",
+			   {
+			    "perpage" : maxResults
+			   },
+			   function(url)
+			   {
+			      var result = "";
+	  
+			      doRequest(engine, url,
+					function(job, data)
+					{
+					  result += data.valueOf();
+					},
+					function(job)
+					{
+					  try{
+					    print("Parsing...");
+					    print(result);
+					    var objDom = new XMLDoc(result, xmlError);
+					    var objDomTree = objDom.docNode;
+
+					    if (photobucketObject.isErrorMessage(objDomTree))
+					      return;
+					    
+					    var photoNodes = objDomTree.getElements("content")[0].getElements("result")[0].getElements("primary")[0].getElements("media");
+					    if (photoNodes.length == 0)
+					    {
+					      outputErrorMessage(photobucketObject.name, "", text, ErrorTypes[NORESULTS]);
+					      return;
+					    }
+					    print(photoNodes.length);
+
+					    for (var i = 0; i < photoNodes.length; i++)
+					    {
+					    
+					      var webmedia = new WebMedia();
+					      
+					      //potential nullable items
+					      var descriptionItem = photoNodes[i].getElements("decription")[0];
+					      
+					      var typeItem = photoNodes[i].getElements("type")[0];
+					      if (typeItem && typeItem.getText() == "video")
+						webmedia.type = MediaTypes[VIDEO];
+					      else
+						webmedia.type = MediaTypes[PHOTO];
+					      
+					      //in photobucket the attribute 'description_id' is somehow always an empty string
+					      webmedia.id = i;
+					      webmedia.providerSpecificID = photoNodes[i].getAttribute("description_id");
+
+					      webmedia.title = photoNodes[i].getElements("title")[0].getText();
+					      
+					      if (descriptionItem)
+						webmedia.description = descriptionItem.getText();
+					      
+					      webmedia.user = photoNodes[i].getAttribute("username");
+					      webmedia.published = UnixToDate(photoNodes[i].getAttribute("uploaddate"));
+					      webmedia.link = photoNodes[i].getElements("url")[0].getText();
+					      webmedia.addThumbnail(photoNodes[i].getElements("thumb")[0].getText(), "", "");
+					      setData(webmedia.id, webmedia.toArray());
+					    }
+					  }
+					  catch(e)
+					  {
+					    outputErrorMessage(photobucketObject.name, "", e.message, ErrorTypes[PARSINGERROR]);
+					  }
+					}
+				);  
+			    }
+       );
+}
+
+Photobucket.prototype.getUserUploadedCollection = function(queryParams)
+{
+  var user = queryParams['user'];
+  var maxResults = queryParams['max-results'];
+  var page = queryParams['page'];
+  
+  
+  this.buildPhotobucketUrl(this.baseUrl + "/user/" + user + "/group",
+			   null,
+			   function(url)
+			   {
+			      var result = "";
+	  
+			      doRequest(engine, url,
+					function(job, data)
+					{
+					  result += data.valueOf();
+					},
+					function(job)
+					{
+					  try{
+					    print("Parsing...");
+					    print(result);
+					    var objDom = new XMLDoc(result, xmlError);
+					    var objDomTree = objDom.docNode;
+
+					    if (photobucketObject.isErrorMessage(objDomTree))
+					      return;
+					    
+					    var photoNodes = objDomTree.getElements("content")[0].getElements("result")[0].getElements("primary")[0].getElements("media");
+					    if (photoNodes.length == 0)
+					    {
+					      outputErrorMessage(photobucketObject.name, "", text, ErrorTypes[NORESULTS]);
+					      return;
+					    }
+					    print(photoNodes.length);
+
+					    for (var i = 0; i < photoNodes.length; i++)
+					    {
+					      var webmedia = new WebMedia();
+					      
+					      //potential nullable items
+					      var descriptionItem = photoNodes[i].getElements("decription")[0];
+					      
+					      var typeItem = photoNodes[i].getElements("type")[0];
+					      if (typeItem && typeItem.getText() == "video")
+						webmedia.type = MediaTypes[VIDEO];
+					      else
+						webmedia.type = MediaTypes[PHOTO];
+					      
+					      //in photobucket the attribute 'description_id' is somehow always an empty string
+					      webmedia.id = i;
+					      webmedia.providerSpecificID = photoNodes[i].getAttribute("description_id");
+
+					      webmedia.title = photoNodes[i].getElements("title")[0].getText();
+					      
+					      if (descriptionItem)
+						webmedia.description = descriptionItem.getText();
+					      
+					      webmedia.user = photoNodes[i].getAttribute("username");
+					      webmedia.published = UnixToDate(photoNodes[i].getAttribute("uploaddate"));
+					      webmedia.link = photoNodes[i].getElements("url")[0].getText();
+					      webmedia.addThumbnail(photoNodes[i].getElements("thumb")[0].getText(), "", "");
+					      setData(webmedia.id, webmedia.toArray());
+					    }
+					  }
+					  catch(e)
+					  {
+					    outputErrorMessage(photobucketObject.name, "", e.message, ErrorTypes[PARSINGERROR]);
+					  }
+					}
+				);  
+			    }
+       );
 }
 
 Photobucket.prototype.toString = function()
@@ -186,82 +339,69 @@ Photobucket.prototype.toString = function()
   return "Photobucket";
 }
 
-Photobucket.prototype.buildUrl = function(url, format) {
-  try 
-  {
-    if( url == undefined ) 
+Photobucket.prototype.buildPhotobucketUrl = function(url, optionalParams, onUrlCreated)
+{
+  var pbUrl = "";
+  this.getTimestamp(
+    function(timestamp)
     {
-      url = "http://api.photobucket.com/ping";
+      var params = {
+		      "format" : "xml",
+		      "oauth_consumer_key" : encodeURIComponent(photobucketObject.consumerKey),
+		      "oauth_nonce" : encodeURIComponent("nonce" + timestamp),
+		      "oauth_signature_method" : encodeURIComponent("HMAC-SHA1"),
+		      "oauth_timestamp" : encodeURIComponent(timestamp),
+		      "oauth_version" : encodeURIComponent("1.0")
+		    };
+      if (optionalParams)
+      {
+	for (var key in optionalParams)
+	  params[key] = encodeURIComponent(optionalParams[key]);
+      }
+      var query = photobucketObject.makeQuery(params);
+      //print(encodeURIComponent(query));
+      var base = encodeURIComponent("GET") + "&" + encodeURIComponent(url) + "&" + encodeURIComponent(query);
+      print(base);
+      var base2 = encodeURIComponent("GET") + "&" + url + "&" + query;
+      print(base2);
+      params["oauth_signature"] = getSignature(photobucketObject.consumerSecret + "&", base);
+
+    //  print(photobucketObject.makeQuery(params));
+      pbUrl = buildUrl(url, params);
+      print(pbUrl);
+      onUrlCreated(pbUrl);
     }
+  );
+}
 
-    if( format == undefined ) 
-    {
-      format = "format=xml";
-    }
-
-    var timestamp = getTimestamp();
-    auth_nonce="nonce" + timestamp;
-
-    auth_method = "HMAC-SHA1";
-    auth_timestamp = "" + timestamp;
-
-    auth_version="1.0";
-
-    auth_consumer = "&oauth_consumer_key="+ encodeURIComponent( this.consumerKey );
-    nonce = "&oauth_nonce="+ encodeURIComponent( auth_nonce );
-    auth_sig_method = "&oauth_signature_method="+ encodeURIComponent( auth_method );
-    auth_timestamp = "&oauth_timestamp="+ encodeURIComponent( auth_timestamp );
-    version = "&oauth_version=" + encodeURIComponent( auth_version );
-
-    paramstring = format + auth_consumer + nonce + auth_sig_method + auth_timestamp + version;
-
-    method = "GET";
-
-    base = encodeURIComponent( method ) + "&" +
-    encodeURIComponent( url ) + "&" +
-    encodeURIComponent( paramstring );
-    print(base);
-    sig_hash = getSignature( this.consumerSecret+"&", base );
-    auth_sign = "oauth_signature=" + sig_hash;
-
-    auth_url = url + "?" + paramstring + "&" + auth_sign;
-    print( ""+ auth_url+"");
-    return auth_url;
-  }
-  catch (err) 
+Photobucket.prototype.makeQuery = function(queryItems)
+{
+  var query = "";
+  for (var key in queryItems)
   {
-      print( "A problem occured while building the url: " + err.message);
+    query += key + "=" + queryItems[key] + "&";
   }
+  if (query.charAt(query.length - 1) == '&')
+    query = query.slice(0, query.length - 1);
+  return query;
 }
 
 Photobucket.prototype.isErrorMessage = function(objDomTree)
 {
-  if (objDomTree.getElements("status")[0].getText() == "Exception")
+  try
   {
-    var msg = objDomTree.getElements("message")[0].getText();
-    setData(this.toString(), "Error", msg);
-    return true;
+    if (objDomTree.getElements("status")[0].getText() == "Exception")
+    {
+      var msg = objDomTree.getElements("message")[0].getText();
+      outputErrorMessage(photobucketObject.name, "", "Server response", msg);
+      return true;
+    }
+    return false;
+  }catch(e)
+  {
+    outputErrorMessage(this.name, "", e.message, ErrorTypes[PARSINGERROR]);
+    return false;
   }
-  return false;
-}
-
-Photobucket.prototype.buildParams = function(queryParams)
-{
-  var params = "";
-  if (queryParams['text'] != null)
-    params += "text=" + queryParams['text'];
-  if (queryParams['max-results'] != null)
-    params += "per-page=" + queryParams['max-results'];
-  if (queryParams['min-results'] != null)
-    params += queryParams['min-results'];
-  if (queryParams['user'] != null)
-    //params += queryParams['user'];
-    print("Parameter user for flickr not supported yet");
-  if (queryParams['tags'] != null)
-    print("Parameter tags for photobucket not supported");
-  if (queryParams['page'] != null)
-    params += "page=" + queryParams['page'];
-  return params;
 }
 
 function getSignature(key, baseString) {
@@ -297,17 +437,32 @@ function xmlError(e)
   });
 }*/
 
-function getTimestamp() {
+Photobucket.prototype.getTimestamp = function(onTimeStampRetrieved) {
 /*  var timestamp = "";
   var io = engine.getUrl("http://api.photobucket.com/time");
   io.data.connect(function(job, data){ timestamp += data.valueOf(); });
   io.finished.connect(function(job){ print(timestamp); return; });
   doRequest(engine, "http://api.photobucket.com/time", function(job, data){ timestamp += data.valueOf(); } , function(job){ print(timestamp); });*/
   
-  var timestamp = new Date().valueOf();
+  /*var timestamp = new Date().valueOf();
   timestamp = timestamp / 1000;
   timestamp = Math.ceil( timestamp );
-  return timestamp;
+  return timestamp;*/
+  var timestamp = "";
+  var url = buildUrl(this.baseUrl + "time", null);
+  print(url);
+  
+  doRequest(engine, url,
+	    function(job, data)
+	    {
+	      timestamp += data.valueOf();
+	    },
+	    function(job)
+	    {
+	      print(timestamp);
+	      onTimeStampRetrieved(timestamp);
+	    }
+  );
 }
 
 

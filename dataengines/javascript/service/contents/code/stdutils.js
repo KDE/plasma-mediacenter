@@ -1,5 +1,12 @@
 // INET HELPER FUNCTIONS
 
+/*
+ * Makes a http request
+ * @param webengine: the engine that makes the request
+ * @param url: the url to make a request to
+ * @param onDataCallBack: function pointer, when data arrives
+ * @param onFinishedCallBack: function pointer, when the request finished
+ */
 function doRequest(webengine, url, onDataCallBack, onFinishedCallBack)
 {
   var io = webengine.getUrl(url);
@@ -7,16 +14,21 @@ function doRequest(webengine, url, onDataCallBack, onFinishedCallBack)
   io.finished.connect(onFinishedCallBack);
 }
 
+/*
+ * Builds an url with query
+ * @param baseUrl: the base url to build the url on
+ * @param queryItems: array of key value pairs, which represent the query
+ * @return a complete url, e.g. http://www.example.com?test=true
+ * returns the base url when queryItems is empty
+ */
 function buildUrl(baseUrl, queryItems)
 {
   var newUrl = "";
-  if (queryItems == null)
+  if (!queryItems)
     return baseUrl;
   
   if (baseUrl.charAt(baseUrl.length - 1) != '/')
     baseUrl.concat("/");
-
-  // build query in the url
   newUrl = baseUrl + "?";
   for (var key in queryItems)
   {
@@ -54,6 +66,11 @@ Date.prototype.setISO8601 = function(string) {
     this.setTime(Number(time));
 }
 
+function UnixToDate(unixTimeStamp)
+{
+  return new Date(unixTimeStamp * 1000);
+}
+
 // OUTPUT FUNCTIONS
 
 
@@ -61,6 +78,7 @@ var errorID = 0;
 
 function outputErrorMessage(provider, providerSpecificCode, identifier, message)
 {
+  print(identifier + " caused a problem in " + provider + ": " + message);
   setData("Error:" + errorID, 
 	  {
 	    "provider" : provider,
