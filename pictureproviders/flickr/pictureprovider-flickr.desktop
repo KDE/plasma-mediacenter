@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=Service
 Name=Flickr picture provider
+Name[et]=Flickri piltide pakkuja
 Name[nds]=Flickr-Bildanbeder
 Name[pt]=Fornecedor de imagens do Flickr
 Name[pt_BR]=Fornecedor de imagens Flickr
@@ -10,6 +11,7 @@ Name[x-test]=xxFlickr picture providerxx
 
 
 Comment=A plugin that allows browsing through Flickr pictures
+Comment[et]=Plugin Flickri piltide sirvimiseks
 Comment[pt]=Um 'plugin' que lhe permite navegar pelas imagens do Flickr
 Comment[pt_BR]=Um plug-in que lhe permite navegar pelas imagens no Flickr.
 Comment[sv]=Ett insticksprogram som låter dig bläddra igenom bilder på Flickr.

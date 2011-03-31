@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Playlist Engine
+Name[et]=Esitusnimekirja mootor
 Name[hr]=Podrška za Playlist
 Name[ja]=プレイリストエンジン
 Name[pt]=Motor da Lista de Reprodução
@@ -8,6 +9,7 @@ Name[sv]=Spellistegränssnitt
 Name[uk]=Рушій списків відтворення
 Name[x-test]=xxPlaylist Enginexx
 Comment=A playlist engine useful for Media Center components.
+Comment[et]=Esitusnimekirja mootor meediakeskuse komponentidele.
 Comment[hr]=Podrška za playliste korisna kod komponenti Media Centra.
 Comment[pt]=Um motor de listas de reprodução, útil para componentes de Centros Multimédia.
 Comment[pt_BR]=Um mecanismo de listas de reprodução, útil para componentes de Centros Multimídia.

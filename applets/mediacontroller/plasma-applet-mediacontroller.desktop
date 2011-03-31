@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=MediaController
+Name[et]=Meediakontroller
 Name[hr]=MultiMedijaUpravitelj
 Name[pt]=Controlador Multimédia
 Name[pt_BR]=Controlador Multimídia
@@ -7,6 +8,7 @@ Name[sv]=Mediahanterare
 Name[uk]=Контейнер мультимедіа
 Name[x-test]=xxMediaControllerxx
 Comment=A simple applet to control media reproduction
+Comment[et]=Lihtne aplett meedia taasesitamise juhtimiseks
 Comment[hr]=Jednostavni programčić za upravljanje izvođenjem multimedijalnih datoteka
 Comment[pt]=Uma 'applet' simples para controlar a reprodução multimédia
 Comment[pt_BR]=Um miniaplicativo simples para controlar a reprodução multimídia

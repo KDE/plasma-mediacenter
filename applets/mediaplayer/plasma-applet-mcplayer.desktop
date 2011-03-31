@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Media Center Player
+Name[et]=Meediakeskuse mängija
 Name[hr]=Media Center Player
 Name[ja]=メディアセンタープレーヤー
 Name[pt]=Reprodutor Multimédia
@@ -8,6 +9,7 @@ Name[sv]=Spelare för Media Center
 Name[uk]=Програвач медіа-центру
 Name[x-test]=xxMedia Center Playerxx
 Comment=The playing applet for the Media Center.
+Comment[et]=Meediakeskuse esitamisaplett
 Comment[hr]=Programčić za sviranje za Media Center.
 Comment[pt]=Uma 'applet' de reprodução para Centros Multimédia.
 Comment[pt_BR]=Um miniaplicativo de reprodução para Centros Multimídia.
