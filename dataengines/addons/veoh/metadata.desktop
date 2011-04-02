@@ -1,5 +1,8 @@
 [Desktop Entry]
 Name=Veoh
+Name[pt]=Veoh
+Name[uk]=Veoh
+Name[x-test]=xxVeohxx
 
 Comment=An engine that allows you to query web services for media.
 Comment[et]=Mootor veebiteenustele meedia kohta päringute esitamiseks.
