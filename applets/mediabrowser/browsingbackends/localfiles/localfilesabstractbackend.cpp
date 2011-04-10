@@ -68,6 +68,7 @@ void LocalFilesAbstractBackend::createConfigurationInterface(KConfigDialog* pare
 {
     QWidget *localConfig = new QWidget(parent);
     ui.setupUi(localConfig);
+    connect(parent, SIGNAL(applyClicked()), this, SLOT(configAccepted()));
 
     parent->addPage(localConfig, i18n("Local Browsing"), "folder-development");
 
@@ -98,6 +99,14 @@ void LocalFilesAbstractBackend::createConfigurationInterface(KConfigDialog* pare
     foreach(const QString &folder, m_watchedDirs) {
         ui.watchedFoldersList->addItem(folder);
     }
+    connect(ui.nepomukBox, SIGNAL(toggled(bool)), parent, SLOT(settingsModified()));
+    connect(ui.addFoldersButton, SIGNAL(pressed()), parent, SLOT(settingsModified()));
+    connect(ui.removeFoldersButton, SIGNAL(pressed()), parent, SLOT(settingsModified()));
+    connect(ui.showPlace, SIGNAL(toggled(bool)), parent, SLOT(settingsModified()));
+    connect(ui.showCustomFolder, SIGNAL(toggled(bool)), parent, SLOT(settingsModified()));
+    connect(ui.placesCombo, SIGNAL(currentIndexChanged(QString)), parent, SLOT(settingsModified()));
+    connect(ui.urlRequester, SIGNAL(textChanged(QString)), parent, SLOT(settingsModified()));
+    connect(ui.folderNavigationCheckBox, SIGNAL(toggled(bool)), parent, SLOT(settingsModified()));
 }
 
 void LocalFilesAbstractBackend::init()

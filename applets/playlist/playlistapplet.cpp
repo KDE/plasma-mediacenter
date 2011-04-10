@@ -117,12 +117,14 @@ void PlaylistApplet::createConfigurationInterface(KConfigDialog *parent)
 {
     QWidget *config = new QWidget(parent);
     configUi.setupUi(config);
+    connect(parent, SIGNAL(applyClicked()), this, SLOT(configAccepted()));
 
     configUi.multiplePlaylistsCheckBox->setChecked(m_multiplePlaylists);
 
     parent->addPage(config, i18n("Playlist settings"), icon());
 
     connect (parent, SIGNAL(accepted()), this, SLOT(configAccepted()));
+    connect (configUi.multiplePlaylistsCheckBox, SIGNAL(toggled(bool)), parent, SLOT(settingsModified()));
 }
 
 void PlaylistApplet::configAccepted()

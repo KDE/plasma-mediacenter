@@ -75,11 +75,14 @@ void MediaPlayer::createConfigurationInterface(KConfigDialog *parent)
 {
     QWidget *widget = new QWidget(parent);
     ui.setupUi(widget);
+    connect(parent, SIGNAL(applyClicked()), this, SLOT(configAccepted()));
 
     parent->addPage(widget, i18n("Player settings"), "multimedia-player");
 
     ui.slideshowSpinBox->setValue(m_sshowTime);
     connect(parent, SIGNAL(accepted()), this, SLOT(acceptConfiguration()));
+    connect(ui.fullScreenCheckBox, SIGNAL(toggled(bool)), parent, SLOT(settingsModified()));
+    connect(ui.slideshowSpinBox, SIGNAL(valueChanged(int)), parent, SLOT(settingsModified()));
 }
 
 void MediaPlayer::acceptConfiguration()
