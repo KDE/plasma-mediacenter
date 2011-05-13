@@ -13,6 +13,7 @@ Name[uk]=Локальні відеофайли
 Name[x-test]=xxLocal videosxx
 Comment=A plugin for the mediabrowser applet that allows local file browsing
 Comment[et]=Meediasirvija plugin kohalike failide sirvimiseks
+Comment[nl]=Een plugin voor de mediabrowser-applet die bladeren door lokale bestanden mogelijk maakt
 Comment[pt]=Um 'plugin' para a 'applet' de leitura multimédia, que permite a navegação nos ficheiros locais.
 Comment[pt_BR]=Um plug-in para o miniaplicativo leitor multimídia, que permite a navegação nos arquivos locais
 Comment[sv]=Ett insticksprogram för miniprogrammet Mediabläddrare som tillåter bläddring i lokala filer

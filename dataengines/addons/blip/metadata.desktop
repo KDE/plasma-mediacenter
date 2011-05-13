@@ -11,6 +11,7 @@ Name[x-test]=xxBlipxx
 
 Comment=An engine that allows you to query web services for media.
 Comment[et]=Mootor veebiteenustele meedia kohta päringute esitamiseks.
+Comment[nl]=Een engine die u in staat stelt om media op te zoeken in webservices.
 Comment[pt]=Um motor que lhe permite pesquisar conteúdos multimédia em vários serviços na Web.
 Comment[pt_BR]=Um mecanismo que lhe permite pesquisar conteúdos multimídia em vários serviços na Web.
 Comment[sv]=Ett gränssnitt som låter dig söka efter media på webbtjänster.
