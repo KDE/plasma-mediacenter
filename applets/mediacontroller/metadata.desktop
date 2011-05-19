@@ -1,6 +1,14 @@
 [Desktop Entry]
 Name=Media Controller (QML)
 Comment=A simple applet to control media reproduction
+Comment[et]=Lihtne aplett meedia taasesitamise juhtimiseks
+Comment[hr]=Jednostavni programčić za upravljanje izvođenjem multimedijalnih datoteka
+Comment[nl]=Een eenvoudige applet voor besturing van reproductie van media
+Comment[pt]=Uma 'applet' simples para controlar a reprodução multimédia
+Comment[pt_BR]=Um miniaplicativo simples para controlar a reprodução multimídia
+Comment[sv]=Ett enkelt miniprogram för att hantera mediareproduktion
+Comment[uk]=Простий аплет, призначений для спостереження за відтворенням мультимедіа
+Comment[x-test]=xxA simple applet to control media reproductionxx
 Encoding=UTF-8
 Icon=applications-multimedia
 ServiceTypes=Plasma/Applet
