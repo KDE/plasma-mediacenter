@@ -1,5 +1,5 @@
 # A name for the project
-project(plasma-datasource)
+project(plasma-mediacentercontrol)
  
 # Find the required Libaries
 find_package(KDE4 REQUIRED)
@@ -13,19 +13,18 @@ include_directories(
    )
  
 # We add our source code here
-set(datasource_SRCS
-    datasource.cpp
+set(mediacentercontrol_SRCS
+    mediacentercontrol.cpp
 )
-#qt4_automoc(${datasource_SRCS})
  
 # Now make sure all files get to the right place
-kde4_add_plugin(plasma_engine_singleDataSource ${datasource_SRCS})
-target_link_libraries(plasma_engine_singleDataSource
+kde4_add_plugin(plasma_engine_mediacentercontrol ${mediacentercontrol_SRCS})
+target_link_libraries(plasma_engine_mediacentercontrol
                       ${KDE4_KDECORE_LIBS}
                       ${KDE4_PLASMA_LIBS})
  
-install(TARGETS plasma_engine_singleDataSource
+install(TARGETS plasma_engine_mediacentercontrol
         DESTINATION ${PLUGIN_INSTALL_DIR})
  
-install(FILES plasma-engine-datasource.desktop
+install(FILES plasma-engine-mediacentercontrol.desktop
         DESTINATION ${SERVICES_INSTALL_DIR})

@@ -1,13 +1,13 @@
-#include "datasource.h"
+#include "mediacentercontrol.h"
 #include <Plasma/DataContainer>
 
-DataSource::DataSource(QObject *parent, const QVariantList &args)
+MediaCenterControl::MediaCenterControl(QObject *parent, const QVariantList &args)
     : Plasma::DataEngine(parent, args)
 {
      Q_UNUSED(args);
 }
 
-void DataSource::init()
+void MediaCenterControl::init()
 {
     Plasma::DataContainer *source = new Plasma::DataContainer;
      source->setObjectName("MediaStatus");
@@ -19,5 +19,5 @@ void DataSource::init()
      
 }
     
-K_EXPORT_PLASMA_DATAENGINE(singleDataSource, DataSource)
-#include "datasource.moc"
+K_EXPORT_PLASMA_DATAENGINE(org.kde.mediacentercontrol, MediaCenterControl)
+#include "mediacentercontrol.moc"
