@@ -1,5 +1,5 @@
 # A name for the project
-project(plasma-mediacentercontrol)
+project(plasma-mediaCenterControl)
  
 # Find the required Libaries
 find_package(KDE4 REQUIRED)
@@ -13,12 +13,13 @@ include_directories(
    )
  
 # We add our source code here
-set(mediacentercontrol_SRCS
-    mediacentercontrol.cpp
+set(mediaCenterControl_SRCS
+    mediaCenterControl.cpp
+    mediaContainer.cpp
 )
  
 # Now make sure all files get to the right place
-kde4_add_plugin(plasma_engine_mediacentercontrol ${mediacentercontrol_SRCS})
+kde4_add_plugin(plasma_engine_mediacentercontrol ${mediaCenterControl_SRCS})
 target_link_libraries(plasma_engine_mediacentercontrol
                       ${KDE4_KDECORE_LIBS}
                       ${KDE4_PLASMA_LIBS})

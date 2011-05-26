@@ -16,8 +16,8 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#include "mediacentercontrol.h"
-#include <Plasma/DataContainer>
+#include "mediaCenterControl.h"
+#include "mediaContainer.h"
 
 MediaCenterControl::MediaCenterControl(QObject *parent, const QVariantList &args)
     : Plasma::DataEngine(parent, args)
@@ -27,15 +27,14 @@ MediaCenterControl::MediaCenterControl(QObject *parent, const QVariantList &args
 
 void MediaCenterControl::init()
 {
-    Plasma::DataContainer *source = new Plasma::DataContainer;
-     source->setObjectName("MediaStatus");
-     addSource(source);
-     setData("MediaStatus","State","Playing");
-     setData("MediaStatus","Progress",20); 
-     setData("MediaStatus","MediaType", "Audio");
-     setData("MediaStatus","Url","/home/Music/sintel.mp3");
-     
+    MediaContainer *source = new MediaContainer(this);
+    source->setObjectName("MediaStatus");
+    addSource(source);
+    setData("MediaStatus","State","Playing");
+    setData("MediaStatus","Progress",20); 
+    setData("MediaStatus","MediaType", "Audio");
+    setData("MediaStatus","Url","/home/Music/sintel.mp3");
 }
-    
+
 K_EXPORT_PLASMA_DATAENGINE(org.kde.mediacentercontrol, MediaCenterControl)
-#include "mediacentercontrol.moc"
+#include "mediaCenterControl.moc"
