@@ -16,25 +16,15 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#include "mediaCenterControl.h"
-#include "mediaContainer.h"
+#include "mediacontainer.h"
 
-MediaCenterControl::MediaCenterControl(QObject *parent, const QVariantList &args)
-    : Plasma::DataEngine(parent, args)
+MediaContainer::MediaContainer(QObject *parent)
+    : Plasma::DataContainer(parent)
 {
-     Q_UNUSED(args);
+    
 }
 
-void MediaCenterControl::init()
+void MediaContainer::updateData()
 {
-    MediaContainer *source = new MediaContainer(this);
-    source->setObjectName("MediaStatus");
-    addSource(source);
-    setData("MediaStatus","State","Playing");
-    setData("MediaStatus","Progress",20); 
-    setData("MediaStatus","MediaType", "Audio");
-    setData("MediaStatus","Url","/home/Music/sintel.mp3");
+//will be used futher
 }
-
-K_EXPORT_PLASMA_DATAENGINE(org.kde.mediacentercontrol, MediaCenterControl)
-#include "mediaCenterControl.moc"
