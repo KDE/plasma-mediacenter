@@ -1,6 +1,14 @@
 [Desktop Entry]
 Name=MediaCenterControl
+Name[pt]=Controlo do Centro Multimédia
+Name[sv]=Kontroll av Media Center
+Name[uk]=Керування медіацентру
+Name[x-test]=xxMediaCenterControlxx
 Comment= controlling the MediaCenter
+Comment[pt]=Para controlar o Centro Multimédia.
+Comment[sv]=Kontroll av Media Center
+Comment[uk]=Керування медіацентром
+Comment[x-test]=xx controlling the MediaCenterxx
 Type=Service
 Icon=applications-multimedia
 X-KDE-ServiceTypes=Plasma/DataEngine
