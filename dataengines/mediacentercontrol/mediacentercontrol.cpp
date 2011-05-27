@@ -30,10 +30,7 @@ void MediaCenterControl::init()
     MediaContainer *source = new MediaContainer(this);
     source->setObjectName("MediaStatus");
     addSource(source);
-    setData("MediaStatus","State","Playing");
-    setData("MediaStatus","Progress",20); 
-    setData("MediaStatus","MediaType", "Audio");
-    setData("MediaStatus","Url","/home/Music/sintel.mp3");
+
 }
 
 K_EXPORT_PLASMA_DATAENGINE(org.kde.mediacentercontrol, MediaCenterControl)

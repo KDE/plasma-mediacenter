@@ -21,10 +21,13 @@
 MediaContainer::MediaContainer(QObject *parent)
     : Plasma::DataContainer(parent)
 {
-    
+    updateData();
 }
 
 void MediaContainer::updateData()
 {
-//will be used futher
+    setData("State","Playing");
+    setData("Progress",20); 
+    setData("MediaType", "Audio");
+    setData("Url","/home/Music/sintel.mp3");
 }
