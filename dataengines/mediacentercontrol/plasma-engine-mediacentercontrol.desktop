@@ -1,10 +1,12 @@
 [Desktop Entry]
 Name=MediaCenterControl
+Name[nl]=Mediacentrumbesturing
 Name[pt]=Controlo do Centro Multimédia
 Name[sv]=Kontroll av Media Center
 Name[uk]=Керування медіацентру
 Name[x-test]=xxMediaCenterControlxx
 Comment= controlling the MediaCenter
+Comment[nl]= het mediacentrum besturen
 Comment[pt]=Para controlar o Centro Multimédia.
 Comment[sv]=Kontroll av Media Center
 Comment[uk]=Керування медіацентром
