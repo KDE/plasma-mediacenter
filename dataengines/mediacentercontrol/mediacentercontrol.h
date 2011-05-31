@@ -28,6 +28,7 @@ class MediaCenterControl : public Plasma::DataEngine
     
 public:
     MediaCenterControl(QObject* parent, const QVariantList& args);
+   // Plasma::Service* serviceForSource(const QString& source);
     void init();
 };
 

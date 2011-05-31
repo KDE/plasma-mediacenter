@@ -16,32 +16,121 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#include "mediacontainer.h"
-#include "mediaservice.h"
+#include "media.h"
+#include "kdebug.h"
 
-MediaContainer::MediaContainer(QObject *parent)
-    : Plasma::DataContainer(parent)
+Media::Media()
 {
-    updateData();
+
 }
 
-void MediaContainer::updateData()
+QString Media::name() const
 {
-    Media* m_media=new Media;
-    switch(m_media->state()) {
-        case Media::Playing:
-            setData("State", "playing");
-            break;
-        case Media::Paused:
-            setData("State", "paused");
-            break;
-        case Media::Stopped:
-            setData("State", "stopped");
-            break;
-    }
-    setData("Progress",m_media->position()); 
-    setData("MediaType", "Audio");
-    setData("Url","/home/Music/sintel.mp3");
+    Q_ASSERT(!m_name.isEmpty());
+    return m_name;
 }
 
-#include "mediacontainer.moc"
+Media::State Media::state()
+{
+    m_state = Playing;
+    return m_state;
+}
+
+int Media::length()
+{
+    return 60;
+}
+
+int Media::position()
+{
+    return 20;
+}
+
+float Media::volume()
+{
+    return 24;
+}
+
+bool Media::canPlay()
+{
+    kDebug() << "yes";
+    return true;
+}
+
+void Media::play()
+{
+    kDebug() << "play";
+}
+
+bool Media::canPause()
+{
+    kDebug() << "yes";
+    return true;
+}
+
+void Media::pause()
+{
+    kDebug() <<" Pause";
+}
+
+bool Media::canStop()
+{
+    kDebug() << "yes";
+    return true;
+}
+
+void Media::stop()
+{
+    kDebug() << "stop";
+}
+
+bool Media::canGoPrevious()
+{
+    kDebug() << "yes";
+    return true;
+}
+
+void Media::previous()
+{
+    kDebug() << "previous";
+}
+
+bool Media::canGoNext()
+{
+    kDebug() << "yes";
+    return true;
+}
+
+void Media::next()
+{
+    kDebug() << "next";
+}
+
+bool Media::canSetVolume()
+{
+    kDebug() << "yes";
+    return true;
+}
+
+void Media::setVolume(qreal)
+{
+    kDebug() << "volumeSet";
+}
+
+bool Media::canSeek()
+{
+    kDebug() << "yes";
+    return true;
+}
+
+void Media::seek(int)
+{
+    kDebug() << "seek";
+}
+
+void Media::setName(const QString& name)
+{
+    m_name = name;
+}
+
+#include "media.moc"

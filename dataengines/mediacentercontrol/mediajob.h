@@ -16,32 +16,25 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#include "mediacontainer.h"
-#include "mediaservice.h"
 
-MediaContainer::MediaContainer(QObject *parent)
-    : Plasma::DataContainer(parent)
+#ifndef MEDIAJOB_H
+#define MEDIAJOB_H
+
+#include <Plasma/ServiceJob>
+#include <QMap>
+#include "media.h"
+
+class MediaJob : public Plasma::ServiceJob
 {
-    updateData();
-}
+    Q_OBJECT
+    
+public:
+    MediaJob(Media* media, const QString& destination,
+             const QString& operation, const QMap< QString, QVariant >& parameters, QObject* parent = 0);
+    void start();
+    
+private:
+    Media* m_media;
+};
 
-void MediaContainer::updateData()
-{
-    Media* m_media=new Media;
-    switch(m_media->state()) {
-        case Media::Playing:
-            setData("State", "playing");
-            break;
-        case Media::Paused:
-            setData("State", "paused");
-            break;
-        case Media::Stopped:
-            setData("State", "stopped");
-            break;
-    }
-    setData("Progress",m_media->position()); 
-    setData("MediaType", "Audio");
-    setData("Url","/home/Music/sintel.mp3");
-}
-
-#include "mediacontainer.moc"
+#endif // MEDIAJOB_H

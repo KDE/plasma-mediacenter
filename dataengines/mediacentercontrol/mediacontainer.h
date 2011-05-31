@@ -20,6 +20,7 @@
 #define MEDIACONTAINER_H
 
 #include <Plasma/DataContainer>
+#include "media.h"
 
 class MediaContainer : public Plasma::DataContainer
 {
@@ -28,9 +29,12 @@ class MediaContainer : public Plasma::DataContainer
 public:
     MediaContainer(QObject *parent = 0);
 
-protected:
+public slots:
     void updateData();
-
+    
+private:
+    Media* m_media;
+    
 };
 
 #endif

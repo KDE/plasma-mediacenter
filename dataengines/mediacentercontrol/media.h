@@ -16,32 +16,48 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#include "mediacontainer.h"
-#include "mediaservice.h"
+#ifndef MEDIA_H
+#define MEDIA_H
 
-MediaContainer::MediaContainer(QObject *parent)
-    : Plasma::DataContainer(parent)
+#include <QString>
+
+class Media
 {
-    updateData();
-}
+public:
+    Media();
+    QString name() const;
+    enum State {
+        Playing,
+        Paused,
+        Stopped
+    };
+    int length();
+    bool isRunning();
+    State state();
+    int position();
+    float volume();
+    bool canPlay();
+    void play();
+    bool canPause();
+    void pause();
+    bool canStop();
+    void stop();
+    bool canGoPrevious();
+    void previous();
+    bool canGoNext();
+    void next();
+    bool canSetVolume();
+    void setVolume(qreal volume);
+    bool canSeek();
+    void seek(int time);
+    
+protected:
+    void setName(const QString& name);
+    
+private:
+    QString m_name;
+    Media::State m_state;
+};
 
-void MediaContainer::updateData()
-{
-    Media* m_media=new Media;
-    switch(m_media->state()) {
-        case Media::Playing:
-            setData("State", "playing");
-            break;
-        case Media::Paused:
-            setData("State", "paused");
-            break;
-        case Media::Stopped:
-            setData("State", "stopped");
-            break;
-    }
-    setData("Progress",m_media->position()); 
-    setData("MediaType", "Audio");
-    setData("Url","/home/Music/sintel.mp3");
-}
-
-#include "mediacontainer.moc"
+#endif // MEDIA_H
+    

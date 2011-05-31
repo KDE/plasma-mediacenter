@@ -18,6 +18,8 @@
  ***************************************************************************/
 #include "mediacentercontrol.h"
 #include "mediacontainer.h"
+#include "media.h"
+#include "mediaservice.h"
 
 MediaCenterControl::MediaCenterControl(QObject *parent, const QVariantList &args)
     : Plasma::DataEngine(parent, args)
@@ -34,4 +36,5 @@ void MediaCenterControl::init()
 }
 
 K_EXPORT_PLASMA_DATAENGINE(org.kde.mediacentercontrol, MediaCenterControl)
+
 #include "mediacentercontrol.moc"

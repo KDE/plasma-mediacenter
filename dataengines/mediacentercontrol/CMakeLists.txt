@@ -12,13 +12,16 @@ include_directories(
    ${KDE4_INCLUDES}
    )
  
-# We add our source code here
+# Adding source code here
 set(mediacentercontrol_SRCS
     mediacentercontrol.cpp
     mediacontainer.cpp
+    media.cpp
+    mediaservice.cpp
+    mediajob.cpp
 )
  
-# Now make sure all files get to the right place
+# Make sure that all files get to the right place
 kde4_add_plugin(plasma_engine_mediacentercontrol ${mediacentercontrol_SRCS})
 target_link_libraries(plasma_engine_mediacentercontrol
                       ${KDE4_KDECORE_LIBS}
@@ -29,3 +32,4 @@ install(TARGETS plasma_engine_mediacentercontrol
  
 install(FILES plasma-engine-mediacentercontrol.desktop
         DESTINATION ${SERVICES_INSTALL_DIR})
+install(FILES mediacentercontrol.operations DESTINATION ${DATA_INSTALL_DIR}/plasma/services)

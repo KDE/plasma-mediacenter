@@ -16,32 +16,38 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#include "mediacontainer.h"
 #include "mediaservice.h"
+#include "mediajob.h"
 
-MediaContainer::MediaContainer(QObject *parent)
-    : Plasma::DataContainer(parent)
+MediaService::MediaService(Media* media, QObject* parent)
+    : Plasma::Service(parent), m_media(media)
 {
-    updateData();
-}
-
-void MediaContainer::updateData()
-{
-    Media* m_media=new Media;
-    switch(m_media->state()) {
-        case Media::Playing:
-            setData("State", "playing");
-            break;
-        case Media::Paused:
-            setData("State", "paused");
-            break;
-        case Media::Stopped:
-            setData("State", "stopped");
-            break;
+    setObjectName("media controller");
+    setName("media");
+    if (m_media) {
+        setDestination(m_media->name());
     }
-    setData("Progress",m_media->position()); 
-    setData("MediaType", "Audio");
-    setData("Url","/home/Music/sintel.mp3");
+    enableMediaOperations();
 }
 
-#include "mediacontainer.moc"
+void MediaService::enableMediaOperations()
+{
+        if (m_media) {
+        setOperationEnabled("play", m_media->canPlay());
+        setOperationEnabled("pause", m_media->canPause());
+        setOperationEnabled("stop", m_media->canStop());
+        setOperationEnabled("next", m_media->canGoNext());
+        setOperationEnabled("previous", m_media->canGoPrevious());
+        setOperationEnabled("volume", m_media->canSetVolume());
+        setOperationEnabled("seek", m_media->canSeek());
+    }
+
+}
+
+Plasma::ServiceJob* MediaService::createJob(const QString &operation, QMap<QString, QVariant> &parameters)
+{
+    return new MediaJob(m_media, destination(), operation, parameters, this);
+}
+
+
+#include "mediaservice.moc"
