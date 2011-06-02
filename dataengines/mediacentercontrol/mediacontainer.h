@@ -28,6 +28,7 @@ class MediaContainer : public Plasma::DataContainer
 
 public:
     MediaContainer(QObject *parent = 0);
+    Plasma::Service* service(QObject* parent = 0);
 
 public slots:
     void updateData();

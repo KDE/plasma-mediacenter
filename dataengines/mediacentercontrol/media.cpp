@@ -112,7 +112,7 @@ bool Media::canSetVolume()
     return true;
 }
 
-void Media::setVolume(qreal)
+void Media::setVolume(qreal volume)
 {
     kDebug() << "volumeSet";
 }

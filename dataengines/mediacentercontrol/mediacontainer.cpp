@@ -22,7 +22,16 @@
 MediaContainer::MediaContainer(QObject *parent)
     : Plasma::DataContainer(parent)
 {
-    updateData();
+    connect(this, SIGNAL(updateRequested(DataContainer*)),
+            this, SLOT(updateData()));
+}
+
+Plasma::Service* MediaContainer::service(QObject* parent)
+{
+    Plasma::Service *controller = new MediaService(m_media,parent);
+    connect(this, SIGNAL(updateRequested(DataContainer*)),
+            controller, SLOT(enableMediaOperations()));
+    return controller;
 }
 
 void MediaContainer::updateData()

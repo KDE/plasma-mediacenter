@@ -7,4 +7,6 @@
   <group name="stop"/>
   <group name="previous"/>
   <group name="next"/>
+  <group name="seek" />
+  <group name="volume" />
 </kcfg>

@@ -35,6 +35,16 @@ void MediaCenterControl::init()
 
 }
 
+Plasma::Service* MediaCenterControl::serviceForSource(const QString& source)
+{
+    MediaContainer* container = qobject_cast<MediaContainer*>(containerForSource(source));
+    if (container) {
+        return container->service(this);
+    } else {
+        return DataEngine::serviceForSource(source);
+    }
+}
+
 K_EXPORT_PLASMA_DATAENGINE(org.kde.mediacentercontrol, MediaCenterControl)
 
 #include "mediacentercontrol.moc"
