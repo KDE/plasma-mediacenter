@@ -25,41 +25,53 @@ import org.kde.plasma.graphicslayouts 4.7 as GraphicsLayouts
 
 QGraphicsWidget {
     id: mediaController
-    preferredSize: "200x200"
+    preferredSize: "400x200"
     minimumSize: "100x40"
     Row {
         id:layouting
         spacing: 5
-        anchors.verticalCenter: parent.vertcalCenter
         PlasmaWidgets.IconWidget {
             id: backward;
             Component.onCompleted: {
-            setIcon("media-skip-backward");
+            setIcon("media-skip-backward")
             }
         }
         PlasmaWidgets.IconWidget {
-            id: start;
+            id: playPause;
             Component.onCompleted: {
-            setIcon("media-playback-start");
+            setIcon("media-playback-start")
             }
+            onClicked:
+                 setIcon("media-playback-pause")
         }
+        
         PlasmaWidgets.IconWidget {
             id: stop;
             Component.onCompleted: {
-            setIcon("media-playback-stop");
+            setIcon("media-playback-stop")
             }
         }
+        
         PlasmaWidgets.IconWidget {
             id: forward;
             Component.onCompleted: {
-            setIcon("media-skip-forward");
+            setIcon("media-skip-forward")
             }
         }
+        
     }
+    PlasmaWidgets.IconWidget {
+            id: volume;    
+            anchors.right: parent.right
+            Component.onCompleted: {
+            setIcon("audio-volume-medium")
+            }
+        }
+        
     PlasmaWidgets.Slider {
         id: progress
         anchors.left: layouting.right
-        anchors.right: parent.right
+        anchors.right: volume.left
         anchors.verticalCenter: layouting.verticalCenter
         orientation: Qt.Horizontal
     }
