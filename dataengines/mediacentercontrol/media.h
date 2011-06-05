@@ -35,7 +35,7 @@ public:
     bool isRunning();
     State state();
     int position();
-    float volume();
+    qreal volume();
     bool canPlay();
     void play();
     bool canPause();
@@ -47,9 +47,9 @@ public:
     bool canGoNext();
     void next();
     bool canSetVolume();
-    void setVolume(qreal volume);
+    void setVolume(qreal volume=0);
     bool canSeek();
-    void seek(int time);
+    void seek(int time=0);
     
 protected:
     void setName(const QString& name);
@@ -57,6 +57,12 @@ protected:
 private:
     QString m_name;
     Media::State m_state;
+    int m_progress;
+    qreal m_volume;
+    bool m_playPause;
+    bool m_stop;
+    int m_length;
+    
 };
 
 #endif // MEDIA_H

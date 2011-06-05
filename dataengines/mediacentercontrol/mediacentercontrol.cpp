@@ -20,6 +20,7 @@
 #include "mediacontainer.h"
 #include "media.h"
 #include "mediaservice.h"
+#include "kdebug.h"
 
 MediaCenterControl::MediaCenterControl(QObject *parent, const QVariantList &args)
     : Plasma::DataEngine(parent, args)
@@ -44,6 +45,17 @@ Plasma::Service* MediaCenterControl::serviceForSource(const QString& source)
         return DataEngine::serviceForSource(source);
     }
 }
+
+bool MediaCenterControl::sourceRequestEvent(const QString& source)
+{
+    kDebug() << "Source" << source;
+    if (source != '\0') {
+     
+        return true;
+    }
+    return false;
+}
+
 
 K_EXPORT_PLASMA_DATAENGINE(org.kde.mediacentercontrol, MediaCenterControl)
 

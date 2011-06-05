@@ -30,6 +30,9 @@ public:
     MediaCenterControl(QObject* parent, const QVariantList& args);
     Plasma::Service* serviceForSource(const QString& source);
     void init();
+    
+protected:
+    bool sourceRequestEvent(const QString &source);
 };
 
 #endif
