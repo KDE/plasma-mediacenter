@@ -25,8 +25,30 @@ import org.kde.plasma.graphicslayouts 4.7 as GraphicsLayouts
 
 QGraphicsWidget {
     id: mediaController
-    preferredSize: "400x200"
-    minimumSize: "100x40"
+    preferredSize: "200x200"
+    minimumSize: "100x20"
+    property string activeSource: dataSource.sources[0]
+
+    Item {
+        id:main
+
+        PlasmaCore.DataSource {
+            id: dataSource
+            engine: "org.kde.mediacentercontrol"
+            connectedSources: activeSource
+
+            onDataChanged: {
+
+                if (data[activeSource].State == "playing") {
+                    playPause.setIcon("media-playback-pause")
+                } else {
+                    playPause.setIcon("media-playback-start")
+                }
+
+               // progress.value = 100*data[activeSource].Position/data[activeSource].Length
+            }
+        }
+    }
     Row {
         id:layouting
         spacing: 5
@@ -38,11 +60,17 @@ QGraphicsWidget {
         }
         PlasmaWidgets.IconWidget {
             id: playPause;
-            Component.onCompleted: {
-            setIcon("media-playback-start")
+            property string state: "stop"
+
+            onClicked: {
+                var operation
+                if (dataSource.data[activeSource].State == "playing") {
+                    operation = "pause"
+                } else {
+                    operation = "play"
+                }
+               // var data = dataSource.serviceForSource(activeSource).operationDescription(operation);
             }
-            onClicked:
-                 setIcon("media-playback-pause")
         }
         
         PlasmaWidgets.IconWidget {
@@ -50,6 +78,11 @@ QGraphicsWidget {
             Component.onCompleted: {
             setIcon("media-playback-stop")
             }
+            onClicked: {
+                var data = dataSource.serviceForSource(activeSource).operationDescription("stop");
+               // print(dataSource.serviceForSource(activeSource).name);
+            }
+
         }
         
         PlasmaWidgets.IconWidget {

@@ -22,6 +22,7 @@
 MediaContainer::MediaContainer(QObject *parent)
     : Plasma::DataContainer(parent)
 {
+    m_media=new Media;
     connect(this, SIGNAL(updateRequested(DataContainer*)),
             this, SLOT(updateData()));
 }
@@ -36,7 +37,6 @@ Plasma::Service* MediaContainer::service(QObject* parent)
 
 void MediaContainer::updateData()
 {
-    Media* m_media=new Media;
     switch(m_media->state()) {
         case Media::Playing:
             setData("State", "playing");

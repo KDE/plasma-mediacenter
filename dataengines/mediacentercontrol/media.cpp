@@ -24,13 +24,12 @@ Media::Media()
     m_playPause = true;
     m_stop = false;
     m_progress = 0;
-    m_state = Playing;
+    m_state = Paused;
 
 }
 
 QString Media::name() const
 {
-    Q_ASSERT(!m_name.isEmpty());
     return m_name;
 }
 

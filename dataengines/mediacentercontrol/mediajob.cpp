@@ -24,7 +24,7 @@ MediaJob::MediaJob(Media* media,
         QObject *parent) : Plasma::ServiceJob(destination, operation, parameters, parent),
         m_media(media)
 {
-    
+    m_media=new Media;
 }
 
 void MediaJob::start()

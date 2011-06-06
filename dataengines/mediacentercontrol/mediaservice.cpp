@@ -22,7 +22,8 @@
 MediaService::MediaService(Media* media, QObject* parent)
     : Plasma::Service(parent), m_media(media)
 {
-    setObjectName("media controller");
+    //setObjectName("MediaStatus");
+    m_media=new Media;
     setName("media");
     if (m_media) {
         setDestination(m_media->name());
