@@ -80,6 +80,7 @@ void Media::pause()
 {
         m_playPause = true;
         m_state = Paused;
+        kDebug() << "pause";
 }
 
 bool Media::canStop()
@@ -99,7 +100,7 @@ void Media::stop()
 
 bool Media::canGoPrevious()
 {
-    kDebug() << "yes";
+    //kDebug() << "yes";
     return true;
 }
 
@@ -110,7 +111,7 @@ void Media::previous()
 
 bool Media::canGoNext()
 {
-    kDebug() << "yes";
+   // kDebug() << "yes";
     return true;
 }
 
@@ -121,7 +122,7 @@ void Media::next()
 
 bool Media::canSetVolume()
 {
-    kDebug() << "yes";
+    //kDebug() << "yes";
     return true;
 }
 

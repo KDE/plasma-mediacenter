@@ -25,6 +25,7 @@ MediaContainer::MediaContainer(QObject *parent)
     m_media=new Media;
     connect(this, SIGNAL(updateRequested(DataContainer*)),
             this, SLOT(updateData()));
+    updateData();
 }
 
 Plasma::Service* MediaContainer::service(QObject* parent)

@@ -24,7 +24,7 @@ MediaService::MediaService(Media* media, QObject* parent)
 {
     //setObjectName("MediaStatus");
     m_media=new Media;
-    setName("media");
+    setName("mediacentercontrol");
     if (m_media) {
         setDestination(m_media->name());
     }

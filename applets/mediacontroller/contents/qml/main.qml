@@ -36,6 +36,7 @@ QGraphicsWidget {
             id: dataSource
             engine: "org.kde.mediacentercontrol"
             connectedSources: activeSource
+            interval: 500
 
             onDataChanged: {
 
@@ -45,9 +46,18 @@ QGraphicsWidget {
                     playPause.setIcon("media-playback-start")
                 }
 
-               // progress.value = 100*data[activeSource].Position/data[activeSource].Length
+                progress.value = 100*data[activeSource].Position/data[activeSource].Length
             }
         }
+    }
+   Component.onCompleted:
+    {
+        dataSource.serviceForSource(activeSource).associateWidget(stop, "stop");
+        dataSource.serviceForSource(activeSource).associateWidget(progress, "progress");
+        dataSource.serviceForSource(activeSource).associateWidget(forward, "forward");
+        dataSource.serviceForSource(activeSource).associateWidget(backward, "backward");
+        dataSource.serviceForSource(activeSource).associateWidget(volume, "volume");
+        
     }
     Row {
         id:layouting
@@ -57,19 +67,29 @@ QGraphicsWidget {
             Component.onCompleted: {
             setIcon("media-skip-backward")
             }
+            onClicked: {
+                var data = dataSource.serviceForSource(activeSource).operationDescription("previous");
+                print(dataSource.serviceForSource(activeSource).name);
+                dataSource.serviceForSource(activeSource).startOperationCall(dataSource.serviceForSource(activeSource).operationDescription("previous"));
+            }
         }
         PlasmaWidgets.IconWidget {
             id: playPause;
-            property string state: "stop"
+            //property string state: "stop"
 
             onClicked: {
                 var operation
                 if (dataSource.data[activeSource].State == "playing") {
                     operation = "pause"
+                    dataSource.serviceForSource(activeSource).associateWidget(playPause, "pause");
                 } else {
                     operation = "play"
+                    dataSource.serviceForSource(activeSource).associateWidget(playPause, "play");
                 }
-               // var data = dataSource.serviceForSource(activeSource).operationDescription(operation);
+               var data = dataSource.serviceForSource(activeSource).operationDescription(operation);
+               print(dataSource.serviceForSource(activeSource).name);
+               dataSource.serviceForSource(activeSource).startOperationCall(dataSource.serviceForSource(activeSource).operationDescription(operation));
+              
             }
         }
         
@@ -80,7 +100,8 @@ QGraphicsWidget {
             }
             onClicked: {
                 var data = dataSource.serviceForSource(activeSource).operationDescription("stop");
-               // print(dataSource.serviceForSource(activeSource).name);
+                print(dataSource.serviceForSource(activeSource).name);
+                dataSource.serviceForSource(activeSource).startOperationCall(dataSource.serviceForSource(activeSource).operationDescription("stop"));
             }
 
         }
@@ -89,6 +110,11 @@ QGraphicsWidget {
             id: forward;
             Component.onCompleted: {
             setIcon("media-skip-forward")
+            }
+            onClicked: {
+                var data = dataSource.serviceForSource(activeSource).operationDescription("next");
+                print(dataSource.serviceForSource(activeSource).name);
+                dataSource.serviceForSource(activeSource).startOperationCall(dataSource.serviceForSource(activeSource).operationDescription("next"));
             }
         }
         
@@ -99,6 +125,11 @@ QGraphicsWidget {
             Component.onCompleted: {
             setIcon("audio-volume-medium")
             }
+            onClicked: {
+                var data = dataSource.serviceForSource(activeSource).operationDescription("volume");
+                print(dataSource.serviceForSource(activeSource).name);
+                dataSource.serviceForSource(activeSource).startOperationCall(dataSource.serviceForSource(activeSource).operationDescription("volume"));
+            }
         }
         
     PlasmaWidgets.Slider {
@@ -107,5 +138,17 @@ QGraphicsWidget {
         anchors.right: volume.left
         anchors.verticalCenter: layouting.verticalCenter
         orientation: Qt.Horizontal
+        onSliderMoved: {
+                var operation = dataSource.serviceForSource(activeSource).operationDescription("seek");
+                operation.seconds = Math.round(dataSource.data[activeSource].Length*(value/100));
+
+                for ( var i in operation ) {
+                    print(i + ' -> ' + operation[i] );
+                }
+
+                dataSource.serviceForSource(activeSource).startOperationCall(operation);
+                print("set progress to " + progress);
+        }
     }
+    
 }
