@@ -126,7 +126,7 @@ void MainWindow::loadMediaCenter()
     m_player = m_containment->addApplet("mcplayer");
     m_infobar = m_containment->addApplet("mediainfobar");
     m_welcome = m_containment->addApplet("mediawelcome");
-    m_controller = m_containment->addApplet("mediacontroller"); //Keep the controller last
+    m_controller = m_containment->addApplet("org.kde.mediacontroller"); //Keep the controller last
 
     if (m_browser) {
         MediaCenter::Browser *browser = qobject_cast<MediaCenter::Browser *>(m_browser);
