@@ -82,6 +82,7 @@ bool Media::canStop()
 void Media::stop()
 {
     m_state = Stopped;
+    m_position = 0;
     kDebug() << "stop";
 }
 

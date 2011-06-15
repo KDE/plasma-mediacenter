@@ -34,8 +34,8 @@ MediaService::MediaService(Media* media, QObject* parent)
 void MediaService::enableMediaOperations()
 {
         if (m_media) {
-        setOperationEnabled("play", m_media->canPlay());
-        setOperationEnabled("pause", m_media->canPause());
+        setOperationEnabled("play", true);
+        setOperationEnabled("pause", true);
         setOperationEnabled("stop", m_media->canStop());
         setOperationEnabled("next", m_media->canGoNext());
         setOperationEnabled("previous", m_media->canGoPrevious());
