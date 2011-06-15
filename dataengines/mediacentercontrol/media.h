@@ -57,10 +57,8 @@ protected:
 private:
     QString m_name;
     Media::State m_state;
-    int m_progress;
+    int m_position;
     qreal m_volume;
-    bool m_playPause;
-    bool m_stop;
     int m_length;
     
 };

@@ -25,8 +25,8 @@ import org.kde.plasma.graphicslayouts 4.7 as GraphicsLayouts
 
 QGraphicsWidget {
     id: mediaController
-    preferredSize: "200x200"
-    minimumSize: "100x20"
+    preferredSize: "600x600"
+    minimumSize: "500x500"
     property string activeSource: dataSource.sources[0]
 
     Item {
@@ -46,7 +46,7 @@ QGraphicsWidget {
                     playPause.setIcon("media-playback-start")
                 }
 
-                progress.value = 100*data[activeSource].Position/data[activeSource].Length
+                progress.value = (100*data[activeSource].Position)/data[activeSource].Length
             }
         }
     }
@@ -57,7 +57,6 @@ QGraphicsWidget {
         dataSource.serviceForSource(activeSource).associateWidget(forward, "forward");
         dataSource.serviceForSource(activeSource).associateWidget(backward, "backward");
         dataSource.serviceForSource(activeSource).associateWidget(volume, "volume");
-        
     }
     Row {
         id:layouting
@@ -74,22 +73,19 @@ QGraphicsWidget {
             }
         }
         PlasmaWidgets.IconWidget {
-            id: playPause;
-            //property string state: "stop"
+            id: playPause
 
             onClicked: {
                 var operation
                 if (dataSource.data[activeSource].State == "playing") {
                     operation = "pause"
-                    dataSource.serviceForSource(activeSource).associateWidget(playPause, "pause");
                 } else {
                     operation = "play"
-                    dataSource.serviceForSource(activeSource).associateWidget(playPause, "play");
                 }
                var data = dataSource.serviceForSource(activeSource).operationDescription(operation);
                print(dataSource.serviceForSource(activeSource).name);
                dataSource.serviceForSource(activeSource).startOperationCall(dataSource.serviceForSource(activeSource).operationDescription(operation));
-              
+               dataSource.serviceForSource(activeSource).associateWidget(playPause, operation);
             }
         }
         
@@ -138,7 +134,7 @@ QGraphicsWidget {
         anchors.right: volume.left
         anchors.verticalCenter: layouting.verticalCenter
         orientation: Qt.Horizontal
-        onSliderMoved: {
+        onValueChanged: {
                 var operation = dataSource.serviceForSource(activeSource).operationDescription("seek");
                 operation.seconds = Math.round(dataSource.data[activeSource].Length*(value/100));
 
@@ -147,7 +143,8 @@ QGraphicsWidget {
                 }
 
                 dataSource.serviceForSource(activeSource).startOperationCall(operation);
-                print("set progress to " + progress);
+                print("set progress to " + dataSource.data[activeSource].Position + " of " 
+                                         + dataSource.data[activeSource].Length);
         }
     }
     

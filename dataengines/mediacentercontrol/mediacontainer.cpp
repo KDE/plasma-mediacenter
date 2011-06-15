@@ -22,7 +22,7 @@
 MediaContainer::MediaContainer(QObject *parent)
     : Plasma::DataContainer(parent)
 {
-    m_media=new Media;
+    m_media = new Media;
     connect(this, SIGNAL(updateRequested(DataContainer*)),
             this, SLOT(updateData()));
     updateData();
@@ -49,7 +49,9 @@ void MediaContainer::updateData()
             setData("State", "stopped");
             break;
     }
-    setData("Progress",m_media->position()); 
+    setData("Position",m_media->position()); 
+    setData("Length",m_media->length());
+    setData("Volume",m_media->volume());
     setData("MediaType", "Audio");
     setData("Url","/home/Music/sintel.mp3");
 }

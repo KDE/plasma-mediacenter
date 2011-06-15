@@ -19,11 +19,11 @@
 #include "mediaservice.h"
 #include "mediajob.h"
 
+#include <KDebug>
+
 MediaService::MediaService(Media* media, QObject* parent)
     : Plasma::Service(parent), m_media(media)
 {
-    //setObjectName("MediaStatus");
-    m_media=new Media;
     setName("mediacentercontrol");
     if (m_media) {
         setDestination(m_media->name());

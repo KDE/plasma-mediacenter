@@ -24,7 +24,7 @@ MediaJob::MediaJob(Media* media,
         QObject *parent) : Plasma::ServiceJob(destination, operation, parameters, parent),
         m_media(media)
 {
-    m_media=new Media;
+
 }
 
 void MediaJob::start()
@@ -94,6 +94,7 @@ void MediaJob::start()
         if (m_media->canSeek()) {
             if (parameters().contains("seconds")) {
                 qreal time = parameters()["seconds"].toInt();
+                kDebug() << time;
                 if (time >= 0 && time <= m_media->length()) {
                     m_media->seek(time);
                 } else {
@@ -109,9 +110,6 @@ void MediaJob::start()
             setErrorText(i18n("'%1' cannot perform the action 'seek'.", m_media->name()));
             setError(-1);
         }
-    }
-    if (error()) {
-        kDebug() << "Failed with error" << errorText();
     }
     emitResult();
 } 

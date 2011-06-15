@@ -21,11 +21,10 @@
 
 Media::Media()
 {
-    m_playPause = true;
-    m_stop = false;
-    m_progress = 0;
     m_state = Paused;
-
+    m_length = 200;
+    m_volume = 0.5;
+    m_position = 0;
 }
 
 QString Media::name() const
@@ -45,7 +44,7 @@ int Media::length()
 
 int Media::position()
 {
-    return m_progress;
+    return m_position;
 }
 
 qreal Media::volume()
@@ -55,52 +54,39 @@ qreal Media::volume()
 
 bool Media::canPlay()
 {
-    if (!m_playPause)
-        return true;
-    else 
-        return false;
+    return (m_state==Paused||m_state==Stopped);
 }
 
 void Media::play()
 {
-    m_playPause = true;
     m_state = Playing;
     kDebug() << "play";
 }
 
 bool Media::canPause()
 {
-    if (m_playPause)
-        return true;
-    else
-        return false;
+    return (m_state==Playing);
 }
 
 void Media::pause()
 {
-        m_playPause = true;
         m_state = Paused;
         kDebug() << "pause";
 }
 
 bool Media::canStop()
 {
-    if (!m_stop)
-        return true;
-    else
-        return false;
+    return (m_state==Playing||m_state==Paused);
 }
 
 void Media::stop()
 {
-    m_stop = true;
     m_state = Stopped;
     kDebug() << "stop";
 }
 
 bool Media::canGoPrevious()
 {
-    //kDebug() << "yes";
     return true;
 }
 
@@ -111,7 +97,6 @@ void Media::previous()
 
 bool Media::canGoNext()
 {
-   // kDebug() << "yes";
     return true;
 }
 
@@ -122,7 +107,6 @@ void Media::next()
 
 bool Media::canSetVolume()
 {
-    //kDebug() << "yes";
     return true;
 }
 
@@ -134,16 +118,13 @@ void Media::setVolume(qreal volume)
 
 bool Media::canSeek()
 {
-    if (!m_stop)
-        return true;
-    else
-        return false;
+    return (m_state==Playing||m_state==Paused);
 }
 
 void Media::seek(int time)
 {
-    m_progress = time;
-    kDebug() << "seek";
+    m_position = time;
+    kDebug() << "seek to " << m_position;
 }
 
 void Media::setName(const QString& name)

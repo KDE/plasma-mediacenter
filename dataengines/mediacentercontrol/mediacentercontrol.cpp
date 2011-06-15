@@ -33,7 +33,6 @@ void MediaCenterControl::init()
     MediaContainer *source = new MediaContainer(this);
     source->setObjectName("MediaStatus");
     addSource(source);
-
 }
 
 Plasma::Service* MediaCenterControl::serviceForSource(const QString& source)
