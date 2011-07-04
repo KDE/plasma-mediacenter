@@ -50,6 +50,8 @@ public:
     void setVolume(qreal volume=0);
     bool canSeek();
     void seek(int time=0);
+    void setUrl(QString);
+    QString getUrl();
     
 protected:
     void setName(const QString& name);
@@ -60,6 +62,7 @@ private:
     int m_position;
     qreal m_volume;
     int m_length;
+    QString m_url;
     
 };
 

@@ -109,6 +109,7 @@ QGraphicsWidget {
             }
             onClicked: {
                 var data = dataSource.serviceForSource(activeSource).operationDescription("next");
+                data.murl = "/home/.mp3";
                 print(dataSource.serviceForSource(activeSource).name);
                 dataSource.serviceForSource(activeSource).startOperationCall(dataSource.serviceForSource(activeSource).operationDescription("next"));
             }
@@ -116,7 +117,7 @@ QGraphicsWidget {
         
     }
     PlasmaWidgets.IconWidget {
-            id: volume;    
+            id: volume;
             anchors.right: parent.right
             Component.onCompleted: {
             setIcon("audio-volume-medium")

@@ -122,8 +122,8 @@ void MainWindow::loadMediaCenter()
     m_view->setSceneRect(m_containment->geometry());
 
     m_browser = m_containment->addApplet("mediabrowser");
-    m_playlist = m_containment->addApplet("playlist");
-    m_player = m_containment->addApplet("mcplayer");
+    //m_playlist = m_containment->addApplet("playlist");
+    m_player = m_containment->addApplet("org.kde.mediaplayer");
     m_infobar = m_containment->addApplet("mediainfobar");
     m_welcome = m_containment->addApplet("mediawelcome");
     m_controller = m_containment->addApplet("org.kde.mediacontroller"); //Keep the controller last

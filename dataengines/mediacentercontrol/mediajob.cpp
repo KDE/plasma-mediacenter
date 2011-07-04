@@ -68,6 +68,9 @@ void MediaJob::start()
     } else if (operation == "next") {
         if (m_media->canGoNext()) {
             m_media->next();
+            QString cururl = parameters()["murl"].toString();
+            kDebug() << cururl;
+            m_media->setUrl(cururl);
         } else {
             setErrorText(i18n("'%1' cannot perform the action 'next'.", m_media->name()));
             setError(-1);

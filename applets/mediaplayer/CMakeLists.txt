@@ -1,47 +1,6 @@
-project(plasma-mcplayer)
+project(mediaplayer)
 
-# Find the required Libaries
-find_package(KDE4 REQUIRED)
-include(KDE4Defaults)
+install(DIRECTORY package/ DESTINATION ${DATA_INSTALL_DIR}/plasma/plasmoids/org.kde.mediaplayer PATTERN .git EXCLUDE)
 
-add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
-include_directories(
-   ${CMAKE_SOURCE_DIR}
-   ${CMAKE_BINARY_DIR}
-   ${KDE4_INCLUDES}
-   )
-
-# We add our source code here
-set(mediaplayer_SRCS
-    mediaplayer.cpp
-    pictureviewer.cpp
-#    dbus/playerdbushandler.cpp
-#    dbus/rootdbushandler.cpp
-#    dbus/tracklistdbushandler.cpp
-)
-
-#QT4_ADD_DBUS_ADAPTOR(mediaplayer_SRCS dbus/org.freedesktop.MediaPlayer.player.xml
-#                     dbus/playerdbushandler.h PlayerDBusHandler playeradaptor PlayerAdaptor)
-#QT4_ADD_DBUS_ADAPTOR(mediaplayer_SRCS dbus/org.freedesktop.MediaPlayer.root.xml
-#                     dbus/rootdbushandler.h RootDBusHandler rootadaptor RootAdaptor)
-#QT4_ADD_DBUS_ADAPTOR(mediaplayer_SRCS dbus/org.freedesktop.MediaPlayer.tracklist.xml
-#                     dbus/tracklistdbushandler.h TrackListDBusHandler tracklistadaptor TrackListAdaptor)
-
-#DBus interface for operations not supported by org.mpris stuff
-#QT4_ADD_DBUS_ADAPTOR(mediaplayer_SRCS org.kde.PlasmaMediaPlayer.xml
-#                     mediaplayer.h MediaPlayer)
-
-# Now make sure all files get to the right place
-kde4_add_ui_files(mediaplayer_SRCS config.ui)
-kde4_add_plugin(plasma_applet_mcplayer ${mediaplayer_SRCS})
-target_link_libraries(plasma_applet_mcplayer 
-                      ${KDE4_PHONON_LIBS}
-                      ${KDE4_PLASMA_LIBS} ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} ${QT_QTDBUS_LIBRARY} mediacenterlibs)
-
-
-
-install(TARGETS plasma_applet_mcplayer
-        DESTINATION ${PLUGIN_INSTALL_DIR})
-
-install(FILES plasma-applet-mcplayer.desktop
+install(FILES plasma-applet-mediaplayer.desktop
         DESTINATION ${SERVICES_INSTALL_DIR})

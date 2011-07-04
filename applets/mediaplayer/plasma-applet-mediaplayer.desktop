@@ -1,0 +1,20 @@
+[Desktop Entry]
+Name=Media Player (QML)
+Comment=Playing applet for Plasma Media Center
+Encoding=UTF-8
+Icon=applications-multimedia
+ServiceTypes=Plasma/Applet
+Type=Service
+
+X-KDE-ParentAppp=plasma-mediacenter
+X-KDE-PluginInfo-Category=Multimedia
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-Author=Sinny Kumari
+X-KDE-PluginInfo-Email=ksinny@gmail.com
+X-KDE-PluginInfo-EnabledByDefault=true
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-Name=org.kde.mediaplayer
+X-KDE-PluginInfo-Version=0.1
+X-KDE-PluginInfo-Website=http://plasma.kde.org/
+X-Plasma-API=declarativeappletscript
+X-Plasma-MainScript=qml/main.qml

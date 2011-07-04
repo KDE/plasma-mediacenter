@@ -53,7 +53,7 @@ void MediaContainer::updateData()
     setData("Length",m_media->length());
     setData("Volume",m_media->volume());
     setData("MediaType", "Audio");
-    setData("Url","/home/Music/sintel.mp3");
+    setData("Url",m_media->getUrl());
 }
 
 #include "mediacontainer.moc"
