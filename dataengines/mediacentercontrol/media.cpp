@@ -25,7 +25,7 @@ Media::Media()
     m_length = 200;
     m_volume = 0.5;
     m_position = 0;
-    m_url = "/home/sinny/raj.mp3";
+    m_url = "file:///tmp/sintel.mp3";
 }
 
 QString Media::name() const
@@ -134,12 +134,12 @@ void Media::setName(const QString& name)
     m_name = name;
 }
 
-void Media::setUrl(QString url)
+void Media::setUrl(QUrl url)
 {
     m_url = url;
 }
 
-QString Media::getUrl()
+QUrl Media::getUrl()
 {
     return m_url;
 }

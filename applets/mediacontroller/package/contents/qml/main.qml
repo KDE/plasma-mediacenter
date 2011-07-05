@@ -36,7 +36,6 @@ QGraphicsWidget {
             id: dataSource
             engine: "org.kde.mediacentercontrol"
             connectedSources: activeSource
-            interval: 500
 
             onDataChanged: {
 
@@ -109,7 +108,6 @@ QGraphicsWidget {
             }
             onClicked: {
                 var data = dataSource.serviceForSource(activeSource).operationDescription("next");
-                data.murl = "/home/.mp3";
                 print(dataSource.serviceForSource(activeSource).name);
                 dataSource.serviceForSource(activeSource).startOperationCall(dataSource.serviceForSource(activeSource).operationDescription("next"));
             }
@@ -124,6 +122,10 @@ QGraphicsWidget {
             }
             onClicked: {
                 var data = dataSource.serviceForSource(activeSource).operationDescription("volume");
+
+                for ( var i in data ) {
+                    print(i + ' -> ' + data[i] );
+                }
                 print(dataSource.serviceForSource(activeSource).name);
                 dataSource.serviceForSource(activeSource).startOperationCall(dataSource.serviceForSource(activeSource).operationDescription("volume"));
             }

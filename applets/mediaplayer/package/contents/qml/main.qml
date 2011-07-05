@@ -35,23 +35,32 @@ QGraphicsWidget {
             engine: "org.kde.mediacentercontrol"
             connectedSources: activeSource
             onDataChanged: {
-
                 if (data[activeSource].State == "playing") {
-                    video.play()
-                    print("play")
-                    print(data[activeSource].Url)
-                } else {
+                    if (video.url != data[activeSource].Url) {
+                        print(video.url)
+                        video.url = "/tmp/sintel.mp3";
+                        
+                        print(data[activeSource].Url);
+                        video.play();
+                        print("play");
+                    }
+                } else if(data[activeSource].State == "paused"){
                      video.pause()
                      print("pause")
-                }
+                     video.url = ""
+                }// else {
+                  //  video.stop();
+               // }
             }
         }
     }
     PlasmaWidgets.VideoWidget {
        id: video
        Component.onCompleted: {
-           console.log("hello")
+           video.url = "";
+           console.log("hello");
+           print(video.url);
            video.play();
-    }
+       }
     }
 }
