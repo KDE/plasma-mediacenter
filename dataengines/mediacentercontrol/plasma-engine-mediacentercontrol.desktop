@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=MediaCenterControl
+Name[et]=Meediakeskuse juhtimine
 Name[nl]=Mediacentrumbesturing
 Name[pt]=Controlo do Centro Multimédia
 Name[pt_BR]=Controle do Centro Multimídia
@@ -7,6 +8,7 @@ Name[sv]=Kontroll av Media Center
 Name[uk]=Керування медіацентру
 Name[x-test]=xxMediaCenterControlxx
 Comment= controlling the MediaCenter
+Comment[et]= juhib meediakeskust
 Comment[nl]= het mediacentrum besturen
 Comment[pt]=Para controlar o Centro Multimédia.
 Comment[pt_BR]= controlar o Centro Multimídia
