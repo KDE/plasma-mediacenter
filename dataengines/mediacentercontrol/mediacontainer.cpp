@@ -18,14 +18,16 @@
  ***************************************************************************/
 #include "mediacontainer.h"
 #include "mediaservice.h"
+#include "kdebug.h"
 
 MediaContainer::MediaContainer(QObject *parent)
     : Plasma::DataContainer(parent)
 {
     m_media = new Media;
-    connect(this, SIGNAL(updateRequested(DataContainer*)),
+    connect(m_media, SIGNAL(mediaDataUpdated()),
             this, SLOT(updateData()));
     updateData();
+     kDebug() <<"hello";
 }
 
 Plasma::Service* MediaContainer::service(QObject* parent)
@@ -37,7 +39,7 @@ Plasma::Service* MediaContainer::service(QObject* parent)
 }
 
 void MediaContainer::updateData()
-{
+{ kDebug() << "hi";
     switch(m_media->state()) {
         case Media::Playing:
             setData("State", "playing");

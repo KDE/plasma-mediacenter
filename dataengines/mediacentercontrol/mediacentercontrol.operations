@@ -12,6 +12,11 @@
       <label>The required volume level, as a real number between 0 and 1.</label>
     </entry>
   </group>
+  <group name="mediaProgress">
+    <entry name="seconds" type="Int">
+      <label>position to progress media, value between 0 and track length.</label>
+    </entry>
+  </group>
   <group name="seek">
     <entry name="seconds" type="Int">
       <label>The position to seek to, in seconds.  Must be between 0 and the track length.</label>

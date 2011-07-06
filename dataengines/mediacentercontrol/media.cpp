@@ -22,10 +22,10 @@
 Media::Media()
 {
     m_state = Paused;
-    m_length = 200;
+    m_length = 339767;
     m_volume = 0.5;
     m_position = 0;
-    m_url = "file:///tmp/sintel.mp3";
+    m_url = "file:///home/sinny/raj.mp3";
 }
 
 QString Media::name() const
@@ -61,6 +61,8 @@ bool Media::canPlay()
 void Media::play()
 {
     m_state = Playing;
+    emit mediaDataUpdated();
+    
     kDebug() << "play";
 }
 
@@ -72,6 +74,7 @@ bool Media::canPause()
 void Media::pause()
 {
         m_state = Paused;
+        emit mediaDataUpdated();
         kDebug() << "pause";
 }
 
@@ -84,6 +87,7 @@ void Media::stop()
 {
     m_state = Stopped;
     m_position = 0;
+    emit mediaDataUpdated();
     kDebug() << "stop";
 }
 
@@ -126,9 +130,21 @@ bool Media::canSeek()
 void Media::seek(int time)
 {
     m_position = time;
+    emit mediaDataUpdated();
     kDebug() << "seek to " << m_position;
 }
 
+bool Media::canMediaProgress()
+{
+    return (m_state==Playing);
+}
+
+void Media::mediaProgress(int time)
+{
+    m_position = time;
+    emit mediaDataUpdated();
+    kDebug() << "progress to " << m_position;
+}
 void Media::setName(const QString& name)
 {
     m_name = name;
@@ -137,6 +153,7 @@ void Media::setName(const QString& name)
 void Media::setUrl(QUrl url)
 {
     m_url = url;
+    emit mediaDataUpdated();
 }
 
 QUrl Media::getUrl()

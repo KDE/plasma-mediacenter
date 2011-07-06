@@ -26,7 +26,9 @@ import org.kde.plasma.graphicslayouts 4.7 as GraphicsLayouts
 QGraphicsWidget {
     id: mediaPlayer
      property string activeSource: dataSource.sources[0]
-
+     Component.onCompleted: {
+           dataSource.serviceForSource(activeSource).associateWidget(video, "video");
+       }
     Item {
         id:main
 
@@ -35,32 +37,41 @@ QGraphicsWidget {
             engine: "org.kde.mediacentercontrol"
             connectedSources: activeSource
             onDataChanged: {
+                print(video.currentTime)
                 if (data[activeSource].State == "playing") {
-                    if (video.url != data[activeSource].Url) {
+                   // if (video.url != data[activeSource].Url) {
+                        
+                        video.url = data[activeSource].Url
                         print(video.url)
-                        video.url = "/tmp/sintel.mp3";
                         
                         print(data[activeSource].Url);
                         video.play();
                         print("play");
-                    }
+                    //}
                 } else if(data[activeSource].State == "paused"){
                      video.pause()
                      print("pause")
-                     video.url = ""
-                }// else {
-                  //  video.stop();
-               // }
+                } else {
+                    video.stop();
+                }
             }
         }
     }
     PlasmaWidgets.VideoWidget {
        id: video
-       Component.onCompleted: {
-           video.url = "";
-           console.log("hello");
-           print(video.url);
-           video.play();
-       }
+       onTick:{
+           print("tick enabled");
+           var operation = dataSource.serviceForSource(activeSource).operationDescription("mediaProgress");
+               // operation.seconds = video.currentTime;
+           operation.seconds = video.currentTime;
+
+                for ( var i in operation ) {
+                    print(i + ' -> ' + operation[i] );
+                }
+
+                dataSource.serviceForSource(activeSource).startOperationCall(operation);
+                print("set progress to " + dataSource.data[activeSource].Position + " of "
+                                         + dataSource.data[activeSource].Length);
+        }
     }
 }

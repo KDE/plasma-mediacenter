@@ -20,10 +20,12 @@
 #define MEDIA_H
 
 #include <QString>
+#include <QtCore/QObject>
 #include <QUrl>
 
-class Media
+class Media : public QObject
 {
+    Q_OBJECT
 public:
     Media();
     QString name() const;
@@ -51,12 +53,17 @@ public:
     void setVolume(qreal volume=0);
     bool canSeek();
     void seek(int time=0);
+    bool canMediaProgress();
+    void mediaProgress(int time=0);
     void setUrl(QUrl);
     QUrl getUrl();
-    
+
+Q_SIGNALS:
+    void mediaDataUpdated();
+
 protected:
     void setName(const QString& name);
-    
+
 private:
     QString m_name;
     Media::State m_state;
@@ -64,7 +71,7 @@ private:
     qreal m_volume;
     int m_length;
     QUrl m_url;
-    
+
 };
 
 #endif // MEDIA_H

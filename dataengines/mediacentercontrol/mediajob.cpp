@@ -110,6 +110,17 @@ void MediaJob::start()
             setErrorText(i18n("'%1' cannot perform the action 'seek'.", m_media->name()));
             setError(-1);
         }
+    } else if (operation == "mediaProgress") {
+        if (m_media->canMediaProgress()) {
+            if (parameters().contains("seconds")) {
+                qreal time = parameters()["seconds"].toInt();
+                kDebug() << time;
+                if (time >= 0 && time <= m_media->length()) {
+                    kDebug() << "updating progres";
+                    m_media->mediaProgress(time);
+                }
+            }
+        }
     }
     emitResult();
 } 
