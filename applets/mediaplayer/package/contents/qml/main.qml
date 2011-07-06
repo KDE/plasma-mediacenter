@@ -43,15 +43,17 @@ QGraphicsWidget {
                         
                         video.url = data[activeSource].Url
                         print(video.url)
-                        
+                        video.seek(data[activeSource].Position);
                         print(data[activeSource].Url);
                         video.play();
+                        
+                        print(data[activeSource].Position);
                         print("play");
                     //}
-                } else if(data[activeSource].State == "paused"){
+                } else if (data[activeSource].State == "paused") {
                      video.pause()
                      print("pause")
-                } else {
+                } else if (data[activeSource].state == "stop") {
                     video.stop();
                 }
             }
