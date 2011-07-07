@@ -1,6 +1,14 @@
 [Desktop Entry]
 Name=Media Player (QML)
+Name[nl]=Mediaspeler (QML)
+Name[pt]=Controlador Multimédia (QML)
+Name[sv]=Mediaspelare (QML)
+Name[x-test]=xxMedia Player (QML)xx
 Comment=Playing applet for Plasma Media Center
+Comment[nl]=Het afspeelapplet voor het Plasma-mediacentrum.
+Comment[pt]=Uma 'applet' de reprodução para o Centro Multimédia do Plasma
+Comment[sv]=Spelarminiprogram för Plasma Media Center
+Comment[x-test]=xxPlaying applet for Plasma Media Centerxx
 Encoding=UTF-8
 Icon=applications-multimedia
 ServiceTypes=Plasma/Applet
