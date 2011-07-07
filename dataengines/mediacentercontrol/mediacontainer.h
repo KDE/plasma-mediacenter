@@ -32,10 +32,10 @@ public:
 
 public slots:
     void updateData();
-    
+
 private:
     Media* m_media;
-    
+
 };
 
 #endif

@@ -61,6 +61,8 @@ QGraphicsWidget {
     }
     PlasmaWidgets.VideoWidget {
        id: video
+       tickInterval: 500
+       
        onTick:{
            print("tick enabled");
            var operation = dataSource.serviceForSource(activeSource).operationDescription("mediaProgress");
