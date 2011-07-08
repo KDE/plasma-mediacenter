@@ -97,6 +97,7 @@ void MediaJob::start()
                 kDebug() << time;
                 if (time >= 0 && time <= m_media->length()) {
                     m_media->seek(time);
+                   // bool dirtyBit = parameters()["dirty"].toBool();
                 } else {
                     setErrorText(i18n("The 'seconds' argument to the 'seek' command must be "
                                       "between 0 and the length of the track."));

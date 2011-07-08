@@ -26,6 +26,7 @@ Media::Media()
     m_volume = 0.5;
     m_position = 0;
     m_url = "file:///home/sinny/raj.mp3";
+    m_dirty = false;
 }
 
 QString Media::name() const
@@ -36,6 +37,10 @@ QString Media::name() const
 Media::State Media::state()
 {
     return m_state;
+}
+bool Media::status()
+{
+    return m_dirty;
 }
 
 int Media::length()
@@ -130,6 +135,7 @@ bool Media::canSeek()
 void Media::seek(int time)
 {
     m_position = time;
+    m_dirty = true;
     emit mediaDataUpdated();
     kDebug() << "seek to " << m_position;
 }
@@ -142,6 +148,7 @@ bool Media::canMediaProgress()
 void Media::mediaProgress(int time)
 {
     m_position = time;
+    m_dirty = false;
     emit mediaDataUpdated();
     kDebug() << "progress to " << m_position;
 }

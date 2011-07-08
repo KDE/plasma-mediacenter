@@ -57,6 +57,7 @@ public:
     void mediaProgress(int time=0);
     void setUrl(QUrl);
     QUrl getUrl();
+    bool status();
 
 Q_SIGNALS:
     void mediaDataUpdated();
@@ -71,6 +72,7 @@ private:
     qreal m_volume;
     int m_length;
     QUrl m_url;
+    bool m_dirty;
 
 };
 

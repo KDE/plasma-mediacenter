@@ -36,24 +36,25 @@ QGraphicsWidget {
             id: dataSource
             engine: "org.kde.mediacentercontrol"
             connectedSources: activeSource
-            onDataChanged: {
+            onDataChanged: {print(data[activeSource].State);
                 print(video.currentTime)
                 if (data[activeSource].State == "playing") {
                    // if (video.url != data[activeSource].Url) {
                         
                         video.url = data[activeSource].Url
-                        print(video.url)
+                       // print(video.url)
+                       print(data[activeSource].DirtyBit);
                         video.seek(data[activeSource].Position);
                         print(data[activeSource].Url);
                         video.play();
                         
                         print(data[activeSource].Position);
-                        print("play");
+                       // print("play");
                     //}
                 } else if (data[activeSource].State == "paused") {
                      video.pause()
-                     print("pause")
-                } else if (data[activeSource].state == "stop") {
+                     //print("pause")
+                } else if (data[activeSource].State == "stopped") {
                     video.stop();
                 }
             }
@@ -64,7 +65,7 @@ QGraphicsWidget {
        tickInterval: 500
        
        onTick:{
-           print("tick enabled");
+          // print("tick enabled");
            var operation = dataSource.serviceForSource(activeSource).operationDescription("mediaProgress");
                // operation.seconds = video.currentTime;
            operation.seconds = video.currentTime;
@@ -75,7 +76,7 @@ QGraphicsWidget {
 
                 dataSource.serviceForSource(activeSource).startOperationCall(operation);
                 print("set progress to " + dataSource.data[activeSource].Position + " of "
-                                         + dataSource.data[activeSource].Length);
+                                         + dataSource.data[activeSource].Length + "current mediapos" + video.currentTime);
         }
     }
 }

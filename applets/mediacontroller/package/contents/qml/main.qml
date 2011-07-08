@@ -140,6 +140,7 @@ QGraphicsWidget {
         onValueChanged: {
                 var operation = dataSource.serviceForSource(activeSource).operationDescription("seek");
                 operation.seconds = Math.round(dataSource.data[activeSource].Length*(value/100));
+                
 
                 for ( var i in operation ) {
                     print(i + ' -> ' + operation[i] );
