@@ -111,7 +111,7 @@ void MainWindow::loadMediaCenter()
 
     m_gestureType = QGestureRecognizer::registerRecognizer(m_recognizer);
 
-    m_containment = m_corona->addContainment("mediacontainment");
+    m_containment = m_corona->addContainment("org.kde.mediacontainment");
     if (!m_containment) {
         kDebug() << "unable to load mediacontaiment";
         return;
@@ -121,7 +121,7 @@ void MainWindow::loadMediaCenter()
 
     m_view->setSceneRect(m_containment->geometry());
 
-    //m_browser = m_containment->addApplet("mediabrowser");
+    //m_browser = m_containment->addApplet("org.kde.mediabrowser");
     //m_playlist = m_containment->addApplet("playlist");
     m_player = m_containment->addApplet("org.kde.mediaplayer");
    // m_infobar = m_containment->addApplet("mediainfobar");
