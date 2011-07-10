@@ -37,6 +37,7 @@
 #include <KStandardDirs>
 #include <KDebug>
 #include <KDirLister>
+#include <KService>
 
 QML_DECLARE_TYPE(MediaCenter::AbstractBrowsingBackend)
 
@@ -86,7 +87,11 @@ void MediaBrowser::init()
     if (m_backend) {
         m_view->engine()->rootContext()->setContextProperty("fileBackend", m_backend);
     }
-    showInstalledBackends();
+
+/* TODO:choose a backend by merging the welcome plasmoid*/
+    /*KSharedPtr<KService>service = MediaCenter::AbstractBrowsingBackend::availableBackends();
+    MediaCenter::AbstractBrowsingBackend *backend = service->createInstance<MediaCenter::AbstractBrowsingBackend>(0, QVariantList() << service->storageId());
+    loadBrowsingBackend(backend);*/
 }
 
 void MediaBrowser::createConfigurationInterface(KConfigDialog *parent)
