@@ -76,32 +76,17 @@ void MediaBrowser::init()
 {
     loadConfiguration();
 
-    createView();
-    showInstalledBackends();
-}
-
-void MediaBrowser::createView()
-{
-    delete m_view;
     m_view = new Plasma::DeclarativeWidget(this);
-    
+    QGraphicsLinearLayout *lay = new QGraphicsLinearLayout(this);
+    lay->setContentsMargins(0,0,0,0);
+    setContentsMargins(0,0,0,0);
+
     m_view->setQmlPath(KStandardDirs::locate("data", "plasma-mediacenter/declarative/filegrid.qml"));
 
     if (m_backend) {
         m_view->engine()->rootContext()->setContextProperty("fileBackend", m_backend);
     }
-    /*connect (this, SIGNAL(browseHistoryBackRequest()), m_view, SLOT(goPrevious()));
-    connect (m_view, SIGNAL(mediasActivated(QList<MediaCenter::Media>)), this, SIGNAL(mediasActivated(QList<MediaCenter::Media>)));
-    connect (m_view, SIGNAL(mediasListChanged(QList<MediaCenter::Media>)), this, SIGNAL(mediasListChanged(QList<MediaCenter::Media>)));
-    connect (m_view, SIGNAL(mediaActivated(const MediaCenter::Media&)), this, SIGNAL(mediaActivated(const MediaCenter::Media&)));
-    //connect (m_view, SIGNAL(indexActivated(QModelIndex)), this, SLOT(slotIndexActivated(QModelIndex)));
-    connect (m_view, SIGNAL(mediaSelected(MediaCenter::Media)), this, SLOT(selectedMediasAdd(MediaCenter::Media)));
-    connect (m_view, SIGNAL(mediaUnselected(MediaCenter::Media)), this, SLOT(selectedMediasRemove(MediaCenter::Media)));
-    connect (m_view, SIGNAL(directoryChanged()), this, SLOT(clearSelectedMedias()));
-// //     */
-
-    QGraphicsLinearLayout *layout = static_cast<QGraphicsLinearLayout*>(this->layout());
-    layout->addItem(m_view);
+    showInstalledBackends();
 }
 
 void MediaBrowser::createConfigurationInterface(KConfigDialog *parent)

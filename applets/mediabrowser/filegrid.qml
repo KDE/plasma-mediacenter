@@ -1,5 +1,6 @@
 import Qt 4.7
 import MediaCenter 0.1
+import org.kde.qtextracomponents 0.1
 
 Item {
     width: 200; height: 300
@@ -33,13 +34,12 @@ Item {
                     text: display
                     smooth: true
                 }
-                Image { 
-                    source: decoration //Doesn't work, needs a url
+                QIconItem { 
+                    icon: decoration
                     anchors.horizontalCenter: parent.horizontalCenter
-                    fillMode: Image.PreserveAspectFit
-                    smooth:true
-                    sourceSize.width: width - parent.anchors.leftMargin - parent.anchors.rightMargin
-                    sourceSize.height: height - parent.anchors.bottomMargin
+                    //FIXME: sensible sizes
+                    width: 64
+                    height: 64
                 }
                 MouseArea {
                     hoverEnabled: true

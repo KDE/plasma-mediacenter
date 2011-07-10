@@ -86,6 +86,7 @@ Item {
     }
 
     Row {
+        y: 64
         Item {
             id: welcomeItem
             width: 300

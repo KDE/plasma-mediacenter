@@ -77,7 +77,6 @@ private:
     QGraphicsLinearLayout *m_layout;
 
 private:
-    void createView();
     void showInstalledBackends();
 
 private slots:
