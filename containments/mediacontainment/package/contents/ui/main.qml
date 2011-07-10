@@ -49,11 +49,18 @@ Item {
             plasmoidContainer = component.createObject(mediaPlayerItem);
         } else if (applet.pluginName == "org.kde.mediabrowser") {
             plasmoidContainer = component.createObject(browserItem);
+        } else if (applet.pluginName == "org.kde.mediawelcome") {
+            plasmoidContainer = component.createObject(welcomeItem);
         } else {
             plasmoidContainer = component.createObject(main);
         }
 
         plasmoidContainer.applet = applet
+    }
+
+    Item {
+        id: mediaPlayerItem
+        anchors.fill: parent
     }
 
     PlasmaCore.FrameSvgItem {
@@ -80,7 +87,7 @@ Item {
 
     Row {
         Item {
-            id: mediaPlayerItem
+            id: welcomeItem
             width: 300
             height: 300
         }
