@@ -61,6 +61,7 @@ MediaBrowser::~MediaBrowser()
 
 void MediaBrowser::showInstalledBackends()
 {
+    //TODO: always a view with all the avail backends in the scene instead
 //    delete m_backend->model();
 //    m_model = new StartupModel(this);
 //    m_view->setModel(m_backend->model());
@@ -75,8 +76,6 @@ void MediaBrowser::showInstalledBackends()
 
 void MediaBrowser::init()
 {
-    loadConfiguration();
-
     m_view = new Plasma::DeclarativeWidget(this);
     QGraphicsLinearLayout *lay = new QGraphicsLinearLayout(this);
     lay->setContentsMargins(0,0,0,0);
@@ -96,18 +95,6 @@ void MediaBrowser::init()
 
 void MediaBrowser::createConfigurationInterface(KConfigDialog *parent)
 {
-    /*QWidget *generalConfig = new QWidget(parent);
-    uiGeneral.setupUi(generalConfig);
-
-    parent->addPage(generalConfig, i18n("Browser appearance"), "preferences-desktop-display");
-    if (m_viewType == "list") {
-        uiGeneral.listRadio->setChecked(true);
-    } else {
-        uiGeneral.gridRadio->setChecked(true);
-    }
-
-    uiGeneral.blurredTextCheckBox->setChecked(m_blurred);*/
-
     if (currentBrowsingBackend()) {
         if (currentBrowsingBackend()->hasConfigurationInterface()) {
             currentBrowsingBackend()->createConfigurationInterface(parent);
@@ -117,40 +104,6 @@ void MediaBrowser::createConfigurationInterface(KConfigDialog *parent)
     connect(parent, SIGNAL(accepted()), this, SLOT(configAccepted()));
 }
 
-void MediaBrowser::loadConfiguration()
-{
-    //KConfigGroup cf = config();
-
-    //m_viewType = cf.readEntry("ViewType", "list");
-    //m_blurred = cf.readEntry("BlurredText", true);
-}
-
-void MediaBrowser::configAccepted()
-{
-   /*KConfigGroup cf = config();
-    kDebug() << cf.name();
-
-    QString type;
-    if (uiGeneral.listRadio->isChecked()) {
-        type = "list";
-    } else {
-        type = "grid";
-    }
-
-    if (m_viewType != type) {
-        m_viewType = type;
-        createView();
-    }
-
-    cf.writeEntry("ViewType", type);
-    bool blurred = uiGeneral.blurredTextCheckBox->isChecked();
-    if (blurred != m_blurred) {
-        m_blurred = blurred;
-        //m_view->setDrawBlurredText(m_blurred);
-        cf.writeEntry("BlurredText", m_blurred);
-    }*/
-
-}
 
 void MediaBrowser::loadBrowsingBackend(MediaCenter::AbstractBrowsingBackend *backend)
 {

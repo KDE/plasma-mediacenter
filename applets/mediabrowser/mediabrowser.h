@@ -79,11 +79,6 @@ private:
 private:
     void showInstalledBackends();
 
-private slots:
-    void loadConfiguration();
-    void configAccepted();
-    //void slotIndexActivated(const QModelIndex &);
-
 };
 
 #endif
