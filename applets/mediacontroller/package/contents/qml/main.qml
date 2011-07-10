@@ -23,10 +23,10 @@ import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.graphicslayouts 4.7 as GraphicsLayouts
 
 
-QGraphicsWidget {
+Item {
     id: mediaController
-    preferredSize: "1000x20"
-    minimumSize: "1000x20"
+    width: 300
+    height: 48
     property string activeSource: dataSource.sources[0]
 
     Item {
@@ -61,10 +61,12 @@ QGraphicsWidget {
         id:layouting
         spacing: 5
         PlasmaWidgets.IconWidget {
-            id: backward;
-            Component.onCompleted: {
-            setIcon("media-skip-backward")
-            }
+            id: backward
+            width: mediaController.height
+            height: width
+
+            icon: QIcon("media-skip-backward")
+
             onClicked: {
                 var data = dataSource.serviceForSource(activeSource).operationDescription("previous");
                 print(dataSource.serviceForSource(activeSource).name);
@@ -73,6 +75,8 @@ QGraphicsWidget {
         }
         PlasmaWidgets.IconWidget {
             id: playPause
+            width: mediaController.height
+            height: width
 
             onClicked: {
                 var operation
@@ -89,10 +93,12 @@ QGraphicsWidget {
         }
         
         PlasmaWidgets.IconWidget {
-            id: stop;
-            Component.onCompleted: {
-            setIcon("media-playback-stop")
-            }
+            id: stop
+            width: mediaController.height
+            height: width
+
+            icon: QIcon("media-playback-stop")
+
             onClicked: {
                 var data = dataSource.serviceForSource(activeSource).operationDescription("stop");
                 print(dataSource.serviceForSource(activeSource).name);
@@ -102,10 +108,12 @@ QGraphicsWidget {
         }
         
         PlasmaWidgets.IconWidget {
-            id: forward;
-            Component.onCompleted: {
-            setIcon("media-skip-forward")
-            }
+            id: forward
+            width: mediaController.height
+            height: width
+
+            icon: QIcon("media-skip-forward")
+
             onClicked: {
                 var data = dataSource.serviceForSource(activeSource).operationDescription("next");
                 print(dataSource.serviceForSource(activeSource).name);
@@ -117,9 +125,10 @@ QGraphicsWidget {
     PlasmaWidgets.IconWidget {
             id: volume;
             anchors.right: parent.right
-            Component.onCompleted: {
-            setIcon("audio-volume-medium")
-            }
+            width: mediaController.height
+            height: width
+            icon: QIcon("audio-volume-medium")
+
             onClicked: {
                 var data = dataSource.serviceForSource(activeSource).operationDescription("volume");
 

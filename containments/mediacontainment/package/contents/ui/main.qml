@@ -57,8 +57,8 @@ Item {
     }
 
     PlasmaCore.FrameSvgItem {
-        width: parent.width -100
-        height: 100
+        width: parent.width * 0.8
+        height: 64
         anchors {
             top: parent.top
             horizontalCenter: parent.horizontalCenter
