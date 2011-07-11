@@ -30,6 +30,7 @@ class KDirModel;
 class LocalFilesAbstractBackend : public MediaCenter::AbstractBrowsingBackend
 {
     Q_OBJECT
+    Q_PROPERTY(QString url READ url WRITE setUrl);
 public:
     LocalFilesAbstractBackend(const QString &name, QObject* parent, const QVariantList& args);
     virtual ~LocalFilesAbstractBackend();
@@ -38,6 +39,9 @@ public:
     virtual void init();
 
     QString backendName() const;
+    virtual void openUrl(const KUrl& url);
+    void setUrl(const QString& url);
+    QString url();
 
 private slots:
     void initModel();

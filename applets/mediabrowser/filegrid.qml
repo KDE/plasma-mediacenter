@@ -8,7 +8,7 @@ Item {
     GridView {
         clip: true
         id: grid
-        cellWidth: width / 12; cellHeight: width / 12
+        cellWidth: width / 4; cellHeight: width / 4
 
         anchors.fill: parent
 
@@ -38,14 +38,14 @@ Item {
                     icon: decoration
                     anchors.horizontalCenter: parent.horizontalCenter
                     //FIXME: sensible sizes
-                    width: 64
-                    height: 64
+                    width: 32
+                    height: 32
                 }
                 MouseArea {
                     hoverEnabled: true
                     anchors.fill: parent
                     onEntered: grid.currentIndex = index
-                    onClicked: fileBackend.openUrl()//grid.currentItem.text)
+                    onClicked: fileBackend.url = (fileBackend.url + "/" + display)
                 }      
             }
         }

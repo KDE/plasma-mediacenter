@@ -88,9 +88,9 @@ void MediaBrowser::init()
     }
 
 /* TODO:choose a backend by merging the welcome plasmoid*/
-    /*KSharedPtr<KService>service = MediaCenter::AbstractBrowsingBackend::availableBackends();
+    KSharedPtr<KService>service = MediaCenter::AbstractBrowsingBackend::availableBackends().at(1);
     MediaCenter::AbstractBrowsingBackend *backend = service->createInstance<MediaCenter::AbstractBrowsingBackend>(0, QVariantList() << service->storageId());
-    loadBrowsingBackend(backend);*/
+    loadBrowsingBackend(backend);
 }
 
 void MediaBrowser::createConfigurationInterface(KConfigDialog *parent)

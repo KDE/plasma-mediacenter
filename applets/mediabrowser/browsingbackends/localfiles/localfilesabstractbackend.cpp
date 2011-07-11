@@ -54,6 +54,22 @@ LocalFilesAbstractBackend::~LocalFilesAbstractBackend()
 
 }
 
+QString LocalFilesAbstractBackend::url()
+{
+    return m_model->dirLister()->url().path();
+
+}
+
+void LocalFilesAbstractBackend::setUrl(const QString& url)
+{
+    openUrl(KUrl(url));
+}
+
+void LocalFilesAbstractBackend::openUrl(const KUrl& url)
+{
+    m_model->dirLister()->openUrl(url);
+}
+
 void LocalFilesAbstractBackend::setBackendName(const QString& name)
 {
     m_backendName = name;
@@ -116,7 +132,7 @@ void LocalFilesAbstractBackend::init()
     m_localUrl = KUrl(cf.readEntry("Url", QDir::homePath()));
     m_fromPlaces = cf.readEntry("FromPlaces", true);
     m_folderNavigation = cf.readEntry("FolderNavigation", true);
-    m_useNepomuk = cf.readEntry("Nepomuk", true);
+    m_useNepomuk = cf.readEntry("Nepomuk", false);
     m_watchedDirs = cf.readEntry("WatchedFolders", QStringList());
 
     if (!m_model) {
