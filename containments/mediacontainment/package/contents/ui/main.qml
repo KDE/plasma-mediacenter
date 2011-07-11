@@ -35,6 +35,8 @@ Item {
             var applet = plasmoid.applets[i]
             addApplet(applet, Qt.point(-1,-1))
         }
+        
+        print(i18n("Test message"))
     }
 
 
