@@ -28,7 +28,7 @@
 #include <KLineEdit>
 
 #include <QDir>
-
+#include <QFileInfo>
 #include <Nepomuk/ResourceManager>
 #include <Nepomuk/Variant>
 #include <Nepomuk/Query/ResourceTypeTerm>
@@ -54,10 +54,18 @@ LocalFilesAbstractBackend::~LocalFilesAbstractBackend()
 
 }
 
+bool LocalFilesAbstractBackend::fileType(const QString& url)
+{
+    QFileInfo info(url);
+    bool value = info.isDir();
+    return value;
+
+}
+
 QString LocalFilesAbstractBackend::url()
 {
+    kDebug() << m_model->dirLister()->url().path();
     return m_model->dirLister()->url().path();
-
 }
 
 void LocalFilesAbstractBackend::setUrl(const QString& url)

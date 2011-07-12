@@ -45,7 +45,12 @@ Item {
                     hoverEnabled: true
                     anchors.fill: parent
                     onEntered: grid.currentIndex = index
-                    onClicked: fileBackend.url = (fileBackend.url + "/" + display)
+                    onClicked:{
+                        if (fileBackend.fileType(fileBackend.url + "/" + display)) {
+                        fileBackend.url = (fileBackend.url + "/" + display)
+                        print("this is backend" + fileBackend.url);
+                        }
+                    }
                 }      
             }
         }

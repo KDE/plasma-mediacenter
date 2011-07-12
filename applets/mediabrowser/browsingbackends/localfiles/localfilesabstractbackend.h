@@ -42,6 +42,7 @@ public:
     virtual void openUrl(const KUrl& url);
     void setUrl(const QString& url);
     QString url();
+    Q_INVOKABLE  bool fileType(const QString& url);
 
 private slots:
     void initModel();
