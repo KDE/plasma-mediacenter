@@ -21,7 +21,7 @@
 
 Media::Media()
 {
-    m_state = Paused;
+    m_state = Stopped;
     m_length = 339767;
     m_volume = 0.5;
     m_position = 0;
@@ -157,13 +157,13 @@ void Media::setName(const QString& name)
     m_name = name;
 }
 
-void Media::setUrl(QUrl url)
+void Media::setUrl(QString url)
 {
     m_url = url;
     emit mediaDataUpdated();
 }
 
-QUrl Media::getUrl()
+QString Media::getUrl()
 {
     return m_url;
 }

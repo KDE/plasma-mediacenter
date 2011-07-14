@@ -122,6 +122,12 @@ void MediaJob::start()
                 }
             }
         }
+    } else if (operation == "url") {
+        if (parameters().contains("mediaUrl")) {
+            QString newUrl = parameters()["mediaUrl"].toString();
+            kDebug() << "new Url to be set is  " << newUrl;
+            m_media->setUrl(newUrl);
+        }
     }
     emitResult();
 } 

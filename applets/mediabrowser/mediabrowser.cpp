@@ -91,6 +91,7 @@ void MediaBrowser::init()
     KSharedPtr<KService>service = MediaCenter::AbstractBrowsingBackend::availableBackends().at(1);
     MediaCenter::AbstractBrowsingBackend *backend = service->createInstance<MediaCenter::AbstractBrowsingBackend>(0, QVariantList() << service->storageId());
     loadBrowsingBackend(backend);
+    kDebug() << "backkkkkkkkkkkkeeeeeeeddddd" << m_backend->name();
 }
 
 void MediaBrowser::createConfigurationInterface(KConfigDialog *parent)

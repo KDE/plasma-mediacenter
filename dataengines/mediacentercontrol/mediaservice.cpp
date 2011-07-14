@@ -42,6 +42,7 @@ void MediaService::enableMediaOperations()
         setOperationEnabled("volume", m_media->canSetVolume());
         setOperationEnabled("seek", m_media->canSeek());
         setOperationEnabled("mediaProgress", m_media->canMediaProgress());
+        setOperationEnabled("url", !(m_media->canStop()));
     }
 
 }

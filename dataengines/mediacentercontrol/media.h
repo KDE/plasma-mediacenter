@@ -21,7 +21,6 @@
 
 #include <QString>
 #include <QtCore/QObject>
-#include <QUrl>
 
 class Media : public QObject
 {
@@ -55,8 +54,8 @@ public:
     void seek(int time=0);
     bool canMediaProgress();
     void mediaProgress(int time=0);
-    void setUrl(QUrl);
-    QUrl getUrl();
+    void setUrl(QString);
+    QString getUrl();
     bool status();
 
 Q_SIGNALS:
@@ -71,7 +70,7 @@ private:
     int m_position;
     qreal m_volume;
     int m_length;
-    QUrl m_url;
+    QString m_url;
     bool m_dirty;
 
 };

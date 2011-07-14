@@ -1,14 +1,27 @@
-import Qt 4.7
+import QtQuick 1.0
 import MediaCenter 0.1
 import org.kde.qtextracomponents 0.1
 
 Item {
-    width: 200; height: 300
+    width: 500; height: 500
+    property string activeSource: dataSource.sources[0]
+
+    /*Item {
+        id:main
+
+        PlasmaCore.DataSource {
+            id: dataSource
+            engine: "org.kde.mediacentercontrol"
+            connectedSources: activeSource
+
+            //onDataChanged: {
+        }
+    }*/
 
     GridView {
         clip: true
         id: grid
-        cellWidth: width / 4; cellHeight: width / 4
+        cellWidth: width / 8; cellHeight: width / 8
 
         anchors.fill: parent
 
@@ -37,9 +50,8 @@ Item {
                 QIconItem { 
                     icon: decoration
                     anchors.horizontalCenter: parent.horizontalCenter
-                    //FIXME: sensible sizes
-                    width: 32
-                    height: 32
+                    width: 50
+                    height: 50
                 }
                 MouseArea {
                     hoverEnabled: true
@@ -48,10 +60,16 @@ Item {
                     onClicked:{
                         if (fileBackend.fileType(fileBackend.url + "/" + display)) {
                         fileBackend.url = (fileBackend.url + "/" + display)
-                        print("this is backend" + fileBackend.url);
+                        } else {
+                            var operation = dataSource.serviceForSource(activeSource).operationDescription("url");
+                            operation.mediaUrl = fileBackend.url;
+                            for ( var i in operation ) {
+                                 print(i + ' -> ' + operation[i] );
+                             }
+                             dataSource.serviceForSource(activeSource).startOperationCall(operation);
                         }
                     }
-                }      
+                }
             }
         }
     }
@@ -60,7 +78,11 @@ Item {
         id: highlight
         Rectangle {
             width: grid.cellWidth; height: grid.cellHeight
-            color: "lightsteelblue"; radius: 5
+            radius: 5
+            gradient: Gradient {
+                GradientStop { position: 0.0; color: "lightsteelblue" }
+                GradientStop { position: 1.0; color: "steelblue" }
+            }
         }
     }
 }
