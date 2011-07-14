@@ -160,6 +160,7 @@ void Media::setName(const QString& name)
 void Media::setUrl(QString url)
 {
     m_url = url;
+    m_state = Playing;
     emit mediaDataUpdated();
 }
 
