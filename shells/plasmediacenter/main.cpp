@@ -36,11 +36,15 @@ int main(int argc, char *argv[])
                          "0.1",
                          ki18n("A convenient shell for the Plasma Media Center Components"),
                          KAboutData::License_GPL_V2,
-                         ki18n("Copyright (c) 2009"));
+                         ki18n("Copyright (c) 2009-2011"));
     aboutData.addAuthor(ki18n("Alessandro Diaferia"),
                         ki18n("Mantainer and main developer"),
                         "alediaferia@gmail.com",
                         "http://alediaferia.wordpress.com");
+    aboutData.addAuthor(ki18n("Sinny Kumari"),
+                        ki18n("Mantainer and main developer"),
+                        "ksinny@gmail.com",
+                        "http://www.sinny.in");
     aboutData.addCredit(ki18n("Marco Martin"), ki18n("GSoC project mentor"), "notmart@gmail.com", "");
 
     KCmdLineArgs::init(argc, argv, &aboutData);

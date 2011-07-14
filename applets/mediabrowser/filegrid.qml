@@ -6,7 +6,7 @@ import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.graphicslayouts 4.7 as GraphicsLayouts
 
 Item {
-    width: 500; height: 500
+    width: 700; height: 700
     property string activeSource: dataSource.sources[0]
 
     Item {
@@ -26,7 +26,7 @@ Item {
     GridView {
         clip: true
         id: grid
-        cellWidth: width / 8; cellHeight: width / 8
+        cellWidth: width / 6; cellHeight: width / 6
 
         anchors.fill: parent
 
@@ -51,12 +51,16 @@ Item {
                 Text {
                     text: display
                     smooth: true
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.bottom: parent.bottom
                 }
                 QIconItem { 
                     icon: decoration
                     anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.bottom: parent.bottom
                     width: 50
                     height: 50
+                    anchors.bottomMargin: 15
                 }
                 MouseArea {
                     hoverEnabled: true
