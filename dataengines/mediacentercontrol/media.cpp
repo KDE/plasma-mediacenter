@@ -25,7 +25,7 @@ Media::Media()
     m_length = 339767;
     m_volume = 0.5;
     m_position = 0;
-    m_url = "file:///home/sinny/raj.mp3";
+    m_url = "";
     m_dirty = false;
 }
 

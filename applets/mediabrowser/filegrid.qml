@@ -1,12 +1,15 @@
 import QtQuick 1.0
 import MediaCenter 0.1
 import org.kde.qtextracomponents 0.1
+import org.kde.plasma.graphicswidgets 0.1 as PlasmaWidgets
+import org.kde.plasma.core 0.1 as PlasmaCore
+import org.kde.plasma.graphicslayouts 4.7 as GraphicsLayouts
 
 Item {
     width: 500; height: 500
     property string activeSource: dataSource.sources[0]
 
-    /*Item {
+    Item {
         id:main
 
         PlasmaCore.DataSource {
@@ -14,9 +17,11 @@ Item {
             engine: "org.kde.mediacentercontrol"
             connectedSources: activeSource
 
-            //onDataChanged: {
+            onDataChanged: {
+                //nothing to be added right now, maybe further
+            }
         }
-    }*/
+    }
 
     GridView {
         clip: true
@@ -62,7 +67,7 @@ Item {
                         fileBackend.url = (fileBackend.url + "/" + display)
                         } else {
                             var operation = dataSource.serviceForSource(activeSource).operationDescription("url");
-                            operation.mediaUrl = fileBackend.url;
+                            operation.mediaUrl = (fileBackend.url + "/" + display);
                             for ( var i in operation ) {
                                  print(i + ' -> ' + operation[i] );
                              }

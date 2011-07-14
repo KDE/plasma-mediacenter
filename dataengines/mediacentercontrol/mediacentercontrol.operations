@@ -23,7 +23,7 @@
     </entry>
   </group>
    <group name="url">
-    <entry name="mediaUrl" type="QString">
+    <entry name="mediaUrl" type="String">
       <label>A valid url to be set for for media.</label>
     </entry>
   </group>
