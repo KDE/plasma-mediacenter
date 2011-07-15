@@ -126,8 +126,8 @@ void NavigationToolbar::setNavigationControls(NavigationControls controls)
     if (d->controls & BackwardControl) {
         if (!d->backwardButton) {
             d->backwardButton = new Plasma::ToolButton(this);
-            d->backwardButton->setIcon(KIcon("go-previous"));
-            connect (d->backwardButton, SIGNAL(clicked()), this, SIGNAL(browseHistoryBack()));
+            //d->backwardButton->setIcon(KIcon("go-previous"));
+            //connect (d->backwardButton, SIGNAL(clicked()), this, SIGNAL(browseHistoryBack()));
         }
         layout->insertItem(0, d->backwardButton);
     }

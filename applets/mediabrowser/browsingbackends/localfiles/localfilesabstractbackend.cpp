@@ -140,7 +140,7 @@ void LocalFilesAbstractBackend::init()
     m_localUrl = KUrl(cf.readEntry("Url", QDir::homePath()));
     m_fromPlaces = cf.readEntry("FromPlaces", true);
     m_folderNavigation = cf.readEntry("FolderNavigation", true);
-    m_useNepomuk = cf.readEntry("Nepomuk", false);
+    m_useNepomuk = cf.readEntry("Nepomuk", true);
     m_watchedDirs = cf.readEntry("WatchedFolders", QStringList());
 
     if (!m_model) {

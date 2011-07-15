@@ -6,6 +6,7 @@ import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.graphicslayouts 4.7 as GraphicsLayouts
 
 Item {
+    id: mediaBrowser
     width: 700; height: 700
     property string activeSource: dataSource.sources[0]
 
@@ -29,9 +30,7 @@ Item {
         cellWidth: width / 6; cellHeight: width / 6
 
         anchors.fill: parent
-
         model: fileBackend.backendModel
-
         delegate: testDelegate
     
         highlight: highlight
@@ -82,7 +81,7 @@ Item {
             }
         }
     }
-
+    
     Component {
         id: highlight
         Rectangle {
@@ -94,4 +93,31 @@ Item {
             }
         }
     }
+    PlasmaWidgets.IconWidget {
+        id: back
+        width: 50
+        height: 50
+        icon: QIcon("go-previous");
+        anchors.right: grid.left
+            onClicked: {
+                if (fileBackend.url != "file:///") {
+                    fileBackend.url = (fileBackend.url + "/" + "../")
+                    print (fileBackend.url);
+                }
+            }
+    }
+
+    /*PlasmaWidgets.IconWidget {
+        id: next
+        width: 50
+        height: 50
+        icon: QIcon("go-next");
+        anchors.left: grid.right
+            onClicked: {
+                if (fileBackend.url != "file:///") {
+                    fileBackend.url = (fileBackend.url + "/")
+                    print (fileBackend.url);
+                }
+            }
+    }*/
 }
