@@ -69,6 +69,7 @@ QGraphicsWidget {
            var operation = dataSource.serviceForSource(activeSource).operationDescription("mediaProgress");
                // operation.seconds = video.currentTime;
            operation.seconds = video.currentTime;
+           operation.mediaLength = video.totalTime;
 
                 for ( var i in operation ) {
                     print(i + ' -> ' + operation[i] );

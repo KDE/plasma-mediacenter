@@ -115,10 +115,15 @@ void MediaJob::start()
         if (m_media->canMediaProgress()) {
             if (parameters().contains("seconds")) {
                 qreal time = parameters()["seconds"].toInt();
-                kDebug() << time;
                 if (time >= 0 && time <= m_media->length()) {
-                    kDebug() << "updating progres";
                     m_media->mediaProgress(time);
+                }
+            }
+            if (parameters().contains("mediaLength")) {
+                qreal totalTime = parameters()["mediaLength"].toInt();
+                if (totalTime >= 0) {
+                    kDebug() << "updating legth of media progres";
+                    m_media->setLength(totalTime);
                 }
             }
         }

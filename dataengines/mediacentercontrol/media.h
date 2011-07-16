@@ -34,6 +34,7 @@ public:
         Stopped
     };
     int length();
+    void setLength(int time);
     bool isRunning();
     State state();
     int position();

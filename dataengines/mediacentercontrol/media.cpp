@@ -22,7 +22,7 @@
 Media::Media()
 {
     m_state = Stopped;
-    m_length = 339767;
+    m_length = 0;
     m_volume = 0.5;
     m_position = 0;
     m_url = "";
@@ -46,6 +46,11 @@ bool Media::status()
 int Media::length()
 {
     return m_length;
+}
+
+void Media::setLength(int time)
+{
+    m_length = time;
 }
 
 int Media::position()

@@ -16,6 +16,9 @@
     <entry name="seconds" type="Int">
       <label>position to progress media, value between 0 and track length.</label>
     </entry>
+    <entry name="mediaLength" type="Int">
+      <label>total length of current playing media.</label>
+    </entry>
   </group>
   <group name="seek">
     <entry name="seconds" type="Int">
