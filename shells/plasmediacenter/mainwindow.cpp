@@ -125,7 +125,7 @@ void MainWindow::loadMediaCenter()
     //m_playlist = m_containment->addApplet("playlist");
     m_player = m_containment->addApplet("org.kde.mediaplayer");
    // m_infobar = m_containment->addApplet("mediainfobar");
-    //m_welcome = m_containment->addApplet("mediawelcome");
+    m_welcome = m_containment->addApplet("org.kde.mediawelcome");
     m_controller = m_containment->addApplet("org.kde.mediacontroller"); //Keep the controller last
 
     if (m_browser) {

@@ -81,14 +81,13 @@ void MediaBrowser::init()
     lay->setContentsMargins(0,0,0,0);
     setContentsMargins(0,0,0,0);
 
-    m_view->setQmlPath(KStandardDirs::locate("data", "plasma-mediacenter/declarative/filegrid.qml"));
-
     if (m_backend) {
         m_view->engine()->rootContext()->setContextProperty("fileBackend", m_backend);
     }
+    m_view->setQmlPath(KStandardDirs::locate("data", "plasma-mediacenter/declarative/filegrid.qml"));
 
 /* TODO:choose a backend by merging the welcome plasmoid*/
-    KSharedPtr<KService>service = MediaCenter::AbstractBrowsingBackend::availableBackends().at(1);
+    KSharedPtr<KService>service = MediaCenter::AbstractBrowsingBackend::availableBackends().at(0);
     MediaCenter::AbstractBrowsingBackend *backend = service->createInstance<MediaCenter::AbstractBrowsingBackend>(0, QVariantList() << service->storageId());
     loadBrowsingBackend(backend);
     kDebug() << "backkkkkkkkkkkkeeeeeeeddddd" << m_backend->name();
