@@ -99,25 +99,11 @@ Item {
         height: 50
         icon: QIcon("go-previous");
         anchors.right: grid.left
-            onClicked: {
-                if (fileBackend.url != "file:///") {
-                    fileBackend.url = (fileBackend.url + "/" + "../")
-                    print (fileBackend.url);
-                }
+        onClicked: {
+            if (fileBackend.url != "file:///") {
+                fileBackend.url = (fileBackend.url + "/" + "../")
+                print (fileBackend.url);
             }
+        }
     }
-
-    /*PlasmaWidgets.IconWidget {
-        id: next
-        width: 50
-        height: 50
-        icon: QIcon("go-next");
-        anchors.left: grid.right
-            onClicked: {
-                if (fileBackend.url != "file:///") {
-                    fileBackend.url = (fileBackend.url + "/")
-                    print (fileBackend.url);
-                }
-            }
-    }*/
 }

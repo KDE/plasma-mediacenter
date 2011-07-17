@@ -91,7 +91,7 @@ Item {
                dataSource.serviceForSource(activeSource).associateWidget(playPause, operation);
             }
         }
-        
+
         PlasmaWidgets.IconWidget {
             id: stop
             width: mediaController.height
@@ -104,9 +104,8 @@ Item {
                 print(dataSource.serviceForSource(activeSource).name);
                 dataSource.serviceForSource(activeSource).startOperationCall(dataSource.serviceForSource(activeSource).operationDescription("stop"));
             }
-
         }
-        
+
         PlasmaWidgets.IconWidget {
             id: forward
             width: mediaController.height
@@ -120,8 +119,8 @@ Item {
                 dataSource.serviceForSource(activeSource).startOperationCall(dataSource.serviceForSource(activeSource).operationDescription("next"));
             }
         }
-        
     }
+
     PlasmaWidgets.IconWidget {
             id: volume;
             anchors.right: parent.right
@@ -139,7 +138,7 @@ Item {
                 dataSource.serviceForSource(activeSource).startOperationCall(dataSource.serviceForSource(activeSource).operationDescription("volume"));
             }
         }
-        
+
     PlasmaWidgets.Slider {
         id: progress
         anchors.left: layouting.right
@@ -149,7 +148,7 @@ Item {
         onValueChanged: {
                 var operation = dataSource.serviceForSource(activeSource).operationDescription("seek");
                 operation.seconds = Math.round(dataSource.data[activeSource].Length*(value/100));
-                
+
 
                 for ( var i in operation ) {
                     print(i + ' -> ' + operation[i] );
@@ -160,5 +159,5 @@ Item {
                                          + dataSource.data[activeSource].Length);
         }
     }
-    
+
 }

@@ -138,6 +138,7 @@ void LocalFilesAbstractBackend::init()
     KConfigGroup cf = config();
 
     m_localUrl = KUrl(cf.readEntry("Url", QDir::homePath()));
+    //TODO:Check if dir in config exists, if not, then goto homedir
     m_fromPlaces = cf.readEntry("FromPlaces", true);
     m_folderNavigation = cf.readEntry("FolderNavigation", true);
     m_useNepomuk = cf.readEntry("Nepomuk", false);
