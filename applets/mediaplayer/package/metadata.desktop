@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Media Player (QML)
+Name[fr]=Lecteur multimédia (QML)
 Name[nl]=Mediaspeler (QML)
 Name[pt]=Controlador Multimédia (QML)
 Name[pt_BR]=Reprodutor de mídia (QML)
@@ -7,6 +8,7 @@ Name[sv]=Mediaspelare (QML)
 Name[uk]=Програвач (QML)
 Name[x-test]=xxMedia Player (QML)xx
 Comment=Playing applet for Plasma Media Center
+Comment[fr]=Applet de lecture pour le centre multimédia
 Comment[nl]=Het afspeelapplet voor het Plasma-mediacentrum.
 Comment[pt]=Uma 'applet' de reprodução para o Centro Multimédia do Plasma
 Comment[pt_BR]=Um miniaplicativo de reprodução para o Centro Multimídia do Plasma

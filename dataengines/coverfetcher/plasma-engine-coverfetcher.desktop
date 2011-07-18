@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Cover Fetcher Engine
 Name[et]=Kaanepildi tõmbamise mootor
+Name[fr]=Moteur d'extraction de couvertures
 Name[hr]=Podrška za dohvat omota
 Name[ja]=カバー取得エンジン
 Name[nl]=Engine voor hoezen ophalen
@@ -11,6 +12,7 @@ Name[uk]=Рушій отримання обкладинок
 Name[x-test]=xxCover Fetcher Enginexx
 Comment=An Engine able to fetch covers from last.fm.
 Comment[et]=Mootor, mis tõmbab last.fm-ist kaanepilte.
+Comment[fr]=Un moteur capable d'extraire des couvertures de last.fm.
 Comment[hr]=Podrška za dohvat omota s last.fm-a
 Comment[ja]=last.fm からカバーを取得するエンジン
 Comment[nl]=Een engine om hoezen op te halen van last.fm.

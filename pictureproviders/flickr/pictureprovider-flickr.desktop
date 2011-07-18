@@ -2,6 +2,7 @@
 Type=Service
 Name=Flickr picture provider
 Name[et]=Flickri piltide pakkuja
+Name[fr]=Fournisseur d'images Flickr
 Name[nds]=Flickr-Bildanbeder
 Name[nl]=Leverancier van Flickr-afbeeldingen
 Name[pt]=Fornecedor de imagens do Flickr
@@ -13,6 +14,7 @@ Name[x-test]=xxFlickr picture providerxx
 
 Comment=A plugin that allows browsing through Flickr pictures
 Comment[et]=Plugin Flickri piltide sirvimiseks
+Comment[fr]=Un module externe permettant de parcourir des images sur Flickr
 Comment[nl]=Een plugin voor bladeren door afbeeldingen in Flickr
 Comment[pt]=Um 'plugin' que lhe permite navegar pelas imagens do Flickr
 Comment[pt_BR]=Um plug-in que lhe permite navegar pelas imagens no Flickr.

@@ -2,6 +2,7 @@
 Type=Service
 Name=YouTube video provider.
 Name[et]=YouTube'i video pakkuja
+Name[fr]=Fournisseur de vidéos YouTube.
 Name[nl]=Leverancier van YouTube-video's.
 Name[pt]=Fornecedor de vídeos do YouTube.
 Name[pt_BR]=Fornecedor de vídeos do YouTube.
@@ -10,6 +11,7 @@ Name[uk]=Показ відео YouTube.
 Name[x-test]=xxYouTube video provider.xx
 Comment=A plugin that allows browsing through YouTube videos.
 Comment[et]=Plugin Youtube'i videode sirvimiseks.
+Comment[fr]=Un module externe permettant de parcourir des vidéos sur YouTube.
 Comment[nl]=Een plugin voor bladeren door video's in YouTube.
 Comment[pt]=Um 'plugin' que lhe permite pesquisar vídeos no YouTube.
 Comment[pt_BR]=Um plug-in que lhe permite navegar pelos vídeos no YouTube.

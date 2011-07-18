@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Media Controller (QML)
 Name[et]=Meediakontroller (QML)
+Name[fr]=Contrôleur multimédia (QML)
 Name[nl]=Mediacontroller (QML)
 Name[pt]=Controlador Multimédia (QML)
 Name[pt_BR]=Controlador Multimídia (QML)
@@ -9,6 +10,7 @@ Name[uk]=Керування мультимедійними засобами (QML
 Name[x-test]=xxMedia Controller (QML)xx
 Comment=A simple applet to control media reproduction
 Comment[et]=Lihtne aplett meedia taasesitamise juhtimiseks
+Comment[fr]=Une applet simple pour contrôler la reproduction multimédia
 Comment[hr]=Jednostavni programčić za upravljanje izvođenjem multimedijalnih datoteka
 Comment[nl]=Een eenvoudige applet voor besturing van reproductie van media
 Comment[pt]=Uma 'applet' simples para controlar a reprodução multimédia

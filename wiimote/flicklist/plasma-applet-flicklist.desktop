@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=flicklist
 Name[et]=flicklist
+Name[fr]=flicklist
 Name[nds]=flicklist
 Name[nl]=flicklist
 Name[pt]=flicklist
@@ -10,6 +11,7 @@ Name[uk]=flicklist
 Name[x-test]=xxflicklistxx
 Comment=Plasma flicklist
 Comment[et]=Plasma flicklist
+Comment[fr]=flicklist pour Plasma
 Comment[nl]=Plasma flicklist
 Comment[pt]=Flicklist do Plasma
 Comment[pt_BR]=Flicklist do Plasma
