@@ -7,7 +7,7 @@ import org.kde.plasma.graphicslayouts 4.7 as GraphicsLayouts
 
 Item {
     id: mediaBrowser
-    width: 700; height: 700
+    width: 1200; height: 1200
     property string activeSource: dataSource.sources[0]
 
     Item {
@@ -49,6 +49,7 @@ Item {
                 }
                 Text {
                     text: display
+		    font.pointSize: 20
                     smooth: true
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.bottom: parent.bottom
@@ -56,9 +57,9 @@ Item {
                 QIconItem { 
                     icon: decoration
                     anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.bottom: parent.bottom
-                    width: 50
-                    height: 50
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: 128
+                    height: 128
                     anchors.bottomMargin: 15
                 }
                 MouseArea {
