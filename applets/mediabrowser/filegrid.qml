@@ -41,7 +41,9 @@ Item {
         id: testDelegate
         Item {
             width: grid.cellWidth; height: grid.cellHeight
-
+	    PlasmaCore.Theme {
+		id:theme
+	    }
             Column {
                 clip:true
                 anchors {
@@ -53,6 +55,7 @@ Item {
                     smooth: true
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.bottom: parent.bottom
+                    color: theme.textcolor
                 }
                 QIconItem { 
                     icon: decoration
@@ -84,15 +87,16 @@ Item {
     }
     
     Component {
-        id: highlight
-        Rectangle {
-            width: grid.cellWidth; height: grid.cellHeight
-            radius: 5
-            gradient: Gradient {
-                GradientStop { position: 0.0; color: "lightsteelblue" }
-                GradientStop { position: 1.0; color: "steelblue" }
-            }
-        }
+	id: highlight
+	Rectangle {
+	    width: grid.cellWidth; height: grid.cellHeight
+	    radius: 5
+            PlasmaCore.FrameSvgItem {
+                id: highlightFrame
+                imagePath: "widgets/frame"
+                prefix: "selected+hover"
+	    }
+	}
     }
     PlasmaWidgets.IconWidget {
         id: back
