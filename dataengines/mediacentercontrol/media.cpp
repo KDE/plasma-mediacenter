@@ -38,10 +38,6 @@ Media::State Media::state()
 {
     return m_state;
 }
-bool Media::status()
-{
-    return m_dirty;
-}
 
 int Media::length()
 {
@@ -153,7 +149,6 @@ bool Media::canMediaProgress()
 void Media::mediaProgress(int time)
 {
     m_position = time;
-    m_dirty = false;
     emit mediaDataUpdated();
     kDebug() << "progress to " << m_position;
 }
@@ -168,6 +163,19 @@ void Media::setUrl(QString url)
     m_position = 0;
     m_url = url;
     m_state = Playing;
+    emit mediaDataUpdated();
+}
+
+bool Media::getDirty()
+{
+    return m_dirty;
+}
+
+
+void Media::setDirty(bool dirtyBit)
+{
+
+    m_dirty = dirtyBit;
     emit mediaDataUpdated();
 }
 

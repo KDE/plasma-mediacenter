@@ -133,7 +133,13 @@ void MediaJob::start()
             kDebug() << "new Url to be set is  " << newUrl;
             m_media->setUrl(newUrl);
         }
+    } else if (operation == "dirtyCheck") {
+        if (parameters().contains("dirty")) {
+            bool dirtyBit = parameters()["dirty"].toBool();
+            m_media->setDirty(dirtyBit);
+        }
     }
+        
     emitResult();
 } 
 

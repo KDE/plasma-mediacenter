@@ -45,7 +45,8 @@ Item {
                     playPause.setIcon("media-playback-start")
                 }
 
-                progress.value = (100*data[activeSource].Position)/data[activeSource].Length
+                progress.maximum = data[activeSource].Length
+                progress.value = data[activeSource].Position
             }
         }
     }
@@ -145,9 +146,9 @@ Item {
         anchors.right: volume.left
         anchors.verticalCenter: layouting.verticalCenter
         orientation: Qt.Horizontal
-        onValueChanged: {
+        onSliderMoved: {
                 var operation = dataSource.serviceForSource(activeSource).operationDescription("seek");
-                operation.seconds = Math.round(dataSource.data[activeSource].Length*(value/100));
+                operation.seconds = value;
 
 
                 for ( var i in operation ) {

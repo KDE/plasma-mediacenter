@@ -49,9 +49,8 @@ void MediaWelcome::init()
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
     layout->addItem(m_view);
     setLayout(layout);
-
-    m_view->setQmlPath(KStandardDirs::locate("data", "plasma-mediacenter/declarative/homeview.qml"));
     m_view->setModel(m_model);
+    m_view->setQmlPath(KStandardDirs::locate("data", "plasma-mediacenter/declarative/homeview.qml"));
 
     QDeclarativeItem *item = qobject_cast<QDeclarativeItem*>(m_view->rootObject());
     connect(item, SIGNAL(clicked()), this, SLOT(itemActivated()));
