@@ -43,6 +43,7 @@ void MediaService::enableMediaOperations()
         setOperationEnabled("seek", m_media->canSeek());
         setOperationEnabled("mediaProgress", m_media->canMediaProgress());
         setOperationEnabled("url", true);
+        setOperationEnabled("dirtyCheck", m_media->getDirty());
     }
 
 }

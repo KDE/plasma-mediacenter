@@ -57,7 +57,8 @@ public:
     void mediaProgress(int time=0);
     void setUrl(QString);
     QString getUrl();
-    bool status();
+    void setDirty(bool);
+    bool getDirty();
 
 Q_SIGNALS:
     void mediaDataUpdated();

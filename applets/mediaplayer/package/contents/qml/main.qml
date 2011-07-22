@@ -39,21 +39,18 @@ QGraphicsWidget {
             onDataChanged: {print(data[activeSource].State);
                 print(video.currentTime)
                 if (data[activeSource].State == "playing") {
-                   // if (video.url != data[activeSource].Url) {
-                        
                         video.url = data[activeSource].Url
-                       // print(video.url)
-                       print(data[activeSource].DirtyBit);
-                        video.seek(data[activeSource].Position);
-                        print(data[activeSource].Url);
-                        video.play();
-                        
+                        if (data[activeSource].DirtyBit) {
+                           video.seek(data[activeSource].Position);
+                           var operation = dataSource.serviceForSource(activeSource).operationDescription("dirtyCheck");
+                           operation.dirty = false;
+                           dataSource.serviceForSource(activeSource).startOperationCall(operation);
+                    }
+                    print(data[activeSource].Url);
+                    video.play();    
                         print(data[activeSource].Position);
-                       // print("play");
-                    //}
                 } else if (data[activeSource].State == "paused") {
                      video.pause()
-                     //print("pause")
                 } else if (data[activeSource].State == "stopped") {
                     video.stop();
                 }
@@ -65,9 +62,10 @@ QGraphicsWidget {
        tickInterval: 500
        
        onTick:{
-          // print("tick enabled");
+           if (dataSource.data[activeSource].DirtyBit) {
+               return;
+           }
            var operation = dataSource.serviceForSource(activeSource).operationDescription("mediaProgress");
-               // operation.seconds = video.currentTime;
            operation.seconds = video.currentTime;
            operation.mediaLength = video.totalTime;
 

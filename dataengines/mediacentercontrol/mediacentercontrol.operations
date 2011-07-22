@@ -30,4 +30,9 @@
       <label>A valid url to be set for for media.</label>
     </entry>
   </group>
+     <group name="dirtyCheck">
+    <entry name="dirty" type="Bool">
+      <label>To check whether user is seeking or not.</label>
+    </entry>
+  </group>
 </kcfg>
