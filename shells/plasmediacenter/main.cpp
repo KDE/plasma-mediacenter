@@ -56,7 +56,10 @@ int main(int argc, char *argv[])
 
     KApplication app;
 
+    KConfigGroup cg(KSharedConfig::openConfig("plasmarc"), "Theme-plasma-mediacenter");
+    const QString themeName = cg.readEntry("name", "oxygen-mediacenter");
     Plasma::Theme::defaultTheme()->setUseGlobalSettings(false);
+    Plasma::Theme::defaultTheme()->setThemeName(themeName);
 
     MainWindow *mw = new MainWindow;
     mw->show();

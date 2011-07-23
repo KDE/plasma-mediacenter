@@ -81,11 +81,6 @@ m_recognizer(0)
 
     KAction *preferences = KStandardAction::preferences(this, SLOT(createConfigurationInterface()), this);
 
-    KConfigGroup cg(KSharedConfig::openConfig("plasmarc"), "Theme-plasma-mediacenter");
-    const QString themeName = cg.readEntry("name", "oxygen-mediacenter");
-    Plasma::Theme::defaultTheme()->setUseGlobalSettings(false);
-    Plasma::Theme::defaultTheme()->setThemeName(themeName);
-
     QMenu *menu = menuBar()->addMenu(i18n("Settings"));
     menu->addAction(fullScreen);
     menu->addSeparator();
