@@ -57,6 +57,7 @@ void MediaContainer::updateData()
     setData("MediaType", "Audio");
     setData("Url",m_media->getUrl());
     setData("DirtyBit", m_media->getDirty());
+    setData("BrowsingState", m_media->browsingState());
 }
 
 #include "mediacontainer.moc"

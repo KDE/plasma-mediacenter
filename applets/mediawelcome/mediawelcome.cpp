@@ -29,6 +29,9 @@
 #include <KStandardDirs>
 #include <KService>
 #include <KDebug>
+#include <plasma/widgets/declarativewidget.h>
+#include <QDeclarativeEngine>
+#include <QDeclarativeContext>
 
 MediaWelcome::MediaWelcome(QObject *parent, const QVariantList &args) : MediaCenter::HomeApplet(parent, args),
     m_model(0),
@@ -45,15 +48,16 @@ void MediaWelcome::init()
     m_model = new BackendModel(this);
     m_model->setModelServices(MediaCenter::AbstractBrowsingBackend::availableBackends());
 
-    m_view = new QmlViewWrapper(this);
+    Plasma::DeclarativeWidget *qmlWidget = new Plasma::DeclarativeWidget(this);
+    qmlWidget->engine()->rootContext()->setContextProperty("homeModel", m_model);
+    qmlWidget->setQmlPath(KStandardDirs::locate("data", "plasma-mediacenter/declarative/homeview.qml"));
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
-    layout->addItem(m_view);
+    layout->addItem(qmlWidget);
     setLayout(layout);
-    m_view->setModel(m_model);
-    m_view->setQmlPath(KStandardDirs::locate("data", "plasma-mediacenter/declarative/homeview.qml"));
+    kDebug() << m_model->rowCount();
 
-    QDeclarativeItem *item = qobject_cast<QDeclarativeItem*>(m_view->rootObject());
-    connect(item, SIGNAL(clicked()), this, SLOT(itemActivated()));
+    /*QDeclarativeItem *item = qobject_cast<QDeclarativeItem*>(m_view->rootObject());
+    connect(item, SIGNAL(clicked()), this, SLOT(itemActivated()));*/
 }
 
 void MediaWelcome::itemActivated()

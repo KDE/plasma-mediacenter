@@ -29,7 +29,7 @@ LocalFilesAbstractBackend("LocalPictures", parent, args)
 {
     m_acceptedMimePrefix = "image/";
     m_term = Nepomuk::Query::ResourceTypeTerm(Vocabulary::NFO::Image());
-    setRequiredMode(MediaCenter::MusicMode);
+    setRequiredMode(MediaCenter::PictureMode);
 }
 
 LocalPicturesBackend::~LocalPicturesBackend()

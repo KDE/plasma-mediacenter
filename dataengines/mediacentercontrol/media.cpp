@@ -183,4 +183,16 @@ QString Media::getUrl()
 {
     return m_url;
 }
+
+QString Media::browsingState()
+{
+    return m_browsingState;
+}
+
+void Media::setBrowsingState(const QString& state)
+{
+    m_browsingState = state;
+    emit mediaDataUpdated();
+}
+
 #include "media.moc"

@@ -21,8 +21,6 @@ import QtQuick 1.0
 
 Item {
     id: plasmoidContainer
-    width: 100
-    height: 100
     anchors.fill: parent
 
     property QGraphicsWidget applet

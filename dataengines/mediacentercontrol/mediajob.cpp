@@ -138,6 +138,11 @@ void MediaJob::start()
             bool dirtyBit = parameters()["dirty"].toBool();
             m_media->setDirty(dirtyBit);
         }
+    } else if (operation == "setBrowsingState") {
+        if (parameters().contains("state")) {
+            QString state = parameters()["state"].toString();
+            m_media->setBrowsingState(state);
+        }
     }
         
     emitResult();

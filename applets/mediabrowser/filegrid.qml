@@ -7,7 +7,7 @@ import org.kde.plasma.graphicslayouts 4.7 as GraphicsLayouts
 
 Item {
     id: mediaBrowser
-    width: 1200; height: 1200
+    clip: true
     property string activeSource: dataSource.sources[0]
 
     Item {
@@ -28,11 +28,12 @@ Item {
         clip: true
         id: grid
         cellWidth: width / 6; cellHeight: width / 6
-
-        anchors.fill: parent
+        keyNavigationWraps: true
+        width: parent.width - back.width
+        height: parent.height
+        anchors.left: back.right
         model: fileBackend.backendModel
         delegate: testDelegate
-    
         highlight: highlight
         focus: true
     }
@@ -41,29 +42,31 @@ Item {
         id: testDelegate
         Item {
             width: grid.cellWidth; height: grid.cellHeight
-	    PlasmaCore.Theme {
-		id:theme
-	    }
+            PlasmaCore.Theme {
+                id:theme
+            }
             Column {
                 clip:true
                 anchors {
                     leftMargin: 2; topMargin: 2; rightMargin: 2; bottomMargin: 2; fill: parent
                 }
-                Text {
-                    text: display
-		    font.pointSize: 20
-                    smooth: true
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.bottom: parent.bottom
-                    color: theme.textcolor
-                }
                 QIconItem { 
                     icon: decoration
+                    width: parent.height*2/3
+                    height: parent.height - itemText.height
                     anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: 128
-                    height: 128
                     anchors.bottomMargin: 15
+                }
+                Text {
+                    id: itemText
+                    text: display
+                    font.pointSize: 20
+                    smooth: true
+                    width: parent.width
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    color: theme.textcolor
+                    elide: Text.ElideRight
+                    horizontalAlignment: Text.AlignHCenter
                 }
                 MouseArea {
                     hoverEnabled: true
@@ -87,23 +90,23 @@ Item {
     }
     
     Component {
-	id: highlight
-	Rectangle {
-	    width: grid.cellWidth; height: grid.cellHeight
-	    radius: 5
+        id: highlight
+        Rectangle {
+            width: grid.cellWidth; height: grid.cellHeight
+            radius: 5
             PlasmaCore.FrameSvgItem {
                 id: highlightFrame
                 imagePath: "widgets/frame"
                 prefix: "selected+hover"
-	    }
-	}
+            }
+        }
     }
     PlasmaWidgets.IconWidget {
         id: back
         width: 50
         height: 50
         icon: QIcon("go-previous");
-        anchors.right: grid.left
+        anchors.left: parent.left
         onClicked: {
             if (fileBackend.url != "file:///") {
                 fileBackend.url = (fileBackend.url + "/" + "../")

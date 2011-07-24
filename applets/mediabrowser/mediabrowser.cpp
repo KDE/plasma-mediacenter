@@ -77,9 +77,7 @@ void MediaBrowser::showInstalledBackends()
 void MediaBrowser::init()
 {
     m_view = new Plasma::DeclarativeWidget(this);
-    QGraphicsLinearLayout *lay = new QGraphicsLinearLayout(this);
-    lay->setContentsMargins(0,0,0,0);
-    setContentsMargins(0,0,0,0);
+    m_layout->addItem(m_view);
 
     if (m_backend) {
         m_view->engine()->rootContext()->setContextProperty("fileBackend", m_backend);

@@ -24,7 +24,7 @@ import org.kde.qtextracomponents 0.1 as QtExtra
 
 Item {
     id: main
-
+    property string activeSource: dataSource.sources[0]
 
     Component.onCompleted: {
         plasmoid.containmentType = "CustomContainment"
@@ -60,18 +60,51 @@ Item {
         plasmoidContainer.applet = applet
     }
 
+    PlasmaCore.DataSource {
+        id: dataSource
+        engine: "org.kde.mediacentercontrol"
+        connectedSources: activeSource
+
+        onDataChanged: {
+            console.log(data[activeSource].BrowsingState);
+            main.state = data[activeSource].BrowsingState;
+        }
+    }
+
     Item {
         id: mediaPlayerItem
         anchors.fill: parent
     }
 
+    states: [
+        State {
+            name: "browsing"
+            AnchorChanges {
+                target: controlBarFrame
+                anchors.top: main.top
+            }
+            AnchorChanges {
+                target: welcomeItem
+                anchors.bottom: main.top
+            }
+            AnchorChanges {
+                target: browserItem
+                anchors.left: main.left
+            }
+        }
+    ]
+
+    transitions: Transition {
+         // smoothly reanchor myRect and move into new position
+         AnchorAnimation { duration: 1000 }
+     }
+
     PlasmaCore.FrameSvgItem {
+        id: controlBarFrame
         width: parent.width * 0.8
         height: 64
-        anchors {
-            top: parent.top
-            horizontalCenter: parent.horizontalCenter
-        }
+        anchors.bottom: main.top
+        anchors.horizontalCenter: parent.horizontalCenter
         imagePath: "widgets/background"
         enabledBorders: "LeftBorder|RightBorder|BottomBorder"
 
@@ -84,20 +117,19 @@ Item {
                 bottomMargin: parent.margins.bottom
             }
         }
-        
     }
 
-    Row {
-        y: 64
         Item {
             id: welcomeItem
-            width: 300
-            height: 300
+            anchors { top: main.top; left: main.left }
+            width: main.width
+            height: main.height
         }
+
         Item {
             id: browserItem
-            width: 300
-            height: 300
+            width: main.width
+            height: main.height
+            anchors.left: main.right
         }
     }
-}

@@ -17,31 +17,53 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-import Qt 4.7
-import MediaCenter 0.1
+import QtQuick 1.0
+import org.kde.qtextracomponents 0.1
+import org.kde.plasma.graphicswidgets 0.1 as PlasmaWidgets
+import org.kde.plasma.core 0.1 as PlasmaCore
+import org.kde.plasma.graphicslayouts 4.7 as GraphicsLayouts
 
 PathView {
     id: view
+    clip: true
     model: homeModel
     signal clicked
+    property string activeSource: dataSource.sources[0]
+
+    PlasmaCore.DataSource {
+        id: dataSource
+        engine: "org.kde.mediacentercontrol"
+        connectedSources: activeSource
+
+        onDataChanged: {
+        }
+    }
+
     delegate:     Component {
         Item {
             id: wrapper
-            width:  256
-            height:  256
-            ViewItem {
+            width:  parent.width/3
+            height:  parent.height/3
+
+            Column {
+            QIconItem {
+                icon: decoration
                 width: wrapper.width
                 height: wrapper.height
-                modelIndex: homeModel.index(index, 0)
-                scale: PathView.scale
-                opacity: PathView.opacity
+                scale: PathView.iconScale
+            }
+            Text {
+                text: display
+            }
             }
 
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    view.currentIndex = index
-                    view.clicked()
+                    var operation =
+                    dataSource.serviceForSource(activeSource).operationDescription("setBrowsingState");
+                    operation.state = "browsing"
+                    dataSource.serviceForSource(activeSource).startOperationCall(operation);
                 }
             }
         }
@@ -51,18 +73,12 @@ PathView {
     preferredHighlightBegin: 0.5
     preferredHighlightEnd: 0.5
     path: Path {
-        startX: 0; startY: view.height / 2
-        PathAttribute {name: "scale"; value: 0.3}
-        PathAttribute {name: "opacity"; value: 0.4}
-        PathLine {
-            x: view.width / 2; y: view.height / 2
-        }
-        PathAttribute {name: "scale"; value: 1.0}
-        PathAttribute {name: "opacity"; value: 1}
-        PathLine {
-            x: view.width; y: view.height / 2
-        }
-        PathAttribute {name: "scale"; value: 0.3}
-        PathAttribute {name: "opacity"; value: 0.4}
-    }
+             startX: 0
+             startY: 10
+             PathAttribute { name: "iconScale"; value: 0.3 }
+             PathQuad { x: view.width/2; y: view.height/2; controlX: view.width/4; controlY: view.height/4 }
+             PathAttribute { name: "iconScale"; value: 1 }
+             PathQuad { x: view.width; y: 10; controlX: view.width*3/4; controlY: view.height/4 }
+             PathAttribute { name: "iconScale"; value: 0.3 }
+         }
 }

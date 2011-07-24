@@ -35,4 +35,9 @@
       <label>To check whether user is seeking or not.</label>
     </entry>
   </group>
+  <group name="setBrowsingState">
+    <entry name="state" type="String">
+      <label>The current browsing state</label>
+    </entry>
+  </group>
 </kcfg>
