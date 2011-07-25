@@ -79,16 +79,24 @@ void MediaBrowser::init()
     m_view = new Plasma::DeclarativeWidget(this);
     m_layout->addItem(m_view);
 
-    if (m_backend) {
-        m_view->engine()->rootContext()->setContextProperty("fileBackend", m_backend);
-    }
     m_view->setQmlPath(KStandardDirs::locate("data", "plasma-mediacenter/declarative/filegrid.qml"));
 
-/* TODO:choose a backend by merging the welcome plasmoid*/
-    KSharedPtr<KService>service = MediaCenter::AbstractBrowsingBackend::availableBackends().at(0);
-    MediaCenter::AbstractBrowsingBackend *backend = service->createInstance<MediaCenter::AbstractBrowsingBackend>(0, QVariantList() << service->storageId());
+    MediaCenter::AbstractBrowsingBackend *backend;
+    KSharedPtr<KService> service;
+
+    service = MediaCenter::AbstractBrowsingBackend::availableBackends().at(0);
+    backend = service->createInstance<MediaCenter::AbstractBrowsingBackend>(0, QVariantList() << service->storageId());
     loadBrowsingBackend(backend);
-    kDebug() << "backkkkkkkkkkkkeeeeeeeddddd" << m_backend->name();
+
+    service = MediaCenter::AbstractBrowsingBackend::availableBackends().at(1);
+    backend = service->createInstance<MediaCenter::AbstractBrowsingBackend>(0, QVariantList() << service->storageId());
+    loadBrowsingBackend(backend);
+
+    service = MediaCenter::AbstractBrowsingBackend::availableBackends().at(2);
+    backend = service->createInstance<MediaCenter::AbstractBrowsingBackend>(0, QVariantList() << service->storageId());
+    loadBrowsingBackend(backend);
+
+    m_view->engine()->rootContext()->setContextProperty("fileBackends", QVariant::fromValue(m_backends));
 }
 
 void MediaBrowser::createConfigurationInterface(KConfigDialog *parent)
@@ -106,14 +114,12 @@ void MediaBrowser::createConfigurationInterface(KConfigDialog *parent)
 void MediaBrowser::loadBrowsingBackend(MediaCenter::AbstractBrowsingBackend *backend)
 {
     kDebug() << "loading browsing backend";
-    
-    m_backend = backend;
 
-    m_backend->setParent(this);
-    m_backend->init();
-    m_view->engine()->rootContext()->setContextProperty("fileBackend", m_backend);
+    backend->setParent(this);
+    backend->init();
+    m_backends.append(backend);
 
-    emit browsingModeChanged( m_backend->requiredMode() );
+    emit browsingModeChanged( backend->requiredMode() );
 }
 
 void MediaBrowser::showStartupState()
@@ -122,19 +128,22 @@ void MediaBrowser::showStartupState()
 
 KUrl MediaBrowser::currentUrl() const
 {
-    KDirModel *modeldir = qobject_cast<KDirModel*>(m_backend->model());
-    if (!modeldir || !modeldir->dirLister()) {
-        return KUrl();
-    }
-    return modeldir->dirLister()->url();
+//     MediaCenter::AbstractBrowsingBackend* currentBackend = qobject_cast<MediaCenter::AbstractBrowsingBackend*>(m_backends.at(backend));
+//     KDirModel *modeldir = qobject_cast<KDirModel*>(currentBackend->model());
+//     if (!modeldir || !modeldir->dirLister()) {
+//         return KUrl();
+//     }
+//     return modeldir->dirLister()->url();
+return  KUrl();
 }
 
 void MediaBrowser::openUrl(const KUrl &url)
 {
-    KDirModel *modeldir = qobject_cast<KDirModel*>(m_backend->model());
-    if (modeldir) {
-        modeldir->dirLister()->openUrl(url);
-    }
+//     MediaCenter::AbstractBrowsingBackend* currentBackend = qobject_cast<MediaCenter::AbstractBrowsingBackend*>(m_backends.at(backend));
+//     KDirModel *modeldir = qobject_cast<KDirModel*>(currentBackend->model());
+//     if (modeldir) {
+//         modeldir->dirLister()->openUrl(url);
+//     }
 }
 
 void MediaBrowser::listMediaInDirectory()
@@ -168,6 +177,5 @@ void MediaBrowser::clearSelectedMedias()
     m_selectedMedias.clear();
     emit selectedMediasChanged(m_selectedMedias);
 }
-
 
 K_EXPORT_PLASMA_APPLET(mediabrowser, MediaBrowser)

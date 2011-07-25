@@ -78,7 +78,37 @@ Item {
 
     states: [
         State {
-            name: "browsing"
+            name: "MusicBrowsing"
+            AnchorChanges {
+                target: controlBarFrame
+                anchors.top: main.top
+            }
+            AnchorChanges {
+                target: welcomeItem
+                anchors.bottom: main.top
+            }
+            AnchorChanges {
+                target: browserItem
+                anchors.left: main.left
+            }
+        },
+        State {
+            name: "VideoBrowsing"
+            AnchorChanges {
+                target: controlBarFrame
+                anchors.top: main.top
+            }
+            AnchorChanges {
+                target: welcomeItem
+                anchors.bottom: main.top
+            }
+            AnchorChanges {
+                target: browserItem
+                anchors.left: main.left
+            }
+        },
+        State {
+            name: "PictureBrowsing"
             AnchorChanges {
                 target: controlBarFrame
                 anchors.top: main.top

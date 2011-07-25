@@ -54,6 +54,7 @@ PathView {
             }
             Text {
                 text: display
+                font.pointSize: 30
             }
             }
 
@@ -62,7 +63,11 @@ PathView {
                 onClicked: {
                     var operation =
                     dataSource.serviceForSource(activeSource).operationDescription("setBrowsingState");
-                    operation.state = "browsing"
+                    switch (index) {
+                        case 0: operation.state = "MusicBrowsing"; break;
+                        case 1: operation.state = "VideoBrowsing"; break;
+                        case 2: operation.state = "PictureBrowsing";  break;
+                    }
                     dataSource.serviceForSource(activeSource).startOperationCall(operation);
                 }
             }

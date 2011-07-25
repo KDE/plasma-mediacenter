@@ -48,10 +48,10 @@ public:
 
     KUrl currentUrl() const;
 
-    void loadBrowsingBackend(MediaCenter::AbstractBrowsingBackend*);
+    void loadBrowsingBackend(MediaCenter::AbstractBrowsingBackend* backend);
 
 public slots:
-    void openUrl(const KUrl &url);
+    void openUrl(const KUrl& url);
     void listMediaInDirectory();
     void selectedMediasAdd(const MediaCenter::Media &media);
     void selectedMediasRemove(const MediaCenter::Media &media);
@@ -73,6 +73,7 @@ private:
     bool m_blurred;
     QString m_viewType;
     QList<MediaCenter::Media> m_selectedMedias;
+    QList<QObject*> m_backends;
 
     QGraphicsLinearLayout *m_layout;
 

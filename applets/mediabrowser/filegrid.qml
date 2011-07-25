@@ -9,6 +9,7 @@ Item {
     id: mediaBrowser
     clip: true
     property string activeSource: dataSource.sources[0]
+    property int browsingMode: -1
 
     Item {
         id:main
@@ -19,7 +20,7 @@ Item {
             connectedSources: activeSource
 
             onDataChanged: {
-                //nothing to be added right now, maybe further
+                updateBrowsingMode();
             }
         }
     }
@@ -32,10 +33,28 @@ Item {
         width: parent.width - back.width
         height: parent.height
         anchors.left: back.right
-        model: fileBackend.backendModel
         delegate: testDelegate
         highlight: highlight
         focus: true
+
+        Component.onCompleted: {
+            updateBrowsingMode();
+        }
+    }
+
+    function updateBrowsingMode()
+    {
+        var browsingModeName = dataSource.data[activeSource].BrowsingState
+        var oldMode = browsingMode
+        if (browsingModeName == "MusicBrowsing") {
+            browsingMode = 0
+        } else if (browsingModeName == "VideoBrowsing") {
+            browsingMode = 1
+        } else if (browsingModeName == "PictureBrowsing") {
+            browsingMode = 2
+        }
+        if (oldMode != browsingMode)
+            grid.model = fileBackends[browsingMode].backendModel
     }
 
     Component {
@@ -73,11 +92,11 @@ Item {
                     anchors.fill: parent
                     onEntered: grid.currentIndex = index
                     onClicked:{
-                        if (fileBackend.fileType(fileBackend.url + "/" + display)) {
-                        fileBackend.url = (fileBackend.url + "/" + display)
+                        if (fileBackends[browsingMode].fileType(fileBackends[browsingMode].url + "/" + display)) {
+                        fileBackends[browsingMode].url = (fileBackends[browsingMode].url + "/" + display)
                         } else {
                             var operation = dataSource.serviceForSource(activeSource).operationDescription("url");
-                            operation.mediaUrl = (fileBackend.url + "/" + display);
+                            operation.mediaUrl = (fileBackends[browsingMode].url + "/" + display);
                             for ( var i in operation ) {
                                  print(i + ' -> ' + operation[i] );
                              }
@@ -108,9 +127,9 @@ Item {
         icon: QIcon("go-previous");
         anchors.left: parent.left
         onClicked: {
-            if (fileBackend.url != "file:///") {
-                fileBackend.url = (fileBackend.url + "/" + "../")
-                print (fileBackend.url);
+            if (fileBackends[browsingMode].url != "file:///") {
+                fileBackends[browsingMode].url = (fileBackends[browsingMode].url + "/" + "../")
+                print (fileBackends[browsingMode].url);
             }
         }
     }
