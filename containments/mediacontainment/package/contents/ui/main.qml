@@ -73,12 +73,17 @@ Item {
 
     Item {
         id: mediaPlayerItem
-        anchors.fill: parent
+        anchors.fill: main
+        visible: false
     }
 
     states: [
         State {
             name: "MusicBrowsing"
+            PropertyChanges {
+                target: mediaPlayerItem
+                visible: true
+            }
             AnchorChanges {
                 target: controlBarFrame
                 anchors.top: main.top
@@ -94,6 +99,10 @@ Item {
         },
         State {
             name: "VideoBrowsing"
+            PropertyChanges {
+                target: mediaPlayerItem
+                visible: true
+            }
             AnchorChanges {
                 target: controlBarFrame
                 anchors.top: main.top
@@ -109,9 +118,13 @@ Item {
         },
         State {
             name: "PictureBrowsing"
+            PropertyChanges {
+                target: mediaPlayerItem
+                visible: true
+            }
             AnchorChanges {
                 target: controlBarFrame
-                anchors.top: main.top
+                anchors.bottom: main.top
             }
             AnchorChanges {
                 target: welcomeItem

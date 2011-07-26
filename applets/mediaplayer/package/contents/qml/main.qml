@@ -23,7 +23,7 @@ import org.kde.plasma.graphicswidgets 0.1 as PlasmaWidgets
 import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.graphicslayouts 4.7 as GraphicsLayouts
 
-QGraphicsWidget {
+Item{
     id: mediaPlayer
      property string activeSource: dataSource.sources[0]
      Component.onCompleted: {
@@ -36,9 +36,9 @@ QGraphicsWidget {
             id: dataSource
             engine: "org.kde.mediacentercontrol"
             connectedSources: activeSource
-            onDataChanged: {print(data[activeSource].State);
-                print(video.currentTime)
-                if (data[activeSource].State == "playing") {
+            onDataChanged: {
+                if(data[activeSource].BrowsingState != "PictureBrowsing") {
+                    if (data[activeSource].State == "playing") {
                         video.url = data[activeSource].Url
                         if (data[activeSource].DirtyBit) {
                            video.seek(data[activeSource].Position);
@@ -47,12 +47,15 @@ QGraphicsWidget {
                            dataSource.serviceForSource(activeSource).startOperationCall(operation);
                     }
                     print(data[activeSource].Url);
-                    video.play();    
-                        print(data[activeSource].Position);
-                } else if (data[activeSource].State == "paused") {
-                     video.pause()
-                } else if (data[activeSource].State == "stopped") {
-                    video.stop();
+                    video.play();
+                    } else if (data[activeSource].State == "paused") {
+                        video.pause()
+                    } else if (data[activeSource].State == "stopped") {
+                        video.stop();
+                    }
+
+                } else {
+                    img.source = data[activeSource].Url;
                 }
             }
         }
@@ -76,6 +79,31 @@ QGraphicsWidget {
                 dataSource.serviceForSource(activeSource).startOperationCall(operation);
                 print("set progress to " + dataSource.data[activeSource].Position + " of "
                                          + dataSource.data[activeSource].Length + "current mediapos" + video.currentTime);
+        }
+    }
+
+    Image {
+        id: img
+        anchors {
+            verticalCenter: mediaPlayer.verticalCenter
+            horizontalCenter: mediaPlayer.horizontalCenter
+        }
+        fillMode: Image.PreserveAspectFit
+        smooth: true
+
+        onStatusChanged: {
+            if (img.status == Image.Ready) {
+                if (img.sourceSize.height > img.height || img.sourceSize.width > img.width) {
+                    if (img.sourceSize.height > img.sourceSize.width) {
+                        img.sourceSize.height = mediaPlayer.height
+                    } else {
+                        img.sourceSize.width = mediaPlayer.width
+                    }
+                } else {
+                    img.height = img.sourceSize.height
+                    img.width = img.sourceSize.width
+                }
+            }
         }
     }
 }
