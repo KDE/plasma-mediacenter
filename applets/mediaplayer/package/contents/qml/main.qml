@@ -37,7 +37,8 @@ Item{
             engine: "org.kde.mediacentercontrol"
             connectedSources: activeSource
             onDataChanged: {
-                if(data[activeSource].BrowsingState != "PictureBrowsing") {
+                if(data[activeSource].BrowsingState == "MusicBrowsing" || data[activeSource].BrowsingState == "VideoBrowsing") {
+                    video.visible = true
                     if (data[activeSource].State == "playing") {
                         video.url = data[activeSource].Url
                         if (data[activeSource].DirtyBit) {
@@ -54,7 +55,8 @@ Item{
                         video.stop();
                     }
 
-                } else {
+                } else if(data[activeSource].BrowsingState == "PictureBrowsing") {
+                    img.visible = true
                     img.source = data[activeSource].Url;
                 }
             }
@@ -62,6 +64,7 @@ Item{
     }
     PlasmaWidgets.VideoWidget {
        id: video
+       visible: false
        tickInterval: 500
        
        onTick:{
@@ -90,6 +93,7 @@ Item{
         }
         fillMode: Image.PreserveAspectFit
         smooth: true
+        visible: false
 
         onStatusChanged: {
             if (img.status == Image.Ready) {
