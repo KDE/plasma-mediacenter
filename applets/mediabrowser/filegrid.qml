@@ -73,6 +73,24 @@ Item {
                     height: parent.height - itemText.height
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.bottomMargin: 15
+
+                    Image {
+                        id: delegateItemImage
+                        anchors.fill: parent
+                        visible: false
+                        sourceSize {
+                            height: delegateItemIcon.height
+                            width: delegateItemIcon.width
+                        }
+                    }
+
+                    Component.onCompleted: {
+                        if (!fileBackends[browsingMode].fileType(fileBackends[browsingMode].url + "/" + display)) {
+                            delegateItemImage.source = fileBackends[browsingMode].url + "/" + display
+                            delegateItemImage.visible = true
+                            delegateItemIcon.icon = QIcon()
+                        }
+                    }
                 }
                 Text {
                     id: itemText
