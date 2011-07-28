@@ -97,7 +97,6 @@ m_recognizer(0)
     }
     args->clear();
 
-    setAttribute(Qt::WA_TranslucentBackground);
     m_recognizer = new MediaCenter::GestureRecognizer;
 }
 
