@@ -26,47 +26,46 @@ import org.kde.plasma.graphicslayouts 4.7 as GraphicsLayouts
 Item{
     id: mediaPlayer
      property string activeSource: dataSource.sources[0]
-     Component.onCompleted: {
-           dataSource.serviceForSource(activeSource).associateWidget(video, "video");
-       }
-    Item {
-        id:main
+     /*Component.onCompleted: {
+          dataSource.serviceForSource(activeSource).associateWidget(video, "video");
+     }*/
 
-        PlasmaCore.DataSource {
-            id: dataSource
-            engine: "org.kde.mediacentercontrol"
-            connectedSources: activeSource
-            onDataChanged: {
-                if(data[activeSource].BrowsingState == "MusicBrowsing" || data[activeSource].BrowsingState == "VideoBrowsing") {
-                    video.visible = true
-                    if (data[activeSource].State == "playing") {
-                        video.url = data[activeSource].Url
-                        if (data[activeSource].DirtyBit) {
-                           video.seek(data[activeSource].Position);
-                           var operation = dataSource.serviceForSource(activeSource).operationDescription("dirtyCheck");
-                           operation.dirty = false;
-                           dataSource.serviceForSource(activeSource).startOperationCall(operation);
-                    }
-                    print(data[activeSource].Url);
-                    video.play();
-                    } else if (data[activeSource].State == "paused") {
-                        video.pause()
-                    } else if (data[activeSource].State == "stopped") {
-                        video.stop();
-                    }
 
-                } else if(data[activeSource].BrowsingState == "PictureBrowsing") {
-                    img.visible = true
-                    img.source = data[activeSource].Url;
+    PlasmaCore.DataSource {
+        id: dataSource
+        engine: "org.kde.mediacentercontrol"
+        connectedSources: activeSource
+        onDataChanged: {
+            if(data[activeSource].BrowsingState == "MusicBrowsing" || data[activeSource].BrowsingState == "VideoBrowsing") {
+                video.visible = true
+                if (data[activeSource].State == "playing") {
+                    video.url = data[activeSource].Url
+                    if (data[activeSource].DirtyBit) {
+                        video.seek(data[activeSource].Position);
+                        var operation = dataSource.serviceForSource(activeSource).operationDescription("dirtyCheck");
+                        operation.dirty = false;
+                        dataSource.serviceForSource(activeSource).startOperationCall(operation);
                 }
+                print(data[activeSource].Url);
+                video.play();
+                } else if (data[activeSource].State == "paused") {
+                    video.pause()
+                } else if (data[activeSource].State == "stopped") {
+                    video.stop();
+                }
+
+            } else if(data[activeSource].BrowsingState == "PictureBrowsing") {
+                imageFrame.visible = true
+                imageFrame.source = data[activeSource].Url;
             }
         }
     }
+
     PlasmaWidgets.VideoWidget {
        id: video
        visible: false
        tickInterval: 500
-       
+       anchors.fill: mediaPlayer
        onTick:{
            if (dataSource.data[activeSource].DirtyBit) {
                return;
@@ -85,28 +84,23 @@ Item{
         }
     }
 
-    Image {
-        id: img
-        anchors {
-            verticalCenter: mediaPlayer.verticalCenter
-            horizontalCenter: mediaPlayer.horizontalCenter
-        }
-        fillMode: Image.PreserveAspectFit
-        smooth: true
+    Rectangle {
+        id: imageFrame
+        color: "black"
+        anchors.fill: mediaPlayer
+        property alias source: img.source
         visible: false
-
-        onStatusChanged: {
-            if (img.status == Image.Ready) {
-                if (img.sourceSize.height > img.height || img.sourceSize.width > img.width) {
-                    if (img.sourceSize.height > img.sourceSize.width) {
-                        img.sourceSize.height = mediaPlayer.height
-                    } else {
-                        img.sourceSize.width = mediaPlayer.width
-                    }
-                } else {
-                    img.height = img.sourceSize.height
-                    img.width = img.sourceSize.width
-                }
+        Flickable {
+            anchors.fill: parent
+            contentWidth: img.width
+            contentHeight: img.height
+            Image {
+                id: img
+                anchors.centerIn: parent
+                //fillMode: Image.PreserveAspectFit
+                smooth: true
+                width: sourceSize.width
+                height: sourceSize.height
             }
         }
     }
