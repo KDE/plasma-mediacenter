@@ -97,9 +97,14 @@ Item {
                         id: delegateItemImage
                         anchors.fill: parent
                         visible: false
-                        sourceSize {
-                            height: delegateItemIcon.height
-                            width: delegateItemIcon.width
+                        fillMode: Image.PreserveAspectFit
+
+                        onSourceChanged: {
+                            if (sourceSize.width > sourceSize.height) {
+                                sourceSize.width = delegateItemIcon.width
+                            } else {
+                                sourceSize.height = delegateItemIcon.height
+                            }
                         }
                     }
 
