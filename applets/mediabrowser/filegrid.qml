@@ -11,17 +11,13 @@ Item {
     property string activeSource: dataSource.sources[0]
     property int browsingMode: -1
 
-    Item {
-        id:main
+    PlasmaCore.DataSource {
+        id: dataSource
+        engine: "org.kde.mediacentercontrol"
+        connectedSources: activeSource
 
-        PlasmaCore.DataSource {
-            id: dataSource
-            engine: "org.kde.mediacentercontrol"
-            connectedSources: activeSource
-
-            onDataChanged: {
-                updateBrowsingMode();
-            }
+        onDataChanged: {
+            updateBrowsingMode();
         }
     }
 
@@ -60,6 +56,7 @@ Item {
     Component {
         id: testDelegate
         Item {
+            id: delegateItem
             width: grid.cellWidth; height: grid.cellHeight
             PlasmaCore.Theme {
                 id:theme
@@ -69,7 +66,8 @@ Item {
                 anchors {
                     leftMargin: 2; topMargin: 2; rightMargin: 2; bottomMargin: 2; fill: parent
                 }
-                QIconItem { 
+                QIconItem {
+                    id: delegateItemIcon
                     icon: decoration
                     width: parent.height*2/3
                     height: parent.height - itemText.height
@@ -93,7 +91,7 @@ Item {
                     onEntered: grid.currentIndex = index
                     onClicked:{
                         if (fileBackends[browsingMode].fileType(fileBackends[browsingMode].url + "/" + display)) {
-                        fileBackends[browsingMode].url = (fileBackends[browsingMode].url + "/" + display)
+                            fileBackends[browsingMode].url = (fileBackends[browsingMode].url + "/" + display)
                         } else {
                             var operation = dataSource.serviceForSource(activeSource).operationDescription("url");
                             operation.mediaUrl = (fileBackends[browsingMode].url + "/" + display);
@@ -101,6 +99,7 @@ Item {
                                  print(i + ' -> ' + operation[i] );
                              }
                              dataSource.serviceForSource(activeSource).startOperationCall(operation);
+                             mediaBrowser.state = "viewing"
                         }
                     }
                 }
@@ -120,6 +119,7 @@ Item {
             }
         }
     }
+
     PlasmaWidgets.IconWidget {
         id: back
         width: 50
@@ -127,10 +127,26 @@ Item {
         icon: QIcon("go-previous");
         anchors.left: parent.left
         onClicked: {
-            if (fileBackends[browsingMode].url != "file:///") {
-                fileBackends[browsingMode].url = (fileBackends[browsingMode].url + "/" + "../")
-                print (fileBackends[browsingMode].url);
+            if (mediaBrowser.state == "viewing") {
+                mediaBrowser.state = ""
+            }
+            else {
+                if (fileBackends[browsingMode].url != "file:///") {
+                    fileBackends[browsingMode].url = (fileBackends[browsingMode].url + "/" + "../")
+                    print (fileBackends[browsingMode].url);
+                }
             }
         }
     }
+
+    states: [
+        State {
+            name: "viewing"
+
+            PropertyChanges {
+                target: grid
+                visible: false
+            }
+        }
+    ]
 }
