@@ -42,9 +42,10 @@ Item {
     }
 
     GridView {
-        clip: true
         id: grid
-        cellWidth: width / 5; cellHeight: width / 6
+        clip: true
+        cellWidth: width / 5
+        cellHeight: width / 6
         keyNavigationWraps: true
         anchors.fill: parent
         delegate: testDelegate
