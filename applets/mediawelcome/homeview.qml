@@ -19,7 +19,6 @@
 
 import QtQuick 1.0
 import org.kde.qtextracomponents 0.1
-import org.kde.plasma.graphicswidgets 0.1 as PlasmaWidgets
 import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.graphicslayouts 4.7 as GraphicsLayouts
 
@@ -30,6 +29,10 @@ PathView {
     signal clicked
     property string activeSource: dataSource.sources[0]
 
+    PlasmaCore.Theme {
+        id: theme
+    }
+
     PlasmaCore.DataSource {
         id: dataSource
         engine: "org.kde.mediacentercontrol"
@@ -39,23 +42,25 @@ PathView {
         }
     }
 
-    delegate:     Component {
+    delegate: Component {
         Item {
             id: wrapper
             width:  parent.width/3
             height:  parent.height/3
 
             Column {
-            QIconItem {
-                icon: decoration
-                width: wrapper.width
-                height: wrapper.height
-                scale: PathView.iconScale
-            }
-            Text {
-                text: display
-                font.pointSize: 30
-            }
+                QIconItem {
+                    icon: decoration
+                    width: wrapper.width
+                    height: wrapper.height
+                    scale: PathView.iconScale
+                }
+                Text {
+                    text: display
+                    font.pointSize: 30
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    color: theme.textColor
+                }
             }
 
             MouseArea {
