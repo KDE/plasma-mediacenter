@@ -44,12 +44,13 @@ Item {
     GridView {
         clip: true
         id: grid
-        cellWidth: width / 6; cellHeight: width / 6
+        cellWidth: width / 5; cellHeight: width / 6
         keyNavigationWraps: true
         anchors.fill: parent
         delegate: testDelegate
         highlight: highlight
         focus: true
+        flow: GridView.TopToBottom
 
         Component.onCompleted: {
             updateBrowsingMode();
@@ -80,7 +81,6 @@ Item {
                 id:theme
             }
             Column {
-                clip:true
                 anchors {
                     margins: 2
                     fill: parent
@@ -119,7 +119,8 @@ Item {
                     smooth: true
                     color: theme.textColor
                     elide: Text.ElideRight
-                    anchors.horizontalCenter: parent.horizontalCenter
+                    width: parent.width
+                    horizontalAlignment: Text.AlignHCenter
                 }
             }
             MouseArea {
