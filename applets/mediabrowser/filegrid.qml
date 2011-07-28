@@ -46,9 +46,7 @@ Item {
         id: grid
         cellWidth: width / 6; cellHeight: width / 6
         keyNavigationWraps: true
-        width: parent.width - back.width
-        height: parent.height
-        anchors.left: back.right
+        anchors.fill: parent
         delegate: testDelegate
         highlight: highlight
         focus: true
@@ -84,7 +82,8 @@ Item {
             Column {
                 clip:true
                 anchors {
-                    leftMargin: 2; topMargin: 2; rightMargin: 2; bottomMargin: 2; fill: parent
+                    margins: 2
+                    fill: parent
                 }
                 QIconItem {
                     id: delegateItemIcon
@@ -92,7 +91,6 @@ Item {
                     width: parent.height*2/3
                     height: parent.height - itemText.height
                     anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.bottomMargin: 15
 
                     Image {
                         id: delegateItemImage
@@ -119,44 +117,41 @@ Item {
                     text: display
                     font.pointSize: 20
                     smooth: true
-                    width: parent.width
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    color: theme.textcolor
+                    color: theme.textColor
                     elide: Text.ElideRight
-                    horizontalAlignment: Text.AlignHCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
                 }
-                MouseArea {
-                    hoverEnabled: true
-                    anchors.fill: parent
-                    onEntered: grid.currentIndex = index
-                    onClicked:{
-                        if (fileBackends[browsingMode].fileType(fileBackends[browsingMode].url + "/" + display)) {
-                            fileBackends[browsingMode].url = (fileBackends[browsingMode].url + "/" + display)
-                        } else {
-                            var operation = dataSource.serviceForSource(activeSource).operationDescription("url");
-                            operation.mediaUrl = (fileBackends[browsingMode].url + "/" + display);
-                            for ( var i in operation ) {
-                                 print(i + ' -> ' + operation[i] );
-                             }
-                             dataSource.serviceForSource(activeSource).startOperationCall(operation);
-                             mediaBrowser.state = "viewing"
-                        }
+            }
+            MouseArea {
+                hoverEnabled: true
+                anchors.fill: parent
+                onEntered: grid.currentIndex = index
+                onClicked:{
+                    if (fileBackends[browsingMode].fileType(fileBackends[browsingMode].url + "/" + display)) {
+                        fileBackends[browsingMode].url = (fileBackends[browsingMode].url + "/" + display)
+                    } else {
+                        var operation = dataSource.serviceForSource(activeSource).operationDescription("url");
+                        operation.mediaUrl = (fileBackends[browsingMode].url + "/" + display);
+                        for ( var i in operation ) {
+                                print(i + ' -> ' + operation[i] );
+                            }
+                            dataSource.serviceForSource(activeSource).startOperationCall(operation);
+                            mediaBrowser.state = "viewing"
                     }
                 }
             }
         }
     }
-    
+
     Component {
         id: highlight
-        Rectangle {
-            width: grid.cellWidth; height: grid.cellHeight
-            radius: 5
-            PlasmaCore.FrameSvgItem {
-                id: highlightFrame
-                imagePath: "widgets/frame"
-                prefix: "selected+hover"
-            }
+
+        PlasmaCore.FrameSvgItem {
+            id: highlightFrame
+            imagePath: "widgets/viewitem"
+            prefix: "selected+hover"
+            width: 100
+            height: 100
         }
     }
 
