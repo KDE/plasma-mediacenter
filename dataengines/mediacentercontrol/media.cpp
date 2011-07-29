@@ -175,10 +175,8 @@ bool Media::getDirty()
 
 void Media::setDirty(bool dirtyBit)
 {
-
     m_dirty = dirtyBit;
-    emit mediaDataUpdated();
-}
+    emit mediaDataUpdated();}
 
 QString Media::getUrl()
 {
@@ -200,7 +198,6 @@ bool Media::viewMode()
 {
     return m_viewMode;
 }
-
 
 void Media::setBrowsingState(const QString& state)
 {

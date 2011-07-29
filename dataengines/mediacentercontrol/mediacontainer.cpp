@@ -39,7 +39,7 @@ Plasma::Service* MediaContainer::service(QObject* parent)
 }
 
 void MediaContainer::updateData()
-{ kDebug() << "hi";
+{
     switch(m_media->state()) {
         case Media::Playing:
             setData("State", "playing");

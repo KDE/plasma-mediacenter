@@ -55,11 +55,19 @@ Item{
                 }
 
             } else if(data[activeSource].BrowsingState == "PictureBrowsing" && data[activeSource].Viewing) {
-                imageFrame.source = data[activeSource].Url;
-                imageFrame.visible = true;
+                imageViewerLoader.item.visible = true;
+                /*Unload and load again, because Image doesn't want to forget the old
+                values of sourceSize*/
+                if (imageViewerLoader.item.source != "file://" + data[activeSource].Url) {
+                    imageViewerLoader.source = ""
+                    imageViewerLoader.source = "ImageViewer.qml"
+                    imageViewerLoader.item.visible = true
+                    imageViewerLoader.item.source = ""
+                    imageViewerLoader.item.source = data[activeSource].Url
+                }
             }
             else {
-                imageFrame.visible = false;
+                imageViewerLoader.item.visible = false;
             }
         }
     }
@@ -87,24 +95,8 @@ Item{
         }
     }
 
-    Rectangle {
-        id: imageFrame
-        color: "black"
-        anchors.fill: mediaPlayer
-        property alias source: img.source
-        visible: false
-        Flickable {
-            anchors.fill: parent
-            contentWidth: img.width
-            contentHeight: img.height
-            Image {
-                id: img
-                anchors.centerIn: parent
-                //fillMode: Image.PreserveAspectFit
-                smooth: true
-                width: sourceSize.width
-                height: sourceSize.height
-            }
-        }
+    Loader {
+        id: imageViewerLoader
+        source: "ImageViewer.qml"
     }
 }
