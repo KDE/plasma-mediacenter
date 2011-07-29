@@ -67,7 +67,6 @@ Item {
         connectedSources: activeSource
 
         onDataChanged: {
-            console.log(data[activeSource].BrowsingState);
             main.state = data[activeSource].BrowsingState;
         }
     }

@@ -30,6 +30,7 @@ Item {
     clip: true
     property string activeSource: dataSource.sources[0]
     property int browsingMode: -1
+    property bool mediaViewing
 
     PlasmaCore.DataSource {
         id: dataSource
@@ -136,15 +137,17 @@ Item {
                 onClicked:{
                     if (fileBackends[browsingMode].fileType(fileBackends[browsingMode].url + "/" + display)) {
                         fileBackends[browsingMode].url = (fileBackends[browsingMode].url + "/" + display)
+                        mediaViewing = false
                     } else {
+                        mediaViewing = true
                         var operation = dataSource.serviceForSource(activeSource).operationDescription("url");
                         operation.mediaUrl = (fileBackends[browsingMode].url + "/" + display);
-                        for ( var i in operation ) {
-                                print(i + ' -> ' + operation[i] );
-                            }
-                            dataSource.serviceForSource(activeSource).startOperationCall(operation);
-                            mediaBrowser.state = "viewing"
+                        dataSource.serviceForSource(activeSource).startOperationCall(operation);
+                        mediaBrowser.state = "viewing"
                     }
+                     var operation = dataSource.serviceForSource(activeSource).operationDescription("viewingState");
+                     operation.viewing = mediaViewing
+                     dataSource.serviceForSource(activeSource).startOperationCall(operation);
                 }
             }
         }
@@ -178,6 +181,9 @@ Item {
                     print (fileBackends[browsingMode].url);
                 }
             }
+            var operation = dataSource.serviceForSource(activeSource).operationDescription("viewingState");
+            operation.viewing = false
+            dataSource.serviceForSource(activeSource).startOperationCall(operation);
         }
     }
 

@@ -54,9 +54,12 @@ Item{
                     video.stop();
                 }
 
-            } else if(data[activeSource].BrowsingState == "PictureBrowsing") {
-                imageFrame.visible = true
+            } else if(data[activeSource].BrowsingState == "PictureBrowsing" && data[activeSource].Viewing) {
                 imageFrame.source = data[activeSource].Url;
+                imageFrame.visible = true;
+            }
+            else {
+                imageFrame.visible = false;
             }
         }
     }

@@ -27,6 +27,7 @@ Media::Media()
     m_position = 0;
     m_url = "";
     m_dirty = false;
+    m_viewMode = false;
 }
 
 QString Media::name() const
@@ -188,6 +189,18 @@ QString Media::browsingState()
 {
     return m_browsingState;
 }
+
+void Media::setViewMode(bool mode)
+{
+    m_viewMode = mode;
+    emit mediaDataUpdated();
+}
+
+bool Media::viewMode()
+{
+    return m_viewMode;
+}
+
 
 void Media::setBrowsingState(const QString& state)
 {

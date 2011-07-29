@@ -143,8 +143,13 @@ void MediaJob::start()
             QString state = parameters()["state"].toString();
             m_media->setBrowsingState(state);
         }
+    } else if (operation == "viewingState") {
+        if(parameters().contains("viewing")) {
+            bool viewingState =  parameters()["viewing"].toBool();
+            m_media->setViewMode(viewingState);
+        }
     }
-        
+
     emitResult();
 } 
 

@@ -61,6 +61,8 @@ public:
     bool getDirty();
     QString browsingState();
     void setBrowsingState(const QString &state);
+    void setViewMode(bool);
+    bool viewMode();
 
 Q_SIGNALS:
     void mediaDataUpdated();
@@ -77,6 +79,7 @@ private:
     QString m_url;
     bool m_dirty;
     QString m_browsingState;
+    bool m_viewMode;
 };
 
 #endif // MEDIA_H

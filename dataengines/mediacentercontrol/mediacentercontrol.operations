@@ -40,4 +40,9 @@
       <label>The current browsing state</label>
     </entry>
   </group>
+    <group name="viewingState">
+    <entry name="viewing" type="Bool">
+      <label>Check whether current state is viewing or Browsing</label>
+    </entry>
+  </group>
 </kcfg>

@@ -44,6 +44,7 @@ void MediaService::enableMediaOperations()
         setOperationEnabled("mediaProgress", m_media->canMediaProgress());
         setOperationEnabled("url", true);
         setOperationEnabled("dirtyCheck", m_media->getDirty());
+        setOperationEnabled("viewingState", true);
     }
 
 }
