@@ -133,6 +133,7 @@ Item {
             AnchorChanges {
                 target: browserItem
                 anchors.left: main.left
+                anchors.top: main.top
             }
         }
     ]
@@ -174,5 +175,6 @@ Item {
             width: main.width
             height: main.height
             anchors.left: main.right
+            anchors.top: main.top
         }
     }

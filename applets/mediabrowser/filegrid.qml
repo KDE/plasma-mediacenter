@@ -42,6 +42,25 @@ Item {
         }
     }
 
+    ListView {
+        id: list
+        clip: true
+        keyNavigationWraps: true
+        anchors.top: parent.top
+        anchors.left: parent.left
+        height: width/6
+        width: parent.width
+        delegate: testDelegate
+        highlight: highlight
+        focus: true
+        orientation: ListView.Horizontal
+        visible: false
+
+        Component.onCompleted: {
+            updateBrowsingMode();
+        }
+    }
+
     GridView {
         id: grid
         clip: true
@@ -70,8 +89,10 @@ Item {
         } else if (browsingModeName == "PictureBrowsing") {
             browsingMode = 2
         }
-        if (oldMode != browsingMode)
+        if (oldMode != browsingMode) {
             grid.model = fileBackends[browsingMode].backendModel
+            list.model = fileBackends[browsingMode].backendModel
+        }
     }
 
     Component {
@@ -194,6 +215,11 @@ Item {
             PropertyChanges {
                 target: grid
                 visible: false
+            }
+
+            PropertyChanges {
+                target: list
+                visible: true
             }
         }
     ]
