@@ -42,11 +42,13 @@ Rectangle {
             id: mainImage
 
             anchors.centerIn: parent
-            Component.onCompleted: {
-                if (sourceSize.width < sourceSize.height) {
-                    mainImage.scale = Math.min(1, mainFlickable.height/sourceSize.height)
-                } else {
-                    mainImage.scale = Math.min(1, mainFlickable.width/sourceSize.width)
+            onStatusChanged:{
+                if (mainImage.status == Image.Ready) {
+                    if (sourceSize.width < sourceSize.height) {
+                        mainImage.scale = Math.min(1, mainFlickable.height/sourceSize.height)
+                    } else {
+                        mainImage.scale = Math.min(1, mainFlickable.width/sourceSize.width)
+                    }
                 }
             }
         }

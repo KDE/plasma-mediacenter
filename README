@@ -1,28 +1,31 @@
+Required:
+==========
+
+phonon and phonon-gstreamer qml-i2 need to be installed before.
+while building Plasma Media Center set -DPHONON_INSTALL_QT_EXTENSIONS_INTO_SYSTEM_QT=TRUE
+
 The current status of this project:
 
 MediaCenterComponents/
     |
-    |_applets/: here is where the main components for the mediacenter are placed.
+    |_applets-: here is where the main components for the mediacenter are placed.
     |     |
     |     |_mediabrowser/: this is probably the most important applet for the mediacenter. It currently allows browsing through files with media content.
     |     |                It exposes an API that allows developing the so called ModelPackages. Each ModelPackage contains an inheritance of QAbstractItemModel that
-    |     |                is used by the mediabrowser in order to allow different kind of browsing. Currently only the local-files browsing plugin is there. This is due
-    |     |                to the fact that in my plans are also pictures and videos browsing models but they're supposed to make use of DataEngines to retrieve datas which
-    |     |                are still not ready. See dataengines part.
+    |     |                is used by the mediabrowser in order to allow different kind of browsing. filegrid.qml file is the qml file which accesses different browsing
+    |     |                available and does browsing accordingly
     |     |
-    |     |_mediacontroller/: this is a basic applet for playback controlling. It just works but would need lot of love from the graphics point of view.
+    |     |_mediacontroller/: this is a basic applet written in qml for playback controlling. It uses dataengine mediacentercontrol to read and write data.
     |     |
-    |     |_mediaplayer/: this is just a "port" from the mediaplayer applet in kdebase by marco martin in order to allow receiving control by the mediacontroller applet.
-    |     |               Lots of code should be cleaned out. Its mpris dbus interface is currently
-    |     |               disabled but should be removed from there and put somewhere more "general" in order to control the whole mediacenter.
+    |     |_mediaplayer/: It contains image, Video, music to be displayed after according to the selected browsing mode.
+    |     |               Audio and video is played by simply porting from the phonon branch.
     |     |
     |     |_playlist/: a simple applet that makes use of the playlist dataengine to store playlists. Needs graphics polishing and the support to multiple playlists should be 
     |     |            enhanced.
     |     |
     |     |_test/: this applet should be removed along with the activeitemwidget under widgets/
     |
-    |_containments/: this currently contains just the mediacontainment. This is the containment dedicated to media content management. It currently only handles media applets.
-    |                Work has to be done in order to support "the other applets" and remove some bad assumptions about the existance of applets already loaded.
+    |_containments/: contains mediacontainment directory written in qml which holds the applets mentioned above (excluding playlist and test)
     |
     |_dataengines/:
     |     |
@@ -35,9 +38,11 @@ MediaCenterComponents/
     |     |         This dataengine should be used in order to provide a new ModelPackage to allow online-videos-browsing.
     |     |
     |     |_picasa/: this is a contribution by a friend. This engine fetches pictures and albums from picasa. The same work done for the video dataengine should be done here.
-    |                A guy (thehayro on IRC) is working on this side with me at the silk project in order to provide a plugin system for pictures providers. This engine would
-    |                just become a provider plugin as soon as the plugin system is ready.
-    |
+    |     |          A guy (thehayro on IRC) is working on this side with me at the silk project in order to provide a plugin system for pictures providers. This engine would
+    |     |          just become a provider plugin as soon as the plugin system is ready.
+    |     |
+    |     |_mediacentercontrol/: This dataengine provides services required. Different applets accesses or does setData 
+    |                           through it. Essential componet of MediaCenter
     |
     |_libs/: simply the mediacenter libraries that allow creating new applets. The mediaobject wrapper should be deleted as it isn't used by any component.
     |
@@ -57,4 +62,4 @@ That's the current status. Hope it helps to have ideas clearer about the mediace
 
 Cheers
 --
-Alessandro Diaferia
+Alessandro Diaferia, Sinny Kumari

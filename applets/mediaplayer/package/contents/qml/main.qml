@@ -22,6 +22,7 @@ import QtQuick 1.0
 import org.kde.plasma.graphicswidgets 0.1 as PlasmaWidgets
 import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.graphicslayouts 4.7 as GraphicsLayouts
+import Phonon 1.0
 
 Item{
     id: mediaPlayer
@@ -39,7 +40,10 @@ Item{
             if(data[activeSource].BrowsingState == "MusicBrowsing" || data[activeSource].BrowsingState == "VideoBrowsing") {
                 video.visible = true
                 if (data[activeSource].State == "playing") {
-                    video.url = data[activeSource].Url
+                    if (video.source !=data[activeSource].Url) {
+                        video.source = data[activeSource].Url
+                        video.play();
+                    }
                     if (data[activeSource].DirtyBit) {
                         video.seek(data[activeSource].Position);
                         var operation = dataSource.serviceForSource(activeSource).operationDescription("dirtyCheck");
@@ -47,7 +51,7 @@ Item{
                         dataSource.serviceForSource(activeSource).startOperationCall(operation);
                 }
                 print(data[activeSource].Url);
-                video.play();
+                
                 } else if (data[activeSource].State == "paused") {
                     video.pause()
                 } else if (data[activeSource].State == "stopped") {
@@ -69,20 +73,36 @@ Item{
             else {
                 imageViewerLoader.item.visible = false;
             }
+            if (data[activeSource].BrowsingState == "VideoBrowsing" && data[activeSource].Viewing) {
+                videoPlayer.visible = true;
+            }
+            else {
+                videoPlayer.visible= false;
+            }
         }
     }
 
-    PlasmaWidgets.VideoWidget {
+    Media {
        id: video
        visible: false
-       tickInterval: 500
+      // tickInterval: 500
        anchors.fill: mediaPlayer
-       onTick:{
+
+        AudioOutput {
+            id: audioPlayer
+        }
+
+        Video {
+            id: videoPlayer
+            anchors.fill: parent
+            visible: false
+        }
+       onTimeChanged:{
            if (dataSource.data[activeSource].DirtyBit) {
                return;
            }
            var operation = dataSource.serviceForSource(activeSource).operationDescription("mediaProgress");
-           operation.seconds = video.currentTime;
+           operation.seconds = video.time;
            operation.mediaLength = video.totalTime;
 
                 for ( var i in operation ) {
@@ -91,7 +111,7 @@ Item{
 
                 dataSource.serviceForSource(activeSource).startOperationCall(operation);
                 print("set progress to " + dataSource.data[activeSource].Position + " of "
-                                         + dataSource.data[activeSource].Length + "current mediapos" + video.currentTime);
+                                         + dataSource.data[activeSource].Length + "current mediapos" + video.time);
         }
     }
 
