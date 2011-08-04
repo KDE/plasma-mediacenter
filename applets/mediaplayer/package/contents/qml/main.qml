@@ -45,7 +45,7 @@ Item{
                         video.play();
                     }
                     if (data[activeSource].DirtyBit) {
-                        video.seek(data[activeSource].Position);
+                        video.time = data[activeSource].Position;
                         var operation = dataSource.serviceForSource(activeSource).operationDescription("dirtyCheck");
                         operation.dirty = false;
                         dataSource.serviceForSource(activeSource).startOperationCall(operation);
