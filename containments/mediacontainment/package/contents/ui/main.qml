@@ -177,4 +177,23 @@ Item {
             anchors.left: main.right
             anchors.top: main.top
         }
-    }
+        
+        Timer {
+            id: movementTimer
+            running: true
+            interval: 2000
+            onTriggered: {
+                controlBarItem.visible = false
+            }
+        }
+
+        MouseArea
+        {
+            anchors.fill: controlBarFrame
+            hoverEnabled: true
+            onMousePositionChanged: {
+                movementTimer.restart()
+                controlBarItem.visible = true
+            }
+        }
+}
