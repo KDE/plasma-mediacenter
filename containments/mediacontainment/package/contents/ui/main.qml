@@ -94,10 +94,15 @@ Item {
                 target: welcomeItem
                 anchors.bottom: main.top
             }
-            AnchorChanges {
+            AnchorChanges{
                 target: browserItem
                 anchors.left: main.left
             }
+            PropertyChanges {
+                target: infoBarItem
+                visible: true
+            }
+
         },
         State {
             name: "VideoBrowsing"
@@ -116,6 +121,10 @@ Item {
             AnchorChanges {
                 target: browserItem
                 anchors.left: main.left
+            }
+            PropertyChanges {
+                target: infoBarItem
+                visible: true
             }
         },
         State {
@@ -136,6 +145,10 @@ Item {
                 target: browserItem
                 anchors.left: main.left
                 anchors.top: main.top
+            }
+            PropertyChanges {
+                target: infoBarItem
+                visible: true
             }
         }
     ]
@@ -187,6 +200,7 @@ Item {
         anchors.left: main.left
         anchors.bottom: main.bottom
         enabledBorders: "LeftBorder|RightBorder|BottomBorder"
+        visible: false
        }
 
         Timer {

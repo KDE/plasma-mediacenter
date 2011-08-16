@@ -28,6 +28,8 @@ Rectangle {
     color: "lightBlue"
     opacity: 0.7
     property string activeSource: dataSource.sources[0]
+    property int remainingMediaTime
+    property int remainingTimeFraction
 
     PlasmaCore.Theme {
         id:theme
@@ -41,12 +43,22 @@ Rectangle {
             connectedSources: activeSource
 
             onDataChanged: {
+                remainingMediaTime = (data[activeSource].Length - data[activeSource].Position)/ (60 * 1000)
+                remainingTimeFraction = ((data[activeSource].Length - data[activeSource].Position) % (60 * 1000)) / 1000
                 if ( data[activeSource].BrowsingState == "PictureBrowsing") {
                     browsingMode.icon = QIcon("image-x-genereic")
                 } else if (data[activeSource].BrowsingState == "MusicBrowsing") {
                     browsingMode.icon = QIcon("audio-ac3")
+                    if (data[activeSource].Url != "") {
+                        time.text = "Remaining time"
+                        remainingTime.text = remainingMediaTime + "min  "  + remainingTimeFraction + "sec"
+                    }
                 } else if (data[activeSource].BrowsingState == "VideoBrowsing") {
                     browsingMode.icon = QIcon("video-x-generic")
+                    if (data[activeSource].Url != "") {
+                        time.text = "Remaining Time"
+                        remainingTime.text = remainingMediaTime + "min  "  + remainingTimeFraction + "sec"
+                    }
                 }
                 mediaPlayer.text = data[activeSource].Url
             }
@@ -71,8 +83,20 @@ Rectangle {
         font.italic: true
         color: theme.textColor
         ColorAnimation on color { from: "white"; to: "Black"; duration: 6000 ; loops: Animation.Infinite }
-     //PropertyAnimation on y { to: 50; duration: 1000; loops: Animation.Infinite }
     }
-        
+
+    Text {
+        id: time
+        font.pointSize: 14
+        font.bold: true
+        anchors.left: browsingMode.right
+    }
+    Text {
+         id: remainingTime
+         font.pointSize: 12
+         font.italic: true
+         anchors.top: time.bottom
+         anchors.left: browsingMode.right
+    }
 }
         
