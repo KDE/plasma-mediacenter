@@ -191,6 +191,9 @@ QString Media::browsingState()
 void Media::setViewMode(bool mode)
 {
     m_viewMode = mode;
+    if (mode == false && m_browsingState == "PictureBrowsing") {
+        m_url = "";
+    }
     emit mediaDataUpdated();
 }
 

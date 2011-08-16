@@ -60,6 +60,10 @@ PathView {
                     font.pointSize: 30
                     anchors.horizontalCenter: parent.horizontalCenter
                     color: theme.textColor
+                    smooth: true
+                    style: Text.Raised
+                    font.bold: true
+                    font.italic: true
                 }
             }
 

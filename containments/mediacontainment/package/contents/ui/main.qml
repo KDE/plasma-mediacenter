@@ -54,6 +54,8 @@ Item {
             plasmoidContainer = component.createObject(browserItem);
         } else if (applet.pluginName == "org.kde.mediawelcome") {
             plasmoidContainer = component.createObject(welcomeItem);
+        } else if (applet.pluginName == "org.kde.mediainfobar") {
+            plasmoidContainer = component.createObject(infoBarItem);
         } else {
             plasmoidContainer = component.createObject(main);
         }
@@ -177,7 +179,16 @@ Item {
             anchors.left: main.right
             anchors.top: main.top
         }
-        
+
+        PlasmaCore.FrameSvgItem {
+        id: infoBarItem
+        height: 50
+        width: parent.width
+        anchors.left: main.left
+        anchors.bottom: main.bottom
+        enabledBorders: "LeftBorder|RightBorder|BottomBorder"
+       }
+
         Timer {
             id: movementTimer
             running: true

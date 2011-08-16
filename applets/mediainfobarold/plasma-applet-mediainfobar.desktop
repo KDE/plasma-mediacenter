@@ -1,0 +1,33 @@
+[Desktop Entry]
+Name=MediaInfoBar
+Name[et]=Meediateaberiba
+Name[fr]=MediaInfoBar
+Name[ja]=MediaInfoBar
+Name[nl]=MediaInfoBar
+Name[pt]=Barra de Informação Multimédia
+Name[pt_BR]=Barra de informação multimídia
+Name[sv]=Mediainformationsrad
+Name[uk]=Мультимедійні дані
+Name[x-test]=xxMediaInfoBarxx
+Comment=A simple applet to display media information
+Comment[et]=Lihtne aplett meediateabe näitamiseks
+Comment[fr]=Une applet simple pour afficher des informations sur un média
+Comment[nl]=Een eenvoudige applet om media-information te tonen
+Comment[pt]=Uma 'applet' simples para mostrar informações multimédia
+Comment[pt_BR]=Um miniaplicativo simples para mostrar informações multimídia
+Comment[sv]=Ett enkelt miniprogram för att visa mediainformation
+Comment[uk]=Простий аплет, призначений для показу параметрів мультимедійних даних
+Comment[x-test]=xxA simple applet to display media informationxx
+Type=Service
+
+X-KDE-ServiceTypes=Plasma/Applet
+X-KDE-Library=plasma_applet_mediainfobar
+X-KDE-PluginInfo-Author=Christophe Olinger
+X-KDE-PluginInfo-Email=olingerc@binarylooks.com
+X-KDE-PluginInfo-Name=org.kde.mediainfobar
+X-KDE-PluginInfo-Version=0.1
+X-KDE-PluginInfo-Website=http://plasma.kde.org/
+X-KDE-PluginInfo-Category=Multimedia
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
