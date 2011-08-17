@@ -30,6 +30,8 @@ Rectangle {
     property string activeSource: dataSource.sources[0]
     property int remainingMediaTime
     property int remainingTimeFraction
+    property int totalTimeInt
+    property int totalTimeFraction
 
     PlasmaCore.Theme {
         id:theme
@@ -45,19 +47,21 @@ Rectangle {
             onDataChanged: {
                 remainingMediaTime = (data[activeSource].Length - data[activeSource].Position)/ (60 * 1000)
                 remainingTimeFraction = ((data[activeSource].Length - data[activeSource].Position) % (60 * 1000)) / 1000
+                totalTimeInt = (data[activeSource].Length) / (60 * 1000)
+                totalTimeFraction = (data[activeSource].Length) % (60 * 1000) / 1000
                 if ( data[activeSource].BrowsingState == "PictureBrowsing") {
                     browsingMode.icon = QIcon("image-x-genereic")
                 } else if (data[activeSource].BrowsingState == "MusicBrowsing") {
                     browsingMode.icon = QIcon("audio-ac3")
                     if (data[activeSource].Url != "") {
                         time.text = "Remaining time"
-                        remainingTime.text = remainingMediaTime + "min  "  + remainingTimeFraction + "sec"
+                        remainingTime.text = remainingMediaTime + ":"  + remainingTimeFraction + " / " + totalTimeInt + ":" + totalTimeFraction
                     }
                 } else if (data[activeSource].BrowsingState == "VideoBrowsing") {
                     browsingMode.icon = QIcon("video-x-generic")
                     if (data[activeSource].Url != "") {
                         time.text = "Remaining Time"
-                        remainingTime.text = remainingMediaTime + "min  "  + remainingTimeFraction + "sec"
+                        remainingTime.text = remainingMediaTime + ":"  + remainingTimeFraction + " / " + totalTimeInt + ":" + totalTimeFraction
                     }
                 }
                 mediaPlayer.text = data[activeSource].Url
@@ -91,6 +95,7 @@ Rectangle {
         font.bold: true
         anchors.left: browsingMode.right
     }
+
     Text {
          id: remainingTime
          font.pointSize: 12
