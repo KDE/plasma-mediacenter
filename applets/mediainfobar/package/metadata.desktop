@@ -1,6 +1,14 @@
 [Desktop Entry]
 Name=Name=Media InfoBar (QML)
 Comment=A simple applet to display media information
+Comment[et]=Lihtne aplett meediateabe näitamiseks
+Comment[fr]=Une applet simple pour afficher des informations sur un média
+Comment[nl]=Een eenvoudige applet om media-information te tonen
+Comment[pt]=Uma 'applet' simples para mostrar informações multimédia
+Comment[pt_BR]=Um miniaplicativo simples para mostrar informações multimídia
+Comment[sv]=Ett enkelt miniprogram för att visa mediainformation
+Comment[uk]=Простий аплет, призначений для показу параметрів мультимедійних даних
+Comment[x-test]=xxA simple applet to display media informationxx
 Encoding=UTF-8
 Icon=applications-multimedia
 ServiceTypes=Plasma/Applet
