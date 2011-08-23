@@ -197,7 +197,12 @@ Item {
                 mediaBrowser.state = ""
             }
             else {
-                if (fileBackends[browsingMode].url != "file:///") {
+                if (fileBackends[browsingMode].url == fileBackends[browsingMode].homeDirUrl()) {
+                    var operation =
+                    dataSource.serviceForSource(activeSource).operationDescription("setBrowsingState");
+                    operation.state = "welcome"
+                    dataSource.serviceForSource(activeSource).startOperationCall(operation);
+                } else {
                     fileBackends[browsingMode].url = (fileBackends[browsingMode].url + "/" + "../")
                     print (fileBackends[browsingMode].url);
                 }

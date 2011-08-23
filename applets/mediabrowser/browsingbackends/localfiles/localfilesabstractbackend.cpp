@@ -162,6 +162,11 @@ void LocalFilesAbstractBackend::getWatchedDirsList()
     ui.watchedFoldersList->addItem(url.prettyUrl());
 }
 
+QString LocalFilesAbstractBackend::homeDirUrl()
+{
+    return QDir::homePath();
+}
+
 void LocalFilesAbstractBackend::removeItem()
 {
     qDeleteAll(ui.watchedFoldersList->selectedItems());

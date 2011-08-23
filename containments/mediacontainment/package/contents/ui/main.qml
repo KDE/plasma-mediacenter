@@ -69,7 +69,7 @@ Item {
         connectedSources: activeSource
 
         onDataChanged: {
-            main.state = data[activeSource].BrowsingState;
+                main.state = data[activeSource].BrowsingState;
         }
     }
 
@@ -150,7 +150,35 @@ Item {
                 target: infoBarItem
                 visible: true
             }
+        },
+        State {
+            name: "welcome"
+             PropertyChanges {
+                target: mediaPlayerItem
+                visible: false
+            }
+            AnchorChanges {
+                target: controlBarFrame
+                anchors.bottom: main.top
+            }
+            AnchorChanges {
+                target: welcomeItem
+                anchors.top: main.top
+                anchors.bottom: main.bottom
+                anchors.right: main.right
+                anchors.left: main.left
+            }
+            AnchorChanges {
+                target: browserItem
+                anchors.left: main.right
+                anchors.top: main.top
+            }
+            PropertyChanges {
+                target: infoBarItem
+                visible: false
+            }
         }
+            
     ]
 
     transitions: Transition {

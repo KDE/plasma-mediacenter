@@ -43,6 +43,7 @@ public:
     void setUrl(const QString& url);
     QString url();
     Q_INVOKABLE  bool fileType(const QString& url);
+    Q_INVOKABLE QString homeDirUrl();
 
 private slots:
     void initModel();
