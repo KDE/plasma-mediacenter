@@ -25,6 +25,7 @@
 #include <QGraphicsView>
 #include <QKeyEvent>
 #include <QWheelEvent>
+#include <QGLWidget>
 
 #include <KAction>
 #include <KCmdLineArgs>
@@ -60,6 +61,9 @@ m_recognizer(0)
 {
     setCentralWidget(m_view);
 
+    QGLWidget *glWidget = new QGLWidget;
+    glWidget->setAutoFillBackground(false);
+    m_view->setViewport(glWidget);
     m_view->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 
     m_corona = new Plasma::Corona(this);
