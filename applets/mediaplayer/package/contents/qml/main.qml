@@ -42,18 +42,18 @@ Item{
                 if (data[activeSource].State == "playing") {
                     if (video.source !=data[activeSource].Url) {
                         video.source = data[activeSource].Url
-                        video.play();
                     }
+                    video.play();
                     if (data[activeSource].DirtyBit) {
                         video.time = data[activeSource].Position;
                         var operation = dataSource.serviceForSource(activeSource).operationDescription("dirtyCheck");
                         operation.dirty = false;
                         dataSource.serviceForSource(activeSource).startOperationCall(operation);
-                }
+                    }
                 print(data[activeSource].Url);
                 
                 } else if (data[activeSource].State == "paused") {
-                    video.pause()
+                    video.pause();
                 } else if (data[activeSource].State == "stopped") {
                     video.stop();
                 }
@@ -85,11 +85,11 @@ Item{
     Media {
        id: video
        visible: false
-      // tickInterval: 500
        anchors.fill: mediaPlayer
 
         AudioOutput {
             id: audioPlayer
+            anchors.fill: parent
         }
 
         Video {
@@ -97,12 +97,8 @@ Item{
             anchors.fill: parent
             visible: false
         }
-       onTimeChanged:{
-           if (dataSource.data[activeSource].DirtyBit) {
-               return;
-           }
+       onTotalTimeChanged:{
            var operation = dataSource.serviceForSource(activeSource).operationDescription("mediaProgress");
-           operation.seconds = video.time;
            operation.mediaLength = video.totalTime;
 
                 for ( var i in operation ) {
@@ -111,7 +107,21 @@ Item{
 
                 dataSource.serviceForSource(activeSource).startOperationCall(operation);
                 print("set progress to " + dataSource.data[activeSource].Position + " of "
-                                         + dataSource.data[activeSource].Length + "current mediapos" + video.time);
+                                         + dataSource.data[activeSource].Length);
+        }
+        onTimeChanged:{
+           if (dataSource.data[activeSource].DirtyBit) {
+               return;
+           }
+           var operation = dataSource.serviceForSource(activeSource).operationDescription("mediaProgress");
+           operation.seconds = video.time;
+
+                for ( var i in operation ) {
+                    print(i + ' -> ' + operation[i] );
+                }
+
+                dataSource.serviceForSource(activeSource).startOperationCall(operation);
+                print("set progress to " + dataSource.data[activeSource].Position + " of " + "current mediapos" + video.time);
         }
     }
 
