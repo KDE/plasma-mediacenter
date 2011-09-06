@@ -21,6 +21,7 @@ Type=Service
 Icon=applications-multimedia
 X-KDE-ServiceTypes=Plasma/DataEngine
 X-KDE-Library=plasma_engine_mediacentercontrol
+X-KDE-ParentApp=plasma-mediacenter
 
 X-KDE-PluginInfo-Author=Sinny Kumari
 X-KDE-PluginInfo-Email=ksinny@gmail.com
