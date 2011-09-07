@@ -59,6 +59,7 @@ void MediaContainer::updateData()
     setData("DirtyBit", m_media->getDirty());
     setData("BrowsingState", m_media->browsingState());
     setData("Viewing", m_media->viewMode());
+    checkForUpdate();
 }
 
 #include "mediacontainer.moc"
