@@ -3,6 +3,7 @@ Type=Service
 Icon=folder-video
 Name=Local videos
 Name[de]=Lokale Videos
+Name[es]=Vídeos locales
 Name[et]=Kohalikud videod
 Name[fr]=Vidéos locales
 Name[nds]=Lokaal Videos

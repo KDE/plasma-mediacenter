@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Flickr Engine
+Name[es]=Motor Flickr
 Name[et]=Flickri mootor
 Name[fr]=Moteur Flickr
 Name[ja]=Flickr エンジン
@@ -11,6 +12,7 @@ Name[uk]=Рушій Flickr
 Name[x-test]=xxFlickr Enginexx
 
 Comment=An engine that allows you to query Flickr.
+Comment[es]=Un motor que le permite consultar Flickr.
 Comment[et]=Mootor Flickrile päringute esitamiseks.
 Comment[fr]=Un moteur permettant de consulter Flickr.
 Comment[nl]=Een engine die u in staat stelt om te zoeken in Flickr.

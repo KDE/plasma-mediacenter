@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=MediaBrowser Applet
+Name[es]=Miniaplicación MediaBrowser
 Name[et]=Meediasirvija aplett
 Name[fr]=Applet de navigateur multimédia
 Name[hr]=PreglednikMultiMedije Programčić
@@ -11,6 +12,7 @@ Name[sv]=Miniprogram för mediabläddring
 Name[uk]=Аплет мультимедійного переглядача
 Name[x-test]=xxMediaBrowser Appletxx
 Comment=An applet to browse through your media files
+Comment[es]=Una miniaplicación para explorar sus archivos multimedia
 Comment[et]=Aplett meediafailide sirvimiseks
 Comment[fr]=Une applet pour parcourir vos fichiers multimédia
 Comment[hr]=Programčić za pregled Vaših multimedijalnih datoteka

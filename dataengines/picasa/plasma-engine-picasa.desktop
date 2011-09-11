@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Picasa Engine
+Name[es]=Motor Picassa
 Name[et]=Picasa mootor
 Name[fr]=Moteur Picasa
 Name[ja]=Picasa エンジン
@@ -11,6 +12,7 @@ Name[uk]=Рушій Picasa
 Name[x-test]=xxPicasa Enginexx
 
 Comment=An engine that allows you to query Picasa.
+Comment[es]=Un motor que le permite consultar Picassa.
 Comment[et]=Mootor Picasale päringute esitamiseks.
 Comment[fr]=Un moteur permettant de consulter Picasa.
 Comment[nl]=Een engine die u in staat stelt om te zoeken in Picasa.

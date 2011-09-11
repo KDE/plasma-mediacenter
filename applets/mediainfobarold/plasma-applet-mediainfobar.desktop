@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=MediaInfoBar
+Name[es]=MediaInfoBar
 Name[et]=Meediateaberiba
 Name[fr]=MediaInfoBar
 Name[ja]=MediaInfoBar
@@ -10,6 +11,7 @@ Name[sv]=Mediainformationsrad
 Name[uk]=Мультимедійні дані
 Name[x-test]=xxMediaInfoBarxx
 Comment=A simple applet to display media information
+Comment[es]=Una sencilla miniaplicación para mostrar información multimedia
 Comment[et]=Lihtne aplett meediateabe näitamiseks
 Comment[fr]=Une applet simple pour afficher des informations sur un média
 Comment[nl]=Een eenvoudige applet om media-information te tonen
