@@ -46,10 +46,11 @@ Item {
         id: list
         clip: true
         keyNavigationWraps: true
-        anchors.top: parent.top
-        anchors.left: parent.left
-        height: width/6
-        width: parent.width
+//         anchors.left: parent.left
+//         anchors.bottom: parent.bottom
+//         height: parent.height/6
+//         width: parent.width
+        anchors.fill: parent
         delegate: testDelegate
         highlight: highlight
         focus: true
@@ -224,7 +225,8 @@ Item {
 
             PropertyChanges {
                 target: list
-                visible: true
+                //TODO: Enable when we can do this properly
+                //visible: true
             }
         }
     ]

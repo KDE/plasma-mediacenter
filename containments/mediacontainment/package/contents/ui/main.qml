@@ -47,7 +47,7 @@ Item {
         var plasmoidContainer
 
         if (applet.pluginName == "org.kde.mediacontroller") {
-            plasmoidContainer = component.createObject(controlBarItem);
+            //plasmoidContainer = component.createObject(controlBarItem);
         } else if (applet.pluginName == "org.kde.mediaplayer") {
             plasmoidContainer = component.createObject(mediaPlayerItem);
         } else if (applet.pluginName == "org.kde.mediabrowser") {
@@ -86,10 +86,10 @@ Item {
                 target: mediaPlayerItem
                 visible: true
             }
-            AnchorChanges {
-                target: controlBarFrame
-                anchors.top: main.top
-            }
+//             AnchorChanges {
+//                 target: controlBarFrame
+//                 anchors.top: main.top
+//             }
             AnchorChanges {
                 target: welcomeItem
                 anchors.bottom: main.top
@@ -110,10 +110,10 @@ Item {
                 target: mediaPlayerItem
                 visible: true
             }
-            AnchorChanges {
-                target: controlBarFrame
-                anchors.top: main.top
-            }
+//             AnchorChanges {
+//                 target: controlBarFrame
+//                 anchors.top: main.top
+//             }
             AnchorChanges {
                 target: welcomeItem
                 anchors.bottom: main.top
@@ -133,10 +133,10 @@ Item {
                 target: mediaPlayerItem
                 visible: true
             }
-            AnchorChanges {
-                target: controlBarFrame
-                anchors.bottom: main.top
-            }
+//             AnchorChanges {
+//                 target: controlBarFrame
+//                 anchors.bottom: main.top
+//             }
             AnchorChanges {
                 target: welcomeItem
                 anchors.bottom: main.top
@@ -157,10 +157,10 @@ Item {
                 target: mediaPlayerItem
                 visible: false
             }
-            AnchorChanges {
-                target: controlBarFrame
-                anchors.bottom: main.top
-            }
+//             AnchorChanges {
+//                 target: controlBarFrame
+//                 anchors.bottom: main.top
+//             }
             AnchorChanges {
                 target: welcomeItem
                 anchors.top: main.top
@@ -186,25 +186,25 @@ Item {
          AnchorAnimation { duration: 1000 }
      }
 
-    PlasmaCore.FrameSvgItem {
-        id: controlBarFrame
-        width: parent.width * 0.8
-        height: 64
-        anchors.bottom: main.top
-        anchors.horizontalCenter: parent.horizontalCenter
-        imagePath: "widgets/background"
-        enabledBorders: "LeftBorder|RightBorder|BottomBorder"
-
-        Item {
-            id: controlBarItem
-            anchors {
-                fill: parent
-                leftMargin: parent.margins.left
-                rightMargin: parent.margins.right
-                bottomMargin: parent.margins.bottom
-            }
-        }
-    }
+//     PlasmaCore.FrameSvgItem {
+//         id: controlBarFrame
+//         width: parent.width * 0.8
+//         height: 64
+//         anchors.bottom: main.top
+//         anchors.horizontalCenter: parent.horizontalCenter
+//         imagePath: "widgets/background"
+//         enabledBorders: "LeftBorder|RightBorder|BottomBorder"
+// 
+//         Item {
+//             id: controlBarItem
+//             anchors {
+//                 fill: parent
+//                 leftMargin: parent.margins.left
+//                 rightMargin: parent.margins.right
+//                 bottomMargin: parent.margins.bottom
+//             }
+//         }
+//     }
 
         Item {
             id: welcomeItem
@@ -229,24 +229,5 @@ Item {
         anchors.bottom: main.bottom
         enabledBorders: "LeftBorder|RightBorder|BottomBorder"
         visible: false
-       }
-
-        Timer {
-            id: movementTimer
-            running: true
-            interval: 2000
-            onTriggered: {
-                controlBarItem.visible = false
-            }
-        }
-
-        MouseArea
-        {
-            anchors.fill: controlBarFrame
-            hoverEnabled: true
-            onMousePositionChanged: {
-                movementTimer.restart()
-                controlBarItem.visible = true
-            }
         }
 }

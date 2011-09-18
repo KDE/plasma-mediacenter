@@ -52,7 +52,7 @@ m_view(new QGraphicsView(this)),
 m_containment(0),
 m_cfskeleton(new KConfigSkeleton),
 m_browser(0),
-m_controller(0),
+// m_controller(0),
 m_playlist(0),
 m_player(0),
 m_infobar(0),
@@ -129,7 +129,7 @@ void MainWindow::loadMediaCenter()
     m_player = m_containment->addApplet("org.kde.mediaplayer");
     m_infobar = m_containment->addApplet("org.kde.mediainfobar");
     m_welcome = m_containment->addApplet("org.kde.mediawelcome");
-    m_controller = m_containment->addApplet("org.kde.mediacontroller"); //Keep the controller last
+    //m_controller = m_containment->addApplet("org.kde.mediacontroller"); //Keep the controller last
 
     if (m_browser) {
         MediaCenter::Browser *browser = qobject_cast<MediaCenter::Browser *>(m_browser);
@@ -203,9 +203,9 @@ void MainWindow::createConfigurationInterface()
     if (m_browser) {
         m_browser->createConfigurationInterface(dialog);
     }
-    if (m_controller) {
-        m_controller->createConfigurationInterface(dialog);
-    }
+//     if (m_controller) {
+//         m_controller->createConfigurationInterface(dialog);
+//     }
     if (m_playlist) {
         m_playlist->createConfigurationInterface(dialog);
     }

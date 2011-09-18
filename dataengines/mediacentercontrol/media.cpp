@@ -16,18 +16,13 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#include "media.h"
-#include "kdebug.h"
 
-Media::Media()
+#include "media.h"
+#include <KDebug>
+
+Media::Media() : m_state(Stopped), m_length(0), m_volume(0.5), m_position(0),
+    m_dirty(false), m_viewMode(false)
 {
-    m_state = Stopped;
-    m_length = 0;
-    m_volume = 0.5;
-    m_position = 0;
-    m_url = "";
-    m_dirty = false;
-    m_viewMode = false;
 }
 
 QString Media::name() const
@@ -40,7 +35,7 @@ Media::State Media::state()
     return m_state;
 }
 
-int Media::length()
+int Media::length() const
 {
     return m_length;
 }
@@ -48,19 +43,20 @@ int Media::length()
 void Media::setLength(int time)
 {
     m_length = time;
+    emit mediaDataUpdated();
 }
 
-int Media::position()
+int Media::position() const
 {
     return m_position;
 }
 
-qreal Media::volume()
+qreal Media::volume() const
 {
     return m_volume;
 }
 
-bool Media::canPlay()
+bool Media::canPlay() const
 {
     return (m_state==Paused||m_state==Stopped);
 }
@@ -69,23 +65,20 @@ void Media::play()
 {
     m_state = Playing;
     emit mediaDataUpdated();
-    
-    kDebug() << "play";
 }
 
-bool Media::canPause()
+bool Media::canPause() const
 {
     return (m_state==Playing);
 }
 
 void Media::pause()
 {
-        m_state = Paused;
-        emit mediaDataUpdated();
-        kDebug() << "pause";
+    m_state = Paused;
+    emit mediaDataUpdated();
 }
 
-bool Media::canStop()
+bool Media::canStop() const
 {
     return (m_state==Playing||m_state==Paused);
 }
@@ -95,30 +88,27 @@ void Media::stop()
     m_state = Stopped;
     m_position = 0;
     emit mediaDataUpdated();
-    kDebug() << "stop";
 }
 
-bool Media::canGoPrevious()
+bool Media::canGoPrevious() const
 {
     return true;
 }
 
 void Media::previous()
 {
-    kDebug() << "previous";
 }
 
-bool Media::canGoNext()
+bool Media::canGoNext() const
 {
     return true;
 }
 
 void Media::next()
 {
-    kDebug() << "next";
 }
 
-bool Media::canSetVolume()
+bool Media::canSetVolume() const
 {
     return true;
 }
@@ -126,10 +116,10 @@ bool Media::canSetVolume()
 void Media::setVolume(qreal volume)
 {
     m_volume = volume;
-    kDebug() << "volumeSet";
+    emit mediaDataUpdated();
 }
 
-bool Media::canSeek()
+bool Media::canSeek() const
 {
     return (m_state==Playing||m_state==Paused);
 }
@@ -139,10 +129,9 @@ void Media::seek(int time)
     m_position = time;
     m_dirty = true;
     emit mediaDataUpdated();
-    kDebug() << "seek to " << m_position;
 }
 
-bool Media::canMediaProgress()
+bool Media::canUpdateMediaProgress() const
 {
     return (m_state==Playing);
 }
@@ -151,8 +140,8 @@ void Media::mediaProgress(int time)
 {
     m_position = time;
     emit mediaDataUpdated();
-    kDebug() << "progress to " << m_position;
 }
+
 void Media::setName(const QString& name)
 {
     m_name = name;
@@ -167,7 +156,7 @@ void Media::setUrl(QString url)
     emit mediaDataUpdated();
 }
 
-bool Media::getDirty()
+bool Media::getDirty() const
 {
     return m_dirty;
 }
@@ -176,14 +165,15 @@ bool Media::getDirty()
 void Media::setDirty(bool dirtyBit)
 {
     m_dirty = dirtyBit;
-    emit mediaDataUpdated();}
+    emit mediaDataUpdated();
+}
 
-QString Media::getUrl()
+QString Media::getUrl() const
 {
     return m_url;
 }
 
-QString Media::browsingState()
+QString Media::browsingState() const
 {
     return m_browsingState;
 }
@@ -197,7 +187,7 @@ void Media::setViewMode(bool mode)
     emit mediaDataUpdated();
 }
 
-bool Media::viewMode()
+bool Media::viewMode() const
 {
     return m_viewMode;
 }

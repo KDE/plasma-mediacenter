@@ -86,7 +86,6 @@ Rectangle {
         font.bold: true
         font.italic: true
         color: theme.textColor
-        ColorAnimation on color { from: "white"; to: "Black"; duration: 6000 ; loops: Animation.Infinite }
     }
 
     Text {

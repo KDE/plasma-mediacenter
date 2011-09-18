@@ -19,9 +19,9 @@
 #include "mediajob.h"
 #include "kdebug.h"
 
-MediaJob::MediaJob(Media* media,
-        const QString &destination, const QString &operation, const QMap<QString, QVariant> &parameters,
-        QObject *parent) : Plasma::ServiceJob(destination, operation, parameters, parent),
+MediaJob::MediaJob(Media* media, const QString &destination, const QString &operation,
+                   const QMap<QString, QVariant> &parameters, QObject *parent)
+        : Plasma::ServiceJob(destination, operation, parameters, parent),
         m_media(media)
 {
 
@@ -29,7 +29,7 @@ MediaJob::MediaJob(Media* media,
 
 void MediaJob::start()
 {
-       if (!m_media) {
+    if (!m_media) {
         setErrorText(i18n("'%1' cannot be found.", destination()));
         setError(-1);
         emitResult();
@@ -112,7 +112,7 @@ void MediaJob::start()
             setError(-1);
         }
     } else if (operation == "mediaProgress") {
-        if (m_media->canMediaProgress()) {
+        if (m_media->canUpdateMediaProgress()) {
             if (parameters().contains("seconds")) {
                 qreal time = parameters()["seconds"].toInt();
                 if (time >= 0 && time <= m_media->length()) {
@@ -122,7 +122,7 @@ void MediaJob::start()
             if (parameters().contains("mediaLength")) {
                 qreal totalTime = parameters()["mediaLength"].toInt();
                 if (totalTime >= 0) {
-                    kDebug() << "updating legth of media progres";
+                    //kDebug() << "updating legth of media progres";
                     m_media->setLength(totalTime);
                 }
             }

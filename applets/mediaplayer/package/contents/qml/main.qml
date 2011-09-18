@@ -24,40 +24,41 @@ import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.graphicslayouts 4.7 as GraphicsLayouts
 import Phonon 1.0
 
-Item{
-    id: mediaPlayer
-     property string activeSource: dataSource.sources[0]
-     /*Component.onCompleted: {
-          dataSource.serviceForSource(activeSource).associateWidget(video, "video");
-     }*/
-
+Item {
+    id: mediaPlayerRootItem
+    property string activeSource: dataSource.sources[0]
 
     PlasmaCore.DataSource {
         id: dataSource
         engine: "org.kde.mediacentercontrol"
         connectedSources: activeSource
+
         onDataChanged: {
-            if(data[activeSource].BrowsingState == "MusicBrowsing" || data[activeSource].BrowsingState == "VideoBrowsing") {
+            if (data[activeSource].State == "playing") {
+                playPause.setIcon("media-playback-pause")
+            } else {
+                playPause.setIcon("media-playback-start")
+            }
+
+            progressSlider.maximum = data[activeSource].Length
+            progressSlider.value = data[activeSource].Position
+
+            if(data[activeSource].BrowsingState == "MusicBrowsing"
+                || data[activeSource].BrowsingState == "VideoBrowsing") {
+
                 video.visible = true
+
                 if (data[activeSource].State == "playing") {
-                    if (video.source !=data[activeSource].Url) {
+                    if (video.source != data[activeSource].Url) {
                         video.source = data[activeSource].Url
                     }
-                    video.play();
-                    if (data[activeSource].DirtyBit) {
-                        video.time = data[activeSource].Position;
-                        var operation = dataSource.serviceForSource(activeSource).operationDescription("dirtyCheck");
-                        operation.dirty = false;
-                        dataSource.serviceForSource(activeSource).startOperationCall(operation);
-                    }
-                print(data[activeSource].Url);
-                
+                video.play();
+
                 } else if (data[activeSource].State == "paused") {
                     video.pause();
                 } else if (data[activeSource].State == "stopped") {
                     video.stop();
                 }
-
             } else if(data[activeSource].BrowsingState == "PictureBrowsing" && data[activeSource].Viewing) {
                 imageViewerLoader.item.visible = true;
                 /*Unload and load again, because Image doesn't want to forget the old
@@ -79,54 +80,182 @@ Item{
             else {
                 videoPlayer.visible= false;
             }
+        } //END onDataChanged
+    }
+
+//***********************CONTROLLER******************************//
+    PlasmaCore.FrameSvgItem {
+        id: controlBarFrame
+        width: parent.width * 0.8
+        height: 64
+        anchors.bottom: main.top
+        anchors.horizontalCenter: parent.horizontalCenter
+        imagePath: "widgets/background"
+        enabledBorders: "LeftBorder|RightBorder|BottomBorder"
+
+        Item {
+            id: mediaController
+            height: 48
+            
+            anchors {
+                fill: parent
+                leftMargin: parent.margins.left
+                rightMargin: parent.margins.right
+                bottomMargin: parent.margins.bottom
+                top: parent.top
+            }
+
+            Component.onCompleted:
+            {
+                dataSource.serviceForSource(activeSource).associateWidget(stop, "stop");
+                dataSource.serviceForSource(activeSource).associateWidget(forward, "forward");
+                dataSource.serviceForSource(activeSource).associateWidget(backward, "backward");
+                dataSource.serviceForSource(activeSource).associateWidget(volume, "volume");
+            }
+
+            Row {
+                id:layouting
+                spacing: 5
+
+                PlasmaWidgets.IconWidget {
+                    id: backward
+                    width: mediaController.height
+                    height: width
+
+                    icon: QIcon("media-skip-backward")
+
+                    onClicked: {
+                        var data = dataSource.serviceForSource(activeSource).operationDescription("previous");
+                        print(dataSource.serviceForSource(activeSource).name);
+                        dataSource.serviceForSource(activeSource).startOperationCall(dataSource.serviceForSource(activeSource).operationDescription("previous"));
+                    }
+                }
+
+                PlasmaWidgets.IconWidget {
+                    id: playPause
+                    width: mediaController.height
+                    height: width
+
+                    onClicked: {
+                        var operation
+                        if (dataSource.data[activeSource].State == "playing") {
+                            operation = "pause"
+                        } else {
+                            operation = "play"
+                        }
+                    var data = dataSource.serviceForSource(activeSource).operationDescription(operation);
+                    dataSource.serviceForSource(activeSource).startOperationCall(dataSource.serviceForSource(activeSource).operationDescription(operation));
+                    dataSource.serviceForSource(activeSource).associateWidget(playPause, operation);
+                    }
+                }
+
+                PlasmaWidgets.IconWidget {
+                    id: stop
+                    width: mediaController.height
+                    height: width
+
+                    icon: QIcon("media-playback-stop")
+
+                    onClicked: {
+                        var data = dataSource.serviceForSource(activeSource).operationDescription("stop");
+                        print(dataSource.serviceForSource(activeSource).name);
+                        dataSource.serviceForSource(activeSource).startOperationCall(dataSource.serviceForSource(activeSource).operationDescription("stop"));
+                    }
+                }
+
+                PlasmaWidgets.IconWidget {
+                    id: forward
+                    width: mediaController.height
+                    height: width
+
+                    icon: QIcon("media-skip-forward")
+
+                    onClicked: {
+                        var data = dataSource.serviceForSource(activeSource).operationDescription("next");
+                        print(dataSource.serviceForSource(activeSource).name);
+                        dataSource.serviceForSource(activeSource).startOperationCall(dataSource.serviceForSource(activeSource).operationDescription("next"));
+                    }
+                }
+            }
+
+            PlasmaWidgets.IconWidget {
+                    id: volume;
+                    anchors.right: parent.right
+                    width: mediaController.height
+                    height: width
+                    icon: QIcon("audio-volume-medium")
+
+                    onClicked: {
+                        var data = dataSource.serviceForSource(activeSource).operationDescription("volume");
+                        dataSource.serviceForSource(activeSource).startOperationCall(dataSource.serviceForSource(activeSource).operationDescription("volume"));
+                    }
+                }
+
+            PlasmaWidgets.Slider {
+                id: progressSlider
+                anchors.left: layouting.right
+                anchors.right: volume.left
+                anchors.verticalCenter: layouting.verticalCenter
+                orientation: Qt.Horizontal
+                onSliderMoved: {
+                    console.log("SEEK ATTEMPT " + value)
+                    var operation = dataSource.serviceForSource(activeSource).operationDescription("seek");
+                    operation.seconds = value;
+                    dataSource.serviceForSource(activeSource).startOperationCall(operation);
+                    video.time = value
+                }
+            }
         }
     }
 
-    Media {
-       id: video
-       visible: false
-       anchors.fill: mediaPlayer
-
-        AudioOutput {
-            id: audioPlayer
-            anchors.fill: parent
+//***********************PLAYER******************************//
+    Item {
+        id: mediaPlayer
+        height: parent.height - mediaController.height
+        anchors {
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
         }
 
-        Video {
-            id: videoPlayer
-            anchors.fill: parent
+        Media {
+            id: video
             visible: false
-        }
-       onTotalTimeChanged:{
-           var operation = dataSource.serviceForSource(activeSource).operationDescription("mediaProgress");
-           operation.mediaLength = video.totalTime;
+            anchors.fill: mediaPlayer
 
-                for ( var i in operation ) {
-                    print(i + ' -> ' + operation[i] );
+            AudioOutput {
+                id: audioPlayer
+                anchors.fill: parent
+            }
+
+            Video {
+                id: videoPlayer
+                anchors.fill: parent
+                visible: false
+            }
+
+            onTotalTimeChanged: {
+                if (video.totalTime > 0) {
+                    var operation = dataSource.serviceForSource(activeSource).operationDescription("mediaProgress");
+                    operation.mediaLength = video.totalTime;
+                    dataSource.serviceForSource(activeSource).startOperationCall(operation);
+                    progressSlider.maximum = video.totalTime;
                 }
+            }
 
+            onTimeChanged: {
+                var operation = dataSource.serviceForSource(activeSource).operationDescription("mediaProgress");
+                operation.seconds = video.time;
+                operation.mediaLength = video.totalTime;    //FIXME: Why do we MUST set this too?
                 dataSource.serviceForSource(activeSource).startOperationCall(operation);
-                print("set progress to " + dataSource.data[activeSource].Position + " of "
-                                         + dataSource.data[activeSource].Length);
+                progressSlider.maximum = video.totalTime;
+                progressSlider.value = video.time;
+            }
         }
-        onTimeChanged:{
-           if (dataSource.data[activeSource].DirtyBit) {
-               return;
-           }
-           var operation = dataSource.serviceForSource(activeSource).operationDescription("mediaProgress");
-           operation.seconds = video.time;
 
-                for ( var i in operation ) {
-                    print(i + ' -> ' + operation[i] );
-                }
-
-                dataSource.serviceForSource(activeSource).startOperationCall(operation);
-                print("set progress to " + dataSource.data[activeSource].Position + " of " + "current mediapos" + video.time);
+        Loader {
+            id: imageViewerLoader
+            source: "ImageViewer.qml"
         }
-    }
-
-    Loader {
-        id: imageViewerLoader
-        source: "ImageViewer.qml"
     }
 }

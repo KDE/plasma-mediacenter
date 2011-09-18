@@ -35,7 +35,6 @@ public slots:
 
 private:
     Media* m_media;
-
 };
 
 #endif

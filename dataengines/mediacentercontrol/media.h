@@ -16,6 +16,7 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
+
 #ifndef MEDIA_H
 #define MEDIA_H
 
@@ -26,43 +27,58 @@ class Media : public QObject
 {
     Q_OBJECT
 public:
-    Media();
-    QString name() const;
     enum State {
         Playing,
         Paused,
         Stopped
     };
-    int length();
+
+    Media();
+    QString name() const;
+
+    int length() const;
     void setLength(int time);
+
     bool isRunning();
     State state();
-    int position();
-    qreal volume();
-    bool canPlay();
+    int position() const;
+    qreal volume() const;
+
+    bool canPlay() const;
     void play();
-    bool canPause();
+
+    bool canPause() const;
     void pause();
-    bool canStop();
+
+    bool canStop() const;
     void stop();
-    bool canGoPrevious();
+
+    bool canGoPrevious() const;
     void previous();
-    bool canGoNext();
+
+    bool canGoNext() const;
     void next();
-    bool canSetVolume();
+
+    bool canSetVolume() const;
     void setVolume(qreal volume=0);
-    bool canSeek();
+
+    bool canSeek() const;
     void seek(int time=0);
-    bool canMediaProgress();
+
+    bool canUpdateMediaProgress() const;
     void mediaProgress(int time=0);
+
     void setUrl(QString);
-    QString getUrl();
+    QString getUrl() const;
+
     void setDirty(bool);
-    bool getDirty();
-    QString browsingState();
+    bool getDirty() const;
+
+    QString browsingState() const;
     void setBrowsingState(const QString &state);
+
     void setViewMode(bool);
-    bool viewMode();
+    bool viewMode() const;
 
 Q_SIGNALS:
     void mediaDataUpdated();
@@ -83,4 +99,3 @@ private:
 };
 
 #endif // MEDIA_H
-    

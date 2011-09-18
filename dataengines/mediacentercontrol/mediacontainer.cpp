@@ -16,26 +16,25 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
+
 #include "mediacontainer.h"
 #include "mediaservice.h"
-#include "kdebug.h"
 
 MediaContainer::MediaContainer(QObject *parent)
     : Plasma::DataContainer(parent)
 {
     m_media = new Media;
-    connect(m_media, SIGNAL(mediaDataUpdated()),
-            this, SLOT(updateData()));
+    connect(m_media, SIGNAL(mediaDataUpdated()), SLOT(updateData()));
     updateData();
-     kDebug() <<"hello";
 }
 
 Plasma::Service* MediaContainer::service(QObject* parent)
 {
-    Plasma::Service *controller = new MediaService(m_media,parent);
+    MediaService *mediaService = new MediaService(m_media, parent);
     connect(this, SIGNAL(updateRequested(DataContainer*)),
-            controller, SLOT(enableMediaOperations()));
-    return controller;
+            mediaService, SLOT(enableMediaOperations()));
+
+    return qobject_cast<Plasma::Service*>(mediaService);
 }
 
 void MediaContainer::updateData()
@@ -59,6 +58,7 @@ void MediaContainer::updateData()
     setData("DirtyBit", m_media->getDirty());
     setData("BrowsingState", m_media->browsingState());
     setData("Viewing", m_media->viewMode());
+
     checkForUpdate();
 }
 
