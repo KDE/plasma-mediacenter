@@ -83,7 +83,8 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
         smooth: true
         style: Text.Raised
-        font.bold: true
+        elide: Text.ElideRight
+        width: parent.width/2;
         font.italic: true
         color: theme.textColor
     }
