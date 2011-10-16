@@ -2,6 +2,7 @@
 Name=Media InfoBar (QML)
 Name[fr]=Barre d'informations multimédia (QML)
 Name[nl]=MediaInfoBar (QML)
+Name[pl]=Pasek informacji o mediach (QML)
 Name[pt]=Barra de Informação Multimédia (QML)
 Name[pt_BR]=Barra de informação multimídia (QML)
 Name[sv]=Mediainformationsrad (QML)
@@ -12,6 +13,7 @@ Comment[es]=Una sencilla miniaplicación para mostrar información multimedia
 Comment[et]=Lihtne aplett meediateabe näitamiseks
 Comment[fr]=Une applet simple pour afficher des informations sur un média
 Comment[nl]=Een eenvoudige applet om media-information te tonen
+Comment[pl]=Prosty aplet do wyświetlania informacji o mediach
 Comment[pt]=Uma 'applet' simples para mostrar informações multimédia
 Comment[pt_BR]=Um miniaplicativo simples para mostrar informações multimídia
 Comment[sv]=Ett enkelt miniprogram för att visa mediainformation
