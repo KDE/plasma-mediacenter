@@ -18,7 +18,6 @@
  ***************************************************************************/
 #include "localmusicbackend.h"
 
-#include <mediacenter/mediacenterstate.h>
 #include <Nepomuk/Query/ResourceTypeTerm>
 #include "nfo.h"
 
@@ -30,7 +29,6 @@ LocalFilesAbstractBackend("LocalMusic", parent, args)
 
     m_acceptedMimePrefix = "audio/";
     m_term = Nepomuk::Query::ResourceTypeTerm(Vocabulary::NFO::Audio());
-    setRequiredMode(MediaCenter::MusicMode);
 }
 
 LocalMusicBackend::~LocalMusicBackend()

@@ -21,7 +21,6 @@
 
 #include "mediacenter_export.h"
 #include "mediacenter.h"
-#include "mediacenterstate.h"
 
 #include <Plasma/Applet>
 #include <Plasma/Slider>

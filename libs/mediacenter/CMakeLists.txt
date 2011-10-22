@@ -6,20 +6,9 @@ browser.cpp
 playbackcontrol.cpp
 infodisplay.cpp
 playlist.cpp
-player.cpp
 mediacenter.cpp
-mediacenterstate.cpp
-picturestate.cpp
-videostate.cpp
-musicstate.cpp
-homestate.cpp
-medialayout.cpp
 abstractbrowsingbackend.cpp
 homeapplet.cpp
-
-# private stuff
-private/mediahandler.cpp
-private/sharedlayoutcomponentsmanager.cpp
 
 # widgets
 widgets/navigationtoolbar.cpp
@@ -37,13 +26,6 @@ set (mediacenterlibs_HDRS
     playbackcontrol.h
     infodisplay.h
     playlist.h
-    player.h
-    mediacenterstate.h
-    picturestate.h
-    videostate.h
-    musicstate.h
-    homestate.h
-    medialayout.h
     gesturerecognizer.h
     playbackgesture.h
     browsergesture.h

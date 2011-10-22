@@ -26,7 +26,6 @@
 #include <KConfigGroup>
 #include "mediacenter_export.h"
 #include "mediacenter/mediacenter.h"
-#include "mediacenter/mediacenterstate.h"
 #include <KService>
 
 class QAbstractItemModel;
@@ -110,12 +109,6 @@ public:
      */
     virtual void init();
 
-    /**
-     * @return the proper mode needed to play the files exposed
-     * by the model in this backend
-     */
-    MediaCenter::Mode requiredMode() const;
-
     QString name() const;
     
     /**
@@ -159,7 +152,6 @@ protected:
      * the model.
      */
     void setHasConfigurationInterface(bool hasInterface);
-    void setRequiredMode(MediaCenter::Mode);
 
     void setBrowsingType(BrowsingType);
 

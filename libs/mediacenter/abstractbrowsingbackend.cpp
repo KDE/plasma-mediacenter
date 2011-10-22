@@ -32,14 +32,12 @@ public:
     AbstractBrowsingBackendPrivate(KService::Ptr service, AbstractBrowsingBackend *q) :
     backendInfo(service),
     q(q),
-    cfInterface(false),
-    model(0)
+    cfInterface(false)
     {}
 
     AbstractBrowsingBackend *q;
     bool cfInterface;
     KPluginInfo backendInfo;
-    MediaCenter::Mode requiredMode;
     BrowsingType browsingType;
     QAbstractItemModel * model;
 };
@@ -95,16 +93,6 @@ KConfigGroup AbstractBrowsingBackend::config()
 
 void AbstractBrowsingBackend::init()
 {}
-
-void AbstractBrowsingBackend::setRequiredMode(MediaCenter::Mode mode)
-{
-    d->requiredMode = mode;
-}
-
-MediaCenter::Mode AbstractBrowsingBackend::requiredMode() const
-{
-    return d->requiredMode;
-}
 
 QString AbstractBrowsingBackend::name() const
 {

@@ -118,8 +118,6 @@ void MediaBrowser::loadBrowsingBackend(MediaCenter::AbstractBrowsingBackend *bac
     backend->setParent(this);
     backend->init();
     m_backends.append(backend);
-
-    emit browsingModeChanged( backend->requiredMode() );
 }
 
 void MediaBrowser::showStartupState()

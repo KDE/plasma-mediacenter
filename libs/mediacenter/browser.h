@@ -23,7 +23,6 @@
 
 #include <Plasma/Applet>
 #include <mediacenter/mediacenter.h>
-#include <mediacenter/mediacenterstate.h>
 
 
 namespace MediaCenter {
@@ -130,12 +129,6 @@ Q_SIGNALS:
      * This signal should be emitted as soon as the selection of items changes
      */
     void selectedMediasChanged(const QList<MediaCenter::Media> &);
-
-   /**
-    * The browser should emit these signals when a certain dataengine type is selected
-    * to inform the state machine to switch to the corresponding state.
-    */
-    void browsingModeChanged(MediaCenter::Mode);
 
 protected:
     virtual bool sceneEvent(QEvent *event);
