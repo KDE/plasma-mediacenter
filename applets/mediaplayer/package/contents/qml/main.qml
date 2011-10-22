@@ -47,6 +47,7 @@ Item {
                 || data[activeSource].BrowsingState == "VideoBrowsing") {
 
                 video.visible = true
+                controlBarFrame.visible = true
 
                 if (data[activeSource].State == "playing") {
                     if (video.source != data[activeSource].Url) {
@@ -61,6 +62,7 @@ Item {
                 }
             } else if(data[activeSource].BrowsingState == "PictureBrowsing" && data[activeSource].Viewing) {
                 imageViewerLoader.item.visible = true;
+                mediaController.visible = false
                 /*Unload and load again, because Image doesn't want to forget the old
                 values of sourceSize*/
                 if (imageViewerLoader.item.source != "file://" + data[activeSource].Url) {
@@ -79,6 +81,9 @@ Item {
             }
             else {
                 videoPlayer.visible= false;
+            }
+            if(data[activeSource].BrowsingState == "PictureBrowsing") {
+                controlBarFrame.visible = false;
             }
         } //END onDataChanged
     }
@@ -211,7 +216,7 @@ Item {
 //***********************PLAYER******************************//
     Item {
         id: mediaPlayer
-        height: parent.height - mediaController.height
+        height: parent.height
         anchors {
             left: parent.left
             right: parent.right

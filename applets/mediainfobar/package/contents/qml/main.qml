@@ -28,10 +28,13 @@ Rectangle {
     color: "lightBlue"
     opacity: 0.7
     property string activeSource: dataSource.sources[0]
-    property int remainingMediaTime
-    property int remainingTimeFraction
-    property int totalTimeInt
-    property int totalTimeFraction
+     property int totalTimeHr
+     property int totalTimeMin
+     property int totalTimeSec
+     property int remainingTimeHr
+     property int remainigTimeMin
+     property int remainingTimeSec
+     
 
     PlasmaCore.Theme {
         id:theme
@@ -45,23 +48,37 @@ Rectangle {
             connectedSources: activeSource
 
             onDataChanged: {
-                remainingMediaTime = (data[activeSource].Length - data[activeSource].Position)/ (60 * 1000)
-                remainingTimeFraction = ((data[activeSource].Length - data[activeSource].Position) % (60 * 1000)) / 1000
-                totalTimeInt = (data[activeSource].Length) / (60 * 1000)
-                totalTimeFraction = (data[activeSource].Length) % (60 * 1000) / 1000
+//                 totalremainingMediaTimeSec = (data[activeSource].Length - data[activeSource].Position)/ (1000)
+//                 remainingTimeFraction = ((data[activeSource].Length - data[activeSource].Position) % (60 * 1000)) / 1000
+//                 totalTimeInt = (data[activeSource].Length) / (60 * 1000)
+//                 totalTimeFraction = (data[activeSource].Length) % (60 * 1000) / 1000
+                   totalTimeSec = (data[activeSource].Length) / 1000;
+                   totalTimeHr = totalTimeSec / 3600;
+                   totalTimeSec %= 3600;
+                   totalTimeMin = totalTimeSec / 60;
+                   totalTimeSec %= 60;
+                   
+                   remainingTimeSec = (data[activeSource].Length - data[activeSource].Position) /1000;
+                   remainingTimeHr = remainingTimeSec / 3600;
+                   remainingTimeSec %= 3600;
+                   remainingTimeMin = remainingTimeSec / 60;
+                   remainingTimeSec %= 60;
+                   
                 if ( data[activeSource].BrowsingState == "PictureBrowsing") {
                     browsingMode.icon = QIcon("image-x-genereic")
                 } else if (data[activeSource].BrowsingState == "MusicBrowsing") {
                     browsingMode.icon = QIcon("audio-ac3")
                     if (data[activeSource].Url != "") {
                         time.text = "Remaining time"
-                        remainingTime.text = remainingMediaTime + ":"  + remainingTimeFraction + " / " + totalTimeInt + ":" + totalTimeFraction
+                        remainingTime.text = remainingTimeHr + ":"  + remainingTimeMin + ":" + remainingTimeSec +
+                                "/ " + totalTimeHr + ":" + totalTimeMin + ":" + totalTimeSec;
                     }
                 } else if (data[activeSource].BrowsingState == "VideoBrowsing") {
                     browsingMode.icon = QIcon("video-x-generic")
                     if (data[activeSource].Url != "") {
                         time.text = "Remaining Time"
-                        remainingTime.text = remainingMediaTime + ":"  + remainingTimeFraction + " / " + totalTimeInt + ":" + totalTimeFraction
+                        remainingTime.text = remainingTimeHr + ":"  + remainingTimeMin + ":" + remainingTimeSec +
+                                "/ " + totalTimeHr + ":" + totalTimeMin + ":" + totalTimeSec
                     }
                 }
                 mediaPlayer.text = data[activeSource].Url
