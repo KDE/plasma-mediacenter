@@ -85,10 +85,12 @@ Item {
         var oldMode = browsingMode
         if (browsingModeName == "MusicBrowsing") {
             browsingMode = 0
-        } else if (browsingModeName == "VideoBrowsing") {
+        } else if (browsingModeName == "MetadataMusicBrowsing") {
             browsingMode = 1
-        } else if (browsingModeName == "PictureBrowsing") {
+        } else if (browsingModeName == "VideoBrowsing") {
             browsingMode = 2
+        } else if (browsingModeName == "PictureBrowsing") {
+            browsingMode = 3
         }
         if (oldMode != browsingMode) {
             grid.model = fileBackends[browsingMode].backendModel
@@ -111,7 +113,7 @@ Item {
                 }
                 QIconItem {
                     id: delegateItemIcon
-                    icon: decoration
+                    icon: QIcon(decoration)
                     width: parent.height*2/3
                     height: parent.height - itemText.height
                     anchors.horizontalCenter: parent.horizontalCenter

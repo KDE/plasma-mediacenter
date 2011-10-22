@@ -1,5 +1,7 @@
 /***************************************************************************
  *   Copyright 2009 by Alessandro Diaferia <alediaferia@gmail.com>         *
+ *   Copyright 2011 Sinny Kumari <ksinny@gmail.com>                        *
+ *   Copyright 2007 Aaron Seigo <aseigo@kde.org>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,18 +18,22 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#include "localpicturesbackend.h"
 
-#include "nfo.h"
-#include <Nepomuk/Query/ResourceTypeTerm>
 
-MEDIACENTER_EXPORT_BROWSINGBACKEND(LocalPicturesBackend)
+#include "metadatamusicbackend.h"
 
-LocalPicturesBackend::LocalPicturesBackend(QObject *parent, const QVariantList &args) :
-LocalFilesAbstractBackend("LocalPictures", parent, args)
+#include "metadatamusicmodel.h"
+
+MEDIACENTER_EXPORT_BROWSINGBACKEND(MetadataMusicBackend)
+
+MetadataMusicBackend::MetadataMusicBackend(QObject* parent, const QVariantList& args)
+    : AbstractBrowsingBackend(parent, args)
 {
-    m_acceptedMimePrefix = "image/";
+    setModel(new MetadataMusicModel(this));
 }
 
-LocalPicturesBackend::~LocalPicturesBackend()
-{}
+MetadataMusicBackend::~MetadataMusicBackend()
+{
+}
+
+#include "metadatamusicbackend.moc"

@@ -52,7 +52,7 @@ MediaBrowser::MediaBrowser(QObject *parent, const QVariantList &args)
 
     setEnableToolbar(true);
     toolbar()->setNavigationControls(MediaCenter::NavigationToolbar::BackwardControl | MediaCenter::NavigationToolbar::ViewModeControl);
-    
+
     qmlRegisterType<MediaCenter::AbstractBrowsingBackend>("MediaCenter", 0, 1, "AbstractBrowsingBackend");
 }
 
@@ -84,17 +84,11 @@ void MediaBrowser::init()
     MediaCenter::AbstractBrowsingBackend *backend;
     KSharedPtr<KService> service;
 
-    service = MediaCenter::AbstractBrowsingBackend::availableBackends().at(0);
-    backend = service->createInstance<MediaCenter::AbstractBrowsingBackend>(0, QVariantList() << service->storageId());
-    loadBrowsingBackend(backend);
-
-    service = MediaCenter::AbstractBrowsingBackend::availableBackends().at(1);
-    backend = service->createInstance<MediaCenter::AbstractBrowsingBackend>(0, QVariantList() << service->storageId());
-    loadBrowsingBackend(backend);
-
-    service = MediaCenter::AbstractBrowsingBackend::availableBackends().at(2);
-    backend = service->createInstance<MediaCenter::AbstractBrowsingBackend>(0, QVariantList() << service->storageId());
-    loadBrowsingBackend(backend);
+    for (int i=0; i<MediaCenter::AbstractBrowsingBackend::availableBackends().size(); ++i) {
+        service = MediaCenter::AbstractBrowsingBackend::availableBackends().at(i);
+        backend = service->createInstance<MediaCenter::AbstractBrowsingBackend>(0, QVariantList() << service->storageId());
+        loadBrowsingBackend(backend);
+    }
 
     m_view->engine()->rootContext()->setContextProperty("fileBackends", QVariant::fromValue(m_backends));
 }
@@ -113,15 +107,17 @@ void MediaBrowser::createConfigurationInterface(KConfigDialog *parent)
 
 void MediaBrowser::loadBrowsingBackend(MediaCenter::AbstractBrowsingBackend *backend)
 {
-    kDebug() << "loading browsing backend";
+    if (!backend) {
+        kDebug() << "OUCH! Something's wrong with the backend";
+        return;
+    }
+
+    kDebug() << "LOADING browsing backend " << backend->name();
 
     backend->setParent(this);
     backend->init();
     m_backends.append(backend);
-}
-
-void MediaBrowser::showStartupState()
-{
+    kDebug() << "backend " << backend->name() << " loaded";
 }
 
 KUrl MediaBrowser::currentUrl() const

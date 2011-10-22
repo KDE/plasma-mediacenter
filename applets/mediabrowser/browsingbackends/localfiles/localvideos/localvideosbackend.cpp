@@ -28,7 +28,6 @@ LocalVideosBackend::LocalVideosBackend(QObject *parent, const QVariantList &args
 LocalFilesAbstractBackend("LocalVideosBackend", parent, args)
 {
     m_acceptedMimePrefix = "video/";
-    m_term = Nepomuk::Query::ResourceTypeTerm(Vocabulary::NFO::Video());
 }
 
 LocalVideosBackend::~LocalVideosBackend()

@@ -7,9 +7,10 @@ set(QT_USE_QTOPENGL TRUE)
 include(${QT_USE_FILE})
 
 set(plasma-mediacenter_SRCS
-main.cpp
-mainwindow.cpp
+    main.cpp
+    mainwindow.cpp
 )
+
 kde4_add_ui_files(plasma-mediacenter_SRCS theme.ui backgrounddialog.ui)
 kde4_add_executable(plasma-mediacenter ${plasma-mediacenter_SRCS})
 target_link_libraries(plasma-mediacenter mediacenterlibs ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} ${KDE4_KIO_LIBS} ${QT_LIBRARIES} )

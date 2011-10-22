@@ -29,11 +29,6 @@
 
 #include <QDir>
 #include <QFileInfo>
-#include <Nepomuk/ResourceManager>
-#include <Nepomuk/Variant>
-#include <Nepomuk/Query/ResourceTypeTerm>
-#include <Nepomuk/Query/QueryServiceClient>
-#include <Nepomuk/Query/FileQuery>
 
 LocalFilesAbstractBackend::LocalFilesAbstractBackend(const QString& name, QObject* parent, const QVariantList& args) :
     MediaCenter::AbstractBrowsingBackend(parent, args),
@@ -41,10 +36,8 @@ m_acceptedMimePrefix(QString()),
 m_backendName(name),
 m_model(0),
 m_fromPlaces(false),
-m_folderNavigation(false),
-m_useNepomuk(false)
+m_folderNavigation(false)
 {
-    Nepomuk::ResourceManager::instance()->init();
     setHasConfigurationInterface(true);
     setBrowsingType(AbstractBrowsingBackend::LocalBrowsing);
 }
@@ -118,12 +111,9 @@ void LocalFilesAbstractBackend::createConfigurationInterface(KConfigDialog* pare
     ui.addFoldersButton->setIcon(KIcon("list-add"));
     ui.removeFoldersButton->setIcon(KIcon("list-remove"));
 
-    ui.nepomukBox->setChecked(m_useNepomuk);
-
     foreach(const QString &folder, m_watchedDirs) {
         ui.watchedFoldersList->addItem(folder);
     }
-    connect(ui.nepomukBox, SIGNAL(toggled(bool)), parent, SLOT(settingsModified()));
     connect(ui.addFoldersButton, SIGNAL(pressed()), parent, SLOT(settingsModified()));
     connect(ui.removeFoldersButton, SIGNAL(pressed()), parent, SLOT(settingsModified()));
     connect(ui.showPlace, SIGNAL(toggled(bool)), parent, SLOT(settingsModified()));
@@ -141,7 +131,6 @@ void LocalFilesAbstractBackend::init()
     //TODO:Check if dir in config exists, if not, then goto homedir
     m_fromPlaces = cf.readEntry("FromPlaces", true);
     m_folderNavigation = cf.readEntry("FolderNavigation", true);
-    m_useNepomuk = cf.readEntry("Nepomuk", false);
     m_watchedDirs = cf.readEntry("WatchedFolders", QStringList());
 
     if (!m_model) {
@@ -213,29 +202,15 @@ void LocalFilesAbstractBackend::configAccepted()
 
 void LocalFilesAbstractBackend::initModel()
 {
-    if (m_useNepomuk) {
-        m_model->dirLister()->setMimeFilter(QStringList());
+    KMimeType::List mimeList = KMimeType::allMimeTypes();
 
-        Nepomuk::Query::FileQuery query;
-        query.setTerm(m_term);
-        foreach (const QString &folder, m_watchedDirs) {
-            query.addIncludeFolder(folder);
-        }
-
-        m_model->dirLister()->stop();
-        m_model->dirLister()->openUrl(query.toSearchUrl());
-
-    } else {
-        KMimeType::List mimeList = KMimeType::allMimeTypes();
-
-        foreach (KMimeType::Ptr mime, mimeList) {
-            if (mime->name().startsWith(m_acceptedMimePrefix)) {
-                m_mimeTypes << mime->name();
-            }
-        }
-        setFolderNavigation();
-        m_model->dirLister()->openUrl(m_localUrl);
+    foreach (KMimeType::Ptr mime, mimeList) {
+	if (mime->name().startsWith(m_acceptedMimePrefix)) {
+	    m_mimeTypes << mime->name();
+	}
     }
+    setFolderNavigation();
+    m_model->dirLister()->openUrl(m_localUrl);
 }
 
 void LocalFilesAbstractBackend::setFolderNavigation()

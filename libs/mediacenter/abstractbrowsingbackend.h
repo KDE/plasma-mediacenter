@@ -16,6 +16,7 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
+
 #ifndef MODELPACKAGE_H
 #define MODELPACKAGE_H
 
@@ -82,6 +83,7 @@ public:
      * that allow actions like "go backward", "go forward", "go uplevel" that generally change
      * their meaning if the browsing type is local or remote.
      */
+    //TODO: May no longer be needed
     BrowsingType browsingType() const;
 
     bool hasConfigurationInterface() const;
@@ -122,6 +124,7 @@ public:
      * LocalBrowsing. This method will be used to list the media
      * resources in location specified by @param url
      */
+    //TODO: Maybe its better to let the model handle this
     virtual void openUrl(const KUrl &url);
 
     /**
@@ -129,8 +132,9 @@ public:
      * RemoteBrowsing. This method will be used to perform searches
      * for new medias to show in the browsing applet.
      */
+    //TODO: Maybe its better to let the model handle this
     virtual void searchForMedia(const QString &name);
-    
+
 signals:
     void modelChanged(QAbstractItemModel * model);
 
@@ -138,7 +142,7 @@ protected:
     /**
      * This method must be set in order to provide the model to be
      * used by the view.
-     * @note When LocalBrowsing is set it is highly recommended to use a KDirModel.
+     * @note When LocalBrowsing is set it is highly recommended to use a KDirModel.     ////TODO: May no longer be needed
      * If the package is set to RemoteBrowsing the model
      * must provide an url that points to the media content for each
      * QModelIndex. It must make use of MediaRole role to accomplish this.

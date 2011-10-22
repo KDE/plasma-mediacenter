@@ -105,6 +105,30 @@ Item {
 
         },
         State {
+            name: "MetadataMusicBrowsing"
+            PropertyChanges {
+                target: mediaPlayerItem
+                visible: true
+            }
+//             AnchorChanges {
+//                 target: controlBarFrame
+//                 anchors.top: main.top
+//             }
+            AnchorChanges {
+                target: welcomeItem
+                anchors.bottom: main.top
+            }
+            AnchorChanges{
+                target: browserItem
+                anchors.left: main.left
+            }
+            PropertyChanges {
+                target: infoBarItem
+                visible: true
+            }
+
+        },
+        State {
             name: "VideoBrowsing"
             PropertyChanges {
                 target: mediaPlayerItem

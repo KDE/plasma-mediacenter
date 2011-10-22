@@ -28,7 +28,6 @@ LocalFilesAbstractBackend("LocalMusic", parent, args)
 {
 
     m_acceptedMimePrefix = "audio/";
-    m_term = Nepomuk::Query::ResourceTypeTerm(Vocabulary::NFO::Audio());
 }
 
 LocalMusicBackend::~LocalMusicBackend()

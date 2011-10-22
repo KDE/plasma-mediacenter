@@ -59,7 +59,6 @@ public:
     void setEnableToolbar(bool);
     bool enableToolbar() const;
 
-    virtual void showStartupState() = 0;
     virtual QList<MediaCenter::Media> selectedMedias() const = 0;
 
     /**

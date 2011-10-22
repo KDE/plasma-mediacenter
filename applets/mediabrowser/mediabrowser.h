@@ -20,15 +20,13 @@
 #define MEDIABROWSER_H
 
 #include <mediacenter/browser.h>
-#include <plasma/widgets/declarativewidget.h>
-
-//#include "ui_general.h"
+#include <Plasma/DeclarativeWidget>
 
 class QGraphicsLinearLayout;
 class AbstractMediaItemView;
 
 namespace MediaCenter {
-class AbstractBrowsingBackend;
+    class AbstractBrowsingBackend;
 }
 
 class MediaBrowser : public MediaCenter::Browser
@@ -41,8 +39,6 @@ public:
 
     void init();
     void createConfigurationInterface(KConfigDialog *parent);
-
-    void showStartupState();
 
     QList<MediaCenter::Media> selectedMedias() const;
 
@@ -66,7 +62,6 @@ signals:
 
 private:
     Plasma::DeclarativeWidget * m_view;
-    //Ui::General uiGeneral;
 
     MediaCenter::AbstractBrowsingBackend *m_backend;
 

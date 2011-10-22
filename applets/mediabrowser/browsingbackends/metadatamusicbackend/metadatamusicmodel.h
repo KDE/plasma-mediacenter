@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright 2009 by Alessandro Diaferia <alediaferia@gmail.com>         *
+ *   Copyright 2011 Sinny Kumari <ksinny@gmail.com>                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,18 +16,33 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#include "localpicturesbackend.h"
 
-#include "nfo.h"
-#include <Nepomuk/Query/ResourceTypeTerm>
+#ifndef METADATAMUSICMODEL_H
+#define METADATAMUSICMODEL_H
 
-MEDIACENTER_EXPORT_BROWSINGBACKEND(LocalPicturesBackend)
+#include <QtCore/QAbstractItemModel>
 
-LocalPicturesBackend::LocalPicturesBackend(QObject *parent, const QVariantList &args) :
-LocalFilesAbstractBackend("LocalPictures", parent, args)
+#include <Plasma/DataEngine>
+
+class MetadataMusicModel : public QAbstractItemModel
 {
-    m_acceptedMimePrefix = "image/";
-}
+    Q_OBJECT
+public:
+    explicit MetadataMusicModel (QObject* parent = 0);
+    virtual ~MetadataMusicModel();
 
-LocalPicturesBackend::~LocalPicturesBackend()
-{}
+    virtual QVariant data (const QModelIndex& index, int role = Qt::DisplayRole) const;
+    virtual int columnCount (const QModelIndex& parent = QModelIndex()) const;
+    virtual int rowCount (const QModelIndex& parent = QModelIndex()) const;
+    virtual QModelIndex parent (const QModelIndex& child) const;
+    virtual QModelIndex index (int row, int column, const QModelIndex& parent = QModelIndex()) const;
+
+private Q_SLOTS:
+    void dataUpdated (const QString& sourceName, const Plasma::DataEngine::Data& data);
+
+private:
+    class Private;
+    Private* const d;
+};
+
+#endif // METADATAMUSICMODEL_H

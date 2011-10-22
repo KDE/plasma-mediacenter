@@ -21,7 +21,6 @@
 #define LOCALFILESABSTRACTBACKEND_H
 
 #include <mediacenter/abstractbrowsingbackend.h>
-#include <Nepomuk/Query/Term>
 
 #include "ui_configbase.h"
 
@@ -57,7 +56,6 @@ private:
 
 protected:
     QString m_acceptedMimePrefix;
-    Nepomuk::Query::Term m_term;
 
 private:
     Ui::ConfigBase ui;

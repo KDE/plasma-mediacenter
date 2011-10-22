@@ -74,8 +74,9 @@ PathView {
                     dataSource.serviceForSource(activeSource).operationDescription("setBrowsingState");
                     switch (index) {
                         case 0: operation.state = "MusicBrowsing"; break;
-                        case 1: operation.state = "VideoBrowsing"; break;
-                        case 2: operation.state = "PictureBrowsing";  break;
+                        case 1: operation.state = "MetadataMusicBrowsing";  break;
+                        case 2: operation.state = "VideoBrowsing"; break;
+                        case 3: operation.state = "PictureBrowsing";  break;
                     }
                     dataSource.serviceForSource(activeSource).startOperationCall(operation);
                 }
