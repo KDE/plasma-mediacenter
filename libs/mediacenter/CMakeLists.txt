@@ -4,7 +4,6 @@ playbackgesture.cpp
 browsergesture.cpp
 browser.cpp
 playbackcontrol.cpp
-infodisplay.cpp
 playlist.cpp
 mediacenter.cpp
 abstractbrowsingbackend.cpp
@@ -24,7 +23,6 @@ set (mediacenterlibs_HDRS
     mediacenter.h
     browser.h
     playbackcontrol.h
-    infodisplay.h
     playlist.h
     gesturerecognizer.h
     playbackgesture.h
