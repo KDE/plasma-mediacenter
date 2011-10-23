@@ -17,17 +17,20 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 #include "localpicturesbackend.h"
-
-#include "nfo.h"
-#include <Nepomuk/Query/ResourceTypeTerm>
+#include "localpicturesmodel.h"
 
 MEDIACENTER_EXPORT_BROWSINGBACKEND(LocalPicturesBackend)
 
-LocalPicturesBackend::LocalPicturesBackend(QObject *parent, const QVariantList &args) :
-LocalFilesAbstractBackend("LocalPictures", parent, args)
+LocalPicturesBackend::LocalPicturesBackend (QObject* parent, const QVariantList& args)
+    : AbstractBrowsingBackend (parent)
 {
-    m_acceptedMimePrefix = "image/";
+
 }
 
 LocalPicturesBackend::~LocalPicturesBackend()
 {}
+
+void LocalPicturesBackend::init()
+{
+    setModel(new LocalPicturesModel(this));
+}

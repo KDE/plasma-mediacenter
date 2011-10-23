@@ -151,7 +151,7 @@ void Media::setUrl(QString url)
 {
     m_length = 0;
     m_position = 0;
-    m_url = "file://" + url;
+    m_url = url;
     m_state = Playing;
     emit mediaDataUpdated();
 }

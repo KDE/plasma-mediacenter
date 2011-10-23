@@ -1,5 +1,6 @@
 set(localpicturesbackend_SRCS
-    ../localfilesabstractbackend.cpp
+    localpicturesmodel.cpp
+    ../localfilesabstractmodel.cpp
     localpicturesbackend.cpp
 )
 soprano_add_ontology(localpicturesbackend_SRCS ${SHAREDDESKTOPONTOLOGIES_ROOT_DIR}/nie/nfo.trig "NFO" "Vocabulary" "trig")

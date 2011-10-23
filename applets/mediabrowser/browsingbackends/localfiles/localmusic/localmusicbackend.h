@@ -19,15 +19,16 @@
 #ifndef LOCALMUSICPACKAGE_H
 #define LOCALMUSICPACKAGE_H
 
-#include "../localfilesabstractbackend.h"
+#include <mediacenter/abstractbrowsingbackend.h>
 
-class LocalMusicBackend : public LocalFilesAbstractBackend
+class LocalMusicBackend : public MediaCenter::AbstractBrowsingBackend
 {
     Q_OBJECT
 public:
     LocalMusicBackend(QObject *parent, const QVariantList &args);
     ~LocalMusicBackend();
 
+    virtual void init();
 };
 
 #endif // LOCALMUSICPACKAGE_H

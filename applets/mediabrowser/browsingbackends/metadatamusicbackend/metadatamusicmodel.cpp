@@ -43,6 +43,10 @@ MetadataMusicModel::MetadataMusicModel (QObject* parent)
     : QAbstractItemModel (parent)
     , d (new Private())
 {
+    QHash<int, QByteArray> roles = roleNames();
+    roles[MediaUrlRole] = "mediaUrl";
+    setRoleNames(roles);
+
     d->engineManager = Plasma::DataEngineManager::self();
     d->engine = d->engineManager->loadEngine ("org.kde.active.metadata");
     d->engine->connectSource ("ResourcesOfType:Audio", this);
@@ -64,8 +68,8 @@ void MetadataMusicModel::dataUpdated (const QString& sourceName, const Plasma::D
         musicObject->setObjectName (it.key());
 
         Plasma::DataEngine::Data data = it.value().value<Plasma::DataEngine::Data>();
-        musicObject->setProperty ("url", data.value ("url"));
-        musicObject->setProperty ("icon", "media-playback-start");
+        musicObject->setProperty ("mediaUrl", data.value ("url"));
+        musicObject->setProperty ("icon", data.value("icon"));
         musicObject->setProperty("fileName", data.value("fileName"));
 
         d->musicList.append (musicObject);
@@ -83,7 +87,11 @@ QVariant MetadataMusicModel::data (const QModelIndex& index, int role) const
         return d->musicList.at (index.row())->property("fileName");
         break;
     case Qt::DecorationRole:
-        return "media-optical-mixed-cd";
+        return d->musicList.at (index.row())->property("icon");
+        break;
+    case MediaUrlRole:
+        return d->musicList.at (index.row())->property("mediaUrl");
+        break;
     }
 
     return QVariant();
@@ -106,6 +114,7 @@ QModelIndex MetadataMusicModel::parent (const QModelIndex& child) const
 
 QModelIndex MetadataMusicModel::index (int row, int column, const QModelIndex& parent) const
 {
+    Q_UNUSED(parent);
     return createIndex (row, column);
 }
 

@@ -16,19 +16,21 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#include "localmusicbackend.h"
 
-#include <Nepomuk/Query/ResourceTypeTerm>
-#include "nfo.h"
+#include "localmusicbackend.h"
+#include "localmusicmodel.h"
 
 MEDIACENTER_EXPORT_BROWSINGBACKEND(LocalMusicBackend)
 
 LocalMusicBackend::LocalMusicBackend(QObject *parent, const QVariantList &args) :
-LocalFilesAbstractBackend("LocalMusic", parent, args)
+    MediaCenter::AbstractBrowsingBackend(parent, args)
 {
-
-    m_acceptedMimePrefix = "audio/";
 }
 
 LocalMusicBackend::~LocalMusicBackend()
 {}
+
+void LocalMusicBackend::init()
+{
+    setModel(new LocalMusicModel(this));
+}

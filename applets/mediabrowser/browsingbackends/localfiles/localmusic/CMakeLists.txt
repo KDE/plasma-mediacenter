@@ -1,5 +1,6 @@
 set(localmusicbackend_SRCS
-  ../localfilesabstractbackend.cpp
+  localmusicmodel.cpp
+  ../localfilesabstractmodel.cpp
   localmusicbackend.cpp
 )
 

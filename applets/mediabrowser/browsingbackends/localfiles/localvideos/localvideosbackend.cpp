@@ -17,18 +17,20 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 #include "localvideosbackend.h"
-
-#include "nfo.h"
-
-#include <Nepomuk/Query/ResourceTypeTerm>
+#include "localvideosmodel.h"
 
 MEDIACENTER_EXPORT_BROWSINGBACKEND(LocalVideosBackend)
 
-LocalVideosBackend::LocalVideosBackend(QObject *parent, const QVariantList &args) :
-LocalFilesAbstractBackend("LocalVideosBackend", parent, args)
+LocalVideosBackend::LocalVideosBackend (QObject* parent, const QVariantList& args)
+    : AbstractBrowsingBackend (parent)
 {
-    m_acceptedMimePrefix = "video/";
+
 }
 
 LocalVideosBackend::~LocalVideosBackend()
 {}
+
+void LocalVideosBackend::init()
+{
+    setModel(new LocalVideosModel(this));
+}

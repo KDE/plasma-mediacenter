@@ -29,11 +29,15 @@ MEDIACENTER_EXPORT_BROWSINGBACKEND(MetadataMusicBackend)
 MetadataMusicBackend::MetadataMusicBackend(QObject* parent, const QVariantList& args)
     : AbstractBrowsingBackend(parent, args)
 {
-    setModel(new MetadataMusicModel(this));
 }
 
 MetadataMusicBackend::~MetadataMusicBackend()
 {
+}
+
+void MetadataMusicBackend::init()
+{
+    setModel(new MetadataMusicModel(this));
 }
 
 #include "metadatamusicbackend.moc"

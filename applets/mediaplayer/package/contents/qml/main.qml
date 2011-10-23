@@ -44,7 +44,8 @@ Item {
             progressSlider.value = data[activeSource].Position
 
             if(data[activeSource].BrowsingState == "MusicBrowsing"
-                || data[activeSource].BrowsingState == "VideoBrowsing") {
+                || data[activeSource].BrowsingState == "VideoBrowsing"
+                || data[activeSource].BrowsingState == "MetadataMusicBrowsing") {
 
                 video.visible = true
                 controlBarFrame.visible = true

@@ -29,6 +29,8 @@ class MetadataMusicBackend : public MediaCenter::AbstractBrowsingBackend
 public:
     MetadataMusicBackend (QObject* parent, const QVariantList& args);
     virtual ~MetadataMusicBackend();
+
+    virtual void init();
 };
 
 #endif // METADATAMUSICBACKEND_H

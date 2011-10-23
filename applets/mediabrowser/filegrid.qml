@@ -111,38 +111,47 @@ Item {
                     margins: 2
                     fill: parent
                 }
-                QIconItem {
-                    id: delegateItemIcon
-                    icon: QIcon(decoration)
-                    width: parent.height*2/3
-                    height: parent.height - itemText.height
-                    anchors.horizontalCenter: parent.horizontalCenter
 
-                    Image {
-                        id: delegateItemImage
-                        anchors.fill: parent
-                        visible: false
-                        fillMode: Image.PreserveAspectFit
-
-                        onSourceChanged: {
-                            if (sourceSize.width > sourceSize.height) {
-                                sourceSize.width = delegateItemIcon.width
-                            } else {
-                                sourceSize.height = delegateItemIcon.height
-                            }
-                        }
-                    }
+                Loader {
+                    anchors.fill: parent
 
                     Component.onCompleted: {
-                        if (!fileBackends[browsingMode].fileType(fileBackends[browsingMode].url + "/" + display)) {
-                            if (dataSource.data[activeSource].BrowsingState == "PictureBrowsing") {
-                                delegateItemImage.source = fileBackends[browsingMode].url + "/" + display
-                                delegateItemImage.visible = true
-                                delegateItemIcon.icon = QIcon()
+                        if (typeof(decoration) == "string") {
+                            if (decoration.search('[a-z]+://') == 0) {
+                                sourceComponent = delegateItemImageComponent;
+                                item.source = decoration;
+                            } else {
+                                sourceComponent = delegateItemIconComponent;
+                                item.icon = QIcon(decoration);
                             }
+                        } else if (typeof(decoration) == "object") {
+                            sourceComponent = delegateItemIconComponent;
+                            item.icon = decoration;
                         }
                     }
                 }
+
+                Component {
+                    id: delegateItemImageComponent
+                    Image {
+                        id: delegateItemImage
+                        width: parent.height*2/3
+                        height: parent.height - itemText.height
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        fillMode: Image.PreserveAspectFit
+                    }
+                }
+
+                Component {
+                    id: delegateItemIconComponent
+                    QIconItem {
+                        id: delegateItemIcon
+                        width: parent.height*2/3
+                        height: parent.height - itemText.height
+                        anchors.horizontalCenter: parent.horizontalCenter
+                    }
+                }
+
                 Text {
                     id: itemText
                     text: display
@@ -159,16 +168,21 @@ Item {
                 anchors.fill: parent
                 onEntered: grid.currentIndex = index
                 onClicked:{
-                    if (fileBackends[browsingMode].fileType(fileBackends[browsingMode].url + "/" + display)) {
-                        fileBackends[browsingMode].url = (fileBackends[browsingMode].url + "/" + display)
-                        mediaViewing = false
-                    } else {
-                        mediaViewing = true
-                        var operation = dataSource.serviceForSource(activeSource).operationDescription("url");
-                        operation.mediaUrl = (fileBackends[browsingMode].url + "/" + display);
-                        dataSource.serviceForSource(activeSource).startOperationCall(operation);
-                        mediaBrowser.state = "viewing"
-                    }
+                    var operation = dataSource.serviceForSource(activeSource).operationDescription("url");
+                    operation.mediaUrl = mediaUrl;
+                    dataSource.serviceForSource(activeSource).startOperationCall(operation);
+                    mediaBrowser.state = "viewing"
+
+//                     if (fileBackends[browsingMode].fileType(fileBackends[browsingMode].url + "/" + display)) {
+//                         fileBackends[browsingMode].url = (fileBackends[browsingMode].url + "/" + display)
+//                         mediaViewing = false
+//                     } else {
+//                         mediaViewing = true
+//                         var operation = dataSource.serviceForSource(activeSource).operationDescription("url");
+//                         operation.mediaUrl = (fileBackends[browsingMode].url + "/" + display);
+//                         dataSource.serviceForSource(activeSource).startOperationCall(operation);
+//                         mediaBrowser.state = "viewing"
+//                     }
                      var operation = dataSource.serviceForSource(activeSource).operationDescription("viewingState");
                      operation.viewing = mediaViewing
                      dataSource.serviceForSource(activeSource).startOperationCall(operation);
