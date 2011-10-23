@@ -27,9 +27,4 @@ LocalMusicModel::LocalMusicModel (QObject* parent) : LocalFilesAbstractModel (pa
 
 }
 
-QVariant LocalMusicModel::data (const QModelIndex& index, int role) const
-{
-    return dirModel()->data(index, role);
-}
-
 #include "localmusicmodel.moc"

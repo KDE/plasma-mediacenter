@@ -40,4 +40,9 @@ void MetadataMusicBackend::init()
     setModel(new MetadataMusicModel(this));
 }
 
+bool MetadataMusicBackend::goOneLevelUp()
+{
+    return false;
+}
+
 #include "metadatamusicbackend.moc"

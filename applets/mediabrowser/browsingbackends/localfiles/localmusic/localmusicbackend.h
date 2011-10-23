@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright 2009 by Alessandro Diaferia <alediaferia@gmail.com>         *
- *                                                                         *
+ *                                                                                  *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
@@ -19,16 +19,17 @@
 #ifndef LOCALMUSICPACKAGE_H
 #define LOCALMUSICPACKAGE_H
 
-#include <mediacenter/abstractbrowsingbackend.h>
+#include <../localfilesabstractbackend.h>
 
-class LocalMusicBackend : public MediaCenter::AbstractBrowsingBackend
+class LocalMusicBackend : public LocalFilesAbstractBackend
 {
     Q_OBJECT
 public:
     LocalMusicBackend(QObject *parent, const QVariantList &args);
     ~LocalMusicBackend();
 
-    virtual void init();
+protected:
+    virtual void initModel();
 };
 
 #endif // LOCALMUSICPACKAGE_H

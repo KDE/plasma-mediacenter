@@ -1,6 +1,6 @@
 /*
-    <one line to give the library's name and an idea of what it does.>
-    Copyright (C) 2011  Shantanu Tushar jhahoneyk@gmail.com
+    Copyright (C) 2010  Alessandro Diaferia <alediaferia@gmail.com>
+    Copyright (C) 2011  Shantanu Tushar <jhahoneyk@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -18,16 +18,24 @@
 */
 
 
-#ifndef LOCALMUSICMODEL_H
-#define LOCALMUSICMODEL_H
+#ifndef LOCALFILESABSTRACTBACKEND_H
+#define LOCALFILESABSTRACTBACKEND_H
 
-#include "../localfilesabstractmodel.h"
+#include <mediacenter/abstractbrowsingbackend.h>
 
-class LocalMusicModel : public LocalFilesAbstractModel
+
+class LocalFilesAbstractBackend : public MediaCenter::AbstractBrowsingBackend
 {
 
 public:
-    explicit LocalMusicModel (QObject* parent);
+    LocalFilesAbstractBackend (QObject* parent, const QVariantList& args);
+
+    virtual void init();
+    virtual bool goOneLevelUp();
+    virtual bool expand (int row);
+
+protected:
+    virtual void initModel() = 0;
 };
 
-#endif // LOCALMUSICMODEL_H
+#endif // LOCALFILESABSTRACTBACKEND_H

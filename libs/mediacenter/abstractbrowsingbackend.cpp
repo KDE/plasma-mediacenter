@@ -127,3 +127,13 @@ KService::List AbstractBrowsingBackend::availableBackends()
     }
     return plugins;
 }
+
+bool AbstractBrowsingBackend::goOneLevelUp()
+{
+    return false;
+}
+
+bool AbstractBrowsingBackend::expand (int row)
+{
+    return false;
+}

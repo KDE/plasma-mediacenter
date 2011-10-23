@@ -25,39 +25,36 @@
 class LocalFilesAbstractModel::Private
 {
 public:
-    KDirModel dirModel;
 };
 
 LocalFilesAbstractModel::LocalFilesAbstractModel (QObject* parent)
-    : QAbstractItemModel (parent)
+    : KDirModel (parent)
     , d(new Private())
 {
-    d->dirModel.dirLister()->openUrl(KUrl::fromLocalFile(QDir::homePath()));
+    dirLister()->openUrl(KUrl::fromLocalFile(QDir::homePath()));
 }
 
-int LocalFilesAbstractModel::columnCount (const QModelIndex& parent) const
+bool LocalFilesAbstractModel::goOneLevelUp()
 {
-    return d->dirModel.columnCount(parent);
+    KUrl url = dirLister()->url();
+
+    if (QDir(url.toLocalFile()) == QDir(QDir::homePath())) {
+        return false;
+    }
+
+    url.addPath("..");
+    bool success = dirLister()->openUrl(url);
+
+    return success;
 }
 
-int LocalFilesAbstractModel::rowCount (const QModelIndex& parent) const
+bool LocalFilesAbstractModel::browseTo (int row)
 {
-    return d->dirModel.rowCount(parent);
-}
+    KUrl url = dirLister()->url();
+    url.addPath(data(index(row, 0)).toString());
+    bool success = dirLister()->openUrl(url);
 
-QModelIndex LocalFilesAbstractModel::parent (const QModelIndex& child) const
-{
-    return d->dirModel.parent(child);
-}
-
-QModelIndex LocalFilesAbstractModel::index (int row, int column, const QModelIndex& parent) const
-{
-    return d->dirModel.index(row, column, parent);
-}
-
-KDirModel* LocalFilesAbstractModel::dirModel() const
-{
-    return &d->dirModel;
+    return success;
 }
 
 #include "localfilesabstractmodel.moc"

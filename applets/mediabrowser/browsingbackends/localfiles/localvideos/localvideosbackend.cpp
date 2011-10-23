@@ -22,7 +22,7 @@
 MEDIACENTER_EXPORT_BROWSINGBACKEND(LocalVideosBackend)
 
 LocalVideosBackend::LocalVideosBackend (QObject* parent, const QVariantList& args)
-    : AbstractBrowsingBackend (parent)
+    : LocalFilesAbstractBackend (parent, args)
 {
 
 }
@@ -30,7 +30,7 @@ LocalVideosBackend::LocalVideosBackend (QObject* parent, const QVariantList& arg
 LocalVideosBackend::~LocalVideosBackend()
 {}
 
-void LocalVideosBackend::init()
+void LocalVideosBackend::initModel()
 {
     setModel(new LocalVideosModel(this));
 }

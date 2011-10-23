@@ -27,8 +27,4 @@ LocalPicturesModel::LocalPicturesModel (QObject* parent) : LocalFilesAbstractMod
 
 }
 
-QVariant LocalPicturesModel::data (const QModelIndex& index, int role) const
-{
-    return dirModel()->data(index, role);
-}
 

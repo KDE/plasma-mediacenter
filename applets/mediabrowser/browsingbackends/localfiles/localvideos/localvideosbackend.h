@@ -19,16 +19,17 @@
 #ifndef LOCALVIDEOSPACKAGE_H
 #define LOCALVIDEOSPACKAGE_H
 
-#include <mediacenter/abstractbrowsingbackend.h>
+#include <../localfilesabstractbackend.h>
 
-class LocalVideosBackend : public MediaCenter::AbstractBrowsingBackend
+class LocalVideosBackend : public LocalFilesAbstractBackend
 {
     Q_OBJECT
 public:
     LocalVideosBackend(QObject *parent, const QVariantList &args);
     ~LocalVideosBackend();
 
-    virtual void init();
+protected:
+    virtual void initModel();
 };
 
 #endif // LOCALVIDEOSPACKAGE_H

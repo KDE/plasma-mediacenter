@@ -28,7 +28,6 @@ class LocalVideosModel : public LocalFilesAbstractModel
 
 public:
     explicit LocalVideosModel (QObject* parent);
-    virtual QVariant data (const QModelIndex& index, int role = Qt::DisplayRole) const;
 };
 
 #endif // LOCALVIDEOSMODEL_H

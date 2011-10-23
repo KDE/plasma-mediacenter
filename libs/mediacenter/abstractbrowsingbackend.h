@@ -135,6 +135,27 @@ public:
     //TODO: Maybe its better to let the model handle this
     virtual void searchForMedia(const QString &name);
 
+    /**
+     * This function is used by Media Browser to go to one level
+     * up in the browsing structure. Must be reimplemented
+     *
+     * @return true if operation succeeded
+     * @return false if we are already at the topmost level
+     */
+    Q_INVOKABLE virtual bool goOneLevelUp();
+
+    /**
+     * This slot is called by the media browser when the model contains
+     * directories (or equivalents of them) and the user requests to browse
+     * to a particular one
+     *
+     * @param row the row index of the directory
+     *
+     * @return true if operation was successful
+     * @return false if operation was unsuccessful
+     */
+    Q_INVOKABLE virtual bool expand(int row);
+
 signals:
     void modelChanged(QAbstractItemModel * model);
 

@@ -31,6 +31,7 @@ public:
     virtual ~MetadataMusicBackend();
 
     virtual void init();
+    virtual bool goOneLevelUp();
 };
 
 #endif // METADATAMUSICBACKEND_H

@@ -19,16 +19,17 @@
 #ifndef LOCALPICTURESPACKAGE_H
 #define LOCALPICTURESPACKAGE_H
 
-#include <mediacenter/abstractbrowsingbackend.h>
+#include <../localfilesabstractbackend.h>
 
-class LocalPicturesBackend : public MediaCenter::AbstractBrowsingBackend
+class LocalPicturesBackend : public LocalFilesAbstractBackend
 {
     Q_OBJECT
 public:
     LocalPicturesBackend(QObject *parent, const QVariantList &args);
     ~LocalPicturesBackend();
 
-    virtual void init();
+protected:
+    virtual void initModel();
 };
 
 #endif // LOCALPICTURESPACKAGE_H

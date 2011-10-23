@@ -168,10 +168,12 @@ Item {
                 anchors.fill: parent
                 onEntered: grid.currentIndex = index
                 onClicked:{
-                    var operation = dataSource.serviceForSource(activeSource).operationDescription("url");
-                    operation.mediaUrl = mediaUrl;
-                    dataSource.serviceForSource(activeSource).startOperationCall(operation);
-                    mediaBrowser.state = "viewing"
+                    if (!fileBackends[browsingMode].expand(index)) {
+                        var operation = dataSource.serviceForSource(activeSource).operationDescription("url");
+                        operation.mediaUrl = mediaUrl;
+                        dataSource.serviceForSource(activeSource).startOperationCall(operation);
+                        mediaBrowser.state = "viewing"
+                    }
 
 //                     if (fileBackends[browsingMode].fileType(fileBackends[browsingMode].url + "/" + display)) {
 //                         fileBackends[browsingMode].url = (fileBackends[browsingMode].url + "/" + display)
@@ -214,14 +216,11 @@ Item {
                 mediaBrowser.state = ""
             }
             else {
-                if (fileBackends[browsingMode].url == fileBackends[browsingMode].homeDirUrl()) {
+                if (!fileBackends[browsingMode].goOneLevelUp()) {
                     var operation =
                     dataSource.serviceForSource(activeSource).operationDescription("setBrowsingState");
                     operation.state = "welcome"
                     dataSource.serviceForSource(activeSource).startOperationCall(operation);
-                } else {
-                    fileBackends[browsingMode].url = (fileBackends[browsingMode].url + "/" + "../")
-                    print (fileBackends[browsingMode].url);
                 }
             }
             var operation = dataSource.serviceForSource(activeSource).operationDescription("viewingState");

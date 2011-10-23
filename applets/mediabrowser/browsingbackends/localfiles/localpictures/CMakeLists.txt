@@ -1,5 +1,6 @@
 set(localpicturesbackend_SRCS
     localpicturesmodel.cpp
+    ../localfilesabstractbackend.cpp
     ../localfilesabstractmodel.cpp
     localpicturesbackend.cpp
 )

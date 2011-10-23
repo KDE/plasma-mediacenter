@@ -26,9 +26,3 @@ LocalVideosModel::LocalVideosModel (QObject* parent) : LocalFilesAbstractModel (
 {
 
 }
-
-QVariant LocalVideosModel::data (const QModelIndex& index, int role) const
-{
-    return dirModel()->data(index, role);
-}
-

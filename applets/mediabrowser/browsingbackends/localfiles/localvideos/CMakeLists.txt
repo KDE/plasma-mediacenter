@@ -1,5 +1,6 @@
 set(localvideosbackend_SRCS
   localvideosmodel.cpp
+  ../localfilesabstractbackend.cpp
   ../localfilesabstractmodel.cpp
   localvideosbackend.cpp
 )
