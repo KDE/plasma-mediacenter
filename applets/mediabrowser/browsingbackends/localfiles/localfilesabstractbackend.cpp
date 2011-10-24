@@ -22,7 +22,7 @@
 #include "localfilesabstractmodel.h"
 
 LocalFilesAbstractBackend::LocalFilesAbstractBackend (QObject* parent, const QVariantList& args)
-    : AbstractBrowsingBackend (parent)
+    : AbstractBrowsingBackend (parent, args)
 {
 
 }

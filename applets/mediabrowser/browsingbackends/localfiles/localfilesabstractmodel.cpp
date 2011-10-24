@@ -23,8 +23,6 @@
 #include <KDirLister>
 #include <KDebug>
 
-#include <QAbstractItemModel>
-
 class LocalFilesAbstractModel::Private
 {
 public:
