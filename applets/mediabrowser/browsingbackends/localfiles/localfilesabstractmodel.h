@@ -29,6 +29,7 @@ class LocalFilesAbstractModel : public KDirModel
 public:
     explicit LocalFilesAbstractModel(QObject *parent, const QString &acceptedMimetypes);
 
+    virtual QVariant data (const QModelIndex& index, int role = Qt::DisplayRole) const;
     virtual bool goOneLevelUp();
     virtual bool browseTo(int row);
 

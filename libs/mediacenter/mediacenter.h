@@ -22,12 +22,18 @@
 #include "mediacenter_export.h"
 
 #include <QPair>
+#include <QHash>
 
 namespace Phonon {
     class MediaSource;
 }
 
 namespace MediaCenter {
+
+enum AdditionalMediaRoles {
+    MediaUrlRole = Qt::UserRole + 1,
+    IsExpandableRole = Qt::UserRole + 2
+};
 
 enum MediaType {
     Invalid = 0x0,
@@ -70,6 +76,8 @@ enum LayoutZone {
     MiddleZone,
     RightZone,
 };
+
+MEDIACENTER_EXPORT QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> &roles);
 
 /**
  * @typedef Media defines a QPair of MediaCenter::MediaType and QString.

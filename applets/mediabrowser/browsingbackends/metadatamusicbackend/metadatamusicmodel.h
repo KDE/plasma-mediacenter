@@ -28,11 +28,6 @@ class MetadataMusicModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
-    enum MediaItemRole
-    {
-        MediaUrlRole = Qt::UserRole + 1
-    };
-
     explicit MetadataMusicModel (QObject* parent = 0);
     virtual ~MetadataMusicModel();
 

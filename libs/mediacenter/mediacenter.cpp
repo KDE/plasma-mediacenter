@@ -92,4 +92,12 @@ Media mediaFromMediaSource(const Phonon::MediaSource &source)
     return Media();
 }
 
+QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> &roles)
+{
+    QHash<int, QByteArray> newRoles(roles);
+    newRoles[MediaUrlRole] = "mediaUrl";
+    newRoles[IsExpandableRole] = "isExpandable";
+    return newRoles;
+}
+
 } // MediaCenter namespace

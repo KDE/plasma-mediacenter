@@ -167,8 +167,10 @@ Item {
                 hoverEnabled: true
                 anchors.fill: parent
                 onEntered: grid.currentIndex = index
-                onClicked:{
-                    if (!fileBackends[browsingMode].expand(index)) {
+                onClicked: {
+                    if (isExpandable)
+                        fileBackends[browsingMode].expand(index);
+                    else {
                         var operation = dataSource.serviceForSource(activeSource).operationDescription("url");
                         operation.mediaUrl = mediaUrl;
                         dataSource.serviceForSource(activeSource).startOperationCall(operation);

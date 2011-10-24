@@ -19,9 +19,10 @@
 
 #include "localfilesabstractmodel.h"
 
+#include <mediacenter/mediacenter.h>
+
 #include <KDirModel>
 #include <KDirLister>
-#include <KDebug>
 
 class LocalFilesAbstractModel::Private
 {
@@ -33,6 +34,7 @@ LocalFilesAbstractModel::LocalFilesAbstractModel (QObject* parent, const QString
     : KDirModel (parent)
     , d(new Private())
 {
+    setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
     KMimeType::List mimeList = KMimeType::allMimeTypes();
 
     d->mimeTypes << "inode/directory";
@@ -47,6 +49,17 @@ LocalFilesAbstractModel::LocalFilesAbstractModel (QObject* parent, const QString
     }
 
     dirLister()->openUrl(KUrl::fromLocalFile(QDir::homePath()));
+}
+
+QVariant LocalFilesAbstractModel::data (const QModelIndex& index, int role) const
+{
+    switch (role) {
+        case MediaCenter::IsExpandableRole:
+            return data(index, KDirModel::FileItemRole).value<KFileItem>().isDir();
+        case MediaCenter::MediaUrlRole:
+            return data(index, KDirModel::FileItemRole).value<KFileItem>().url().prettyUrl();
+    }
+    return KDirModel::data (index, role);
 }
 
 bool LocalFilesAbstractModel::goOneLevelUp()

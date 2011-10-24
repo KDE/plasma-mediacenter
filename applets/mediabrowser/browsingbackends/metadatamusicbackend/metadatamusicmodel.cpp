@@ -19,6 +19,7 @@
 
 
 #include "metadatamusicmodel.h"
+#include <mediacenter/mediacenter.h>
 
 #include <Plasma/DataEngineManager>
 
@@ -43,9 +44,7 @@ MetadataMusicModel::MetadataMusicModel (QObject* parent)
     : QAbstractItemModel (parent)
     , d (new Private())
 {
-    QHash<int, QByteArray> roles = roleNames();
-    roles[MediaUrlRole] = "mediaUrl";
-    setRoleNames(roles);
+    setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
 
     d->engineManager = Plasma::DataEngineManager::self();
     d->engine = d->engineManager->loadEngine ("org.kde.active.metadata");
@@ -89,8 +88,11 @@ QVariant MetadataMusicModel::data (const QModelIndex& index, int role) const
     case Qt::DecorationRole:
         return d->musicList.at (index.row())->property("icon");
         break;
-    case MediaUrlRole:
+    case MediaCenter::MediaUrlRole:
         return d->musicList.at (index.row())->property("mediaUrl");
+        break;
+    case MediaCenter::IsExpandableRole:
+        return false;
         break;
     }
 
