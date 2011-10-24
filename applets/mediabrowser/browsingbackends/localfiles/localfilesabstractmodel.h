@@ -21,14 +21,19 @@
 #ifndef LOCALFILESABSTRACTMODEL_H
 #define LOCALFILESABSTRACTMODEL_H
 
-#include <KDirModel>
+#include <QtCore/QAbstractItemModel>
 
-class LocalFilesAbstractModel : public KDirModel
+class LocalFilesAbstractModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
     explicit LocalFilesAbstractModel(QObject *parent);
 
+    virtual QVariant data (const QModelIndex& index, int role = Qt::DisplayRole) const;
+    virtual QModelIndex index (int row, int column, const QModelIndex& parent = QModelIndex()) const;
+    virtual QModelIndex parent (const QModelIndex& child) const;
+    virtual int rowCount (const QModelIndex& parent = QModelIndex()) const;
+    virtual int columnCount (const QModelIndex& parent = QModelIndex()) const;
     virtual bool goOneLevelUp();
     virtual bool browseTo(int row);
 

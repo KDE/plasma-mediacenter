@@ -25,34 +25,61 @@
 class LocalFilesAbstractModel::Private
 {
 public:
+    KDirModel *model;
 };
 
 LocalFilesAbstractModel::LocalFilesAbstractModel (QObject* parent)
-    : KDirModel (parent)
+    : QAbstractItemModel (parent)
     , d(new Private())
 {
-    dirLister()->openUrl(KUrl::fromLocalFile(QDir::homePath()));
+    d->model = new KDirModel(this);
+    d->model->dirLister()->openUrl(KUrl::fromLocalFile(QDir::homePath()));
+}
+
+int LocalFilesAbstractModel::columnCount (const QModelIndex& parent) const
+{
+    return 1;
+}
+
+QModelIndex LocalFilesAbstractModel::index (int row, int column, const QModelIndex& parent) const
+{
+    return d->model->index(row, column, parent);
+}
+
+QModelIndex LocalFilesAbstractModel::parent (const QModelIndex& child) const
+{
+    return d->model->parent(child);
+}
+
+int LocalFilesAbstractModel::rowCount (const QModelIndex& parent) const
+{
+    return d->model->rowCount(parent);
+}
+
+QVariant LocalFilesAbstractModel::data (const QModelIndex& index, int role) const
+{
+    return d->model->data(index, role);
 }
 
 bool LocalFilesAbstractModel::goOneLevelUp()
 {
-    KUrl url = dirLister()->url();
+    KUrl url = d->model->dirLister()->url();
 
     if (QDir(url.toLocalFile()) == QDir(QDir::homePath())) {
         return false;
     }
 
     url.addPath("..");
-    bool success = dirLister()->openUrl(url);
+    bool success = d->model->dirLister()->openUrl(url);
 
     return success;
 }
 
 bool LocalFilesAbstractModel::browseTo (int row)
 {
-    KUrl url = dirLister()->url();
+    KUrl url = d->model->dirLister()->url();
     url.addPath(data(index(row, 0)).toString());
-    bool success = dirLister()->openUrl(url);
+    bool success = d->model->dirLister()->openUrl(url);
 
     return success;
 }
