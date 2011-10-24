@@ -22,7 +22,7 @@
 
 #include <KDirModel>
 
-LocalVideosModel::LocalVideosModel (QObject* parent) : LocalFilesAbstractModel (parent)
+LocalVideosModel::LocalVideosModel (QObject* parent) : LocalFilesAbstractModel (parent, QString("video/"))
 {
 
 }

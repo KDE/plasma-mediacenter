@@ -21,65 +21,55 @@
 
 #include <KDirModel>
 #include <KDirLister>
+#include <KDebug>
+
+#include <QAbstractItemModel>
 
 class LocalFilesAbstractModel::Private
 {
 public:
-    KDirModel *model;
+    QStringList mimeTypes;
 };
 
-LocalFilesAbstractModel::LocalFilesAbstractModel (QObject* parent)
-    : QAbstractItemModel (parent)
+LocalFilesAbstractModel::LocalFilesAbstractModel (QObject* parent, const QString& acceptedMimetypes)
+    : KDirModel (parent)
     , d(new Private())
 {
-    d->model = new KDirModel(this);
-    d->model->dirLister()->openUrl(KUrl::fromLocalFile(QDir::homePath()));
-}
+    KMimeType::List mimeList = KMimeType::allMimeTypes();
 
-int LocalFilesAbstractModel::columnCount (const QModelIndex& parent) const
-{
-    return 1;
-}
+    d->mimeTypes << "inode/directory";
+    foreach (KMimeType::Ptr mime, mimeList) {
+        if (mime->name().startsWith(acceptedMimetypes)) {
+            d->mimeTypes << mime->name();
+        }
+    }
 
-QModelIndex LocalFilesAbstractModel::index (int row, int column, const QModelIndex& parent) const
-{
-    return d->model->index(row, column, parent);
-}
+    if (dirLister()) {
+        dirLister()->setMimeFilter(d->mimeTypes);
+    }
 
-QModelIndex LocalFilesAbstractModel::parent (const QModelIndex& child) const
-{
-    return d->model->parent(child);
-}
-
-int LocalFilesAbstractModel::rowCount (const QModelIndex& parent) const
-{
-    return d->model->rowCount(parent);
-}
-
-QVariant LocalFilesAbstractModel::data (const QModelIndex& index, int role) const
-{
-    return d->model->data(index, role);
+    dirLister()->openUrl(KUrl::fromLocalFile(QDir::homePath()));
 }
 
 bool LocalFilesAbstractModel::goOneLevelUp()
 {
-    KUrl url = d->model->dirLister()->url();
+    KUrl url = dirLister()->url();
 
     if (QDir(url.toLocalFile()) == QDir(QDir::homePath())) {
         return false;
     }
 
     url.addPath("..");
-    bool success = d->model->dirLister()->openUrl(url);
+    bool success = dirLister()->openUrl(url);
 
     return success;
 }
 
 bool LocalFilesAbstractModel::browseTo (int row)
 {
-    KUrl url = d->model->dirLister()->url();
+    KUrl url = dirLister()->url();
     url.addPath(data(index(row, 0)).toString());
-    bool success = d->model->dirLister()->openUrl(url);
+    bool success = dirLister()->openUrl(url);
 
     return success;
 }

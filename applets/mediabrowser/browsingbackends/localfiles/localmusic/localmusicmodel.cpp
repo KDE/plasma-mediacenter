@@ -22,7 +22,7 @@
 
 #include <KDirModel>
 
-LocalMusicModel::LocalMusicModel (QObject* parent) : LocalFilesAbstractModel (parent)
+LocalMusicModel::LocalMusicModel (QObject* parent) : LocalFilesAbstractModel (parent, QString("audio/"))
 {
 
 }

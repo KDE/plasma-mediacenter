@@ -22,7 +22,7 @@
 
 #include <KDirModel>
 
-LocalPicturesModel::LocalPicturesModel (QObject* parent) : LocalFilesAbstractModel (parent)
+LocalPicturesModel::LocalPicturesModel (QObject* parent) : LocalFilesAbstractModel (parent, QString("image/"))
 {
 
 }
