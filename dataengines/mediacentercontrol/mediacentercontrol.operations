@@ -25,9 +25,12 @@
       <label>The position to seek to, in seconds.  Must be between 0 and the track length.</label>
     </entry>
   </group>
-   <group name="url">
+   <group name="setCurrentMedia">
     <entry name="mediaUrl" type="String">
       <label>A valid url to be set for for media.</label>
+    </entry>
+    <entry name="mediaType" type="String">
+      <label>A type for media, can be audio, video or image</label>
     </entry>
   </group>
      <group name="dirtyCheck">

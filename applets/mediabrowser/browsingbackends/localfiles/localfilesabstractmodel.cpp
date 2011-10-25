@@ -58,6 +58,12 @@ QVariant LocalFilesAbstractModel::data (const QModelIndex& index, int role) cons
             return data(index, KDirModel::FileItemRole).value<KFileItem>().isDir();
         case MediaCenter::MediaUrlRole:
             return data(index, KDirModel::FileItemRole).value<KFileItem>().url().prettyUrl();
+        case MediaCenter::MediaTypeRole:
+            KFileItem fileItem = data(index, KDirModel::FileItemRole).value<KFileItem>();
+            const QString mime = fileItem.mimetype().split('/').at(0);
+            
+            if (mime == "audio" || mime == "image" || mime == "video")
+                return mime;
     }
     return KDirModel::data (index, role);
 }

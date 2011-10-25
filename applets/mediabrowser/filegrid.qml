@@ -147,8 +147,9 @@ Item {
                     if (isExpandable)
                         mediaBrowserObject.backendFromName(currentBrowsingBackendName).expand(index);
                     else {
-                        var operation = dataSource.serviceForSource(activeSource).operationDescription("url");
+                        var operation = dataSource.serviceForSource(activeSource).operationDescription("setCurrentMedia");
                         operation.mediaUrl = mediaUrl;
+                        operation.mediaType = mediaType;
                         dataSource.serviceForSource(activeSource).startOperationCall(operation);
                         mediaBrowser.state = "viewing"
                     }
@@ -158,7 +159,7 @@ Item {
 //                         mediaViewing = false
 //                     } else {
 //                         mediaViewing = true
-//                         var operation = dataSource.serviceForSource(activeSource).operationDescription("url");
+//                         var operation = dataSource.serviceForSource(activeSource).operationDescription("setCurrentMedia");
 //                         operation.mediaUrl = (fileBackends[browsingMode].url + "/" + display);
 //                         dataSource.serviceForSource(activeSource).startOperationCall(operation);
 //                         mediaBrowser.state = "viewing"

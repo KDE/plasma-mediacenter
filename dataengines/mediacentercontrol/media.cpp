@@ -209,4 +209,15 @@ void Media::setCurrentBackendName (const QString& backendName)
     emit mediaDataUpdated();
 }
 
+void Media::setType(const QString& type)
+{
+    m_type = type;
+    emit mediaDataUpdated();
+}
+
+QString Media::type() const
+{
+    return m_type;
+}
+
 #include "media.moc"

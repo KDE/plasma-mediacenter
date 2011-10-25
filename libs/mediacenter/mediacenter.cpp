@@ -97,6 +97,7 @@ QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> 
     QHash<int, QByteArray> newRoles(roles);
     newRoles[MediaUrlRole] = "mediaUrl";
     newRoles[IsExpandableRole] = "isExpandable";
+    newRoles[MediaTypeRole] = "mediaType";
     return newRoles;
 }
 

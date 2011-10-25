@@ -53,8 +53,8 @@ void MediaContainer::updateData()
     setData("Position",m_media->position());
     setData("Length",m_media->length());
     setData("Volume",m_media->volume());
-    setData("MediaType", "Audio");
     setData("Url",m_media->getUrl());
+    setData("MediaType", m_media->type());
     setData("DirtyBit", m_media->getDirty());
     setData("BrowsingState", m_media->browsingState());
     setData("Viewing", m_media->viewMode());

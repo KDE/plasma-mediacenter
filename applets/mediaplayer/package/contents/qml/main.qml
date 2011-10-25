@@ -27,6 +27,7 @@ import Phonon 1.0
 Item {
     id: mediaPlayerRootItem
     property string activeSource: dataSource.sources[0]
+    property string currentMediaType: ""
 
     PlasmaCore.DataSource {
         id: dataSource
@@ -42,11 +43,9 @@ Item {
 
             progressSlider.maximum = data[activeSource].Length
             progressSlider.value = data[activeSource].Position
+            currentMediaType = data[activeSource].MediaType
 
-            if(data[activeSource].BrowsingState == "MusicBrowsing"
-                || data[activeSource].BrowsingState == "VideoBrowsing"
-                || data[activeSource].BrowsingState == "MetadataMusicBrowsing") {
-
+            if(currentMediaType == "audio" || currentMediaType == "video") {
                 video.visible = true
                 controlBarFrame.visible = true
 
@@ -61,7 +60,7 @@ Item {
                 } else if (data[activeSource].State == "stopped") {
                     video.stop();
                 }
-            } else if(data[activeSource].BrowsingState == "PictureBrowsing" && data[activeSource].Viewing) {
+            } else if(currentMediaType == "image" && data[activeSource].Viewing) {
                 imageViewerLoader.item.visible = true;
                 mediaController.visible = false
                 /*Unload and load again, because Image doesn't want to forget the old
@@ -69,7 +68,7 @@ Item {
                 if (imageViewerLoader.item.source != "file://" + data[activeSource].Url) {
                     imageViewerLoader.source = ""
                     imageViewerLoader.source = "ImageViewer.qml"
-                    imageViewerLoader.item.visible = true
+                    imageViewerLosetCurrentMediaader.item.visible = true
                     imageViewerLoader.item.source = ""
                     imageViewerLoader.item.source = data[activeSource].Url
                 }
@@ -77,15 +76,15 @@ Item {
             else {
                 imageViewerLoader.item.visible = false;
             }
-            if (data[activeSource].BrowsingState == "VideoBrowsing" && data[activeSource].Viewing) {
-                videoPlayer.visible = true;
-            }
-            else {
-                videoPlayer.visible= false;
-            }
-            if(data[activeSource].BrowsingState == "PictureBrowsing") {
-                controlBarFrame.visible = false;
-            }
+//             if (data[activeSource].BrowsingState == "VideoBrowsing" && data[activeSource].Viewing) {
+//                 videoPlayer.visible = true;
+//             }
+//             else {
+//                 videoPlayer.visible= false;
+//             }
+//             if(data[activeSource].BrowsingState == "PictureBrowsing") {
+//                 controlBarFrame.visible = false;
+//             }
         } //END onDataChanged
     }
 
@@ -98,6 +97,7 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
         imagePath: "widgets/background"
         enabledBorders: "LeftBorder|RightBorder|BottomBorder"
+        z: 2
 
         Item {
             id: mediaController
@@ -226,7 +226,7 @@ Item {
 
         Media {
             id: video
-            visible: false
+            //visible: false
             anchors.fill: mediaPlayer
 
             AudioOutput {
@@ -237,7 +237,7 @@ Item {
             Video {
                 id: videoPlayer
                 anchors.fill: parent
-                visible: false
+                //visible: false
             }
 
             onTotalTimeChanged: {
