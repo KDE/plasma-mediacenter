@@ -198,4 +198,15 @@ void Media::setBrowsingState(const QString& state)
     emit mediaDataUpdated();
 }
 
+QString Media::currentBackendName() const
+{
+    return m_backendName;
+}
+
+void Media::setCurrentBackendName (const QString& backendName)
+{
+    m_backendName = backendName;
+    emit mediaDataUpdated();
+}
+
 #include "media.moc"

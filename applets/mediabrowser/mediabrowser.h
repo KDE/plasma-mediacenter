@@ -20,7 +20,10 @@
 #define MEDIABROWSER_H
 
 #include <mediacenter/browser.h>
+
 #include <Plasma/DeclarativeWidget>
+
+#include <QMetaType>
 
 class QGraphicsLinearLayout;
 class AbstractMediaItemView;
@@ -46,6 +49,8 @@ public:
 
     void loadBrowsingBackend(MediaCenter::AbstractBrowsingBackend* backend);
 
+    Q_INVOKABLE QObject *backendFromName(const QString &backendName);
+
 public slots:
     void openUrl(const KUrl& url);
     void listMediaInDirectory();
@@ -68,12 +73,9 @@ private:
     bool m_blurred;
     QString m_viewType;
     QList<MediaCenter::Media> m_selectedMedias;
-    QList<QObject*> m_backends;
+    QHash<QString,QObject*> m_backends;
 
     QGraphicsLinearLayout *m_layout;
-
-private:
-    void showInstalledBackends();
 
 };
 

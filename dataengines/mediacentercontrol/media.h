@@ -80,6 +80,9 @@ public:
     void setViewMode(bool);
     bool viewMode() const;
 
+    void setCurrentBackendName(const QString &backendName);
+    QString currentBackendName() const;
+
 Q_SIGNALS:
     void mediaDataUpdated();
 
@@ -96,6 +99,7 @@ private:
     bool m_dirty;
     QString m_browsingState;
     bool m_viewMode;
+    QString m_backendName;
 };
 
 #endif // MEDIA_H

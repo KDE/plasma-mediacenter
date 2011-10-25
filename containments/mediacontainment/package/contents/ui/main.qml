@@ -46,9 +46,7 @@ Item {
         var component = Qt.createComponent("PlasmoidContainer.qml")
         var plasmoidContainer
 
-        if (applet.pluginName == "org.kde.mediacontroller") {
-            //plasmoidContainer = component.createObject(controlBarItem);
-        } else if (applet.pluginName == "org.kde.mediaplayer") {
+        if (applet.pluginName == "org.kde.mediaplayer") {
             plasmoidContainer = component.createObject(mediaPlayerItem);
         } else if (applet.pluginName == "org.kde.mediabrowser") {
             plasmoidContainer = component.createObject(browserItem);
@@ -81,15 +79,11 @@ Item {
 
     states: [
         State {
-            name: "MusicBrowsing"
+            name: "Browsing"
             PropertyChanges {
                 target: mediaPlayerItem
                 visible: true
             }
-//             AnchorChanges {
-//                 target: controlBarFrame
-//                 anchors.top: main.top
-//             }
             AnchorChanges {
                 target: welcomeItem
                 anchors.bottom: main.top
@@ -103,77 +97,6 @@ Item {
                 visible: true
             }
 
-        },
-        State {
-            name: "MetadataMusicBrowsing"
-            PropertyChanges {
-                target: mediaPlayerItem
-                visible: true
-            }
-//             AnchorChanges {
-//                 target: controlBarFrame
-//                 anchors.top: main.top
-//             }
-            AnchorChanges {
-                target: welcomeItem
-                anchors.bottom: main.top
-            }
-            AnchorChanges{
-                target: browserItem
-                anchors.left: main.left
-            }
-            PropertyChanges {
-                target: infoBarItem
-                visible: true
-            }
-
-        },
-        State {
-            name: "VideoBrowsing"
-            PropertyChanges {
-                target: mediaPlayerItem
-                visible: true
-            }
-//             AnchorChanges {
-//                 target: controlBarFrame
-//                 anchors.top: main.top
-//             }
-            AnchorChanges {
-                target: welcomeItem
-                anchors.bottom: main.top
-            }
-            AnchorChanges {
-                target: browserItem
-                anchors.left: main.left
-            }
-            PropertyChanges {
-                target: infoBarItem
-                visible: true
-            }
-        },
-        State {
-            name: "PictureBrowsing"
-            PropertyChanges {
-                target: mediaPlayerItem
-                visible: true
-            }
-//             AnchorChanges {
-//                 target: controlBarFrame
-//                 anchors.bottom: main.top
-//             }
-            AnchorChanges {
-                target: welcomeItem
-                anchors.bottom: main.top
-            }
-            AnchorChanges {
-                target: browserItem
-                anchors.left: main.left
-                anchors.top: main.top
-            }
-            PropertyChanges {
-                target: infoBarItem
-                visible: true
-            }
         },
         State {
             name: "welcome"
@@ -181,10 +104,6 @@ Item {
                 target: mediaPlayerItem
                 visible: false
             }
-//             AnchorChanges {
-//                 target: controlBarFrame
-//                 anchors.bottom: main.top
-//             }
             AnchorChanges {
                 target: welcomeItem
                 anchors.top: main.top
@@ -202,7 +121,6 @@ Item {
                 visible: false
             }
         }
-            
     ]
 
     transitions: Transition {
@@ -210,48 +128,28 @@ Item {
          AnchorAnimation { duration: 1000 }
      }
 
-//     PlasmaCore.FrameSvgItem {
-//         id: controlBarFrame
-//         width: parent.width * 0.8
-//         height: 64
-//         anchors.bottom: main.top
-//         anchors.horizontalCenter: parent.horizontalCenter
-//         imagePath: "widgets/background"
-//         enabledBorders: "LeftBorder|RightBorder|BottomBorder"
-// 
-//         Item {
-//             id: controlBarItem
-//             anchors {
-//                 fill: parent
-//                 leftMargin: parent.margins.left
-//                 rightMargin: parent.margins.right
-//                 bottomMargin: parent.margins.bottom
-//             }
-//         }
-//     }
+    Item {
+        id: welcomeItem
+        anchors { top: main.top; left: main.left }
+        width: main.width
+        height: main.height
+    }
 
-        Item {
-            id: welcomeItem
-            anchors { top: main.top; left: main.left }
-            width: main.width
-            height: main.height
-        }
+    Item {
+        id: browserItem
+        width: main.width
+        height: main.height
+        anchors.left: main.right
+        anchors.top: main.top
+    }
 
-        Item {
-            id: browserItem
-            width: main.width
-            height: main.height
-            anchors.left: main.right
-            anchors.top: main.top
-        }
-
-        PlasmaCore.FrameSvgItem {
-        id: infoBarItem
-        height: 50
-        width: parent.width
-        anchors.left: main.left
-        anchors.bottom: main.bottom
-        enabledBorders: "LeftBorder|RightBorder|BottomBorder"
-        visible: false
-        }
+    PlasmaCore.FrameSvgItem {
+    id: infoBarItem
+    height: 50
+    width: parent.width
+    anchors.left: main.left
+    anchors.bottom: main.bottom
+    enabledBorders: "LeftBorder|RightBorder|BottomBorder"
+    visible: false
+    }
 }

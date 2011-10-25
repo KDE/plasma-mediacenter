@@ -52,27 +52,10 @@ MediaBrowser::MediaBrowser(QObject *parent, const QVariantList &args)
 
     setEnableToolbar(true);
     toolbar()->setNavigationControls(MediaCenter::NavigationToolbar::BackwardControl | MediaCenter::NavigationToolbar::ViewModeControl);
-
-    qmlRegisterType<MediaCenter::AbstractBrowsingBackend>("MediaCenter", 0, 1, "AbstractBrowsingBackend");
 }
 
 MediaBrowser::~MediaBrowser()
 {}
-
-void MediaBrowser::showInstalledBackends()
-{
-    //TODO: always a view with all the avail backends in the scene instead
-//    delete m_backend->model();
-//    m_model = new StartupModel(this);
-//    m_view->setModel(m_backend->model());
-
-//    QmlHomeView *homeView = new QmlHomeView(this);
-//    QGraphicsLinearLayout *layout = static_cast<QGraphicsLinearLayout*>(this->layout());
-//    layout->addItem(homeView);
-
-//    homeView->setQmlPath(KStandardDirs::locate("data", "plasma-mediacenter/declarative/homeview.qml"));
-//    homeView->setModel(m_backend->model());
-}
 
 void MediaBrowser::init()
 {
@@ -84,13 +67,15 @@ void MediaBrowser::init()
     MediaCenter::AbstractBrowsingBackend *backend;
     KSharedPtr<KService> service;
 
-    for (int i=0; i<MediaCenter::AbstractBrowsingBackend::availableBackends().size(); ++i) {
-        service = MediaCenter::AbstractBrowsingBackend::availableBackends().at(i);
+    KService::List list = MediaCenter::AbstractBrowsingBackend::availableBackends();
+
+    for (int i=0; i<list.size(); ++i) {
+        service = list.at(i);
         backend = service->createInstance<MediaCenter::AbstractBrowsingBackend>(0, QVariantList() << service->storageId());
         loadBrowsingBackend(backend);
     }
 
-    m_view->engine()->rootContext()->setContextProperty("fileBackends", QVariant::fromValue(m_backends));
+    m_view->engine()->rootContext()->setContextProperty("mediaBrowserObject", this);
 }
 
 void MediaBrowser::createConfigurationInterface(KConfigDialog *parent)
@@ -116,7 +101,7 @@ void MediaBrowser::loadBrowsingBackend(MediaCenter::AbstractBrowsingBackend *bac
 
     backend->setParent(this);
     backend->init();
-    m_backends.append(backend);
+    m_backends.insert(backend->name(), backend);
     kDebug() << "backend " << backend->name() << " loaded";
 }
 
@@ -170,6 +155,11 @@ void MediaBrowser::clearSelectedMedias()
 {
     m_selectedMedias.clear();
     emit selectedMediasChanged(m_selectedMedias);
+}
+
+QObject* MediaBrowser::backendFromName (const QString& backendName)
+{
+    return m_backends.value(backendName);
 }
 
 K_EXPORT_PLASMA_APPLET(mediabrowser, MediaBrowser)

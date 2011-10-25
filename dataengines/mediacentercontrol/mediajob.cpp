@@ -148,6 +148,11 @@ void MediaJob::start()
             bool viewingState =  parameters()["viewing"].toBool();
             m_media->setViewMode(viewingState);
         }
+    } else if (operation == "setCurrentBrowsingBackend") {
+        if(parameters().contains("backend")) {
+            QString backend =  parameters()["backend"].toString();
+            m_media->setCurrentBackendName(backend);
+        }
     }
 
     emitResult();

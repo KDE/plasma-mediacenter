@@ -19,7 +19,6 @@
  */
 
 import QtQuick 1.0
-import MediaCenter 0.1
 import org.kde.qtextracomponents 0.1
 import org.kde.plasma.graphicswidgets 0.1 as PlasmaWidgets
 import org.kde.plasma.core 0.1 as PlasmaCore
@@ -30,6 +29,7 @@ Item {
     clip: true
     property string activeSource: dataSource.sources[0]
     property int browsingMode: -1
+    property string currentBrowsingBackendName: ""
     property bool mediaViewing
 
     PlasmaCore.DataSource {
@@ -38,26 +38,6 @@ Item {
         connectedSources: activeSource
 
         onDataChanged: {
-            updateBrowsingMode();
-        }
-    }
-
-    ListView {
-        id: list
-        clip: true
-        keyNavigationWraps: true
-//         anchors.left: parent.left
-//         anchors.bottom: parent.bottom
-//         height: parent.height/6
-//         width: parent.width
-        anchors.fill: parent
-        delegate: testDelegate
-        highlight: highlight
-        focus: true
-        orientation: ListView.Horizontal
-        visible: false
-
-        Component.onCompleted: {
             updateBrowsingMode();
         }
     }
@@ -81,20 +61,15 @@ Item {
 
     function updateBrowsingMode()
     {
-        var browsingModeName = dataSource.data[activeSource].BrowsingState
-        var oldMode = browsingMode
-        if (browsingModeName == "MusicBrowsing") {
-            browsingMode = 0
-        } else if (browsingModeName == "MetadataMusicBrowsing") {
-            browsingMode = 1
-        } else if (browsingModeName == "VideoBrowsing") {
-            browsingMode = 2
-        } else if (browsingModeName == "PictureBrowsing") {
-            browsingMode = 3
-        }
-        if (oldMode != browsingMode) {
-            grid.model = fileBackends[browsingMode].backendModel
-            list.model = fileBackends[browsingMode].backendModel
+        var browsingModeName = dataSource.data[activeSource].BrowsingState;
+
+        if (browsingModeName == "Browsing") {
+            currentBrowsingBackendName = dataSource.data[activeSource].CurrentBrowsingBackend;
+
+            if (currentBrowsingBackendName) {
+                var backend = mediaBrowserObject.backendFromName(currentBrowsingBackendName);
+                grid.model = backend.backendModel;
+            }
         }
     }
 
@@ -163,13 +138,14 @@ Item {
                     horizontalAlignment: Text.AlignHCenter
                 }
             }
+
             MouseArea {
                 hoverEnabled: true
                 anchors.fill: parent
                 onEntered: grid.currentIndex = index
                 onClicked: {
                     if (isExpandable)
-                        fileBackends[browsingMode].expand(index);
+                        mediaBrowserObject.backendFromName(currentBrowsingBackendName).expand(index);
                     else {
                         var operation = dataSource.serviceForSource(activeSource).operationDescription("url");
                         operation.mediaUrl = mediaUrl;
@@ -216,18 +192,19 @@ Item {
         onClicked: {
             if (mediaBrowser.state == "viewing") {
                 mediaBrowser.state = ""
+
+                var operation = dataSource.serviceForSource(activeSource).operationDescription("viewingState");
+                operation.viewing = false
+                dataSource.serviceForSource(activeSource).startOperationCall(operation);
             }
             else {
-                if (!fileBackends[browsingMode].goOneLevelUp()) {
+                if (!mediaBrowserObject.backendFromName(currentBrowsingBackendName).goOneLevelUp()) {
                     var operation =
-                    dataSource.serviceForSource(activeSource).operationDescription("setBrowsingState");
+                        dataSource.serviceForSource(activeSource).operationDescription("setBrowsingState");
                     operation.state = "welcome"
                     dataSource.serviceForSource(activeSource).startOperationCall(operation);
                 }
             }
-            var operation = dataSource.serviceForSource(activeSource).operationDescription("viewingState");
-            operation.viewing = false
-            dataSource.serviceForSource(activeSource).startOperationCall(operation);
         }
     }
 
@@ -238,12 +215,6 @@ Item {
             PropertyChanges {
                 target: grid
                 visible: false
-            }
-
-            PropertyChanges {
-                target: list
-                //TODO: Enable when we can do this properly
-                //visible: true
             }
         }
     ]

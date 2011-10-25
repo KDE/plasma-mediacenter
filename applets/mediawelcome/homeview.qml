@@ -70,14 +70,12 @@ PathView {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    var operation =
-                    dataSource.serviceForSource(activeSource).operationDescription("setBrowsingState");
-                    switch (index) {
-                        case 0: operation.state = "MusicBrowsing"; break;
-                        case 1: operation.state = "MetadataMusicBrowsing";  break;
-                        case 2: operation.state = "VideoBrowsing"; break;
-                        case 3: operation.state = "PictureBrowsing";  break;
-                    }
+                    var operation = dataSource.serviceForSource(activeSource).operationDescription("setBrowsingState");
+                    operation.state = "Browsing";
+                    dataSource.serviceForSource(activeSource).startOperationCall(operation);
+
+                    operation = dataSource.serviceForSource(activeSource).operationDescription("setCurrentBrowsingBackend");
+                    operation.backend = display;
                     dataSource.serviceForSource(activeSource).startOperationCall(operation);
                 }
             }
