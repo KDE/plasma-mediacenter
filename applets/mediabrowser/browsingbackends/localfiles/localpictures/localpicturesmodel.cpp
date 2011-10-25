@@ -20,11 +20,18 @@
 
 #include "localpicturesmodel.h"
 
-#include <KDirModel>
+#include <mediacenter/mediacenter.h>
 
 LocalPicturesModel::LocalPicturesModel (QObject* parent) : LocalFilesAbstractModel (parent, QString("image/"))
 {
 
 }
 
-
+QVariant LocalPicturesModel::data (const QModelIndex& index, int role) const
+{
+    if (role == Qt::DecorationRole) {
+        if (!LocalPicturesModel::data(index, MediaCenter::IsExpandableRole).toBool())
+            return LocalFilesAbstractModel::data (index, MediaCenter::MediaUrlRole);
+    }
+    return LocalFilesAbstractModel::data (index, role);
+}

@@ -28,6 +28,7 @@ class LocalPicturesModel : public LocalFilesAbstractModel
 
 public:
     explicit LocalPicturesModel (QObject* parent);
+    virtual QVariant data (const QModelIndex& index, int role = Qt::DisplayRole) const;
 };
 
 #endif // LOCALPICTURESMODEL_H

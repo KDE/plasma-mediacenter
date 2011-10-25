@@ -76,19 +76,19 @@ Item {
     Component {
         id: testDelegate
         Item {
-            id: delegateItem
             width: grid.cellWidth; height: grid.cellHeight
+
             PlasmaCore.Theme {
                 id:theme
             }
+
             Column {
                 anchors {
-                    margins: 2
                     fill: parent
                 }
 
                 Loader {
-                    anchors.fill: parent
+                    width: parent.width * 0.95; height: parent.height - itemText.height;
 
                     Component.onCompleted: {
                         if (typeof(decoration) == "string") {
@@ -110,10 +110,18 @@ Item {
                     id: delegateItemImageComponent
                     Image {
                         id: delegateItemImage
-                        width: parent.height*2/3
-                        height: parent.height - itemText.height
+                        width: parent.width
+                        height: parent.height
                         anchors.horizontalCenter: parent.horizontalCenter
                         fillMode: Image.PreserveAspectFit
+
+                        Component.onCompleted: {
+                            if (sourceSize.width >sourceSize.height) {
+                                sourceSize.width = width;
+                            } else {
+                                sourceSize.height = height;
+                            }
+                        }
                     }
                 }
 
@@ -121,8 +129,8 @@ Item {
                     id: delegateItemIconComponent
                     QIconItem {
                         id: delegateItemIcon
-                        width: parent.height*2/3
-                        height: parent.height - itemText.height
+                        width: parent.width
+                        height: parent.height
                         anchors.horizontalCenter: parent.horizontalCenter
                     }
                 }
@@ -144,29 +152,22 @@ Item {
                 anchors.fill: parent
                 onEntered: grid.currentIndex = index
                 onClicked: {
-                    if (isExpandable)
+                    var mediaViewing;
+                    if (isExpandable) {
                         mediaBrowserObject.backendFromName(currentBrowsingBackendName).expand(index);
+                        mediaViewing = false;
+                    }
                     else {
                         var operation = dataSource.serviceForSource(activeSource).operationDescription("setCurrentMedia");
                         operation.mediaUrl = mediaUrl;
                         operation.mediaType = mediaType;
                         dataSource.serviceForSource(activeSource).startOperationCall(operation);
                         mediaBrowser.state = "viewing"
+                        mediaViewing = true;
                     }
-
-//                     if (fileBackends[browsingMode].fileType(fileBackends[browsingMode].url + "/" + display)) {
-//                         fileBackends[browsingMode].url = (fileBackends[browsingMode].url + "/" + display)
-//                         mediaViewing = false
-//                     } else {
-//                         mediaViewing = true
-//                         var operation = dataSource.serviceForSource(activeSource).operationDescription("setCurrentMedia");
-//                         operation.mediaUrl = (fileBackends[browsingMode].url + "/" + display);
-//                         dataSource.serviceForSource(activeSource).startOperationCall(operation);
-//                         mediaBrowser.state = "viewing"
-//                     }
-                     var operation = dataSource.serviceForSource(activeSource).operationDescription("viewingState");
-                     operation.viewing = mediaViewing
-                     dataSource.serviceForSource(activeSource).startOperationCall(operation);
+                    var operation = dataSource.serviceForSource(activeSource).operationDescription("viewingState");
+                    operation.viewing = mediaViewing
+                    dataSource.serviceForSource(activeSource).startOperationCall(operation);
                 }
             }
         }
@@ -179,8 +180,6 @@ Item {
             id: highlightFrame
             imagePath: "widgets/viewitem"
             prefix: "selected+hover"
-            width: 100
-            height: 100
         }
     }
 

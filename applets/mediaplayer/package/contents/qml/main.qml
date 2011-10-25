@@ -68,7 +68,7 @@ Item {
                 if (imageViewerLoader.item.source != "file://" + data[activeSource].Url) {
                     imageViewerLoader.source = ""
                     imageViewerLoader.source = "ImageViewer.qml"
-                    imageViewerLosetCurrentMediaader.item.visible = true
+                    imageViewerLoader.item.visible = true
                     imageViewerLoader.item.source = ""
                     imageViewerLoader.item.source = data[activeSource].Url
                 }
@@ -226,7 +226,7 @@ Item {
 
         Media {
             id: video
-            //visible: false
+            visible: false
             anchors.fill: mediaPlayer
 
             AudioOutput {
@@ -237,7 +237,6 @@ Item {
             Video {
                 id: videoPlayer
                 anchors.fill: parent
-                //visible: false
             }
 
             onTotalTimeChanged: {

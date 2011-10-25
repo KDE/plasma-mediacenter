@@ -94,6 +94,8 @@ QVariant MetadataMusicModel::data (const QModelIndex& index, int role) const
     case MediaCenter::IsExpandableRole:
         return false;
         break;
+    case MediaCenter::MediaTypeRole:
+        return "audio";
     }
 
     return QVariant();
