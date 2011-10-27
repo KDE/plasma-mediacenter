@@ -40,9 +40,9 @@ public:
     void setLength(int time);
 
     bool isRunning();
-    State state();
     int position() const;
     qreal volume() const;
+    State state() const;
 
     bool canPlay() const;
     void play();
@@ -60,31 +60,28 @@ public:
     void next();
 
     bool canSetVolume() const;
-    void setVolume(qreal volume=0);
+    void setVolume(qreal volume);
 
     bool canSeek() const;
-    void seek(int time=0);
+    void seek(int time);
 
     bool canUpdateMediaProgress() const;
-    void mediaProgress(int time=0);
+    void setMediaProgress(int time=0);
 
-    void setUrl(QString);
-    QString getUrl() const;
-
-    void setDirty(bool);
-    bool getDirty() const;
+    QString url() const;
+    void setUrl(const QString &url);
 
     QString browsingState() const;
     void setBrowsingState(const QString &state);
 
-    void setViewMode(bool);
     bool viewMode() const;
+    void setViewMode(bool);
 
-    void setCurrentBackendName(const QString &backendName);
     QString currentBackendName() const;
-    
-    void setType(const QString &type);
+    void setCurrentBackendName(const QString &backendName);
+
     QString type() const;
+    void setType(const QString &type);
 
 Q_SIGNALS:
     void mediaDataUpdated();
@@ -99,7 +96,6 @@ private:
     qreal m_volume;
     int m_length;
     QString m_url;
-    bool m_dirty;
     QString m_browsingState;
     bool m_viewMode;
     QString m_backendName;

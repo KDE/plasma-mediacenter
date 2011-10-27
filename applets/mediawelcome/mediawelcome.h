@@ -29,16 +29,11 @@ class MediaWelcome : public MediaCenter::HomeApplet
     Q_OBJECT
 public:
     MediaWelcome(QObject *parent, const QVariantList &args = QVariantList());
-    ~MediaWelcome();
 
     void init();
 
-private slots:
-    void itemActivated();
-
 private:
     BackendModel *m_model;
-    QmlViewWrapper *m_view;
 };
 
 #endif // MEDIAWELCOME_H

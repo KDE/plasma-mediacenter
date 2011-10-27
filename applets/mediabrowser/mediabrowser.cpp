@@ -78,83 +78,15 @@ void MediaBrowser::init()
     m_view->engine()->rootContext()->setContextProperty("mediaBrowserObject", this);
 }
 
-void MediaBrowser::createConfigurationInterface(KConfigDialog *parent)
-{
-    if (currentBrowsingBackend()) {
-        if (currentBrowsingBackend()->hasConfigurationInterface()) {
-            currentBrowsingBackend()->createConfigurationInterface(parent);
-        }
-    }
-
-    connect(parent, SIGNAL(accepted()), this, SLOT(configAccepted()));
-}
-
-
 void MediaBrowser::loadBrowsingBackend(MediaCenter::AbstractBrowsingBackend *backend)
 {
     if (!backend) {
         kDebug() << "OUCH! Something's wrong with the backend";
         return;
     }
-
-    kDebug() << "LOADING browsing backend " << backend->name();
-
     backend->setParent(this);
     backend->init();
     m_backends.insert(backend->name(), backend);
-    kDebug() << "backend " << backend->name() << " loaded";
-}
-
-KUrl MediaBrowser::currentUrl() const
-{
-//     MediaCenter::AbstractBrowsingBackend* currentBackend = qobject_cast<MediaCenter::AbstractBrowsingBackend*>(m_backends.at(backend));
-//     KDirModel *modeldir = qobject_cast<KDirModel*>(currentBackend->model());
-//     if (!modeldir || !modeldir->dirLister()) {
-//         return KUrl();
-//     }
-//     return modeldir->dirLister()->url();
-return  KUrl();
-}
-
-void MediaBrowser::openUrl(const KUrl &url)
-{
-//     MediaCenter::AbstractBrowsingBackend* currentBackend = qobject_cast<MediaCenter::AbstractBrowsingBackend*>(m_backends.at(backend));
-//     KDirModel *modeldir = qobject_cast<KDirModel*>(currentBackend->model());
-//     if (modeldir) {
-//         modeldir->dirLister()->openUrl(url);
-//     }
-}
-
-void MediaBrowser::listMediaInDirectory()
-{
-    //m_view->listMediaInDirectory();
-}
-
-void MediaBrowser::selectedMediasAdd(const MediaCenter::Media &media)
-{
-    if (!m_selectedMedias.contains(media)) {
-        m_selectedMedias << media;
-        emit selectedMediasChanged(m_selectedMedias);
-    }
-}
-
-void MediaBrowser::selectedMediasRemove(const MediaCenter::Media &media)
-{
-    if (m_selectedMedias.contains(media)) {
-        m_selectedMedias.removeAll(media);
-        emit selectedMediasChanged(m_selectedMedias);
-    }
-}
-
-QList<MediaCenter::Media> MediaBrowser::selectedMedias() const
-{
-    return m_selectedMedias;
-}
-
-void MediaBrowser::clearSelectedMedias()
-{
-    m_selectedMedias.clear();
-    emit selectedMediasChanged(m_selectedMedias);
 }
 
 QObject* MediaBrowser::backendFromName (const QString& backendName)

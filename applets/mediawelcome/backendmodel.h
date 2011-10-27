@@ -35,7 +35,6 @@ class BackendModel : public QAbstractItemModel
 public:
     enum BackendRoles { ServiceRole = Qt::UserRole + 1 };
     BackendModel(QObject *parent = 0);
-    ~BackendModel();
 
     virtual int columnCount ( const QModelIndex & parent = QModelIndex() ) const;
     virtual QVariant data ( const QModelIndex & index, int role = Qt::DisplayRole ) const;

@@ -30,9 +30,6 @@ BackendModel::BackendModel(QObject *parent) : QAbstractItemModel(parent)
 {
 }
 
-BackendModel::~BackendModel()
-{}
-
 int BackendModel::columnCount(const QModelIndex &parent) const
 {
     if (!parent.isValid()) {

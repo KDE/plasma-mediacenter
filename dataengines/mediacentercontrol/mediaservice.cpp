@@ -34,15 +34,14 @@ MediaService::MediaService(Media* media, QObject* parent)
 void MediaService::enableMediaOperations()
 {
     if (m_media) {
-        setOperationEnabled("play", true);
-        setOperationEnabled("pause", true);
+        setOperationEnabled("play", m_media->canPlay());
+        setOperationEnabled("pause", m_media->canPause());
         setOperationEnabled("stop", m_media->canStop());
         setOperationEnabled("next", m_media->canGoNext());
         setOperationEnabled("previous", m_media->canGoPrevious());
         setOperationEnabled("volume", m_media->canSetVolume());
         setOperationEnabled("seek", m_media->canSeek());
         setOperationEnabled("mediaProgress", m_media->canUpdateMediaProgress());
-        setOperationEnabled("dirtyCheck", m_media->getDirty());
     }
 }
 

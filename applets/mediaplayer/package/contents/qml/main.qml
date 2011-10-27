@@ -131,9 +131,8 @@ Item {
                     icon: QIcon("media-skip-backward")
 
                     onClicked: {
-                        var data = dataSource.serviceForSource(activeSource).operationDescription("previous");
-                        print(dataSource.serviceForSource(activeSource).name);
-                        dataSource.serviceForSource(activeSource).startOperationCall(dataSource.serviceForSource(activeSource).operationDescription("previous"));
+                        var operation = dataSource.serviceForSource(activeSource).operationDescription("previous");
+                        dataSource.serviceForSource(activeSource).startOperationCall(operation);
                     }
                 }
 
@@ -143,15 +142,15 @@ Item {
                     height: width
 
                     onClicked: {
-                        var operation
+                        var operationName
                         if (dataSource.data[activeSource].State == "playing") {
-                            operation = "pause"
+                            operationName = "pause";
                         } else {
-                            operation = "play"
+                            operationName = "play";
                         }
-                    var data = dataSource.serviceForSource(activeSource).operationDescription(operation);
-                    dataSource.serviceForSource(activeSource).startOperationCall(dataSource.serviceForSource(activeSource).operationDescription(operation));
-                    dataSource.serviceForSource(activeSource).associateWidget(playPause, operation);
+                        var operation = dataSource.serviceForSource(activeSource).operationDescription(operationName);
+                        dataSource.serviceForSource(activeSource).startOperationCall(operation);
+                        dataSource.serviceForSource(activeSource).associateWidget(playPause, operation);
                     }
                 }
 
@@ -163,9 +162,8 @@ Item {
                     icon: QIcon("media-playback-stop")
 
                     onClicked: {
-                        var data = dataSource.serviceForSource(activeSource).operationDescription("stop");
-                        print(dataSource.serviceForSource(activeSource).name);
-                        dataSource.serviceForSource(activeSource).startOperationCall(dataSource.serviceForSource(activeSource).operationDescription("stop"));
+                        var operation = dataSource.serviceForSource(activeSource).operationDescription("stop");
+                        dataSource.serviceForSource(activeSource).startOperationCall(operation);
                     }
                 }
 
@@ -177,9 +175,8 @@ Item {
                     icon: QIcon("media-skip-forward")
 
                     onClicked: {
-                        var data = dataSource.serviceForSource(activeSource).operationDescription("next");
-                        print(dataSource.serviceForSource(activeSource).name);
-                        dataSource.serviceForSource(activeSource).startOperationCall(dataSource.serviceForSource(activeSource).operationDescription("next"));
+                        var operation = dataSource.serviceForSource(activeSource).operationDescription("next");
+                        dataSource.serviceForSource(activeSource).startOperationCall(operation);
                     }
                 }
             }
@@ -192,8 +189,6 @@ Item {
                     icon: QIcon("audio-volume-medium")
 
                     onClicked: {
-                        var data = dataSource.serviceForSource(activeSource).operationDescription("volume");
-                        dataSource.serviceForSource(activeSource).startOperationCall(dataSource.serviceForSource(activeSource).operationDescription("volume"));
                     }
                 }
 
@@ -204,7 +199,6 @@ Item {
                 anchors.verticalCenter: layouting.verticalCenter
                 orientation: Qt.Horizontal
                 onSliderMoved: {
-                    console.log("SEEK ATTEMPT " + value)
                     var operation = dataSource.serviceForSource(activeSource).operationDescription("seek");
                     operation.seconds = value;
                     dataSource.serviceForSource(activeSource).startOperationCall(operation);

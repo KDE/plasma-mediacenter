@@ -116,13 +116,12 @@ void MediaJob::start()
             if (parameters().contains("seconds")) {
                 qreal time = parameters()["seconds"].toInt();
                 if (time >= 0 && time <= m_media->length()) {
-                    m_media->mediaProgress(time);
+                    m_media->setMediaProgress(time);
                 }
             }
             if (parameters().contains("mediaLength")) {
                 qreal totalTime = parameters()["mediaLength"].toInt();
                 if (totalTime >= 0) {
-                    //kDebug() << "updating legth of media progres";
                     m_media->setLength(totalTime);
                 }
             }
@@ -136,11 +135,6 @@ void MediaJob::start()
         if (parameters().contains("mediaType")) {
             QString mediaType = parameters()["mediaType"].toString();
             m_media->setType(mediaType);
-        }
-    } else if (operation == "dirtyCheck") {
-        if (parameters().contains("dirty")) {
-            bool dirtyBit = parameters()["dirty"].toBool();
-            m_media->setDirty(dirtyBit);
         }
     } else if (operation == "setBrowsingState") {
         if (parameters().contains("state")) {

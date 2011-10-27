@@ -59,14 +59,6 @@ public:
     void setEnableToolbar(bool);
     bool enableToolbar() const;
 
-    virtual QList<MediaCenter::Media> selectedMedias() const = 0;
-
-    /**
-     * This method must be reimplemented in order to notify the current
-     * url for which files are currently showed.
-     */
-    virtual KUrl currentUrl() const = 0;
-
     /**
      * This method should only be used by the main application to
      * set the gesture type to handle.
@@ -93,17 +85,6 @@ public:
     MediaCenter::AbstractBrowsingBackend* currentBrowsingBackend() const;
 
 public Q_SLOTS:
-    /**
-     * This method must be reimplemented in order to allow the browsing
-     * for a location specified by @param url
-     */
-    virtual void openUrl(const KUrl &url) = 0;
-
-    virtual void listMediaInDirectory() = 0;
-    virtual void selectedMediasAdd(const MediaCenter::Media &) = 0;
-    virtual void selectedMediasRemove(const MediaCenter::Media &) = 0;
-    virtual void clearSelectedMedias() = 0;
-
     /**
      * sets the current browsing backend and then calls loadBrowsingBackend.
      */

@@ -18,7 +18,6 @@
  ***************************************************************************/
 #include "mediawelcome.h"
 
-#include "qmlviewwrapper.h"
 #include "backendmodel.h"
 
 #include <mediacenter/abstractbrowsingbackend.h>
@@ -34,14 +33,10 @@
 #include <QDeclarativeContext>
 
 MediaWelcome::MediaWelcome(QObject *parent, const QVariantList &args) : MediaCenter::HomeApplet(parent, args),
-    m_model(0),
-    m_view(0)
+    m_model(0)
 {
     setAcceptedMouseButtons(Qt::NoButton);
 }
-
-MediaWelcome::~MediaWelcome()
-{}
 
 void MediaWelcome::init()
 {
@@ -54,20 +49,6 @@ void MediaWelcome::init()
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
     layout->addItem(qmlWidget);
     setLayout(layout);
-    kDebug() << m_model->rowCount();
-
-    /*QDeclarativeItem *item = qobject_cast<QDeclarativeItem*>(m_view->rootObject());
-    connect(item, SIGNAL(clicked()), this, SLOT(itemActivated()));*/
-}
-
-void MediaWelcome::itemActivated()
-{
-    QDeclarativeItem *item = qobject_cast<QDeclarativeItem*>(m_view->rootObject());
-    KService *service = m_model->index(item->property("currentIndex").toInt(), 0).data(BackendModel::ServiceRole).value<KService*>();
-    MediaCenter::AbstractBrowsingBackend *backend = service->createInstance<MediaCenter::AbstractBrowsingBackend>(0, QVariantList() << service->storageId());
-
-    kDebug() << "browsing backend chosen";
-    emit browsingBackendActivated(backend);
 }
 
 K_EXPORT_PLASMA_APPLET(mediawelcome, MediaWelcome)

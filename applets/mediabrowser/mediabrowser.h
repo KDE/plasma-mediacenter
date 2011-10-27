@@ -41,42 +41,16 @@ public:
     ~MediaBrowser();
 
     void init();
-    void createConfigurationInterface(KConfigDialog *parent);
-
-    QList<MediaCenter::Media> selectedMedias() const;
-
-    KUrl currentUrl() const;
-
     void loadBrowsingBackend(MediaCenter::AbstractBrowsingBackend* backend);
 
     Q_INVOKABLE QObject *backendFromName(const QString &backendName);
 
-public slots:
-    void openUrl(const KUrl& url);
-    void listMediaInDirectory();
-    void selectedMediasAdd(const MediaCenter::Media &media);
-    void selectedMediasRemove(const MediaCenter::Media &media);
-    void clearSelectedMedias();
-
-signals:
-    void mediasListChanged(const QList<MediaCenter::Media> &list);
-
-    void musicDataEngine();
-    void videoDataEngine();
-    void pictureDataEngine();
-
 private:
     Plasma::DeclarativeWidget * m_view;
-
     MediaCenter::AbstractBrowsingBackend *m_backend;
 
-    bool m_blurred;
-    QString m_viewType;
-    QList<MediaCenter::Media> m_selectedMedias;
     QHash<QString,QObject*> m_backends;
-
     QGraphicsLinearLayout *m_layout;
-
 };
 
 #endif

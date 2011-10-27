@@ -3,7 +3,6 @@ include_directories(../../libs ../../)
 set(welcome_SRCS
 mediawelcome.cpp
 backendmodel.cpp
-qmlviewwrapper.cpp
 )
  
 # Now make sure all files get to the right place

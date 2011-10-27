@@ -21,7 +21,7 @@
 #include <KDebug>
 
 Media::Media() : m_state(Stopped), m_length(0), m_volume(0.5), m_position(0),
-    m_dirty(false), m_viewMode(false)
+    m_viewMode(false)
 {
 }
 
@@ -30,7 +30,7 @@ QString Media::name() const
     return m_name;
 }
 
-Media::State Media::state()
+Media::State Media::state() const
 {
     return m_state;
 }
@@ -127,7 +127,6 @@ bool Media::canSeek() const
 void Media::seek(int time)
 {
     m_position = time;
-    m_dirty = true;
     emit mediaDataUpdated();
 }
 
@@ -136,7 +135,7 @@ bool Media::canUpdateMediaProgress() const
     return (m_state==Playing);
 }
 
-void Media::mediaProgress(int time)
+void Media::setMediaProgress(int time)
 {
     m_position = time;
     emit mediaDataUpdated();
@@ -147,7 +146,7 @@ void Media::setName(const QString& name)
     m_name = name;
 }
 
-void Media::setUrl(QString url)
+void Media::setUrl(const QString &url)
 {
     m_length = 0;
     m_position = 0;
@@ -156,19 +155,7 @@ void Media::setUrl(QString url)
     emit mediaDataUpdated();
 }
 
-bool Media::getDirty() const
-{
-    return m_dirty;
-}
-
-
-void Media::setDirty(bool dirtyBit)
-{
-    m_dirty = dirtyBit;
-    emit mediaDataUpdated();
-}
-
-QString Media::getUrl() const
+QString Media::url() const
 {
     return m_url;
 }
