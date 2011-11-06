@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Media InfoBar (QML)
+Name[da]=Medie-infobjælke (QML)
 Name[fr]=Barre d'informations multimédia (QML)
 Name[nl]=MediaInfoBar (QML)
 Name[pl]=Pasek informacji o mediach (QML)
@@ -9,6 +10,7 @@ Name[sv]=Mediainformationsrad (QML)
 Name[uk]=Панель мультимедійних даних (QML)
 Name[x-test]=xxMedia InfoBar (QML)xx
 Comment=A simple applet to display media information
+Comment[da]=En simpel applet til at vise medieinformation
 Comment[es]=Una sencilla miniaplicación para mostrar información multimedia
 Comment[et]=Lihtne aplett meediateabe näitamiseks
 Comment[fr]=Une applet simple pour afficher des informations sur un média

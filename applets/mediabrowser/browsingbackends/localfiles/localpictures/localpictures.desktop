@@ -2,6 +2,7 @@
 Type=Service
 Icon=folder-image
 Name=Local pictures
+Name[da]=Lokale billeder
 Name[de]=Lokale Bilder
 Name[es]=Imágenes locales
 Name[et]=Kohalikud pildid
@@ -15,6 +16,7 @@ Name[sv]=Lokala bilder
 Name[uk]=Локальні зображення
 Name[x-test]=xxLocal picturesxx
 Comment=A plugin for the mediabrowser applet that allows local file browsing
+Comment[da]=Et plugin til mediebrowser-appletten som muliggør at gennemse lokale filer
 Comment[et]=Meediasirvija plugin kohalike failide sirvimiseks
 Comment[fr]=Un module externe pour l'applet du navigateur multimédia permettant la navigation dans les fichiers locaux
 Comment[nl]=Een plugin voor de mediabrowser-applet die bladeren door lokale bestanden mogelijk maakt

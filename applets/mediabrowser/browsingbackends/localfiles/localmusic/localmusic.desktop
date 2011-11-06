@@ -2,6 +2,7 @@
 Type=Service
 Icon=folder-sound
 Name=Local music
+Name[da]=Lokal musik
 Name[de]=Lokale Musik
 Name[es]=Música local
 Name[et]=Kohalik muusika
@@ -17,6 +18,7 @@ Name[sv]=Lokal musik
 Name[uk]=Локальна музика
 Name[x-test]=xxLocal musicxx
 Comment=A plugin for the mediabrowser applet that allows local music browsing
+Comment[da]=Et plugin til mediebrowser-appletten som muliggør at gennemse lokal musik
 Comment[et]=Meediasirvija plugin kohaliku muusika sirvimiseks
 Comment[fr]=Un module externe pour l'applet du navigateur multimédia permettant la navigation dans la musique locale
 Comment[nl]=Een plugin voor de mediabrowser-applet die bladeren door lokale muziek mogelijk maakt
