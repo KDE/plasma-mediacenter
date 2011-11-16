@@ -22,4 +22,3 @@ install(FILES
 filegrid.qml
 DESTINATION ${DATA_INSTALL_DIR}/plasma-mediacenter/declarative/)
 
-add_subdirectory(browsingbackends)

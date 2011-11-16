@@ -13,6 +13,8 @@ include_directories(
     widgets/
     libs/
 )
+
+add_subdirectory(browsingbackends)
 add_subdirectory(artwork)
 add_subdirectory(dataengines)
 add_subdirectory(applets)
