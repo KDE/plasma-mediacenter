@@ -19,7 +19,7 @@
 #ifndef LOCALVIDEOSPACKAGE_H
 #define LOCALVIDEOSPACKAGE_H
 
-#include <../localfilesabstractbackend.h>
+#include "../localfilesabstractbackend.h"
 
 class LocalVideosBackend : public LocalFilesAbstractBackend
 {

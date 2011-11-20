@@ -23,7 +23,9 @@
 
 #include <libs/mediacenter/abstractbrowsingbackend.h>
 
-class MetadataMusicBackend : public MediaCenter::AbstractBrowsingBackend
+#include "../abstractmetadatabackend.h"
+
+class MetadataMusicBackend : public AbstractMetadataBackend
 {
     Q_OBJECT
 public:
@@ -32,7 +34,6 @@ public:
 
 public Q_SLOTS:
     virtual void init();
-    virtual bool goOneLevelUp();
 };
 
 #endif // METADATAMUSICBACKEND_H

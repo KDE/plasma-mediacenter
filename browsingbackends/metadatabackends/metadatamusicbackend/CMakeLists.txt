@@ -1,5 +1,7 @@
 set(metadatamusicbackend_SRCS
     metadatamusicmodel.cpp
+    ../abstractmetadatabackend.cpp
+    ../abstractmetadatamodel.cpp
     metadatamusicbackend.cpp
 )
 
@@ -12,7 +14,6 @@ target_link_libraries(pmc_metadatamusicbackend
     ${KDE4_KDECORE_LIBS}
     ${KDE4_KIO_LIBS}
     ${KDE4_KFILE_LIBS}
-    ${KDE4_PLASMA_LIBS}
 )
 
 install(TARGETS pmc_metadatamusicbackend DESTINATION ${PLUGIN_INSTALL_DIR})

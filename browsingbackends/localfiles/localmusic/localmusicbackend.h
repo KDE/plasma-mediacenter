@@ -19,7 +19,7 @@
 #ifndef LOCALMUSICPACKAGE_H
 #define LOCALMUSICPACKAGE_H
 
-#include <../localfilesabstractbackend.h>
+#include "../localfilesabstractbackend.h"
 
 class LocalMusicBackend : public LocalFilesAbstractBackend
 {

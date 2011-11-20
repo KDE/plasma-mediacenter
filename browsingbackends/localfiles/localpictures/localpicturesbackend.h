@@ -19,7 +19,7 @@
 #ifndef LOCALPICTURESPACKAGE_H
 #define LOCALPICTURESPACKAGE_H
 
-#include <../localfilesabstractbackend.h>
+#include "../localfilesabstractbackend.h"
 
 class LocalPicturesBackend : public LocalFilesAbstractBackend
 {
