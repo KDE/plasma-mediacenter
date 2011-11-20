@@ -23,6 +23,7 @@ import org.kde.qtextracomponents 0.1
 import org.kde.plasma.graphicswidgets 0.1 as PlasmaWidgets
 import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.graphicslayouts 4.7 as GraphicsLayouts
+import org.kde.metadatamodels 0.1 as MetadataModels
 
 Item {
     id: mediaBrowser
@@ -31,6 +32,11 @@ Item {
     property int browsingMode: -1
     property string currentBrowsingBackendName: ""
     property bool mediaViewing
+
+    MetadataModels.MetadataModel
+    {
+        id: metadataModel
+    }
 
     PlasmaCore.DataSource {
         id: dataSource
@@ -68,6 +74,8 @@ Item {
 
             if (currentBrowsingBackendName) {
                 var backend = mediaBrowserObject.backendFromName(currentBrowsingBackendName);
+                backend.metadataModel = metadataModel;
+                backend.init();
                 grid.model = backend.backendModel;
             }
         }
@@ -164,6 +172,11 @@ Item {
                         dataSource.serviceForSource(activeSource).startOperationCall(operation);
                         mediaBrowser.state = "viewing"
                         mediaViewing = true;
+
+                        var operation =
+                        dataSource.serviceForSource(activeSource).operationDescription("setBrowsingState");
+                        operation.state = "Viewing"
+                        dataSource.serviceForSource(activeSource).startOperationCall(operation);
                     }
                     var operation = dataSource.serviceForSource(activeSource).operationDescription("viewingState");
                     operation.viewing = mediaViewing

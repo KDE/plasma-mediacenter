@@ -20,7 +20,7 @@
 #ifndef METADATAMUSICMODEL_H
 #define METADATAMUSICMODEL_H
 
-#include <QtCore/QAbstractItemModel>
+#include <QAbstractItemModel>
 
 #include <Plasma/DataEngine>
 
@@ -31,16 +31,37 @@ public:
     explicit MetadataMusicModel (QObject* parent = 0);
     virtual ~MetadataMusicModel();
 
+    virtual QAbstractItemModel* sourceModel() const;
+    virtual void setSourceModel (QAbstractItemModel* sourceModel);
     virtual QVariant data (const QModelIndex& index, int role = Qt::DisplayRole) const;
     virtual int columnCount (const QModelIndex& parent = QModelIndex()) const;
     virtual int rowCount (const QModelIndex& parent = QModelIndex()) const;
     virtual QModelIndex parent (const QModelIndex& child) const;
     virtual QModelIndex index (int row, int column, const QModelIndex& parent = QModelIndex()) const;
 
-private Q_SLOTS:
-    void dataUpdated (const QString& sourceName, const Plasma::DataEngine::Data& data);
+private slots:
+    void sourceColumnsAboutToBeInserted (const QModelIndex& parent, int start, int end);
+    void sourceColumnsAboutToBeMoved (const QModelIndex& sourceParent, int sourceStart, int sourceEnd, const QModelIndex& destinationParent, int destinationColumn);
+    void sourceColumnsAboutToBeRemoved (const QModelIndex& parent, int start, int end);
+    void sourceColumnsInserted (const QModelIndex& parent, int start, int end);
+    void sourceColumnsMoved (const QModelIndex& sourceParent, int sourceStart, int sourceEnd, const QModelIndex& destinationParent, int destinationColumn);
+    void sourceColumnsRemoved (const QModelIndex& parent, int start, int end);
+    void sourceDataChanged (const QModelIndex& topLeft, const QModelIndex& bottomRight);
+    void sourceHeaderDataChanged (Qt::Orientation orientation, int first, int last);
+    void sourceLayoutAboutToBeChanged ();
+    void sourceLayoutChanged ();
+    void sourceModelAboutToBeReset ();
+    void sourceModelReset ();
+    void sourceRowsAboutToBeInserted (const QModelIndex& parent, int start, int end);
+    void sourceRowsAboutToBeMoved (const QModelIndex& sourceParent, int sourceStart, int sourceEnd, const QModelIndex& destinationParent, int destinationRow);
+    void sourceRowsAboutToBeRemoved (const QModelIndex& parent, int start, int end);
+    void sourceRowsInserted (const QModelIndex& parent, int start, int end);
+    void sourceRowsMoved (const QModelIndex& sourceParent, int sourceStart, int sourceEnd, const QModelIndex& destinationParent, int destinationRow);
+    void sourceRowsRemoved (const QModelIndex& parent, int start, int end);
 
 private:
+    QAbstractItemModel* metadataModel() const;
+
     class Private;
     Private* const d;
 };

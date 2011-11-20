@@ -1,7 +1,6 @@
 /***************************************************************************
  *   Copyright 2009 by Alessandro Diaferia <alediaferia@gmail.com>         *
- *   Copyright 2011 Sinny Kumari <ksinny@gmail.com>                        *
- *   Copyright 2007 Aaron Seigo <aseigo@kde.org>
+ *   Copyright 2011 Sinny Kumari <ksinny@gmail.com>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -19,30 +18,21 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
+#ifndef METADATAMUSICBACKEND_H
+#define METADATAMUSICBACKEND_H
 
-#include "metadatamusicbackend.h"
+#include <libs/mediacenter/abstractbrowsingbackend.h>
 
-#include "metadatamusicmodel.h"
-
-MEDIACENTER_EXPORT_BROWSINGBACKEND(MetadataMusicBackend)
-
-MetadataMusicBackend::MetadataMusicBackend(QObject* parent, const QVariantList& args)
-    : AbstractBrowsingBackend(parent, args)
+class MetadataMusicBackend : public MediaCenter::AbstractBrowsingBackend
 {
-}
+    Q_OBJECT
+public:
+    MetadataMusicBackend (QObject* parent, const QVariantList& args);
+    virtual ~MetadataMusicBackend();
 
-MetadataMusicBackend::~MetadataMusicBackend()
-{
-}
+public Q_SLOTS:
+    virtual void init();
+    virtual bool goOneLevelUp();
+};
 
-void MetadataMusicBackend::init()
-{
-    setModel(new MetadataMusicModel(this));
-}
-
-bool MetadataMusicBackend::goOneLevelUp()
-{
-    return false;
-}
-
-#include "metadatamusicbackend.moc"
+#endif // METADATAMUSICBACKEND_H

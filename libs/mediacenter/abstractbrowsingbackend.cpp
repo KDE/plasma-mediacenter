@@ -24,6 +24,8 @@
 #include <KDebug>
 #include <KServiceTypeTrader>
 
+#include <QAbstractItemModel>
+
 using namespace MediaCenter;
 
 class AbstractBrowsingBackend::AbstractBrowsingBackendPrivate
@@ -32,7 +34,9 @@ public:
     AbstractBrowsingBackendPrivate(KService::Ptr service, AbstractBrowsingBackend *q) :
     backendInfo(service),
     q(q),
-    cfInterface(false)
+    cfInterface(false),
+    model(0),
+    metadataModel(0)
     {}
 
     AbstractBrowsingBackend *q;
@@ -40,6 +44,7 @@ public:
     KPluginInfo backendInfo;
     BrowsingType browsingType;
     QAbstractItemModel * model;
+    QAbstractItemModel * metadataModel;
 };
 
 AbstractBrowsingBackend::AbstractBrowsingBackend(QObject *parent, const QVariantList &args) : QObject(parent),
@@ -69,6 +74,17 @@ void AbstractBrowsingBackend::setModel(QAbstractItemModel * model)
 QObject * AbstractBrowsingBackend::model()
 {
     return (QObject*)(d->model);
+}
+
+QObject* AbstractBrowsingBackend::metadataModel()
+{
+    return (QObject*)(d->metadataModel);
+}
+
+void AbstractBrowsingBackend::setMetadataModel (QObject* model)
+{
+    d->metadataModel = qobject_cast<QAbstractItemModel*>(model);
+    emit metadataModelChanged();
 }
 
 bool AbstractBrowsingBackend::hasConfigurationInterface() const

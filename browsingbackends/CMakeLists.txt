@@ -1,3 +1,3 @@
 add_subdirectory(localfiles)
 
-add_subdirectory(metadatamusicbackend)
+add_subdirectory(metadatabackends)

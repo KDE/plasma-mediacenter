@@ -36,7 +36,7 @@ Item {
             var applet = plasmoid.applets[i]
             addApplet(applet, Qt.point(-1,-1))
         }
-        
+
         print(i18n("Test message"))
     }
 
@@ -120,6 +120,26 @@ Item {
                 target: infoBarItem
                 visible: false
             }
+        },
+        State {
+            name: "Viewing"
+            PropertyChanges {
+                target: mediaPlayerItem
+                visible: true
+            }
+            AnchorChanges {
+                target: welcomeItem
+                anchors.bottom: main.top
+            }
+            AnchorChanges{
+                target: browserItem
+                anchors.left: main.left
+            }
+            PropertyChanges {
+                target: infoBarItem
+                visible: true
+            }
+
         }
     ]
 

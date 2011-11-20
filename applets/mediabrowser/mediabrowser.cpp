@@ -62,6 +62,7 @@ void MediaBrowser::init()
     m_view = new Plasma::DeclarativeWidget(this);
     m_layout->addItem(m_view);
 
+    m_view->engine()->rootContext()->setContextProperty("mediaBrowserObject", this);
     m_view->setQmlPath(KStandardDirs::locate("data", "plasma-mediacenter/declarative/filegrid.qml"));
 
     MediaCenter::AbstractBrowsingBackend *backend;
@@ -74,8 +75,6 @@ void MediaBrowser::init()
         backend = service->createInstance<MediaCenter::AbstractBrowsingBackend>(0, QVariantList() << service->storageId());
         loadBrowsingBackend(backend);
     }
-
-    m_view->engine()->rootContext()->setContextProperty("mediaBrowserObject", this);
 }
 
 void MediaBrowser::loadBrowsingBackend(MediaCenter::AbstractBrowsingBackend *backend)
@@ -85,7 +84,6 @@ void MediaBrowser::loadBrowsingBackend(MediaCenter::AbstractBrowsingBackend *bac
         return;
     }
     backend->setParent(this);
-    backend->init();
     m_backends.insert(backend->name(), backend);
 }
 
