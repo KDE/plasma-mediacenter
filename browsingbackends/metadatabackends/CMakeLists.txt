@@ -1,1 +1,3 @@
 add_subdirectory(metadatamusicbackend)
+add_subdirectory(metadatavideobackend)
+add_subdirectory(metadatapicturebackend)
