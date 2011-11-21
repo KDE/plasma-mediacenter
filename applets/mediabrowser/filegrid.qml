@@ -31,6 +31,7 @@ Item {
     property string activeSource: dataSource.sources[0]
     property int browsingMode: -1
     property string currentBrowsingBackendName: ""
+    property string previousBrowsingBackendName: ""
     property bool mediaViewing
 
     MetadataModels.MetadataModel
@@ -72,11 +73,12 @@ Item {
         if (browsingModeName == "Browsing") {
             currentBrowsingBackendName = dataSource.data[activeSource].CurrentBrowsingBackend;
 
-            if (currentBrowsingBackendName) {
+            if (currentBrowsingBackendName && currentBrowsingBackendName != previousBrowsingBackendName) {
                 var backend = mediaBrowserObject.backendFromName(currentBrowsingBackendName);
                 backend.metadataModel = metadataModel;
                 backend.init();
                 grid.model = backend.backendModel;
+                previousBrowsingBackendName = currentBrowsingBackendName;
             }
         }
     }
