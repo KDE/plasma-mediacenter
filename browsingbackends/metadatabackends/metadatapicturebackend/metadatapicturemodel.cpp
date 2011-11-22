@@ -48,6 +48,10 @@ QVariant MetadataPictureModel::data (const QModelIndex& index, int role) const
         return QVariant();
     }
 
+      if (role == Qt::DecorationRole) {
+        if (!MetadataPictureModel::data(index, MediaCenter::IsExpandableRole).toBool())
+            return AbstractMetadataModel::data (index, MediaCenter::MediaUrlRole);
+    }
     if(role == MediaCenter::MediaTypeRole) {
         return "image";
     }

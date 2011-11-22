@@ -34,7 +34,6 @@ Rectangle {
      property int remainingTimeHr
      property int remainigTimeMin
      property int remainingTimeSec
-     
 
     PlasmaCore.Theme {
         id:theme
@@ -53,17 +52,17 @@ Rectangle {
 //                 totalTimeInt = (data[activeSource].Length) / (60 * 1000)
 //                 totalTimeFraction = (data[activeSource].Length) % (60 * 1000) / 1000
                    totalTimeSec = (data[activeSource].Length) / 1000;
-                   totalTimeHr = totalTimeSec / 3600;
+                   totalTimeHr = Math.floor(totalTimeSec / 3600);
                    totalTimeSec %= 3600;
-                   totalTimeMin = totalTimeSec / 60;
-                   totalTimeSec %= 60;
-                   
+                   totalTimeMin = Math.floor(totalTimeSec / 60);
+                   totalTimeSec = Math.floor(totalTimeSec % 60);
+
                    remainingTimeSec = (data[activeSource].Length - data[activeSource].Position) /1000;
-                   remainingTimeHr = remainingTimeSec / 3600;
+                   remainingTimeHr = Math.floor(remainingTimeSec / 3600);
                    remainingTimeSec %= 3600;
-                   remainingTimeMin = remainingTimeSec / 60;
-                   remainingTimeSec %= 60;
-                   
+                   remainingTimeMin = Math.floor(remainingTimeSec / 60);
+                   remainingTimeSec = Math.floor(remainingTimeSec % 60);
+
                 if ( data[activeSource].BrowsingState == "PictureBrowsing") {
                     browsingMode.icon = QIcon("image-x-genereic")
                 } else if (data[activeSource].BrowsingState == "MusicBrowsing") {
