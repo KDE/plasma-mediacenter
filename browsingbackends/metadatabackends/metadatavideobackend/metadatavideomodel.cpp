@@ -30,7 +30,7 @@ MetadataVideoModel::MetadataVideoModel (QObject* parent)
     : AbstractMetadataModel (parent)
 {
     if (metadataModel()) {
-        metadataModel()->setProperty("resourceType", "nfo:Video");
+        metadataModel()->setProperty("mimeType", "video");
     }
     else {
         kDebug() << "WARNING: Constructor called before metadataModel set :/";

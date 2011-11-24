@@ -145,7 +145,7 @@ Item {
 
     transitions: Transition {
          // smoothly reanchor myRect and move into new position
-         AnchorAnimation { duration: 1000 }
+         AnchorAnimation { duration: 500 }
      }
 
     Item {
