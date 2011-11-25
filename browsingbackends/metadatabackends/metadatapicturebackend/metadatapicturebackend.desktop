@@ -3,6 +3,7 @@ Type=Service
 Icon=folder-image
 Name=Picture Metadata
 Name[pt]=Meta-Dados da Imagem
+Name[pt_BR]=Metadados da figura
 Name[sv]=Bildmetadata
 Name[uk]=Метадані зображення
 Name[x-test]=xxPicture Metadataxx
