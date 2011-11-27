@@ -3,6 +3,7 @@ Type=Service
 Icon=folder-sound
 Name=Music Metadata
 Name[da]=Musik-metadata
+Name[nl]=Metadata van muziek
 Name[pt]=Meta-Dados Musicais
 Name[pt_BR]=Metadados da música
 Name[sv]=Musikmetadata
