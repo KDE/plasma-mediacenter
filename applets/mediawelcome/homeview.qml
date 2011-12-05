@@ -22,7 +22,7 @@ import org.kde.qtextracomponents 0.1
 import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.graphicslayouts 4.7 as GraphicsLayouts
 
-ListView {
+PathView {
     id: view
     clip: true
     model: homeModel
@@ -46,30 +46,30 @@ ListView {
     delegate: Component {
         Item {
             id: wrapper
-            width: view.width
-            height: view.height/6
+            width: parent.width/3
+            height: parent.height/3
+            scale: PathView.iconScale
 
-            Row {
+            Column {
                 anchors.fill: parent
-                spacing: 20
 
                 QIconItem {
                     icon: decoration
-                    height: parent.height
-                    width: height
-                    scale: PathView.iconScale
+                    height: wrapper.height
+                    width: wrapper.width
                 }
                 Text {
                     text: display
                     font.pointSize: 30
+                    anchors.horizontalCenter: parent.horizontalCenter
                     color: theme.textColor
                     smooth: true
                     style: Text.Raised
                     font.bold: true
                     font.italic: true
-                    verticalAlignment: Text.AlignVCenter
-                    height: parent.height
-                    width: parent.width - decoration.width - anchors.leftMargin
+//                     verticalAlignment: Text.AlignVCenter
+//                     height: parent.height
+//                     width: parent.width - decoration.width - anchors.leftMargin
                 }
             }
 
@@ -89,4 +89,15 @@ ListView {
     }
 
     focus: true
+    preferredHighlightBegin: 0.5
+    preferredHighlightEnd: 0.5
+    path: Path {
+        startX: 0
+        startY: 10
+        PathAttribute { name: "iconScale"; value: 0.1 }
+        PathQuad { x: view.width/2; y: view.height/2; controlX: view.width/4; controlY: view.height/4 }
+        PathAttribute { name: "iconScale"; value: 1 }
+        PathQuad { x: view.width; y: 10; controlX: view.width*3/4; controlY: view.height/4 }
+        PathAttribute { name: "iconScale"; value: 0.1 }
+    }
 }

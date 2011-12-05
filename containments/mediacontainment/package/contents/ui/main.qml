@@ -25,6 +25,7 @@ import org.kde.qtextracomponents 0.1 as QtExtra
 
 Item {
     id: main
+    focus: true
     property string activeSource: dataSource.sources[0]
 
     Component.onCompleted: {
