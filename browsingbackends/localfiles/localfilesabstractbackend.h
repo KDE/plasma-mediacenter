@@ -1,6 +1,6 @@
 /*
     Copyright (C) 2010  Alessandro Diaferia <alediaferia@gmail.com>
-    Copyright (C) 2011  Shantanu Tushar <jhahoneyk@gmail.com>
+    Copyright (C) 2011  Shantanu Tushar <shaan7in@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
