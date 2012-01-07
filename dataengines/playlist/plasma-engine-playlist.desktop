@@ -13,6 +13,7 @@ Name[sv]=Spellistegränssnitt
 Name[uk]=Рушій списків відтворення
 Name[x-test]=xxPlaylist Enginexx
 Comment=A playlist engine useful for Media Center components.
+Comment[es]=Un motor de listas de reproducción útil para componentes del Centro Multimedia.
 Comment[et]=Esitusnimekirja mootor meediakeskuse komponentidele.
 Comment[fr]=Un moteur de listes de lecture utile pour les composants du centre multimédia.
 Comment[hr]=Podrška za playliste korisna kod komponenti Media Centra.

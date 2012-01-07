@@ -2,6 +2,7 @@
 Type=Service
 Icon=folder-video
 Name=Video Metadata
+Name[es]=Metadatos de vídeo
 Name[nl]=Metadata van video's
 Name[pl]=Metadane filmu
 Name[pt]=Meta-Dados do Vídeo

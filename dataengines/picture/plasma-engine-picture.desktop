@@ -12,6 +12,7 @@ Name[uk]=Рушій зображень
 Name[x-test]=xxPicture Enginexx
 
 Comment=An engine that allows you to query web services for pictures.
+Comment[es]=Un motor que le permite consultar servicios web de imágenes.
 Comment[et]=Mootor veebiteenustele piltide kohta päringute esitamiseks.
 Comment[fr]=Un moteur permettant de rechercher des images sur les services web.
 Comment[nl]=Een engine die u in staat stelt om afbeeldingen op te zoeken in webservices.

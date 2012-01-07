@@ -2,6 +2,7 @@
 Type=Service
 Icon=folder-image
 Name=Picture Metadata
+Name[es]=Metadatos de imágenes
 Name[nl]=Metadata van afbeeldingen
 Name[pl]=Metadane zdjęcia
 Name[pt]=Meta-Dados da Imagem

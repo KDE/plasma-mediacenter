@@ -12,6 +12,7 @@ Name[sv]=Videogränssnitt
 Name[uk]=Відеорушій
 Name[x-test]=xxVideo Enginexx
 Comment=An engine that allows you to query web services for videos.
+Comment[es]=Un motor que le permite consultar servicios web de vídeos.
 Comment[et]=Mootor veebiteenustele videode kohta päringute esitamiseks.
 Comment[fr]=Un moteur permettant de rechercher des vidéos sur les services web.
 Comment[nl]=Een engine die u in staat stelt om video's op te zoeken in webservices.

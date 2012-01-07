@@ -17,6 +17,7 @@ Name[uk]=Локальні зображення
 Name[x-test]=xxLocal picturesxx
 Comment=A plugin for the mediabrowser applet that allows local file browsing
 Comment[da]=Et plugin til mediebrowser-appletten som muliggør at gennemse lokale filer
+Comment[es]=Un complemento para la miniaplicación del explorador multimedia que permite explorar archivos locales
 Comment[et]=Meediasirvija plugin kohalike failide sirvimiseks
 Comment[fr]=Un module externe pour l'applet du navigateur multimédia permettant la navigation dans les fichiers locaux
 Comment[nl]=Een plugin voor de mediabrowser-applet die bladeren door lokale bestanden mogelijk maakt

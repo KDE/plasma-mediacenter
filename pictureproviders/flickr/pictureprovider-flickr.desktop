@@ -15,6 +15,7 @@ Name[x-test]=xxFlickr picture providerxx
 
 
 Comment=A plugin that allows browsing through Flickr pictures
+Comment[es]=Un complemento que le permite explorar imágenes de Flickr
 Comment[et]=Plugin Flickri piltide sirvimiseks
 Comment[fr]=Un module externe permettant de parcourir des images sur Flickr
 Comment[nl]=Een plugin voor bladeren door afbeeldingen in Flickr

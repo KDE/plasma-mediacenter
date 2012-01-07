@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=MediaWelcome
+Name[es]=MediaWelcome
 Name[et]=Meediatervitus
 Name[fr]=MediaWelcome
 Name[ja]=MediaWelcome
@@ -11,6 +12,7 @@ Name[sv]=Välkommen till Media Center
 Name[uk]=Медіа-вітання
 Name[x-test]=xxMediaWelcomexx
 Comment=Plasma Media Center welcome applet
+Comment[es]=Miniaplicación de bienvenida para el Centro Multimedia de Plasma
 Comment[et]=Plasma meediakeskuse tervitusaplett
 Comment[fr]=Applet de bienvenue du centre multimédia
 Comment[nl]=Applet voor verwelkoming in het Plasma mediacentrum

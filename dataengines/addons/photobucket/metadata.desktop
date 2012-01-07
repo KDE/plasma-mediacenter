@@ -14,6 +14,7 @@ Name[uk]=Photobucket
 Name[x-test]=xxPhotobucketxx
 
 Comment=An engine that allows you to query web services for media.
+Comment[es]=Un motor que le permite consultar servicios web multimedia.
 Comment[et]=Mootor veebiteenustele meedia kohta päringute esitamiseks.
 Comment[fr]=Un moteur permettant de consulter des média sur les services web.
 Comment[nl]=Een engine die u in staat stelt om media op te zoeken in webservices.
