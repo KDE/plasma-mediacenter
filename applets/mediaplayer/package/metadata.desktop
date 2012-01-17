@@ -2,6 +2,7 @@
 Name=Media Player (QML)
 Name[da]=Medieafspiller (QML)
 Name[es]=Reproductor multimedia (QML)
+Name[et]=Meediamängija (QML)
 Name[fr]=Lecteur multimédia (QML)
 Name[nl]=Mediaspeler (QML)
 Name[pl]=Odtwarzacz multimedialny (QML)
@@ -12,6 +13,7 @@ Name[uk]=Програвач (QML)
 Name[x-test]=xxMedia Player (QML)xx
 Comment=Playing applet for Plasma Media Center
 Comment[es]=Miniaplicación de reproducción para el Centro Multimedia de Plasma
+Comment[et]=Plasma meediakeskuse esitamisaplett
 Comment[fr]=Applet de lecture pour le centre multimédia
 Comment[nl]=Het afspeelapplet voor het Plasma-mediacentrum.
 Comment[pl]=Aplet odtwarzający dla centrum multimedialnego plazmy
