@@ -126,10 +126,13 @@ Item {
                         fillMode: Image.PreserveAspectFit
 
                         Component.onCompleted: {
-                            if (sourceSize.width >sourceSize.height) {
-                                sourceSize.width = width;
+                            var factor = sourceSize.width/sourceSize.height;
+                            if (factor > 1) {
+                                sourceSize.width = 128;
+                                sourceSize.height = sourceSize.width/factor;
                             } else {
-                                sourceSize.height = height;
+                                sourceSize.height = 128;
+                                sourceSize.width = sourceSize.height/factor;
                             }
                         }
                     }

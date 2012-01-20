@@ -31,6 +31,7 @@ MetadataPictureModel::MetadataPictureModel (QObject* parent)
 {
     if (metadataModel()) {
         metadataModel()->setProperty("resourceType", "nfo:Image");
+        metadataModel()->setProperty("limit", 500);
     }
     else {
         kDebug() << "WARNING: Constructor called before metadataModel set :/";
