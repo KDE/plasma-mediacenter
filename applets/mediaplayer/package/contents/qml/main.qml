@@ -47,7 +47,6 @@ Item {
 
             if(currentMediaType == "audio" || currentMediaType == "video") {
                 video.visible = true
-                controlBarFrame.visible = true
 
                 if (data[activeSource].State == "playing") {
                     if (video.source != data[activeSource].Url) {
@@ -62,7 +61,7 @@ Item {
                 }
             } else if(currentMediaType == "image" && data[activeSource].Viewing) {
                 imageViewerLoader.item.visible = true;
-                mediaController.visible = false
+                controlBarFrame.visible = false
                 /*Unload and load again, because Image doesn't want to forget the old
                 values of sourceSize*/
                 if (imageViewerLoader.item.source != "file://" + data[activeSource].Url) {
@@ -89,6 +88,7 @@ Item {
     }
 
 //***********************CONTROLLER******************************//
+
     PlasmaCore.FrameSvgItem {
         id: controlBarFrame
         width: parent.width * 0.8
@@ -208,6 +208,22 @@ Item {
         }
     }
 
+     Timer {
+         id: movementTimer
+         running: true
+         interval: 5000
+         onTriggered: {
+             controlBarFrame.visible = false
+         }
+     }
+
+     MouseArea {
+         anchors.fill: parent
+         onClicked: {
+             movementTimer.restart()
+             controlBarFrame.visible = true
+         }
+     }
 //***********************PLAYER******************************//
     Item {
         id: mediaPlayer
