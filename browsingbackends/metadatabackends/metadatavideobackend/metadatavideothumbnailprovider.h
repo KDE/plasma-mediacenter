@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright 2011 Sinny Kumari <ksinny@gmail.com>                        *
+ *   Copyright 2011 Shantanu Tushar <shaan7in@gmail.com>                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,28 +17,43 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#ifndef METADATAVIDEOMODEL_H
-#define METADATAVIDEOMODEL_H
+#ifndef METADATAVIDEOTHUMBNAILPROVIDER_H
+#define METADATAVIDEOTHUMBNAILPROVIDER_H
 
-#include <QAbstractItemModel>
+#include <QtDeclarative/QDeclarativeImageProvider>
 
-#include "../abstractmetadatamodel.h"
+#include <KUrl>
 
-class MetadataVideoModel : public AbstractMetadataModel
+namespace KIO
+{
+class PreviewJob;
+};
+
+class KFileItemList;
+class KFileItem;
+
+class MetadataVideoThumbnailProvider : public QObject, public QDeclarativeImageProvider
 {
     Q_OBJECT
 public:
-    explicit MetadataVideoModel(QObject* parent = 0);
-    virtual ~MetadataVideoModel();
+    MetadataVideoThumbnailProvider(ImageType type, QObject* parent = 0);
+    virtual ~MetadataVideoThumbnailProvider();
 
-    virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+    virtual QPixmap requestPixmap(const QString& id, QSize* size, const QSize& requestedSize);
+
+    void loadThumbnails(const KUrl::List& fileList, const QSize& size);
+    void loadThumbnail(const KUrl& file, const QSize& size);
+    bool hasThumbnail(const QString& url);
+
+signals:
+    void gotThumbnail(const QString& url);
 
 private slots:
-    void gotThumbnail(const QString& url);
+    void processPreview(const KFileItem& file, const QPixmap& thumbnail);
 
 private:
     class Private;
     Private* const d;
 };
 
-#endif // METADATAVIDEOMODEL_H
+#endif // METADATAVIDEOTHUMBNAILPROVIDER_H

@@ -84,6 +84,7 @@ void MediaBrowser::loadBrowsingBackend(MediaCenter::AbstractBrowsingBackend *bac
         return;
     }
     backend->setParent(this);
+    backend->setDeclarativeEngine(m_view->engine());
     m_backends.insert(backend->name(), backend);
 }
 

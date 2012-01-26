@@ -19,39 +19,72 @@
 
 
 #include "metadatavideomodel.h"
+#include "metadatavideothumbnailprovider.h"
+
 #include <mediacenter/mediacenter.h>
 #include <mediacenter/abstractbrowsingbackend.h>
 
+#include <KUrl>
+
 #include <QtGui/QIcon>
-#include <QEvent>
+#include <QtCore/QEvent>
+#include <QtDeclarative/QDeclarativeEngine>
 
-
-MetadataVideoModel::MetadataVideoModel (QObject* parent)
-    : AbstractMetadataModel (parent)
+class MetadataVideoModel::Private
 {
-    if (metadataModel()) {
-        metadataModel()->setProperty("mimeType", "video");
+public:
+    Private()
+        : thumbProvider(new MetadataVideoThumbnailProvider(QDeclarativeImageProvider::Pixmap)) {
     }
-    else {
+    MetadataVideoThumbnailProvider* thumbProvider;
+};
+
+MetadataVideoModel::MetadataVideoModel(QObject* parent)
+    : AbstractMetadataModel(parent)
+    , d(new Private())
+{
+    if(metadataModel()) {
+        metadataModel()->setProperty("mimeType", "video");
+    } else {
         kDebug() << "WARNING: Constructor called before metadataModel set :/";
     }
+
+    connect(d->thumbProvider, SIGNAL(gotThumbnail(QString)), SLOT(gotThumbnail(QString)));
+    qobject_cast<MediaCenter::AbstractBrowsingBackend*>(parent)->declarativeEngine()->addImageProvider(QLatin1String("metadatavideothumb"),
+                                                                                                       d->thumbProvider);
 }
 
 MetadataVideoModel::~MetadataVideoModel()
 {
-
+    delete d;
 }
 
-QVariant MetadataVideoModel::data (const QModelIndex& index, int role) const
+void MetadataVideoModel::gotThumbnail(const QString& url)
 {
-    if (!metadataModel()) {
+    for(int i = 0; i < rowCount(); ++i) {
+        if(data(index(i, 0), MediaCenter::MediaUrlRole).toUrl() == QUrl(url)) {
+            emit dataChanged(index(i, 0), index(i, 0));
+        }
+    }
+}
+
+QVariant MetadataVideoModel::data(const QModelIndex& index, int role) const
+{
+    if(!metadataModel()) {
         return QVariant();
     }
 
-    if(role == MediaCenter::MediaTypeRole) {
+    switch (role) {
+    case MediaCenter::MediaTypeRole:
         return "video";
+    case Qt::DecorationRole: {
+        QString url = data(index, MediaCenter::MediaUrlRole).toUrl().toString();
+        if (d->thumbProvider->hasThumbnail(url)) {
+            return QString("image://metadatavideothumb/") + url;
+        }
+        d->thumbProvider->loadThumbnail(KUrl(url), QSize(256, 256));
     }
-    else {
+    default:
         return AbstractMetadataModel::data(index, role);
     }
 }

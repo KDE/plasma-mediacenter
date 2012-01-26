@@ -25,6 +25,7 @@
 #include <KServiceTypeTrader>
 
 #include <QAbstractItemModel>
+#include <QDeclarativeEngine>
 
 using namespace MediaCenter;
 
@@ -36,7 +37,8 @@ public:
     q(q),
     cfInterface(false),
     model(0),
-    metadataModel(0)
+    metadataModel(0),
+    declarativeEngine(0)
     {}
 
     AbstractBrowsingBackend *q;
@@ -45,6 +47,7 @@ public:
     BrowsingType browsingType;
     QAbstractItemModel * model;
     QAbstractItemModel * metadataModel;
+    QDeclarativeEngine *declarativeEngine;
 };
 
 AbstractBrowsingBackend::AbstractBrowsingBackend(QObject *parent, const QVariantList &args) : QObject(parent),
@@ -152,4 +155,14 @@ bool AbstractBrowsingBackend::goOneLevelUp()
 bool AbstractBrowsingBackend::expand (int row)
 {
     return false;
+}
+
+QDeclarativeEngine *AbstractBrowsingBackend::declarativeEngine() const
+{
+    return d->declarativeEngine;
+}
+
+void AbstractBrowsingBackend::setDeclarativeEngine(QDeclarativeEngine *declarativeEngine)
+{
+    d->declarativeEngine = declarativeEngine;
 }

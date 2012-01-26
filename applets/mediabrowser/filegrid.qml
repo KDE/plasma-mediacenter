@@ -98,9 +98,11 @@ Item {
                 }
 
                 Loader {
+                    id: iconImageLoader
                     width: parent.width * 0.95; height: parent.height - itemText.height;
 
-                    Component.onCompleted: {
+                    function checkAndLoad()
+                    {
                         if (typeof(decoration) == "string") {
                             if (decoration.search('[a-z]+://') == 0) {
                                 sourceComponent = delegateItemImageComponent;
@@ -114,6 +116,7 @@ Item {
                             item.icon = decoration;
                         }
                     }
+                    Component.onCompleted: checkAndLoad()
                 }
 
                 Component {
@@ -187,6 +190,14 @@ Item {
                     operation.viewing = mediaViewing
                     dataSource.serviceForSource(activeSource).startOperationCall(operation);
                 }
+            }
+
+            Text {
+                id: workaroundForDecorationUpdate
+                text: decoration
+                visible: false
+
+                onTextChanged: iconImageLoader.checkAndLoad()
             }
         }
     }

@@ -82,7 +82,6 @@ m_recognizer(0)
     fullScreen->setIcon(KIcon("view-fullscreen"));
     connect (fullScreen, SIGNAL(triggered()), this, SLOT(toggleFullScreen()));
 
-
     KAction *preferences = KStandardAction::preferences(this, SLOT(createConfigurationInterface()), this);
 
     QMenu *menu = menuBar()->addMenu(i18n("Settings"));

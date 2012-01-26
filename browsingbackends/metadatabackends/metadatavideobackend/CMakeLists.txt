@@ -1,4 +1,5 @@
 set(metadatavideobackend_SRCS
+    metadatavideothumbnailprovider.cpp
     metadatavideomodel.cpp
     ../abstractmetadatabackend.cpp
     ../abstractmetadatamodel.cpp
@@ -14,6 +15,7 @@ target_link_libraries(pmc_metadatavideobackend
     ${KDE4_KDECORE_LIBS}
     ${KDE4_KIO_LIBS}
     ${KDE4_KFILE_LIBS}
+    ${QT_QTDECLARATIVE_LIBRARIES}
 )
 
 install(TARGETS pmc_metadatavideobackend DESTINATION ${PLUGIN_INSTALL_DIR})
