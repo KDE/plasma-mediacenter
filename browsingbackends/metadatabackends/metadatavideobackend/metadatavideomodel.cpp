@@ -45,6 +45,7 @@ MetadataVideoModel::MetadataVideoModel(QObject* parent)
 {
     if(metadataModel()) {
         metadataModel()->setProperty("mimeType", "video");
+        metadataModel()->setProperty("resourceType", "nfo:FileDataObject");
     } else {
         kDebug() << "WARNING: Constructor called before metadataModel set :/";
     }

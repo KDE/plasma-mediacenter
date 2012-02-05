@@ -194,7 +194,7 @@ Item {
 
             Text {
                 id: workaroundForDecorationUpdate
-                text: decoration
+                text: decoration.toString()
                 visible: false
 
                 onTextChanged: iconImageLoader.checkAndLoad()
