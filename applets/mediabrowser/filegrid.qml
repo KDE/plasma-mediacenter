@@ -22,6 +22,7 @@ import QtQuick 1.0
 import org.kde.qtextracomponents 0.1
 import org.kde.plasma.graphicswidgets 0.1 as PlasmaWidgets
 import org.kde.plasma.core 0.1 as PlasmaCore
+import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.kde.plasma.graphicslayouts 4.7 as GraphicsLayouts
 import org.kde.metadatamodels 0.1 as MetadataModels
 
@@ -60,6 +61,7 @@ Item {
         highlight: highlight
         focus: true
         flow: GridView.TopToBottom
+        cacheBuffer: width*5
 
         Component.onCompleted: {
             updateBrowsingMode();
@@ -218,6 +220,8 @@ Item {
         height: 50
         icon: QIcon("go-previous");
         anchors.left: parent.left
+//         text: grid.count
+
         onClicked: {
             if (mediaBrowser.state == "viewing") {
                 mediaBrowser.state = ""

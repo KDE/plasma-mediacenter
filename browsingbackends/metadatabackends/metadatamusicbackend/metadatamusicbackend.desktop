@@ -1,17 +1,7 @@
 [Desktop Entry]
 Type=Service
 Icon=folder-sound
-Name=Music Metadata
-Name[da]=Musik-metadata
-Name[es]=Metadatos de música
-Name[et]=Muusika metaandmed
-Name[nl]=Metadata van muziek
-Name[pl]=Metadane muzyki
-Name[pt]=Meta-Dados Musicais
-Name[pt_BR]=Metadados da música
-Name[sv]=Musikmetadata
-Name[uk]=Метадані композиції
-Name[x-test]=xxMusic Metadataxx
+Name=All Music
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 

@@ -44,8 +44,9 @@ MetadataVideoModel::MetadataVideoModel(QObject* parent)
     , d(new Private())
 {
     if(metadataModel()) {
-        metadataModel()->setProperty("mimeType", "video");
         metadataModel()->setProperty("resourceType", "nfo:FileDataObject");
+        metadataModel()->setProperty("mimeType", "video");
+        metadataModel()->setProperty("limit", 500);
     } else {
         kDebug() << "WARNING: Constructor called before metadataModel set :/";
     }

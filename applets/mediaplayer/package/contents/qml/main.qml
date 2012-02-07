@@ -1,7 +1,6 @@
 /*
  *   Copyright 2011 Sinny Kumari <ksinny@gmail.com>
  *
-
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU Library General Public License as
  *   published by the Free Software Foundation; either version 2, or
@@ -19,15 +18,15 @@
  */
 
 import QtQuick 1.0
-import org.kde.plasma.graphicswidgets 0.1 as PlasmaWidgets
+import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.kde.plasma.core 0.1 as PlasmaCore
-import org.kde.plasma.graphicslayouts 4.7 as GraphicsLayouts
 import Phonon 1.0
 
 Item {
     id: mediaPlayerRootItem
     property string activeSource: dataSource.sources[0]
     property string currentMediaType: ""
+    property bool volumeStatus: false
 
     PlasmaCore.DataSource {
         id: dataSource
@@ -36,24 +35,24 @@ Item {
 
         onDataChanged: {
             if (data[activeSource].State == "playing") {
-                playPause.setIcon("media-playback-pause")
+                playPause.iconSource = "media-playback-pause"
             } else {
-                playPause.setIcon("media-playback-start")
+                playPause.iconSource = "media-playback-start"
             }
 
-            progressSlider.maximum = data[activeSource].Length
-            progressSlider.value = data[activeSource].Position
             currentMediaType = data[activeSource].MediaType
 
             if(currentMediaType == "audio" || currentMediaType == "video") {
-                video.visible = true
+                if (currentMediaType == "video") {
+                    video.visible = true
+                }
 
                 if (data[activeSource].State == "playing") {
                     if (video.source != data[activeSource].Url) {
                         video.source = data[activeSource].Url
+                        video.play();
                     }
-                video.play();
-
+                    video.play();
                 } else if (data[activeSource].State == "paused") {
                     video.pause();
                 } else if (data[activeSource].State == "stopped") {
@@ -75,15 +74,6 @@ Item {
             else {
                 imageViewerLoader.item.visible = false;
             }
-//             if (data[activeSource].BrowsingState == "VideoBrowsing" && data[activeSource].Viewing) {
-//                 videoPlayer.visible = true;
-//             }
-//             else {
-//                 videoPlayer.visible= false;
-//             }
-//             if(data[activeSource].BrowsingState == "PictureBrowsing") {
-//                 controlBarFrame.visible = false;
-//             }
         } //END onDataChanged
     }
 
@@ -97,12 +87,12 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
         imagePath: "widgets/background"
         enabledBorders: "LeftBorder|RightBorder|BottomBorder"
-        z: 2
+        z: 1
 
         Item {
             id: mediaController
             height: 48
-            
+
             anchors {
                 fill: parent
                 leftMargin: parent.margins.left
@@ -123,12 +113,12 @@ Item {
                 id:layouting
                 spacing: 5
 
-                PlasmaWidgets.IconWidget {
+                PlasmaComponents.ToolButton {
                     id: backward
                     width: mediaController.height
                     height: width
 
-                    icon: QIcon("media-skip-backward")
+                    iconSource: "media-skip-backward"
 
                     onClicked: {
                         var operation = dataSource.serviceForSource(activeSource).operationDescription("previous");
@@ -136,7 +126,7 @@ Item {
                     }
                 }
 
-                PlasmaWidgets.IconWidget {
+                PlasmaComponents.ToolButton {
                     id: playPause
                     width: mediaController.height
                     height: width
@@ -154,12 +144,12 @@ Item {
                     }
                 }
 
-                PlasmaWidgets.IconWidget {
+                PlasmaComponents.ToolButton {
                     id: stop
                     width: mediaController.height
                     height: width
 
-                    icon: QIcon("media-playback-stop")
+                    iconSource: "media-playback-stop"
 
                     onClicked: {
                         var operation = dataSource.serviceForSource(activeSource).operationDescription("stop");
@@ -167,12 +157,12 @@ Item {
                     }
                 }
 
-                PlasmaWidgets.IconWidget {
+                PlasmaComponents.ToolButton {
                     id: forward
                     width: mediaController.height
                     height: width
 
-                    icon: QIcon("media-skip-forward")
+                    iconSource: "media-skip-forward"
 
                     onClicked: {
                         var operation = dataSource.serviceForSource(activeSource).operationDescription("next");
@@ -181,41 +171,64 @@ Item {
                 }
             }
 
-            PlasmaWidgets.IconWidget {
+            PlasmaComponents.ToolButton {
                     id: volume;
                     anchors.right: parent.right
                     width: mediaController.height
                     height: width
-                    icon: QIcon("audio-volume-medium")
+                    iconSource: "audio-volume-medium"
 
                     onClicked: {
+                        if(!volumeStatus){
+                            volumeSlider.visible=true
+                            volumeStatus = true
+                        } else {
+                            volumeSlider.visible = false
+                            volumeStatus = false
+                        }
                     }
                 }
 
-            PlasmaWidgets.Slider {
+            PlasmaComponents.Slider {
+                id: volumeSlider
+                visible: false
+                anchors.right: parent.right
+                anchors.top:volume.bottom;
+                anchors.horizontalCenter: volume.verticalCenter
+                value: audioPlayer.volume
+                onValueChanged: {
+                   if(pressed) {
+                       audioPlayer.volume = volumeSlider.value
+                   }
+               }
+            }
+
+            PlasmaComponents.Slider {
                 id: progressSlider
                 anchors.left: layouting.right
                 anchors.right: volume.left
                 anchors.verticalCenter: layouting.verticalCenter
-                orientation: Qt.Horizontal
-                onSliderMoved: {
-                    var operation = dataSource.serviceForSource(activeSource).operationDescription("seek");
-                    operation.seconds = value;
-                    dataSource.serviceForSource(activeSource).startOperationCall(operation);
-                    video.time = value
+
+                onValueChanged: {
+                    if (pressed) {
+                        var operation = dataSource.serviceForSource(activeSource).operationDescription("seek");
+                        operation.seconds = value;
+                        dataSource.serviceForSource(activeSource).startOperationCall(operation);
+                        video.time = value
+                    }
                 }
             }
         }
     }
 
-     Timer {
-         id: movementTimer
-         running: true
-         interval: 5000
-         onTriggered: {
-             controlBarFrame.visible = false
-         }
-     }
+    Timer {
+        id: movementTimer
+        running: true
+        interval: 5000
+        onTriggered: {
+            //controlBarFrame.visible = false
+        }
+    }
 
      MouseArea {
          anchors.fill: parent
@@ -254,7 +267,7 @@ Item {
                     var operation = dataSource.serviceForSource(activeSource).operationDescription("mediaProgress");
                     operation.mediaLength = video.totalTime;
                     dataSource.serviceForSource(activeSource).startOperationCall(operation);
-                    progressSlider.maximum = video.totalTime;
+                    progressSlider.maximumValue = video.totalTime;
                 }
             }
 
@@ -263,8 +276,10 @@ Item {
                 operation.seconds = video.time;
                 operation.mediaLength = video.totalTime;    //FIXME: Why do we MUST set this too?
                 dataSource.serviceForSource(activeSource).startOperationCall(operation);
-                progressSlider.maximum = video.totalTime;
-                progressSlider.value = video.time;
+                progressSlider.maximumValue = video.totalTime;
+                if (!progressSlider.pressed) {
+                    progressSlider.value = video.time;
+                }
             }
         }
 

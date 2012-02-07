@@ -20,5 +20,6 @@ install(FILES plasma-applet-mediabrowser.desktop
 
 install(FILES
 filegrid.qml
+IconLoader.qml
 DESTINATION ${DATA_INSTALL_DIR}/plasma-mediacenter/declarative/)
 

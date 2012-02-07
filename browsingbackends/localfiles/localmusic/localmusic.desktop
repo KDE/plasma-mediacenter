@@ -1,22 +1,8 @@
 [Desktop Entry]
 Type=Service
 Icon=folder-sound
-Name=Local music
-Name[da]=Lokal musik
-Name[de]=Lokale Musik
-Name[es]=Música local
-Name[et]=Kohalik muusika
-Name[fr]=Musique locale
-Name[km]= 
-Name[nb]=Lokal fil
-Name[nds]=Lokaal Musik
-Name[nl]=Lokale muziek
-Name[pl]=Muzyka lokalna
-Name[pt]=Música local
-Name[pt_BR]=Música local
-Name[sv]=Lokal musik
-Name[uk]=Локальна музика
-Name[x-test]=xxLocal musicxx
+Name=Browse music
+
 Comment=A plugin for the mediabrowser applet that allows local music browsing
 Comment[da]=Et plugin til mediebrowser-appletten som muliggør at gennemse lokal musik
 Comment[es]=Un complemento para la miniaplicación del explorador multimedia que permite explorar la música local

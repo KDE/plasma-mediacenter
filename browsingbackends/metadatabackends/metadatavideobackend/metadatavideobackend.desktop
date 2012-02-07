@@ -1,16 +1,7 @@
 [Desktop Entry]
 Type=Service
 Icon=folder-video
-Name=Video Metadata
-Name[es]=Metadatos de vídeo
-Name[et]=Video metaandmed
-Name[nl]=Metadata van video's
-Name[pl]=Metadane filmu
-Name[pt]=Meta-Dados do Vídeo
-Name[pt_BR]=Metadados do vídeo
-Name[sv]=Videometadata
-Name[uk]=Метадані відео
-Name[x-test]=xxVideo Metadataxx
+Name=All Videos
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 

@@ -31,6 +31,8 @@ MetadataMusicModel::MetadataMusicModel (QObject* parent)
 {
     if (metadataModel()) {
         metadataModel()->setProperty("resourceType", "nfo:Audio");
+        metadataModel()->setProperty("mimeType", "");
+        metadataModel()->setProperty("limit", 500);
     }
     else {
         kDebug() << "WARNING: Constructor called before metadataModel set :/";

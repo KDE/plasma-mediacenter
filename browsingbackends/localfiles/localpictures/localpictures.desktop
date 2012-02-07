@@ -1,20 +1,8 @@
 [Desktop Entry]
 Type=Service
 Icon=folder-image
-Name=Local pictures
-Name[da]=Lokale billeder
-Name[de]=Lokale Bilder
-Name[es]=Imágenes locales
-Name[et]=Kohalikud pildid
-Name[fr]=Images locales
-Name[nds]=Lokaal Biller
-Name[nl]=Lokale afbeeldingen
-Name[pl]=Zdjęcia lokalne
-Name[pt]=Imagens locais
-Name[pt_BR]=Imagens locais
-Name[sv]=Lokala bilder
-Name[uk]=Локальні зображення
-Name[x-test]=xxLocal picturesxx
+Name=Browse Pictures
+
 Comment=A plugin for the mediabrowser applet that allows local file browsing
 Comment[da]=Et plugin til mediebrowser-appletten som muliggør at gennemse lokale filer
 Comment[es]=Un complemento para la miniaplicación del explorador multimedia que permite explorar archivos locales

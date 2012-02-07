@@ -22,7 +22,7 @@
 #include <mediacenter/mediacenter.h>
 #include <mediacenter/abstractbrowsingbackend.h>
 
-#include <KDebug>
+#include <QDebug>
 
 #include <QtGui/QIcon>
 #include <QEvent>
@@ -35,6 +35,9 @@ public:
     }
 
     QAbstractItemModel* model;
+    int labelKey;
+    int iconKey;
+    int urlKey;
 };
 
 AbstractMetadataModel::AbstractMetadataModel (QObject* parent)
@@ -115,6 +118,10 @@ void AbstractMetadataModel::setSourceModel (QAbstractItemModel* newSourceModel)
                  SLOT (sourceRowsMoved (QModelIndex, int, int, QModelIndex, int)));
         connect (sourceModel(), SIGNAL (rowsRemoved (QModelIndex, int, int)),
                  SLOT (sourceRowsRemoved (QModelIndex, int, int)));
+
+        d->labelKey = metadataModel()->roleNames().key("label");
+        d->iconKey = metadataModel()->roleNames().key("icon");
+        d->urlKey = metadataModel()->roleNames().key("url");
     }
 }
 
@@ -125,13 +132,13 @@ QVariant AbstractMetadataModel::data (const QModelIndex& index, int role) const
 
     switch (role) {
     case Qt::DisplayRole:
-        return metadataModel()->data(index, metadataModel()->roleNames().key("label"));
+        return metadataModel()->data(index, d->labelKey);
         break;
     case Qt::DecorationRole:
-        return metadataModel()->data(index, metadataModel()->roleNames().key("icon"));
+        return metadataModel()->data(index, d->iconKey);
         break;
     case MediaCenter::MediaUrlRole:
-        return metadataModel()->data(index, metadataModel()->roleNames().key("url"));
+        return metadataModel()->data(index, d->urlKey);
         break;
     case MediaCenter::IsExpandableRole:
         return false;

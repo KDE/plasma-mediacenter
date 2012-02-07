@@ -1,20 +1,8 @@
 [Desktop Entry]
 Type=Service
 Icon=folder-video
-Name=Local videos
-Name[da]=Lokale videoer
-Name[de]=Lokale Videos
-Name[es]=Vídeos locales
-Name[et]=Kohalikud videod
-Name[fr]=Vidéos locales
-Name[nds]=Lokaal Videos
-Name[nl]=Lokale video's
-Name[pl]=Wideo lokalne
-Name[pt]=Vídeos locais
-Name[pt_BR]=Vídeos locais
-Name[sv]=Lokala videor
-Name[uk]=Локальні відеофайли
-Name[x-test]=xxLocal videosxx
+Name=Browse videos
+
 Comment=A plugin for the mediabrowser applet that allows local file browsing
 Comment[da]=Et plugin til mediebrowser-appletten som muliggør at gennemse lokale filer
 Comment[es]=Un complemento para la miniaplicación del explorador multimedia que permite explorar archivos locales
