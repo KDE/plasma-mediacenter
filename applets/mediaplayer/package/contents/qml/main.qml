@@ -43,9 +43,7 @@ Item {
             currentMediaType = data[activeSource].MediaType
 
             if(currentMediaType == "audio" || currentMediaType == "video") {
-                if (currentMediaType == "video") {
-                    video.visible = true
-                }
+                
 
                 if (data[activeSource].State == "playing") {
                     if (video.source != data[activeSource].Url) {
@@ -74,6 +72,11 @@ Item {
             else {
                 imageViewerLoader.item.visible = false;
             }
+            if (currentMediaType == "video") {
+                    video.visible = true
+                }
+                else
+                    video.visible = false
         } //END onDataChanged
     }
 
