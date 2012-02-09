@@ -2,6 +2,10 @@
 Type=Service
 Icon=folder-video
 Name=All Videos
+Name[pt]=Todos os Vídeos
+Name[pt_BR]=Todos os vídeos
+Name[uk]=Всі відео
+Name[x-test]=xxAll Videosxx
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 

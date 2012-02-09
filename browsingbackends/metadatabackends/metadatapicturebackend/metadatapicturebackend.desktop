@@ -2,6 +2,10 @@
 Type=Service
 Icon=folder-image
 Name=All Pictures
+Name[pt]=Todas as Imagens
+Name[pt_BR]=Todas as imagens
+Name[uk]=Всі зображення
+Name[x-test]=xxAll Picturesxx
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 

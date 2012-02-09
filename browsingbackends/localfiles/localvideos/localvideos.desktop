@@ -2,6 +2,10 @@
 Type=Service
 Icon=folder-video
 Name=Browse videos
+Name[pt]=Navegar pelos Vídeos
+Name[pt_BR]=Navegar pelos vídeos
+Name[uk]=Навігація відео
+Name[x-test]=xxBrowse videosxx
 
 Comment=A plugin for the mediabrowser applet that allows local file browsing
 Comment[da]=Et plugin til mediebrowser-appletten som muliggør at gennemse lokale filer

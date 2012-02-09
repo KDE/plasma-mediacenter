@@ -2,6 +2,10 @@
 Type=Service
 Icon=folder-image
 Name=Browse Pictures
+Name[pt]=Navegar pelas Imagens
+Name[pt_BR]=Navegar pelas imagens
+Name[uk]=Навігація зображеннями
+Name[x-test]=xxBrowse Picturesxx
 
 Comment=A plugin for the mediabrowser applet that allows local file browsing
 Comment[da]=Et plugin til mediebrowser-appletten som muliggør at gennemse lokale filer

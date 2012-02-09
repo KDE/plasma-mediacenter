@@ -2,6 +2,10 @@
 Type=Service
 Icon=folder-sound
 Name=Browse music
+Name[pt]=Navegar pela música
+Name[pt_BR]=Navegar pela música
+Name[uk]=Навігація музикою
+Name[x-test]=xxBrowse musicxx
 
 Comment=A plugin for the mediabrowser applet that allows local music browsing
 Comment[da]=Et plugin til mediebrowser-appletten som muliggør at gennemse lokal musik
