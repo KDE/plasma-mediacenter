@@ -2,6 +2,7 @@
 Type=Service
 Icon=folder-sound
 Name=Browse music
+Name[de]=Musik durchsuchen
 Name[pt]=Navegar pela música
 Name[pt_BR]=Navegar pela música
 Name[uk]=Навігація музикою

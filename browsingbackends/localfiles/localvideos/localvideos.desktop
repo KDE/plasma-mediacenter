@@ -2,6 +2,7 @@
 Type=Service
 Icon=folder-video
 Name=Browse videos
+Name[de]=Videos durchsuchen
 Name[pt]=Navegar pelos Vídeos
 Name[pt_BR]=Navegar pelos vídeos
 Name[uk]=Навігація відео

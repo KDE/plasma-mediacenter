@@ -2,6 +2,7 @@
 Type=Service
 Icon=folder-image
 Name=All Pictures
+Name[de]=Alle Bilder
 Name[pt]=Todas as Imagens
 Name[pt_BR]=Todas as imagens
 Name[uk]=Всі зображення
