@@ -24,6 +24,7 @@
 #include <QAbstractItemModel>
 
 #include <Nepomuk/Query/Result>
+#include <Nepomuk/Types/Property>
 
 class MetadataMusicModel : public AbstractMetadataModel
 {
@@ -40,27 +41,35 @@ public:
     virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
     virtual QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
     bool browseTo(int row);
+    virtual bool goOneLevelUp();
 
 private:
     class Category;
+    enum Categories { AllSongs, Artists, Albums };
 
     QList< Nepomuk::Query::Result > m_queryResults;
     QList< Category > m_categories;
     bool m_showingCategories;
     bool m_usingNepomukDirectly;
+    bool m_showingAllSongs;     //FIXME: Implement a state machine to get rid of crap
+    Categories m_currentCategory;
 
     void initializeCategories();
+    bool m_browseTo;
 };
 
 class MetadataMusicModel::Category
 {
 public:
-    Category(const QString &label, const QString &icon);
+    Category(const QString &label, const QString &icon, const Nepomuk::Types::Property &nepomukProperty);
     QString label() const;
     QString icon() const;
+    Nepomuk::Types::Property nepomukProperty() const;
+    
 private:
     QString m_label;
     QString m_icon;
+    Nepomuk::Types::Property m_property;
 };
 
 #endif // METADATAMUSICMODEL_H

@@ -44,10 +44,9 @@
 #include <nepomuk/nfo.h>
 #include <nepomuk/nie.h>
 
-MetadataMusicModel::Category::Category ( const QString& label, const QString& icon )
+MetadataMusicModel::Category::Category ( const QString& label, const QString& icon, const Nepomuk::Types::Property& nepomukProperty )
+    : m_label(label), m_icon(icon), m_property(nepomukProperty)
 {
-    m_label = label;
-    m_icon = icon;
 }
 
 QString MetadataMusicModel::Category::icon() const
@@ -58,6 +57,11 @@ QString MetadataMusicModel::Category::icon() const
 QString MetadataMusicModel::Category::label() const
 {
     return m_label;
+}
+
+Nepomuk::Types::Property MetadataMusicModel::Category::nepomukProperty() const
+{
+    return m_property;
 }
 
 MetadataMusicModel::MetadataMusicModel (QObject* parent)
@@ -78,7 +82,9 @@ MetadataMusicModel::MetadataMusicModel (QObject* parent)
 
 void MetadataMusicModel::initializeCategories()
 {
-    m_categories << Category("All Songs", "audio") << Category("Artist", "view-media-artist") << Category("Albums", "tools-media-optical-copy");
+    m_categories<< Category("All Songs", "audio", Nepomuk::Vocabulary::NFO::Audio())    //unused NFO:Audio to satisfy the compiler
+                << Category("Artists", "view-media-artist", Nepomuk::Vocabulary::NMM::performer())
+                << Category("Albums", "tools-media-optical-copy", Nepomuk::Vocabulary::NMM::musicAlbum());
     m_showingCategories = true;
 }
 
@@ -97,12 +103,12 @@ QVariant MetadataMusicModel::data (const QModelIndex& index, int role) const
     switch (role) {
         case MediaCenter::MediaTypeRole:
             return "audio";
-            break;
         case Qt::DecorationRole:
             if (m_showingCategories) {
                 return m_categories.at(index.row()).icon();
-            } 
-            break;
+            } else {
+                return m_categories.at(m_currentCategory).icon();
+            }
         case Qt::DisplayRole:
             if(m_showingCategories) {
                 return m_categories.at(index.row()).label();
@@ -116,7 +122,7 @@ QVariant MetadataMusicModel::data (const QModelIndex& index, int role) const
             if (m_showingCategories) {
                 return true;
             } else if (m_usingNepomukDirectly) {
-                return false;
+                return true;
             }
             break;
         default:
@@ -166,34 +172,23 @@ QModelIndex MetadataMusicModel::index(int row, int column, const QModelIndex& pa
 
 bool MetadataMusicModel::browseTo(int row)
 {
+    m_showingAllSongs = false;
     if (m_showingCategories) {
+        m_currentCategory = Categories(row);
         m_showingCategories = false;
         switch(row) {
-            case 0:
+            case AllSongs:
                 m_usingNepomukDirectly = false;
+                m_showingAllSongs = true;
                 metadataModel()->setProperty("resourceType", "nfo:Audio");
                 metadataModel()->setProperty("mimeType", "");
                 metadataModel()->setProperty("limit", 500);
                 break;
-            case 1: {
+            case Artists:
+            case Albums: {
                 m_usingNepomukDirectly = true;
                 Nepomuk::Query::Query myQuery;
-                Nepomuk::Query::ComparisonTerm term(Nepomuk::Vocabulary::NMM::performer(), Nepomuk::Query::Term());
-                term.setInverted(true);
-                Nepomuk::Query::QueryServiceClient *queryClient = new Nepomuk::Query::QueryServiceClient(this);
-                connect(queryClient, SIGNAL(newEntries(const QList<Nepomuk::Query::Result> &)),
-                        this, SLOT(newEntries(const QList<Nepomuk::Query::Result> &)));
-                connect(queryClient, SIGNAL(error(QString)), SLOT(error(QString)));
-                connect(queryClient, SIGNAL(finishedListing()), this, SLOT(finishedListing()));
-                myQuery.setTerm(term);
-                kDebug()<< "Sparql query:"<< myQuery.toSparqlQuery();
-                queryClient->query(myQuery);
-                break;
-            }
-            case 2: {
-                m_usingNepomukDirectly = true;
-                Nepomuk::Query::Query myQuery;
-                Nepomuk::Query::ComparisonTerm term(Nepomuk::Vocabulary::NMM::musicAlbum(), Nepomuk::Query::Term());
+                Nepomuk::Query::ComparisonTerm term(m_categories.at(m_currentCategory).nepomukProperty(), Nepomuk::Query::Term());
                 term.setInverted(true);
                 Nepomuk::Query::QueryServiceClient *queryClient = new Nepomuk::Query::QueryServiceClient(this);
                 connect(queryClient, SIGNAL(newEntries(const QList<Nepomuk::Query::Result> &)),
@@ -207,6 +202,48 @@ bool MetadataMusicModel::browseTo(int row)
             }
             reset();
         }
+        return true;
+    } else {
+        QString name = data(index(row, 0)).toString();
+        m_usingNepomukDirectly = false;
+
+        QDeclarativePropertyMap *map
+            = qobject_cast<QDeclarativePropertyMap*>(metadataModel()->property("extraParameters").value<QObject*>());
+        map->clear("nmm:performer");
+        map->clear("nmm:musicAlbum");
+        switch (m_currentCategory) {
+            case Artists:
+                map->insert("nmm:performer", name);
+                break;
+            case Albums:
+                map->insert("nmm:musicAlbum", name);
+                break;
+        }
+        metadataModel()->setProperty("resourceType", "nfo:Audio");
+    }
+
+    return false;
+}
+
+bool MetadataMusicModel::goOneLevelUp()
+{
+    if (m_showingCategories) {
+        return false;
+    }
+    if (!m_usingNepomukDirectly) {
+        if (m_showingAllSongs) {
+            m_showingCategories = true;
+            m_usingNepomukDirectly = false;
+            reset();
+            return true;
+        } else {
+            m_showingCategories = true;
+            return browseTo(m_currentCategory);
+        }
+    } else {
+        m_showingCategories = true;
+        m_usingNepomukDirectly = false;
+        reset();
         return true;
     }
     return false;

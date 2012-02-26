@@ -31,6 +31,7 @@ class MetadataMusicBackend : public AbstractMetadataBackend
 public:
     MetadataMusicBackend (QObject* parent, const QVariantList& args);
     virtual ~MetadataMusicBackend();
+    virtual bool goOneLevelUp();
 
 protected:
     virtual bool expand (int row);

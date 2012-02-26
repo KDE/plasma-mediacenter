@@ -52,4 +52,10 @@ bool MetadataMusicBackend::expand(int row)
     return filesModel->browseTo(row);
 }
 
+bool MetadataMusicBackend::goOneLevelUp()
+{
+     MetadataMusicModel *filesModel = qobject_cast<MetadataMusicModel*>(model());
+    return filesModel->goOneLevelUp();
+}
+
 #include "metadatamusicbackend.moc"
