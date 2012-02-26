@@ -32,6 +32,8 @@ public:
     MetadataMusicBackend (QObject* parent, const QVariantList& args);
     virtual ~MetadataMusicBackend();
 
+protected:
+    virtual bool expand (int row);
 public Q_SLOTS:
     virtual void init();
 };

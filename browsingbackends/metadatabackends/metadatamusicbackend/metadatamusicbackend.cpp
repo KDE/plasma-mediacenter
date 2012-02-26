@@ -45,5 +45,11 @@ void MetadataMusicBackend::init()
     AbstractMetadataBackend::init();
 }
 
+bool MetadataMusicBackend::expand(int row)
+{
+    MetadataMusicModel *filesModel = qobject_cast<MetadataMusicModel*>(model());
+
+    return filesModel->browseTo(row);
+}
 
 #include "metadatamusicbackend.moc"

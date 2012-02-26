@@ -20,18 +20,47 @@
 #ifndef METADATAMUSICMODEL_H
 #define METADATAMUSICMODEL_H
 
+#include "../abstractmetadatamodel.h"
 #include <QAbstractItemModel>
 
-#include "../abstractmetadatamodel.h"
+#include <Nepomuk/Query/Result>
 
 class MetadataMusicModel : public AbstractMetadataModel
 {
     Q_OBJECT
+protected Q_SLOTS:
+    void newEntries(const QList< Nepomuk::Query::Result > &entries);
+    void finishedListing();
+    void error(const QString& e);
 public:
     explicit MetadataMusicModel (QObject* parent = 0);
     virtual ~MetadataMusicModel();
 
     virtual QVariant data (const QModelIndex& index, int role = Qt::DisplayRole) const;
+    virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
+    virtual QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
+    bool browseTo(int row);
+
+private:
+    class Category;
+
+    QList< Nepomuk::Query::Result > m_queryResults;
+    QList< Category > m_categories;
+    bool m_showingCategories;
+    bool m_usingNepomukDirectly;
+
+    void initializeCategories();
+};
+
+class MetadataMusicModel::Category
+{
+public:
+    Category(const QString &label, const QString &icon);
+    QString label() const;
+    QString icon() const;
+private:
+    QString m_label;
+    QString m_icon;
 };
 
 #endif // METADATAMUSICMODEL_H
