@@ -26,6 +26,8 @@
 
 #include <QDebug>
 #include "categoriesmodel.h"
+#include "nepomukmusicmodel.h"
+#include <nepomuk/nmm.h>
 
 MEDIACENTER_EXPORT_BROWSINGBACKEND(MetadataMusicBackend)
 
@@ -41,7 +43,9 @@ MetadataMusicBackend::~MetadataMusicBackend()
 void MetadataMusicBackend::init()
 {
     if (metadataModel()) {
-        setModel(new CategoriesModel(this));
+        NepomukMusicModel *model = new NepomukMusicModel();
+        model->setTerm(Nepomuk::Vocabulary::NMM::musicAlbum());
+        setModel(model);
     }
     AbstractMetadataBackend::init();
 }

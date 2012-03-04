@@ -1,4 +1,5 @@
 set(metadatamusicbackend_SRCS
+    nepomukmusicmodel.cpp
     categoriesmodel.cpp   
     metadatamusicmodel.cpp
     ../abstractmetadatabackend.cpp
