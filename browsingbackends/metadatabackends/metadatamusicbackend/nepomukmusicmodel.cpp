@@ -27,7 +27,6 @@ NepomukMusicModel::NepomukMusicModel(QObject* parent): QAbstractItemModel(parent
 void NepomukMusicModel::setTerm(Nepomuk::Types::Property term)
 {
     Nepomuk::Query::Query myQuery;
-    kDebug() << "haaaaaaaaaahaaaaaaaaaaaaaaa";
     Nepomuk::Query::ComparisonTerm ct(term, Nepomuk::Query::Term());
     ct.setInverted(true);
     Nepomuk::Query::QueryServiceClient *queryClient = new Nepomuk::Query::QueryServiceClient(this);
@@ -37,6 +36,8 @@ void NepomukMusicModel::setTerm(Nepomuk::Types::Property term)
     connect(queryClient, SIGNAL(finishedListing()), this, SLOT(finishedListing()));
     myQuery.setTerm(ct);
     kDebug()<< "Sparql query:"<< myQuery.toSparqlQuery();
+    m_queryResults.clear();
+    reset();
     queryClient->query(myQuery);
 }
 

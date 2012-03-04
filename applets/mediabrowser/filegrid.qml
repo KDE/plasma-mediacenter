@@ -79,7 +79,7 @@ Item {
                 var backend = mediaBrowserObject.backendFromName(currentBrowsingBackendName);
                 backend.metadataModel = metadataModel;
                 backend.init();
-                grid.model = backend.backendModel;
+                grid.model = (function() { return backend.backendModel; })
                 previousBrowsingBackendName = currentBrowsingBackendName;
             }
         }

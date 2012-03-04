@@ -184,7 +184,7 @@ public:
     QDeclarativeEngine *declarativeEngine() const;
 
 signals:
-    void modelChanged(QAbstractItemModel * model);
+    void modelChanged();
     void metadataModelChanged();
 
 protected:

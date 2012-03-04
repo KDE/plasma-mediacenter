@@ -71,7 +71,7 @@ AbstractBrowsingBackend::~AbstractBrowsingBackend()
 void AbstractBrowsingBackend::setModel(QAbstractItemModel * model)
 {
     d->model = model;
-    emit modelChanged(d->model);
+    emit modelChanged();
 }
 
 QObject * AbstractBrowsingBackend::model()

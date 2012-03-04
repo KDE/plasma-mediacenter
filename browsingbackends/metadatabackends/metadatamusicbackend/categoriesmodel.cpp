@@ -1,18 +1,18 @@
 #include "categoriesmodel.h"
+
 #include <mediacenter/mediacenter.h>
 
 CategoriesModel::CategoriesModel(QObject* parent): QAbstractItemModel(parent)
 {
+    m_categories.append(Category("All Songs", "audio", Category::AllMusic));
+    m_categories.append(Category("Artists", "view-media-artist", Category::Artists));
+    m_categories.append(Category("Albums", "tools-media-optical-copy", Category::Albums));
 
-    m_categories.append(Category("All Songs","audio"));
-    m_categories.append(Category("Artist", "view-media-artist"));
-    m_categories.append(Category("Album", "tools-media-optical-copy"));
+    setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
 }
-
 
 QVariant CategoriesModel::data(const QModelIndex& index, int role) const
 {
-
     switch (role) {
         case Qt::DecorationRole:{
             return m_categories.at(index.row()).icon();
@@ -52,20 +52,32 @@ QModelIndex CategoriesModel::index(int row, int column, const QModelIndex& paren
 }
 
 
-Category::Category(QString label, QString icon)
+Category::Category(QString label, QString icon, CategoryType categoryType)
+    : m_icon(icon),
+    m_label(label),
+    m_categoryType(categoryType)
 {
-
-    m_icon = icon;
-    m_label = label;
 }
 
 QString Category::icon() const
 {
-
     return m_icon;
 }
 
 QString Category::label() const
 {
     return m_label;
+}
+
+Category::CategoryType Category::categoryType() const
+{
+    return m_categoryType;
+}
+
+Category::CategoryType CategoriesModel::categoryTypeForIndex(int index) const
+{
+    if (index >= m_categories.size())
+        return Category::AllMusic;
+
+    return m_categories.at(index).categoryType();
 }

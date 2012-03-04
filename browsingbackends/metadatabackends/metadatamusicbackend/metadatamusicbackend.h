@@ -25,18 +25,55 @@
 
 #include "../abstractmetadatabackend.h"
 
+#include <QStateMachine>
+
+class CategoriesModel;
+class NepomukMusicModel;
+class MetadataMusicModel;
+
 class MetadataMusicBackend : public AbstractMetadataBackend
 {
     Q_OBJECT
 public:
     MetadataMusicBackend (QObject* parent, const QVariantList& args);
     virtual ~MetadataMusicBackend();
-    virtual bool goOneLevelUp();
 
-protected:
+    virtual bool goOneLevelUp();
     virtual bool expand (int row);
-public Q_SLOTS:
     virtual void init();
+
+private Q_SLOTS:
+    void showCategories();
+    void showAllMusic();
+    void showArtists();
+    void showAlbums();
+    void showMusicForArtist();
+    void showMusicForAlbum();
+
+Q_SIGNALS:
+    void currentStateCategories();
+    void currentStateAllMusic();
+    void currentStateArtists();
+    void currentStateAlbums();
+    void currentStateMusicForArtist();
+    void currentStateMusicForAlbum();
+    void backRequested();
+
+private:
+    QStateMachine m_machine;
+    QState m_categoriesState;
+    QState m_artistsState;
+    QState m_albumsState;
+    QState m_allMusicState;
+    QState m_musicForArtistState;
+    QState m_musicForAlbumState;
+
+    CategoriesModel *m_categoriesModel;
+    NepomukMusicModel *m_nepomukModel;
+    MetadataMusicModel *m_metadataMusicModel;
+
+    void setupStates();
+    inline QState *currentState() const;
 };
 
 #endif // METADATAMUSICBACKEND_H
