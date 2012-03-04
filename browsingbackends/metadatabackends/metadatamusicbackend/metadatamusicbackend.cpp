@@ -63,6 +63,12 @@ void MetadataMusicBackend::setupStates()
     m_categoriesState.addTransition(this, SIGNAL(currentStateArtists()), &m_artistsState);
     m_categoriesState.addTransition(this, SIGNAL(currentStateAlbums()), &m_albumsState);
 
+    m_albumsState.addTransition(this, SIGNAL(currentStateMusicForAlbum()), &m_musicForAlbumState);
+    m_artistsState.addTransition(this, SIGNAL(currentStateMusicForArtist()), &m_musicForArtistState);
+
+    m_musicForAlbumState.addTransition(this, SIGNAL(backRequested()), &m_albumsState);
+    m_musicForArtistState.addTransition(this, SIGNAL(backRequested()), &m_artistsState);
+
     m_allMusicState.addTransition(this, SIGNAL(backRequested()), &m_categoriesState);
     m_artistsState.addTransition(this, SIGNAL(backRequested()), &m_categoriesState);
     m_albumsState.addTransition(this, SIGNAL(backRequested()), &m_categoriesState);
@@ -104,6 +110,17 @@ bool MetadataMusicBackend::expand(int row)
             emit currentStateAlbums();
             return true;
         }
+    } else if (curState != &m_allMusicState) {
+        QAbstractItemModel *currentModel = qobject_cast<QAbstractItemModel*>(model());
+        QString currentItemLabel = currentModel->data(currentModel->index(row, 0), Qt::DisplayRole).toString();
+
+        if (curState == &m_albumsState) {
+            m_albumName = currentItemLabel;
+            emit currentStateMusicForAlbum();
+        } else if (curState == &m_artistsState) {
+            m_artistName = currentItemLabel;
+            emit currentStateMusicForArtist();
+        }
     }
 
     return false;
@@ -127,28 +144,37 @@ void MetadataMusicBackend::showCategories()
 void MetadataMusicBackend::showAllMusic()
 {
     setModel(m_metadataMusicModel);
+    m_metadataMusicModel->setAlbumName("");
+    m_metadataMusicModel->setArtistName("");
+    m_metadataMusicModel->updateModel();
 }
 
 void MetadataMusicBackend::showAlbums()
 {
     setModel(m_nepomukModel);
-    m_nepomukModel->setTerm(Nepomuk::Vocabulary::NMM::musicAlbum());
+    m_nepomukModel->setTerm(Nepomuk::Vocabulary::NMM::musicAlbum(), "tools-media-optical-copy");
 }
 
 void MetadataMusicBackend::showArtists()
 {
     setModel(m_nepomukModel);
-    m_nepomukModel->setTerm(Nepomuk::Vocabulary::NMM::performer());
+    m_nepomukModel->setTerm(Nepomuk::Vocabulary::NMM::performer(), "user-identity");
 }
 
 void MetadataMusicBackend::showMusicForAlbum()
 {
-
+    setModel(m_metadataMusicModel);
+    m_metadataMusicModel->setArtistName("");
+    m_metadataMusicModel->setAlbumName(m_albumName);
+    m_metadataMusicModel->updateModel();
 }
 
 void MetadataMusicBackend::showMusicForArtist()
 {
-
+    setModel(m_metadataMusicModel);
+    m_metadataMusicModel->setArtistName(m_artistName);
+    m_metadataMusicModel->setAlbumName("");
+    m_metadataMusicModel->updateModel();
 }
 
 #include "metadatamusicbackend.moc"

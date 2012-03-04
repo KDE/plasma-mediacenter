@@ -32,6 +32,13 @@ public:
     virtual ~MetadataMusicModel();
 
     virtual QVariant data (const QModelIndex& index, int role = Qt::DisplayRole) const;
+    void setArtistName(const QString &artistName);
+    void setAlbumName(const QString &albumName);
+    void updateModel();
+
+private:
+    QString m_artistName;
+    QString m_albumName;
 };
 
 #endif // METADATAMUSICMODEL_H

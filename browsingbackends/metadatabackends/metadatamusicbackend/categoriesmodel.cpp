@@ -5,7 +5,7 @@
 CategoriesModel::CategoriesModel(QObject* parent): QAbstractItemModel(parent)
 {
     m_categories.append(Category("All Songs", "audio", Category::AllMusic));
-    m_categories.append(Category("Artists", "view-media-artist", Category::Artists));
+    m_categories.append(Category("Artists", "user-identity", Category::Artists));
     m_categories.append(Category("Albums", "tools-media-optical-copy", Category::Albums));
 
     setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));

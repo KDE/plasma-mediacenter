@@ -5,17 +5,6 @@
 #include <Nepomuk/Query/Result>
 #include <Nepomuk/Types/Property>
 
-class CategoryData
-{
-public:
-    CategoryData(QString icon, Nepomuk::Types::Property property);
-    Nepomuk::Types::Property property() const;
-    QString icon() const;
-private:
-    Nepomuk::Types::Property m_property;
-    QString m_icon;
-};
-
 class NepomukMusicModel : public QAbstractItemModel
 {
 
@@ -30,11 +19,11 @@ public:
     virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
     virtual QModelIndex parent(const QModelIndex& child) const;
     virtual QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
-    void setTerm(Nepomuk::Types::Property term);
+    void setTerm(Nepomuk::Types::Property term, const QString& iconName);
 
 private:
+    QString m_icon;
     QList< Nepomuk::Query::Result > m_queryResults;
-    QList<CategoryData> m_categoryData;
 };
 
 #endif // NEPOMUKMUSICMODEL_H

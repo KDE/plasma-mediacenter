@@ -68,6 +68,9 @@ private:
     QState m_musicForArtistState;
     QState m_musicForAlbumState;
 
+    QString m_artistName;
+    QString m_albumName;
+
     CategoriesModel *m_categoriesModel;
     NepomukMusicModel *m_nepomukModel;
     MetadataMusicModel *m_metadataMusicModel;

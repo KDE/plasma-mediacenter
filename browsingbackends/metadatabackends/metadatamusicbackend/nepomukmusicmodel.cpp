@@ -15,17 +15,18 @@
 #include <nepomuk/nfo.h>
 #include <nepomuk/nie.h>
 #include <KDebug>
+#include <mediacenter/mediacenter.h>
 
 
 NepomukMusicModel::NepomukMusicModel(QObject* parent): QAbstractItemModel(parent)
 {
-    m_categoryData.append(CategoryData("audio", Nepomuk::Vocabulary::NFO::Audio()));
-    m_categoryData.append(CategoryData("view-media-artist", Nepomuk::Vocabulary::NMM::performer()));
-    m_categoryData.append(CategoryData("tools-media-optical-copy", Nepomuk::Vocabulary::NMM::musicAlbum()));
+    setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
 }
 
-void NepomukMusicModel::setTerm(Nepomuk::Types::Property term)
+void NepomukMusicModel::setTerm(Nepomuk::Types::Property term, const QString &iconName)
 {
+    m_icon = iconName;
+
     Nepomuk::Query::Query myQuery;
     Nepomuk::Query::ComparisonTerm ct(term, Nepomuk::Query::Term());
     ct.setInverted(true);
@@ -46,9 +47,11 @@ QVariant NepomukMusicModel::data(const QModelIndex& index, int role) const
 
     switch(role) {
     case Qt::DecorationRole:
-                return "view-media-artist";
-        case Qt::DisplayRole:
-                return m_queryResults.at(index.row()).resource().genericLabel();
+        return m_icon;
+    case Qt::DisplayRole:
+        return m_queryResults.at(index.row()).resource().genericLabel();
+    case MediaCenter::IsExpandableRole:
+        return true;
     }
 
     return QVariant();
@@ -80,7 +83,6 @@ QModelIndex NepomukMusicModel::index(int row, int column, const QModelIndex& par
 
 void NepomukMusicModel::newEntries(const QList< Nepomuk::Query::Result >& entries)
 {
-    kDebug() << "ITEEM";
       Q_FOREACH (Nepomuk::Query::Result res, entries) {
         m_queryResults.append(res);
     }
@@ -88,26 +90,5 @@ void NepomukMusicModel::newEntries(const QList< Nepomuk::Query::Result >& entrie
 
 void NepomukMusicModel::finishedListing()
 {
-    kDebug() << "FINEESH";
     reset();
 }
-
-CategoryData::CategoryData(QString icon, Nepomuk::Types::Property property)
-{
-
-    m_property = property;
-    m_icon = icon;
-}
-
-QString CategoryData::icon() const
-{
-
-    return m_icon;
-}
-
-Nepomuk::Types::Property CategoryData::property() const
-{
-
-    return m_property;
-}
-

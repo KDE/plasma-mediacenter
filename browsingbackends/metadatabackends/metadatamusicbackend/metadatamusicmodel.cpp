@@ -23,15 +23,16 @@
 #include <mediacenter/abstractbrowsingbackend.h>
 
 #include <QtGui/QIcon>
-#include <QEvent>
+#include <QtCore/QEvent>
+#include <QtDeclarative/QDeclarativePropertyMap>
+
+#include <QDebug>
 
 MetadataMusicModel::MetadataMusicModel (QObject* parent)
     : AbstractMetadataModel (parent)
 {
     if (metadataModel()) {
-        metadataModel()->setProperty("resourceType", "nfo:Audio");
-        metadataModel()->setProperty("mimeType", "");
-        metadataModel()->setProperty("limit", 500);
+        
     }
     else {
         kDebug() << "WARNING: Constructor called before metadataModel set :/";
@@ -41,6 +42,37 @@ MetadataMusicModel::MetadataMusicModel (QObject* parent)
 MetadataMusicModel::~MetadataMusicModel()
 {
 
+}
+
+void MetadataMusicModel::setAlbumName(const QString& albumName)
+{
+    m_albumName = albumName;
+}
+
+void MetadataMusicModel::setArtistName(const QString& artistName)
+{
+    m_artistName = artistName;
+}
+
+void MetadataMusicModel::updateModel()
+{
+    QDeclarativePropertyMap *map
+            = qobject_cast<QDeclarativePropertyMap*>(metadataModel()->property("extraParameters").value<QObject*>());
+
+    if (m_albumName.isEmpty()) {
+        map->clear("nmm:musicAlbum");
+    } else {
+        map->insert("nmm:musicAlbum", m_albumName);
+    }
+
+    if (m_artistName.isEmpty()) {
+        map->clear("nmm:performer");
+    } else {
+        map->insert("nmm:performer", m_artistName);
+    }
+
+    metadataModel()->setProperty("resourceType", "");
+    metadataModel()->setProperty("resourceType", "nfo:Audio");
 }
 
 QVariant MetadataMusicModel::data (const QModelIndex& index, int role) const
