@@ -59,19 +59,10 @@ void MetadataMusicModel::updateModel()
     QDeclarativePropertyMap *map
             = qobject_cast<QDeclarativePropertyMap*>(metadataModel()->property("extraParameters").value<QObject*>());
 
-    if (m_albumName.isEmpty()) {
-        map->clear("nmm:musicAlbum");
-    } else {
-        map->insert("nmm:musicAlbum", m_albumName);
-    }
+    resetMetadataModel();
+    map->insert("nmm:musicAlbum", m_albumName);
+    map->insert("nmm:performer", m_artistName);
 
-    if (m_artistName.isEmpty()) {
-        map->clear("nmm:performer");
-    } else {
-        map->insert("nmm:performer", m_artistName);
-    }
-
-    metadataModel()->setProperty("resourceType", "");
     metadataModel()->setProperty("resourceType", "nfo:Audio");
 }
 

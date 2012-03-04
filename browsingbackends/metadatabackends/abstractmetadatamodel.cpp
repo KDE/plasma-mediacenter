@@ -22,10 +22,9 @@
 #include <mediacenter/mediacenter.h>
 #include <mediacenter/abstractbrowsingbackend.h>
 
-#include <QDebug>
-
 #include <QtGui/QIcon>
-#include <QEvent>
+#include <QtCore/QEvent>
+#include <QtDeclarative/QDeclarativePropertyMap>
 
 class AbstractMetadataModel::Private
 {
@@ -266,6 +265,19 @@ void AbstractMetadataModel::sourceRowsMoved ( const QModelIndex & sourceParent, 
 void AbstractMetadataModel::sourceRowsRemoved ( const QModelIndex & parent, int start, int end )
 {
     removeRows(start, end, parent);
+}
+
+void AbstractMetadataModel::resetMetadataModel()
+{
+    QDeclarativePropertyMap *map
+            = qobject_cast<QDeclarativePropertyMap*>(metadataModel()->property("extraParameters").value<QObject*>());
+
+    metadataModel()->setProperty("resourceType", "");
+    metadataModel()->setProperty("mimeType", "");
+    metadataModel()->setProperty("limit", "");
+    Q_FOREACH(const QString &key, map->keys()) {
+        map->clear(key);
+    }
 }
 
 #include "abstractmetadatamodel.moc"

@@ -14,6 +14,7 @@ target_link_libraries(pmc_metadatapicturebackend
     ${KDE4_KDECORE_LIBS}
     ${KDE4_KIO_LIBS}
     ${KDE4_KFILE_LIBS}
+    ${QT_QTDECLARATIVE_LIBRARIES}
 )
 
 install(TARGETS pmc_metadatapicturebackend DESTINATION ${PLUGIN_INSTALL_DIR})

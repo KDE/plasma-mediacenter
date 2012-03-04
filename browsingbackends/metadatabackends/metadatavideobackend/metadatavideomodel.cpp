@@ -44,6 +44,7 @@ MetadataVideoModel::MetadataVideoModel(QObject* parent)
     , d(new Private())
 {
     if(metadataModel()) {
+        resetMetadataModel();
         metadataModel()->setProperty("resourceType", "nfo:FileDataObject");
         metadataModel()->setProperty("mimeType", "video");
         metadataModel()->setProperty("limit", 500);

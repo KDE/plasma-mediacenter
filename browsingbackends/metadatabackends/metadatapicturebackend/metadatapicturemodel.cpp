@@ -30,6 +30,7 @@ MetadataPictureModel::MetadataPictureModel (QObject* parent)
     : AbstractMetadataModel (parent)
 {
     if (metadataModel()) {
+        resetMetadataModel();
         metadataModel()->setProperty("resourceType", "nfo:Image");
         metadataModel()->setProperty("mimeType", "");
         metadataModel()->setProperty("limit", 500);

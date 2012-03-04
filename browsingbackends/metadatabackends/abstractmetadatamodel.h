@@ -61,6 +61,7 @@ private slots:
 
 protected:
     QAbstractItemModel* metadataModel() const;
+    void resetMetadataModel();
 
 private:
     class Private;

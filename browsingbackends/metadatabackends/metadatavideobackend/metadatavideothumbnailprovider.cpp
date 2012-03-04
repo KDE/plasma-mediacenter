@@ -46,7 +46,8 @@ void MetadataVideoThumbnailProvider::loadThumbnails(const KUrl::List& fileList, 
 {
     KFileItemList fileItems;
     for(KUrl::List::ConstIterator it = fileList.begin(); it != fileList.end(); ++it) {
-        Q_ASSERT((*it).isValid());   // please call us with valid urls only
+        if (!(*it).isValid())
+            return;
         fileItems.append(KFileItem(KFileItem::Unknown, KFileItem::Unknown, *it, true));
     }
 
