@@ -1,5 +1,5 @@
 set(metadatamusicbackend_SRCS
-   
+    categoriesmodel.cpp   
     metadatamusicmodel.cpp
     ../abstractmetadatabackend.cpp
     ../abstractmetadatamodel.cpp

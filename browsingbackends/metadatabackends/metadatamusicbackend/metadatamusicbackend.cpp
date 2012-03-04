@@ -25,6 +25,7 @@
 #include "metadatamusicmodel.h"
 
 #include <QDebug>
+#include "categoriesmodel.h"
 
 MEDIACENTER_EXPORT_BROWSINGBACKEND(MetadataMusicBackend)
 
@@ -40,7 +41,7 @@ MetadataMusicBackend::~MetadataMusicBackend()
 void MetadataMusicBackend::init()
 {
     if (metadataModel()) {
-        setModel(new MetadataMusicModel(this));
+        setModel(new CategoriesModel(this));
     }
     AbstractMetadataBackend::init();
 }
