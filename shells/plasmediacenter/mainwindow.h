@@ -51,10 +51,9 @@ public:
 
     bool eventFilter(QObject *o, QEvent *e);
 
-    void loadMediaCenter();
-
 public slots:
     void createConfigurationInterface();
+    void loadMediaCenter();
 
 protected:
     void resizeEvent(QResizeEvent *event);
@@ -63,6 +62,7 @@ protected:
 protected slots:
     void toggleFullScreen();
     void applyConfig();
+    void toggleContainment();
 
 private:
     KConfigGroup wallpaperConfig(Plasma::Containment * containment, const QString &plugin);

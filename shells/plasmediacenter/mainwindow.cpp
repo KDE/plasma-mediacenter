@@ -19,13 +19,13 @@
 
 #include "mainwindow.h"
 
-#include <mediacenter/gesturerecognizer.h>
 #include <mediacenter/browser.h>
 
 #include <QGraphicsView>
 #include <QKeyEvent>
 #include <QWheelEvent>
 #include <QGLWidget>
+#include <QtCore/QTimer>
 
 #include <KAction>
 #include <KCmdLineArgs>
@@ -61,8 +61,10 @@ m_recognizer(0)
 {
     setCentralWidget(m_view);
 
-    QGLWidget *glWidget = new QGLWidget;
-    glWidget->setAutoFillBackground(false);
+    QGLWidget *glWidget = new QGLWidget(this);
+    glWidget->setGeometry(geometry());
+    glWidget->setAutoFillBackground(true);
+
     m_view->setViewport(glWidget);
     m_view->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 
@@ -91,28 +93,20 @@ m_recognizer(0)
 
     menuBar()->addMenu(helpMenu());
 
-    resize(1024, 600); //netbook size
-    //showFullScreen();
-
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
     if (args->isSet("fullscreen")) {
         toggleFullScreen();
     }
     args->clear();
-
-    m_recognizer = new MediaCenter::GestureRecognizer;
 }
 
 MainWindow::~MainWindow()
 {
-    QGestureRecognizer::unregisterRecognizer(m_gestureType);
+
 }
 
 void MainWindow::loadMediaCenter()
 {
-
-    m_gestureType = QGestureRecognizer::registerRecognizer(m_recognizer);
-
     m_containment = m_corona->addContainment("org.kde.mediacontainment");
     if (!m_containment) {
         kDebug() << "unable to load mediacontaiment";
@@ -120,26 +114,20 @@ void MainWindow::loadMediaCenter()
     }
 
     m_containment->resize(m_view->size());
-
     m_view->setSceneRect(m_containment->geometry());
+    toggleContainment();
 
     m_browser = m_containment->addApplet("org.kde.mediabrowser");
-    //m_playlist = m_containment->addApplet("playlist");
     m_player = m_containment->addApplet("org.kde.mediaplayer");
     m_infobar = m_containment->addApplet("org.kde.mediainfobar");
     m_welcome = m_containment->addApplet("org.kde.mediawelcome");
-    //m_controller = m_containment->addApplet("org.kde.mediacontroller"); //Keep the controller last
 
-    if (m_browser) {
-        MediaCenter::Browser *browser = qobject_cast<MediaCenter::Browser *>(m_browser);
-        if (browser) {
-            browser->setGestureType(m_gestureType);
-        } else {
-            kWarning() << "expecting MedicaCenter::Browser for the browser, but didn't get one!";
-        }
+    QTimer::singleShot(100, this, SLOT(toggleContainment()));
+}
 
-        m_browser->grabGesture(m_gestureType);
-    }
+void MainWindow::toggleContainment()
+{
+    m_containment->setVisible(!m_containment->isVisible());
 }
 
 bool MainWindow::eventFilter(QObject *o, QEvent *e)

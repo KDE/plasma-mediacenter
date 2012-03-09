@@ -62,8 +62,9 @@ int main(int argc, char *argv[])
     Plasma::Theme::defaultTheme()->setThemeName(themeName);
 
     MainWindow *mw = new MainWindow;
-    mw->show();
     mw->loadMediaCenter();
+    mw->show();
+
     return app.exec();
 
 }
