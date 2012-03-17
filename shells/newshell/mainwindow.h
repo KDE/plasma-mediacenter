@@ -21,26 +21,8 @@
 
 #include <KMainWindow>
 
-#include "ui_theme.h"
-#include "ui_backgrounddialog.h"
-
-
-class QGraphicsView;
-namespace Plasma {
-    class Corona;
-    class Containment;
-    class Applet;
-}
-
-namespace Phonon {
-    class VideoWidget;
-}
-
-namespace MediaCenter {
-    class GestureRecognizer;
-}
-
-class KConfigSkeleton;
+#include <Plasma/PackageStructure>
+#include <kdeclarative.h>
 
 class MainWindow : public KMainWindow
 {
@@ -49,42 +31,12 @@ public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    bool eventFilter(QObject *o, QEvent *e);
-
-    void loadMediaCenter();
-
-public slots:
-    void createConfigurationInterface();
-
-protected:
-    void resizeEvent(QResizeEvent *event);
-    void moveEvent(QMoveEvent *);
-
-protected slots:
+public Q_SLOTS:
     void toggleFullScreen();
-    void applyConfig();
 
 private:
-    KConfigGroup wallpaperConfig(Plasma::Containment * containment, const QString &plugin);
-    QGraphicsView *m_view;
-    Plasma::Corona *m_corona;
-    Plasma::Containment *m_containment;
-    KConfigSkeleton *m_cfskeleton;
-
-    Plasma::Applet *m_browser;
-    Plasma::Applet *m_controller;
-    Plasma::Applet *m_playlist;
-    Plasma::Applet *m_player;
-    Plasma::Applet *m_infobar;
-    Plasma::Applet *m_welcome;
-
-    MediaCenter::GestureRecognizer *m_recognizer;
-    Qt::GestureType m_gestureType;
-
-    KUrl m_wallpaper;
-
-    Ui::Theme m_theme;
-    Ui::BackgroundDialog m_background;
+    Plasma::PackageStructure::Ptr m_structure;
+    KDeclarative m_kdeclarative;
 };
 
 #endif // MAINWINDOW_H

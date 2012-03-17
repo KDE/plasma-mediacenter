@@ -25,7 +25,6 @@
 #include <QtGui/QIcon>
 #include <QEvent>
 
-
 MetadataPictureModel::MetadataPictureModel (QObject* parent)
     : AbstractMetadataModel (parent)
 {
@@ -33,7 +32,6 @@ MetadataPictureModel::MetadataPictureModel (QObject* parent)
         resetMetadataModel();
         metadataModel()->setProperty("resourceType", "nfo:Image");
         metadataModel()->setProperty("mimeType", "");
-        metadataModel()->setProperty("limit", 500);
     }
     else {
         kDebug() << "WARNING: Constructor called before metadataModel set :/";
@@ -51,16 +49,16 @@ QVariant MetadataPictureModel::data (const QModelIndex& index, int role) const
         return QVariant();
     }
 
-      if (role == Qt::DecorationRole) {
-        if (!MetadataPictureModel::data(index, MediaCenter::IsExpandableRole).toBool())
-            return AbstractMetadataModel::data (index, MediaCenter::MediaUrlRole);
-    }
-    if(role == MediaCenter::MediaTypeRole) {
+    switch (role) {
+    case Qt::DecorationRole:
+        return AbstractMetadataModel::data (index, MediaCenter::MediaUrlRole);
+    case MediaCenter::MediaTypeRole:
         return "image";
+    case MediaCenter::HideLabelRole:
+        return true;
     }
-    else {
-        return AbstractMetadataModel::data(index, role);
-    }
+
+    return AbstractMetadataModel::data(index, role);
 }
 
 #include "metadatapicturemodel.moc"

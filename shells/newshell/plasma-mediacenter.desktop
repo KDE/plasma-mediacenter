@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Plasma Media Center
+GenericName=Plasma Media Center
+Comment=Plasma Media Center
+Exec=plasma-mediacenter -graphicssystem raster %u
+Terminal=false
+Icon=plasma
+Type=Application
+Categories=Multimedia

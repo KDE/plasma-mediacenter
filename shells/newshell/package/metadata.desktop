@@ -1,0 +1,17 @@
+[Desktop Entry]
+Name=Plasma Media Center
+Comment=Plasma Media Center
+Encoding=UTF-8
+Type=Service
+Icon=plasma
+X-KDE-ParentApp=
+X-KDE-PluginInfo-Author=Shantanu Tushar
+X-KDE-PluginInfo-Email=shaan7in@gmail.com
+X-KDE-PluginInfo-Name=org.kde.plasma.mediacenter
+X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-Website=http://plasma.kde.org
+X-KDE-PluginInfo-Category=Multimedia
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
+X-Plasma-MainScript=ui/mediacenter.qml

@@ -25,6 +25,7 @@ Item {
 
     property QGraphicsWidget applet
     onAppletChanged: {
+        print(plasmoidContainer.applet)
         plasmoidContainer.applet.backgroundHints = "NoBackground"
         plasmoidContainer.applet.parent = plasmoidContainer
         plasmoidContainer.applet.height = plasmoidContainer.height

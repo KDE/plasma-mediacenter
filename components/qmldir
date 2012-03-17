@@ -1,0 +1,6 @@
+MediaBrowser 0.1 mediabrowser/MediaBrowser.qml
+MediaController 0.1 mediacontroller/MediaController.qml
+MediaInfoBar 0.1 mediainfobar/MediaInfoBar.qml
+MediaPlayer 0.1 mediaplayer/MediaPlayer.qml
+MediaWelcome 0.1 mediawelcome/MediaWelcome.qml
+RuntimeData 0.1 runtimedata/RuntimeData.qml

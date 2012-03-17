@@ -48,7 +48,6 @@ int main(int argc, char *argv[])
     aboutData.addCredit(ki18n("Marco Martin"), ki18n("GSoC project mentor"), "notmart@gmail.com", "");
 
     KCmdLineArgs::init(argc, argv, &aboutData);
-
     KCmdLineOptions options;
     options.add("f");
     options.add("nofullscreen", ki18n("Starts Plasma Media Center in fullscreen mode (the default)"));
@@ -56,14 +55,7 @@ int main(int argc, char *argv[])
 
     KApplication app;
 
-    KConfigGroup cg(KSharedConfig::openConfig("plasmarc"), "Theme-plasma-mediacenter");
-    const QString themeName = cg.readEntry("name", "oxygen-mediacenter");
-    Plasma::Theme::defaultTheme()->setUseGlobalSettings(false);
-    Plasma::Theme::defaultTheme()->setThemeName(themeName);
-
     MainWindow *mw = new MainWindow;
     mw->show();
-    mw->loadMediaCenter();
     return app.exec();
-
 }

@@ -19,8 +19,9 @@
 
 
 #include "abstractmetadatamodel.h"
-#include <mediacenter/mediacenter.h>
-#include <mediacenter/abstractbrowsingbackend.h>
+
+#include <libs/mediacenter/mediacenter.h>
+#include <libs/mediacenter/abstractbrowsingbackend.h>
 
 #include <QtGui/QIcon>
 #include <QtCore/QEvent>
@@ -132,19 +133,15 @@ QVariant AbstractMetadataModel::data (const QModelIndex& index, int role) const
     switch (role) {
     case Qt::DisplayRole:
         return metadataModel()->data(index, d->labelKey);
-        break;
     case Qt::DecorationRole:
         return metadataModel()->data(index, d->iconKey);
-        break;
     case MediaCenter::MediaUrlRole:
         return metadataModel()->data(index, d->urlKey);
-        break;
     case MediaCenter::IsExpandableRole:
         return false;
-        break;
     }
 
-    return QVariant();
+    return metadataModel()->data(index, role);
 }
 
 int AbstractMetadataModel::columnCount (const QModelIndex& parent) const
@@ -166,7 +163,6 @@ QModelIndex AbstractMetadataModel::parent (const QModelIndex& child) const
 
 QModelIndex AbstractMetadataModel::index (int row, int column, const QModelIndex& parent) const
 {
-    Q_UNUSED(parent);
     return metadataModel()->index(row, column, parent);
 }
 
@@ -275,6 +271,9 @@ void AbstractMetadataModel::resetMetadataModel()
     metadataModel()->setProperty("resourceType", "");
     metadataModel()->setProperty("mimeType", "");
     metadataModel()->setProperty("limit", "");
+    metadataModel()->setProperty("thumbnailSize", "");
+    metadataModel()->setProperty("lazyLoading", false);
+
     Q_FOREACH(const QString &key, map->keys()) {
         map->clear(key);
     }

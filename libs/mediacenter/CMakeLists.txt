@@ -8,6 +8,7 @@ playlist.cpp
 mediacenter.cpp
 abstractbrowsingbackend.cpp
 homeapplet.cpp
+backendsmodel.cpp
 
 # widgets
 widgets/navigationtoolbar.cpp
@@ -29,6 +30,7 @@ set (mediacenterlibs_HDRS
     browsergesture.h
     abstractbrowsingbackend.h
     homeapplet.h
+    backendsmodel.h
 )
 
 set (mediacenterlibs_WIDGETS_HDRS

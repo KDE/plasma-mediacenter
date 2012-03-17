@@ -98,6 +98,8 @@ QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> 
     newRoles[MediaUrlRole] = "mediaUrl";
     newRoles[IsExpandableRole] = "isExpandable";
     newRoles[MediaTypeRole] = "mediaType";
+    newRoles[DecorationTypeRole] = "decorationType";
+    newRoles[HideLabelRole] = "hideLabel";
     return newRoles;
 }
 

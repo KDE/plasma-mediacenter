@@ -118,6 +118,11 @@ QString AbstractBrowsingBackend::name() const
     return d->backendInfo.name();
 }
 
+QString AbstractBrowsingBackend::icon() const
+{
+    return d->backendInfo.icon();
+}
+
 AbstractBrowsingBackend::BrowsingType AbstractBrowsingBackend::browsingType() const
 {
     return d->browsingType;

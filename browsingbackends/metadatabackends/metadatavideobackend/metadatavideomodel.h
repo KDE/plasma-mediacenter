@@ -33,9 +33,6 @@ public:
 
     virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
-private slots:
-    void gotThumbnail(const QString& url);
-
 private:
     class Private;
     Private* const d;

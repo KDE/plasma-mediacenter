@@ -50,6 +50,8 @@ namespace MediaCenter {
 class MEDIACENTER_EXPORT AbstractBrowsingBackend : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QString name READ name CONSTANT)
+    Q_PROPERTY(QString icon READ icon CONSTANT)
     Q_PROPERTY(QObject* backendModel READ model NOTIFY modelChanged)
     Q_PROPERTY(QObject* metadataModel READ metadataModel WRITE setMetadataModel NOTIFY metadataModelChanged)
 
@@ -124,6 +126,8 @@ public:
     Q_INVOKABLE virtual void init();
 
     QString name() const;
+
+    QString icon() const;
     
     /**
      * Convenience function that returns the list of

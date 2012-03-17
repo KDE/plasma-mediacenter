@@ -16,6 +16,7 @@ include_directories(
 
 add_subdirectory(browsingbackends)
 add_subdirectory(artwork)
+add_subdirectory(components)
 add_subdirectory(dataengines)
 add_subdirectory(applets)
 add_subdirectory(containments)

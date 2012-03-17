@@ -32,8 +32,10 @@ namespace MediaCenter {
 
 enum AdditionalMediaRoles {
     MediaUrlRole = Qt::UserRole + 1,
-    IsExpandableRole = Qt::UserRole + 2,
-    MediaTypeRole = Qt::UserRole + 3
+    IsExpandableRole,
+    MediaTypeRole,
+    DecorationTypeRole,
+    HideLabelRole
 };
 
 enum MediaType {
