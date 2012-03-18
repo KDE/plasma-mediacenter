@@ -42,7 +42,7 @@ Item {
     GridView {
         id: mediaBrowserGridView
         anchors.fill: parent
-        cellWidth: width / 5
+        cellWidth: width / 6
         cellHeight: width / 6
         delegate: MediaItemDelegate {
             backend: currentBrowsingBackend

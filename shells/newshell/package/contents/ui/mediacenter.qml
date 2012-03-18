@@ -28,7 +28,7 @@ Rectangle {
         width: parent.width
         model: backendsModel
         anchors {
-            left: parent.left; right: parent.right; top: mediaController.top; bottom: mediaInfoBar.top
+            left: parent.left; right: parent.right; top: mediaController.bottom; bottom: mediaInfoBar.top
         }
 
         onBackendSelected: { runtimeData.currentBrowsingBackend = selectedBackend; visible = false }
@@ -36,9 +36,8 @@ Rectangle {
 
     MediaCenterComponents.MediaBrowser {
         id: mediaBrowser
-        width: parent.width
         anchors {
-            left: parent.left; right: parent.right; top: mediaController.top; bottom: mediaInfoBar.top
+            left: parent.left; right: parent.right; top: mediaController.bottom; bottom: mediaInfoBar.top
         }
         visible: false
         z: 1
