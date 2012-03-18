@@ -1,18 +1,7 @@
 set (mediacenterlibs_SRCS
-gesturerecognizer.cpp
-playbackgesture.cpp
-browsergesture.cpp
-browser.cpp
-playbackcontrol.cpp
-playlist.cpp
-mediacenter.cpp
-abstractbrowsingbackend.cpp
-homeapplet.cpp
-backendsmodel.cpp
-
-# widgets
-widgets/navigationtoolbar.cpp
-widgets/viewitem.cpp
+    mediacenter.cpp
+    abstractbrowsingbackend.cpp
+    backendsmodel.cpp
 )
 
 kde4_add_library(mediacenterlibs SHARED ${mediacenterlibs_SRCS})
@@ -22,22 +11,9 @@ install(TARGETS mediacenterlibs ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 set (mediacenterlibs_HDRS
     mediacenter.h
-    browser.h
-    playbackcontrol.h
-    playlist.h
-    gesturerecognizer.h
-    playbackgesture.h
-    browsergesture.h
     abstractbrowsingbackend.h
-    homeapplet.h
     backendsmodel.h
 )
 
-set (mediacenterlibs_WIDGETS_HDRS
-    widgets/navigationtoolbar.h
-    widgets/viewitem.h
-)
-
 install(FILES ${mediacenterlibs_HDRS} DESTINATION ${INCLUDE_INSTALL_DIR}/mediacenter COMPONENT Devel)
-install(FILES ${mediacenterlibs_WIDGETS_HDRS} DESTINATION ${INCLUDE_INSTALL_DIR}/mediacenter/widgets COMPONENT Devel)
 install(FILES data/servicetypes/pmc_browsingbackend.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})

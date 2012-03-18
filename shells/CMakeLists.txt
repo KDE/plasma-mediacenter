@@ -1,2 +1,1 @@
 add_subdirectory(newshell)
-add_subdirectory(plasmediacenter)
