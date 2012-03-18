@@ -11,8 +11,8 @@ set(plasma-mediacenter_SRCS
     mainwindow.cpp
 )
 
-kde4_add_executable(plasma-mediacenter-new ${plasma-mediacenter_SRCS})
-target_link_libraries(plasma-mediacenter-new
+kde4_add_executable(plasma-mediacenter ${plasma-mediacenter_SRCS})
+target_link_libraries(plasma-mediacenter
     mediacenterlibs
     ${KDE4_KDEUI_LIBS}
     ${KDE4_PLASMA_LIBS}
@@ -22,6 +22,6 @@ target_link_libraries(plasma-mediacenter-new
     kdeclarative
 )
 
-install(TARGETS plasma-mediacenter-new ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS plasma-mediacenter ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(DIRECTORY package/ DESTINATION ${DATA_INSTALL_DIR}/plasma/packages/org.kde.plasma.mediacenter)
 install(FILES plasma-mediacenter.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
