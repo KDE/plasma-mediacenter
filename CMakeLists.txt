@@ -9,20 +9,20 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_BINARY_DIR}
     ${KDE4_INCLUDES}
-    utils/
-    widgets/
+    #utils/
+    #widgets/
     libs/
 )
 
 add_subdirectory(browsingbackends)
-add_subdirectory(artwork)
+#add_subdirectory(artwork)
 add_subdirectory(components)
-add_subdirectory(dataengines)
-add_subdirectory(applets)
-add_subdirectory(containments)
+#add_subdirectory(dataengines)
+#add_subdirectory(applets)
+#add_subdirectory(containments)
 add_subdirectory(libs)
 add_subdirectory(shells)
-add_subdirectory(videoproviders)
+#add_subdirectory(videoproviders)
 
 # FIXME: needs CMake check for bluetooth.h and cwiid.h
 #add_subdirectory(wiimote)
