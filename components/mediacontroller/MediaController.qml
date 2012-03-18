@@ -51,8 +51,7 @@ PlasmaCore.FrameSvgItem {
 
             iconSource: "media-playback-stop"
 
-            onClicked: {
-            }
+            onClicked: runtimeDataObject.stopped = true
         }
 
         PlasmaComponents.ToolButton {
