@@ -119,16 +119,5 @@ PlasmaCore.FrameSvgItem {
             iconSource: "audio-volume-medium"
             checkable: true
         }
-
-//         PlasmaComponents.Slider {
-//             id: volumeSlider
-//             visible: false
-//             anchors.right: parent.right
-//             anchors.top:volume.bottom;
-//             anchors.horizontalCenter: volume.verticalCenter
-//             value: audioPlayer.volume
-//             onValueChanged: {
-//             }
-//         }
     }
 }
