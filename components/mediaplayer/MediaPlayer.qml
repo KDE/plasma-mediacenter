@@ -6,6 +6,10 @@ Rectangle {
     color: "black"
 
     property alias url: video.source
+    property bool playing: false
+    property bool paused: false
+    property bool stopped: true
+
     signal clicked
 
     Phonon.Media {
@@ -28,6 +32,10 @@ Rectangle {
         onTimeChanged: {
         }
     }
+
+    onPlayingChanged: if (playing) video.play();
+    onPausedChanged: if (paused) video.pause();
+    onStoppedChanged: if (stopped) video.stop();
 
     function play()
     {

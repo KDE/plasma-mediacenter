@@ -8,6 +8,10 @@ Rectangle {
         id: mediaPlayer
         anchors.fill: parent
 
+        playing: runtimeData.playing
+        paused: runtimeData.paused
+        stopped: runtimeData.stopped
+
         onClicked: mediaBrowser.visible = mediaBrowser.visible ? false : true
     }
 
@@ -22,6 +26,8 @@ Rectangle {
         anchors {
             horizontalCenter: parent.horizontalCenter; top: parent.top
         }
+
+        runtimeDataObject: runtimeData
     }
 
     MediaCenterComponents.MediaWelcome {
@@ -47,6 +53,7 @@ Rectangle {
         onVisibleChanged: if (visible) loadModel();
         onPlayRequested: {
             mediaPlayer.visible = true
+            runtimeData.playing = true
             mediaPlayer.url = url
             mediaPlayer.play()
             mediaBrowser.visible = false

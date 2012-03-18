@@ -7,6 +7,8 @@ PlasmaCore.FrameSvgItem {
     imagePath: "widgets/background"
     enabledBorders: "LeftBorder|RightBorder|BottomBorder"
 
+    property QtObject runtimeDataObject
+
     Row {
         id: mediaController
         anchors {
@@ -31,7 +33,14 @@ PlasmaCore.FrameSvgItem {
             width: parent.height
             height: width
 
+            iconSource: runtimeDataObject.paused ? "media-playback-start" : "media-playback-pause"
+
             onClicked: {
+                if (runtimeDataObject.playing) {
+                    runtimeDataObject.playing = false; runtimeDataObject.paused = true;
+                } else if (runtimeDataObject.paused) {
+                    runtimeDataObject.playing = true; runtimeDataObject.paused = false;
+                }
             }
         }
 
