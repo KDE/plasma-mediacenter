@@ -8,6 +8,7 @@ Item {
     property int position: 0
     property int totalTime: 0
     property int currentTime: 0
+    property bool currentTimeDirty: false
 
     onStoppedChanged: playing = !stopped
     onPausedChanged: playing = !paused

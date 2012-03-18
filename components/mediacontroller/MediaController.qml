@@ -72,6 +72,10 @@ PlasmaCore.FrameSvgItem {
             height: parent.height
 
             onValueChanged: {
+                if (pressed) {
+                    runtimeDataObject.currentTimeDirty = true;
+                    runtimeDataObject.currentTime = value;
+                }
             }
 
             Component.onCompleted: {

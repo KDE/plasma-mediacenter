@@ -8,7 +8,13 @@ Rectangle {
         id: runtimeData
 
         totalTime: mediaPlayer.totalTime
-        currentTime: mediaPlayer.currentTime
+
+        onCurrentTimeChanged: {
+            if (currentTimeDirty) {
+                currentTimeDirty = false
+                mediaPlayer.currentTime = currentTime
+            }
+        }
     }
 
     MediaCenterComponents.MediaPlayer {
@@ -20,6 +26,7 @@ Rectangle {
         stopped: runtimeData.stopped
 
         onClicked: mediaBrowser.visible = mediaBrowser.visible ? false : true
+        onCurrentTimeChanged: runtimeData.currentTime = currentTime
     }
 
     MediaCenterComponents.MediaController {
