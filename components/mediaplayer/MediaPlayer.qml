@@ -11,6 +11,7 @@ Rectangle {
     property bool stopped: true
     property alias totalTime: video.totalTime
     property alias currentTime: video.time
+    property alias volume: audioPlayer.volume
 
     signal clicked
 
@@ -20,7 +21,6 @@ Rectangle {
 
         Phonon.AudioOutput {
             id: audioPlayer
-            volume: 100
             anchors.fill: parent
         }
 

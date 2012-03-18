@@ -9,6 +9,7 @@ Item {
     property int totalTime: 0
     property int currentTime: 0
     property bool currentTimeDirty: false
+    property int volume: 100
 
     onStoppedChanged: playing = !stopped
     onPausedChanged: playing = !paused

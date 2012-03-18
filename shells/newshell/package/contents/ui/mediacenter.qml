@@ -24,6 +24,7 @@ Rectangle {
         playing: runtimeData.playing
         paused: runtimeData.paused
         stopped: runtimeData.stopped
+        volume: runtimeData.volume
 
         onClicked: mediaBrowser.visible = mediaBrowser.visible ? false : true
         onCurrentTimeChanged: runtimeData.currentTime = currentTime
@@ -41,6 +42,7 @@ Rectangle {
     }
 
     MediaCenterComponents.MediaWelcome {
+        id: mediaWelcome
         width: parent.width
         model: backendsModel
         anchors {
@@ -67,6 +69,13 @@ Rectangle {
             mediaPlayer.url = url
             mediaPlayer.play()
             mediaBrowser.visible = false
+        }
+        onBackStoppedChanged: {
+            if(backStopped) {
+                visible = false
+                mediaWelcome.visible = true
+                backStopped = false
+            }
         }
     }
 

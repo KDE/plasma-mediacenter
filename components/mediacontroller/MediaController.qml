@@ -68,7 +68,7 @@ PlasmaCore.FrameSvgItem {
         PlasmaComponents.Slider {
             id: progressSlider
             width: parent.width - backwardButton.width - playPauseButton.width - stopButton.width
-                 - forwardButton.width - volumeButton.width
+                 - forwardButton.width - volumeButton.width - volumeSlider.width
             height: parent.height
 
             onValueChanged: {
@@ -84,17 +84,23 @@ PlasmaCore.FrameSvgItem {
             }
         }
 
+        PlasmaComponents.Slider {
+            id: volumeSlider
+            height: parent.height
+            width: volumeButton.checked ? parent.width * 0.2 : 1
+            visible: volumeButton.checked
+
+            onValueChanged: runtimeDataObject.volume = value
+        }
+
         PlasmaComponents.ToolButton {
             id: volumeButton
-            anchors.right: parent.right
             width: parent.height
             height: width
             iconSource: "audio-volume-medium"
-
-            onClicked: {
-            }
+            checkable: true
         }
-            
+
 //         PlasmaComponents.Slider {
 //             id: volumeSlider
 //             visible: false

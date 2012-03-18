@@ -20,12 +20,14 @@
 
 import QtQuick 1.1
 import org.kde.metadatamodels 0.1 as MetadataModels
+import org.kde.plasma.components 0.1 as PlasmaComponents
 
 Item {
     id: mediaBrowser
     clip: true
     property QtObject currentBrowsingBackend
     property alias count: mediaBrowserGridView.count
+    property bool backStopped: false
 
     signal playRequested(string url)
 
@@ -65,5 +67,20 @@ Item {
     {
         //JS snippet to do mediaBrowserGridView.model: currentBrowsingBackend.backendModel
         mediaBrowserGridView.model = (function() { return currentBrowsingBackend.backendModel; })
+    }
+
+    PlasmaComponents.ToolButton {
+        id: back
+        width: 50
+        height: 50
+        iconSource: "go-previous";
+        anchors.left: parent.left
+        
+        onClicked: {
+            if(!currentBrowsingBackend.goOneLevelUp()) {
+                console.log("nooooooooo")
+                backStopped = true
+            }
+        }
     }
 }
