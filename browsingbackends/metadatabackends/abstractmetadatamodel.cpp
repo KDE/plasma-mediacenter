@@ -272,7 +272,6 @@ void AbstractMetadataModel::resetMetadataModel()
     metadataModel()->setProperty("mimeType", "");
     metadataModel()->setProperty("limit", "");
     metadataModel()->setProperty("thumbnailSize", "");
-    metadataModel()->setProperty("lazyLoading", false);
 
     Q_FOREACH(const QString &key, map->keys()) {
         map->clear(key);

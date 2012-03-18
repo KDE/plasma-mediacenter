@@ -31,14 +31,8 @@ Item {
 
     signal playRequested(string url)
 
-    MetadataModels.MetadataUserTypes {
-        id: userTypes
-    }
-
     MetadataModels.MetadataModel {
         id: metadataModel
-        sortBy: ["nao:lastModified"]
-        sortOrder: Qt.DescendingOrder
     }
 
     GridView {
@@ -54,7 +48,6 @@ Item {
         focus: true
         highlightFollowsCurrentItem: true
         flow: GridView.TopToBottom
-        cacheBuffer: width
     }
 
     onCurrentBrowsingBackendChanged: {

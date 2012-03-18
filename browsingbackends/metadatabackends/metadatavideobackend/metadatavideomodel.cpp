@@ -72,7 +72,7 @@ QVariant MetadataVideoModel::data(const QModelIndex& index, int role) const
     case MediaCenter::DecorationTypeRole:
         return "qimage";
     case MediaCenter::HideLabelRole:
-        return true;
+        return false;
     default:
         return AbstractMetadataModel::data(index, role);
     }
