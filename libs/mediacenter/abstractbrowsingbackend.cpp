@@ -171,3 +171,15 @@ void AbstractBrowsingBackend::setDeclarativeEngine(QDeclarativeEngine *declarati
 {
     d->declarativeEngine = declarativeEngine;
 }
+
+QString AbstractBrowsingBackend::bottomToolbar() const
+{
+    return "";
+}
+
+QString AbstractBrowsingBackend::constructQmlSource(const QString& componentDirName, const QString &versionString,
+                                                    const QString& itemName) const
+{
+    return QString("import QtQuick 1.1\n\import org.kde.plasma.mediacentercomponents.%1 %2 as %3\n\%3.%4 {\n\}\n")
+        .arg(componentDirName).arg(versionString).arg(componentDirName.toUpper()).arg(itemName);
+}

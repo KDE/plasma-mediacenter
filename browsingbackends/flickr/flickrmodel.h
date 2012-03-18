@@ -1,4 +1,5 @@
 /***************************************************************************
+ *   Copyright 2009 by Onur-Hayri Bakici <thehayro@gmail.com               *
  *   Copyright 2012 Sinny Kumari <ksinny@gmail.com>                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -17,27 +18,51 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-function checkAndLoad(loader)
-{
-    if (typeof(decoration) == "string") {
-        if (decoration.search('[a-z]+://') == 0) {
-            loadImage(loader);
-        } else {
-            loadIcon(loader);
-        }
-    } else if (typeof(decoration) == "object") {
-        loadIcon(loader);
-    }
+#ifndef FLICKRMODEL_H
+#define FLICKRMODEL_H
+
+#include <QAbstractListModel>
+
+namespace KIO {
+    class Job;
 }
 
-function loadImage(loader)
-{
-    rootColumn.source = decoration;
-    loader.sourceComponent = delegateItemImageComponent;
-}
+class KJob;
 
-function loadIcon(loader)
+class FlickrModel : public QAbstractListModel
 {
-    rootColumn.source = decoration;
-    loader.sourceComponent = delegateItemIconComponent;
-}
+    Q_OBJECT
+public:
+    explicit FlickrModel (QObject* parent = 0);
+    ~FlickrModel();
+    void query(const QString &searchTerm);
+
+    virtual QVariant data (const QModelIndex& index, int role = Qt::DisplayRole) const;
+    virtual int rowCount (const QModelIndex& parent = QModelIndex()) const;
+
+protected slots:
+    void flickrDataReady(KIO::Job *job, const QByteArray &data);
+    void parseResults(KJob *job);
+
+private:
+    struct Photo;
+    QHash<KIO::Job*, QString> m_queries;
+    QHash<KIO::Job*, QString> m_datas;
+    QList<Photo> m_photos;
+
+    void listPhotos(KJob *job);
+};
+
+struct FlickrModel::Photo
+{
+public:
+    QString title;
+    QString id;
+    QString owner;
+    QString secret;
+    QString farmID;
+    QString serverID;
+    QString link;
+};
+
+#endif // FLICKRMODEL_H

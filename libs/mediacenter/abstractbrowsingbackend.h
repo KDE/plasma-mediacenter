@@ -38,7 +38,7 @@ namespace MediaCenter {
 /**
  * @class AbstractBrowsingBackend @author Alessandro Diaferia
  * @brief A useful class to build custom plugins for the mediabrowser.
- * 
+ *
  * This class allows you to write custom models to use with the mediabrowser applet.
  * Custom models are useful to implement custom navigations such as navigation
  * through services available through the web, see YouTube.
@@ -128,7 +128,7 @@ public:
     QString name() const;
 
     QString icon() const;
-    
+
     /**
      * Convenience function that returns the list of
      * available browsing backends found.
@@ -187,6 +187,8 @@ public:
      */
     QDeclarativeEngine *declarativeEngine() const;
 
+    Q_INVOKABLE virtual QString bottomToolbar() const;
+
 signals:
     void modelChanged();
     void metadataModelChanged();
@@ -202,7 +204,7 @@ protected:
      * @see MediaRole
      */
     void setModel(QAbstractItemModel * model);
-    
+
     /**
      * As from Plasma::Applet this method should be used in order
      * to inform about the availability of a configuration interface for
@@ -211,6 +213,17 @@ protected:
     void setHasConfigurationInterface(bool hasInterface);
 
     void setBrowsingType(BrowsingType);
+
+    /**
+     * This is a convenience function which constructs a string representing QML source for
+     * loading an item of name itemName which exists in componentDirName
+     *
+     * @param componentDirName name of the dir (relative to org.kde.plasma.mediacentercomponents
+     * @param versionString version of the item as specified in qmldir in componentDirName
+     * @param itemName name of the item as specified in qmldir in componentDirName
+     */
+    QString constructQmlSource(const QString& componentDirName, const QString& versionString,
+                               const QString& itemName) const;
 
 private:
     class AbstractBrowsingBackendPrivate;

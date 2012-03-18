@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright 2012 Sinny Kumari <ksinny@gmail.com>                        *
+ *   Copyright 2009 by Onur-Hayri Bakici <thehayro@gmail.com               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,27 +17,61 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-function checkAndLoad(loader)
-{
-    if (typeof(decoration) == "string") {
-        if (decoration.search('[a-z]+://') == 0) {
-            loadImage(loader);
-        } else {
-            loadIcon(loader);
-        }
-    } else if (typeof(decoration) == "object") {
-        loadIcon(loader);
-    }
+
+#ifndef FLICKRINTERFACE_H
+#define FLICKRINTERFACE_H
+
+#include <QObject>
+#include <Plasma/DataEngine>
+#include <QHash>
+
+namespace KIO {
+    class Job;
 }
 
-function loadImage(loader)
-{
-    rootColumn.source = decoration;
-    loader.sourceComponent = delegateItemImageComponent;
-}
+class QByteArray;
+class KJob;
 
-function loadIcon(loader)
+/**
+  * @class FlickrInterface
+  * @brief The interface that queries Flickr with searchTerms
+  * @author Onur-Hayri Bakici
+  *
+  * This class interfaces Flickr and returns result entries
+  * with the signal result.
+  */
+
+class FlickrInterface : public QObject
 {
-    rootColumn.source = decoration;
-    loader.sourceComponent = delegateItemIconComponent;
-}
+    Q_OBJECT
+
+public:
+    FlickrInterface(QObject *parent = 0);
+    ~FlickrInterface();
+
+    void query(const QString &searchTerm);
+
+
+
+signals:
+    /**
+      * @return the entry as Plasma::DataEnginge::Data
+      * each value can be retrieved by using the following key
+      * "title" for the title of the picture
+
+      * @param searchTerm ist the term to search for
+      */
+    void result(const QString &searchTerm, const Plasma::DataEngine::Data &image);
+protected slots:
+    void flickrDataReady(KIO::Job *job, const QByteArray &data);
+    void parseResults(KJob *job);
+
+private:
+    QHash<KIO::Job*, QString> m_queries;
+    QHash<KIO::Job*, QString> m_datas;
+
+    void listPhotos(KJob *job);
+};
+
+
+#endif //FLICKRINTERFACE_J

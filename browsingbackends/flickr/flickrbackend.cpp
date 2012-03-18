@@ -1,4 +1,5 @@
 /***************************************************************************
+ *   Copyright 2009 by Onur-Hayri Bakici <thehayro@gmail.com               *
  *   Copyright 2012 Sinny Kumari <ksinny@gmail.com>                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -17,27 +18,35 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-function checkAndLoad(loader)
+#include "flickrbackend.h"
+
+#include "flickrmodel.h"
+
+MEDIACENTER_EXPORT_BROWSINGBACKEND(FlickrBackend)
+
+FlickrBackend::FlickrBackend(QObject* parent, const QVariantList& args)
+    : MediaCenter::AbstractBrowsingBackend(parent, args)
 {
-    if (typeof(decoration) == "string") {
-        if (decoration.search('[a-z]+://') == 0) {
-            loadImage(loader);
-        } else {
-            loadIcon(loader);
-        }
-    } else if (typeof(decoration) == "object") {
-        loadIcon(loader);
-    }
+
 }
 
-function loadImage(loader)
+
+FlickrBackend::~FlickrBackend()
 {
-    rootColumn.source = decoration;
-    loader.sourceComponent = delegateItemImageComponent;
+
 }
 
-function loadIcon(loader)
+void FlickrBackend::init()
 {
-    rootColumn.source = decoration;
-    loader.sourceComponent = delegateItemIconComponent;
+    setModel(new FlickrModel(this));
+}
+
+bool FlickrBackend::goOneLevelUp()
+{
+    return MediaCenter::AbstractBrowsingBackend::goOneLevelUp();
+}
+
+QString FlickrBackend::bottomToolbar() const
+{
+    return constructQmlSource("flickrcomponents", "0.1", "SearchToolbar");
 }

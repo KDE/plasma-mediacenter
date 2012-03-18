@@ -1,3 +1,22 @@
+/***************************************************************************
+ *   Copyright 2012 Sinny Kumari <ksinny@gmail.com>                        *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
+ ***************************************************************************/
+
 import QtQuick 1.1
 import org.kde.plasma.mediacentercomponents 0.1 as MediaCenterComponents
 
@@ -15,6 +34,8 @@ Rectangle {
                 mediaPlayer.currentTime = currentTime
             }
         }
+
+        onCurrentBrowsingBackendChanged: mediaCenterRootItem.loadToolbars();
     }
 
     MediaCenterComponents.MediaPlayer {
@@ -46,7 +67,7 @@ Rectangle {
         width: parent.width
         model: backendsModel
         anchors {
-            left: parent.left; right: parent.right; top: mediaController.bottom; bottom: mediaInfoBar.top
+            left: parent.left; right: parent.right; top: mediaController.bottom; bottom: bottomToolbar.top
         }
 
         onBackendSelected: { runtimeData.currentBrowsingBackend = selectedBackend; visible = false }
@@ -55,7 +76,7 @@ Rectangle {
     MediaCenterComponents.MediaBrowser {
         id: mediaBrowser
         anchors {
-            left: parent.left; right: parent.right; top: mediaController.bottom; bottom: mediaInfoBar.top
+            left: parent.left; right: parent.right; top: mediaController.bottom; bottom: bottomToolbar.top
         }
         visible: false
         z: 1
@@ -79,12 +100,18 @@ Rectangle {
         }
     }
 
-    MediaCenterComponents.MediaInfoBar {
-        id: mediaInfoBar
+    Item {
+        id: bottomToolbar
         height: parent.height * 0.07
         width: parent.width
         anchors {
             left: parent.left; right: parent.right; bottom: parent.bottom
         }
+    }
+
+    function loadToolbars()
+    {
+        var qmlSource = runtimeData.currentBrowsingBackend.bottomToolbar();
+        var newObject = Qt.createQmlObject(qmlSource, bottomToolbar);
     }
 }

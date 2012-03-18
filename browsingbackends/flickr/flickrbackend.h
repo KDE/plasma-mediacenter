@@ -1,4 +1,5 @@
 /***************************************************************************
+ *   Copyright 2009 by Onur-Hayri Bakici <thehayro@gmail.com               *
  *   Copyright 2012 Sinny Kumari <ksinny@gmail.com>                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -17,27 +18,23 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-function checkAndLoad(loader)
-{
-    if (typeof(decoration) == "string") {
-        if (decoration.search('[a-z]+://') == 0) {
-            loadImage(loader);
-        } else {
-            loadIcon(loader);
-        }
-    } else if (typeof(decoration) == "object") {
-        loadIcon(loader);
-    }
-}
+#ifndef FLICKRBACKEND_H
+#define FLICKRBACKEND_H
 
-function loadImage(loader)
-{
-    rootColumn.source = decoration;
-    loader.sourceComponent = delegateItemImageComponent;
-}
+#include <libs/mediacenter/abstractbrowsingbackend.h>
 
-function loadIcon(loader)
+class FlickrBackend : public MediaCenter::AbstractBrowsingBackend
 {
-    rootColumn.source = decoration;
-    loader.sourceComponent = delegateItemIconComponent;
-}
+    Q_OBJECT
+public:
+    FlickrBackend (QObject* parent, const QVariantList& args);
+    virtual ~FlickrBackend();
+
+    virtual QString bottomToolbar() const;
+
+public Q_SLOTS:
+    virtual void init();
+    virtual bool goOneLevelUp();
+};
+
+#endif // FLICKRBACKEND_H
