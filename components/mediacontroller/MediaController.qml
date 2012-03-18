@@ -108,8 +108,16 @@ PlasmaCore.FrameSvgItem {
             height: parent.height
             width: volumeButton.checked ? parent.width * 0.2 : 1
             visible: volumeButton.checked
+            minimumValue: 0
+            maximumValue: 100
+            value: Math.round(100 * runtimeDataObject.volume)
 
-            onValueChanged: runtimeDataObject.volume = value
+            Binding {
+                when: volumeSlider.pressed
+                target: runtimeDataObject
+                property: "volume"
+                value: volumeSlider.value * 0.01
+            }
         }
 
         PlasmaComponents.ToolButton {
