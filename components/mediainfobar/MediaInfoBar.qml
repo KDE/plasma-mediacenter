@@ -1,4 +1,5 @@
 import QtQuick 1.1
 
-Text {
+Rectangle {
+    color: "red"
 }

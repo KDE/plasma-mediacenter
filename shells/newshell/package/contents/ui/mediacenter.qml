@@ -17,15 +17,11 @@ Rectangle {
 
     MediaCenterComponents.MediaController {
         id: mediaController
-        height: 64
+        height: parent.height * 0.08
         width: parent.width * 0.8
         anchors {
-            left: parent.left; right: parent.left; top: parent.top
+            horizontalCenter: parent.horizontalCenter; top: parent.top
         }
-
-        text: mediaBrowser.count
-        font.pointSize: 16
-        color: "white"
     }
 
     MediaCenterComponents.MediaWelcome {
@@ -51,7 +47,6 @@ Rectangle {
         onCurrentBrowsingBackendChanged: visible = true
         onVisibleChanged: if (visible) loadModel();
         onPlayRequested: {
-            mediaController.visible = true
             mediaPlayer.visible = true
             mediaPlayer.url = url
             mediaPlayer.play()
@@ -61,10 +56,10 @@ Rectangle {
 
     MediaCenterComponents.MediaInfoBar {
         id: mediaInfoBar
-        height: parent.height * 0.1
+        height: parent.height * 0.07
         width: parent.width
         anchors {
-            left: parent.left; right: parent.left; bottom: parent.bottom
+            left: parent.left; right: parent.right; bottom: parent.bottom
         }
     }
 }
