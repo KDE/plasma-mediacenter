@@ -18,7 +18,7 @@ PlasmaCore.FrameSvgItem {
         height: parent.height * 0.8
 
         PlasmaComponents.ToolButton {
-            id: backward
+            id: backwardButton
             width: parent.height
             height: width
 
@@ -29,7 +29,7 @@ PlasmaCore.FrameSvgItem {
         }
 
         PlasmaComponents.ToolButton {
-            id: playPause
+            id: playPauseButton
             width: parent.height
             height: width
 
@@ -45,7 +45,7 @@ PlasmaCore.FrameSvgItem {
         }
 
         PlasmaComponents.ToolButton {
-            id: stop
+            id: stopButton
             width: parent.height
             height: width
 
@@ -55,7 +55,7 @@ PlasmaCore.FrameSvgItem {
         }
 
         PlasmaComponents.ToolButton {
-            id: forward
+            id: forwardButton
             width: parent.height
             height: width
 
@@ -65,8 +65,23 @@ PlasmaCore.FrameSvgItem {
             }
         }
 
+        PlasmaComponents.Slider {
+            id: progressSlider
+            width: parent.width - backwardButton.width - playPauseButton.width - stopButton.width
+                 - forwardButton.width - volumeButton.width
+            height: parent.height
+
+            onValueChanged: {
+            }
+
+            Component.onCompleted: {
+                maximumValue = (function() { return runtimeDataObject.totalTime; })
+                value = (function() { return runtimeDataObject.currentTime; })
+            }
+        }
+
         PlasmaComponents.ToolButton {
-            id: volume;
+            id: volumeButton
             anchors.right: parent.right
             width: parent.height
             height: width
@@ -75,16 +90,16 @@ PlasmaCore.FrameSvgItem {
             onClicked: {
             }
         }
-
-        PlasmaComponents.Slider {
-            id: volumeSlider
-            visible: false
-            anchors.right: parent.right
-            anchors.top:volume.bottom;
-            anchors.horizontalCenter: volume.verticalCenter
-            value: audioPlayer.volume
-            onValueChanged: {
-            }
-        }
+            
+//         PlasmaComponents.Slider {
+//             id: volumeSlider
+//             visible: false
+//             anchors.right: parent.right
+//             anchors.top:volume.bottom;
+//             anchors.horizontalCenter: volume.verticalCenter
+//             value: audioPlayer.volume
+//             onValueChanged: {
+//             }
+//         }
     }
 }

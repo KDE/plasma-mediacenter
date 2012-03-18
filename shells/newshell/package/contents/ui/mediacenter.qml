@@ -4,6 +4,13 @@ import org.kde.plasma.mediacentercomponents 0.1 as MediaCenterComponents
 Rectangle {
     id: mediaCenterRootItem
 
+    MediaCenterComponents.RuntimeData {
+        id: runtimeData
+
+        totalTime: mediaPlayer.totalTime
+        currentTime: mediaPlayer.currentTime
+    }
+
     MediaCenterComponents.MediaPlayer {
         id: mediaPlayer
         anchors.fill: parent
@@ -13,10 +20,6 @@ Rectangle {
         stopped: runtimeData.stopped
 
         onClicked: mediaBrowser.visible = mediaBrowser.visible ? false : true
-    }
-
-    MediaCenterComponents.RuntimeData {
-        id: runtimeData
     }
 
     MediaCenterComponents.MediaController {
