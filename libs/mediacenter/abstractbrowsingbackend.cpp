@@ -177,6 +177,16 @@ QString AbstractBrowsingBackend::bottomToolbar() const
     return "";
 }
 
+QString AbstractBrowsingBackend::leftToolbar() const
+{
+    return "";
+}
+
+QString AbstractBrowsingBackend::rightToolbar() const
+{
+    return "";
+}
+
 QString AbstractBrowsingBackend::constructQmlSource(const QString& componentDirName, const QString &versionString,
                                                     const QString& itemName) const
 {

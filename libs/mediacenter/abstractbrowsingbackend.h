@@ -188,6 +188,8 @@ public:
     QDeclarativeEngine *declarativeEngine() const;
 
     Q_INVOKABLE virtual QString bottomToolbar() const;
+    Q_INVOKABLE virtual QString leftToolbar() const;
+    Q_INVOKABLE virtual QString rightToolbar() const;
 
 signals:
     void modelChanged();

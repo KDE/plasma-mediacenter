@@ -67,7 +67,7 @@ Rectangle {
         width: parent.width
         model: backendsModel
         anchors {
-            left: parent.left; right: parent.right; top: mediaController.bottom; bottom: bottomToolbar.top
+            left: leftToolbar.right; right: rightToolbar.left; top: mediaController.bottom; bottom: bottomToolbar.top
         }
 
         onBackendSelected: { runtimeData.currentBrowsingBackend = selectedBackend; visible = false }
@@ -76,7 +76,7 @@ Rectangle {
     MediaCenterComponents.MediaBrowser {
         id: mediaBrowser
         anchors {
-            left: parent.left; right: parent.right; top: mediaController.bottom; bottom: bottomToolbar.top
+            left: leftToolbar.right; right: rightToolbar.left; top: mediaController.bottom; bottom: bottomToolbar.top
         }
         visible: false
         z: 1
@@ -109,9 +109,33 @@ Rectangle {
         }
     }
 
+    Item {
+        id: leftToolbar
+        height: parent.height
+        width: parent.width * 0.05
+        anchors {
+            bottom: bottomToolbar.top; left: parent.left
+        }
+    }
+
+    Item {
+        id: rightToolbar
+        height: parent.height
+        width: parent.width * 0.05
+        anchors {
+            bottom: bottomToolbar.top; right: parent.right
+        }
+    }
+
     function loadToolbars()
     {
         var qmlSource = runtimeData.currentBrowsingBackend.bottomToolbar();
         var newObject = Qt.createQmlObject(qmlSource, bottomToolbar);
+        
+        var qmlSource = runtimeData.currentBrowsingBackend.leftToolbar();
+        var newObject = Qt.createQmlObject(qmlSource, leftToolbar);
+        
+        var qmlSource = runtimeData.currentBrowsingBackend.rightToolbar();
+        var newObject = Qt.createQmlObject(qmlSource, rightToolbar);
     }
 }
