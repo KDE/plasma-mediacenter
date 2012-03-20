@@ -1,7 +1,25 @@
 [Desktop Entry]
 Name=Plasma Media Center
+Name[nl]=Plasma mediacentrum
+Name[pt]=Centro Multimédia do Plasma
+Name[pt_BR]=Plasma Media Center
+Name[sv]=Plasma Media Center
+Name[uk]=Медіацентр Плазми
+Name[x-test]=xxPlasma Media Centerxx
 GenericName=Plasma Media Center
+GenericName[nl]=Plasma mediacentrum
+GenericName[pt]=Centro Multimédia do Plasma
+GenericName[pt_BR]=Plasma Media Center
+GenericName[sv]=Plasma Media Center
+GenericName[uk]=Медіацентр Плазми
+GenericName[x-test]=xxPlasma Media Centerxx
 Comment=Plasma Media Center
+Comment[nl]=Plasma mediacentrum
+Comment[pt]=Centro Multimédia do Plasma
+Comment[pt_BR]=Plasma Media Center
+Comment[sv]=Plasma Media Center
+Comment[uk]=Медіацентр Плазми
+Comment[x-test]=xxPlasma Media Centerxx
 Exec=plasma-mediacenter -graphicssystem raster %u
 Terminal=false
 Icon=plasma

@@ -1,6 +1,18 @@
 [Desktop Entry]
 Name=Plasma Media Center
+Name[nl]=Plasma mediacentrum
+Name[pt]=Centro Multimédia do Plasma
+Name[pt_BR]=Plasma Media Center
+Name[sv]=Plasma Media Center
+Name[uk]=Медіацентр Плазми
+Name[x-test]=xxPlasma Media Centerxx
 Comment=Plasma Media Center
+Comment[nl]=Plasma mediacentrum
+Comment[pt]=Centro Multimédia do Plasma
+Comment[pt_BR]=Plasma Media Center
+Comment[sv]=Plasma Media Center
+Comment[uk]=Медіацентр Плазми
+Comment[x-test]=xxPlasma Media Centerxx
 Encoding=UTF-8
 Type=Service
 Icon=plasma
