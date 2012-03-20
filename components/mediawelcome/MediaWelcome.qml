@@ -21,6 +21,7 @@ import QtQuick 1.1
 import org.kde.qtextracomponents 0.1 as QtExtraComponents
 
 PathView {
+    property bool welcomeFocusStatus:true
     id: view
     clip: true
     model: homeModel
@@ -77,4 +78,13 @@ PathView {
 
     Keys.onLeftPressed: decrementCurrentIndex()
     Keys.onRightPressed: incrementCurrentIndex()
+    //Keys.onReturnPressed: console.log("return keyyyyyyyyyyyyyy")
+
+    onWelcomeFocusStatusChanged: {
+        if(welcomeFocusStatus)
+           focus = true
+        else
+           focus = false
+          // console.log("welcome statussss is  " + welcomeFocusStatus + "focus is  " + view.focus)
+    }
 }

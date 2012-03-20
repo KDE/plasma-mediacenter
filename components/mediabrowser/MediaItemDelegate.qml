@@ -121,4 +121,11 @@ Item {
 
         onTextChanged: iconImageLoader.checkAndLoad()
     }
+      Keys.onReturnPressed: {
+           if (isExpandable) {
+                backend.expand(index);
+            } else {
+                mediaItemDelegateItem.playRequested(mediaUrl)
+            }
+        }
 }

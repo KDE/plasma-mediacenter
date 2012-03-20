@@ -36,6 +36,7 @@ Rectangle {
         }
 
         onCurrentBrowsingBackendChanged: mediaCenterRootItem.loadToolbars();
+
     }
 
     MediaCenterComponents.MediaPlayer {
@@ -71,6 +72,13 @@ Rectangle {
         }
 
         onBackendSelected: { runtimeData.currentBrowsingBackend = selectedBackend; visible = false }
+        onVisibleChanged: {
+            if(visible)
+                welcomeFocusStatus = true
+            else
+                welcomeFocusStatus = false
+                //console.log("visiblity of welcome  " + visible)
+        }
     }
 
     MediaCenterComponents.MediaBrowser {
@@ -83,7 +91,15 @@ Rectangle {
 
         currentBrowsingBackend: runtimeData.currentBrowsingBackend
         onCurrentBrowsingBackendChanged: visible = true
-        onVisibleChanged: if (visible) loadModel();
+        onVisibleChanged: {
+            if (visible) loadModel();
+            if(visible)
+                browsingFocusStatus = true
+            else
+                browsingFocusStatus = false
+                //console.log("visiblity of browsing  " + visible)
+        }
+
         onPlayRequested: {
             mediaPlayer.visible = true
             runtimeData.playing = true
@@ -131,10 +147,10 @@ Rectangle {
     {
         var qmlSource = runtimeData.currentBrowsingBackend.bottomToolbar();
         var newObject = Qt.createQmlObject(qmlSource, bottomToolbar);
-        
+
         var qmlSource = runtimeData.currentBrowsingBackend.leftToolbar();
         var newObject = Qt.createQmlObject(qmlSource, leftToolbar);
-        
+
         var qmlSource = runtimeData.currentBrowsingBackend.rightToolbar();
         var newObject = Qt.createQmlObject(qmlSource, rightToolbar);
     }

@@ -27,6 +27,7 @@ Item {
     clip: true
     property QtObject currentBrowsingBackend
     property alias count: mediaBrowserGridView.count
+    property bool browsingFocusStatus:false
     property bool backStopped: false
 
     signal playRequested(string url)
@@ -45,7 +46,7 @@ Item {
             onPlayRequested: mediaBrowser.playRequested(url)
         }
         highlight: MediaItemHighlight { z:1 }
-        focus: true
+        //focus: true
         highlightFollowsCurrentItem: true
         flow: GridView.TopToBottom
     }
@@ -68,7 +69,7 @@ Item {
         height: 50
         iconSource: "go-previous";
         anchors.left: parent.left
-        
+
         onClicked: {
             if(!currentBrowsingBackend.goOneLevelUp()) {
                 console.log("nooooooooo")
@@ -76,4 +77,18 @@ Item {
             }
         }
     }
+
+    onBrowsingFocusStatusChanged: {
+        if(browsingFocusStatus) {
+           mediaBrowserGridView.focus = true
+        } else {
+           mediaBrowserGridView.focus = false
+        }
+         //console.log("browsing statussss is  " + browsingFocusStatus + "focus is  " + mediaBrowserGridView.focus)
+    }
+      Keys.onEscapePressed: {
+          if(!currentBrowsingBackend.goOneLevelUp()) {
+                backStopped = true
+            }
+      }
 }
