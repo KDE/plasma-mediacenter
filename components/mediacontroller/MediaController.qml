@@ -52,7 +52,7 @@ PlasmaCore.FrameSvgItem {
             width: parent.height
             height: width
 
-            iconSource: runtimeDataObject.paused ? "media-playback-start" : "media-playback-pause"
+            iconSource: runtimeDataObject.playing ? "media-playback-pause" : "media-playback-start"
 
             onClicked: {
                 if (runtimeDataObject.playing) {
