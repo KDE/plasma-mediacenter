@@ -18,7 +18,7 @@
  ***************************************************************************/
 
 import QtQuick 1.1
-import Phonon 1.0 as Phonon
+import QtMultimediaKit 1.1 as QtMultimediaKit
 
 Rectangle {
     id: mediaPlayerRootRect
@@ -28,31 +28,15 @@ Rectangle {
     property bool playing: false
     property bool paused: false
     property bool stopped: true
-    property alias totalTime: video.totalTime
-    property alias currentTime: video.time
-    property alias volume: audioPlayer.volume
+    property alias totalTime: video.duration
+    property alias currentTime: video.position
+    property alias volume: video.volume
 
     signal clicked
 
-    Phonon.Media {
+    QtMultimediaKit.Video {
         id: video
         anchors.fill: parent
-
-        Phonon.AudioOutput {
-            id: audioPlayer
-            anchors.fill: parent
-        }
-
-        Phonon.Video {
-            id: videoPlayer
-            anchors.fill: parent
-        }
-
-        onTotalTimeChanged: {
-        }
-
-        onTimeChanged: {
-        }
     }
 
     onPlayingChanged: if (playing) video.play();

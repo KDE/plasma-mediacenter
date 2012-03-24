@@ -110,13 +110,19 @@ PlasmaCore.FrameSvgItem {
             visible: volumeButton.checked
             minimumValue: 0
             maximumValue: 100
-            value: Math.round(100 * runtimeDataObject.volume)
 
             Binding {
                 when: volumeSlider.pressed
                 target: runtimeDataObject
                 property: "volume"
                 value: volumeSlider.value * 0.01
+            }
+
+            Binding {
+                when: !volumeSlider.pressed
+                target: volumeSlider
+                property: "value"
+                value: Math.round(100 * runtimeDataObject.volume)
             }
         }
 
