@@ -177,4 +177,9 @@ void MetadataMusicBackend::showMusicForArtist()
     m_metadataMusicModel->updateModel();
 }
 
+QString MetadataMusicBackend::mediaBrowserOverride() const
+{
+    return constructQmlSource("metadatamusiccomponents", "0.1", "MediaBrowser");
+}
+
 #include "metadatamusicbackend.moc"

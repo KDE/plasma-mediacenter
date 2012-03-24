@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright 2009 by Alessandro Diaferia <alediaferia@gmail.com>         *
- *   Copyright 2011 Sinny Kumari <ksinny@gmail.com>
+ *   Copyright 2011 Sinny Kumari <ksinny@gmail.com>                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -41,6 +41,8 @@ public:
     virtual bool goOneLevelUp();
     virtual bool expand (int row);
     virtual void init();
+
+    virtual QString mediaBrowserOverride() const;
 
 private Q_SLOTS:
     void showCategories();

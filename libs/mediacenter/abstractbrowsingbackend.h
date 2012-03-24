@@ -191,6 +191,8 @@ public:
     Q_INVOKABLE virtual QString leftToolbar() const;
     Q_INVOKABLE virtual QString rightToolbar() const;
 
+    Q_INVOKABLE virtual QString mediaBrowserOverride() const;
+
 signals:
     void modelChanged();
     void metadataModelChanged();

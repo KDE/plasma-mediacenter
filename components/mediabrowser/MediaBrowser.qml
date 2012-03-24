@@ -26,7 +26,6 @@ Item {
     id: mediaBrowser
     clip: true
     property QtObject currentBrowsingBackend
-    property alias count: mediaBrowserGridView.count
     property bool browsingFocusStatus:false
     property bool backStopped: false
 
@@ -36,31 +35,50 @@ Item {
         id: metadataModel
     }
 
-    GridView {
-        id: mediaBrowserGridView
+    Item {
+        id: mediaBrowserViewItem
+        property QtObject mediaBrowserGridView
+
         anchors.fill: parent
-        cellWidth: width / 6
-        cellHeight: width / 6
-        delegate: MediaItemDelegate {
-            backend: currentBrowsingBackend
-            onPlayRequested: mediaBrowser.playRequested(url)
+    }
+
+    Component {
+        id: mediaBrowserViewComponent
+        GridView {
+            anchors.fill: parent
+            cellWidth: width / 6
+            cellHeight: width / 6
+            delegate: MediaItemDelegate {
+                backend: currentBrowsingBackend
+                onPlayRequested: mediaBrowser.playRequested(url)
+            }
+            highlight: MediaItemHighlight { z:1 }
+            //focus: true
+            highlightFollowsCurrentItem: true
+            flow: GridView.TopToBottom
+            model: mediaBrowser.currentBrowsingBackendModel
         }
-        highlight: MediaItemHighlight { z:1 }
-        //focus: true
-        highlightFollowsCurrentItem: true
-        flow: GridView.TopToBottom
     }
 
     onCurrentBrowsingBackendChanged: {
-        console.log("INIT'ing " + currentBrowsingBackend)
         currentBrowsingBackend.metadataModel = metadataModel;
         currentBrowsingBackend.init();
+
+        var object;
+        if (currentBrowsingBackend.mediaBrowserOverride()) {
+            var qmlSource = currentBrowsingBackend.mediaBrowserOverride();
+            object = Qt.createQmlObject(qmlSource, mediaBrowserViewItem);
+            mediaBrowserViewItem.mediaBrowserGridView = object;
+        } else {
+            object = mediaBrowserViewComponent.createObject(mediaBrowserViewItem);
+        }
+        mediaBrowserViewItem.mediaBrowserGridView = object;
     }
 
     function loadModel()
     {
         //JS snippet to do mediaBrowserGridView.model: currentBrowsingBackend.backendModel
-        mediaBrowserGridView.model = (function() { return currentBrowsingBackend.backendModel; })
+        mediaBrowserViewItem.mediaBrowserGridView.model = (function() { return currentBrowsingBackend.backendModel; });
     }
 
     PlasmaComponents.ToolButton {
@@ -72,7 +90,7 @@ Item {
 
         onClicked: {
             if(!currentBrowsingBackend.goOneLevelUp()) {
-                console.log("nooooooooo")
+                mediaBrowserViewItem.mediaBrowserGridView.destroy();
                 backStopped = true
             }
         }
@@ -80,9 +98,9 @@ Item {
 
     onBrowsingFocusStatusChanged: {
         if(browsingFocusStatus) {
-           mediaBrowserGridView.focus = true
+           mediaBrowserViewItem.mediaBrowserGridView.focus = true
         } else {
-           mediaBrowserGridView.focus = false
+           mediaBrowserViewItem.mediaBrowserGridView.focus = false
         }
          //console.log("browsing statussss is  " + browsingFocusStatus + "focus is  " + mediaBrowserGridView.focus)
     }

@@ -193,3 +193,8 @@ QString AbstractBrowsingBackend::constructQmlSource(const QString& componentDirN
     return QString("import QtQuick 1.1\n\import org.kde.plasma.mediacentercomponents.%1 %2 as %3\n\%3.%4 {\n\}\n")
         .arg(componentDirName).arg(versionString).arg(componentDirName.toUpper()).arg(itemName);
 }
+
+QString AbstractBrowsingBackend::mediaBrowserOverride() const
+{
+    return "";
+}
