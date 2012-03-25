@@ -144,10 +144,24 @@ Rectangle {
         model: playlistModel
         delegate:
             Text {
-            text: display
-            color: "white"
+                text: display
+                color: "white"
+
+                MouseArea {
+                    hoverEnabled: true
+                    anchors.fill: parent
+                    onClicked: {
+                        mediaPlayer.visible = true
+                        runtimeData.playing = true
+                        mediaPlayer.url = display
+                        mediaPlayer.play()
+                        mediaBrowser.visible = false
+                    }
+
+                }
             }
         }
+
         anchors {
             top: parent.top; bottom: bottomToolbar.top; right: parent.right
         }
