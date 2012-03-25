@@ -17,8 +17,31 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-import QtQuick 1.1
-import org.kde.plasma.components 0.1 as PlasmaComponents
+#include "playlistmodel.h"
 
-Item {
+PlaylistModel::PlaylistModel(QObject* parent): QAbstractListModel(parent)
+{
+    m_musicList << "";
 }
+
+QVariant PlaylistModel::data(const QModelIndex& index, int role) const
+{
+    if (role == Qt::DisplayRole) {
+        return m_musicList.at(index.row());
+    }
+
+    return QVariant();
+}
+
+int PlaylistModel::rowCount(const QModelIndex& parent) const
+{
+    return m_musicList.count();
+}
+
+void PlaylistModel::addToPlaylist(const QString& url)
+{
+    beginResetModel();
+    m_musicList << url;
+    endResetModel();
+}
+

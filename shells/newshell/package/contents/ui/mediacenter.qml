@@ -138,8 +138,18 @@ Rectangle {
         id: rightToolbar
         height: parent.height
         width: parent.width * 0.05
+        ListView {
+        anchors.fill:parent
+
+        model: playlistModel
+        delegate:
+            Text {
+            text: display
+            color: "white"
+            }
+        }
         anchors {
-            bottom: bottomToolbar.top; right: parent.right
+            top: parent.top; bottom: bottomToolbar.top; right: parent.right
         }
     }
 
@@ -148,10 +158,10 @@ Rectangle {
         var qmlSource = runtimeData.currentBrowsingBackend.bottomToolbar();
         var newObject = Qt.createQmlObject(qmlSource, bottomToolbar);
 
-        var qmlSource = runtimeData.currentBrowsingBackend.leftToolbar();
-        var newObject = Qt.createQmlObject(qmlSource, leftToolbar);
+        qmlSource = runtimeData.currentBrowsingBackend.leftToolbar();
+        newObject = Qt.createQmlObject(qmlSource, leftToolbar);
 
-        var qmlSource = runtimeData.currentBrowsingBackend.rightToolbar();
-        var newObject = Qt.createQmlObject(qmlSource, rightToolbar);
+        qmlSource = runtimeData.currentBrowsingBackend.rightToolbar();
+        newObject = Qt.createQmlObject(qmlSource, rightToolbar);
     }
 }
