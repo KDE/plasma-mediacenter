@@ -1,9 +1,8 @@
 Required:
 ==========
 
-1) phonon and phonon-gstreamer qml need to be installed before.
-   while building phonon set -DPHONON_INSTALL_QT_EXTENSIONS_INTO_SYSTEM_QT=TRUE
-
-2) plasma-mobile is needed in order to get features of different metadatamodel backends.
+1) qt-mobility from http://qt.gitorious.org/qt-mobility/qt-mobility for QtMultimediaKit
+2) plasma-mobile from https://projects.kde.org/projects/kdereview/plasma-mobile is needed in order to get features of different metadatamodel backends.
 
 To know Plasma Media Center architecture and other related information browse through http://community.kde.org/Plasma/Plasma_Media_Center
+
