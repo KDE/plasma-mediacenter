@@ -19,6 +19,7 @@
 
 import QtQuick 1.1
 import org.kde.plasma.mediacentercomponents 0.1 as MediaCenterComponents
+import org.kde.plasma.core 0.1 as PlasmaCore
 
 Rectangle {
     id: mediaCenterRootItem
@@ -139,14 +140,14 @@ Rectangle {
         height: parent.height
         width: parent.width * 0.05
         ListView {
-        anchors.fill:parent
+            anchors.fill:parent
+            model: playlistModel
+            spacing: 2
 
-        model: playlistModel
-        delegate:
-            Text {
-                text: display
-                color: "white"
-
+            delegate:
+            Item{
+                width: 100
+                height: 20
                 MouseArea {
                     hoverEnabled: true
                     anchors.fill: parent
@@ -157,7 +158,16 @@ Rectangle {
                         mediaPlayer.play()
                         mediaBrowser.visible = false
                     }
-
+                }
+                Rectangle {
+                    anchors.fill: parent
+                    color: "lightsteelblue"
+                    opacity: 0.4
+                    Text {
+                        text: display
+                        color: "white"
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
                 }
             }
         }

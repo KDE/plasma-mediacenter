@@ -21,7 +21,7 @@
 
 PlaylistModel::PlaylistModel(QObject* parent): QAbstractListModel(parent)
 {
-    m_musicList << "";
+    
 }
 
 QVariant PlaylistModel::data(const QModelIndex& index, int role) const
