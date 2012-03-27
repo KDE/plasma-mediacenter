@@ -19,8 +19,31 @@
 
 import QtQuick 1.1
 
-Text {
-    anchors.centerIn: parent
-    text: "Hello world"
-    color: "white"
+Row {
+    id: rootRow
+    anchors.fill: parent
+    property QtObject model
+    property QtObject backend
+    spacing: 10
+
+    ListView {
+        width: parent.width/3 * 0.9; height: parent.height
+        model: backend.level1Model();
+        delegate: CategoriesDelegate { width: parent.width; height: 96 }
+        spacing: 5
+    }
+
+    ListView {
+        width: parent.width/3; height: parent.height
+        model: backend.level2Model();
+        delegate: FilteringDelegate { width: parent.width; height: 64 }
+        spacing: 5
+    }
+
+    ListView {
+        width: parent.width/3; height: parent.height
+        model: backend.level3Model();
+        delegate: MusicDelegate { width: parent.width; height: 64 }
+        spacing: 5
+    }
 }

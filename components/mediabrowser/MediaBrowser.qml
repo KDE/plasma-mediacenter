@@ -24,7 +24,6 @@ import org.kde.plasma.components 0.1 as PlasmaComponents
 
 Item {
     id: mediaBrowser
-    clip: true
     property QtObject currentBrowsingBackend
     property bool browsingFocusStatus:false
     property bool backStopped: false
@@ -69,6 +68,7 @@ Item {
             var qmlSource = currentBrowsingBackend.mediaBrowserOverride();
             object = Qt.createQmlObject(qmlSource, mediaBrowserViewItem);
             mediaBrowserViewItem.mediaBrowserGridView = object;
+            object.backend = (function() { return currentBrowsingBackend; });
         } else {
             object = mediaBrowserViewComponent.createObject(mediaBrowserViewItem);
         }
@@ -86,7 +86,10 @@ Item {
         width: 50
         height: 50
         iconSource: "go-previous";
-        anchors.left: parent.left
+        anchors {
+            left: parent.left
+            bottom: parent.top
+        }
 
         onClicked: {
             if(!currentBrowsingBackend.goOneLevelUp()) {

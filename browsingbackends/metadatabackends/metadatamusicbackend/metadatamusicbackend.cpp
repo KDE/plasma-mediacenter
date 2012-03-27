@@ -38,46 +38,46 @@ MetadataMusicBackend::MetadataMusicBackend(QObject* parent, const QVariantList& 
     : AbstractMetadataBackend(parent, args),
     m_categoriesModel(new CategoriesModel(this)),
     m_nepomukModel(new NepomukMusicModel(this)),
-    m_metadataMusicModel(0)
+    m_metadataMusicModel(0),
+    m_currentCategory(Category::AllMusic)
 {
-    setupStates();
-}
-
-void MetadataMusicBackend::setupStates()
-{
-    m_machine.addState(&m_categoriesState);
-    m_machine.addState(&m_allMusicState);
-    m_machine.addState(&m_albumsState);
-    m_machine.addState(&m_artistsState);
-    m_machine.addState(&m_musicForAlbumState);
-    m_machine.addState(&m_musicForArtistState);
-
-    connect(&m_musicForArtistState, SIGNAL(entered()), SLOT(showMusicForArtist()));
-    connect(&m_musicForAlbumState, SIGNAL(entered()), SLOT(showMusicForAlbum()));
-    connect(&m_categoriesState, SIGNAL(entered()), SLOT(showCategories()));
-    connect(&m_allMusicState, SIGNAL(entered()), SLOT(showAllMusic()));
-    connect(&m_artistsState, SIGNAL(entered()), SLOT(showArtists()));
-    connect(&m_albumsState, SIGNAL(entered()), SLOT(showAlbums()));
-
-    m_categoriesState.addTransition(this, SIGNAL(currentStateAllMusic()), &m_allMusicState);
-    m_categoriesState.addTransition(this, SIGNAL(currentStateArtists()), &m_artistsState);
-    m_categoriesState.addTransition(this, SIGNAL(currentStateAlbums()), &m_albumsState);
-
-    m_albumsState.addTransition(this, SIGNAL(currentStateMusicForAlbum()), &m_musicForAlbumState);
-    m_artistsState.addTransition(this, SIGNAL(currentStateMusicForArtist()), &m_musicForArtistState);
-
-    m_musicForAlbumState.addTransition(this, SIGNAL(backRequested()), &m_albumsState);
-    m_musicForArtistState.addTransition(this, SIGNAL(backRequested()), &m_artistsState);
-
-    m_allMusicState.addTransition(this, SIGNAL(backRequested()), &m_categoriesState);
-    m_artistsState.addTransition(this, SIGNAL(backRequested()), &m_categoriesState);
-    m_albumsState.addTransition(this, SIGNAL(backRequested()), &m_categoriesState);
-
-    m_machine.setInitialState(&m_categoriesState);
 }
 
 MetadataMusicBackend::~MetadataMusicBackend()
 {
+}
+
+void MetadataMusicBackend::setCategory (int index)
+{
+    m_currentCategory = m_categoriesModel->categoryTypeForIndex(index);
+    switch (m_currentCategory) {
+    case Category::AllMusic:
+        break;
+    case Category::Artists:
+        showArtists();
+        break;
+    case Category::Albums:
+        showAlbums();
+        break;
+    }
+}
+
+void MetadataMusicBackend::setSubCategory (int index)
+{
+    QString currentItemLabel = m_nepomukModel->data(m_nepomukModel->index(index, 0), Qt::DisplayRole).toString();
+qDebug() << currentItemLabel;
+    switch (m_currentCategory) {
+    case Category::AllMusic:
+        break;
+    case Category::Artists:
+        m_artistName = currentItemLabel;
+        showMusicForArtist();
+        break;
+    case Category::Albums:
+        m_albumName = currentItemLabel;
+        showMusicForAlbum();
+        break;
+    }
 }
 
 void MetadataMusicBackend::init()
@@ -89,61 +89,8 @@ void MetadataMusicBackend::init()
     m_machine.start();
 }
 
-QState* MetadataMusicBackend::currentState() const
-{
-    return qobject_cast<QState*>(m_machine.configuration().values().at(0));
-}
-
-bool MetadataMusicBackend::expand(int row)
-{
-    QState *curState = currentState();
-
-    if (curState == &m_categoriesState) {
-        switch (m_categoriesModel->categoryTypeForIndex(row)) {
-        case Category::AllMusic:
-            emit currentStateAllMusic();
-            return true;
-        case Category::Artists:
-            emit currentStateArtists();
-            return true;
-        case Category::Albums:
-            emit currentStateAlbums();
-            return true;
-        }
-    } else if (curState != &m_allMusicState) {
-        QAbstractItemModel *currentModel = qobject_cast<QAbstractItemModel*>(model());
-        QString currentItemLabel = currentModel->data(currentModel->index(row, 0), Qt::DisplayRole).toString();
-
-        if (curState == &m_albumsState) {
-            m_albumName = currentItemLabel;
-            emit currentStateMusicForAlbum();
-        } else if (curState == &m_artistsState) {
-            m_artistName = currentItemLabel;
-            emit currentStateMusicForArtist();
-        }
-    }
-
-    return false;
-}
-
-bool MetadataMusicBackend::goOneLevelUp()
-{
-    if (currentState() == &m_categoriesState) {
-        return false;
-    }
-
-    emit backRequested();
-    return true;
-}
-
-void MetadataMusicBackend::showCategories()
-{
-    setModel(m_categoriesModel);
-}
-
 void MetadataMusicBackend::showAllMusic()
 {
-    setModel(m_metadataMusicModel);
     m_metadataMusicModel->setAlbumName("");
     m_metadataMusicModel->setArtistName("");
     m_metadataMusicModel->updateModel();
@@ -151,19 +98,16 @@ void MetadataMusicBackend::showAllMusic()
 
 void MetadataMusicBackend::showAlbums()
 {
-    setModel(m_nepomukModel);
     m_nepomukModel->setTerm(Nepomuk::Vocabulary::NMM::musicAlbum(), "tools-media-optical-copy");
 }
 
 void MetadataMusicBackend::showArtists()
 {
-    setModel(m_nepomukModel);
     m_nepomukModel->setTerm(Nepomuk::Vocabulary::NMM::performer(), "user-identity");
 }
 
 void MetadataMusicBackend::showMusicForAlbum()
 {
-    setModel(m_metadataMusicModel);
     m_metadataMusicModel->setArtistName("");
     m_metadataMusicModel->setAlbumName(m_albumName);
     m_metadataMusicModel->updateModel();
@@ -171,7 +115,6 @@ void MetadataMusicBackend::showMusicForAlbum()
 
 void MetadataMusicBackend::showMusicForArtist()
 {
-    setModel(m_metadataMusicModel);
     m_metadataMusicModel->setArtistName(m_artistName);
     m_metadataMusicModel->setAlbumName("");
     m_metadataMusicModel->updateModel();
@@ -180,6 +123,21 @@ void MetadataMusicBackend::showMusicForArtist()
 QString MetadataMusicBackend::mediaBrowserOverride() const
 {
     return constructQmlSource("metadatamusiccomponents", "0.1", "MediaBrowser");
+}
+
+QObject* MetadataMusicBackend::level1Model() const
+{
+    return m_categoriesModel;
+}
+
+QObject* MetadataMusicBackend::level2Model() const
+{
+    return m_nepomukModel;
+}
+
+QObject* MetadataMusicBackend::level3Model() const
+{
+    return m_metadataMusicModel;
 }
 
 #include "metadatamusicbackend.moc"

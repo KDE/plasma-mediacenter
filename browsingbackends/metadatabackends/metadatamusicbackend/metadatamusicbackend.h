@@ -24,6 +24,7 @@
 #include <libs/mediacenter/abstractbrowsingbackend.h>
 
 #include "../abstractmetadatabackend.h"
+#include "categoriesmodel.h"
 
 #include <QStateMachine>
 
@@ -38,14 +39,18 @@ public:
     MetadataMusicBackend (QObject* parent, const QVariantList& args);
     virtual ~MetadataMusicBackend();
 
-    virtual bool goOneLevelUp();
-    virtual bool expand (int row);
     virtual void init();
 
     virtual QString mediaBrowserOverride() const;
 
+    Q_INVOKABLE QObject *level1Model() const;
+    Q_INVOKABLE QObject *level2Model() const;
+    Q_INVOKABLE QObject *level3Model() const;
+
+    Q_INVOKABLE void setCategory(int index);
+    Q_INVOKABLE void setSubCategory(int index);
+
 private Q_SLOTS:
-    void showCategories();
     void showAllMusic();
     void showArtists();
     void showAlbums();
@@ -79,6 +84,8 @@ private:
 
     void setupStates();
     inline QState *currentState() const;
+
+    Category::CategoryType m_currentCategory;
 };
 
 #endif // METADATAMUSICBACKEND_H
