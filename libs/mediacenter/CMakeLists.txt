@@ -1,5 +1,4 @@
 set (mediacenterlibs_SRCS
-    playlistmodel.cpp
     mediacenter.cpp
     abstractbrowsingbackend.cpp
     backendsmodel.cpp

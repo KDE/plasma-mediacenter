@@ -16,5 +16,3 @@ target_link_libraries(pmc_flickrbackend
 
 install(TARGETS pmc_flickrbackend DESTINATION ${PLUGIN_INSTALL_DIR})
 install(FILES flickrbackend.desktop DESTINATION ${SERVICES_INSTALL_DIR})
-
-install(DIRECTORY flickrcomponents DESTINATION ${IMPORTS_INSTALL_DIR}/org/kde/plasma/mediacentercomponents)

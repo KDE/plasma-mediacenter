@@ -187,10 +187,6 @@ public:
      */
     QDeclarativeEngine *declarativeEngine() const;
 
-    Q_INVOKABLE virtual QString bottomToolbar() const;
-    Q_INVOKABLE virtual QString leftToolbar() const;
-    Q_INVOKABLE virtual QString rightToolbar() const;
-
     Q_INVOKABLE virtual QString mediaBrowserOverride() const;
 
 signals:

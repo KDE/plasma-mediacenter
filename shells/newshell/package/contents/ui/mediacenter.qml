@@ -35,9 +35,6 @@ Rectangle {
                 mediaPlayer.currentTime = currentTime
             }
         }
-
-        onCurrentBrowsingBackendChanged: mediaCenterRootItem.loadToolbars();
-
     }
 
     MediaCenterComponents.MediaPlayer {
@@ -69,7 +66,7 @@ Rectangle {
         width: parent.width
         model: backendsModel
         anchors {
-            left: leftToolbar.right; right: rightToolbar.left; top: mediaController.bottom; bottom: bottomToolbar.top
+            left: parent.left; right: parent.right; top: mediaController.bottom; bottom: parent.bottom
         }
 
         onBackendSelected: { runtimeData.currentBrowsingBackend = selectedBackend; visible = false }
@@ -85,7 +82,7 @@ Rectangle {
     MediaCenterComponents.MediaBrowser {
         id: mediaBrowser
         anchors {
-            left: leftToolbar.right; right: rightToolbar.left; top: mediaController.bottom; bottom: bottomToolbar.top
+            left: parent.left; right: parent.right; top: mediaController.bottom; bottom:parent.bottom
         }
         visible: false
         z: 1
@@ -115,77 +112,5 @@ Rectangle {
                 backStopped = false
             }
         }
-    }
-
-    Item {
-        id: bottomToolbar
-        height: parent.height * 0.07
-        width: parent.width
-        anchors {
-            left: parent.left; right: parent.right; bottom: parent.bottom
-        }
-    }
-
-    Item {
-        id: leftToolbar
-        height: parent.height
-        width: parent.width * 0.05
-        anchors {
-            bottom: bottomToolbar.top; left: parent.left
-        }
-    }
-
-    Item {
-        id: rightToolbar
-        height: parent.height
-        width: parent.width * 0.05
-        ListView {
-            anchors.fill:parent
-            model: playlistModel
-            spacing: 2
-
-            delegate:
-            Item{
-                width: 100
-                height: 20
-                MouseArea {
-                    hoverEnabled: true
-                    anchors.fill: parent
-                    onClicked: {
-                        mediaPlayer.visible = true
-                        runtimeData.playing = true
-                        mediaPlayer.url = display
-                        mediaPlayer.play()
-                        mediaBrowser.visible = false
-                    }
-                }
-                Rectangle {
-                    anchors.fill: parent
-                    color: "lightsteelblue"
-                    opacity: 0.4
-                    Text {
-                        text: display
-                        color: "white"
-                        anchors.verticalCenter: parent.verticalCenter
-                    }
-                }
-            }
-        }
-
-        anchors {
-            top: parent.top; bottom: bottomToolbar.top; right: parent.right
-        }
-    }
-
-    function loadToolbars()
-    {
-        var qmlSource = runtimeData.currentBrowsingBackend.bottomToolbar();
-        var newObject = Qt.createQmlObject(qmlSource, bottomToolbar);
-
-        qmlSource = runtimeData.currentBrowsingBackend.leftToolbar();
-        newObject = Qt.createQmlObject(qmlSource, leftToolbar);
-
-        qmlSource = runtimeData.currentBrowsingBackend.rightToolbar();
-        newObject = Qt.createQmlObject(qmlSource, rightToolbar);
     }
 }

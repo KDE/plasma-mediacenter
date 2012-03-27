@@ -47,11 +47,7 @@ Item {
             height: parent.height - (itemText.visible ? itemText.height : 0 );
 
             function checkAndLoad()
-            {
-                if (isExpandable) {
-                    addToPlaylistButton.visible = false
-                }
-                    
+            {       
                 Logic.checkAndLoad(iconImageLoader);
             }
 
@@ -133,13 +129,4 @@ Item {
                 mediaItemDelegateItem.playRequested(mediaUrl)
             }
         }
-
-    PlasmaComponents.ToolButton {
-        id: addToPlaylistButton
-        iconSource: "list-add"
-        anchors.right: rootColumn.right
-        onClicked: {
-            playlistModel.addToPlaylist( mediaUrl );
-        }
-    }
 }

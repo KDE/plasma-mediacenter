@@ -46,17 +46,3 @@ bool FlickrBackend::goOneLevelUp()
     return MediaCenter::AbstractBrowsingBackend::goOneLevelUp();
 }
 
-QString FlickrBackend::bottomToolbar() const
-{
-    return constructQmlSource("flickrcomponents", "0.1", "SearchToolbar");
-}
-
-QString FlickrBackend::leftToolbar() const
-{
-    return constructQmlSource("flickrcomponents", "0.1", "LeftToolbar");
-}
-
-QString FlickrBackend::rightToolbar() const
-{
-    return constructQmlSource("flickrcomponents", "0.1", "RightToolbar");
-}

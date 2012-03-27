@@ -30,10 +30,6 @@ public:
     FlickrBackend (QObject* parent, const QVariantList& args);
     virtual ~FlickrBackend();
 
-    virtual QString bottomToolbar() const;
-    virtual QString leftToolbar() const;
-    virtual QString rightToolbar() const;
-
 public Q_SLOTS:
     virtual void init();
     virtual bool goOneLevelUp();
