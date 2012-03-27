@@ -25,6 +25,7 @@ Row {
     property QtObject model
     property QtObject backend
     spacing: 10
+    clip: true
 
     ListView {
         width: parent.width/3 * 0.9; height: parent.height

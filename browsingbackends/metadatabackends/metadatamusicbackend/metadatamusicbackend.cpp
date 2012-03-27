@@ -49,6 +49,7 @@ void MetadataMusicBackend::setCategory (int index)
     m_currentCategory = m_categoriesModel->categoryTypeForIndex(index);
     switch (m_currentCategory) {
     case Category::AllMusic:
+        showAllMusic();
         break;
     case Category::Artists:
         showArtists();
@@ -62,7 +63,6 @@ void MetadataMusicBackend::setCategory (int index)
 void MetadataMusicBackend::setSubCategory (int index)
 {
     QString currentItemLabel = m_nepomukModel->data(m_nepomukModel->index(index, 0), Qt::DisplayRole).toString();
-qDebug() << currentItemLabel;
     switch (m_currentCategory) {
     case Category::AllMusic:
         break;
