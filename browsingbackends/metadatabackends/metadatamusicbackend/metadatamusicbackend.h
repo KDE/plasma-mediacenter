@@ -67,23 +67,12 @@ Q_SIGNALS:
     void backRequested();
 
 private:
-    QStateMachine m_machine;
-    QState m_categoriesState;
-    QState m_artistsState;
-    QState m_albumsState;
-    QState m_allMusicState;
-    QState m_musicForArtistState;
-    QState m_musicForAlbumState;
-
     QString m_artistName;
     QString m_albumName;
 
     CategoriesModel *m_categoriesModel;
     NepomukMusicModel *m_nepomukModel;
     MetadataMusicModel *m_metadataMusicModel;
-
-    void setupStates();
-    inline QState *currentState() const;
 
     Category::CategoryType m_currentCategory;
 };

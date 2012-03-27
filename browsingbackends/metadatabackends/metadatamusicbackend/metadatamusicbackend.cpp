@@ -29,9 +29,6 @@
 #include "nepomukmusicmodel.h"
 #include <nepomuk/nmm.h>
 
-#include <QStateMachine>
-#include <QDebug>
-
 MEDIACENTER_EXPORT_BROWSINGBACKEND(MetadataMusicBackend)
 
 MetadataMusicBackend::MetadataMusicBackend(QObject* parent, const QVariantList& args)
@@ -86,7 +83,6 @@ void MetadataMusicBackend::init()
         m_metadataMusicModel = new MetadataMusicModel(this);
     }
     AbstractMetadataBackend::init();
-    m_machine.start();
 }
 
 void MetadataMusicBackend::showAllMusic()
