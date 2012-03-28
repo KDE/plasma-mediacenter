@@ -1,5 +1,0 @@
-add_subdirectory(playlist)
-add_subdirectory(mediabrowser)
-add_subdirectory(mediaplayer)
-add_subdirectory(mediainfobar)
-add_subdirectory(mediawelcome)

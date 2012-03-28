@@ -1,8 +1,0 @@
-add_subdirectory(playlist)
-add_subdirectory(coverfetcher)
-add_subdirectory(picasa)
-add_subdirectory(video)
-add_subdirectory(flickr)
-add_subdirectory(picture)
-add_subdirectory(addons)
-add_subdirectory(mediacentercontrol)
