@@ -130,7 +130,14 @@ PlasmaCore.FrameSvgItem {
             id: volumeButton
             width: parent.height
             height: width
-            iconSource: "audio-volume-medium"
+            iconSource: {
+                var value = volumeSlider.value
+                var max = volumeSlider.maximumValue
+                if (value > 0 && value < max/3) "audio-volume-low"
+                else if (value > max/3 && value < max*2/3) "audio-volume-medium"
+                else if (value <= 0) "audio-volume-muted"
+                else "audio-volume-high"
+            }
             checkable: true
         }
     }

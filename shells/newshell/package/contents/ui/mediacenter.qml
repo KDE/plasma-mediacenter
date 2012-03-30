@@ -57,6 +57,7 @@ Rectangle {
         id: mediaController
         height: parent.height * 0.08
         width: parent.width * 0.8
+        visible: !mediaWelcome.visible
         anchors {
             horizontalCenter: parent.horizontalCenter; top: parent.top
         }
