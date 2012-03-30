@@ -41,7 +41,7 @@ namespace {
 FlickrModel::FlickrModel (QObject* parent)
 {
     setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
-    query("KDE");
+    query("kde");
 }
 
 FlickrModel::~FlickrModel()

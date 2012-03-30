@@ -50,7 +50,7 @@ FocusScope {
                 backend: currentBrowsingBackend
                 onPlayRequested: mediaBrowser.playRequested(url)
             }
-            highlight: MediaItemHighlight { z:1 }
+            highlight: MediaItemHighlight { z: 1 }
             focus: true
             highlightFollowsCurrentItem: true
             flow: GridView.TopToBottom
@@ -100,6 +100,7 @@ FocusScope {
 
     Keys.onEscapePressed: {
         if(!currentBrowsingBackend.goOneLevelUp()) {
+                mediaBrowserViewItem.mediaBrowserGridView.destroy();
                 backStopped = true
             }
         }
