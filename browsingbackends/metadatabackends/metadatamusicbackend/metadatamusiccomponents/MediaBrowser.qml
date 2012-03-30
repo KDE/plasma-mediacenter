@@ -44,7 +44,7 @@ Row {
     }
 
     ListView {
-        width: parent.width/3; height: parent.height
+        width: parent.width/3 * (backend.level2Visible ? 1 : 2) ; height: parent.height
         model: backend.level3Model();
         delegate: MusicDelegate { width: parent.width; height: 64 }
         spacing: 5
