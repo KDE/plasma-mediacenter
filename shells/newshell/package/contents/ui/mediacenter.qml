@@ -48,6 +48,8 @@ Rectangle {
 
         onClicked: mediaBrowser.visible = mediaBrowser.visible ? false : true
         onCurrentTimeChanged: runtimeData.currentTime = currentTime
+
+        onStoppedChanged: runtimeData.stopped = stopped
     }
 
     MediaCenterComponents.MediaController {

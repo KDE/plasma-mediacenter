@@ -37,6 +37,8 @@ Rectangle {
     QtMultimediaKit.Video {
         id: video
         anchors.fill: parent
+
+        onStopped: mediaPlayerRootRect.stopped = true
     }
 
     onPlayingChanged: if (playing) video.play();
