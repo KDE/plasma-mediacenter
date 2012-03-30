@@ -19,8 +19,6 @@
 
 
 #include "metadatavideomodel.h"
-#include "metadatavideothumbnailprovider.h"
-#include <mediacenter/mediacenter.h>
 
 #include <mediacenter/mediacenter.h>
 #include <mediacenter/abstractbrowsingbackend.h>
