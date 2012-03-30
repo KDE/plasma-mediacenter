@@ -20,9 +20,46 @@
 
 #include "localvideosmodel.h"
 
+#include <libs/mediacenter/mediacenter.h>
+#include <libs/mediacenter/abstractbrowsingbackend.h>
+
 #include <KDirModel>
 
-LocalVideosModel::LocalVideosModel (QObject* parent) : LocalFilesAbstractModel (parent, QString("video/"))
-{
+#include <QtDeclarative/QDeclarativeEngine>
 
+LocalVideosModel::LocalVideosModel (QObject* parent)
+    : LocalFilesAbstractModel (parent, QString("video/")),
+    m_thumbProvider(new VideoThumbnailProvider(this))
+{
+    MediaCenter::AbstractBrowsingBackend *backend = qobject_cast<MediaCenter::AbstractBrowsingBackend*>(parent);
+    backend->declarativeEngine()->addImageProvider("localvideothumbnail", m_thumbProvider);
+
+    connect(m_thumbProvider, SIGNAL(gotThumbnail(QString)), SLOT(processThumbnail(QString)));
+}
+
+QVariant LocalVideosModel::data (const QModelIndex& index, int role) const
+{
+    if (index.row() >= rowCount()) {
+        return QVariant();
+    }
+
+    if (role == Qt::DecorationRole && !data(index, MediaCenter::IsExpandableRole).toBool()) {
+        const QString url = data(index, MediaCenter::MediaUrlRole).toString();
+
+        if (m_thumbProvider->hasThumbnail(url)) {
+            return "image://localvideothumbnail/" + url;
+        } else {
+            m_thumbProvider->loadThumbnail(KUrl(url), QSize(600, 600));
+            m_pendingThumbs.insert(url, index);
+        }
+    }
+
+    return LocalFilesAbstractModel::data (index, role);
+}
+
+void LocalVideosModel::processThumbnail (const QString &url)
+{
+    QModelIndex index = m_pendingThumbs.take(url);
+
+    emit dataChanged(index, index);
 }

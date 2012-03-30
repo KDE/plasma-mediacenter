@@ -33,13 +33,14 @@ PlasmaCore.FrameSvgItem {
         anchors {
             horizontalCenter: parent.horizontalCenter
         }
-        width: parent.width * 0.8
+        width: parent.width * 0.9
         height: parent.height * 0.8
 
         PlasmaComponents.ToolButton {
             id: backwardButton
             width: parent.height
             height: width
+            visible: false      //doesn't work, so dont show ;)
 
             iconSource: "media-skip-backward"
 
@@ -77,6 +78,7 @@ PlasmaCore.FrameSvgItem {
             id: forwardButton
             width: parent.height
             height: width
+            visible: false      //doesn't work, so dont show ;)
 
             iconSource: "media-skip-forward"
 

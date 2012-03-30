@@ -23,11 +23,21 @@
 
 #include "../localfilesabstractmodel.h"
 
+#include "localvideothumbnailprovider.h"
+
 class LocalVideosModel : public LocalFilesAbstractModel
 {
-
+    Q_OBJECT
 public:
     explicit LocalVideosModel (QObject* parent);
+    virtual QVariant data (const QModelIndex& index, int role = Qt::DisplayRole) const;
+
+private slots:
+    void processThumbnail (const QString& url);
+
+private:
+    VideoThumbnailProvider *m_thumbProvider;
+    mutable QHash<QString, QModelIndex> m_pendingThumbs;        //aw mutable, any other way to let data() change this?
 };
 
 #endif // LOCALVIDEOSMODEL_H

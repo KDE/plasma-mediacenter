@@ -3,6 +3,7 @@ set(localvideosbackend_SRCS
   ../localfilesabstractbackend.cpp
   ../localfilesabstractmodel.cpp
   localvideosbackend.cpp
+  localvideothumbnailprovider.cpp
 )
 
 soprano_add_ontology(localvideosbackend_SRCS ${SHAREDDESKTOPONTOLOGIES_ROOT_DIR}/nie/nfo.trig "NFO" "Vocabulary" "trig")
@@ -19,6 +20,7 @@ ${KDE4_KFILE_LIBS}
 ${NEPOMUK_LIBRARIES}
 ${NEPOMUK_QUERY_LIBRARIES}
 ${SOPRANO_LIBRARIES}
+${QT_QTDECLARATIVE_LIBRARIES}
 )
 
 install(TARGETS pmc_localvideos DESTINATION ${PLUGIN_INSTALL_DIR})
