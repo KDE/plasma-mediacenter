@@ -36,7 +36,10 @@ MetadataMusicBackend::MetadataMusicBackend(QObject* parent, const QVariantList& 
     m_categoriesModel(new CategoriesModel(this)),
     m_nepomukModel(new NepomukMusicModel(this)),
     m_metadataMusicModel(0),
-    m_currentCategory(Category::AllMusic)
+    m_currentCategory(Category::AllMusic),
+    m_level1Visible(true),
+    m_level2Visible(false),
+    m_level3Visible(false)
 {
 }
 
@@ -90,16 +93,31 @@ void MetadataMusicBackend::showAllMusic()
     m_metadataMusicModel->setAlbumName("");
     m_metadataMusicModel->setArtistName("");
     m_metadataMusicModel->updateModel();
+
+    m_level2Visible = false;
+    emit level2VisibleChanged();
+    m_level3Visible = true;
+    emit level3VisibleChanged();
 }
 
 void MetadataMusicBackend::showAlbums()
 {
     m_nepomukModel->setTerm(Nepomuk::Vocabulary::NMM::musicAlbum(), "tools-media-optical-copy");
+
+    m_level2Visible = true;
+    emit level2VisibleChanged();
+    m_level3Visible = false;
+    emit level3VisibleChanged();
 }
 
 void MetadataMusicBackend::showArtists()
 {
     m_nepomukModel->setTerm(Nepomuk::Vocabulary::NMM::performer(), "user-identity");
+
+    m_level2Visible = true;
+    emit level2VisibleChanged();
+    m_level3Visible = false;
+    emit level3VisibleChanged();
 }
 
 void MetadataMusicBackend::showMusicForAlbum()
@@ -107,6 +125,9 @@ void MetadataMusicBackend::showMusicForAlbum()
     m_metadataMusicModel->setArtistName("");
     m_metadataMusicModel->setAlbumName(m_albumName);
     m_metadataMusicModel->updateModel();
+
+    m_level3Visible = true;
+    emit level3VisibleChanged();
 }
 
 void MetadataMusicBackend::showMusicForArtist()
@@ -114,6 +135,9 @@ void MetadataMusicBackend::showMusicForArtist()
     m_metadataMusicModel->setArtistName(m_artistName);
     m_metadataMusicModel->setAlbumName("");
     m_metadataMusicModel->updateModel();
+
+    m_level3Visible = true;
+    emit level3VisibleChanged();
 }
 
 QString MetadataMusicBackend::mediaBrowserOverride() const
@@ -134,6 +158,21 @@ QObject* MetadataMusicBackend::level2Model() const
 QObject* MetadataMusicBackend::level3Model() const
 {
     return m_metadataMusicModel;
+}
+
+bool MetadataMusicBackend::level1Visible() const
+{
+    return m_level1Visible;
+}
+
+bool MetadataMusicBackend::level2Visible() const
+{
+    return m_level2Visible;
+}
+
+bool MetadataMusicBackend::level3Visible() const
+{
+    return m_level3Visible;
 }
 
 #include "metadatamusicbackend.moc"

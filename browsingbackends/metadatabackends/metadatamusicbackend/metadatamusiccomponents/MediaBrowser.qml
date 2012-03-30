@@ -32,6 +32,7 @@ Row {
         model: backend.level1Model();
         delegate: CategoriesDelegate { width: parent.width; height: 96 }
         spacing: 5
+        visible: backend.level1Visible
     }
 
     ListView {
@@ -39,6 +40,7 @@ Row {
         model: backend.level2Model();
         delegate: FilteringDelegate { width: parent.width; height: 64 }
         spacing: 5
+        visible: backend.level2Visible
     }
 
     ListView {
@@ -46,5 +48,6 @@ Row {
         model: backend.level3Model();
         delegate: MusicDelegate { width: parent.width; height: 64 }
         spacing: 5
+        visible: backend.level3Visible
     }
 }

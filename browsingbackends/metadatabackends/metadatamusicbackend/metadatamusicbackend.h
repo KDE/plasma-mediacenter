@@ -35,6 +35,10 @@ class MetadataMusicModel;
 class MetadataMusicBackend : public AbstractMetadataBackend
 {
     Q_OBJECT
+    Q_PROPERTY(bool level1Visible READ level1Visible NOTIFY level1VisibleChanged)
+    Q_PROPERTY(bool level2Visible READ level2Visible NOTIFY level2VisibleChanged)
+    Q_PROPERTY(bool level3Visible READ level3Visible NOTIFY level3VisibleChanged)
+
 public:
     MetadataMusicBackend (QObject* parent, const QVariantList& args);
     virtual ~MetadataMusicBackend();
@@ -49,6 +53,10 @@ public:
 
     Q_INVOKABLE void setCategory(int index);
     Q_INVOKABLE void setSubCategory(int index);
+
+    bool level1Visible() const;
+    bool level2Visible() const;
+    bool level3Visible() const;
 
 private Q_SLOTS:
     void showAllMusic();
@@ -66,6 +74,10 @@ Q_SIGNALS:
     void currentStateMusicForAlbum();
     void backRequested();
 
+    void level1VisibleChanged();
+    void level2VisibleChanged();
+    void level3VisibleChanged();
+
 private:
     QString m_artistName;
     QString m_albumName;
@@ -75,6 +87,10 @@ private:
     MetadataMusicModel *m_metadataMusicModel;
 
     Category::CategoryType m_currentCategory;
+
+    bool m_level1Visible;
+    bool m_level2Visible;
+    bool m_level3Visible;
 };
 
 #endif // METADATAMUSICBACKEND_H
