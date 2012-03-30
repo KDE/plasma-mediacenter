@@ -72,10 +72,9 @@ Rectangle {
         onBackendSelected: { runtimeData.currentBrowsingBackend = selectedBackend; visible = false }
         onVisibleChanged: {
             if(visible)
-                welcomeFocusStatus = true
+                focus = true
             else
-                welcomeFocusStatus = false
-                //console.log("visiblity of welcome  " + visible)
+                focus = false
         }
     }
 
@@ -91,11 +90,10 @@ Rectangle {
         onCurrentBrowsingBackendChanged: visible = true
         onVisibleChanged: {
             if (visible) loadModel();
-            if(visible)
-                browsingFocusStatus = true
+            if (visible)
+                focus = true
             else
-                browsingFocusStatus = false
-                //console.log("visiblity of browsing  " + visible)
+                focus = false
         }
 
         onPlayRequested: {
@@ -113,4 +111,6 @@ Rectangle {
             }
         }
     }
+
+    Component.onCompleted: mediaWelcome.focus = true
 }

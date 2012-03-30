@@ -21,16 +21,15 @@ import QtQuick 1.1
 import org.kde.qtextracomponents 0.1 as QtExtraComponents
 
 PathView {
-    property bool welcomeFocusStatus:true
     id: view
     clip: true
     model: homeModel
     anchors.fill: parent
-    focus: true
     preferredHighlightBegin: 0.5
     preferredHighlightEnd: 0.5
+    property variant selectedBackend
 
-    signal backendSelected(variant selectedBackend)
+    signal backendSelected
 
     delegate: Component {
         Item {
@@ -61,8 +60,10 @@ PathView {
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: view.backendSelected(modelObject)
+                onClicked: { view.selectedBackend = modelObject; view.backendSelected() }
             }
+
+            PathView.onIsCurrentItemChanged: if (PathView.isCurrentItem) view.selectedBackend = modelObject
         }
     }
 
@@ -78,13 +79,6 @@ PathView {
 
     Keys.onLeftPressed: decrementCurrentIndex()
     Keys.onRightPressed: incrementCurrentIndex()
-    //Keys.onReturnPressed: console.log("return keyyyyyyyyyyyyyy")
-
-    onWelcomeFocusStatusChanged: {
-        if(welcomeFocusStatus)
-           focus = true
-        else
-           focus = false
-          // console.log("welcome statussss is  " + welcomeFocusStatus + "focus is  " + view.focus)
-    }
+    Keys.onEnterPressed: view.backendSelected()
+    Keys.onReturnPressed: view.backendSelected()
 }

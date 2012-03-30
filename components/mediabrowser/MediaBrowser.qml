@@ -22,10 +22,9 @@ import QtQuick 1.1
 import org.kde.metadatamodels 0.1 as MetadataModels
 import org.kde.plasma.components 0.1 as PlasmaComponents
 
-Item {
+FocusScope {
     id: mediaBrowser
     property QtObject currentBrowsingBackend
-    property bool browsingFocusStatus:false
     property bool backStopped: false
 
     signal playRequested(string url)
@@ -52,7 +51,7 @@ Item {
                 onPlayRequested: mediaBrowser.playRequested(url)
             }
             highlight: MediaItemHighlight { z:1 }
-            //focus: true
+            focus: true
             highlightFollowsCurrentItem: true
             flow: GridView.TopToBottom
             model: mediaBrowser.currentBrowsingBackendModel
@@ -99,17 +98,9 @@ Item {
         }
     }
 
-    onBrowsingFocusStatusChanged: {
-        if(browsingFocusStatus) {
-           mediaBrowserViewItem.mediaBrowserGridView.focus = true
-        } else {
-           mediaBrowserViewItem.mediaBrowserGridView.focus = false
-        }
-         //console.log("browsing statussss is  " + browsingFocusStatus + "focus is  " + mediaBrowserGridView.focus)
-    }
-      Keys.onEscapePressed: {
-          if(!currentBrowsingBackend.goOneLevelUp()) {
+    Keys.onEscapePressed: {
+        if(!currentBrowsingBackend.goOneLevelUp()) {
                 backStopped = true
             }
-      }
+        }
 }
