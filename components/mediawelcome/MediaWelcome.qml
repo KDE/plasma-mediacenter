@@ -81,4 +81,6 @@ PathView {
     Keys.onRightPressed: incrementCurrentIndex()
     Keys.onEnterPressed: view.backendSelected()
     Keys.onReturnPressed: view.backendSelected()
+    Keys.onPressed: event.key
+    Keys.onReleased: event.key
 }

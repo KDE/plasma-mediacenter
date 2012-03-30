@@ -51,7 +51,6 @@ FocusScope {
                 onPlayRequested: mediaBrowser.playRequested(url)
             }
             highlight: MediaItemHighlight { z: 1 }
-            focus: true
             highlightFollowsCurrentItem: true
             flow: GridView.TopToBottom
             model: mediaBrowser.currentBrowsingBackendModel
@@ -72,6 +71,7 @@ FocusScope {
             object = mediaBrowserViewComponent.createObject(mediaBrowserViewItem);
         }
         mediaBrowserViewItem.mediaBrowserGridView = object;
+        object.focus = true
     }
 
     function loadModel()

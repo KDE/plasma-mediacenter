@@ -23,6 +23,7 @@ import org.kde.plasma.core 0.1 as PlasmaCore
 
 Rectangle {
     id: mediaCenterRootItem
+    color: "black"
 
     MediaCenterComponents.RuntimeData {
         id: runtimeData
@@ -66,20 +67,14 @@ Rectangle {
     MediaCenterComponents.MediaWelcome {
         id: mediaWelcome
         width: parent.width
+        focus: visible
+
         model: backendsModel
         anchors {
             left: parent.left; right: parent.right; top: mediaController.bottom; bottom: parent.bottom
         }
 
         onBackendSelected: { runtimeData.currentBrowsingBackend = selectedBackend; visible = false }
-        onVisibleChanged: {
-            if(visible)
-                focus = true
-            else
-                focus = false
-
-            console.log("ACTIVE " + activeFocus)
-        }
     }
 
     MediaCenterComponents.MediaBrowser {
@@ -88,16 +83,14 @@ Rectangle {
             left: parent.left; right: parent.right; top: mediaController.bottom; bottom:parent.bottom
         }
         visible: false
+        focus: visible
+
         z: 1
 
         currentBrowsingBackend: runtimeData.currentBrowsingBackend
         onCurrentBrowsingBackendChanged: visible = true
         onVisibleChanged: {
             if (visible) loadModel();
-            if (visible)
-                focus = true
-            else
-                focus = false
         }
 
         onPlayRequested: {
@@ -107,6 +100,7 @@ Rectangle {
             mediaPlayer.play()
             mediaBrowser.visible = false
         }
+
         onBackStoppedChanged: {
             if(backStopped) {
                 runtimeData.currentBrowsingBackend = null
@@ -115,7 +109,7 @@ Rectangle {
                 backStopped = false
             }
         }
-    }
 
-    Component.onCompleted: mediaWelcome.focus = true
+        onActiveFocusChanged: console.log(activeFocus)
+    }
 }

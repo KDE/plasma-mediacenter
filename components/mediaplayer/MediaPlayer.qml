@@ -20,9 +20,8 @@
 import QtQuick 1.1
 import QtMultimediaKit 1.1 as QtMultimediaKit
 
-Rectangle {
+FocusScope {
     id: mediaPlayerRootRect
-    color: "black"
 
     property alias url: video.source
     property bool playing: false
@@ -54,4 +53,6 @@ Rectangle {
         anchors.fill: parent
         onClicked: mediaPlayerRootRect.clicked()
     }
+
+    Keys.onEscapePressed: console.log("ESCC")
 }
