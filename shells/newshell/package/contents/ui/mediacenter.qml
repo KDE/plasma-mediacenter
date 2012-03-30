@@ -77,6 +77,8 @@ Rectangle {
                 focus = true
             else
                 focus = false
+
+            console.log("ACTIVE " + activeFocus)
         }
     }
 
@@ -107,6 +109,7 @@ Rectangle {
         }
         onBackStoppedChanged: {
             if(backStopped) {
+                runtimeData.currentBrowsingBackend = null
                 visible = false
                 mediaWelcome.visible = true
                 backStopped = false
