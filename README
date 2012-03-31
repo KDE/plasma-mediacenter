@@ -6,3 +6,14 @@ Required:
 
 To know Plasma Media Center architecture and other related information browse through http://community.kde.org/Plasma/Plasma_Media_Center
 
+Installation:
+=========
+Usual cmake stuff-
+
+mkdir build
+cd build
+cmake .. -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix`
+make install
+
+Run PMC using "plasma-mediacenter"
+
