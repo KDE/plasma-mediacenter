@@ -24,7 +24,11 @@ import org.kde.plasma.components 0.1 as PlasmaComponents
 
 Rectangle {
     id: mediaCenterRootItem
-    color: "black"
+    gradient: Gradient {
+        GradientStop { position: 0.0; color: "#000000" }
+        GradientStop { position: 0.5; color: "#222222" }
+        GradientStop { position: 1.0; color: "#000000" }
+    }
 
     MediaCenterComponents.RuntimeData {
         id: runtimeData
