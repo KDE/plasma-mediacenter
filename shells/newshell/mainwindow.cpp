@@ -61,6 +61,8 @@ MainWindow::MainWindow(QWidget *parent) : KMainWindow(parent)
     m_structure = Plasma::PackageStructure::load("Plasma/Generic");
     Plasma::Package *package = new Plasma::Package(QString(), "org.kde.plasma.mediacenter", m_structure);
     view->setSource(QUrl(package->filePath("mainscript")));
+
+    resize(1024, 768);
 }
 
 void MainWindow::toggleFullScreen()
