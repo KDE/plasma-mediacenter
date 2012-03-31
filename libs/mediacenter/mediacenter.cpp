@@ -35,11 +35,11 @@ MediaType getType(const QString &media)
     QFileInfo info(media);
     if (info.exists()) {
         KMimeType::Ptr mime = KMimeType::findByPath(media);
-        if (mime->name().startsWith("image/")) {
+        if (mime->name().startsWith(QLatin1String("image/"))) {
             return Picture;
-        } else if (mime->name().startsWith("video/")) {
+        } else if (mime->name().startsWith(QLatin1String("video/"))) {
             return Video;
-        } else if (mime->name().startsWith("audio/")) {
+        } else if (mime->name().startsWith(QLatin1String("audio/"))) {
             return Audio;
         } else {
             return Invalid;

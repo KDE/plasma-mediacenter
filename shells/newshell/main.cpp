@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
                          KAboutData::License_GPL_V2,
                          ki18n("Copyright (c) 2009-2011"));
     aboutData.addAuthor(ki18n("Alessandro Diaferia"),
-                        ki18n("Mantainer and main developer"),
+                        ki18n("Maintainer and main developer"),
                         "alediaferia@gmail.com",
                         "http://alediaferia.wordpress.com");
     aboutData.addAuthor(ki18n("Sinny Kumari"),

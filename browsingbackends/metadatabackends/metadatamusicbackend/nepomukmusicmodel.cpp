@@ -50,8 +50,8 @@ void NepomukMusicModel::setTerm(Nepomuk::Types::Property term, const QString &ic
     Nepomuk::Query::ComparisonTerm ct(term, Nepomuk::Query::Term());
     ct.setInverted(true);
     Nepomuk::Query::QueryServiceClient *queryClient = new Nepomuk::Query::QueryServiceClient(this);
-    connect(queryClient, SIGNAL(newEntries(const QList<Nepomuk::Query::Result> &)),
-            this, SLOT(newEntries(const QList<Nepomuk::Query::Result> &)));
+    connect(queryClient, SIGNAL(newEntries(QList<Nepomuk::Query::Result>)),
+            this, SLOT(newEntries(QList<Nepomuk::Query::Result>)));
     connect(queryClient, SIGNAL(error(QString)), SLOT(error(QString)));
     connect(queryClient, SIGNAL(finishedListing()), this, SLOT(finishedListing()));
     myQuery.setTerm(ct);
@@ -102,7 +102,7 @@ QModelIndex NepomukMusicModel::index(int row, int column, const QModelIndex& par
 
 void NepomukMusicModel::newEntries(const QList< Nepomuk::Query::Result >& entries)
 {
-      Q_FOREACH (Nepomuk::Query::Result res, entries) {
+      Q_FOREACH (const Nepomuk::Query::Result &res, entries) {
         m_queryResults.append(res);
     }
 }

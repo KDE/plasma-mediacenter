@@ -40,7 +40,7 @@ PlasmaCore.FrameSvgItem {
             id: backwardButton
             width: parent.height
             height: width
-            visible: false      //doesn't work, so dont show ;)
+            visible: false      //doesn't work, so don't show ;)
 
             iconSource: "media-skip-backward"
 

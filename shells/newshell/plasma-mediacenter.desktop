@@ -24,4 +24,4 @@ Exec=plasma-mediacenter -graphicssystem raster %u
 Terminal=false
 Icon=plasma
 Type=Application
-Categories=Multimedia
+Categories=Multimedia;

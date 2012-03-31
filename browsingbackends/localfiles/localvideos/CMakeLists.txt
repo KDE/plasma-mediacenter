@@ -9,8 +9,6 @@ set(localvideosbackend_SRCS
 soprano_add_ontology(localvideosbackend_SRCS ${SHAREDDESKTOPONTOLOGIES_ROOT_DIR}/nie/nfo.trig "NFO" "Vocabulary" "trig")
 soprano_add_ontology(localvideosbackend_SRCS ${SHAREDDESKTOPONTOLOGIES_ROOT_DIR}/nie/nie.trig "NIE" "Vocabulary" "trig")
 
-kde4_add_ui_files(localvideosbackend_SRCS ../configbase.ui)
-
 kde4_add_plugin(pmc_localvideos ${localvideosbackend_SRCS})
 target_link_libraries(pmc_localvideos 
 mediacenterlibs

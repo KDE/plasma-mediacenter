@@ -8,8 +8,6 @@ set(localmusicbackend_SRCS
 soprano_add_ontology(localmusicbackend_SRCS ${SHAREDDESKTOPONTOLOGIES_ROOT_DIR}/nie/nfo.trig "NFO" "Vocabulary" "trig")
 soprano_add_ontology(localmusicbackend_SRCS ${SHAREDDESKTOPONTOLOGIES_ROOT_DIR}/nie/nie.trig "NIE" "Vocabulary" "trig")
 
-kde4_add_ui_files(localmusicbackend_SRCS ../configbase.ui)
-
 kde4_add_plugin(pmc_localmusic ${localmusicbackend_SRCS})
 
 target_link_libraries(pmc_localmusic 
