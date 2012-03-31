@@ -23,7 +23,12 @@ import org.kde.plasma.core 0.1 as PlasmaCore
 
 Rectangle {
     id: mediaCenterRootItem
-    color: "black"
+   // color: "black"
+   gradient: Gradient {
+         GradientStop { position: 0.0; color: "#000000" }
+         GradientStop { position: 0.5; color: "#222222" }
+         GradientStop { position: 1.0; color: "#000000" }
+     }
 
     MediaCenterComponents.RuntimeData {
         id: runtimeData
@@ -115,7 +120,7 @@ Rectangle {
                     mediaPlayer.playing = true;
                     mediaPlayer.paused = false;
                 }
-            }   
+            }
         }
         onPlayRequested: {
             mediaPlayer.visible = true
