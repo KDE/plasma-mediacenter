@@ -20,15 +20,11 @@
 import QtQuick 1.1
 import org.kde.plasma.mediacentercomponents 0.1 as MediaCenterComponents
 import org.kde.plasma.core 0.1 as PlasmaCore
+import org.kde.plasma.components 0.1 as PlasmaComponents
 
 Rectangle {
     id: mediaCenterRootItem
-   // color: "black"
-   gradient: Gradient {
-         GradientStop { position: 0.0; color: "#000000" }
-         GradientStop { position: 0.5; color: "#222222" }
-         GradientStop { position: 1.0; color: "#000000" }
-     }
+    color: "black"
 
     MediaCenterComponents.RuntimeData {
         id: runtimeData
@@ -120,7 +116,7 @@ Rectangle {
                     mediaPlayer.playing = true;
                     mediaPlayer.paused = false;
                 }
-            }
+            }   
         }
         onPlayRequested: {
             mediaPlayer.visible = true
@@ -141,5 +137,21 @@ Rectangle {
         }
 
         onActiveFocusChanged: console.log(activeFocus)
+    }
+
+    MediaCenterComponents.AboutPMC {
+        id: aboutPmc
+        listWidth: parent.width*0.8; listHeight: parent.height*0.8
+        anchors.centerIn: parent
+    }
+
+    PlasmaComponents.ToolButton {
+        anchors.right: parent.right; anchors.bottom: parent.bottom
+        width: 64
+        height: 64
+        visible: mediaWelcome.visible
+
+        iconSource: "plasma"
+        onClicked: aboutPmc.open()
     }
 }

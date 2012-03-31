@@ -4,3 +4,4 @@ install(DIRECTORY mediacontroller DESTINATION ${IMPORTS_INSTALL_DIR}/org/kde/pla
 install(DIRECTORY mediaplayer DESTINATION ${IMPORTS_INSTALL_DIR}/org/kde/plasma/mediacentercomponents)
 install(DIRECTORY mediawelcome DESTINATION ${IMPORTS_INSTALL_DIR}/org/kde/plasma/mediacentercomponents)
 install(DIRECTORY runtimedata DESTINATION ${IMPORTS_INSTALL_DIR}/org/kde/plasma/mediacentercomponents)
+install(DIRECTORY aboutpmc DESTINATION ${IMPORTS_INSTALL_DIR}/org/kde/plasma/mediacentercomponents)
