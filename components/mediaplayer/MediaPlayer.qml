@@ -54,5 +54,5 @@ FocusScope {
         onClicked: mediaPlayerRootRect.clicked()
     }
 
-    Keys.onEscapePressed: console.log("ESCC")
+    Keys.onEscapePressed: mediaPlayerRootRect.clicked()
 }
