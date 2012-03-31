@@ -41,7 +41,7 @@ Rectangle {
     MediaCenterComponents.MediaPlayer {
         id: mediaPlayer
         anchors.fill: parent
-        focus: true
+        focus: !mediaBrowser.activeFocus && !mediaWelcome.activeFocus
 
         playing: runtimeData.playing
         paused: runtimeData.paused
@@ -53,12 +53,11 @@ Rectangle {
 
         onStoppedChanged: runtimeData.stopped = stopped
         Keys.onPressed: {
-            if(event.key == 16777344) {
+            if(event.key == 16777344) { //Media Play key
                 if(mediaPlayer.playing) {
                     mediaPlayer.playing = false;
                     mediaPlayer.paused = true;
-                }
-                else {
+                } else {
                     mediaPlayer.playing = true;
                     mediaPlayer.paused = false;
                 }
@@ -108,12 +107,11 @@ Rectangle {
         }
 
         Keys.onPressed: {
-            if(event.key == 16777344) {
+            if(event.key == 16777344) { //Media Play key
                 if(mediaPlayer.playing) {
                     mediaPlayer.playing = false;
                     mediaPlayer.paused = true;
-                }
-                else {
+                } else {
                     mediaPlayer.playing = true;
                     mediaPlayer.paused = false;
                 }
