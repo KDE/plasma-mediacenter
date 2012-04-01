@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
                         "alediaferia@gmail.com",
                         "http://alediaferia.wordpress.com");
     aboutData.addAuthor(ki18n("Sinny Kumari"),
-                        ki18n("Mantainer and main developer"),
+                        ki18n("Maintainer and main developer"),
                         "ksinny@gmail.com",
                         "http://www.sinny.in");
     aboutData.addCredit(ki18n("Marco Martin"), ki18n("GSoC project mentor"), "notmart@gmail.com", "");
