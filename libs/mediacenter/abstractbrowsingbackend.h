@@ -189,6 +189,15 @@ public:
 
     Q_INVOKABLE virtual QString mediaBrowserOverride() const;
 
+    /**
+     * This method is called by PMC runtime to ask the backend to check the env and report
+     * if all runtime dependencies etc are satisfied.
+     * The default implementation always returns true
+     *
+     * @returns true if its ok to load this backend, false otherwise
+     */
+    virtual bool okToLoad() const;
+
 signals:
     void modelChanged();
     void metadataModelChanged();

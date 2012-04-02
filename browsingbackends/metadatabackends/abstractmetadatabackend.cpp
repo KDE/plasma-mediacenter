@@ -21,6 +21,9 @@
 #include "abstractmetadatabackend.h"
 #include "abstractmetadatamodel.h"
 
+#include <QtDeclarative/QDeclarativeComponent>
+#include <QtDeclarative/QDeclarativeEngine>
+
 AbstractMetadataBackend::AbstractMetadataBackend(QObject* parent, const QVariantList& args)
     : AbstractBrowsingBackend(parent, args)
 {
@@ -28,14 +31,23 @@ AbstractMetadataBackend::AbstractMetadataBackend(QObject* parent, const QVariant
 
 void AbstractMetadataBackend::init()
 {
-    if(!metadataModel()) {
-        connect(this, SIGNAL(metadataModelChanged()), SLOT(init()));
-    }
+    QDeclarativeComponent component(declarativeEngine());
+    component.setData("import org.kde.metadatamodels 0.1\nMetadataModel {}\n", QUrl());
+
+    setMetadataModel(component.create());
 }
 
 bool AbstractMetadataBackend::goOneLevelUp()
 {
     return false;
+}
+
+bool AbstractMetadataBackend::okToLoad() const
+{
+    QDeclarativeComponent component(declarativeEngine());
+    component.setData("import org.kde.metadatamodels 0.1\nMetadataModel {}\n", QUrl());
+
+    return !component.isError();
 }
 
 #include "abstractmetadatabackend.moc"
