@@ -39,10 +39,10 @@ MetadataPictureBackend::~MetadataPictureBackend()
 
 void MetadataPictureBackend::init()
 {
+    AbstractMetadataBackend::init();
     if (metadataModel()) {
         setModel(new MetadataPictureModel(this));
     }
-    AbstractMetadataBackend::init();
 }
 
 

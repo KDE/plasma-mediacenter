@@ -139,8 +139,6 @@ Rectangle {
                 backStopped = false
             }
         }
-
-        onActiveFocusChanged: console.log(activeFocus)
     }
 
     MediaCenterComponents.AboutPMC {
