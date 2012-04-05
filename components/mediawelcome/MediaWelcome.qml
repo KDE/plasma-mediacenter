@@ -37,6 +37,7 @@ PathView {
             width: parent.width/3
             height: parent.height/3
             scale: PathView.iconScale
+            opacity: PathView.iconScale
 
             Column {
                 anchors.fill: parent
