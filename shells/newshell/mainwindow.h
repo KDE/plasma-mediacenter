@@ -30,6 +30,7 @@ class MainWindow : public KMainWindow
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    Q_INVOKABLE void closeMediaCenter();
 
 public Q_SLOTS:
     void toggleFullScreen();
