@@ -27,6 +27,7 @@
 #include <QtDeclarative/QDeclarativeView>
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtOpenGL/QGLWidget>
+#include <QApplication>
 #include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) : KMainWindow(parent)
@@ -59,6 +60,7 @@ MainWindow::MainWindow(QWidget *parent) : KMainWindow(parent)
 
     BackendsModel *backendsModel = new BackendsModel(view->engine(), this);
     view->rootContext()->setContextProperty("backendsModel", backendsModel);
+    view->rootContext()->setContextProperty("mainwindow", this);
 
     m_structure = Plasma::PackageStructure::load("Plasma/Generic");
     Plasma::Package *package = new Plasma::Package(QString(), "org.kde.plasma.mediacenter", m_structure);
@@ -79,4 +81,9 @@ void MainWindow::toggleFullScreen()
 MainWindow::~MainWindow()
 {
     
+}
+
+void MainWindow::closeMediaCenter()
+{
+    QApplication::quit();
 }

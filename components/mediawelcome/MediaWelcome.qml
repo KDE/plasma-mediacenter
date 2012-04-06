@@ -23,7 +23,6 @@ import org.kde.qtextracomponents 0.1 as QtExtraComponents
 PathView {
     id: view
     clip: true
-    model: homeModel
     anchors.fill: parent
     preferredHighlightBegin: 0.5
     preferredHighlightEnd: 0.5
@@ -82,4 +81,5 @@ PathView {
     Keys.onRightPressed: incrementCurrentIndex()
     Keys.onEnterPressed: view.backendSelected()
     Keys.onReturnPressed: view.backendSelected()
+    Keys.onEscapePressed: mainwindow.closeMediaCenter();
 }
