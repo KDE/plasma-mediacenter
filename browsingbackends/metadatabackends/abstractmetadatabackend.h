@@ -27,6 +27,7 @@ class AbstractMetadataBackend : public MediaCenter::AbstractBrowsingBackend
     Q_OBJECT
 public:
     AbstractMetadataBackend (QObject* parent, const QVariantList& args);
+    bool okToLoad() const;
 
 public Q_SLOTS:
     virtual void init();

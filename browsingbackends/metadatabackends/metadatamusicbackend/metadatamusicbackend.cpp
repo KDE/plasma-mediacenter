@@ -82,10 +82,10 @@ void MetadataMusicBackend::setSubCategory (int index)
 
 void MetadataMusicBackend::init()
 {
+    AbstractMetadataBackend::init();
     if (metadataModel()) {
         m_metadataMusicModel = new MetadataMusicModel(this);
     }
-    AbstractMetadataBackend::init();
 }
 
 void MetadataMusicBackend::showAllMusic()

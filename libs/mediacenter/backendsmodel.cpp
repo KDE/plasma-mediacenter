@@ -47,8 +47,15 @@ bool BackendsModel::loadBrowsingBackend(MediaCenter::AbstractBrowsingBackend* ba
         kDebug() << "OUCH! Something's wrong with the backend";
         return false;
     }
+
     backend->setParent(this);
     backend->setDeclarativeEngine(engine);
+
+    if (!backend->okToLoad()) {
+        kDebug() << "Backend " << backend->name() << " doesn't want to be loaded";
+        return false;
+    }
+
     backends.append(backend);
     return true;
 }

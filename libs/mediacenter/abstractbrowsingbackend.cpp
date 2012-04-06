@@ -183,3 +183,8 @@ QString AbstractBrowsingBackend::mediaBrowserOverride() const
 {
     return "";
 }
+
+bool AbstractBrowsingBackend::okToLoad() const
+{
+    return true;
+}

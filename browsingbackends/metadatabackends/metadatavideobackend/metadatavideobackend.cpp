@@ -39,10 +39,10 @@ MetadataVideoBackend::~MetadataVideoBackend()
 
 void MetadataVideoBackend::init()
 {
+    AbstractMetadataBackend::init();
     if (metadataModel()) {
         setModel(new MetadataVideoModel(this));
     }
-    AbstractMetadataBackend::init();
 }
 
 

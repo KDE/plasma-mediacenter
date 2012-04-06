@@ -36,13 +36,15 @@ MainWindow::MainWindow(QWidget *parent) : KMainWindow(parent)
     if (args->isSet("fullscreen")) {
         toggleFullScreen();
     }
-    args->clear();
 
     QDeclarativeView *view = new QDeclarativeView(this);
 
-    QGLWidget *glWidget = new QGLWidget;
-    glWidget->setAutoFillBackground(false);
-    view->setViewport(glWidget);
+    if (!args->isSet("disable-opengl")) {
+        QGLWidget *glWidget = new QGLWidget;
+        glWidget->setAutoFillBackground(false);
+        view->setViewport(glWidget);
+    }
+    args->clear();
       
     view->setAttribute(Qt::WA_OpaquePaintEvent);
     view->setAttribute(Qt::WA_NoSystemBackground);

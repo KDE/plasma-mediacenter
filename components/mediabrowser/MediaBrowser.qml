@@ -19,7 +19,6 @@
  */
 
 import QtQuick 1.1
-import org.kde.metadatamodels 0.1 as MetadataModels
 import org.kde.plasma.components 0.1 as PlasmaComponents
 
 FocusScope {
@@ -28,10 +27,6 @@ FocusScope {
     property bool backStopped: false
 
     signal playRequested(string url)
-
-    MetadataModels.MetadataModel {
-        id: metadataModel
-    }
 
     Item {
         id: mediaBrowserViewItem
@@ -58,7 +53,6 @@ FocusScope {
     }
 
     onCurrentBrowsingBackendChanged: {
-        currentBrowsingBackend.metadataModel = metadataModel;
         currentBrowsingBackend.init();
 
         var object;
