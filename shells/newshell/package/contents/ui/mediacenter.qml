@@ -80,6 +80,13 @@ Rectangle {
         }
 
         runtimeDataObject: runtimeData
+        onVisibleChanged: {
+            if(visible) {
+                buttonText.text = "Hide Controller"
+            } else {
+                buttonText.text = "show Controller"
+            }
+        }
     }
 
     MediaCenterComponents.MediaWelcome {
@@ -155,5 +162,23 @@ Rectangle {
 
         iconSource: "plasma"
         onClicked: aboutPmc.open()
+    }
+
+    PlasmaComponents.Button {
+        anchors.right: parent.right; anchors.top: parent.top
+        width: 100
+        height: 30
+        Text {
+            id: buttonText
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+        }
+        onClicked: {
+            if(mediaController.visible) {
+                mediaController.visible = false
+            } else {
+                mediaController.visible = true
+            }
+        }
     }
 }
