@@ -2,6 +2,7 @@ set (mediacenterlibs_SRCS
     mediacenter.cpp
     abstractbrowsingbackend.cpp
     backendsmodel.cpp
+    playlistmodel.cpp
 )
 
 kde4_add_library(mediacenterlibs SHARED ${mediacenterlibs_SRCS})
@@ -13,6 +14,7 @@ set (mediacenterlibs_HDRS
     mediacenter.h
     abstractbrowsingbackend.h
     backendsmodel.h
+    playlistmodel.h
 )
 
 install(FILES ${mediacenterlibs_HDRS} DESTINATION ${INCLUDE_INSTALL_DIR}/mediacenter COMPONENT Devel)

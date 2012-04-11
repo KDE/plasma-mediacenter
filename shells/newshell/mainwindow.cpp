@@ -20,6 +20,7 @@
 #include "mainwindow.h"
 
 #include <libs/mediacenter/backendsmodel.h>
+#include <libs/mediacenter/playlistmodel.h>
 #include <Plasma/Package>
 
 #include <KDE/KCmdLineArgs>
@@ -60,6 +61,8 @@ MainWindow::MainWindow(QWidget *parent) : KMainWindow(parent)
 
     BackendsModel *backendsModel = new BackendsModel(view->engine(), this);
     view->rootContext()->setContextProperty("backendsModel", backendsModel);
+    PlaylistModel *playlistModel = new PlaylistModel(this);
+    view->rootContext()->setContextProperty("playlistModel", playlistModel);
     view->rootContext()->setContextProperty("mainwindow", this);
 
     m_structure = Plasma::PackageStructure::load("Plasma/Generic");
