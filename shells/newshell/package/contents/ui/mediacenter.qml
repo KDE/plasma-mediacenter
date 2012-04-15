@@ -148,6 +148,22 @@ Rectangle {
         }
     }
 
+     MediaCenterComponents.Playlist {
+         id: playlist
+         visible: false
+         anchors.top: playlistButton.bottom
+         anchors.right: parent.right
+         onPlayRequested: {
+            z = 0
+            mediaPlayer.visible = true
+            runtimeData.playing = true
+            mediaPlayer.url = url
+            mediaPlayer.play()
+            mediaBrowser.visible = false
+            mediaPlayer.focus = true
+        }
+     }
+
     MediaCenterComponents.AboutPMC {
         id: aboutPmc
         listWidth: parent.width*0.8; listHeight: parent.height*0.8
@@ -165,6 +181,7 @@ Rectangle {
     }
 
     PlasmaComponents.Button {
+        id: controllerButton
         anchors.right: parent.right; anchors.top: parent.top
         width: 100
         height: 30
@@ -181,4 +198,28 @@ Rectangle {
             }
         }
     }
+
+     PlasmaComponents.Button {
+        id: playlistButton
+        anchors.right: parent.right; anchors.top: controllerButton.bottom
+        width: 100
+        height: 30
+        Text {
+            id: playlistButtonText
+            text: "Show Playlist"
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+        }
+        onClicked: {
+            if(playlistButtonText.text == "Show Playlist") {
+                playlistButtonText.text = "Hide Playlist";
+                playlist.visible = true
+                playlist.z = 2
+            } else {
+                playlistButtonText.text = "Show Playlist";
+                playlist.visible = false
+            }
+        }
+     }
+
 }

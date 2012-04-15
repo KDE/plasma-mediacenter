@@ -48,6 +48,9 @@ Item {
 
             function checkAndLoad()
             {
+                if (!isExpandable) {
+                    addToPlaylistButton.visible = true
+                }
                 Logic.checkAndLoad(iconImageLoader);
             }
 
@@ -106,15 +109,15 @@ Item {
         anchors.fill: parent
         onEntered: {
             mediaItemDelegateItem.GridView.view.currentIndex = index
-             if (!isExpandable) {
-                 addToPlaylistButton.visible = true
-            }
+//              if (!isExpandable) {
+//                  addToPlaylistButton.visible = true
+//             }
         }
-        onExited: {
-            if (!isExpandable) {
-                addToPlaylistButton.visible = false;
-            }
-        }
+//         onExited: {
+//             if (!isExpandable) {
+//                 addToPlaylistButton.visible = false;
+//             }
+//         }
 
         onClicked: {
             if (isExpandable) {

@@ -17,34 +17,41 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#include "playlistmodel.h"
-#include <KDebug>
+import QtQuick 1.1
 
-PlaylistModel::PlaylistModel(QObject* parent): QAbstractListModel(parent)
-{
-    
-}
+ Rectangle {
+    id: playlistItem
+    signal playRequested(string url)
 
-QVariant PlaylistModel::data(const QModelIndex& index, int role) const
-{
-    if (role == Qt::DisplayRole) {
-        return m_musicList.at(index.row());
+    height: parent.height
+    width: parent.width
+    color: "black"
+    ListView {
+        anchors.fill:parent
+        model: playlistModel
+        spacing: 2
+
+        delegate:
+        Item{
+            width: parent.width
+            height: 20
+            MouseArea {
+                hoverEnabled: true
+                anchors.fill: parent
+                onClicked: {
+                    playlistItem.playRequested(display)
+                }
+            }
+            Rectangle {
+                anchors.fill: parent
+                color: "lightsteelblue"
+                opacity: 0.4
+                Text {
+                    text: display
+                    color: "white"
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+            }
+        }
     }
-
-    return QVariant();
 }
-
-int PlaylistModel::rowCount(const QModelIndex& parent) const
-{
-    return m_musicList.count();
-}
-
-void PlaylistModel::addToPlaylist(const QString& url)
-{
-    beginResetModel();
-//     foreach (QString s, m_musicList)
-//         kDebug() << s;
-    m_musicList << url;
-    endResetModel();
-}
-
