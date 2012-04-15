@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Plasma Media Center
+Name[da]=Plasma Mediecenter
 Name[nl]=Plasma mediacentrum
 Name[pl]=Centrum multimedialne plazmy
 Name[pt]=Centro Multimédia do Plasma
@@ -8,6 +9,7 @@ Name[sv]=Plasma Media Center
 Name[uk]=Медіацентр Плазми
 Name[x-test]=xxPlasma Media Centerxx
 GenericName=Plasma Media Center
+GenericName[da]=Plasma Mediecenter
 GenericName[nl]=Plasma mediacentrum
 GenericName[pl]=Centrum multimedialne plazmy
 GenericName[pt]=Centro Multimédia do Plasma
@@ -16,6 +18,7 @@ GenericName[sv]=Plasma Media Center
 GenericName[uk]=Медіацентр Плазми
 GenericName[x-test]=xxPlasma Media Centerxx
 Comment=A mediacenter user interface written with the Plasma framework
+Comment[da]=En mediecenter-brugerflade skrevet med Plasma-frameworket
 Comment[nl]=Een gebruikersinterface voor een mediacentrum geschreven met het Plasma raamwerk
 Comment[pt]=Uma interface de centro multimédia criada com a plataforma do Plasma
 Comment[pt_BR]=Uma interface de centro multimídia criada com a plataforma do Plasma

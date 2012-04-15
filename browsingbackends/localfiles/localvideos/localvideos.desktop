@@ -2,6 +2,7 @@
 Type=Service
 Icon=folder-video
 Name=Browse videos
+Name[da]=Gennemse videoer
 Name[de]=Videos durchsuchen
 Name[es]=Explorar vídeos
 Name[nl]=Door video's bladeren
