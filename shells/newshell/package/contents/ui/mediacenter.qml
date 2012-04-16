@@ -62,6 +62,7 @@ Rectangle {
 
         onClicked: mediaController.visible = mediaController.visible ? false : true
         onEscapePressed: mediaBrowser.visible = true
+
         onCurrentTimeChanged: {
             runtimeData.currentTime = currentTime
             currentTimeSec = currentTime /1000;
@@ -71,7 +72,7 @@ Rectangle {
             currentTimeSec = Math.floor(currentTimeSec % 60);
             mediaController.curMediaTime = currentTimeHr + ":"  + currentTimeMin + ":" + currentTimeSec;
         }
-        
+
         Keys.onPressed: {
             if(event.key == 16777344) { //Media Play key
                 if(mediaPlayer.playing) {
