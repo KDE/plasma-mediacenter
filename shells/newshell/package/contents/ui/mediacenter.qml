@@ -67,6 +67,8 @@ Rectangle {
                 }
             }
         }
+
+        onMediaFinished: runtimeData.stopped = true
     }
 
     MediaCenterComponents.MediaController {
