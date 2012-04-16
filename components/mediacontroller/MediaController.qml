@@ -76,7 +76,7 @@ PlasmaCore.FrameSvgItem {
             onClicked: {
                 if (runtimeDataObject.playing) {
                     runtimeDataObject.playing = false; runtimeDataObject.paused = true;
-                } else if (runtimeDataObject.paused) {
+                } else if (runtimeDataObject.paused || runtimeDataObject.stopped) {
                     runtimeDataObject.playing = true; runtimeDataObject.paused = false;
                 }
             }

@@ -93,13 +93,14 @@ Rectangle {
         }
 
         onMediaFinished: runtimeData.stopped = true
+        onMediaStarted: runtimeData.playing = true
     }
 
     MediaCenterComponents.MediaController {
         id: mediaController
         height: parent.height * 0.08
         width: parent.width * 0.8
-        visible: !mediaWelcome.visible
+
         anchors {
             horizontalCenter: parent.horizontalCenter; top: parent.top
         }
@@ -120,6 +121,7 @@ Rectangle {
         }
 
         onBackendSelected: { runtimeData.currentBrowsingBackend = selectedBackend; visible = false }
+        onVisibleChanged: mediaController.visible = !visible
     }
 
     MediaCenterComponents.MediaBrowser {

@@ -30,7 +30,7 @@ Item {
     property bool currentTimeDirty: false
     property real volume: 1.0
 
-    onStoppedChanged: playing = !stopped
-    onPausedChanged: playing = !paused
-    onPlayingChanged: { paused = !playing; if (playing) stopped = false; }
+    onStoppedChanged: if (stopped) playing = false
+    onPausedChanged: if (paused) playing = false
+    onPlayingChanged: if (playing) { paused = false; stopped = false }
 }
