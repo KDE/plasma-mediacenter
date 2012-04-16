@@ -91,6 +91,8 @@ Rectangle {
              totalTimeSec = Math.floor(totalTimeSec % 60);
              mediaController.totalMediaTime = totalTimeHr + ":" + totalTimeMin + ":" + totalTimeSec;
         }
+
+        onMediaFinished: runtimeData.stopped = true
     }
 
     MediaCenterComponents.MediaController {
