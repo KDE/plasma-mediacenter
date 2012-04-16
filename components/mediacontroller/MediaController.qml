@@ -25,6 +25,7 @@ PlasmaCore.FrameSvgItem {
     id: controlBarFrame
     imagePath: "widgets/background"
     enabledBorders: "LeftBorder|RightBorder|BottomBorder"
+    visible: false
 
     property QtObject runtimeDataObject
     signal requestToggleBrowser
