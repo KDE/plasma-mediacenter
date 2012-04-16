@@ -61,6 +61,7 @@ Rectangle {
         volume: runtimeData.volume
 
         onClicked: mediaController.visible = mediaController.visible ? false : true
+        onEscapePressed: mediaBrowser.visible = true
         onCurrentTimeChanged: {
             runtimeData.currentTime = currentTime
             currentTimeSec = currentTime /1000;
@@ -137,7 +138,7 @@ Rectangle {
         currentBrowsingBackend: runtimeData.currentBrowsingBackend
         onCurrentBrowsingBackendChanged: visible = true
         onVisibleChanged: {
-            if (visible) loadModel();
+            if (visible) { loadModel(); focus = true }
         }
 
         Keys.onPressed: {
