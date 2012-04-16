@@ -34,6 +34,7 @@ FocusScope {
     signal clicked
     signal mediaFinished
     signal mediaStarted
+    signal escapePressed
 
     QtMultimediaKit.Video {
         id: video
@@ -57,5 +58,5 @@ FocusScope {
         onClicked: mediaPlayerRootRect.clicked()
     }
 
-    Keys.onEscapePressed: mediaPlayerRootRect.clicked()
+    Keys.onEscapePressed: mediaPlayerRootRect.escapePressed()
 }
