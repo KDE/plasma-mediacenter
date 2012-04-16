@@ -33,12 +33,14 @@ FocusScope {
 
     signal clicked
     signal mediaFinished
+    signal mediaStarted
 
     QtMultimediaKit.Video {
         id: video
         anchors.fill: parent
 
         onStopped: mediaPlayerRootRect.mediaFinished()
+        onStarted: mediaPlayerRootRect.mediaStarted()
     }
 
     onPlayingChanged: if (playing) video.play();
