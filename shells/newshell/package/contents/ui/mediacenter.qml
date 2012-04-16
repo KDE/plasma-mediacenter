@@ -69,7 +69,7 @@ Rectangle {
             }
         }
 
-        onMediaFinished: runtimeData.stopped = true
+        onMediaFinished: {runtimeData.currentTime= 0; runtimeData.stopped = true;}
         onMediaStarted: runtimeData.playing = true
     }
 
