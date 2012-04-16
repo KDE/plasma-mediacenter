@@ -27,6 +27,8 @@ PlasmaCore.FrameSvgItem {
     enabledBorders: "LeftBorder|RightBorder|BottomBorder"
 
     property QtObject runtimeDataObject
+    property alias curMediaTime: curMediaTime.text
+    property alias totalMediaTime: totalMediaTime.text
 
     Row {
         id: mediaController
@@ -102,6 +104,18 @@ PlasmaCore.FrameSvgItem {
             Component.onCompleted: {
                 maximumValue = (function() { return runtimeDataObject.totalTime; })
                 value = (function() { return runtimeDataObject.currentTime; })
+            }
+
+            Text {
+                id: curMediaTime
+                text: ""
+                anchors.left: parent.left
+            }
+
+            Text {
+                id: totalMediaTime
+                text: ""
+                anchors.right: parent.right
             }
         }
 

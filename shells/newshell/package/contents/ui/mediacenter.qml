@@ -24,6 +24,13 @@ import org.kde.plasma.components 0.1 as PlasmaComponents
 
 Rectangle {
     id: mediaCenterRootItem
+    property int totalTimeHr
+    property int totalTimeMin
+    property int totalTimeSec
+    property int currentTimeHr
+    property int currentTimeMin
+    property int currentTimeSec
+
     gradient: Gradient {
         GradientStop { position: 0.0; color: "#000000" }
         GradientStop { position: 0.5; color: "#222222" }
@@ -54,7 +61,15 @@ Rectangle {
         volume: runtimeData.volume
 
         onClicked: mediaBrowser.visible = mediaBrowser.visible ? false : true
-        onCurrentTimeChanged: runtimeData.currentTime = currentTime
+        onCurrentTimeChanged: {
+            runtimeData.currentTime = currentTime
+            currentTimeSec = currentTime /1000;
+            currentTimeHr = Math.floor(currentTimeSec / 3600);
+            currentTimeSec %= 3600;
+            currentTimeMin = Math.floor(currentTimeSec / 60);
+            currentTimeSec = Math.floor(currentTimeSec % 60);
+            mediaController.curMediaTime = currentTimeHr + ":"  + currentTimeMin + ":" + currentTimeSec;
+        }
 
         onStoppedChanged: runtimeData.stopped = stopped
         Keys.onPressed: {
@@ -67,6 +82,15 @@ Rectangle {
                     mediaPlayer.paused = false;
                 }
             }
+        }
+
+        onTotalTimeChanged: {
+             totalTimeSec = totalTime / 1000;
+             totalTimeHr = Math.floor(totalTimeSec / 3600);
+             totalTimeSec %= 3600;
+             totalTimeMin = Math.floor(totalTimeSec / 60);
+             totalTimeSec = Math.floor(totalTimeSec % 60);
+             mediaController.totalMediaTime = totalTimeHr + ":" + totalTimeMin + ":" + totalTimeSec;
         }
     }
 
