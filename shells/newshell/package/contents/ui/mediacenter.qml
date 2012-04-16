@@ -60,7 +60,7 @@ Rectangle {
         stopped: runtimeData.stopped
         volume: runtimeData.volume
 
-        onClicked: mediaBrowser.visible = mediaBrowser.visible ? false : true
+        onClicked: mediaController.visible = mediaController.visible ? false : true
         onCurrentTimeChanged: {
             runtimeData.currentTime = currentTime
             currentTimeSec = currentTime /1000;
@@ -70,8 +70,7 @@ Rectangle {
             currentTimeSec = Math.floor(currentTimeSec % 60);
             mediaController.curMediaTime = currentTimeHr + ":"  + currentTimeMin + ":" + currentTimeSec;
         }
-
-        onStoppedChanged: runtimeData.stopped = stopped
+        
         Keys.onPressed: {
             if(event.key == 16777344) { //Media Play key
                 if(mediaPlayer.playing) {
@@ -104,13 +103,8 @@ Rectangle {
         }
 
         runtimeDataObject: runtimeData
-        onVisibleChanged: {
-            if(visible) {
-                buttonText.text = "Hide Controller"
-            } else {
-                buttonText.text = "show Controller"
-            }
-        }
+
+        onRequestToggleBrowser: mediaBrowser.visible = !mediaBrowser.visible
     }
 
     MediaCenterComponents.MediaWelcome {
@@ -186,23 +180,5 @@ Rectangle {
 
         iconSource: "plasma"
         onClicked: aboutPmc.open()
-    }
-
-    PlasmaComponents.Button {
-        anchors.right: parent.right; anchors.top: parent.top
-        width: 100
-        height: 30
-        Text {
-            id: buttonText
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: parent.verticalCenter
-        }
-        onClicked: {
-            if(mediaController.visible) {
-                mediaController.visible = false
-            } else {
-                mediaController.visible = true
-            }
-        }
     }
 }

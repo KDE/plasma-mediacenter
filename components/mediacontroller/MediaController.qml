@@ -27,8 +27,11 @@ PlasmaCore.FrameSvgItem {
     enabledBorders: "LeftBorder|RightBorder|BottomBorder"
 
     property QtObject runtimeDataObject
+
     property alias curMediaTime: curMediaTime.text
     property alias totalMediaTime: totalMediaTime.text
+
+    signal requestToggleBrowser
 
     Row {
         id: mediaController
@@ -37,6 +40,19 @@ PlasmaCore.FrameSvgItem {
         }
         width: parent.width * 0.9
         height: parent.height * 0.8
+
+        PlasmaComponents.ToolButton {
+            id: showBrowserButton
+            width: parent.height
+            height: width
+            iconSource: "view-catalog"
+            onClicked: controlBarFrame.requestToggleBrowser()
+        }
+
+        Item {
+            width: parent.height
+            height: width
+        }
 
         PlasmaComponents.ToolButton {
             id: backwardButton
