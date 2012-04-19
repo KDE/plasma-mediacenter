@@ -69,13 +69,14 @@ MainWindow::MainWindow(QWidget *parent) : KMainWindow(parent)
     resize(1024, 768);
 }
 
-void MainWindow::toggleFullScreen()
+bool MainWindow::toggleFullScreen()
 {
     if (windowState() & Qt::WindowFullScreen) {
         setWindowState(windowState() & ~Qt::WindowFullScreen);
     } else {
         setWindowState(windowState() | Qt::WindowFullScreen);
     }
+    return (windowState() & Qt::WindowFullScreen);
 }
 
 MainWindow::~MainWindow()

@@ -162,4 +162,22 @@ Rectangle {
         iconSource: "plasma"
         onClicked: aboutPmc.open()
     }
+
+    PlasmaComponents.ToolButton {
+        anchors.right: parent.right; anchors.top: parent.top;
+        width: 64
+        height: 64
+
+        property bool fullScreen
+
+        iconSource: "view-fullscreen"
+        onClicked: {
+            fullScreen =  mainwindow.toggleFullScreen();
+            if(fullScreen) {
+                iconSource = "view-restore"
+            } else {
+                iconSource = "view-fullscreen"
+            }
+        }
+    }
 }
