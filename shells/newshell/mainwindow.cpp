@@ -26,7 +26,11 @@
 
 #include <QtDeclarative/QDeclarativeView>
 #include <QtDeclarative/QDeclarativeContext>
+
+#ifdef QT_MULTIMEDIA_KIT_FOUND
 #include <QtMultimediaKit/QVideoWidget>
+#endif
+
 #include <QtOpenGL/QGLWidget>
 #include <QApplication>
 #include <QDebug>
