@@ -72,6 +72,7 @@ MainWindow::MainWindow(QWidget *parent) : KMainWindow(parent)
     BackendsModel *backendsModel = new BackendsModel(view->engine(), this);
     view->rootContext()->setContextProperty("backendsModel", backendsModel);
     view->rootContext()->setContextProperty("mainwindow", this);
+    view->rootContext()->setContextProperty("startedFullScreen", isFullScreen());
 
     m_structure = Plasma::PackageStructure::load("Plasma/Generic");
     Plasma::Package *package = new Plasma::Package(QString(), "org.kde.plasma.mediacenter", m_structure);
