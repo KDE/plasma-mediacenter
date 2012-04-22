@@ -170,7 +170,7 @@ Rectangle {
 
         property bool fullScreen
 
-        iconSource: "view-fullscreen"
+        iconSource: startedFullScreen ? "view-restore" : "view-fullscreen"
         onClicked: {
             fullScreen =  mainwindow.toggleFullScreen();
             if(fullScreen) {
