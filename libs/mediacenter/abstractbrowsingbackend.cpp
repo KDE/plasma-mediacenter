@@ -188,3 +188,13 @@ bool AbstractBrowsingBackend::okToLoad() const
 {
     return true;
 }
+
+bool AbstractBrowsingBackend::supportsSearch() const
+{
+    return false;
+}
+
+void AbstractBrowsingBackend::search(const QString& searchTerm)
+{
+    // Does nothing
+}

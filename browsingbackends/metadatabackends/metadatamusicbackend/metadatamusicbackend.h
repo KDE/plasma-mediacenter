@@ -57,6 +57,7 @@ public:
     bool level1Visible() const;
     bool level2Visible() const;
     bool level3Visible() const;
+    bool supportsSearch() const;
 
 private Q_SLOTS:
     void showAllMusic();

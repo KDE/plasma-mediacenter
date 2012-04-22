@@ -66,6 +66,12 @@ FocusScope {
         }
         mediaBrowserViewItem.mediaBrowserGridView = object;
         object.focus = true
+
+        if (currentBrowsingBackend.supportsSearch()) {
+            searchMedia.visible = true
+        } else {
+            searchMedia.visible = false
+        }
     }
 
     function loadModel()
@@ -98,4 +104,19 @@ FocusScope {
                 backStopped = true
             }
         }
+
+    PlasmaComponents.TextField {
+        id: searchMedia
+        width: parent.width
+        height: 30
+
+        anchors {
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+        }
+
+        placeholderText: "Search..."
+        onTextChanged: currentBrowsingBackend.search(text);
+    }
 }

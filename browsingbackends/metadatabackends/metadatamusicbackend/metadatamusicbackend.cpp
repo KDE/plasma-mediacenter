@@ -175,4 +175,9 @@ bool MetadataMusicBackend::level3Visible() const
     return m_level3Visible;
 }
 
+bool MetadataMusicBackend::supportsSearch() const
+{
+    return false;
+}
+
 #include "metadatamusicbackend.moc"

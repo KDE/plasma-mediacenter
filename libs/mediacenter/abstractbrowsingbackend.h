@@ -198,6 +198,15 @@ public:
      */
     virtual bool okToLoad() const;
 
+    /**
+     * This method is called by mediabrowser during runtime to ask whether backend
+     * supports search or not
+     * default implementaion return false
+     */
+    Q_INVOKABLE virtual bool supportsSearch() const;
+
+    Q_INVOKABLE virtual void search(const QString &searchTerm);
+
 signals:
     void modelChanged();
     void metadataModelChanged();
