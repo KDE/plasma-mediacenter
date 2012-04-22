@@ -23,6 +23,7 @@
 
 #include <QtDeclarative/QDeclarativeComponent>
 #include <QtDeclarative/QDeclarativeEngine>
+#include <QtDeclarative/QDeclarativePropertyMap>
 
 AbstractMetadataBackend::AbstractMetadataBackend(QObject* parent, const QVariantList& args)
     : AbstractBrowsingBackend(parent, args)
@@ -48,6 +49,22 @@ bool AbstractMetadataBackend::okToLoad() const
     component.setData("import org.kde.metadatamodels 0.1\nMetadataModel {}\n", QUrl());
 
     return !component.isError();
+}
+
+bool AbstractMetadataBackend::supportsSearch() const
+{
+    return true;
+}
+
+void AbstractMetadataBackend::search(const QString& searchTerm)
+{
+    QDeclarativePropertyMap *map
+            = qobject_cast<QDeclarativePropertyMap*>(metadataModel()->property("extraParameters").value<QObject*>());
+    map->insert("nfo:fileName", searchTerm);
+    //FIXME: Hack because map->insert won't make the model update
+    QVariantList list; list.append("test");
+    metadataModel()->setProperty("tags", list);
+    metadataModel()->setProperty("tags", QVariantList());
 }
 
 #include "abstractmetadatabackend.moc"
