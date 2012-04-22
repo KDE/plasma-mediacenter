@@ -28,6 +28,8 @@ class AbstractMetadataBackend : public MediaCenter::AbstractBrowsingBackend
 public:
     AbstractMetadataBackend (QObject* parent, const QVariantList& args);
     bool okToLoad() const;
+    bool supportsSearch() const;
+    virtual void search(const QString& searchTerm);
 
 public Q_SLOTS:
     virtual void init();

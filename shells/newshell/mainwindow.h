@@ -33,7 +33,7 @@ public:
     Q_INVOKABLE void closeMediaCenter();
 
 public Q_SLOTS:
-    void toggleFullScreen();
+    Q_INVOKABLE bool toggleFullScreen();
 
 private:
     Plasma::PackageStructure::Ptr m_structure;

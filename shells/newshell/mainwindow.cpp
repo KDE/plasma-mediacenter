@@ -27,6 +27,11 @@
 
 #include <QtDeclarative/QDeclarativeView>
 #include <QtDeclarative/QDeclarativeContext>
+
+#ifdef QT_MULTIMEDIA_KIT_FOUND
+#include <QtMultimediaKit/QVideoWidget>
+#endif
+
 #include <QtOpenGL/QGLWidget>
 #include <QApplication>
 #include <QDebug>
@@ -40,10 +45,16 @@ MainWindow::MainWindow(QWidget *parent) : KMainWindow(parent)
 
     QDeclarativeView *view = new QDeclarativeView(this);
 
-    if (!args->isSet("disable-opengl")) {
+    if (args->isSet("opengl")) {
         QGLWidget *glWidget = new QGLWidget;
         glWidget->setAutoFillBackground(false);
         view->setViewport(glWidget);
+    } else {
+#ifdef QT_MULTIMEDIA_KIT_FOUND
+        QVideoWidget *widget = new QVideoWidget;
+        widget->show();
+        view->setViewport(widget);
+#endif
     }
     args->clear();
       
@@ -64,6 +75,7 @@ MainWindow::MainWindow(QWidget *parent) : KMainWindow(parent)
     PlaylistModel *playlistModel = new PlaylistModel(this);
     view->rootContext()->setContextProperty("playlistModel", playlistModel);
     view->rootContext()->setContextProperty("mainwindow", this);
+    view->rootContext()->setContextProperty("startedFullScreen", isFullScreen());
 
     m_structure = Plasma::PackageStructure::load("Plasma/Generic");
     Plasma::Package *package = new Plasma::Package(QString(), "org.kde.plasma.mediacenter", m_structure);
@@ -72,13 +84,14 @@ MainWindow::MainWindow(QWidget *parent) : KMainWindow(parent)
     resize(1024, 768);
 }
 
-void MainWindow::toggleFullScreen()
+bool MainWindow::toggleFullScreen()
 {
     if (windowState() & Qt::WindowFullScreen) {
         setWindowState(windowState() & ~Qt::WindowFullScreen);
     } else {
         setWindowState(windowState() | Qt::WindowFullScreen);
     }
+    return (windowState() & Qt::WindowFullScreen);
 }
 
 MainWindow::~MainWindow()

@@ -2,6 +2,7 @@
 Type=Service
 Icon=folder-image
 Name=Browse Pictures
+Name[da]=Gennemse billeder
 Name[de]=Bilder durchsuchen
 Name[es]=Explorar imágenes
 Name[nl]=Door afbeeldingen bladeren

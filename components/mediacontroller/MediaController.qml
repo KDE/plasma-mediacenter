@@ -25,8 +25,14 @@ PlasmaCore.FrameSvgItem {
     id: controlBarFrame
     imagePath: "widgets/background"
     enabledBorders: "LeftBorder|RightBorder|BottomBorder"
+    visible: false
 
     property QtObject runtimeDataObject
+
+    property alias curMediaTime: curMediaTime.text
+    property alias totalMediaTime: totalMediaTime.text
+
+    signal requestToggleBrowser
 
     Row {
         id: mediaController
@@ -35,6 +41,19 @@ PlasmaCore.FrameSvgItem {
         }
         width: parent.width * 0.9
         height: parent.height * 0.8
+
+        PlasmaComponents.ToolButton {
+            id: showBrowserButton
+            width: parent.height
+            height: width
+            iconSource: "view-catalog"
+            onClicked: controlBarFrame.requestToggleBrowser()
+        }
+
+        Item {
+            width: parent.height
+            height: width
+        }
 
         PlasmaComponents.ToolButton {
             id: backwardButton
@@ -58,7 +77,7 @@ PlasmaCore.FrameSvgItem {
             onClicked: {
                 if (runtimeDataObject.playing) {
                     runtimeDataObject.playing = false; runtimeDataObject.paused = true;
-                } else if (runtimeDataObject.paused) {
+                } else if (runtimeDataObject.paused || runtimeDataObject.stopped) {
                     runtimeDataObject.playing = true; runtimeDataObject.paused = false;
                 }
             }
@@ -102,6 +121,18 @@ PlasmaCore.FrameSvgItem {
             Component.onCompleted: {
                 maximumValue = (function() { return runtimeDataObject.totalTime; })
                 value = (function() { return runtimeDataObject.currentTime; })
+            }
+
+            Text {
+                id: curMediaTime
+                text: ""
+                anchors.left: parent.left
+            }
+
+            Text {
+                id: totalMediaTime
+                text: ""
+                anchors.right: parent.right
             }
         }
 

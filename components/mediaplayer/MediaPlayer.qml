@@ -32,12 +32,16 @@ FocusScope {
     property alias volume: video.volume
 
     signal clicked
+    signal mediaFinished
+    signal mediaStarted
+    signal escapePressed
 
     QtMultimediaKit.Video {
         id: video
         anchors.fill: parent
 
-        onStopped: mediaPlayerRootRect.stopped = true
+        onStopped: mediaPlayerRootRect.mediaFinished()
+        onStarted: mediaPlayerRootRect.mediaStarted()
     }
 
     onPlayingChanged: if (playing) video.play();
@@ -54,5 +58,5 @@ FocusScope {
         onClicked: mediaPlayerRootRect.clicked()
     }
 
-    Keys.onEscapePressed: mediaPlayerRootRect.clicked()
+    Keys.onEscapePressed: mediaPlayerRootRect.escapePressed()
 }

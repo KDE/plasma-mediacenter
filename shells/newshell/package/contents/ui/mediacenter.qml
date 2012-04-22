@@ -24,6 +24,13 @@ import org.kde.plasma.components 0.1 as PlasmaComponents
 
 Rectangle {
     id: mediaCenterRootItem
+    property int totalTimeHr
+    property int totalTimeMin
+    property int totalTimeSec
+    property int currentTimeHr
+    property int currentTimeMin
+    property int currentTimeSec
+
     gradient: Gradient {
         GradientStop { position: 0.0; color: "#000000" }
         GradientStop { position: 0.5; color: "#222222" }
@@ -53,10 +60,19 @@ Rectangle {
         stopped: runtimeData.stopped
         volume: runtimeData.volume
 
-        onClicked: mediaBrowser.visible = mediaBrowser.visible ? false : true
-        onCurrentTimeChanged: runtimeData.currentTime = currentTime
+        onClicked: mediaController.visible = mediaController.visible ? false : true
+        onEscapePressed: mediaBrowser.visible = true
 
-        onStoppedChanged: runtimeData.stopped = stopped
+        onCurrentTimeChanged: {
+            runtimeData.currentTime = currentTime
+            currentTimeSec = currentTime /1000;
+            currentTimeHr = Math.floor(currentTimeSec / 3600);
+            currentTimeSec %= 3600;
+            currentTimeMin = Math.floor(currentTimeSec / 60);
+            currentTimeSec = Math.floor(currentTimeSec % 60);
+            mediaController.curMediaTime = currentTimeHr + ":"  + currentTimeMin + ":" + currentTimeSec;
+        }
+
         Keys.onPressed: {
             if(event.key == 16777344) { //Media Play key
                 if(mediaPlayer.playing) {
@@ -68,25 +84,32 @@ Rectangle {
                 }
             }
         }
+
+        onTotalTimeChanged: {
+             totalTimeSec = totalTime / 1000;
+             totalTimeHr = Math.floor(totalTimeSec / 3600);
+             totalTimeSec %= 3600;
+             totalTimeMin = Math.floor(totalTimeSec / 60);
+             totalTimeSec = Math.floor(totalTimeSec % 60);
+             mediaController.totalMediaTime = totalTimeHr + ":" + totalTimeMin + ":" + totalTimeSec;
+        }
+
+        onMediaFinished: {runtimeData.currentTime= 0; runtimeData.stopped = true;}
+        onMediaStarted: runtimeData.playing = true
     }
 
     MediaCenterComponents.MediaController {
         id: mediaController
         height: parent.height * 0.08
         width: parent.width * 0.8
-        visible: !mediaWelcome.visible
+
         anchors {
             horizontalCenter: parent.horizontalCenter; top: parent.top
         }
 
         runtimeDataObject: runtimeData
-        onVisibleChanged: {
-            if(visible) {
-                buttonText.text = "Hide Controller"
-            } else {
-                buttonText.text = "show Controller"
-            }
-        }
+
+        onRequestToggleBrowser: mediaBrowser.visible = !mediaBrowser.visible
     }
 
     MediaCenterComponents.MediaWelcome {
@@ -100,6 +123,7 @@ Rectangle {
         }
 
         onBackendSelected: { runtimeData.currentBrowsingBackend = selectedBackend; visible = false }
+        onVisibleChanged: mediaController.visible = !visible
     }
 
     MediaCenterComponents.MediaBrowser {
@@ -115,7 +139,7 @@ Rectangle {
         currentBrowsingBackend: runtimeData.currentBrowsingBackend
         onCurrentBrowsingBackendChanged: visible = true
         onVisibleChanged: {
-            if (visible) loadModel();
+            if (visible) { loadModel(); focus = true }
         }
 
         Keys.onPressed: {
@@ -180,21 +204,20 @@ Rectangle {
         onClicked: aboutPmc.open()
     }
 
-    PlasmaComponents.Button {
-        id: controllerButton
-        anchors.right: parent.right; anchors.top: parent.top
-        width: 100
-        height: 30
-        Text {
-            id: buttonText
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: parent.verticalCenter
-        }
+    PlasmaComponents.ToolButton {
+        anchors.right: parent.right; anchors.top: parent.top;
+        width: 64
+        height: 64
+
+        property bool fullScreen
+
+        iconSource: startedFullScreen ? "view-restore" : "view-fullscreen"
         onClicked: {
-            if(mediaController.visible) {
-                mediaController.visible = false
+            fullScreen =  mainwindow.toggleFullScreen();
+            if(fullScreen) {
+                iconSource = "view-restore"
             } else {
-                mediaController.visible = true
+                iconSource = "view-fullscreen"
             }
         }
     }
