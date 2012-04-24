@@ -2,6 +2,7 @@
 Type=Service
 Icon=image-x-generic
 Name=All Pictures
+Name[cs]=Všechny obrázky
 Name[da]=Alle billeder
 Name[de]=Alle Bilder
 Name[es]=Todas las imágenes
