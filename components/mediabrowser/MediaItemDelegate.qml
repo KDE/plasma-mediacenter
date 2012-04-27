@@ -123,6 +123,7 @@ Item {
             if (isExpandable) {
                 backend.expand(index);
             } else {
+                playlistModel.currentIndex = -1;
                 mediaItemDelegateItem.playRequested(mediaUrl)
             }
         }

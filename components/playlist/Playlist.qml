@@ -39,6 +39,7 @@ import QtQuick 1.1
                 hoverEnabled: true
                 anchors.fill: parent
                 onClicked: {
+                    playlistModel.currentIndex = index
                     playlistItem.playRequested(display)
                 }
             }

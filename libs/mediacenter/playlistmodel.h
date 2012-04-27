@@ -27,14 +27,22 @@
 class MEDIACENTER_EXPORT PlaylistModel : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(int currentIndex READ currentIndex WRITE setCurrentIndex NOTIFY currentIndexChanged)
 public:
     explicit PlaylistModel(QObject* parent = 0);
     virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
     virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
     Q_INVOKABLE  void addToPlaylist(const QString &url);
+    Q_INVOKABLE QString getNextUrl();
+    int currentIndex();
+    void setCurrentIndex(int index);
+
+signals:
+    void currentIndexChanged();
 
 private:
     QStringList m_musicList;
+    int m_currentIndex;
 };
 
 #endif // PLAYLISTMODEL_H

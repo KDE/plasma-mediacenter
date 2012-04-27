@@ -94,7 +94,16 @@ Rectangle {
              mediaController.totalMediaTime = totalTimeHr + ":" + totalTimeMin + ":" + totalTimeSec;
         }
 
-        onMediaFinished: {runtimeData.currentTime= 0; runtimeData.stopped = true;}
+        onMediaFinished: {
+            if ((currentTime == totalTime) && (playlistModel.currentIndex != -1)) {
+                playlist.playRequested(playlistModel.getNextUrl());
+                console.log("playlist");
+            } else {
+                console.log(" not playlist" + currentTime + " = " + totalTime);
+                runtimeData.currentTime= 0;
+                runtimeData.stopped = true;
+            }
+        }
         onMediaStarted: runtimeData.playing = true
     }
 
@@ -205,7 +214,7 @@ Rectangle {
     }
 
     PlasmaComponents.ToolButton {
-        anchors.right: parent.right; anchors.top: parent.top;
+        anchors.left: parent.left; anchors.top: parent.top;
         width: 64
         height: 64
 

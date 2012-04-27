@@ -22,7 +22,7 @@
 
 PlaylistModel::PlaylistModel(QObject* parent): QAbstractListModel(parent)
 {
-    
+    m_currentIndex = -1;
 }
 
 QVariant PlaylistModel::data(const QModelIndex& index, int role) const
@@ -48,3 +48,19 @@ void PlaylistModel::addToPlaylist(const QString& url)
     endResetModel();
 }
 
+QString PlaylistModel::getNextUrl()
+{
+    m_currentIndex += 1;
+    return m_musicList.at(m_currentIndex);
+}
+
+int PlaylistModel::currentIndex()
+{
+    return m_currentIndex;
+}
+
+void PlaylistModel::setCurrentIndex(int index)
+{
+    m_currentIndex = index;
+    emit currentIndexChanged();
+}
