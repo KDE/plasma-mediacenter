@@ -53,7 +53,7 @@ Rectangle {
         stopped: runtimeData.stopped
         volume: runtimeData.volume
 
-        onClicked: mediaController.visible = mediaController.visible ? false : true
+        onClicked: mediaController.state = mediaController.state ? "" : "hidden"
         onEscapePressed: mediaBrowser.visible = true
         onCurrentTimeChanged: runtimeData.currentTime = currentTime
 
@@ -83,8 +83,16 @@ Rectangle {
         }
 
         runtimeDataObject: runtimeData
-
         onRequestToggleBrowser: mediaBrowser.visible = !mediaBrowser.visible
+
+        states: [
+            State {
+                name: "hidden"
+                AnchorChanges { target: mediaController; anchors.top: undefined; anchors.bottom: parent.top }
+            }
+        ]
+
+        transitions: [ Transition { AnchorAnimation { duration: 500 } } ]
     }
 
     MediaCenterComponents.MediaWelcome {
