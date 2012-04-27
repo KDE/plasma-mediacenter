@@ -109,10 +109,10 @@ FocusScope {
         id: searchMedia
         width: parent.width
         height: 30
+        clearButtonShown: true
 
         anchors {
             left: parent.left
-            right: parent.right
             bottom: parent.bottom
         }
 
