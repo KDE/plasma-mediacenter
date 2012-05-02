@@ -24,7 +24,7 @@ import QtQuick 1.1
     signal playRequested(string url)
 
     height: parent.height
-    width: parent.width
+    width: parent.width / 3
     color: "black"
     ListView {
         anchors.fill:parent

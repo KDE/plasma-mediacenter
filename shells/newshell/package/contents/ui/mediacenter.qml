@@ -187,13 +187,22 @@ Rectangle {
                 backStopped = false
             }
         }
+
+         states: [
+            State {
+                name: "resize"
+                AnchorChanges { target: mediaBrowser; anchors.right: playlist.left }
+            }
+        ]
+
+        transitions: [ Transition { AnchorAnimation { duration: 100 } } ]
     }
 
      MediaCenterComponents.Playlist {
          id: playlist
-         visible: false
          anchors.top: playlistButton.bottom
-         anchors.right: parent.right
+         anchors.left: parent.right
+         anchors.right: undefined
          onPlayRequested: {
             z = 0
             mediaPlayer.visible = true
@@ -203,6 +212,15 @@ Rectangle {
             mediaBrowser.visible = false
             mediaPlayer.focus = true
         }
+
+         states: [
+            State {
+                name: "playlistShow"
+                AnchorChanges { target: playlist; anchors.right: parent.right; anchors.left: undefined}
+            }
+        ]
+
+        transitions: [ Transition { AnchorAnimation { duration: 100 } } ]
      }
 
     MediaCenterComponents.AboutPMC {
@@ -253,11 +271,13 @@ Rectangle {
         onClicked: {
             if(playlistButtonText.text == "Show Playlist") {
                 playlistButtonText.text = "Hide Playlist";
-                playlist.visible = true
+                mediaBrowser.state = "resize"
+                playlist.state = "playlistShow"
                 playlist.z = 2
             } else {
                 playlistButtonText.text = "Show Playlist";
-                playlist.visible = false
+                mediaBrowser.state = ""
+                playlist.state = ""
             }
         }
      }
