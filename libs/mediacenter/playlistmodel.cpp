@@ -23,12 +23,17 @@
 PlaylistModel::PlaylistModel(QObject* parent): QAbstractListModel(parent)
 {
     m_currentIndex = -1;
+    setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
 }
 
 QVariant PlaylistModel::data(const QModelIndex& index, int role) const
 {
     if (role == Qt::DisplayRole) {
-        return m_musicList.at(index.row());
+        return m_musicList.at(index.row()).mediaName();
+    }
+
+    if (role == MediaCenter::MediaUrlRole) {
+        return m_musicList.at(index.row()).mediaUrl();
     }
 
     return QVariant();
@@ -39,19 +44,22 @@ int PlaylistModel::rowCount(const QModelIndex& parent) const
     return m_musicList.count();
 }
 
-void PlaylistModel::addToPlaylist(const QString& url)
+void PlaylistModel::addToPlaylist(const QString& url, const QString& name)
 {
     beginResetModel();
-//     foreach (QString s, m_musicList)
-//         kDebug() << s;
-    m_musicList << url;
+
+    PlaylistItem item;
+    item.setMediaName(name);
+    item.setMediaUrl(url);
+    m_musicList.append(item);
+
     endResetModel();
 }
 
 QString PlaylistModel::getNextUrl()
 {
     m_currentIndex += 1;
-    return m_musicList.at(m_currentIndex);
+    return m_musicList.at(m_currentIndex).mediaUrl();
 }
 
 int PlaylistModel::currentIndex()
@@ -63,4 +71,24 @@ void PlaylistModel::setCurrentIndex(int index)
 {
     m_currentIndex = index;
     emit currentIndexChanged();
+}
+
+QString PlaylistItem::mediaName() const
+{
+    return m_mediaName;
+}
+
+QString PlaylistItem::mediaUrl() const
+{
+    return m_mediaUrl;
+}
+
+void PlaylistItem::setMediaName(const QString name)
+{
+    m_mediaName = name;
+}
+
+void PlaylistItem::setMediaUrl(const QString url)
+{
+    m_mediaUrl =  url;
 }

@@ -29,18 +29,18 @@ import QtQuick 1.1
     ListView {
         anchors.fill:parent
         model: playlistModel
-        spacing: 2
+        spacing: 3
 
         delegate:
         Item{
             width: parent.width
-            height: 20
+            height: 30
             MouseArea {
                 hoverEnabled: true
                 anchors.fill: parent
                 onClicked: {
                     playlistModel.currentIndex = index
-                    playlistItem.playRequested(display)
+                    playlistItem.playRequested(mediaUrl)
                 }
             }
             Rectangle {
@@ -50,6 +50,8 @@ import QtQuick 1.1
                 Text {
                     text: display
                     color: "white"
+                    elide: Text.ElideRight
+                    font.pixelSize: 18
                     anchors.verticalCenter: parent.verticalCenter
                 }
             }

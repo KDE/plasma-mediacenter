@@ -21,8 +21,24 @@
 #define PLAYLISTMODEL_H
 
 #include <QAbstractItemModel>
-#include <QStringList>
+#include <QString>
+#include <QList>
 #include "mediacenter_export.h"
+#include "mediacenter.h"
+
+class PlaylistItem
+{
+
+public:
+    void setMediaName(const QString name);
+    void setMediaUrl(const QString url);
+    QString mediaName() const;
+    QString mediaUrl() const;
+
+private:
+    QString m_mediaName;
+    QString m_mediaUrl;
+};
 
 class MEDIACENTER_EXPORT PlaylistModel : public QAbstractListModel
 {
@@ -32,7 +48,7 @@ public:
     explicit PlaylistModel(QObject* parent = 0);
     virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
     virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
-    Q_INVOKABLE  void addToPlaylist(const QString &url);
+    Q_INVOKABLE  void addToPlaylist(const QString &url, const QString &name);
     Q_INVOKABLE QString getNextUrl();
     int currentIndex();
     void setCurrentIndex(int index);
@@ -41,7 +57,7 @@ signals:
     void currentIndexChanged();
 
 private:
-    QStringList m_musicList;
+    QList<PlaylistItem> m_musicList;
     int m_currentIndex;
 };
 

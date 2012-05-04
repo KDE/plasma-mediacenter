@@ -150,7 +150,8 @@ Item {
         anchors.right: rootColumn.right
         visible: false
         onClicked: {
-            playlistModel.addToPlaylist (mediaUrl);
+            playlistModel.addToPlaylist (mediaUrl, display);
         }
     }
 }
+
