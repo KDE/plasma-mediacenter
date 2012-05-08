@@ -66,6 +66,16 @@ QString PlaylistModel::getNextUrl()
     return m_musicList.at(m_currentIndex).mediaUrl();
 }
 
+QString PlaylistModel::getPreviousUrl()
+{
+    if (m_currentIndex == 0) {
+        m_currentIndex = m_musicList.count() - 1;
+    } else {
+        m_currentIndex -= 1;
+    }
+    return m_musicList.at(m_currentIndex).mediaUrl();
+}
+
 int PlaylistModel::currentIndex()
 {
     return m_currentIndex;

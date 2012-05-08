@@ -111,6 +111,18 @@ Rectangle {
             }
         }
 
+        onPlayNext: {
+            if (playlistModel.currentIndex != -1) {
+                playlist.playRequested(playlistModel.getNextUrl());
+            }
+        }
+
+        onPlayPrevious: {
+            if (playlistModel.currentIndex != -1) {
+                playlist.playRequested(playlistModel.getPreviousUrl());
+            }
+        }
+
         runtimeDataObject: runtimeData
         onRequestToggleBrowser: mediaBrowser.visible = !mediaBrowser.visible
 

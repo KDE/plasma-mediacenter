@@ -50,6 +50,7 @@ public:
     virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
     Q_INVOKABLE  void addToPlaylist(const QString &url, const QString &name);
     Q_INVOKABLE QString getNextUrl();
+    Q_INVOKABLE QString getPreviousUrl();
     int currentIndex();
     void setCurrentIndex(int index);
 
