@@ -30,6 +30,7 @@ Rectangle {
         anchors.margins: 5
         font.pointSize: 16
         verticalAlignment: Text.AlignVCenter
+        elide: Text.ElideRight
 
         MouseArea {
             id: mouseArea

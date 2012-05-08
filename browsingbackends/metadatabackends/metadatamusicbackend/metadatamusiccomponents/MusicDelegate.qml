@@ -29,6 +29,7 @@ Rectangle {
         anchors.fill: parent
         anchors.margins: 5
         font.pointSize: 16
+        elide: Text.ElideRight
         verticalAlignment: Text.AlignVCenter
 
         MouseArea {
