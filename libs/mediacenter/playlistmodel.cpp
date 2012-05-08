@@ -58,7 +58,11 @@ void PlaylistModel::addToPlaylist(const QString& url, const QString& name)
 
 QString PlaylistModel::getNextUrl()
 {
-    m_currentIndex += 1;
+    if (m_currentIndex == m_musicList.count() - 1) {
+        m_currentIndex = 0;
+    } else {
+        m_currentIndex += 1;
+    }
     return m_musicList.at(m_currentIndex).mediaUrl();
 }
 
