@@ -82,12 +82,12 @@ FocusScope {
 
     PlasmaComponents.ToolButton {
         id: back
-        width: 50
-        height: 50
+        width: 64
+        height: 64
         iconSource: "go-previous";
         anchors {
             left: parent.left
-            bottom: parent.top
+            top: parent.top
         }
 
         onClicked: {

@@ -31,6 +31,8 @@ PlasmaCore.FrameSvgItem {
 
     property alias curMediaTime: curMediaTime.text
     property alias totalMediaTime: totalMediaTime.text
+    property alias playlistButtonChecked: playlistButton.checked
+    signal playlistButtonClicked()
 
     signal requestToggleBrowser
 
@@ -172,6 +174,16 @@ PlasmaCore.FrameSvgItem {
                 else "audio-volume-high"
             }
             checkable: true
+        }
+
+        PlasmaComponents.ToolButton {
+            id: playlistButton
+            width: parent.height
+            height: parent.height
+            font.pointSize: 12
+            iconSource: "format-list-ordered"
+            checkable: true
+            onClicked: playlistButtonClicked();
         }
     }
 }

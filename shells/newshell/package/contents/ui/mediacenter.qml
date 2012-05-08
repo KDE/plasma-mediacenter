@@ -94,10 +94,21 @@ Rectangle {
     MediaCenterComponents.MediaController {
         id: mediaController
         height: parent.height * 0.08
-        width: parent.width * 0.8
+        width: parent.width
 
         anchors {
             horizontalCenter: parent.horizontalCenter; top: parent.top
+        }
+
+        onPlaylistButtonClicked: {
+            if(playlistButtonChecked) {
+                mediaBrowser.state = "resize"
+                playlist.state = "playlistShow"
+                playlist.z = 2
+            } else {
+                mediaBrowser.state = ""
+                playlist.state = ""
+            }
         }
 
         runtimeDataObject: runtimeData
@@ -184,7 +195,7 @@ Rectangle {
 
      MediaCenterComponents.Playlist {
          id: playlist
-         anchors.top: playlistButton.bottom
+         anchors.top: mediaController.bottom
          anchors.left: parent.right
          anchors.right: undefined
          onPlayRequested: {
@@ -224,9 +235,10 @@ Rectangle {
     }
 
     PlasmaComponents.ToolButton {
-        anchors.left: parent.left; anchors.top: parent.top;
+        anchors.right: parent.right; anchors.top: parent.top;
         width: 64
         height: 64
+        visible: mediaWelcome.visible ? true : false
 
         property bool fullScreen
 
@@ -240,30 +252,5 @@ Rectangle {
             }
         }
     }
-
-     PlasmaComponents.Button {
-        id: playlistButton
-        anchors.right: parent.right; anchors.top: controllerButton.bottom
-        width: 100
-        height: 30
-        Text {
-            id: playlistButtonText
-            text: "Show Playlist"
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: parent.verticalCenter
-        }
-        onClicked: {
-            if(playlistButtonText.text == "Show Playlist") {
-                playlistButtonText.text = "Hide Playlist";
-                mediaBrowser.state = "resize"
-                playlist.state = "playlistShow"
-                playlist.z = 2
-            } else {
-                playlistButtonText.text = "Show Playlist";
-                mediaBrowser.state = ""
-                playlist.state = ""
-            }
-        }
-     }
 
 }
