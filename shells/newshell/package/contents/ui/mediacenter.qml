@@ -82,6 +82,10 @@ Rectangle {
         onMediaStarted: runtimeData.playing = true
     }
 
+    MediaCenterComponents.ImageViewer {
+        id: mediaImageViewer
+    }
+
     MediaCenterComponents.MediaController {
         id: mediaController
         height: parent.height * 0.08
@@ -146,12 +150,21 @@ Rectangle {
             }   
         }
         onPlayRequested: {
-            mediaPlayer.visible = true
-            runtimeData.playing = true
-            mediaPlayer.url = url
-            mediaPlayer.play()
-            mediaBrowser.visible = false
-            mediaPlayer.focus = true
+            if (currentMediaType == "image") {
+                mediaImageViewer.visible = true
+                mediaImageViewer.source = url
+                mediaBrowser.visible = false
+                mediaImageViewer.focus = true
+                mediaBrowser.visible = false
+            } else {
+                runtimeData.playing = true
+                mediaPlayer.url = url
+                mediaPlayer.play()
+                mediaBrowser.visible = false
+                mediaPlayer.visible = true
+                mediaPlayer.focus = true
+                mediaImageViewer.visible = (currentMediaType == "audio") ? true : false
+            }
         }
 
         onBackStoppedChanged: {

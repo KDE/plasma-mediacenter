@@ -5,3 +5,4 @@ MediaPlayer 0.1 mediaplayer/MediaPlayer.qml
 MediaWelcome 0.1 mediawelcome/MediaWelcome.qml
 RuntimeData 0.1 runtimedata/RuntimeData.qml
 AboutPMC 0.1 aboutpmc/AboutPMC.qml
+ImageViewer 0.1 imageviewer/ImageViewer.qml
