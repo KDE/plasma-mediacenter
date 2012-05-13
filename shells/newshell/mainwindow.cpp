@@ -44,7 +44,7 @@ MainWindow::MainWindow(QWidget *parent) : KMainWindow(parent)
 
     QDeclarativeView *view = new QDeclarativeView(this);
 
-    if (args->isSet("opengl")) {
+    if (!args->isSet("disable-opengl")) {
         QGLWidget *glWidget = new QGLWidget;
         glWidget->setAutoFillBackground(false);
         view->setViewport(glWidget);
