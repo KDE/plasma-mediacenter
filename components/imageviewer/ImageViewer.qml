@@ -1,6 +1,7 @@
 /***************************************************************************
  *   Copyright 2011 Marco Martin <mart@kde.org>                            *
  *   Copyright 2012 Sinny Kumari <ksinny@gmail.com>                        *
+ *   Copyright 2012 Prashansha Bharti <prashansa007@gmail.com>             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,36 +22,20 @@
 import QtQuick 1.1
 import org.kde.plasma.graphicswidgets 0.1 as PlasmaWidgets
 import org.kde.plasma.core 0.1 as PlasmaCore
-import org.kde.plasma.graphicslayouts 4.7 as GraphicsLayouts
 
-Rectangle {
-    id: imageFrame
-    visible: false
-    width: Math.max(mainFlickable.width, mainImage.width*mainImage.scale)
-    height: Math.max(mainFlickable.height, mainImage.height*mainImage.scale)
-    clip: true
-    color: "black"
-    property alias source: mainImage.source
+Image {
+    id: mainImage
+    anchors.centerIn: parent
 
-    Flickable {
-        id: mainFlickable
-        anchors.fill: parent
-        contentWidth: mainImage.width*mainImage.scale
-        contentHeight: mainImage.height*mainImage.scale
-        interactive: contentWidth > width || contentHeight > height
+    cache: false
+    asynchronous: true
 
-        Image {
-            id: mainImage
-
-            anchors.centerIn: parent
-            onStatusChanged:{
-                if (mainImage.status == Image.Ready) {
-                    if (sourceSize.width < sourceSize.height) {
-                        mainImage.scale = Math.min(1, mainFlickable.height/sourceSize.height)
-                    } else {
-                        mainImage.scale = Math.min(1, mainFlickable.width/sourceSize.width)
-                    }
-                }
+    onStatusChanged: {console.log(status)
+        if (status == Image.Ready) {
+            if (sourceSize.width > sourceSize.height) {
+                mainImage.scale = Math.min(1, parent.height/sourceSize.height)
+            } else {
+                mainImage.scale = Math.min(1, parent.width/sourceSize.width)
             }
         }
     }
