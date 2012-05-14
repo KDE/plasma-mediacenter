@@ -28,19 +28,42 @@ import org.kde.plasma.components 0.1 as PlasmaComponents
     width: parent.width / 3
     color: "black"
 
-    PlasmaComponents.ToolButton {
-        id: clearPlaylist
-        width: 40
-        height: width
-        anchors.top: parent.top
-        iconSource: "edit-clear-list"
-        onClicked: {
-            playlistModel.clearPlaylist();
+    Rectangle {
+        id: rect
+        color: "lightblue"
+        anchors.left: clearPlaylist.right
+        width: parent.width
+        height: clearPlaylist.height
+        opacity: 0.4
+        anchors.bottomMargin: 5
+
+        PlasmaComponents.ToolButton {
+            id: clearPlaylist
+            width: 40
+            height: width
+            anchors.top: parent.top
+            iconSource: "edit-clear-list"
+            onClicked: {
+                playlistModel.clearPlaylist();
+            }
+        }
+
+        Text {
+            id: mediaCount
+            anchors.left: clearPlaylist.right
+            anchors.leftMargin: 10
+            anchors.verticalCenter: parent.verticalCenter
+            text: "MediaCount  "  + playlistList.count
+            font.pixelSize: 18
+            color: "white"
         }
     }
+
     ListView {
-        anchors.top: clearPlaylist.bottom
+        id: playlistList
+        anchors.top: rect.bottom
         anchors.bottom: parent.bottom
+        anchors.topMargin: 4
         model: playlistModel
         width: parent.width
         height: parent.height - clearPlaylist.height
