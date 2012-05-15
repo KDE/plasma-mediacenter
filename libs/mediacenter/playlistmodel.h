@@ -51,6 +51,7 @@ public:
     Q_INVOKABLE  void addToPlaylist(const QString &url, const QString &name);
     Q_INVOKABLE QString getNextUrl();
     Q_INVOKABLE QString getPreviousUrl();
+    Q_INVOKABLE void clearPlaylist();
     int currentIndex();
     void setCurrentIndex(int index);
 

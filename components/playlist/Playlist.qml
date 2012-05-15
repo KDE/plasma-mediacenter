@@ -18,6 +18,7 @@
  ***************************************************************************/
 
 import QtQuick 1.1
+import org.kde.plasma.components 0.1 as PlasmaComponents
 
  Rectangle {
     id: playlistItem
@@ -26,9 +27,23 @@ import QtQuick 1.1
     height: parent.height
     width: parent.width / 3
     color: "black"
+
+    PlasmaComponents.ToolButton {
+        id: clearPlaylist
+        width: 40
+        height: width
+        anchors.top: parent.top
+        iconSource: "edit-clear-list"
+        onClicked: {
+            playlistModel.clearPlaylist();
+        }
+    }
     ListView {
-        anchors.fill:parent
+        anchors.top: clearPlaylist.bottom
+        anchors.bottom: parent.bottom
         model: playlistModel
+        width: parent.width
+        height: parent.height - clearPlaylist.height
         spacing: 3
 
         delegate:

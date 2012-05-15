@@ -76,6 +76,16 @@ QString PlaylistModel::getPreviousUrl()
     return m_musicList.at(m_currentIndex).mediaUrl();
 }
 
+void PlaylistModel::clearPlaylist()
+{
+    beginResetModel();
+
+    m_musicList.clear();
+    m_currentIndex = -1;
+
+    endResetModel();
+}
+
 int PlaylistModel::currentIndex()
 {
     return m_currentIndex;
