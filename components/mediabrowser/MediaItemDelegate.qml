@@ -52,6 +52,9 @@ Item {
                     addToPlaylistButton.visible = true
                 }
                 Logic.checkAndLoad(iconImageLoader);
+                if (mediaType == "image") {
+                    itemText.visible = false
+                }
             }
 
             Component.onCompleted: checkAndLoad()
