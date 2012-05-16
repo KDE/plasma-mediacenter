@@ -25,6 +25,7 @@ FocusScope {
     id: mediaBrowser
     property QtObject currentBrowsingBackend
     property bool backStopped: false
+    clip: true
 
     signal playRequested(string url)
 
