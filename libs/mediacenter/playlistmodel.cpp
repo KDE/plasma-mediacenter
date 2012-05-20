@@ -19,11 +19,43 @@
 
 #include "playlistmodel.h"
 #include <KDebug>
+#include <QtCore/QStringList>
+#include <KDE/KStandardDirs>
+#include <KDE/KCmdLineArgs>
+#include <QtCore/QDir>
 
 PlaylistModel::PlaylistModel(QObject* parent): QAbstractListModel(parent)
 {
+    KStandardDirs dir;
+    QString dirPath = dir.saveLocation("data") + KCmdLineArgs::appName();
+    QDir().mkdir(dirPath);
+    m_filePath = dirPath + "/playlist";
+
+    if (QFile::exists(m_filePath)) {
+        QFile file(m_filePath);
+        if (file.open(QIODevice::ReadOnly)) {
+            QTextStream in(&file);
+            while (!in.atEnd()) {
+                QString line = in.readLine();
+                m_musicList.append(PlaylistItem::fromString(line));
+            }
+        }
+        file.close();
+    }
     m_currentIndex = -1;
     setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
+}
+
+PlaylistModel::~PlaylistModel()
+{
+    QFile file(m_filePath);
+    if (file.open(QIODevice::WriteOnly)) {
+         QTextStream out(&file);
+         foreach (PlaylistItem item, m_musicList) {
+             out << item.intoString() << "\n";
+         }
+    }
+    file.close();
 }
 
 QVariant PlaylistModel::data(const QModelIndex& index, int role) const
@@ -95,6 +127,20 @@ void PlaylistModel::setCurrentIndex(int index)
 {
     m_currentIndex = index;
     emit currentIndexChanged();
+}
+
+QString PlaylistItem::intoString()
+{
+    return  (mediaName() + "/" + mediaUrl());
+}
+
+PlaylistItem PlaylistItem::fromString(QString text)
+{
+    int pos = text.indexOf('/');
+    PlaylistItem item;
+    item.setMediaUrl(text.right(text.length() - pos - 1));
+    item.setMediaName(text.left(pos));
+    return item;
 }
 
 QString PlaylistItem::mediaName() const
