@@ -57,6 +57,7 @@ Rectangle {
         onEscapePressed: mediaBrowser.visible = true
 
         onCurrentTimeChanged: {
+            runtimeData.currentTime = currentTime
             var dateTimeObject = new Date(0, 0, 0, 0, 0, 0, currentTime);
             mediaController.curMediaTime = Qt.formatTime(dateTimeObject, "hh:mm:ss");
         }
@@ -89,6 +90,10 @@ Rectangle {
             }
         }
         onMediaStarted: runtimeData.playing = true
+    }
+
+    MediaCenterComponents.ImageViewer {
+        id: mediaImageViewer
     }
 
     MediaCenterComponents.MediaController {
@@ -178,12 +183,21 @@ Rectangle {
             }   
         }
         onPlayRequested: {
-            mediaPlayer.visible = true
-            runtimeData.playing = true
-            mediaPlayer.url = url
-            mediaPlayer.play()
-            mediaBrowser.visible = false
-            mediaPlayer.focus = true
+            if (currentMediaType == "image") {
+                mediaImageViewer.visible = true
+                mediaImageViewer.source = url
+                mediaBrowser.visible = false
+                mediaImageViewer.focus = true
+                mediaBrowser.visible = false
+            } else {
+                runtimeData.playing = true
+                mediaPlayer.url = url
+                mediaPlayer.play()
+                mediaBrowser.visible = false
+                mediaPlayer.visible = true
+                mediaPlayer.focus = true
+                mediaImageViewer.visible = (currentMediaType == "audio") ? true : false
+            }
         }
 
         onBackStoppedChanged: {

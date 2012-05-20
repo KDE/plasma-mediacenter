@@ -26,7 +26,7 @@ FocusScope {
     property QtObject currentBrowsingBackend
     property bool backStopped: false
 
-    signal playRequested(string url)
+    signal playRequested(string url, string currentMediaType)
 
     Item {
         id: mediaBrowserViewItem
@@ -43,7 +43,7 @@ FocusScope {
             cellHeight: width / 6
             delegate: MediaItemDelegate {
                 backend: currentBrowsingBackend
-                onPlayRequested: mediaBrowser.playRequested(url)
+                onPlayRequested: mediaBrowser.playRequested(url, currentMediaType)
             }
             highlight: MediaItemHighlight { z: 1 }
             highlightFollowsCurrentItem: true
