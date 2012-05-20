@@ -48,13 +48,10 @@ Item {
 
             function checkAndLoad()
             {
-                if (!isExpandable) {
+                if (!isExpandable && mediaType != "image") {
                     addToPlaylistButton.visible = true
                 }
                 Logic.checkAndLoad(iconImageLoader);
-                if (mediaType == "image") {
-                    itemText.visible = false
-                }
             }
 
             Component.onCompleted: checkAndLoad()
@@ -110,18 +107,7 @@ Item {
     MouseArea {
         hoverEnabled: true
         anchors.fill: parent
-        onEntered: {
-            mediaItemDelegateItem.GridView.view.currentIndex = index
-//              if (!isExpandable) {
-//                  addToPlaylistButton.visible = true
-//             }
-        }
-//         onExited: {
-//             if (!isExpandable) {
-//                 addToPlaylistButton.visible = false;
-//             }
-//         }
-
+        onEntered: mediaItemDelegateItem.GridView.view.currentIndex = index
         onClicked: {
             if (isExpandable) {
                 backend.expand(index);

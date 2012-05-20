@@ -32,6 +32,8 @@ QVariant LocalPicturesModel::data (const QModelIndex& index, int role) const
     if (role == Qt::DecorationRole) {
         if (!LocalPicturesModel::data(index, MediaCenter::IsExpandableRole).toBool())
             return LocalFilesAbstractModel::data (index, MediaCenter::MediaUrlRole);
+    } else if(role == MediaCenter::HideLabelRole) {
+        return !LocalPicturesModel::data(index, MediaCenter::IsExpandableRole).toBool();
     }
     return LocalFilesAbstractModel::data (index, role);
 }

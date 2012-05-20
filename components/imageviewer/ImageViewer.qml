@@ -23,19 +23,28 @@ import QtQuick 1.1
 import org.kde.plasma.graphicswidgets 0.1 as PlasmaWidgets
 import org.kde.plasma.core 0.1 as PlasmaCore
 
-Image {
-    id: mainImage
-    anchors.centerIn: parent
+Rectangle {
+    id: imageRect
+    property alias source:mainImage.source
 
-    cache: false
-    asynchronous: true
+    width: parent.width
+    height: parent.height
+    color: "black"
 
-    onStatusChanged: {console.log(status)
-        if (status == Image.Ready) {
-            if (sourceSize.width > sourceSize.height) {
-                mainImage.scale = Math.min(1, parent.height/sourceSize.height)
-            } else {
-                mainImage.scale = Math.min(1, parent.width/sourceSize.width)
+    Image {
+        id: mainImage
+        anchors.centerIn: parent
+
+        cache: false
+        asynchronous: true
+
+        onStatusChanged: {console.log(status)
+            if (status == Image.Ready) {
+                if (sourceSize.width > sourceSize.height) {
+                    mainImage.scale = Math.min(1, parent.height/sourceSize.height)
+                } else {
+                    mainImage.scale = Math.min(1, parent.width/sourceSize.width)
+                }
             }
         }
     }
