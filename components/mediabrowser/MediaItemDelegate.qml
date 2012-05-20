@@ -48,9 +48,6 @@ Item {
 
             function checkAndLoad()
             {
-                if (!isExpandable && mediaType != "image") {
-                    addToPlaylistButton.visible = true
-                }
                 Logic.checkAndLoad(iconImageLoader);
             }
 
@@ -105,6 +102,7 @@ Item {
     }
 
     MouseArea {
+        id: mediaItemDelegateItemMouseArea
         hoverEnabled: true
         anchors.fill: parent
         onEntered: mediaItemDelegateItem.GridView.view.currentIndex = index
@@ -137,8 +135,8 @@ Item {
     PlasmaComponents.ToolButton {
         id: addToPlaylistButton
         iconSource: "list-add"
-        anchors.right: rootColumn.right
-        visible: false
+        anchors { right: parent.right; top: parent.top }
+        visible: !isExpandable && mediaType != "image" &&  mediaItemDelegateItem.GridView.isCurrentItem
         onClicked: {
             playlistModel.addToPlaylist (mediaUrl, display);
         }
