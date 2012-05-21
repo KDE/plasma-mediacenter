@@ -49,5 +49,7 @@ Row {
         delegate: MusicDelegate { width: parent.width; height: 64 }
         spacing: 5
         visible: backend.level3Visible
+        highlight: MediaItemHighlight { z: 1 }
+        highlightFollowsCurrentItem: true
     }
 }
