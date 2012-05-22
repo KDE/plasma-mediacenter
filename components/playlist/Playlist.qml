@@ -71,10 +71,12 @@ import org.kde.plasma.components 0.1 as PlasmaComponents
 
         delegate:
         Item{
+            id: listViewItem
             width: parent.width
             height: 30
             MouseArea {
                 hoverEnabled: true
+                onEntered: listViewItem.ListView.view.currentIndex = index
                 anchors.fill: parent
                 onClicked: {
                     playlistModel.currentIndex = index
@@ -91,6 +93,18 @@ import org.kde.plasma.components 0.1 as PlasmaComponents
                     elide: Text.ElideRight
                     font.pixelSize: 18
                     anchors.verticalCenter: parent.verticalCenter
+                }
+            }
+
+            PlasmaComponents.ToolButton {
+                id: removeFromPlaylistButton
+                width: 30
+                height: width
+                visible: listViewItem.ListView.isCurrentItem
+                iconSource: "list-remove"
+                anchors { right: parent.right; top: parent.top }
+                onClicked: {
+                    playlistModel.removeFromPlaylist (index);
                 }
             }
         }

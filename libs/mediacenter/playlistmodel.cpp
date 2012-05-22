@@ -88,6 +88,16 @@ void PlaylistModel::addToPlaylist(const QString& url, const QString& name)
     endResetModel();
 }
 
+void PlaylistModel::removeFromPlaylist(const int& index)
+{
+    beginResetModel();
+    m_musicList.removeAt(index);
+    if (index <= m_currentIndex) {
+        m_currentIndex -= 1;
+    }
+    endResetModel();
+}
+
 QString PlaylistModel::getNextUrl()
 {
     if (m_currentIndex == m_musicList.count() - 1) {

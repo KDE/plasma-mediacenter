@@ -57,6 +57,7 @@ public:
     Q_INVOKABLE QString getNextUrl();
     Q_INVOKABLE QString getPreviousUrl();
     Q_INVOKABLE void clearPlaylist();
+    Q_INVOKABLE void removeFromPlaylist(const int &index);
     int currentIndex();
     void setCurrentIndex(int index);
 
