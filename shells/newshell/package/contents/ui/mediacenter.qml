@@ -232,6 +232,7 @@ Rectangle {
             mediaPlayer.play()
             mediaBrowser.visible = false
             mediaPlayer.focus = true
+            mediaImageViewer.visible = false
         }
 
          states: [

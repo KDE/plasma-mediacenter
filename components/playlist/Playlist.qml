@@ -85,11 +85,11 @@ import org.kde.plasma.components 0.1 as PlasmaComponents
             }
             Rectangle {
                 anchors.fill: parent
-                color: "lightsteelblue"
+                color: listViewItem.ListView.isCurrentItem ? "#002378" : "lightsteelblue"
                 opacity: 0.4
                 Text {
                     text: display
-                    color: "white"
+                    color: (index == playlistModel.currentIndex) ? "red" : "white"
                     elide: Text.ElideRight
                     font.pixelSize: 18
                     anchors.verticalCenter: parent.verticalCenter

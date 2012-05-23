@@ -101,9 +101,9 @@ void PlaylistModel::removeFromPlaylist(const int& index)
 QString PlaylistModel::getNextUrl()
 {
     if (m_currentIndex == m_musicList.count() - 1) {
-        m_currentIndex = 0;
+        setCurrentIndex(0);
     } else {
-        m_currentIndex += 1;
+        setCurrentIndex(m_currentIndex + 1);
     }
     return m_musicList.at(m_currentIndex).mediaUrl();
 }
@@ -111,9 +111,9 @@ QString PlaylistModel::getNextUrl()
 QString PlaylistModel::getPreviousUrl()
 {
     if (m_currentIndex == 0) {
-        m_currentIndex = m_musicList.count() - 1;
+        setCurrentIndex(m_musicList.count() - 1);
     } else {
-        m_currentIndex -= 1;
+        setCurrentIndex(m_currentIndex - 1);
     }
     return m_musicList.at(m_currentIndex).mediaUrl();
 }

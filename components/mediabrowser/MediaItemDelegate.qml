@@ -132,6 +132,20 @@ Item {
         }
     }
 
+    Behavior on width {
+        NumberAnimation {
+            duration: 1000
+            easing.type: Easing.OutElastic; easing.amplitude: 2.0; easing.period: 0.5
+        }
+    }
+
+    Behavior on height {
+        NumberAnimation {
+            duration: 1000
+            easing.type: Easing.OutElastic; easing.amplitude: 2.0; easing.period: 0.5
+        }
+    }
+
     PlasmaComponents.ToolButton {
         id: addToPlaylistButton
         iconSource: "list-add"
