@@ -152,7 +152,13 @@ Rectangle {
         }
 
         onBackendSelected: { runtimeData.currentBrowsingBackend = selectedBackend; visible = false }
-        onVisibleChanged: mediaController.visible = !visible
+        onVisibleChanged: {
+            mediaController.visible = !visible
+            if (visible && mediaController.playlistButtonChecked) {
+                mediaController.playlistButtonChecked = false
+                mediaController.playlistButtonClicked()
+            }
+        }
     }
 
     MediaCenterComponents.MediaBrowser {
