@@ -11,7 +11,7 @@ soprano_add_ontology(localvideosbackend_SRCS ${SHAREDDESKTOPONTOLOGIES_ROOT_DIR}
 
 kde4_add_plugin(pmc_localvideos ${localvideosbackend_SRCS})
 target_link_libraries(pmc_localvideos 
-mediacenterlibs
+plasmamediacenter
 ${KDE4_KDECORE_LIBS}
 ${KDE4_KIO_LIBS}
 ${KDE4_KFILE_LIBS}
