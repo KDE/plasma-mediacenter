@@ -10,7 +10,7 @@ qt4_automoc(${metadatavideobackend_SRCS})
 kde4_add_plugin(pmc_metadatavideobackend ${metadatavideobackend_SRCS})
 
 target_link_libraries(pmc_metadatavideobackend
-    mediacenterlibs
+    plasmamediacenter
     ${KDE4_KDECORE_LIBS}
     ${KDE4_KIO_LIBS}
     ${KDE4_KFILE_LIBS}

@@ -10,7 +10,7 @@ qt4_automoc(${metadatapicturebackend_SRCS})
 kde4_add_plugin(pmc_metadatapicturebackend ${metadatapicturebackend_SRCS})
 
 target_link_libraries(pmc_metadatapicturebackend
-    mediacenterlibs
+    plasmamediacenter
     ${KDE4_KDECORE_LIBS}
     ${KDE4_KIO_LIBS}
     ${KDE4_KFILE_LIBS}

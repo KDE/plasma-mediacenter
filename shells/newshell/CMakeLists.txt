@@ -22,7 +22,7 @@ set(plasma-mediacenter_SRCS
 
 kde4_add_executable(plasma-mediacenter ${plasma-mediacenter_SRCS})
 target_link_libraries(plasma-mediacenter
-    mediacenterlibs
+    plasmamediacenter
     ${KDE4_KDEUI_LIBS}
     ${KDE4_PLASMA_LIBS}
     ${KDE4_KIO_LIBS}
