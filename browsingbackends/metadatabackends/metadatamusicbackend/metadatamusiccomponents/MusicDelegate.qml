@@ -35,7 +35,7 @@ Rectangle {
         MouseArea {
             id: mouseArea
             anchors.fill: parent
-            onClicked: mediaBrowser.playRequested(mediaUrl)
+            onClicked: mediaBrowser.playRequested(mediaUrl, mediaType)
         }
     }
 }
