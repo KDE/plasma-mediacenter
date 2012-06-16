@@ -44,8 +44,7 @@ MetadataVideoModel::MetadataVideoModel(QObject* parent)
         d->thumbnailKey = metadataModel()->roleNames().key("thumbnail");
         resetMetadataModel();
         metadataModel()->setProperty("thumbnailSize", QSize(600, 600));
-        metadataModel()->setProperty("resourceType", "nfo:FileDataObject");
-        metadataModel()->setProperty("mimeType", "video");
+        metadataModel()->setProperty("resourceType", "nfo:Video");
     } else {
         kDebug() << "WARNING: Constructor called before metadataModel set :/";
     }
