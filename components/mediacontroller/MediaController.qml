@@ -31,6 +31,10 @@ PlasmaCore.FrameSvgItem {
 
     property alias curMediaTime: curMediaTime.text
     property alias totalMediaTime: totalMediaTime.text
+    property alias playlistButtonChecked: playlistButton.checked
+    signal playlistButtonClicked()
+    signal playNext()
+    signal playPrevious()
 
     signal requestToggleBrowser
 
@@ -39,7 +43,7 @@ PlasmaCore.FrameSvgItem {
         anchors {
             horizontalCenter: parent.horizontalCenter
         }
-        width: parent.width * 0.9
+        width: parent.width * 0.8
         height: parent.height * 0.8
 
         PlasmaComponents.ToolButton {
@@ -50,20 +54,16 @@ PlasmaCore.FrameSvgItem {
             onClicked: controlBarFrame.requestToggleBrowser()
         }
 
-        Item {
-            width: parent.height
-            height: width
-        }
-
         PlasmaComponents.ToolButton {
             id: backwardButton
             width: parent.height
             height: width
-            visible: false      //doesn't work, so don't show ;)
+            visible: true
 
             iconSource: "media-skip-backward"
 
             onClicked: {
+                playPrevious();
             }
         }
 
@@ -97,11 +97,12 @@ PlasmaCore.FrameSvgItem {
             id: forwardButton
             width: parent.height
             height: width
-            visible: false      //doesn't work, so dont show ;)
+            visible: true
 
             iconSource: "media-skip-forward"
 
             onClicked: {
+                playNext();
             }
         }
 
@@ -172,6 +173,16 @@ PlasmaCore.FrameSvgItem {
                 else "audio-volume-high"
             }
             checkable: true
+        }
+
+        PlasmaComponents.ToolButton {
+            id: playlistButton
+            width: parent.height
+            height: parent.height
+            font.pointSize: 12
+            iconSource: "format-list-ordered"
+            checkable: true
+            onClicked: playlistButtonClicked();
         }
     }
 }

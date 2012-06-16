@@ -2,6 +2,7 @@ set (plasmamediacenter_SRCS
     mediacenter.cpp
     abstractbrowsingbackend.cpp
     backendsmodel.cpp
+    playlistmodel.cpp
 )
 
 kde4_add_library(plasmamediacenter SHARED ${plasmamediacenter_SRCS})
@@ -15,6 +16,7 @@ set (plasmamediacenter_HDRS
     mediacenter.h
     abstractbrowsingbackend.h
     backendsmodel.h
+    playlistmodel.h
 )
 
 install(FILES ${plasmamediacenter_HDRS} DESTINATION ${INCLUDE_INSTALL_DIR}/mediacenter COMPONENT Devel)

@@ -47,7 +47,7 @@ Item {
             height: parent.height - (itemText.visible ? itemText.height : 0 );
 
             function checkAndLoad()
-            {       
+            {
                 Logic.checkAndLoad(iconImageLoader);
             }
 
@@ -102,14 +102,15 @@ Item {
     }
 
     MouseArea {
+        id: mediaItemDelegateItemMouseArea
         hoverEnabled: true
         anchors.fill: parent
         onEntered: mediaItemDelegateItem.GridView.view.currentIndex = index
-
         onClicked: {
             if (isExpandable) {
                 backend.expand(index);
             } else {
+                playlistModel.currentIndex = -1;
                 mediaItemDelegateItem.playRequested(mediaUrl, mediaType)
             }
         }
@@ -122,11 +123,37 @@ Item {
 
         onTextChanged: iconImageLoader.checkAndLoad()
     }
-      Keys.onReturnPressed: {
-           if (isExpandable) {
-                backend.expand(index);
-            } else {
-                mediaItemDelegateItem.playRequested(mediaUrl, mediaType)
-            }
+
+    Keys.onReturnPressed: {
+        if (isExpandable) {
+            backend.expand(index);
+        } else {
+            mediaItemDelegateItem.playRequested(mediaUrl, mediaType)
         }
+    }
+
+    Behavior on width {
+        NumberAnimation {
+            duration: 1000
+            easing.type: Easing.OutElastic; easing.amplitude: 2.0; easing.period: 0.5
+        }
+    }
+
+    Behavior on height {
+        NumberAnimation {
+            duration: 1000
+            easing.type: Easing.OutElastic; easing.amplitude: 2.0; easing.period: 0.5
+        }
+    }
+
+    PlasmaComponents.ToolButton {
+        id: addToPlaylistButton
+        iconSource: "list-add"
+        anchors { right: parent.right; top: parent.top }
+        visible: !isExpandable && mediaType != "image" &&  mediaItemDelegateItem.GridView.isCurrentItem
+        onClicked: {
+            playlistModel.addToPlaylist (mediaUrl, display);
+        }
+    }
 }
+

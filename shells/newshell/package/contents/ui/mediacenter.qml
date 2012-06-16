@@ -79,7 +79,16 @@ Rectangle {
             mediaController.totalMediaTime = Qt.formatTime(dateTimeObject, "hh:mm:ss");
         }
 
-        onMediaFinished: {runtimeData.currentTime= 0; runtimeData.stopped = true;}
+        onMediaFinished: {
+            if ((currentTime == totalTime) && (playlistModel.currentIndex != -1)) {
+                playlist.playRequested(playlistModel.getNextUrl());
+                console.log("playlist");
+            } else {
+                console.log(" not playlist" + currentTime + " = " + totalTime);
+                runtimeData.currentTime= 0;
+                runtimeData.stopped = true;
+            }
+        }
         onMediaStarted: runtimeData.playing = true
     }
 
@@ -90,10 +99,33 @@ Rectangle {
     MediaCenterComponents.MediaController {
         id: mediaController
         height: parent.height * 0.08
-        width: parent.width * 0.8
+        width: parent.width
 
         anchors {
             horizontalCenter: parent.horizontalCenter; top: parent.top
+        }
+
+        onPlaylistButtonClicked: {
+            if(playlistButtonChecked) {
+                mediaBrowser.state = "resize"
+                playlist.state = "playlistShow"
+                playlist.z = 2
+            } else {
+                mediaBrowser.state = ""
+                playlist.state = ""
+            }
+        }
+
+        onPlayNext: {
+            if (playlistModel.currentIndex != -1) {
+                playlist.playRequested(playlistModel.getNextUrl());
+            }
+        }
+
+        onPlayPrevious: {
+            if (playlistModel.currentIndex != -1) {
+                playlist.playRequested(playlistModel.getPreviousUrl());
+            }
         }
 
         runtimeDataObject: runtimeData
@@ -120,7 +152,13 @@ Rectangle {
         }
 
         onBackendSelected: { runtimeData.currentBrowsingBackend = selectedBackend; visible = false }
-        onVisibleChanged: mediaController.visible = !visible
+        onVisibleChanged: {
+            mediaController.visible = !visible
+            if (visible && mediaController.playlistButtonChecked) {
+                mediaController.playlistButtonChecked = false
+                mediaController.playlistButtonClicked()
+            }
+        }
     }
 
     MediaCenterComponents.MediaBrowser {
@@ -176,7 +214,42 @@ Rectangle {
                 backStopped = false
             }
         }
+
+         states: [
+            State {
+                name: "resize"
+                AnchorChanges { target: mediaBrowser; anchors.right: playlist.left }
+            }
+        ]
+
+        transitions: [ Transition { AnchorAnimation { duration: 100 } } ]
     }
+
+     MediaCenterComponents.Playlist {
+         id: playlist
+         anchors.top: mediaController.bottom
+         anchors.left: parent.right
+         anchors.right: undefined
+         onPlayRequested: {
+            z = 0
+            mediaPlayer.visible = true
+            runtimeData.playing = true
+            mediaPlayer.url = url
+            mediaPlayer.play()
+            mediaBrowser.visible = false
+            mediaPlayer.focus = true
+            mediaImageViewer.visible = false
+        }
+
+         states: [
+            State {
+                name: "playlistShow"
+                AnchorChanges { target: playlist; anchors.right: parent.right; anchors.left: undefined}
+            }
+        ]
+
+        transitions: [ Transition { AnchorAnimation { duration: 100 } } ]
+     }
 
     MediaCenterComponents.AboutPMC {
         id: aboutPmc
@@ -198,6 +271,7 @@ Rectangle {
         anchors.right: parent.right; anchors.top: parent.top;
         width: 64
         height: 64
+        visible: mediaWelcome.visible ? true : false
 
         property bool fullScreen
 
@@ -211,4 +285,5 @@ Rectangle {
             }
         }
     }
+
 }
