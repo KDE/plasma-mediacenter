@@ -33,6 +33,8 @@ Item {
     MouseArea {
         id: pictureStripMouseArea
         anchors.fill: parent
+        hoverEnabled: true
+         onEntered: pictureStripDelegate.ListView.view.currentIndex = index
         onClicked: {
             displayImage(mediaUrl);
         }

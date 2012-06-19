@@ -21,8 +21,15 @@ import QtQuick 1.1
 
 ListView {
     id: imageList
-     signal displayImage(string url)
+    signal displayImage(string url)
 
     orientation: ListView.Horizontal
-    delegate: PictureStripDelegate { height: 64; width: height; onDisplayImage: imageList.displayImage(url) }
+    delegate: PictureStripDelegate {
+        height: 64
+        width: isExpandable ? 0 : height
+        onDisplayImage: imageList.displayImage(url)
+    }
+    highlight: PictureStripItemHighlight { z: 1 }
+    highlightFollowsCurrentItem: true
+    focus: true
 }
