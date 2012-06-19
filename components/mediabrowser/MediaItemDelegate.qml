@@ -66,7 +66,6 @@ Item {
                 sourceSize.height: 0
                 asynchronous: true
                 source: rootColumn.source
-                //cache: false
             }
         }
 

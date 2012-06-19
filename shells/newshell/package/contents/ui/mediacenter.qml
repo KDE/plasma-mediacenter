@@ -53,7 +53,10 @@ Rectangle {
         stopped: runtimeData.stopped
         volume: runtimeData.volume
 
-        onClicked: mediaController.state = mediaController.state ? "" : "hidden"
+        onClicked: {
+            mediaController.state = mediaController.state ? "" : "hidden"
+            mediaPictureStrip.state = mediaPictureStrip.state ? "" : "hidden"
+        }
         onEscapePressed: mediaBrowser.visible = true
 
         onCurrentTimeChanged: {
@@ -94,6 +97,7 @@ Rectangle {
 
     MediaCenterComponents.ImageViewer {
         id: mediaImageViewer
+        visible: false
     }
 
     MediaCenterComponents.MediaController {
@@ -164,8 +168,9 @@ Rectangle {
     MediaCenterComponents.MediaBrowser {
         id: mediaBrowser
         anchors {
-            left: parent.left; right: parent.right; top: mediaController.bottom; bottom:parent.bottom
+            left: parent.left; right: parent.right; top: mediaController.bottom; bottom: parent.bottom
         }
+        height: parent.height - mediaPictureStrip.height
         visible: false
         focus: visible
 
@@ -222,6 +227,26 @@ Rectangle {
             }
         ]
 
+        transitions: [ Transition { AnchorAnimation { duration: 500 } } ]
+    }
+
+    MediaCenterComponents.PictureStrip {
+        id: mediaPictureStrip
+        anchors.bottom: parent.bottom
+        anchors.top: undefined
+        height: 64
+        visible: mediaImageViewer.visible && !mediaBrowser.visible && !mediaWelcome.visible
+        width: parent.width
+        model: mediaBrowser.currentBrowsingBackend.backendModel
+	onDisplayImage: {
+            mediaImageViewer.source = url
+        }
+        states: [
+            State {
+                name: "hidden"
+                AnchorChanges { target: mediaPictureStrip; anchors.top: parent.bottom; anchors.bottom: undefined }
+            }
+        ]
         transitions: [ Transition { AnchorAnimation { duration: 100 } } ]
     }
 
