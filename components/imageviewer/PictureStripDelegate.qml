@@ -19,17 +19,26 @@
 
 import QtQuick 1.1
 
-ListView {
-    id: imageList
-    signal displayImage(string url)
+Item {
+    id: pictureStripDelegate
+    signal imageClicked(string url)
 
-    orientation: ListView.Horizontal
-    delegate: PictureStripDelegate {
-        height: 64
-        width: isExpandable ? 0 : height
-        onDisplayImage: imageList.displayImage(url)
+    Image {
+        anchors.fill: parent
+        sourceSize.width: width
+        sourceSize.height: 0
+        source: mediaUrl
+        asynchronous: true
     }
-    highlight: PictureStripItemHighlight { z: 1 }
-    highlightFollowsCurrentItem: true
-    focus: true
+    MouseArea {
+        id: pictureStripMouseArea
+        anchors.fill: parent
+        hoverEnabled: true
+        onClicked: { pictureStripDelegate.ListView.view.currentIndex = index; emitClicked() }
+    }
+
+    function emitClicked()
+    {
+        pictureStripDelegate.imageClicked(mediaUrl);
+    }
 }

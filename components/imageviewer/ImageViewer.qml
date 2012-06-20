@@ -25,7 +25,11 @@ import org.kde.plasma.core 0.1 as PlasmaCore
 
 Rectangle {
     id: imageRect
-    property alias source:mainImage.source
+    property alias source: mainImage.source
+    property alias stripModel: mediaPictureStrip.model
+    property alias stripVisible: mediaPictureStrip.visible
+    property alias stripState: mediaPictureStrip.state
+    property alias stripCurrentIndex: mediaPictureStrip.currentIndex
 
     width: parent.width
     height: parent.height
@@ -38,7 +42,7 @@ Rectangle {
         cache: false
         asynchronous: true
 
-        onStatusChanged: {console.log(status)
+        onStatusChanged: {
             if (status == Image.Ready) {
                 if (sourceSize.width > sourceSize.height) {
                     mainImage.scale = Math.min(1, parent.height/sourceSize.height)
@@ -47,5 +51,26 @@ Rectangle {
                 }
             }
         }
+    }
+
+    PictureStrip {
+        id: mediaPictureStrip
+        anchors {
+            top: undefined
+            bottom: parent.bottom
+            left: parent.left
+            right: parent.right
+        }
+        height: 64
+        onImageClicked: {
+            mediaImageViewer.source = url
+        }
+        states: [
+            State {
+                name: "hidden"
+                AnchorChanges { target: mediaPictureStrip; anchors.top: parent.bottom; anchors.bottom: undefined }
+            }
+        ]
+        transitions: [ Transition { AnchorAnimation { duration: 100 } } ]
     }
 }

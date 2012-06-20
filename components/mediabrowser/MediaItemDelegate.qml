@@ -30,7 +30,7 @@ Item {
     clip: true
 
     property QtObject backend
-    signal playRequested(string url, string currentMediaType)
+    signal playRequested(int index, string url, string currentMediaType)
 
     PlasmaCore.Theme {
         id:theme
@@ -110,7 +110,7 @@ Item {
                 backend.expand(index);
             } else {
                 playlistModel.currentIndex = -1;
-                mediaItemDelegateItem.playRequested(mediaUrl, mediaType)
+                mediaItemDelegateItem.playRequested(index, mediaUrl, mediaType)
             }
         }
     }

@@ -55,7 +55,7 @@ Rectangle {
 
         onClicked: {
             mediaController.state = mediaController.state ? "" : "hidden"
-            mediaPictureStrip.state = mediaPictureStrip.state ? "" : "hidden"
+            mediaImageViewer.stripState = mediaImageViewer.stripState ? "" : "hidden"
         }
         onEscapePressed: mediaBrowser.visible = true
 
@@ -98,6 +98,7 @@ Rectangle {
     MediaCenterComponents.ImageViewer {
         id: mediaImageViewer
         visible: false
+        stripVisible: visible && !mediaBrowser.visible && !mediaWelcome.visible
     }
 
     MediaCenterComponents.MediaController {
@@ -170,7 +171,7 @@ Rectangle {
         anchors {
             left: parent.left; right: parent.right; top: mediaController.bottom; bottom: parent.bottom
         }
-        height: parent.height - mediaPictureStrip.height
+        height: parent.height
         visible: false
         focus: visible
 
@@ -196,7 +197,8 @@ Rectangle {
         onPlayRequested: {
             if (currentMediaType == "image") {
                 mediaImageViewer.visible = true
-                mediaImageViewer.source = url
+                mediaImageViewer.stripModel = mediaBrowser.currentBrowsingBackend.backendModel
+                mediaImageViewer.stripCurrentIndex = index
                 mediaBrowser.visible = false
                 mediaImageViewer.focus = true
                 mediaBrowser.visible = false
@@ -228,26 +230,6 @@ Rectangle {
         ]
 
         transitions: [ Transition { AnchorAnimation { duration: 500 } } ]
-    }
-
-    MediaCenterComponents.PictureStrip {
-        id: mediaPictureStrip
-        anchors.bottom: parent.bottom
-        anchors.top: undefined
-        height: 64
-        visible: mediaImageViewer.visible && !mediaBrowser.visible && !mediaWelcome.visible
-        width: parent.width
-        model: mediaBrowser.currentBrowsingBackend.backendModel
-	onDisplayImage: {
-            mediaImageViewer.source = url
-        }
-        states: [
-            State {
-                name: "hidden"
-                AnchorChanges { target: mediaPictureStrip; anchors.top: parent.bottom; anchors.bottom: undefined }
-            }
-        ]
-        transitions: [ Transition { AnchorAnimation { duration: 100 } } ]
     }
 
      MediaCenterComponents.Playlist {

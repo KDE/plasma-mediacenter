@@ -7,4 +7,3 @@ install(DIRECTORY runtimedata DESTINATION ${IMPORTS_INSTALL_DIR}/org/kde/plasma/
 install(DIRECTORY aboutpmc DESTINATION ${IMPORTS_INSTALL_DIR}/org/kde/plasma/mediacentercomponents)
 install(DIRECTORY playlist DESTINATION ${IMPORTS_INSTALL_DIR}/org/kde/plasma/mediacentercomponents)
 install(DIRECTORY imageviewer DESTINATION ${IMPORTS_INSTALL_DIR}/org/kde/plasma/mediacentercomponents)
-install(DIRECTORY picturestrip DESTINATION ${IMPORTS_INSTALL_DIR}/org/kde/plasma/mediacentercomponents)

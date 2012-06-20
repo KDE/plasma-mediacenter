@@ -27,7 +27,7 @@ FocusScope {
     property bool backStopped: false
     clip: true
 
-    signal playRequested(string url, string currentMediaType)
+    signal playRequested(int index, string url, string currentMediaType)
 
     Item {
         id: mediaBrowserViewItem
@@ -44,7 +44,7 @@ FocusScope {
             cellHeight: width / 6
             delegate: MediaItemDelegate {
                 backend: currentBrowsingBackend
-                onPlayRequested: mediaBrowser.playRequested(url, currentMediaType)
+                onPlayRequested: mediaBrowser.playRequested(index, url, currentMediaType)
             }
             highlight: MediaItemHighlight { z: 1 }
             highlightFollowsCurrentItem: true

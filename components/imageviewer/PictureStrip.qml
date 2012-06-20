@@ -18,25 +18,51 @@
  ***************************************************************************/
 
 import QtQuick 1.1
+import org.kde.plasma.components 0.1 as PlasmaComponents
 
 Item {
-    id: pictureStripDelegate
-    signal displayImage(string url)
+    id: rootItem
+    property alias model: imageList.model
+    property alias currentIndex: imageList.currentIndex
+    signal imageClicked(string url)
 
-    Image {
-        anchors.fill: parent
-        sourceSize.width: width
-        sourceSize.height: 0
-        source: mediaUrl
-        asynchronous: true
-    }
-    MouseArea {
-        id: pictureStripMouseArea
-        anchors.fill: parent
-        hoverEnabled: true
-         onEntered: pictureStripDelegate.ListView.view.currentIndex = index
+    PlasmaComponents.ToolButton {
+        id: button1
+        height: parent.height; width: height
+        anchors { left: parent.left; top: parent.top; bottom: parent.bottom }
+        iconSource: "go-previous"
         onClicked: {
-            displayImage(mediaUrl);
+            var i = imageList.currentIndex
+            if (i>0) imageList.currentIndex = i - 1
+        }
+    }
+
+    ListView {
+        id: imageList
+        anchors { left: button1.right; right: button2.left; top: parent.top; bottom: parent.bottom }
+
+        orientation: ListView.Horizontal
+        delegate: PictureStripDelegate {
+            height: 64
+            width: isExpandable ? 0 : height
+            onImageClicked: rootItem.imageClicked(url)
+        }
+        focus: true
+        clip: true
+        highlight: PictureStripItemHighlight { z:1 }
+        highlightFollowsCurrentItem: true
+
+        onCurrentItemChanged: currentItem.emitClicked()
+    }
+
+    PlasmaComponents.ToolButton {
+        id: button2
+        height: parent.height; width: height
+        anchors { right: parent.right; top: parent.top; bottom: parent.bottom }
+        iconSource: "go-next"
+        onClicked: {
+            var i = imageList.currentIndex
+            if (i<imageList.count-1) imageList.currentIndex = i + 1
         }
     }
 }
