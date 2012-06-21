@@ -96,7 +96,7 @@ Item {
 
         Text {
             id: itemText
-            text: hideLabel ? "" : display
+            text: hideLabel ? "" : ( display ? display : "" )
             visible: !hideLabel
             font.pointSize: 16
             color: "white"
@@ -123,7 +123,7 @@ Item {
 
     Text {
         id: workaroundForDecorationUpdate
-        text: decoration.toString()
+        text: decoration ? decoration.toString() : ""
         visible: false
 
         onTextChanged: iconImageLoader.checkAndLoad()

@@ -20,21 +20,25 @@
 import QtQuick 1.1
 import org.kde.qtextracomponents 0.1 as QtExtraComponents
 
-Row {
-    spacing: 20
+Item {
+    Row {
+        anchors.fill: parent
+        spacing: 20
 
-    QtExtraComponents.QIconItem {
-        id: backendIcon
-        icon: decoration
-        height: parent.height
-        width: height
-    }
+        QtExtraComponents.QIconItem {
+            id: backendIcon
+            icon: decoration
+            height: parent.height
+            width: height
+        }
 
-    HomeScreenText {
-        height: parent.height
+        HomeScreenText {
+            height: parent.height
 
-        text: display
-        font.pointSize: 20
+            text: display
+            font.pointSize: 20
+        }
+
     }
 
     MouseArea {

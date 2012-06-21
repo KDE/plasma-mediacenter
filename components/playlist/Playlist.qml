@@ -31,7 +31,6 @@ import org.kde.plasma.components 0.1 as PlasmaComponents
     Rectangle {
         id: rect
         color: "lightblue"
-        anchors.left: clearPlaylist.right
         width: parent.width
         height: clearPlaylist.height
         opacity: 0.4
