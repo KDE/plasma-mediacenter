@@ -20,6 +20,7 @@
 
 import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
+import org.kde.plasma.mediacentercomponents 0.1 as MediaCenterComponents
 
 FocusScope {
     id: mediaBrowser
@@ -29,12 +30,8 @@ FocusScope {
 
     signal playRequested(int index, string url, string currentMediaType)
 
-    Rectangle {
+    MediaCenterComponents.RoundedBox {
         anchors.fill: parent
-        color: "black"
-        opacity: 0.8
-        radius: 20
-        border { color: "white"; width: 2 }
     }
 
     Item {

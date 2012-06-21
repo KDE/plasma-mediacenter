@@ -246,9 +246,13 @@ Rectangle {
 
      MediaCenterComponents.Playlist {
          id: playlist
-         anchors.top: mediaController.bottom
-         anchors.left: parent.right
-         anchors.right: undefined
+         anchors {
+            top: mediaController.bottom
+            left: parent.right
+            right: undefined
+            bottom: previewArea.top
+            margins: 10
+         }
          onPlayRequested: {
             z = 0
             mediaPlayer.visible = true

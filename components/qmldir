@@ -7,3 +7,4 @@ RuntimeData 0.1 runtimedata/RuntimeData.qml
 AboutPMC 0.1 aboutpmc/AboutPMC.qml
 Playlist 0.1 playlist/Playlist.qml
 ImageViewer 0.1 imageviewer/ImageViewer.qml
+RoundedBox 0.1 roundedbox/RoundedBox.qml

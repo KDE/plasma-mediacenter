@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 import QtQuick 1.1
+import org.kde.plasma.mediacentercomponents 0.1 as MediaCenterComponents
 
 Item {
     id: homeScreenRootItem
@@ -43,6 +44,7 @@ Item {
             id: homeScreenBody
             width: parent.width
             height: 0.7 * parent.height
+            spacing: 20
 
             Item {
                 id: homeScreenBodyLeft
@@ -50,13 +52,20 @@ Item {
                 height: parent.height
                 clip: true
 
-                ListView {
-                    id: homeScreenBackendsList
+                MediaCenterComponents.RoundedBox {
                     anchors.fill: parent
-                    spacing: 20
 
-                    delegate: BackendsListDelegate { width: parent.width; height: 64 }
+                    ListView {
+                        id: homeScreenBackendsList
+                        anchors { fill: parent; margins: 20 }
+                        spacing: 20
+
+                        header: HomeScreenText { width: parent.width; height: 64; horizontalAlignment: Text.AlignHCenter; text: "Select A Mode"; font.pointSize: 24 }
+                        delegate: BackendsListDelegate { width: parent.width; height: 64 }
+                    }
+
                 }
+
             }
 
             Item {
@@ -65,14 +74,20 @@ Item {
                 height: parent.height
                 clip: true
 
-                ListView {
-                    id: recentlyPlayedList
+                MediaCenterComponents.RoundedBox {
                     anchors.fill: parent
-                    spacing: 20
-                    model: RecentlyPlayed { }
 
-                    delegate: RecentlyPlayedListDelegate { width: parent.width; height: 64 }
+                    ListView {
+                        id: recentlyPlayedList
+                        anchors { fill: parent; margins: 20 }
+                        spacing: 20
+                        model: RecentlyPlayed { }
+
+                        header: HomeScreenText { width: parent.width; height: 64; horizontalAlignment: Text.AlignHCenter; text: "Recently Played"; font.pointSize: 24 }
+                        delegate: RecentlyPlayedListDelegate { width: parent.width; height: 64 }
+                    }
                 }
+
             }
         }
 
