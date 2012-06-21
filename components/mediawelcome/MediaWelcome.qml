@@ -53,20 +53,13 @@ Item {
                 height: parent.height
                 clip: true
 
-                UiElements.RoundedBox {
-                    anchors.fill: parent
+                ListView {
+                    id: homeScreenBackendsList
+                    anchors { fill: parent; margins: 20 }
+                    spacing: 20
 
-                    ListView {
-                        id: homeScreenBackendsList
-                        anchors { fill: parent; margins: 20 }
-                        spacing: 20
-
-                        header: HomeScreenText { width: parent.width; height: 64; horizontalAlignment: Text.AlignHCenter; text: "Select A Mode"; font.pointSize: 24 }
-                        delegate: BackendsListDelegate { width: parent.width; height: 64 }
-                    }
-
+                    delegate: BackendsListDelegate { width: parent.width; height: 64 }
                 }
-
             }
 
             Item {
@@ -75,20 +68,15 @@ Item {
                 height: parent.height
                 clip: true
 
-                UiElements.RoundedBox {
-                    anchors.fill: parent
+                ListView {
+                    id: recentlyPlayedList
+                    anchors { fill: parent; margins: 20 }
+                    spacing: 20
+                    model: RecentlyPlayed { }
 
-                    ListView {
-                        id: recentlyPlayedList
-                        anchors { fill: parent; margins: 20 }
-                        spacing: 20
-                        model: RecentlyPlayed { }
-
-                        header: HomeScreenText { width: parent.width; height: 64; horizontalAlignment: Text.AlignHCenter; text: "Recently Played"; font.pointSize: 24 }
-                        delegate: RecentlyPlayedListDelegate { width: parent.width; height: 64 }
-                    }
+                    header: HomeScreenText { width: parent.width; height: 64; horizontalAlignment: Text.AlignHCenter; text: "Recently Played"; font.pointSize: 24 }
+                    delegate: RecentlyPlayedListDelegate { width: parent.width; height: 64 }
                 }
-
             }
         }
 
