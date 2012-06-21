@@ -20,6 +20,7 @@
 
 import QtQuick 1.1
 import org.kde.plasma.mediacentercomponents 0.1 as MediaCenterComponents
+import org.kde.plasma.mediacentercomponents.uielements 0.1 as UiElements
 
 Item {
     id: homeScreenRootItem
@@ -52,7 +53,7 @@ Item {
                 height: parent.height
                 clip: true
 
-                MediaCenterComponents.RoundedBox {
+                UiElements.RoundedBox {
                     anchors.fill: parent
 
                     ListView {
@@ -74,7 +75,7 @@ Item {
                 height: parent.height
                 clip: true
 
-                MediaCenterComponents.RoundedBox {
+                UiElements.RoundedBox {
                     anchors.fill: parent
 
                     ListView {
