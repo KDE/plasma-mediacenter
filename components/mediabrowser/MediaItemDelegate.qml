@@ -32,13 +32,19 @@ Item {
     property QtObject backend
     signal playRequested(int index, string url, string currentMediaType)
 
+Item {
+    anchors {
+        fill: parent
+        //margins: 5
+    }
+
     PlasmaCore.Theme {
         id:theme
     }
 
     Column {
         id: rootColumn
-        anchors. fill: parent
+        anchors.fill: parent
         property variant source
 
         Loader {
@@ -92,7 +98,7 @@ Item {
             id: itemText
             text: hideLabel ? "" : display
             visible: !hideLabel
-            font.pointSize: 20
+            font.pointSize: 16
             color: "white"
             elide: Text.ElideRight
             width: parent.width
@@ -156,3 +162,4 @@ Item {
     }
 }
 
+}

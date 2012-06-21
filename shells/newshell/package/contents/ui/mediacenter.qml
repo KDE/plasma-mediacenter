@@ -45,8 +45,10 @@ Rectangle {
 
     MediaCenterComponents.MediaPlayer {
         id: mediaPlayer
-        anchors.fill: parent
+        anchors { left: parent.left; right: parent.right; top: parent.top; bottom: parent.bottom }
         focus: !mediaBrowser.activeFocus && !mediaWelcome.activeFocus
+        state: mediaBrowser.visible ? "minimize" : ""
+        z: mediaBrowser.visible ? 2 : 0
 
         playing: runtimeData.playing
         paused: runtimeData.paused
@@ -93,6 +95,19 @@ Rectangle {
             }
         }
         onMediaStarted: runtimeData.playing = true
+
+        states: [
+            State {
+                name: "minimize"
+                AnchorChanges {
+                    target: mediaPlayer; anchors.left: previewArea.left;
+                    anchors.top: previewArea.top; anchors.bottom: previewArea.bottom;
+                    anchors.right: previewArea.right
+                }
+            }
+        ]
+
+        transitions: [ Transition { AnchorAnimation { duration: 200 } } ]
     }
 
     MediaCenterComponents.ImageViewer {
@@ -148,14 +163,10 @@ Rectangle {
 
     MediaCenterComponents.MediaWelcome {
         id: mediaWelcome
-        width: parent.width
+        anchors.fill: parent
         focus: visible
 
         model: backendsModel
-        anchors {
-            left: parent.left; right: parent.right; top: mediaController.bottom; bottom: parent.bottom
-        }
-
         onBackendSelected: { runtimeData.currentBrowsingBackend = selectedBackend; visible = false }
         onVisibleChanged: {
             mediaController.visible = !visible
@@ -169,7 +180,8 @@ Rectangle {
     MediaCenterComponents.MediaBrowser {
         id: mediaBrowser
         anchors {
-            left: parent.left; right: parent.right; top: mediaController.bottom; bottom: parent.bottom
+            left: parent.left; right: parent.right; top: mediaController.bottom; bottom:parent.bottom
+            margins: 30
         }
         height: parent.height
         visible: false
@@ -291,6 +303,12 @@ Rectangle {
                 iconSource = "view-fullscreen"
             }
         }
+    }
+
+    Item {
+        id: previewArea
+        anchors { bottom: parent.bottom; right: parent.right; margins: 40 }
+        height: 128; width: 256
     }
 
 }

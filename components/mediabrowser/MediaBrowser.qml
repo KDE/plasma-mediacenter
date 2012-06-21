@@ -29,6 +29,14 @@ FocusScope {
 
     signal playRequested(int index, string url, string currentMediaType)
 
+    Rectangle {
+        anchors.fill: parent
+        color: "black"
+        opacity: 0.8
+        radius: 20
+        border { color: "white"; width: 2 }
+    }
+
     Item {
         id: mediaBrowserViewItem
         property QtObject mediaBrowserGridView
@@ -39,9 +47,10 @@ FocusScope {
     Component {
         id: mediaBrowserViewComponent
         GridView {
-            anchors.fill: parent
-            cellWidth: width / 6
-            cellHeight: width / 6
+            anchors { fill: parent; leftMargin: 10; rightMargin: 10; topMargin: 10; bottomMargin: 10 + searchMedia.height }
+            clip: true
+            cellWidth: width / 6 - 5
+            cellHeight: height / 4 - 5
             delegate: MediaItemDelegate {
                 backend: currentBrowsingBackend
                 onPlayRequested: mediaBrowser.playRequested(index, url, currentMediaType)
@@ -106,18 +115,20 @@ FocusScope {
             }
         }
 
-    PlasmaComponents.TextField {
-        id: searchMedia
-        width: parent.width
-        height: 30
-        clearButtonShown: true
-
-        anchors {
-            left: parent.left
-            bottom: parent.bottom
-        }
-
-        placeholderText: "Search..."
-        onTextChanged: currentBrowsingBackend.search(text);
-    }
+     PlasmaComponents.TextField {
+         id: searchMedia
+         width: parent.width
+         height: 30
+         clearButtonShown: true
+ 
+         anchors {
+             left: parent.left
+             bottom: parent.bottom
+             right: parent.right
+             margins: 10
+         }
+ 
+         placeholderText: "Search..."
+         onTextChanged: currentBrowsingBackend.search(text);
+     }
 }

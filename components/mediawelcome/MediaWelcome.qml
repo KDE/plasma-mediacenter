@@ -1,5 +1,6 @@
 /***************************************************************************
  *   Copyright 2010 by Alessandro Diaferia <alediaferia@gmail.com>         *
+ *   Copyright 2012 by Sinny Kumari <ksinny@gmail.com>                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,68 +19,67 @@
  ***************************************************************************/
 
 import QtQuick 1.1
-import org.kde.qtextracomponents 0.1 as QtExtraComponents
 
-PathView {
-    id: view
-    clip: true
-    anchors.fill: parent
-    preferredHighlightBegin: 0.5
-    preferredHighlightEnd: 0.5
+Item {
+    id: homeScreenRootItem
+    property alias model: homeScreenBackendsList.model
     property variant selectedBackend
 
     signal backendSelected
 
-    delegate: Component {
-        Item {
-            id: wrapper
-            width: parent.width/3
-            height: parent.height/3
-            scale: PathView.iconScale
-            opacity: PathView.iconScale
+    Column {
+        anchors {
+            fill: parent
+            leftMargin: 50; rightMargin: 50; topMargin: 10; bottomMargin: 10
+        }
 
-            Column {
-                anchors.fill: parent
+        HomeScreenHeader {
+            id: homeScreenHeader
+            width: parent.width
+            height: 0.2 * parent.height
+        }
 
-                QtExtraComponents.QIconItem {
-                    icon: decoration
-                    height: wrapper.height
-                    width: wrapper.width
-                }
-                Text {
-                    text: display
-                    font.pointSize: 30
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    color: "white"
-                    smooth: true
-                    style: Text.Raised
-                    font.bold: true
-                    font.italic: true
+        Row {
+            id: homeScreenBody
+            width: parent.width
+            height: 0.7 * parent.height
+
+            Item {
+                id: homeScreenBodyLeft
+                width: parent.width/2
+                height: parent.height
+                clip: true
+
+                ListView {
+                    id: homeScreenBackendsList
+                    anchors.fill: parent
+                    spacing: 20
+
+                    delegate: BackendsListDelegate { width: parent.width; height: 64 }
                 }
             }
 
-            MouseArea {
-                anchors.fill: parent
-                onClicked: { view.selectedBackend = modelObject; view.backendSelected() }
-            }
+            Item {
+                id: homeScreenBodyRight
+                width: parent.width/2
+                height: parent.height
+                clip: true
 
-            PathView.onIsCurrentItemChanged: if (PathView.isCurrentItem) view.selectedBackend = modelObject
+                ListView {
+                    id: recentlyPlayedList
+                    anchors.fill: parent
+                    spacing: 20
+                    model: RecentlyPlayed { }
+
+                    delegate: RecentlyPlayedListDelegate { width: parent.width; height: 64 }
+                }
+            }
+        }
+
+        HomeScreenFooter {
+            id: homeScreenFooter
+            width: parent.width
+            height: 0.1 * parent.height
         }
     }
-
-    path: Path {
-        startX: 0
-        startY: 10
-        PathAttribute { name: "iconScale"; value: 0.1 }
-        PathQuad { x: view.width/2; y: view.height/2; controlX: view.width/4; controlY: view.height/4 }
-        PathAttribute { name: "iconScale"; value: 1 }
-        PathQuad { x: view.width; y: 10; controlX: view.width*3/4; controlY: view.height/4 }
-        PathAttribute { name: "iconScale"; value: 0.1 }
-    }
-
-    Keys.onLeftPressed: decrementCurrentIndex()
-    Keys.onRightPressed: incrementCurrentIndex()
-    Keys.onEnterPressed: view.backendSelected()
-    Keys.onReturnPressed: view.backendSelected()
-    Keys.onEscapePressed: mainwindow.closeMediaCenter();
 }
