@@ -30,7 +30,7 @@ Item {
     clip: true
 
     property QtObject backend
-    signal playRequested(int index, string url, string display, string currentMediaType)
+    signal playRequested(int index, string url, string currentMediaType)
 
 Item {
     anchors {
@@ -116,7 +116,7 @@ Item {
                 backend.expand(index);
             } else {
                 playlistModel.currentIndex = -1;
-                mediaItemDelegateItem.playRequested(index, mediaUrl, display, mediaType)
+                mediaItemDelegateItem.playRequested(index, mediaUrl, mediaType)
             }
         }
     }
@@ -133,7 +133,7 @@ Item {
         if (isExpandable) {
             backend.expand(index);
         } else {
-            mediaItemDelegateItem.playRequested(index, mediaUrl, display, mediaType)
+            mediaItemDelegateItem.playRequested(mediaUrl, mediaType)
         }
     }
 

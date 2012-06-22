@@ -55,11 +55,6 @@ Rectangle {
         stopped: runtimeData.stopped
         volume: runtimeData.volume
 
-        onStoppedChanged: {
-            if (stopped) {
-                mediaWelcome.footerText = ""
-            }
-        }
         onClicked: {
             mediaController.state = mediaController.state ? "" : "hidden"
             mediaImageViewer.stripState = mediaImageViewer.stripState ? "" : "hidden"
@@ -227,7 +222,6 @@ Rectangle {
                 mediaPlayer.visible = true
                 mediaPlayer.focus = true
                 mediaImageViewer.visible = (currentMediaType == "audio") ? true : false
-                mediaWelcome.footerText = "Now Playing: " + display
             }
         }
 
