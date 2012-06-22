@@ -29,7 +29,7 @@ FocusScope {
     property bool backStopped: false
     clip: true
 
-    signal playRequested(int index, string url, string currentMediaType)
+    signal playRequested(int index, string url, string display, string currentMediaType)
 
     UiElements.RoundedBox {
         anchors.fill: parent
@@ -51,7 +51,7 @@ FocusScope {
             cellHeight: height / 4 - 5
             delegate: MediaItemDelegate {
                 backend: currentBrowsingBackend
-                onPlayRequested: mediaBrowser.playRequested(index, url, currentMediaType)
+                onPlayRequested: mediaBrowser.playRequested(index, url, display, currentMediaType)
             }
             highlight: MediaItemHighlight { z: 1 }
             highlightFollowsCurrentItem: true

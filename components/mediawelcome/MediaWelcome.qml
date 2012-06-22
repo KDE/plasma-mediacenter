@@ -26,6 +26,7 @@ Item {
     id: homeScreenRootItem
     property alias model: homeScreenBackendsList.model
     property variant selectedBackend
+    property alias footerText: homeScreenFooter.text
 
     signal backendSelected
 

@@ -38,7 +38,7 @@ Rectangle {
             hoverEnabled: true
             onEntered: musicDelegateRootRectangle.ListView.view.currentIndex = index
             anchors.fill: parent
-            onClicked: mediaBrowser.playRequested(0, mediaUrl, mediaType)
+            onClicked: mediaBrowser.playRequested(0, mediaUrl, display, mediaType)
         }
     }
 
