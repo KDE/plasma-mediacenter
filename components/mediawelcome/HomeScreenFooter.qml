@@ -20,9 +20,11 @@
 import QtQuick 1.1
 
 Item {
+    property alias text: homeScreenFooterText.text
     HomeScreenText {
+        id: homeScreenFooterText
         anchors.fill: parent
-        text: "Now Playing: Paathshala - Be A Rebel by Blaaze,Aslam,Naresh Iyer"
         font.pointSize: 24
+        font.bold: false
     }
 }

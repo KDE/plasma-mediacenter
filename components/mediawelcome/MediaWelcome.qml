@@ -26,6 +26,7 @@ Item {
     id: homeScreenRootItem
     property alias model: homeScreenBackendsList.model
     property variant selectedBackend
+    property QtObject metaData
 
     signal backendSelected
 
@@ -84,6 +85,7 @@ Item {
             id: homeScreenFooter
             width: parent.width
             height: 0.1 * parent.height
+            text: homeScreenRootItem.metaData.title
         }
     }
 }

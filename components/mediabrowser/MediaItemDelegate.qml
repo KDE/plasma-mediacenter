@@ -133,7 +133,7 @@ Item {
         if (isExpandable) {
             backend.expand(index);
         } else {
-            mediaItemDelegateItem.playRequested(mediaUrl, mediaType)
+            mediaItemDelegateItem.playRequested(index, mediaUrl, mediaType)
         }
     }
 

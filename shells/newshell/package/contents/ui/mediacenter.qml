@@ -167,6 +167,7 @@ Rectangle {
         focus: visible
 
         model: backendsModel
+        metaData: mediaPlayer.metaData
         onBackendSelected: { runtimeData.currentBrowsingBackend = selectedBackend; visible = false }
         onVisibleChanged: {
             mediaController.visible = !visible
@@ -204,7 +205,7 @@ Rectangle {
                     mediaPlayer.playing = true;
                     mediaPlayer.paused = false;
                 }
-            }   
+            }
         }
         onPlayRequested: {
             if (currentMediaType == "image") {

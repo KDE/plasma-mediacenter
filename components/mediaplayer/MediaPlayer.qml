@@ -30,6 +30,7 @@ FocusScope {
     property alias totalTime: video.duration
     property alias currentTime: video.position
     property alias volume: video.volume
+    property alias metaData: video.metaData
 
     signal clicked
     signal mediaFinished
