@@ -58,6 +58,7 @@ Rectangle {
         onClicked: {
             mediaController.state = mediaController.state ? "" : "hidden"
             mediaImageViewer.stripState = mediaImageViewer.stripState ? "" : "hidden"
+            mediaBrowser.visible =false
         }
         onEscapePressed: mediaBrowser.visible = true
 
