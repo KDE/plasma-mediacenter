@@ -213,7 +213,6 @@ Rectangle {
                 mediaImageViewer.visible = true
                 mediaImageViewer.stripModel = mediaBrowser.currentBrowsingBackend.backendModel
                 mediaImageViewer.stripCurrentIndex = index
-                mediaBrowser.visible = false
                 mediaImageViewer.focus = true
                 mediaBrowser.visible = false
             } else {
@@ -223,7 +222,7 @@ Rectangle {
                 mediaBrowser.visible = false
                 mediaPlayer.visible = true
                 mediaPlayer.focus = true
-                mediaImageViewer.visible = (currentMediaType == "audio") ? true : false
+                mediaImageViewer.visible = (currentMediaType != "audio")
             }
         }
 
