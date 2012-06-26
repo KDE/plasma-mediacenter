@@ -51,8 +51,6 @@ Item {
         clip: true
         highlight: PictureStripItemHighlight { z:1 }
         highlightFollowsCurrentItem: true
-
-        onCurrentItemChanged: currentItem.emitClicked()
     }
 
     PlasmaComponents.ToolButton {
