@@ -252,7 +252,6 @@ Rectangle {
             top: mediaController.bottom
             left: parent.right
             right: undefined
-            bottom: previewArea.top
             margins: 10
          }
          onPlayRequested: {
@@ -313,7 +312,7 @@ Rectangle {
 
     Item {
         id: previewArea
-        anchors { bottom: parent.bottom; right: parent.right; margins: 40 }
+        anchors { bottom: mediaBrowser.bottom; right: mediaBrowser.right; margins: 40 }
         height: 128; width: 256
     }
 
