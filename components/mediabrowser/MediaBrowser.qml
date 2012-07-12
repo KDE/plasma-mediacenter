@@ -21,18 +21,12 @@
 import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.kde.plasma.mediacentercomponents 0.1 as MediaCenterComponents
-import org.kde.plasma.mediacentercomponents.uielements 0.1 as UiElements
 
 FocusScope {
     id: mediaBrowser
     property QtObject currentBrowsingBackend
-    clip: true
 
     signal playRequested(int index, string url, string currentMediaType)
-
-    UiElements.RoundedBox {
-        anchors.fill: parent
-    }
 
     Item {
         id: mediaBrowserViewItem
@@ -44,10 +38,10 @@ FocusScope {
     Component {
         id: mediaBrowserViewComponent
         GridView {
-            anchors { fill: parent; leftMargin: 10; rightMargin: 10; topMargin: 10; bottomMargin: 10 + searchMedia.height }
+            anchors { fill: parent; topMargin: 10; bottomMargin: 10 + searchMedia.height }
             clip: true
-            cellWidth: width / 6 - 5
-            cellHeight: height / 4 - 5
+            cellWidth: width / 5
+            cellHeight: cellWidth
             delegate: MediaItemDelegate {
                 backend: currentBrowsingBackend
                 onPlayRequested: mediaBrowser.playRequested(index, url, currentMediaType)
