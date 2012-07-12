@@ -24,5 +24,4 @@ Text {
     color: "white"
     smooth: true
     style: Text.Raised
-    font.bold: true
 }

@@ -25,6 +25,5 @@ Item {
         id: homeScreenFooterText
         anchors.fill: parent
         font.pointSize: 24
-        font.bold: false
     }
 }
