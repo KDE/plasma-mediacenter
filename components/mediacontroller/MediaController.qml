@@ -49,6 +49,7 @@ PlasmaCore.FrameSvgItem {
 
         width: parent.width * 0.8
         height: parent.height * 0.8
+        spacing: 10
 
         PlasmaComponents.ToolButton {
             id: backButton
@@ -122,9 +123,9 @@ PlasmaCore.FrameSvgItem {
 
         PlasmaComponents.Slider {
             id: progressSlider
-            width: parent.width - backButton.width - backwardButton.width - playPauseButton.width
+            width: (parent.width - backButton.width - backwardButton.width - playPauseButton.width
                 - stopButton.width - forwardButton.width - volumeButton.width - volumeSlider.width
-                - playlistButton.width - curMediaTime.width - 20
+                - playlistButton.width - curMediaTime.width) * 0.8
             height: parent.height
 
             onValueChanged: {
@@ -140,10 +141,6 @@ PlasmaCore.FrameSvgItem {
             }
         }
 
-        Item {
-            height: parent.height
-            width: 10
-        }
         PlasmaComponents.Label {
             id: curMediaTime
             property bool checked: false
@@ -157,10 +154,6 @@ PlasmaCore.FrameSvgItem {
                 anchors.fill: parent
                 onClicked: parent.checked = !parent.checked
             }
-        }
-        Item {
-            height: parent.height
-            width: 10
         }
 
         PlasmaComponents.Slider {

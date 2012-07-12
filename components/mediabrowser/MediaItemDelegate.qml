@@ -79,7 +79,7 @@ Item {
                     height: parent.height
                     anchors.horizontalCenter: parent.horizontalCenter
                     fillMode: Image.PreserveAspectCrop
-                    sourceSize.width: width
+                    sourceSize.width: width * 2
                     sourceSize.height: 0
                     asynchronous: true
                     source: rootColumn.source
