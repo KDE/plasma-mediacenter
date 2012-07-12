@@ -149,6 +149,21 @@ Rectangle {
             }
         }
 
+        onBackButtonClicked: {
+            if(!mediaBrowser.currentBrowsingBackend.goOneLevelUp()) {
+                mediaBrowser.destroyGridView()
+                backStopped = true
+            }
+        }
+
+        onBackStoppedChanged: {
+            if(backStopped) {
+                runtimeData.currentBrowsingBackend = null
+                mediaBrowser.visible = false
+                mediaWelcome.visible = true
+                backStopped = false
+            }
+        }
         runtimeDataObject: runtimeData
         onRequestToggleBrowser: mediaBrowser.visible = !mediaBrowser.visible
 
@@ -197,6 +212,12 @@ Rectangle {
             if (visible) { loadModel(); focus = true }
         }
 
+        Keys.onEscapePressed: {
+            if(!currentBrowsingBackend.goOneLevelUp()) {
+                destroyGridView();
+                mediaController.backStopped = true
+            }
+        }
         Keys.onPressed: {
             if(event.key == 16777344) { //Media Play key
                 if(mediaPlayer.playing) {
@@ -224,15 +245,6 @@ Rectangle {
                 mediaPlayer.visible = true
                 mediaPlayer.focus = true
                 mediaImageViewer.visible = (currentMediaType == "audio")
-            }
-        }
-
-        onBackStoppedChanged: {
-            if(backStopped) {
-                runtimeData.currentBrowsingBackend = null
-                visible = false
-                mediaWelcome.visible = true
-                backStopped = false
             }
         }
 

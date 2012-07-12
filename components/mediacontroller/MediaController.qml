@@ -29,12 +29,14 @@ PlasmaCore.FrameSvgItem {
 
     property QtObject runtimeDataObject
 
+    property bool backStopped: false
     property alias curMediaTime: curMediaTime.text
     property alias totalMediaTime: totalMediaTime.text
     property alias playlistButtonChecked: playlistButton.checked
     signal playlistButtonClicked()
     signal playNext()
     signal playPrevious()
+    signal backButtonClicked()
 
     signal requestToggleBrowser
 
@@ -54,6 +56,15 @@ PlasmaCore.FrameSvgItem {
             onClicked: controlBarFrame.requestToggleBrowser()
         }
 
+        PlasmaComponents.ToolButton {
+            id: backButton
+            width: parent.height
+            height: width
+            iconSource: "go-previous";
+            onClicked: {
+                backButtonClicked();
+            }
+        }
         PlasmaComponents.ToolButton {
             id: backwardButton
             width: parent.height

@@ -26,7 +26,6 @@ import org.kde.plasma.mediacentercomponents.uielements 0.1 as UiElements
 FocusScope {
     id: mediaBrowser
     property QtObject currentBrowsingBackend
-    property bool backStopped: false
     clip: true
 
     signal playRequested(int index, string url, string currentMediaType)
@@ -82,36 +81,15 @@ FocusScope {
         }
     }
 
+    function destroyGridView()
+    {
+        mediaBrowserViewItem.mediaBrowserGridView.destroy()
+    }
     function loadModel()
     {
         //JS snippet to do mediaBrowserGridView.model: currentBrowsingBackend.backendModel
         mediaBrowserViewItem.mediaBrowserGridView.model = (function() { return currentBrowsingBackend.backendModel; });
     }
-
-    PlasmaComponents.ToolButton {
-        id: back
-        width: 64
-        height: 64
-        iconSource: "go-previous";
-        anchors {
-            left: parent.left
-            top: parent.top
-        }
-
-        onClicked: {
-            if(!currentBrowsingBackend.goOneLevelUp()) {
-                mediaBrowserViewItem.mediaBrowserGridView.destroy();
-                backStopped = true
-            }
-        }
-    }
-
-    Keys.onEscapePressed: {
-        if(!currentBrowsingBackend.goOneLevelUp()) {
-                mediaBrowserViewItem.mediaBrowserGridView.destroy();
-                backStopped = true
-            }
-        }
 
      PlasmaComponents.TextField {
          id: searchMedia
