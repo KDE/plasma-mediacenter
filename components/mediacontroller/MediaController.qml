@@ -30,8 +30,9 @@ PlasmaCore.FrameSvgItem {
     property QtObject runtimeDataObject
 
     property bool backStopped: false
-    property alias curMediaTime: curMediaTime.text
-    property alias totalMediaTime: totalMediaTime.text
+    property string curMediaTime
+    property string totalMediaTime
+    property string remainingMediaTime
     property alias playlistButtonChecked: playlistButton.checked
     signal playlistButtonClicked()
     signal playNext()
@@ -45,30 +46,32 @@ PlasmaCore.FrameSvgItem {
         anchors {
             horizontalCenter: parent.horizontalCenter
         }
+
         width: parent.width * 0.8
         height: parent.height * 0.8
 
         PlasmaComponents.ToolButton {
-            id: showBrowserButton
-            width: parent.height
-            height: width
-            iconSource: "view-catalog"
-            onClicked: controlBarFrame.requestToggleBrowser()
-        }
-
-        PlasmaComponents.ToolButton {
             id: backButton
-            width: parent.height
-            height: width
+            height: parent.height
+            width: height
             iconSource: "go-previous";
             onClicked: {
                 backButtonClicked();
             }
         }
+
+        PlasmaComponents.ToolButton {
+            id: showBrowserButton
+            height: parent.height
+            width: height
+            iconSource: "view-catalog"
+            onClicked: controlBarFrame.requestToggleBrowser()
+        }
+
         PlasmaComponents.ToolButton {
             id: backwardButton
-            width: parent.height
-            height: width
+            height: parent.height
+            width: height
             visible: true
 
             iconSource: "media-skip-backward"
@@ -80,8 +83,8 @@ PlasmaCore.FrameSvgItem {
 
         PlasmaComponents.ToolButton {
             id: playPauseButton
-            width: parent.height
-            height: width
+            height: parent.height
+            width: height
 
             iconSource: runtimeDataObject.playing ? "media-playback-pause" : "media-playback-start"
 
@@ -96,8 +99,8 @@ PlasmaCore.FrameSvgItem {
 
         PlasmaComponents.ToolButton {
             id: stopButton
-            width: parent.height
-            height: width
+            height: parent.height
+            width: height
 
             iconSource: "media-playback-stop"
 
@@ -106,8 +109,8 @@ PlasmaCore.FrameSvgItem {
 
         PlasmaComponents.ToolButton {
             id: forwardButton
-            width: parent.height
-            height: width
+            height: parent.height
+            width: height
             visible: true
 
             iconSource: "media-skip-forward"
@@ -119,8 +122,9 @@ PlasmaCore.FrameSvgItem {
 
         PlasmaComponents.Slider {
             id: progressSlider
-            width: parent.width - backwardButton.width - playPauseButton.width - stopButton.width
-                 - forwardButton.width - volumeButton.width - volumeSlider.width
+            width: parent.width - backButton.width - backwardButton.width - playPauseButton.width
+                - stopButton.width - forwardButton.width - volumeButton.width - volumeSlider.width
+                - playlistButton.width - curMediaTime.width - 20
             height: parent.height
 
             onValueChanged: {
@@ -134,18 +138,29 @@ PlasmaCore.FrameSvgItem {
                 maximumValue = (function() { return runtimeDataObject.totalTime; })
                 value = (function() { return runtimeDataObject.currentTime; })
             }
+        }
 
-            Text {
-                id: curMediaTime
-                text: ""
-                anchors.left: parent.left
-            }
+        Item {
+            height: parent.height
+            width: 10
+        }
+        PlasmaComponents.Label {
+            id: curMediaTime
+            property bool checked: false
 
-            Text {
-                id: totalMediaTime
-                text: ""
-                anchors.right: parent.right
+            text: checked ? '- ' + controlBarFrame.remainingMediaTime : controlBarFrame.curMediaTime
+            height: parent.height
+
+            verticalAlignment: Text.AlignVCenter
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: parent.checked = !parent.checked
             }
+        }
+        Item {
+            height: parent.height
+            width: 10
         }
 
         PlasmaComponents.Slider {
