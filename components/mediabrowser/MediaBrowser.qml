@@ -46,8 +46,6 @@ FocusScope {
                 backend: currentBrowsingBackend
                 onPlayRequested: mediaBrowser.playRequested(index, url, currentMediaType)
             }
-            highlight: MediaItemHighlight { z: 1 }
-            highlightFollowsCurrentItem: true
             flow: GridView.TopToBottom
             model: mediaBrowser.currentBrowsingBackendModel
         }

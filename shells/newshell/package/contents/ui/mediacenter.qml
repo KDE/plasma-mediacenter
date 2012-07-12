@@ -200,7 +200,6 @@ Rectangle {
         id: mediaBrowser
         anchors {
             left: parent.left; right: parent.right; top: mediaController.bottom; bottom:parent.bottom
-            margins: 30
         }
         height: parent.height
         visible: false
