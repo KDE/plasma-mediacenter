@@ -25,59 +25,32 @@
 #include "metadatamusicmodel.h"
 #include "nepomukmusicmodel.h"
 
-#include "categoriesmodel.h"
 #include "nepomukmusicmodel.h"
 #include <nepomuk/nmm.h>
+#include <nepomuk/nfo.h>
+#include <nepomuk/andterm.h>
+#include <nepomuk/comparisonterm.h>
+#include <nepomuk/resourcetypeterm.h>
+#include <nepomuk/resourceterm.h>
 
 MEDIACENTER_EXPORT_BROWSINGBACKEND(MetadataMusicBackend)
 
 MetadataMusicBackend::MetadataMusicBackend(QObject* parent, const QVariantList& args)
     : AbstractMetadataBackend(parent, args),
-    m_categoriesModel(new CategoriesModel(this)),
     m_nepomukModel(new NepomukMusicModel(this)),
     m_metadataMusicModel(0),
-    m_currentCategory(Category::AllMusic),
-    m_level1Visible(true),
-    m_level2Visible(false),
-    m_level3Visible(false)
+    m_albumsModel(new NepomukMusicModel(this)),
+    m_artistsModel(new NepomukMusicModel(this)),
+    m_musicModel(new NepomukMusicModel(this))
 {
+    m_albumsModel->setResourceType(Nepomuk::Vocabulary::NMM::musicAlbum(), "tools-media-optical-copy");
+    m_artistsModel->setResourceType(Nepomuk::Vocabulary::NMM::performer(), "user-identity");
+    m_musicModel->setResourceType(Nepomuk::Vocabulary::NFO::Audio(), "amarok");
+    emit musicModelChanged();
 }
 
 MetadataMusicBackend::~MetadataMusicBackend()
 {
-}
-
-void MetadataMusicBackend::setCategory (int index)
-{
-    m_currentCategory = m_categoriesModel->categoryTypeForIndex(index);
-    switch (m_currentCategory) {
-    case Category::AllMusic:
-        showAllMusic();
-        break;
-    case Category::Artists:
-        showArtists();
-        break;
-    case Category::Albums:
-        showAlbums();
-        break;
-    }
-}
-
-void MetadataMusicBackend::setSubCategory (int index)
-{
-    QString currentItemLabel = m_nepomukModel->data(m_nepomukModel->index(index, 0), Qt::DisplayRole).toString();
-    switch (m_currentCategory) {
-    case Category::AllMusic:
-        break;
-    case Category::Artists:
-        m_artistName = currentItemLabel;
-        showMusicForArtist();
-        break;
-    case Category::Albums:
-        m_albumName = currentItemLabel;
-        showMusicForAlbum();
-        break;
-    }
 }
 
 void MetadataMusicBackend::init()
@@ -88,96 +61,72 @@ void MetadataMusicBackend::init()
     }
 }
 
-void MetadataMusicBackend::showAllMusic()
-{
-    m_metadataMusicModel->setAlbumName("");
-    m_metadataMusicModel->setArtistName("");
-    m_metadataMusicModel->updateModel();
-
-    m_level2Visible = false;
-    emit level2VisibleChanged();
-    m_level3Visible = true;
-    emit level3VisibleChanged();
-}
-
-void MetadataMusicBackend::showAlbums()
-{
-    m_nepomukModel->setTerm(Nepomuk::Vocabulary::NMM::musicAlbum(), "tools-media-optical-copy");
-
-    m_level2Visible = true;
-    emit level2VisibleChanged();
-    m_level3Visible = false;
-    emit level3VisibleChanged();
-}
-
-void MetadataMusicBackend::showArtists()
-{
-    m_nepomukModel->setTerm(Nepomuk::Vocabulary::NMM::performer(), "user-identity");
-
-    m_level2Visible = true;
-    emit level2VisibleChanged();
-    m_level3Visible = false;
-    emit level3VisibleChanged();
-}
-
-void MetadataMusicBackend::showMusicForAlbum()
-{
-    m_metadataMusicModel->setArtistName("");
-    m_metadataMusicModel->setAlbumName(m_albumName);
-    m_metadataMusicModel->updateModel();
-
-    m_level3Visible = true;
-    emit level3VisibleChanged();
-}
-
-void MetadataMusicBackend::showMusicForArtist()
-{
-    m_metadataMusicModel->setArtistName(m_artistName);
-    m_metadataMusicModel->setAlbumName("");
-    m_metadataMusicModel->updateModel();
-
-    m_level3Visible = true;
-    emit level3VisibleChanged();
-}
-
 QString MetadataMusicBackend::mediaBrowserOverride() const
 {
     return constructQmlSource("metadatamusiccomponents", "0.1", "MediaBrowser");
 }
 
-QObject* MetadataMusicBackend::level1Model() const
-{
-    return m_categoriesModel;
-}
-
-QObject* MetadataMusicBackend::level2Model() const
-{
-    return m_nepomukModel;
-}
-
-QObject* MetadataMusicBackend::level3Model() const
-{
-    return m_metadataMusicModel;
-}
-
-bool MetadataMusicBackend::level1Visible() const
-{
-    return m_level1Visible;
-}
-
-bool MetadataMusicBackend::level2Visible() const
-{
-    return m_level2Visible;
-}
-
-bool MetadataMusicBackend::level3Visible() const
-{
-    return m_level3Visible;
-}
-
 bool MetadataMusicBackend::supportsSearch() const
 {
     return false;
+}
+
+QObject* MetadataMusicBackend::albumsModel() const
+{
+    return m_albumsModel;
+}
+
+QObject* MetadataMusicBackend::artistsModel() const
+{
+    return m_artistsModel;
+}
+
+QString MetadataMusicBackend::albumFilter() const
+{
+    return m_albumFilter;
+}
+
+QString MetadataMusicBackend::artistFilter() const
+{
+    return m_artistFilter;
+}
+
+void MetadataMusicBackend::setAlbumFilter(const QString& filter)
+{
+    m_albumFilter = filter;
+    emit albumFilterChanged();
+    m_artistFilter.clear();
+    emit artistFilterChanged();
+    updateModelAccordingToFilters();
+}
+
+void MetadataMusicBackend::setArtistFilter(const QString& filter)
+{
+    m_artistFilter = filter;
+    emit artistFilterChanged();
+    m_albumFilter.clear();
+    emit albumFilterChanged();
+    updateModelAccordingToFilters();
+}
+
+void MetadataMusicBackend::updateModelAccordingToFilters()
+{
+    QList<Nepomuk::Query::Term> termsList;
+    termsList.append(Nepomuk::Query::ResourceTypeTerm(Nepomuk::Vocabulary::NFO::Audio()));
+
+    if (!m_albumFilter.isEmpty()) {
+        termsList.append(Nepomuk::Query::ComparisonTerm(Nepomuk::Vocabulary::NMM::musicAlbum(), Nepomuk::Query::ResourceTerm(m_albumFilter)));
+    }
+    if (!m_artistFilter.isEmpty()) {
+        termsList.append(Nepomuk::Query::ComparisonTerm(Nepomuk::Vocabulary::NMM::performer(), Nepomuk::Query::ResourceTerm(m_artistFilter)));
+    }
+
+    m_musicModel->setTerm(Nepomuk::Query::AndTerm(termsList), "amarok");
+}
+
+QObject* MetadataMusicBackend::musicModel() const
+{
+    return m_musicModel;
 }
 
 #include "metadatamusicbackend.moc"

@@ -1,5 +1,6 @@
 /***************************************************************************
  *   Copyright 2011 Sinny Kumari <ksinny@gmail.com>                        *
+ *   Copyright 2012 Shantanu Tushar <shaan7in@gmail.com>                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,29 +21,31 @@
 #ifndef NEPOMUKMUSICMODEL_H
 #define NEPOMUKMUSICMODEL_H
 
-#include <QAbstractItemModel>
+#include <QAbstractListModel>
 #include <Nepomuk/Query/Result>
 #include <Nepomuk/Types/Property>
+#include <nepomuk/term.h>
 
-class NepomukMusicModel : public QAbstractItemModel
+class NepomukMusicModel : public QAbstractListModel
 {
-
     Q_OBJECT
-    protected Q_SLOTS:
-    void newEntries(const QList< Nepomuk::Query::Result > &entries);
-    void finishedListing();
 public:
     explicit NepomukMusicModel(QObject* parent = 0);
     virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-    virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
     virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
-    virtual QModelIndex parent(const QModelIndex& child) const;
-    virtual QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
-    void setTerm(Nepomuk::Types::Property term, const QString& iconName);
+    void setTerm(Nepomuk::Query::Term term, const QString& iconName);
+    void setResourceType(Nepomuk::Types::Property property, const QString& iconName);
+
+protected Q_SLOTS:
+    void newEntries(const QList< Nepomuk::Query::Result > &entries);
+    void entriesRemoved(QList< QUrl > entries);
+    void finishedListing();
+    void updateModel();
 
 private:
     QString m_icon;
     QList< Nepomuk::Query::Result > m_queryResults;
+    Nepomuk::Query::Term m_term;
 };
 
 #endif // NEPOMUKMUSICMODEL_H

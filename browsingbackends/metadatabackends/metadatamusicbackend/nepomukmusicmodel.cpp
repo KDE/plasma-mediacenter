@@ -37,33 +37,49 @@
 #include <mediacenter/mediacenter.h>
 
 
-NepomukMusicModel::NepomukMusicModel(QObject* parent): QAbstractItemModel(parent)
+NepomukMusicModel::NepomukMusicModel(QObject* parent): QAbstractListModel(parent)
 {
     setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
 }
 
-void NepomukMusicModel::setTerm(Nepomuk::Types::Property term, const QString &iconName)
+void NepomukMusicModel::setTerm(Nepomuk::Query::Term term, const QString &iconName)
 {
     m_icon = iconName;
+    m_term = term;
+    updateModel();
+}
 
+void NepomukMusicModel::updateModel()
+{
     Nepomuk::Query::Query myQuery;
-    Nepomuk::Query::ComparisonTerm ct(term, Nepomuk::Query::Term());
-    ct.setInverted(true);
     Nepomuk::Query::QueryServiceClient *queryClient = new Nepomuk::Query::QueryServiceClient(this);
+
     connect(queryClient, SIGNAL(newEntries(QList<Nepomuk::Query::Result>)),
             this, SLOT(newEntries(QList<Nepomuk::Query::Result>)));
+    connect(queryClient, SIGNAL(entriesRemoved(QList<QUrl>)),SLOT(entriesRemoved(QList<QUrl>)));
     connect(queryClient, SIGNAL(error(QString)), SLOT(error(QString)));
     connect(queryClient, SIGNAL(finishedListing()), this, SLOT(finishedListing()));
-    myQuery.setTerm(ct);
+
+    myQuery.setTerm(m_term);
     kDebug()<< "Sparql query:"<< myQuery.toSparqlQuery();
+
     m_queryResults.clear();
     reset();
+
     queryClient->query(myQuery);
+}
+
+void NepomukMusicModel::setResourceType(Nepomuk::Types::Property property, const QString &iconName)
+{
+    Nepomuk::Query::ComparisonTerm ct(property, Nepomuk::Query::Term());
+    ct.setInverted(true);
+    m_term = ct;
+    m_icon = iconName;
+    updateModel();
 }
 
 QVariant NepomukMusicModel::data(const QModelIndex& index, int role) const
 {
-
     switch(role) {
     case Qt::DecorationRole:
         return m_icon;
@@ -71,40 +87,32 @@ QVariant NepomukMusicModel::data(const QModelIndex& index, int role) const
         return m_queryResults.at(index.row()).resource().genericLabel();
     case MediaCenter::IsExpandableRole:
         return true;
+    case MediaCenter::ResourceIdRole:
+        return m_queryResults.at(index.row()).resource().resourceUri();
+    case MediaCenter::MediaTypeRole:
+        return "audio";
+    case MediaCenter::MediaUrlRole:
+        return m_queryResults.at(index.row()).resource().property(Nepomuk::Vocabulary::NIE::url()).toString();
     }
 
     return QVariant();
 }
 
-int NepomukMusicModel::columnCount(const QModelIndex& parent) const
-{
-
-    return 1;
-}
-
 int NepomukMusicModel::rowCount(const QModelIndex& parent) const
 {
-
     return m_queryResults.size();
-}
-
-QModelIndex NepomukMusicModel::parent(const QModelIndex& child) const
-{
-
-    return QModelIndex();
-}
-
-QModelIndex NepomukMusicModel::index(int row, int column, const QModelIndex& parent) const
-{
-
-    return createIndex(row,column);
 }
 
 void NepomukMusicModel::newEntries(const QList< Nepomuk::Query::Result >& entries)
 {
-      Q_FOREACH (const Nepomuk::Query::Result &res, entries) {
+    Q_FOREACH (const Nepomuk::Query::Result &res, entries) {
         m_queryResults.append(res);
     }
+}
+
+void NepomukMusicModel::entriesRemoved(QList< QUrl > entries)
+{
+
 }
 
 void NepomukMusicModel::finishedListing()

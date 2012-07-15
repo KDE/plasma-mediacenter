@@ -16,6 +16,7 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
+
 #ifndef MEDIACENTER_H
 #define MEDIACENTER_H
 
@@ -35,7 +36,8 @@ enum AdditionalMediaRoles {
     IsExpandableRole,
     MediaTypeRole,
     DecorationTypeRole,
-    HideLabelRole
+    HideLabelRole,
+    ResourceIdRole
 };
 
 enum MediaType {

@@ -18,6 +18,7 @@
  ***************************************************************************/
 
 import QtQuick 1.1
+import org.kde.plasma.components 0.1 as PlasmaComponents
 
 Row {
     id: rootRow
@@ -29,26 +30,46 @@ Row {
 
     ListView {
         width: parent.width/3 * 0.9; height: parent.height
-        model: backend.level1Model();
-        delegate: CategoriesDelegate { width: parent.width; height: 96 }
+        model: backend.artistsModel();
+        header: PlasmaComponents.Label {
+            text: "Artists"; width: parent.width; height: 96
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            font.pointSize: 14
+            color: "white"
+        }
+        delegate: CategoriesDelegate { width: parent.width; height: 96; categoryName: "artist" }
         spacing: 5
-        visible: backend.level1Visible
+        snapMode: ListView.SnapToItem
     }
 
     ListView {
         width: parent.width/3; height: parent.height
-        model: backend.level2Model();
-        delegate: FilteringDelegate { width: parent.width; height: 64 }
+        model: backend.albumsModel();
+        header: PlasmaComponents.Label {
+            text: "Albums"; width: parent.width; height: 96
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            font.pointSize: 14
+            color: "white"
+        }
+        delegate: CategoriesDelegate { width: parent.width; height: 96; categoryName: "album" }
         spacing: 5
-        visible: backend.level2Visible
+        snapMode: ListView.SnapToItem
     }
 
     ListView {
-        width: parent.width/3 * (backend.level2Visible ? 1 : 2) ; height: parent.height
-        model: backend.level3Model();
+        width: parent.width/3 ; height: parent.height
+        model: backend.musicModel
+        header: PlasmaComponents.Label {
+            text: "Songs"; width: parent.width; height: 96
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            font.pointSize: 14
+            color: "white"
+        }
         delegate: MusicDelegate { width: parent.width; height: 64 }
         spacing: 5
-        visible: backend.level3Visible
         highlight: MediaItemHighlight { z: 1 }
         highlightFollowsCurrentItem: true
     }

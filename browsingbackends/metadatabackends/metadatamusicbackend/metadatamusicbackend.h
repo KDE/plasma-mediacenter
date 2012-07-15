@@ -35,9 +35,9 @@ class MetadataMusicModel;
 class MetadataMusicBackend : public AbstractMetadataBackend
 {
     Q_OBJECT
-    Q_PROPERTY(bool level1Visible READ level1Visible NOTIFY level1VisibleChanged)
-    Q_PROPERTY(bool level2Visible READ level2Visible NOTIFY level2VisibleChanged)
-    Q_PROPERTY(bool level3Visible READ level3Visible NOTIFY level3VisibleChanged)
+    Q_PROPERTY(QString artistFilter READ artistFilter WRITE setArtistFilter NOTIFY artistFilterChanged)
+    Q_PROPERTY(QString albumFilter READ albumFilter WRITE setAlbumFilter NOTIFY albumFilterChanged)
+    Q_PROPERTY(QObject* musicModel READ musicModel NOTIFY musicModelChanged)
 
 public:
     MetadataMusicBackend (QObject* parent, const QVariantList& args);
@@ -47,51 +47,35 @@ public:
 
     virtual QString mediaBrowserOverride() const;
 
-    Q_INVOKABLE QObject *level1Model() const;
-    Q_INVOKABLE QObject *level2Model() const;
-    Q_INVOKABLE QObject *level3Model() const;
+    Q_INVOKABLE QObject *artistsModel() const;
+    Q_INVOKABLE QObject *albumsModel() const;
+    QObject *musicModel() const;
 
-    Q_INVOKABLE void setCategory(int index);
-    Q_INVOKABLE void setSubCategory(int index);
-
-    bool level1Visible() const;
-    bool level2Visible() const;
-    bool level3Visible() const;
     bool supportsSearch() const;
 
-private Q_SLOTS:
-    void showAllMusic();
-    void showArtists();
-    void showAlbums();
-    void showMusicForArtist();
-    void showMusicForAlbum();
+    QString artistFilter() const;
+    QString albumFilter() const;
+
+    void setArtistFilter(const QString &filter);
+    void setAlbumFilter(const QString &filter);
 
 Q_SIGNALS:
-    void currentStateCategories();
-    void currentStateAllMusic();
-    void currentStateArtists();
-    void currentStateAlbums();
-    void currentStateMusicForArtist();
-    void currentStateMusicForAlbum();
-    void backRequested();
+    void artistFilterChanged();
+    void albumFilterChanged();
+    void musicModelChanged();
 
-    void level1VisibleChanged();
-    void level2VisibleChanged();
-    void level3VisibleChanged();
+protected:
+    void updateModelAccordingToFilters();
 
 private:
-    QString m_artistName;
-    QString m_albumName;
-
-    CategoriesModel *m_categoriesModel;
     NepomukMusicModel *m_nepomukModel;
+    NepomukMusicModel* m_artistsModel;
+    NepomukMusicModel* m_albumsModel;
+    NepomukMusicModel* m_musicModel;
     MetadataMusicModel *m_metadataMusicModel;
 
-    Category::CategoryType m_currentCategory;
-
-    bool m_level1Visible;
-    bool m_level2Visible;
-    bool m_level3Visible;
+    QString m_artistFilter;
+    QString m_albumFilter;
 };
 
 #endif // METADATAMUSICBACKEND_H
