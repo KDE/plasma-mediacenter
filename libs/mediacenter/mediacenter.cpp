@@ -30,68 +30,6 @@
 
 namespace MediaCenter {
 
-MediaType getType(const QString &media)
-{
-    QFileInfo info(media);
-    if (info.exists()) {
-        KMimeType::Ptr mime = KMimeType::findByPath(media);
-        if (mime->name().startsWith(QLatin1String("image/"))) {
-            return Picture;
-        } else if (mime->name().startsWith(QLatin1String("video/"))) {
-            return Video;
-        } else if (mime->name().startsWith(QLatin1String("audio/"))) {
-            return Audio;
-        } else {
-            return Invalid;
-        }
-    } else { // it is not a file
-        Solid::Device genericDevice(media);
-        if (!genericDevice.isValid()) {
-            return Invalid;
-        }
-        Solid::OpticalDisc *opticalDisc = genericDevice.as<Solid::OpticalDisc>();
-        if (!opticalDisc) {
-            return Invalid;
-        }
-
-        return OpticalDisc;
-    }
-}
-
-Media mediaFromMediaSource(const Phonon::MediaSource &source)
-{
-    if (source.url().isValid()) {
-        Media media;
-        media.second = KUrl(source.url()).path();
-        media.first = getType(media.second);
-        if (media.first == MediaCenter::Invalid) {
-            media.second = "";
-            return media;
-        }
-        return media;
-    }
-
-    if (!source.fileName().isEmpty()) {
-        Media media;
-        media.second = source.fileName();
-        media.first = getType(media.second);
-        if (media.first == MediaCenter::Invalid) {
-            media.second = "";
-            return media;
-        }
-        return media;
-    }
-
-    if (!source.deviceName().isEmpty()) {
-        Media media;
-        media.second = source.deviceName();
-        media.first = MediaCenter::OpticalDisc;
-        return media;
-    }
-
-    return Media();
-}
-
 QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> &roles)
 {
     QHash<int, QByteArray> newRoles(roles);
