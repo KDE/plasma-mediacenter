@@ -21,8 +21,7 @@
 #ifndef LOCALFILESABSTRACTBACKEND_H
 #define LOCALFILESABSTRACTBACKEND_H
 
-#include <mediacenter/abstractbrowsingbackend.h>
-
+#include <libs/mediacenter/abstractbrowsingbackend.h>
 
 class LocalFilesAbstractBackend : public MediaCenter::AbstractBrowsingBackend
 {

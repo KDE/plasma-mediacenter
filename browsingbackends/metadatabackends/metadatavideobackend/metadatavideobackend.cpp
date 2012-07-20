@@ -45,5 +45,9 @@ void MetadataVideoBackend::init()
     }
 }
 
+QString MetadataVideoBackend::backendCategory() const
+{
+    return "video";
+}
 
 #include "metadatavideobackend.moc"

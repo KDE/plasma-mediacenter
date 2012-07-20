@@ -21,12 +21,14 @@
 
 #include <libs/mediacenter/backendsmodel.h>
 #include <libs/mediacenter/playlistmodel.h>
+#include <libs/mediacenter/filteredbackendsmodel.h>
 #include <Plasma/Package>
 
 #include <KDE/KCmdLineArgs>
 
 #include <QtDeclarative/QDeclarativeView>
 #include <QtDeclarative/QDeclarativeContext>
+#include <qdeclarative.h>
 
 #ifdef QT_MULTIMEDIA_KIT_FOUND
 #include <QtMultimediaKit/QVideoWidget>
@@ -70,6 +72,7 @@ MainWindow::MainWindow(QWidget *parent) : KMainWindow(parent)
     m_kdeclarative.initialize();
     m_kdeclarative.setupBindings();
 
+    qmlRegisterType<FilteredBackendsModel>("org.kde.plasma.mediacentercomponents", 0, 1, "FilteredBackendsModel");
     BackendsModel *backendsModel = new BackendsModel(view->engine(), this);
     view->rootContext()->setContextProperty("backendsModel", backendsModel);
     PlaylistModel *playlistModel = new PlaylistModel(this);

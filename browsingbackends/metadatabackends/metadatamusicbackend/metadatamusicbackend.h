@@ -44,6 +44,7 @@ public:
     virtual ~MetadataMusicBackend();
 
     virtual void init();
+    virtual QString backendCategory() const;
 
     virtual QString mediaBrowserOverride() const;
 

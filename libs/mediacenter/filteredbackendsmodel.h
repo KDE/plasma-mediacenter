@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright 2009 by Alessandro Diaferia <alediaferia@gmail.com>         *
+ *   Copyright 2012 by Shantanu Tushar <shaan7in@gmail.com>         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,21 +16,34 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#ifndef LOCALVIDEOSPACKAGE_H
-#define LOCALVIDEOSPACKAGE_H
 
-#include "../localfilesabstractbackend.h"
+#ifndef FILTEREDBACKENDSMODEL_H
+#define FILTEREDBACKENDSMODEL_H
 
-class LocalVideosBackend : public LocalFilesAbstractBackend
+#include <QtGui/QSortFilterProxyModel>
+#include "mediacenter_export.h"
+
+class MEDIACENTER_EXPORT FilteredBackendsModel : public QSortFilterProxyModel
 {
     Q_OBJECT
-public:
-    LocalVideosBackend(QObject *parent, const QVariantList &args);
-    ~LocalVideosBackend();
-    virtual QString backendCategory() const;
+    Q_PROPERTY(QString backendCategory READ backendCategory WRITE setBackendCategory NOTIFY backendCategoryChanged)
+    Q_PROPERTY(QObject* sourceBackendsModel READ sourceBackendsModel WRITE setSourceBackendsModel NOTIFY sourceBackendsModelChanged)
 
-protected:
-    virtual void initModel();
+public:
+    FilteredBackendsModel(QObject* parent = 0);
+    virtual bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const;
+
+    QString backendCategory() const;
+    void setBackendCategory(const QString &category);
+    QObject *sourceBackendsModel();
+    void setSourceBackendsModel(QObject *model);
+
+signals:
+    void backendCategoryChanged();
+    void sourceBackendsModelChanged();
+
+private:
+    QString m_category;
 };
 
-#endif // LOCALVIDEOSPACKAGE_H
+#endif // FILTEREDBACKENDSMODEL_H

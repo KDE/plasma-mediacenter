@@ -36,3 +36,7 @@ void LocalMusicBackend::initModel()
     setModel(new LocalMusicModel(this));
 }
 
+QString LocalMusicBackend::backendCategory() const
+{
+    return "music";
+}

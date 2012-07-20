@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright 2009 by Alessandro Diaferia <alediaferia@gmail.com>         *
+ *   Copyright 2012 by Shantanu Tushar <shaan7in@gmail.com>                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,21 +16,48 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#ifndef LOCALVIDEOSPACKAGE_H
-#define LOCALVIDEOSPACKAGE_H
 
-#include "../localfilesabstractbackend.h"
+#include "filteredbackendsmodel.h"
+#include "backendsmodel.h"
 
-class LocalVideosBackend : public LocalFilesAbstractBackend
+FilteredBackendsModel::FilteredBackendsModel(QObject *parent) : QSortFilterProxyModel(parent)
 {
-    Q_OBJECT
-public:
-    LocalVideosBackend(QObject *parent, const QVariantList &args);
-    ~LocalVideosBackend();
-    virtual QString backendCategory() const;
 
-protected:
-    virtual void initModel();
-};
+}
 
-#endif // LOCALVIDEOSPACKAGE_H
+bool FilteredBackendsModel::filterAcceptsRow(int source_row, const QModelIndex& source_parent) const
+{
+    if (!sourceModel())
+        return false;
+    if (m_category.isEmpty())
+        return true;
+    return sourceModel()->data(sourceModel()->index(source_row, 0),
+                               BackendsModel::BackendCategoryRole).toString()  == m_category;
+}
+
+void FilteredBackendsModel::setBackendCategory(const QString& category)
+{
+    m_category = category;
+    emit backendCategoryChanged();
+}
+
+QString FilteredBackendsModel::backendCategory() const
+{
+    return m_category;
+}
+
+void FilteredBackendsModel::setSourceBackendsModel(QObject* model)
+{
+    QAbstractItemModel *m = qobject_cast<QAbstractItemModel*>(model);
+    if (m) {
+        setSourceModel(m);
+    }
+    emit sourceBackendsModelChanged();
+}
+
+QObject* FilteredBackendsModel::sourceBackendsModel()
+{
+    return static_cast<QObject*>(sourceModel());
+}
+
+#include "filteredbackendsmodel.moc"

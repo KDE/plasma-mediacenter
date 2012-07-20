@@ -38,6 +38,7 @@ BackendsModel::BackendsModel (QDeclarativeEngine* engine, QObject* parent) : QAb
 
     QHash<int, QByteArray> roles = roleNames();
     roles[ModelObjectRole] = "modelObject";
+    roles[BackendCategoryRole] = "backendCategory";
     setRoleNames(roles);
 }
 
@@ -71,6 +72,8 @@ QVariant BackendsModel::data (const QModelIndex& index, int role) const
             return backends.at(index.row())->name();
         case Qt::DecorationRole:
             return backends.at(index.row())->icon();
+        case BackendCategoryRole:
+            return backends.at(index.row())->backendCategory();
         case ModelObjectRole:
             QVariant ptr;
             ptr.setValue(qobject_cast<QObject*>(backends.at(index.row())));

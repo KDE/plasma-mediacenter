@@ -34,3 +34,8 @@ void LocalVideosBackend::initModel()
 {
     setModel(new LocalVideosModel(this));
 }
+
+QString LocalVideosBackend::backendCategory() const
+{
+    return "video";
+}

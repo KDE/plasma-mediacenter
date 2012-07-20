@@ -31,6 +31,7 @@ class MetadataPictureBackend : public AbstractMetadataBackend
 public:
     MetadataPictureBackend (QObject* parent, const QVariantList& args);
     virtual ~MetadataPictureBackend();
+    virtual QString backendCategory() const;
 
 public Q_SLOTS:
     virtual void init();

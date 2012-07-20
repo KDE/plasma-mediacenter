@@ -45,5 +45,9 @@ void MetadataPictureBackend::init()
     }
 }
 
+QString MetadataPictureBackend::backendCategory() const
+{
+    return "image";
+}
 
 #include "metadatapicturebackend.moc"

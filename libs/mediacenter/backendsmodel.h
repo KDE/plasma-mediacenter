@@ -35,7 +35,8 @@ class MEDIACENTER_EXPORT BackendsModel : public QAbstractListModel
     Q_OBJECT
 public:
     enum Roles {
-        ModelObjectRole = Qt::UserRole + 1
+        ModelObjectRole = Qt::UserRole + 1,
+        BackendCategoryRole
     };
 
     explicit BackendsModel (QDeclarativeEngine *engine, QObject* parent = 0);

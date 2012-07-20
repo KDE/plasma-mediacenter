@@ -129,4 +129,9 @@ QObject* MetadataMusicBackend::musicModel() const
     return m_musicModel;
 }
 
+QString MetadataMusicBackend::backendCategory() const
+{
+    return "music";
+}
+
 #include "metadatamusicbackend.moc"

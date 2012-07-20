@@ -31,6 +31,7 @@ class MetadataVideoBackend : public AbstractMetadataBackend
 public:
     MetadataVideoBackend (QObject* parent, const QVariantList& args);
     virtual ~MetadataVideoBackend();
+    virtual QString backendCategory() const;
 
 public Q_SLOTS:
     virtual void init();

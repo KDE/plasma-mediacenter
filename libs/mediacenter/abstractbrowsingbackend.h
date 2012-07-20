@@ -205,7 +205,20 @@ public:
      */
     Q_INVOKABLE virtual bool supportsSearch() const;
 
+    /**
+     * This method is called by the UI when the user requests to search for a media
+     *
+     * @param searchTerm string entered by the user
+     */
     Q_INVOKABLE virtual void search(const QString &searchTerm);
+
+    /**
+     * This method is called by the PMC runtime to find out which category should
+     * this backend be placed in
+     *
+     * @return one of these strings - "music", "image", "video", "other"
+     */
+    Q_INVOKABLE virtual QString backendCategory() const = 0;
 
 signals:
     void modelChanged();

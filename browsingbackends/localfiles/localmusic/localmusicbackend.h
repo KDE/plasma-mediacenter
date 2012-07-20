@@ -27,6 +27,7 @@ class LocalMusicBackend : public LocalFilesAbstractBackend
 public:
     LocalMusicBackend(QObject *parent, const QVariantList &args);
     ~LocalMusicBackend();
+    virtual QString backendCategory() const;
 
 protected:
     virtual void initModel();
