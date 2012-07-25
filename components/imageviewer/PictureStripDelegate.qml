@@ -21,6 +21,8 @@ import QtQuick 1.1
 
 Item {
     id: pictureStripDelegate
+    scale: (ListView.isCurrentItem ? 1.5 : 1)
+    z: ListView.isCurrentItem ? 1 : 0
     signal imageClicked(string url)
 
     Image {

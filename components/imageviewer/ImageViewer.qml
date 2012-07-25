@@ -69,6 +69,7 @@ Rectangle {
             State {
                 name: "hidden"
                 AnchorChanges { target: mediaPictureStrip; anchors.top: parent.bottom; anchors.bottom: undefined }
+                PropertyChanges { target: mediaPictureStrip; clip: true }
             }
         ]
         transitions: [ Transition { AnchorAnimation { duration: 100 } } ]

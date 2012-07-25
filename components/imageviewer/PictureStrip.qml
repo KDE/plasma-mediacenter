@@ -42,15 +42,16 @@ Item {
         anchors { left: button1.right; right: button2.left; top: parent.top; bottom: parent.bottom }
 
         orientation: ListView.Horizontal
+        spacing: 2
+        preferredHighlightBegin: parent.width*0.4
+        preferredHighlightEnd: parent.width*0.6
+        highlightRangeMode: GridView.ApplyRange
         delegate: PictureStripDelegate {
             height: 64
             width: isExpandable ? 0 : height
             onImageClicked: rootItem.imageClicked(url)
         }
         focus: true
-        clip: true
-        highlight: PictureStripItemHighlight { z:1 }
-        highlightFollowsCurrentItem: true
     }
 
     PlasmaComponents.ToolButton {
