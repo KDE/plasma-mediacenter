@@ -37,9 +37,27 @@ Item {
         }
     }
 
+    PlasmaComponents.ToolButton {
+        id: slideshow
+        anchors.left: button1.right
+        height: parent.height
+        width: height
+        iconSource: "media-playback-start"
+        flat: true
+        onClicked: { slideshowTimer.running = true; }
+        Timer {
+            id: slideshowTimer
+            interval: 4000; running: false; repeat: true
+            onTriggered: {
+                var i = imageList.currentIndex;
+                if (i<imageList.count-1) { imageList.currentIndex = i + 1; emitClicked() }
+            }
+        }
+    }
+
     ListView {
         id: imageList
-        anchors { left: button1.right; right: button2.left; top: parent.top; bottom: parent.bottom }
+        anchors { left: slideshow.right; right: button2.left; top: parent.top; bottom: parent.bottom }
 
         orientation: ListView.Horizontal
         spacing: 2
