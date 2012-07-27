@@ -24,6 +24,7 @@ Item {
     scale: (ListView.isCurrentItem ? 1.5 : 1)
     z: ListView.isCurrentItem ? 1 : 0
     signal imageClicked(string url)
+    ListView.onIsCurrentItemChanged: {pictureStripDelegate.imageClicked(mediaUrl)}
 
     Image {
         anchors.fill: parent
