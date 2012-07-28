@@ -20,7 +20,7 @@
 function checkAndLoad(loader)
 {
     if (typeof(decoration) == "string") {
-        if (decoration.search('/') == 0) {
+        if (decoration.search(/.*\/.*/) == 0) {
             loadImage(loader);
         } else {
             loadIcon(loader);

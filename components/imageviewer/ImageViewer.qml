@@ -31,6 +31,8 @@ Rectangle {
     property alias stripState: mediaPictureStrip.state
     property alias stripCurrentIndex: mediaPictureStrip.currentIndex
 
+    signal slideshowStarted
+
     width: parent.width
     height: parent.height
     color: "black"
@@ -65,6 +67,7 @@ Rectangle {
         onImageClicked: {
             mediaImageViewer.source = url
         }
+        onSlideShowStarted: imageRect.slideshowStarted()
         states: [
             State {
                 name: "hidden"

@@ -25,6 +25,7 @@ Item {
     property alias model: imageList.model
     property alias currentIndex: imageList.currentIndex
     signal imageClicked(string url)
+    signal slideShowStarted
 
     PlasmaComponents.ToolButton {
         id: button1
@@ -43,12 +44,12 @@ Item {
         height: parent.height
         checkable: true
         width: height
-        iconSource: checkable ? "media-playback-start" : "media-playback-pause"
-        flat: true
-        onClicked: checkable = !checkable
+        iconSource: checked ? "media-playback-pause" : "media-playback-start"
+
+        onCheckedChanged: if (checked) rootItem.slideShowStarted()
         Timer {
             id: slideshowTimer
-            interval: 4000; running: !slideshow.checkable ; repeat: true
+            interval: 4000; running: slideshow.checked ; repeat: true
             onTriggered: {
                 var i = imageList.currentIndex;
                 if (i<imageList.count-1) { imageList.currentIndex = i + 1; emitClicked() }
@@ -71,6 +72,8 @@ Item {
             onImageClicked: rootItem.imageClicked(url)
         }
         focus: true
+        snapMode: ListView.SnapToItem
+        clip: true
     }
 
     PlasmaComponents.ToolButton {

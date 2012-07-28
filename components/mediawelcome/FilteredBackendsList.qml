@@ -40,7 +40,6 @@ Item {
         delegate: BackendsListDelegate { width: listView.width; finalHeight: 64 }
         highlight: Rectangle {
             radius: 10
-            height: parent.height
             color: "white"
             opacity: 0.5
         }

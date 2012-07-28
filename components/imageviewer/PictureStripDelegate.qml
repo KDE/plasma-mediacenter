@@ -21,18 +21,27 @@ import QtQuick 1.1
 
 Item {
     id: pictureStripDelegate
-    scale: (ListView.isCurrentItem ? 1.5 : 1)
     z: ListView.isCurrentItem ? 1 : 0
     signal imageClicked(string url)
     ListView.onIsCurrentItemChanged: {pictureStripDelegate.imageClicked(mediaUrl)}
 
     Image {
-        anchors.fill: parent
+        anchors { fill: parent; rightMargin: 1; topMargin: 10 }
+        anchors { leftMargin: rightMargin; bottomMargin: topMargin }
         sourceSize.width: width
         sourceSize.height: 0
         source: mediaUrl
         asynchronous: true
+        scale: (pictureStripDelegate.ListView.isCurrentItem ? 1.5 : 1)
+
+        Behavior on scale {
+            NumberAnimation {
+                duration: 500
+                easing.type: Easing.OutExpo
+            }
+        }
     }
+
     MouseArea {
         id: pictureStripMouseArea
         anchors.fill: parent

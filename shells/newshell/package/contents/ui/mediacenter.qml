@@ -55,11 +55,7 @@ Rectangle {
         stopped: runtimeData.stopped
         volume: runtimeData.volume
 
-        onClicked: {
-            mediaController.state = mediaController.state ? "" : "hidden"
-            mediaImageViewer.stripState = mediaImageViewer.stripState ? "" : "hidden"
-            mediaBrowser.visible =false
-        }
+        onClicked: hideToolbars()
         onEscapePressed: mediaBrowser.visible = true
 
         onCurrentTimeChanged: {
@@ -111,12 +107,20 @@ Rectangle {
         ]
 
         transitions: [ Transition { AnchorAnimation { duration: 200 } } ]
+
+        function hideToolbars()
+        {
+            mediaController.state = mediaController.state ? "" : "hidden"
+            mediaImageViewer.stripState = mediaImageViewer.stripState ? "" : "hidden"
+            mediaBrowser.visible = false
+        }
     }
 
     MediaCenterComponents.ImageViewer {
         id: mediaImageViewer
         visible: false
         stripVisible: visible && !mediaBrowser.visible && !mediaWelcome.visible
+        onSlideshowStarted: mediaPlayer.hideToolbars()
     }
 
     MediaCenterComponents.MediaController {

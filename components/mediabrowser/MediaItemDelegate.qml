@@ -85,7 +85,7 @@ Item {
                         id: delegateItemImage
                         anchors.horizontalCenter: parent.horizontalCenter
                         fillMode: Image.PreserveAspectCrop
-                        sourceSize.width: width * mediaItemDelegateItem.scale
+                        sourceSize.width: width * 2
                         sourceSize.height: 0
                         asynchronous: true
                         source: rootColumn.source
@@ -115,7 +115,7 @@ Item {
                     visible: !hideLabel
                     font.pointSize: 14
                     color: "white"
-                    elide: Text.ElideMiddle
+                    elide: mediaItemDelegateItem.GridView.isCurrentItem ? Text.ElideNone : Text.ElideMiddle
                     width: parent.width
                     wrapMode: mediaItemDelegateItem.GridView.isCurrentItem ? Text.Wrap : Text.NoWrap
 
