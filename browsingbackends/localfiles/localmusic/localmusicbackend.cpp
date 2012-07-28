@@ -38,5 +38,5 @@ void LocalMusicBackend::initModel()
 
 QString LocalMusicBackend::backendCategory() const
 {
-    return "music";
+    return "audio";
 }

@@ -18,41 +18,24 @@
  ***************************************************************************/
 
 import QtQuick 1.1
-import org.kde.qtextracomponents 0.1 as QtExtraComponents
+import org.kde.plasma.mediacentercomponents 0.1 as MediaCenterComponents
 
 Item {
-    id: rootItem
-    property int finalHeight: 0
+    property alias backendsModel: filteredModel.sourceBackendsModel
+    property alias categoryFilter: filteredModel.backendCategory
 
-    Row {
-        anchors.fill: parent
+    MediaCenterComponents.FilteredBackendsModel {
+        id: filteredModel
+
+        onBackendCategoryChanged: console.log(backendCategory)
+    }
+
+    ListView {
+        id: listView
+        anchors { fill: parent; margins: 20 }
         spacing: 20
 
-        QtExtraComponents.QIconItem {
-            id: backendIcon
-            icon: decoration
-            height: parent.height
-            width: finalHeight
-        }
-
-        HomeScreenText {
-            height: parent.height
-
-            text: display
-            font.pointSize: 20
-        }
-
-    }
-
-    MouseArea {
-        anchors.fill: parent
-        onClicked: { homeScreenRootItem.selectedBackend = modelObject; homeScreenRootItem.backendSelected() }
-    }
-
-    ListView.onIsCurrentItemChanged: if (ListView.isCurrentItem) homeScreenRootItem.selectedBackend = modelObject
-
-    Component.onCompleted: SequentialAnimation {
-        PropertyAction { target: rootItem; property: "height"; value: 0 }
-        NumberAnimation { target: rootItem; property: "height"; to: rootItem.finalHeight; easing.type: Easing.InOutQuad }
+        model: filteredModel
+        delegate: BackendsListDelegate { width: listView.width; finalHeight: 64 }
     }
 }

@@ -30,11 +30,6 @@ Rectangle {
         GradientStop { position: 1.0; color: "#000000" }
     }
 
-    MediaCenterComponents.FilteredBackendsModel {
-        id: filteredBackendsModel
-        sourceBackendsModel: backendsModel
-    }
-
     MediaCenterComponents.RuntimeData {
         id: runtimeData
 
@@ -189,7 +184,7 @@ Rectangle {
         anchors.fill: parent
         focus: visible
 
-        model: filteredBackendsModel
+        model: backendsModel
         metaData: mediaPlayer.metaData
         onBackendSelected: { runtimeData.currentBrowsingBackend = selectedBackend; visible = false }
         onVisibleChanged: {

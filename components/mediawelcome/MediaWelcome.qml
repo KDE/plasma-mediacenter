@@ -23,7 +23,7 @@ import org.kde.plasma.mediacentercomponents 0.1 as MediaCenterComponents
 
 Item {
     id: homeScreenRootItem
-    property alias model: homeScreenBackendsList.model
+    property QtObject model
     property variant selectedBackend
     property QtObject metaData
 
@@ -41,42 +41,27 @@ Item {
             height: 0.2 * parent.height
         }
 
-        Row {
-            id: homeScreenBody
+        Item {
+            id: homeScreenBodyLeft
             width: parent.width
-            height: 0.7 * parent.height
-            spacing: 20
+            height: 0.3 * parent.height
+            clip: true
 
-            Item {
-                id: homeScreenBodyLeft
-                width: parent.width/2
-                height: parent.height
-                clip: true
-
-                ListView {
-                    id: homeScreenBackendsList
-                    anchors { fill: parent; margins: 20 }
-                    spacing: 20
-
-                    delegate: BackendsListDelegate { width: parent.width; height: 64 }
-                }
+            CategoriesList {
+                id: categoriesList
+                anchors { top: parent.top; horizontalCenter: parent.horizontalCenter }
+                height: delegateWidth; width: parent.width
             }
+        }
 
-            Item {
-                id: homeScreenBodyRight
-                width: parent.width/2
-                height: parent.height
-                clip: true
-
-                ListView {
-                    id: recentlyPlayedList
-                    anchors { fill: parent; margins: 20 }
-                    spacing: 20
-                    model: RecentlyPlayed { }
-
-                    header: HomeScreenText { width: parent.width; height: 64; horizontalAlignment: Text.AlignHCenter; text: "Recently Played"; font.pointSize: 24 }
-                    delegate: RecentlyPlayedListDelegate { width: parent.width; height: 64 }
-                }
+        Item {
+            width: parent.width
+            height: 0.4 * parent.height
+            FilteredBackendsList {
+                height: parent.height; width: 200
+                anchors.centerIn: parent
+                backendsModel: homeScreenRootItem.model
+                categoryFilter: categoriesList.currentCategory
             }
         }
 
@@ -84,7 +69,7 @@ Item {
             id: homeScreenFooter
             width: parent.width
             height: 0.1 * parent.height
-            text: homeScreenRootItem.metaData.title
+            //text: homeScreenRootItem.metaData.title
         }
     }
 }

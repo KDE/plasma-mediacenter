@@ -21,38 +21,36 @@ import QtQuick 1.1
 import org.kde.qtextracomponents 0.1 as QtExtraComponents
 
 Item {
-    id: rootItem
-    property int finalHeight: 0
+    id: root
+    property alias currentCategory: workaround.text
+    opacity: ListView.isCurrentItem ? 1 : 0.4
 
-    Row {
-        anchors.fill: parent
-        spacing: 20
+    Text {
+        id: workaround
+        visible: false
+        text: category
+    }
+
+    Column {
+        anchors { fill: parent; margins: 20 }
+        spacing: 10
 
         QtExtraComponents.QIconItem {
             id: backendIcon
             icon: decoration
-            height: parent.height
-            width: finalHeight
+            height: width
+            width: parent.width
         }
-
-        HomeScreenText {
-            height: parent.height
-
-            text: display
-            font.pointSize: 20
-        }
-
     }
 
     MouseArea {
         anchors.fill: parent
-        onClicked: { homeScreenRootItem.selectedBackend = modelObject; homeScreenRootItem.backendSelected() }
+        onClicked: { root.ListView.view.currentIndex = index; root.ListView.view.focus = true }
     }
 
-    ListView.onIsCurrentItemChanged: if (ListView.isCurrentItem) homeScreenRootItem.selectedBackend = modelObject
-
-    Component.onCompleted: SequentialAnimation {
-        PropertyAction { target: rootItem; property: "height"; value: 0 }
-        NumberAnimation { target: rootItem; property: "height"; to: rootItem.finalHeight; easing.type: Easing.InOutQuad }
+    Behavior on opacity {
+        NumberAnimation {
+            duration: 500
+        }
     }
 }

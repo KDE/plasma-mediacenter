@@ -18,41 +18,26 @@
  ***************************************************************************/
 
 import QtQuick 1.1
-import org.kde.qtextracomponents 0.1 as QtExtraComponents
 
-Item {
-    id: rootItem
-    property int finalHeight: 0
-
-    Row {
-        anchors.fill: parent
-        spacing: 20
-
-        QtExtraComponents.QIconItem {
-            id: backendIcon
-            icon: decoration
-            height: parent.height
-            width: finalHeight
-        }
-
-        HomeScreenText {
-            height: parent.height
-
-            text: display
-            font.pointSize: 20
-        }
-
+ListModel {
+    ListElement {
+        display: "Music"
+        decoration: "tools-rip-audio-cd"
+        category: "audio"
     }
-
-    MouseArea {
-        anchors.fill: parent
-        onClicked: { homeScreenRootItem.selectedBackend = modelObject; homeScreenRootItem.backendSelected() }
+    ListElement {
+        display: "Pictures"
+        decoration: "image-x-generic"
+        category: "image"
     }
-
-    ListView.onIsCurrentItemChanged: if (ListView.isCurrentItem) homeScreenRootItem.selectedBackend = modelObject
-
-    Component.onCompleted: SequentialAnimation {
-        PropertyAction { target: rootItem; property: "height"; value: 0 }
-        NumberAnimation { target: rootItem; property: "height"; to: rootItem.finalHeight; easing.type: Easing.InOutQuad }
+    ListElement {
+        display: "Videos"
+        decoration: "tools-rip-video-cd"
+        category: "video"
+    }
+    ListElement {
+        display: "Others"
+        decoration: "plasma"
+        category: "other"
     }
 }

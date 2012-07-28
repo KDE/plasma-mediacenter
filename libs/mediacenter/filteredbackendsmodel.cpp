@@ -37,7 +37,9 @@ bool FilteredBackendsModel::filterAcceptsRow(int source_row, const QModelIndex& 
 
 void FilteredBackendsModel::setBackendCategory(const QString& category)
 {
+    beginResetModel();
     m_category = category;
+    endResetModel();
     emit backendCategoryChanged();
 }
 
