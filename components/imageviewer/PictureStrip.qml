@@ -41,13 +41,14 @@ Item {
         id: slideshow
         anchors.left: button1.right
         height: parent.height
+        checkable: true
         width: height
-        iconSource: "media-playback-start"
+        iconSource: checkable ? "media-playback-start" : "media-playback-pause"
         flat: true
-        onClicked: { slideshowTimer.running = true; }
+        onClicked: checkable = !checkable
         Timer {
             id: slideshowTimer
-            interval: 4000; running: false; repeat: true
+            interval: 4000; running: !slideshow.checkable ; repeat: true
             onTriggered: {
                 var i = imageList.currentIndex;
                 if (i<imageList.count-1) { imageList.currentIndex = i + 1; emitClicked() }
