@@ -21,6 +21,7 @@ import QtQuick 1.1
 import org.kde.plasma.mediacentercomponents 0.1 as MediaCenterComponents
 
 Item {
+    id: filterBackend
     property alias backendsModel: filteredModel.sourceBackendsModel
     property alias categoryFilter: filteredModel.backendCategory
 
@@ -37,5 +38,12 @@ Item {
 
         model: filteredModel
         delegate: BackendsListDelegate { width: listView.width; finalHeight: 64 }
+        highlight: Rectangle {
+            radius: 10
+            height: parent.height
+            color: "white"
+            opacity: 0.5
+        }
+        highlightFollowsCurrentItem: true
     }
 }

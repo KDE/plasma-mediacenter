@@ -32,7 +32,7 @@ Item {
     Column {
         anchors {
             fill: parent
-            leftMargin: 50; rightMargin: 50; topMargin: 10; bottomMargin: 10
+            topMargin: 10; bottomMargin: 10
         }
 
         HomeScreenHeader {
@@ -58,7 +58,7 @@ Item {
             width: parent.width
             height: 0.4 * parent.height
             FilteredBackendsList {
-                height: parent.height; width: 200
+                height: parent.height; width: 400
                 anchors.centerIn: parent
                 backendsModel: homeScreenRootItem.model
                 categoryFilter: categoriesList.currentCategory

@@ -24,6 +24,7 @@ ListView {
     property int delegateWidth: parent.height
     property string currentCategory: currentItem.currentCategory
 
+    currentIndex: 2
     spacing: 20
     preferredHighlightBegin: width*0.45
     preferredHighlightEnd: width*0.55
@@ -33,12 +34,5 @@ ListView {
     delegate: CategoriesListDelegate {
         height: categoriesList.height
         width: categoriesList.delegateWidth
-    }
-
-    highlightFollowsCurrentItem: true
-    highlight: Rectangle {
-        radius: 10
-        color: "white"
-        opacity: 0.5
     }
 }
