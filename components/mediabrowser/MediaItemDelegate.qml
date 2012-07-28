@@ -62,9 +62,8 @@ Item {
 
                 Loader {
                     id: iconImageLoader
-                    width: parent.width * 0.95
+                    width: parent.width
                     height: parent.height - (itemText.visible ? itemText.height : 0 );
-                    anchors.centerIn: parent
 
                     function checkAndLoad()
                     {
@@ -72,17 +71,21 @@ Item {
                     }
 
                     Component.onCompleted: checkAndLoad()
+
+                    PlasmaComponents.BusyIndicator {
+                        anchors.centerIn: parent
+                        running: workaroundForDecorationUpdate.text.length == 0
+                        visible: running
+                    }
                 }
 
                 Component {
                     id: delegateItemImageComponent
                     Image {
                         id: delegateItemImage
-                        width: parent.width
-                        height: parent.height
                         anchors.horizontalCenter: parent.horizontalCenter
                         fillMode: Image.PreserveAspectCrop
-                        sourceSize.width: width * 2
+                        sourceSize.width: width * mediaItemDelegateItem.scale
                         sourceSize.height: 0
                         asynchronous: true
                         source: rootColumn.source
@@ -93,8 +96,6 @@ Item {
                     id: delegateItemIconComponent
                     QtExtraComponents.QIconItem {
                         id: delegateItemIcon
-                        width: parent.width
-                        height: parent.height
                         anchors.horizontalCenter: parent.horizontalCenter
                         icon: {
                             if (typeof rootColumn.source == "string")
