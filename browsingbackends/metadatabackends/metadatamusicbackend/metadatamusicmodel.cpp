@@ -31,12 +31,6 @@
 MetadataMusicModel::MetadataMusicModel (QObject* parent)
     : AbstractMetadataModel (parent)
 {
-    if (metadataModel()) {
-        
-    }
-    else {
-        kDebug() << "WARNING: Constructor called before metadataModel set :/";
-    }
 }
 
 MetadataMusicModel::~MetadataMusicModel()

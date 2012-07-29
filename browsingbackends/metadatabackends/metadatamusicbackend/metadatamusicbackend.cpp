@@ -59,6 +59,7 @@ void MetadataMusicBackend::init()
     if (metadataModel()) {
         m_metadataMusicModel = new MetadataMusicModel(this);
     }
+    updateModelAccordingToFilters();
 }
 
 QString MetadataMusicBackend::mediaBrowserOverride() const

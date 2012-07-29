@@ -20,92 +20,48 @@
 import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
 
- Rectangle {
+Rectangle {
     id: playlistItem
     signal playRequested(string url)
 
-    height: parent.height
-    width: parent.width / 3
+    clip: true
     color: "black"
 
-    Rectangle {
-        id: rect
-        color: "lightblue"
-        width: parent.width
-        height: clearPlaylist.height
-        opacity: 0.4
-        anchors.bottomMargin: 5
+    Row {
+        id: topRow
+        anchors { top: parent.top; left: parent.left; right: parent.right }
+        height: 64
 
-        PlasmaComponents.ToolButton {
-            id: clearPlaylist
-            width: 40
-            height: width
-            anchors.top: parent.top
-            iconSource: "edit-clear-list"
-            onClicked: {
-                playlistModel.clearPlaylist();
+        Item {
+            height: parent.height
+            width: parent.width - clearPlaylist.width
+            Text {
+                id: mediaCount
+                anchors.centerIn: parent
+                text: playlistList.count + " items"
+                font.pixelSize: 18
+                color: "white"
             }
         }
 
-        Text {
-            id: mediaCount
-            anchors.left: clearPlaylist.right
-            anchors.leftMargin: 10
-            anchors.verticalCenter: parent.verticalCenter
-            text: "MediaCount  "  + playlistList.count
-            font.pixelSize: 18
-            color: "white"
+        PlasmaComponents.ToolButton {
+            id: clearPlaylist
+            width: height
+            height: parent.height
+            iconSource: "edit-clear-list"
+            onClicked: playlistModel.clearPlaylist();
         }
     }
 
     ListView {
         id: playlistList
-        anchors.top: rect.bottom
+        anchors { top: topRow.bottom; left: parent.left; right: parent.right }
         anchors.bottom: parent.bottom
-        anchors.topMargin: 4
+        anchors.margins: 5
         model: playlistModel
-        width: parent.width
-        height: parent.height - clearPlaylist.height
         spacing: 3
+        clip: true
 
-        delegate:
-        Item{
-            id: listViewItem
-            width: parent.width
-            height: 30
-            MouseArea {
-                hoverEnabled: true
-                onEntered: listViewItem.ListView.view.currentIndex = index
-                anchors.fill: parent
-                onClicked: {
-                    playlistModel.currentIndex = index
-                    playlistItem.playRequested(mediaUrl)
-                }
-            }
-            Rectangle {
-                anchors.fill: parent
-                color: listViewItem.ListView.isCurrentItem ? "#002378" : "lightsteelblue"
-                opacity: 0.4
-                Text {
-                    text: display
-                    color: (index == playlistModel.currentIndex) ? "red" : "white"
-                    elide: Text.ElideRight
-                    font.pixelSize: 18
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-            }
-
-            PlasmaComponents.ToolButton {
-                id: removeFromPlaylistButton
-                width: 30
-                height: width
-                visible: listViewItem.ListView.isCurrentItem
-                iconSource: "list-remove"
-                anchors { right: parent.right; top: parent.top }
-                onClicked: {
-                    playlistModel.removeFromPlaylist (index);
-                }
-            }
-        }
+        delegate: PlaylistDelegate { width: parent.width; height: 32 }
     }
 }

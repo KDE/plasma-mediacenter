@@ -61,16 +61,19 @@ Row {
     ListView {
         width: parent.width/3 ; height: parent.height
         model: backend.musicModel
-        header: PlasmaComponents.Label {
-            text: "Songs"; width: parent.width; height: 96
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            font.pointSize: 14
-            color: "white"
+        header: PlasmaComponents.Button {
+            text: "All Songs"; width: parent.width; height: 96
+            onClicked: backend.albumFilter = backend.artistFilter = ""
         }
         delegate: MusicDelegate { width: parent.width; height: 64 }
         spacing: 5
         highlight: MediaItemHighlight { z: 1 }
         highlightFollowsCurrentItem: true
+
+        PlasmaComponents.BusyIndicator {
+            anchors.centerIn: parent
+            running: parent.count == 0
+            visible: running
+        }
     }
 }

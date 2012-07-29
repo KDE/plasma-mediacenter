@@ -134,9 +134,7 @@ Rectangle {
 
         onPlaylistButtonClicked: {
             if(playlistButtonChecked) {
-                mediaBrowser.state = "resize"
                 playlist.state = "playlistShow"
-                playlist.z = 2
             } else {
                 mediaBrowser.state = ""
                 playlist.state = ""
@@ -203,7 +201,7 @@ Rectangle {
     MediaCenterComponents.MediaBrowser {
         id: mediaBrowser
         anchors {
-            left: parent.left; right: parent.right; top: mediaController.bottom; bottom:parent.bottom
+            left: parent.left; right: playlist.left; top: mediaController.bottom; bottom:parent.bottom
         }
         height: parent.height
         visible: false
@@ -253,24 +251,17 @@ Rectangle {
             }
         }
 
-         states: [
-            State {
-                name: "resize"
-                AnchorChanges { target: mediaBrowser; anchors.right: playlist.left }
-            }
-        ]
-
         transitions: [ Transition { AnchorAnimation { duration: 500 } } ]
     }
 
      MediaCenterComponents.Playlist {
          id: playlist
          anchors {
-            top: mediaController.bottom
-            left: parent.right
-            right: undefined
+            top: mediaController.bottom; bottom: parent.bottom
+            left: parent.right; right: undefined
             margins: 10
          }
+         width: parent.width/4
          onPlayRequested: {
             z = 0
             mediaPlayer.visible = true
@@ -289,7 +280,7 @@ Rectangle {
             }
         ]
 
-        transitions: [ Transition { AnchorAnimation { duration: 100 } } ]
+        transitions: [ Transition { AnchorAnimation { duration: 200 } } ]
      }
 
     MediaCenterComponents.AboutPMC {
