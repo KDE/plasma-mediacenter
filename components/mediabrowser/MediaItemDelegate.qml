@@ -36,21 +36,24 @@ Item {
     signal playRequested(int index, string url, string currentMediaType)
 
     Item {
-        anchors { fill: parent; margins: 1 }
+        anchors { fill: parent; margins: 20 }
         clip: true
-        Rectangle {
+        /*Rectangle {
             anchors.fill: parent
             radius: 5
             z: -1
             color: "black"
             opacity: mediaItemDelegateItem.GridView.isCurrentItem ? 0.9 : 0
-        }
+            border.color: theme.viewHoverColor
+            border.width: mediaItemDelegateItem.GridView.isCurrentItem ? 2 : 0
+        }*/
 
         Item {
             anchors {
                 fill: parent
+                margins: 2
             }
-
+            clip: true
             PlasmaCore.Theme {
                 id:theme
             }
@@ -81,14 +84,38 @@ Item {
 
                 Component {
                     id: delegateItemImageComponent
-                    Image {
-                        id: delegateItemImage
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        fillMode: Image.PreserveAspectCrop
-                        sourceSize.width: width * 2
-                        sourceSize.height: 0
-                        asynchronous: true
-                        source: rootColumn.source
+                    Item {
+                        width: parent.width;
+                        height: parent.height;
+                        Rectangle {
+                            width: parent.width - 6
+                            height: parent.height - 6
+                            clip: true
+                            anchors.centerIn: parent
+                            color: "transparent"
+                            Image {
+                                id: delegateItemImage
+                                width: parent.width - 6
+                                height: parent.height - 6
+                                anchors.centerIn: parent
+                                fillMode: Image.PreserveAspectCrop
+                                sourceSize.width: width * 2
+                                sourceSize.height: 0
+                                asynchronous: true
+                                source: rootColumn.source
+                                z: 1
+                            }
+                        }
+                        Rectangle {
+                            anchors.centerIn: parent
+                            radius: 2
+                            z: 2
+                            color: "transparent"
+                            width: parent.width - 2
+                            height: parent.height -2
+                            border.color: mediaItemDelegateItem.GridView.isCurrentItem ? theme.viewHoverColor : "#666"
+                            border.width: 1
+                        }
                     }
                 }
 
@@ -114,7 +141,7 @@ Item {
                     text: hideLabel ? "" : ( display ? display : "" )
                     visible: !hideLabel
                     font.pointSize: 14
-                    color: "white"
+                    color: mediaItemDelegateItem.GridView.isCurrentItem ? theme.viewHoverColor : "white"
                     elide: mediaItemDelegateItem.GridView.isCurrentItem ? Text.ElideNone : Text.ElideMiddle
                     width: parent.width
                     wrapMode: mediaItemDelegateItem.GridView.isCurrentItem ? Text.Wrap : Text.NoWrap
@@ -146,14 +173,6 @@ Item {
                 onTextChanged: iconImageLoader.checkAndLoad()
             }
 
-            Keys.onReturnPressed: {
-                if (isExpandable) {
-                    backend.expand(index);
-                } else {
-                    mediaItemDelegateItem.playRequested(index, mediaUrl, mediaType)
-                }
-            }
-
             Behavior on width {
                 NumberAnimation {
                     duration: 1000
@@ -183,6 +202,14 @@ Item {
         NumberAnimation {
             duration: 500
             easing.type: Easing.OutExpo
+        }
+    }
+    
+    Keys.onReturnPressed: {
+        if (isExpandable) {
+            backend.expand(index);
+        } else {
+            mediaItemDelegateItem.playRequested(index, mediaUrl, mediaType)
         }
     }
 }

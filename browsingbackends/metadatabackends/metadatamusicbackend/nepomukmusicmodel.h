@@ -41,6 +41,7 @@ protected Q_SLOTS:
     void entriesRemoved(QList< QUrl > entries);
     void finishedListing();
     void updateModel();
+    void error(const QString &message);
 
 private:
     QString m_icon;

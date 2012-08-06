@@ -119,3 +119,8 @@ void NepomukMusicModel::finishedListing()
 {
     reset();
 }
+
+void NepomukMusicModel::error(const QString &message)
+{
+    kDebug() << message;
+}
