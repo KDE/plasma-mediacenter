@@ -23,11 +23,22 @@
 
 #include "../localfilesabstractmodel.h"
 
+#include <QtGui/QImage>
+
+#include <id3v2tag.h>
+#include <mpegfile.h>
+#include <attachedpictureframe.h>
+
 class LocalMusicModel : public LocalFilesAbstractModel
 {
-
+    Q_OBJECT
 public:
     explicit LocalMusicModel (QObject* parent);
+    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+    QImage imageForFile(const QString& file) const;
+    QImage imageForTag(TagLib::ID3v2::Tag *tag) const;
+private:
+    mutable QHash<int, bool> m_wasImageFound;
 };
 
 #endif // LOCALMUSICMODEL_H
