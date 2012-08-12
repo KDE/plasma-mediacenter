@@ -187,6 +187,12 @@ public:
      */
     QDeclarativeEngine *declarativeEngine() const;
 
+    /**
+     * Override this method if you want your backend to show a custom media browser
+     * instead of the standard PMC MediaBrowser.
+     *
+     * @return Valid QML string, use constructQmlSource for convenience
+     */
     Q_INVOKABLE virtual QString mediaBrowserOverride() const;
 
     /**
@@ -219,6 +225,14 @@ public:
      * @return one of these strings - "music", "image", "video", "other"
      */
     Q_INVOKABLE virtual QString backendCategory() const = 0;
+
+    /**
+     * Override this method if you want your backend to show custom items on a
+     * panel/popup. For example this can be used to set filtering options
+     *
+     * @return Valid QML string, use constructQmlSource for convenience
+     */
+    Q_INVOKABLE virtual QString mediaBrowserSidePanel() const;
 
 signals:
     void modelChanged();

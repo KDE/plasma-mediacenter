@@ -23,7 +23,6 @@ import org.kde.plasma.components 0.1 as PlasmaComponents
 Row {
     id: rootRow
     anchors.fill: parent
-    property QtObject model
     property QtObject backend
     spacing: 10
     clip: true

@@ -29,10 +29,28 @@ FocusScope {
     signal playRequested(int index, string url, string currentMediaType)
 
     Item {
+        id: mediaBrowserSidePanel
+        property bool enabled: false
+        property QtObject child
+        anchors { top: parent.top; bottom: parent.bottom; left: parent.left }
+        width: enabled ? parent.width*0.2 : 0
+        clip: true
+
+        Behavior on width {
+            NumberAnimation {
+                duration: 500
+            }
+        }
+    }
+
+    Item {
         id: mediaBrowserViewItem
         property QtObject mediaBrowserGridView
 
-        anchors.fill: parent
+        anchors {
+            top: parent.top; right: parent.right; bottom: parent.bottom;
+            left: mediaBrowserSidePanel.right
+        }
     }
 
     Component {
@@ -57,6 +75,7 @@ FocusScope {
     onCurrentBrowsingBackendChanged: {
         currentBrowsingBackend.init();
 
+        //Check if there is a custom browser, if yes, load that
         var object;
         if (currentBrowsingBackend.mediaBrowserOverride()) {
             var qmlSource = currentBrowsingBackend.mediaBrowserOverride();
@@ -73,6 +92,18 @@ FocusScope {
             searchMedia.visible = true
         } else {
             searchMedia.visible = false
+        }
+
+        if (mediaBrowserSidePanel.child) mediaBrowserSidePanel.child.destroy()
+        //Load the panel if the backend supports one
+        if (currentBrowsingBackend.mediaBrowserSidePanel()) {
+            var qmlSource = currentBrowsingBackend.mediaBrowserSidePanel();
+            object = Qt.createQmlObject(qmlSource, mediaBrowserSidePanel);
+            mediaBrowserSidePanel.child = object
+            object.backend = (function() { return currentBrowsingBackend; });
+            mediaBrowserSidePanel.enabled = true
+        } else {
+            mediaBrowserSidePanel.enabled = false
         }
     }
 

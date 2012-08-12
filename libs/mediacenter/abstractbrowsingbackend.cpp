@@ -181,7 +181,12 @@ QString AbstractBrowsingBackend::constructQmlSource(const QString& componentDirN
 
 QString AbstractBrowsingBackend::mediaBrowserOverride() const
 {
-    return "";
+    return QString();
+}
+
+QString AbstractBrowsingBackend::mediaBrowserSidePanel() const
+{
+    return QString();
 }
 
 bool AbstractBrowsingBackend::okToLoad() const

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright 2009 by Alessandro Diaferia <alediaferia@gmail.com>         *
+ *   Copyright 2012 Sinny Kumari <ksinny@gmail.com>                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,21 +17,32 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#ifndef LOCALMUSICPACKAGE_H
-#define LOCALMUSICPACKAGE_H
+import QtQuick 1.1
+import org.kde.plasma.components 0.1 as PlasmaComponents
+import org.kde.qtextracomponents 0.1 as QtExtraComponents
 
-#include "../localfilesabstractbackend.h"
+Item {
+    id: rootItem
+    anchors.fill: parent
+    property QtObject backend
 
-class LocalMusicBackend : public LocalFilesAbstractBackend
-{
-    Q_OBJECT
-public:
-    LocalMusicBackend(QObject *parent, const QVariantList &args);
-    ~LocalMusicBackend();
-    virtual QString backendCategory() const;
+    ListView {
+        id: placesListView
+        anchors { fill: parent; margins: 10 }
+        model: backend.placesModel()
+        spacing: 10
+        header: PlasmaComponents.Label {
+            id: placesLabel
+            anchors.right: parent.right
+            font.pointSize: 16
+            text: "Places"
+            color: "white"
+        }
+        delegate: PlacesDelegate { height: 64; width: placesListView.width }
+    }
 
-protected:
-    virtual void initModel();
-};
-
-#endif // LOCALMUSICPACKAGE_H
+    Rectangle {
+        anchors.fill: parent
+        radius: 5; opacity: 0.1
+    }
+}

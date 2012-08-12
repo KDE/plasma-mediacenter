@@ -91,4 +91,9 @@ bool LocalFilesAbstractModel::browseTo (int row)
     return success;
 }
 
+void LocalFilesAbstractModel::browseToUrl(const KUrl& url)
+{
+    dirLister()->openUrl(url);
+}
+
 #include "localfilesabstractmodel.moc"

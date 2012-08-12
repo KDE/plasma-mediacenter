@@ -46,3 +46,23 @@ bool LocalFilesAbstractBackend::expand (int row)
     return filesModel->browseTo(row);
 }
 
+QString LocalFilesAbstractBackend::mediaBrowserSidePanel() const
+{
+    return constructQmlSource("localfilescomponents", "0.1", "LocalFilesSidePanel");
+}
+
+
+QObject* LocalFilesAbstractBackend::placesModel()
+{
+     m_placeModel = new KFilePlacesModel(this);
+     return m_placeModel;
+}
+
+void LocalFilesAbstractBackend::browseToPlace(int row)
+{
+    KUrl url =  m_placeModel->url(m_placeModel->index(row, 0));
+    LocalFilesAbstractModel *filesModel = qobject_cast<LocalFilesAbstractModel*>(model());
+    filesModel->browseToUrl(url);
+}
+
+#include "localfilesabstractbackend.h"

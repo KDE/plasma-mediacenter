@@ -22,19 +22,24 @@
 #define LOCALFILESABSTRACTBACKEND_H
 
 #include <libs/mediacenter/abstractbrowsingbackend.h>
+#include <KDE/KFilePlacesModel>
 
 class LocalFilesAbstractBackend : public MediaCenter::AbstractBrowsingBackend
 {
-
+    Q_OBJECT
 public:
     LocalFilesAbstractBackend (QObject* parent, const QVariantList& args);
 
     virtual void init();
     virtual bool goOneLevelUp();
     virtual bool expand (int row);
+    virtual QString mediaBrowserSidePanel() const;
+    Q_INVOKABLE QObject *placesModel();
+    Q_INVOKABLE void browseToPlace(int row);
 
 protected:
     virtual void initModel() = 0;
+    KFilePlacesModel *m_placeModel;
 };
 
 #endif // LOCALFILESABSTRACTBACKEND_H

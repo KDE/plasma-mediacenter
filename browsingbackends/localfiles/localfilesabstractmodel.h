@@ -21,7 +21,7 @@
 #ifndef LOCALFILESABSTRACTMODEL_H
 #define LOCALFILESABSTRACTMODEL_H
 
-#include <KDirModel>
+#include <KDE/KDirModel>
 
 class LocalFilesAbstractModel : public KDirModel
 {
@@ -32,6 +32,7 @@ public:
     virtual QVariant data (const QModelIndex& index, int role = Qt::DisplayRole) const;
     virtual bool goOneLevelUp();
     virtual bool browseTo(int row);
+    void browseToUrl(const KUrl& url);
 
 private:
     class Private;
