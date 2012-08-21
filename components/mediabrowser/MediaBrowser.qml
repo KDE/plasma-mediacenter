@@ -27,6 +27,7 @@ FocusScope {
     property QtObject currentBrowsingBackend
 
     signal playRequested(int index, string url, string currentMediaType)
+    signal popupMenuRequested(int index, string mediaUrl, string mediaType, string display)
 
     Item {
         id: mediaBrowserSidePanel
@@ -56,6 +57,7 @@ FocusScope {
     Component {
         id: mediaBrowserViewComponent
         GridView {
+            id: mediaBrowserGridViewId
             anchors { fill: parent; topMargin: 10; bottomMargin: 10 + searchMedia.height }
             clip: true
             cellWidth: width / 5
@@ -66,6 +68,7 @@ FocusScope {
             delegate: MediaItemDelegate {
                 backend: currentBrowsingBackend
                 onPlayRequested: mediaBrowser.playRequested(index, url, currentMediaType)
+                onPopupMenuRequested: mediaBrowser.popupMenuRequested(index,mediaUrl,mediaType, display)
             }
             flow: GridView.TopToBottom
             model: mediaBrowser.currentBrowsingBackendModel
@@ -122,15 +125,48 @@ FocusScope {
          width: parent.width
          height: 30
          clearButtonShown: true
- 
+
          anchors {
              left: parent.left
              bottom: parent.bottom
              right: parent.right
              margins: 10
          }
- 
+
          placeholderText: "Search..."
          onTextChanged: currentBrowsingBackend.search(text);
      }
+
+     onPopupMenuRequested: {
+        popupMenu.visible = true
+        popupMenu.mediaUrl = mediaUrl
+        popupMenu.display = display
+        popupMenu.mediaType = mediaType
+        popupMenu.currentMediaDelegateIndex = index
+     }
+
+     MediaCenterComponents.PopupMenu {
+         id: popupMenu
+
+         property string mediaUrl
+         property string display
+         property string mediaType
+         property int currentMediaDelegateIndex
+
+         anchors.fill: parent
+         model: PopupModel {}
+         onPopupMenuItemClicked: {
+             switch(index) {
+                 case 0:
+                     playlistModel.addToPlaylist(mediaUrl, display);
+                     break;
+                 case 1:
+                      mediaBrowser.playRequested(currentMediaDelegateIndex, mediaUrl, mediaType)
+                     break;
+                 case 2:
+                     break;
+             }
+             popupMenu.visible = false
+         }
+    }
 }

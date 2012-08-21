@@ -33,20 +33,12 @@ Item {
     z: GridView.isCurrentItem ? 1 : 0
 
     property QtObject backend
+    signal popupMenuRequested(int index, string mediaUrl, string mediaType, string display)
     signal playRequested(int index, string url, string currentMediaType)
 
     Item {
         anchors { fill: parent; margins: 20 }
         clip: true
-        /*Rectangle {
-            anchors.fill: parent
-            radius: 5
-            z: -1
-            color: "black"
-            opacity: mediaItemDelegateItem.GridView.isCurrentItem ? 0.9 : 0
-            border.color: theme.viewHoverColor
-            border.width: mediaItemDelegateItem.GridView.isCurrentItem ? 2 : 0
-        }*/
 
         Item {
             anchors {
@@ -163,6 +155,7 @@ Item {
                         mediaItemDelegateItem.playRequested(index, mediaUrl, mediaType)
                     }
                 }
+                onPressAndHold: popupMenuRequested(index, mediaUrl, mediaType, display);
             }
 
             Text {
@@ -190,7 +183,7 @@ Item {
             easing.type: Easing.OutExpo
         }
     }
-    
+
     Keys.onReturnPressed: {
         if (isExpandable) {
             backend.expand(index);
