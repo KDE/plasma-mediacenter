@@ -52,7 +52,10 @@ Item {
             interval: 4000; running: slideshow.checked ; repeat: true
             onTriggered: {
                 var i = imageList.currentIndex;
-                if (i<imageList.count-1) { imageList.currentIndex = i + 1; emitClicked() }
+                if (i<imageList.count-1) {
+                    imageList.currentIndex = i + 1;
+                    imageList.currentItem.emitClicked()
+                }
             }
         }
     }

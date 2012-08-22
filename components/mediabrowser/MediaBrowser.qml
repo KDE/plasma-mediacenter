@@ -134,7 +134,13 @@ FocusScope {
          }
 
          placeholderText: "Search..."
-         onTextChanged: currentBrowsingBackend.search(text);
+         onTextChanged: searchMediaTimer.restart()
+
+         Timer {
+            id: searchMediaTimer
+            interval: 1000
+            onTriggered: currentBrowsingBackend.search(searchMedia.text);
+         }
      }
 
      onPopupMenuRequested: {

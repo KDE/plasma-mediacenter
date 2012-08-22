@@ -144,14 +144,6 @@ public:
     virtual void openUrl(const KUrl &url);
 
     /**
-     * This slot must be reimplemented if browsingType returns
-     * RemoteBrowsing. This method will be used to perform searches
-     * for new medias to show in the browsing applet.
-     */
-    //TODO: Maybe its better to let the model handle this
-    virtual void searchForMedia(const QString &name);
-
-    /**
      * This function is used by Media Browser to go to one level
      * up in the browsing structure. Must be reimplemented
      *

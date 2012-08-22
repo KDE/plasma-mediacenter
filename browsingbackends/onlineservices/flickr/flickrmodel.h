@@ -1,4 +1,5 @@
 /***************************************************************************
+ *   Copyright 2009 by Onur-Hayri Bakici <thehayro@gmail.com               *
  *   Copyright 2012 Sinny Kumari <ksinny@gmail.com>                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -17,40 +18,52 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-import QtQuick 1.1
+#ifndef FLICKRMODEL_H
+#define FLICKRMODEL_H
 
-Item {
-    id: pictureStripDelegate
-    z: ListView.isCurrentItem ? 1 : 0
-    signal imageClicked(string url)
+#include <QAbstractListModel>
 
-    Image {
-        anchors { fill: parent; rightMargin: 1; topMargin: 10 }
-        anchors { leftMargin: anchors.rightMargin; bottomMargin: anchors.topMargin }
-        sourceSize.width: width
-        sourceSize.height: 0
-        source: mediaUrl
-        asynchronous: true
-        cache: true
-        scale: (pictureStripDelegate.ListView.isCurrentItem ? 1.5 : 1)
-
-        Behavior on scale {
-            NumberAnimation {
-                duration: 500
-                easing.type: Easing.OutExpo
-            }
-        }
-    }
-
-    MouseArea {
-        id: pictureStripMouseArea
-        anchors.fill: parent
-        hoverEnabled: true
-        onClicked: { pictureStripDelegate.ListView.view.currentIndex = index; emitClicked() }
-    }
-
-    function emitClicked()
-    {
-        pictureStripDelegate.imageClicked(mediaUrl);
-    }
+namespace KIO {
+    class Job;
 }
+
+class KJob;
+
+class FlickrModel : public QAbstractListModel
+{
+    Q_OBJECT
+public:
+    explicit FlickrModel (QObject* parent = 0);
+    ~FlickrModel();
+    void query(const QString &searchTerm);
+
+    virtual QVariant data (const QModelIndex& index, int role = Qt::DisplayRole) const;
+    virtual int rowCount (const QModelIndex& parent = QModelIndex()) const;
+
+protected slots:
+    void flickrDataReady(KIO::Job *job, const QByteArray &data);
+    void parseResults(KJob *job);
+
+private:
+    struct Photo;
+    QHash<KIO::Job*, QString> m_queries;
+    QHash<KIO::Job*, QString> m_datas;
+    QList<Photo> m_photos;
+
+    void listPhotos(KJob *job);
+};
+
+struct FlickrModel::Photo
+{
+public:
+    QString title;
+    QString id;
+    QString owner;
+    QString secret;
+    QString farmID;
+    QString serverID;
+    QString previewImgLink;
+    QString originalImgLink;
+};
+
+#endif // FLICKRMODEL_H

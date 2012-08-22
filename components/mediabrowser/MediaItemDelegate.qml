@@ -94,8 +94,15 @@ Item {
                                 sourceSize.width: width * 2
                                 sourceSize.height: 0
                                 asynchronous: true
+                                cache: true
                                 source: rootColumn.source
                                 z: 1
+
+                                PlasmaComponents.BusyIndicator {
+                                    anchors.centerIn: parent
+                                    running: delegateItemImage.status == Image.Loading
+                                    visible: running
+                                }
                             }
                         }
                         Rectangle {
@@ -104,7 +111,8 @@ Item {
                             z: 2
                             color: "transparent"
                             width: parent.width - 2
-                            height: parent.height -2
+                            property int finalHeight: parent.height - 2
+                            height:  finalHeight*delegateItemImage.progress
                             border.color: mediaItemDelegateItem.GridView.isCurrentItem ? theme.viewHoverColor : "#666"
                             border.width: 1
                         }
@@ -155,7 +163,11 @@ Item {
                         mediaItemDelegateItem.playRequested(index, mediaUrl, mediaType)
                     }
                 }
-                onPressAndHold: popupMenuRequested(index, mediaUrl, mediaType, display);
+                onPressAndHold: {
+                    if( mediaType == "audio" || mediaType == "video") {
+                        popupMenuRequested(index, mediaUrl, mediaType, display);
+                    }
+                }
             }
 
             Text {

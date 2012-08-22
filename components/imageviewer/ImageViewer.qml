@@ -22,6 +22,7 @@
 import QtQuick 1.1
 import org.kde.plasma.graphicswidgets 0.1 as PlasmaWidgets
 import org.kde.plasma.core 0.1 as PlasmaCore
+import org.kde.plasma.components 0.1 as PlasmaComponents
 
 Rectangle {
     id: imageRect
@@ -36,6 +37,18 @@ Rectangle {
     width: parent.width
     height: parent.height
     color: "black"
+
+    Rectangle {
+        border.color: "white"; radius: 5; width: parent.width/2; height: 24
+        color: "black"; anchors.centerIn: parent
+        visible: mainImage.status == Image.Loading
+        PlasmaComponents.ProgressBar {
+            anchors { fill: parent; margins: 4 }
+            minimumValue: 0.0
+            maximumValue: 1.0
+            value: mainImage.progress
+        }
+    }
 
     Image {
         id: mainImage

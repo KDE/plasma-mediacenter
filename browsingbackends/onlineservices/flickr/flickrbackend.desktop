@@ -1,0 +1,31 @@
+[Desktop Entry]
+Type=Service
+Icon=image-x-generic
+Name=Flickr
+Name[cs]=Flickr
+Name[de]=Flickr
+Name[es]=Flickr
+Name[et]=Flickr
+Name[fr]=Flickr
+Name[ga]=Flickr
+Name[ja]=Flickr
+Name[nds]=Flickr
+Name[nl]=Flickr
+Name[pl]=Flickr
+Name[pt]=Flickr
+Name[pt_BR]=Flickr
+Name[sk]=Flickr
+Name[sv]=Flickr
+Name[ug]=Flickr
+Name[uk]=Flickr
+Name[x-test]=xxFlickrxx
+
+X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
+
+X-KDE-PluginInfo-Author=Sinny Kumari
+X-KDE-PluginInfo-Email=ksinny@gmail.com
+X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-Category=Service
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
+X-KDE-Library=pmc_flickrbackend

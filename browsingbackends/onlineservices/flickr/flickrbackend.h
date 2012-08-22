@@ -1,4 +1,5 @@
 /***************************************************************************
+ *   Copyright 2009 by Onur-Hayri Bakici <thehayro@gmail.com               *
  *   Copyright 2012 Sinny Kumari <ksinny@gmail.com>                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -17,40 +18,24 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-import QtQuick 1.1
+#ifndef FLICKRBACKEND_H
+#define FLICKRBACKEND_H
 
-Item {
-    id: pictureStripDelegate
-    z: ListView.isCurrentItem ? 1 : 0
-    signal imageClicked(string url)
+#include <libs/mediacenter/abstractbrowsingbackend.h>
 
-    Image {
-        anchors { fill: parent; rightMargin: 1; topMargin: 10 }
-        anchors { leftMargin: anchors.rightMargin; bottomMargin: anchors.topMargin }
-        sourceSize.width: width
-        sourceSize.height: 0
-        source: mediaUrl
-        asynchronous: true
-        cache: true
-        scale: (pictureStripDelegate.ListView.isCurrentItem ? 1.5 : 1)
+class FlickrBackend : public MediaCenter::AbstractBrowsingBackend
+{
+    Q_OBJECT
+public:
+    FlickrBackend (QObject* parent, const QVariantList& args);
+    virtual ~FlickrBackend();
+    virtual QString backendCategory() const;
+    virtual void search(const QString& searchTerm);
+    virtual bool supportsSearch() const;
 
-        Behavior on scale {
-            NumberAnimation {
-                duration: 500
-                easing.type: Easing.OutExpo
-            }
-        }
-    }
+public Q_SLOTS:
+    virtual void init();
+    virtual bool goOneLevelUp();
+};
 
-    MouseArea {
-        id: pictureStripMouseArea
-        anchors.fill: parent
-        hoverEnabled: true
-        onClicked: { pictureStripDelegate.ListView.view.currentIndex = index; emitClicked() }
-    }
-
-    function emitClicked()
-    {
-        pictureStripDelegate.imageClicked(mediaUrl);
-    }
-}
+#endif // FLICKRBACKEND_H

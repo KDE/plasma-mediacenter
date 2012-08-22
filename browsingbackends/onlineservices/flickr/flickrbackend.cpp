@@ -1,4 +1,5 @@
 /***************************************************************************
+ *   Copyright 2009 by Onur-Hayri Bakici <thehayro@gmail.com               *
  *   Copyright 2012 Sinny Kumari <ksinny@gmail.com>                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -17,40 +18,45 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-import QtQuick 1.1
+#include "flickrbackend.h"
 
-Item {
-    id: pictureStripDelegate
-    z: ListView.isCurrentItem ? 1 : 0
-    signal imageClicked(string url)
+#include "flickrmodel.h"
 
-    Image {
-        anchors { fill: parent; rightMargin: 1; topMargin: 10 }
-        anchors { leftMargin: anchors.rightMargin; bottomMargin: anchors.topMargin }
-        sourceSize.width: width
-        sourceSize.height: 0
-        source: mediaUrl
-        asynchronous: true
-        cache: true
-        scale: (pictureStripDelegate.ListView.isCurrentItem ? 1.5 : 1)
+MEDIACENTER_EXPORT_BROWSINGBACKEND(FlickrBackend)
 
-        Behavior on scale {
-            NumberAnimation {
-                duration: 500
-                easing.type: Easing.OutExpo
-            }
-        }
-    }
+FlickrBackend::FlickrBackend(QObject* parent, const QVariantList& args)
+    : MediaCenter::AbstractBrowsingBackend(parent, args)
+{
 
-    MouseArea {
-        id: pictureStripMouseArea
-        anchors.fill: parent
-        hoverEnabled: true
-        onClicked: { pictureStripDelegate.ListView.view.currentIndex = index; emitClicked() }
-    }
+}
 
-    function emitClicked()
-    {
-        pictureStripDelegate.imageClicked(mediaUrl);
-    }
+
+FlickrBackend::~FlickrBackend()
+{
+
+}
+
+void FlickrBackend::init()
+{
+    setModel(new FlickrModel(this));
+}
+
+bool FlickrBackend::goOneLevelUp()
+{
+    return MediaCenter::AbstractBrowsingBackend::goOneLevelUp();
+}
+
+QString FlickrBackend::backendCategory() const
+{
+    return "image";
+}
+
+void FlickrBackend::search(const QString& searchTerm)
+{
+    qobject_cast<FlickrModel*>(model())->query(searchTerm);
+}
+
+bool FlickrBackend::supportsSearch() const
+{
+    return true;
 }

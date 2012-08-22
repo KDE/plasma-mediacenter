@@ -138,11 +138,6 @@ void AbstractBrowsingBackend::openUrl(const KUrl &url)
     Q_UNUSED(url);
 }
 
-void AbstractBrowsingBackend::searchForMedia(const QString &name)
-{
-    Q_UNUSED(name);
-}
-
 KService::List AbstractBrowsingBackend::availableBackends()
 {
     KService::List plugins = KServiceTypeTrader::self()->query("Plasma/MediaCenter/BrowsingBackend");
