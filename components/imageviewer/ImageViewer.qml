@@ -77,6 +77,7 @@ Rectangle {
             right: parent.right
         }
         height: 64
+        slideshowPaused: mainImage.status == Image.Loading
         onImageClicked: {
             mediaImageViewer.source = url
         }

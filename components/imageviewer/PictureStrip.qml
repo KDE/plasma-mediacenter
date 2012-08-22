@@ -24,6 +24,7 @@ Item {
     id: rootItem
     property alias model: imageList.model
     property alias currentIndex: imageList.currentIndex
+    property bool slideshowPaused: false
     signal imageClicked(string url)
     signal slideShowStarted
 
@@ -49,7 +50,7 @@ Item {
         onCheckedChanged: if (checked) rootItem.slideShowStarted()
         Timer {
             id: slideshowTimer
-            interval: 4000; running: slideshow.checked ; repeat: true
+            interval: 4000; running: slideshow.checked && !rootItem.slideshowPaused ; repeat: true
             onTriggered: {
                 var i = imageList.currentIndex;
                 if (i<imageList.count-1) {
