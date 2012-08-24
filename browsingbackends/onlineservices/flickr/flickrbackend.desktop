@@ -2,7 +2,6 @@
 Type=Service
 Icon=image-x-generic
 Name=Flickr
-Name[cs]=Flickr
 Name[de]=Flickr
 Name[es]=Flickr
 Name[et]=Flickr
@@ -11,9 +10,11 @@ Name[ja]=Flickr
 Name[nds]=Flickr
 Name[nl]=Flickr
 Name[pl]=Flickr
+Name[pt_BR]=Flickr
 Name[sv]=Flickr
 Name[ug]=Flickr
 Name[uk]=Flickr
+Name[x-test]=xxFlickrxx
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 
