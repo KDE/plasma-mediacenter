@@ -1,5 +1,6 @@
 /***************************************************************************
  *   Copyright 2009 by Francesco Grieco <fgrieco@gmail.com>                *
+ *   Copyright 2012 by Sinny Kumari <ksinny@gmail.com>                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,12 +17,13 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#ifndef PICASAINTERFACE_H
-#define PICASAINTERFACE_H
+#ifndef PICASAMODEL_H
+#define PICASAMODEL_H
 
 #include <QObject>
 #include <Plasma/DataEngine>
 #include <QHash>
+#include <QAbstractListModel>
 
 namespace KIO {
     class Job;
@@ -30,23 +32,25 @@ class QByteArray;
 class KJob;
 
 /**
- * @class PicasaInterface
- * @brief The interface that queries Picasa with search terms
+ * @class PicasaModel
+ * @brief Model to provide data to required to the QML gridView
  * @author Francesco Grieco
  *
  * This class interfaces Picasa and returns result entries
  * with the signal result.
  */
 
-class PicasaInterface : public QObject
+class PicasaModel: public QAbstractListModel
 {
     Q_OBJECT
 public:
-    PicasaInterface(QObject *parent = 0);
-    ~PicasaInterface();
+    explicit PicasaModel(QObject* parent, const QString& username, const QString& password);
+    virtual ~PicasaModel();
+    virtual QVariant data (const QModelIndex& index, int role = Qt::DisplayRole) const;
+    virtual int rowCount (const QModelIndex& parent = QModelIndex()) const;
 
-    void query(const QString &searchTerm, const QString &request);
-    void getTokenAndQuery(const QString &username, const QString &password, const QString &request);
+   void query(const QString &searchTerm, const QString &request);
+   void getTokenAndQuery(const QString &username, const QString &password, const QString &request);
 
 signals:
     /**
@@ -72,6 +76,10 @@ private:
     QHash<KIO::Job*, QString> m_queries;
     QHash<KIO::Job*, QString> m_datas;
 
+    struct Album;
+    struct Photo;
+    QList<Album> m_albums;
+    QList<Photo> m_photos;
     QString m_token;
     QString m_request;
     QString m_username;
@@ -80,6 +88,33 @@ private:
     void listAllAlbums(KJob *job);
     void listAllPhotos(KJob *job);
 
+};
+
+struct PicasaModel::Photo {
+public:
+    QString published;
+    QString updated;
+    QString title;
+    QString link;
+    QString albumId;
+    QString width;
+    QString height;
+    QString size;
+    QString thumbnail72;
+    QString thumbnail144;
+    QString thumbnail288;
+};
+
+struct PicasaModel::Album {
+public:
+    QString id;
+    QString published;
+    QString updated;
+    QString title;
+    QString link;
+    QString summary;
+    QString noOfPhotos;
+    QString thumbnail;
 };
 
 #endif

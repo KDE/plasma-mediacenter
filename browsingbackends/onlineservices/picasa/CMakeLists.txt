@@ -1,10 +1,19 @@
-set(picasa_engine_SRCS
-picasa.cpp
-picasainterface.cpp
+set(picasabackend_SRCS
+picasabackend.cpp
+picasamodel.cpp
 )
 
-kde4_add_plugin(plasma_engine_picasa ${picasa_engine_SRCS})
-target_link_libraries(plasma_engine_picasa ${KDE4_KDECORE_LIBS} ${KDE4_PLASMA_LIBS} ${KDE4_KIO_LIBS} ${QT_QTXML_LIBRARY})
+qt4_automoc(${picasabackend_SRCS})
 
-install(TARGETS plasma_engine_picasa DESTINATION ${PLUGIN_INSTALL_DIR})
-install(FILES plasma-engine-picasa.desktop DESTINATION ${SERVICES_INSTALL_DIR})
+kde4_add_plugin(pmc_picasabackend ${picasabackend_SRCS})
+
+target_link_libraries(pmc_picasabackend
+    plasmamediacenter
+    ${KDE4_KDECORE_LIBS}
+    ${KDE4_KIO_LIBS}
+    ${QT_QTXML_LIBRARY}
+)
+
+install(TARGETS pmc_picasabackend DESTINATION ${PLUGIN_INSTALL_DIR})
+install(FILES picasabackend.desktop DESTINATION ${SERVICES_INSTALL_DIR})
+install(DIRECTORY picasacomponents DESTINATION ${IMPORTS_INSTALL_DIR}/org/kde/plasma/mediacentercomponents)

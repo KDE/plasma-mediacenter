@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright 2009 by Francesco Grieco <fgrieco@gmail.com>                *
+ *   Copyright 2012 Sinny Kumari <ksinny@gmail.com>                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,40 +16,58 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#ifndef PICASAENGINE_H
-#define PICASAENGINE_H
 
-#include <Plasma/DataEngine>
+import QtQuick 1.1
+import org.kde.plasma.components 0.1 as PlasmaComponents
 
-class PicasaInterface;
-/**
- * @class PicasaEngine
- * @brief An engine that manages queries to Picasa.
- *
- * The engine returns search results as sources.
- * each source as a number of keys equal to the number of
- * search results from the query. The ids correspond to the source keys.
- * For each key a Plasma::DataEngine::Data is
- * associated. See PicasaInterface in order to see the keys available to
- * retrieve informations.
- *
- * @author Francesco Grieco
- */
-class PicasaEngine : public Plasma::DataEngine
-{
-    Q_OBJECT
-public:
-    PicasaEngine(QObject *parent, const QVariantList &args);
-    ~PicasaEngine();
+Rectangle {
+    id: rootItem
+    anchors.fill: parent
+    property QtObject backend
+    color: "black"
+    opacity: 0.7
 
-protected:
-    bool sourceRequestEvent(const QString &source);
+     PlasmaComponents.TextField {
+         id: userid
+         y: rootItem.height / 3
+         width: parent.width
+         height: 30
+         clearButtonShown: true
+         placeholderText: "Gmail user id"
+     }
 
-protected slots:
-    void slotSourceFromResult(const QString &searchTerm, const QString &id, const Plasma::DataEngine::Data &video);
+     Item {
+        id: margin1
+        anchors.top: userid.bottom
+        width: parent.width
+        height: 20
+     }
 
-private:
-    PicasaInterface *m_interface;
-};
+     PlasmaComponents.TextField {
+         id: password
+         anchors.top: margin1.bottom
+         width: parent.width
+         height: 30
+         clearButtonShown: true
+         placeholderText: "Password"
+         echoMode: TextInput.Password
+     }
 
-#endif
+     Item {
+        id: margin2
+        anchors.top: password.bottom
+        width: parent.width
+        height: 20
+     }
+
+    PlasmaComponents.Button {
+        anchors.top: margin2.bottom
+        width: 100
+        height: 32
+        text: "Submit"
+        anchors.horizontalCenter: parent.horizontalCenter
+        onClicked: {
+            backend.userInfo(userid.text, password.text, "album");
+        }
+    }
+}

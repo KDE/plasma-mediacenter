@@ -1,5 +1,6 @@
 /***************************************************************************
  *   Copyright 2009 by Francesco Grieco <fgrieco@gmail.com>                *
+ *   Copyright 2012 by Sinny Kumari <ksinny@gmail.com>                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,8 +17,10 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#include "picasainterface.h"
 
+#include "picasamodel.h"
+
+#include <libs/mediacenter/mediacenter.h>
 // Qt
 #include <QDomDocument>
 #include <QDomNodeList>
@@ -27,15 +30,44 @@
 #include <KUrl>
 #include <KDebug>
 
-PicasaInterface::PicasaInterface(QObject *parent) : QObject(parent)
+PicasaModel::PicasaModel(QObject* parent, const QString& username, const QString& password): QAbstractListModel(parent)
 {
+
+    getTokenAndQuery(username, password,"album");
 }
 
-PicasaInterface::~PicasaInterface()
+
+PicasaModel::~PicasaModel()
 {
+
 }
 
-void PicasaInterface::query(const QString &username, const QString &request)
+int PicasaModel::rowCount(const QModelIndex& parent) const
+{
+    return m_albums.count();
+}
+
+
+QVariant PicasaModel::data(const QModelIndex& index, int role) const
+{
+    switch (role) {
+        case MediaCenter::HideLabelRole:
+            return false;
+        case Qt::DecorationRole:
+            return m_albums.at(index.row()).thumbnail;
+        case MediaCenter::MediaUrlRole:
+            return m_albums.at(index.row()).link;
+        case Qt::DisplayRole:
+            return (m_albums.at(index.row()).title + " (" + m_albums.at(index.row()).noOfPhotos + "Photos)");
+        case MediaCenter::MediaTypeRole:
+            return "image";
+        case MediaCenter::IsExpandableRole:
+            return true;
+    }
+    return QVariant();
+}
+
+void PicasaModel::query(const QString &username, const QString &request)
 {
     if (username.isEmpty()) {
         return;
@@ -72,7 +104,7 @@ void PicasaInterface::query(const QString &username, const QString &request)
     connect (job, SIGNAL(result(KJob *)), this, SLOT(parseResults(KJob*)));
 }
 
-void PicasaInterface::picasaDataReady(KIO::Job *job, const QByteArray &data)
+void PicasaModel::picasaDataReady(KIO::Job *job, const QByteArray &data)
 {
     // could this ever happen?
     if (!m_queries.contains(job)) {
@@ -82,7 +114,7 @@ void PicasaInterface::picasaDataReady(KIO::Job *job, const QByteArray &data)
     m_datas[job].append(data);
 }
 
-void PicasaInterface::parseResults(KJob *job)
+void PicasaModel::parseResults(KJob *job)
 {
     if (!m_datas.contains(static_cast<KIO::Job*>(job))) {
         return;
@@ -97,12 +129,13 @@ void PicasaInterface::parseResults(KJob *job)
     }
 }
 
-void PicasaInterface::listAllAlbums(KJob *job)
+void PicasaModel::listAllAlbums(KJob *job)
 {
     QDomDocument document;
     document.setContent(m_datas[static_cast<KIO::Job*>(job)]);
 
     QDomNodeList entries = document.elementsByTagName("entry");
+    m_albums.clear();
     for (int i = 0; i < entries.count(); i++) {
 
         QString id = entries.at(i).namedItem("id").toElement().text().split("/").last();
@@ -126,32 +159,36 @@ void PicasaInterface::listAllAlbums(KJob *job)
         QDomElement mediaElement = mediaNode.firstChildElement("media:thumbnail");
         QString thumb = mediaElement.attribute("url");
 
-        Plasma::DataEngine::Data album;
-        album["published"] = published;
-        album["updated"] = updated;
-        album["title"] = title;
-        album["summary"] = summary;
-        album["link"] = link;
-        album["number of photos"] = numPhotos;
-        album["thumbnail"] = thumb;
+        Album album;
+        album.id = id;
+        album.published = published;
+        album.updated = updated;
+        album.title = title;
+        album.link = link;
+        album.summary = summary;
+        album.noOfPhotos = numPhotos;
+        album.thumbnail = thumb;
 
-        if (!byteUsed.isEmpty()) {
-            album["byte used"] = byteUsed;
-        }
+        m_albums.append(album);
 
-        emit result(m_queries[static_cast<KIO::Job*>(job)], id, album);
+//         if (!byteUsed.isEmpty()) {
+//             album["byte used"] = byteUsed;
+//         }
+
     }
     m_queries.remove(static_cast<KIO::Job*>(job));
     m_datas.remove(static_cast<KIO::Job*>(job));
+    reset();
 
 }
 
-void PicasaInterface::listAllPhotos(KJob *job)
+void PicasaModel::listAllPhotos(KJob *job)
 {
     QDomDocument document;
     document.setContent(m_datas[static_cast<KIO::Job*>(job)]);
 
     QDomNodeList entries = document.elementsByTagName("entry");
+    m_photos.clear();
     for (int i = 0; i < entries.count(); i++) {
 
         QString id = entries.at(i).namedItem("id").toElement().text().split("/").last();
@@ -173,29 +210,30 @@ void PicasaInterface::listAllPhotos(KJob *job)
         mediaElement = mediaElement.nextSiblingElement("media:thumbnail");
         QString thumb288 = mediaElement.attribute("url");
 
-        Plasma::DataEngine::Data photo;
-        photo["published"] = published;
-        photo["updated"] = updated;
-        photo["title"] = title;
-        photo["link"] = link;
-        photo["albumId"] = albumid;
-        photo["width"] = width;
-        photo["height"] = height;
-        photo["size"] = size;
+        Photo photo;
+        photo.published = published;
+        photo.updated = updated;
+        photo.title = title;
+        photo.link = link;
+        photo.albumId = albumid;
+        photo.width = width;
+        photo.height = height;
+        photo.size = size;
 
-        photo["thumbnail 72 pixel"] = thumb72;
-        photo["thumbnail 144 pixel"] = thumb144;
-        photo["thumbnail 288 pixel"] = thumb288;
+        photo.thumbnail72 = thumb72;
+        photo.thumbnail144 = thumb144;
+        photo.thumbnail288 = thumb288;
 
-        emit result(m_queries[static_cast<KIO::Job*>(job)], id, photo);
+        m_photos.append(photo);
     }
     m_queries.remove(static_cast<KIO::Job*>(job));
     m_datas.remove(static_cast<KIO::Job*>(job));
+    reset();
 
 }
 
 
-void PicasaInterface::getTokenAndQuery(const QString &username, const QString &password, const QString &request)
+void PicasaModel::getTokenAndQuery(const QString &username, const QString &password, const QString &request)
 {
     m_request = request;
     m_username = username;
@@ -219,7 +257,7 @@ void PicasaInterface::getTokenAndQuery(const QString &username, const QString &p
 
 }
 
-void PicasaInterface::token(KIO::Job *job, const QByteArray &data)
+void PicasaModel::token(KIO::Job *job, const QByteArray &data)
 {
     Q_UNUSED(job);
 
@@ -236,7 +274,7 @@ void PicasaInterface::token(KIO::Job *job, const QByteArray &data)
     }
 }
 
-void PicasaInterface::passwordJob(KJob *job)
+void PicasaModel::passwordJob(KJob *job)
 {
     Q_UNUSED(job);
 
