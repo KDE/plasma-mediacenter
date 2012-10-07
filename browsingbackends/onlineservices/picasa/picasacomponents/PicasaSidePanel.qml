@@ -33,7 +33,7 @@ Rectangle {
          width: parent.width
          height: 30
          clearButtonShown: true
-         placeholderText: "Gmail user id"
+         placeholderText: "Google account"
      }
 
      Item {
