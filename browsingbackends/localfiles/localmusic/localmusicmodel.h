@@ -1,6 +1,5 @@
 /*
-    <one line to give the library's name and an idea of what it does.>
-    Copyright (C) 2011  Shantanu Tushar shaan7in@gmail.com
+    Copyright (C) 2011  Shantanu Tushar shantanu@kde.org
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public

@@ -23,7 +23,7 @@
  */
 
 /*
-    Copyright (C) 2011  Shantanu Tushar shaan7in@gmail.com
+    Copyright (C) 2011  Shantanu Tushar shantanu@kde.org
     Copyright (C) 2012  Sinny Kumari ksinny@gmail.com
 
     This library is free software; you can redistribute it and/or
