@@ -20,16 +20,6 @@
 
 #include "metadatavideomodel.h"
 
-#include <mediacenter/mediacenter.h>
-#include <mediacenter/abstractbrowsingbackend.h>
-
-#include <KDebug>
-#include <KDE/KUrl>
-
-#include <QtGui/QIcon>
-#include <QtCore/QEvent>
-#include <QtDeclarative/QDeclarativeEngine>
-
 class MetadataVideoModel::Private
 {
 public:
@@ -37,17 +27,10 @@ public:
 };
 
 MetadataVideoModel::MetadataVideoModel(QObject* parent)
-    : AbstractMetadataModel(parent)
+    : PmcMetadataModel(parent)
     , d(new Private())
 {
-    if(metadataModel()) {
-        d->thumbnailKey = metadataModel()->roleNames().key("thumbnail");
-        resetMetadataModel();
-        metadataModel()->setProperty("thumbnailSize", QSize(600, 600));
-        metadataModel()->setProperty("resourceType", "nfo:Video");
-    } else {
-        kDebug() << "WARNING: Constructor called before metadataModel set :/";
-    }
+    showMediaType(MediaCenter::Video);
 }
 
 MetadataVideoModel::~MetadataVideoModel()
@@ -57,21 +40,13 @@ MetadataVideoModel::~MetadataVideoModel()
 
 QVariant MetadataVideoModel::data(const QModelIndex& index, int role) const
 {
-    if(!metadataModel()) {
-        return QVariant();
-    }
-
     switch (role) {
     case MediaCenter::MediaTypeRole:
         return "video";
-    case Qt::DecorationRole:
-        return AbstractMetadataModel::data(index, d->thumbnailKey);
-    case MediaCenter::DecorationTypeRole:
-        return "qimage";
     case MediaCenter::HideLabelRole:
         return false;
     default:
-        return AbstractMetadataModel::data(index, role);
+        return PmcMetadataModel::data(index, role);
     }
 }
 

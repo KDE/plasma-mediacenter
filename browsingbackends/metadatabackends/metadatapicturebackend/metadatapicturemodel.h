@@ -20,11 +20,9 @@
 #ifndef METADATAPICTUREMODEL_H
 #define METADATAPICTUREMODEL_H
 
-#include <QAbstractItemModel>
+#include <libs/mediacenter/pmcmetadatamodel.h>
 
-#include "../abstractmetadatamodel.h"
-
-class MetadataPictureModel : public AbstractMetadataModel
+class MetadataPictureModel : public PmcMetadataModel
 {
     Q_OBJECT
 public:

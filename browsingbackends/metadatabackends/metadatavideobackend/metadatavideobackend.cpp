@@ -40,9 +40,7 @@ MetadataVideoBackend::~MetadataVideoBackend()
 void MetadataVideoBackend::init()
 {
     AbstractMetadataBackend::init();
-    if (metadataModel()) {
-        setModel(new MetadataVideoModel(this));
-    }
+    setModel(new MetadataVideoModel(this));
 }
 
 QString MetadataVideoBackend::backendCategory() const

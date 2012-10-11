@@ -4,11 +4,22 @@ set (plasmamediacenter_SRCS
     abstractbrowsingbackend.cpp
     backendsmodel.cpp
     playlistmodel.cpp
+    pmcmetadatamodel.cpp
+    pmcimagecache.cpp
+    pmcimageprovider.cpp
 )
 
 kde4_add_library(plasmamediacenter SHARED ${plasmamediacenter_SRCS})
 
-target_link_libraries(plasmamediacenter ${KDE4_PLASMA_LIBS} ${KDE4_SOLID_LIBS} ${KDE4_PHONON_LIBS} ${KDE4_NEPOMUK_LIBS} ${TAGLIB_LIBRARIES})
+target_link_libraries(plasmamediacenter
+    ${QT_QTDECLARATIVE_LIBRARIES}
+    ${KDE4_KDECORE_LIBRARY}
+    ${KDE4_KIO_LIBS}
+    ${KDE4_PLASMA_LIBS}
+    ${KDE4_SOLID_LIBS}
+    ${TAGLIB_LIBRARIES}
+    ${NEPOMUK_LIBRARIES}
+    ${NEPOMUK_QUERY_LIBRARIES})
 set_target_properties(plasmamediacenter PROPERTIES VERSION 0.9 SOVERSION 0.9)
 
 install(TARGETS plasmamediacenter ${INSTALL_TARGETS_DEFAULT_ARGS})

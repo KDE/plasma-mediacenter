@@ -22,10 +22,12 @@
 #include <libs/mediacenter/backendsmodel.h>
 #include <libs/mediacenter/playlistmodel.h>
 #include <libs/mediacenter/filteredbackendsmodel.h>
-#include <Plasma/Package>
+#include <libs/mediacenter/pmcimageprovider.h>
 
+#include <Plasma/Package>
 #include <KDE/KCmdLineArgs>
 
+#include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/QDeclarativeView>
 #include <QtDeclarative/QDeclarativeContext>
 #include <qdeclarative.h>
@@ -79,6 +81,7 @@ MainWindow::MainWindow(QWidget *parent) : KMainWindow(parent)
     view->rootContext()->setContextProperty("playlistModel", playlistModel);
     view->rootContext()->setContextProperty("mainwindow", this);
     view->rootContext()->setContextProperty("startedFullScreen", isFullScreen());
+    view->engine()->addImageProvider(PmcImageProvider::identificationString, new PmcImageProvider());
 
     m_structure = Plasma::PackageStructure::load("Plasma/Generic");
     Plasma::Package *package = new Plasma::Package(QString(), "org.kde.plasma.mediacenter", m_structure);
@@ -99,7 +102,6 @@ bool MainWindow::toggleFullScreen()
 
 MainWindow::~MainWindow()
 {
-    
 }
 
 void MainWindow::closeMediaCenter()

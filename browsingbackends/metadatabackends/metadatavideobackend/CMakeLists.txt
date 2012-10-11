@@ -1,7 +1,6 @@
 set(metadatavideobackend_SRCS
     metadatavideomodel.cpp
     ../abstractmetadatabackend.cpp
-    ../abstractmetadatamodel.cpp
     metadatavideobackend.cpp
 )
 
@@ -12,9 +11,7 @@ kde4_add_plugin(pmc_metadatavideobackend ${metadatavideobackend_SRCS})
 target_link_libraries(pmc_metadatavideobackend
     plasmamediacenter
     ${KDE4_KDECORE_LIBS}
-    ${KDE4_KIO_LIBS}
-    ${KDE4_KFILE_LIBS}
-    ${QT_QTDECLARATIVE_LIBRARIES}
+    ${QT_QTCORE_LIBRARIES}
 )
 
 install(TARGETS pmc_metadatavideobackend DESTINATION ${PLUGIN_INSTALL_DIR})

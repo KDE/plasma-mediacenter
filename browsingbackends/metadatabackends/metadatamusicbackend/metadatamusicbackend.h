@@ -26,10 +26,9 @@
 #include "../abstractmetadatabackend.h"
 #include "categoriesmodel.h"
 
-#include <QStateMachine>
-
 class CategoriesModel;
 class NepomukMusicModel;
+class PmcMetadataModel;
 class MetadataMusicModel;
 
 class MetadataMusicBackend : public AbstractMetadataBackend
@@ -69,11 +68,9 @@ protected:
     void updateModelAccordingToFilters();
 
 private:
-    NepomukMusicModel *m_nepomukModel;
-    NepomukMusicModel* m_artistsModel;
-    NepomukMusicModel* m_albumsModel;
-    NepomukMusicModel* m_musicModel;
-    MetadataMusicModel *m_metadataMusicModel;
+    PmcMetadataModel* m_artistsModel;
+    PmcMetadataModel* m_albumsModel;
+    PmcMetadataModel* m_musicModel;
 
     QString m_artistFilter;
     QString m_albumFilter;

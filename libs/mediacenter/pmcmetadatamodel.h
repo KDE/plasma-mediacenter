@@ -18,23 +18,45 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#ifndef NEPOMUKMUSICMODEL_H
-#define NEPOMUKMUSICMODEL_H
+#ifndef PMCMETADATAMODEL_H
+#define PMCMETADATAMODEL_H
 
-#include <QAbstractListModel>
+#include <QtCore/QAbstractItemModel>
+
 #include <Nepomuk/Query/Result>
+#include <Nepomuk/Query/Term>
 #include <Nepomuk/Types/Property>
-#include <nepomuk/term.h>
+#include <nepomuk/resource.h>
+#include <nepomuk/comparisonterm.h>
 
-class NepomukMusicModel : public QAbstractListModel
+#include "mediacenter_export.h"
+#include "mediacenter.h"
+
+namespace Nepomuk {
+namespace Query {
+class ResourceTypeTerm;
+}
+}
+
+class QPixmap;
+class KFileItem;
+
+class MEDIACENTER_EXPORT PmcMetadataModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    explicit NepomukMusicModel(QObject* parent = 0);
+    explicit PmcMetadataModel(QObject* parent = 0);
+    virtual ~PmcMetadataModel();
     virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
     virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
-    void setTerm(Nepomuk::Query::Term term, const QString& iconName);
-    void setResourceType(Nepomuk::Types::Property property, const QString& iconName);
+
+    void showMediaType(MediaCenter::MediaType mediaType);
+    void showMediaForProperty(Nepomuk::Types::Property property);
+    void setTerm(const Nepomuk::Query::Term &term);
+    void addFilter(const Nepomuk::Types::Property& property, const Nepomuk::Query::Term& term, Nepomuk::Query::ComparisonTerm::Comparator comparator = Nepomuk::Query::ComparisonTerm::Contains);
+
+public Q_SLOTS:
+    void clearAllFilters();
 
 protected Q_SLOTS:
     void newEntries(const QList< Nepomuk::Query::Result > &entries);
@@ -42,11 +64,20 @@ protected Q_SLOTS:
     void finishedListing();
     void updateModel();
     void error(const QString &message);
+    void delayedPreview();
+
+protected:
+    QString fetchPreview(const KUrl& url, const QModelIndex& index);
+    QString urlForResource(const Nepomuk::Resource &resource) const;
+    QString mimetypeForResource(const Nepomuk::Resource &resource) const;
+
+private Q_SLOTS:
+    void showPreview(const KFileItem &item, const QPixmap &preview);
+    void previewFailed(const KFileItem &item);
 
 private:
-    QString m_icon;
-    QList< Nepomuk::Query::Result > m_queryResults;
-    Nepomuk::Query::Term m_term;
+    class Private;
+    Private * const d;
 };
 
-#endif // NEPOMUKMUSICMODEL_H
+#endif // PMCMETADATAMODEL_H

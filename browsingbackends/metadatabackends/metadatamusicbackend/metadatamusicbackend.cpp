@@ -22,10 +22,8 @@
 
 #include "metadatamusicbackend.h"
 
-#include "metadatamusicmodel.h"
-#include "nepomukmusicmodel.h"
+#include <libs/mediacenter/pmcmetadatamodel.h>
 
-#include "nepomukmusicmodel.h"
 #include <nepomuk/nmm.h>
 #include <nepomuk/nfo.h>
 #include <nepomuk/andterm.h>
@@ -37,16 +35,10 @@ MEDIACENTER_EXPORT_BROWSINGBACKEND(MetadataMusicBackend)
 
 MetadataMusicBackend::MetadataMusicBackend(QObject* parent, const QVariantList& args)
     : AbstractMetadataBackend(parent, args),
-    m_nepomukModel(new NepomukMusicModel(this)),
-    m_metadataMusicModel(0),
-    m_albumsModel(new NepomukMusicModel(this)),
-    m_artistsModel(new NepomukMusicModel(this)),
-    m_musicModel(new NepomukMusicModel(this))
+    m_albumsModel(new PmcMetadataModel(this)),
+    m_artistsModel(new PmcMetadataModel(this)),
+    m_musicModel(new PmcMetadataModel(this))
 {
-    m_albumsModel->setResourceType(Nepomuk::Vocabulary::NMM::musicAlbum(), "tools-media-optical-copy");
-    m_artistsModel->setResourceType(Nepomuk::Vocabulary::NMM::performer(), "user-identity");
-    m_musicModel->setResourceType(Nepomuk::Vocabulary::NFO::Audio(), "amarok");
-    emit musicModelChanged();
 }
 
 MetadataMusicBackend::~MetadataMusicBackend()
@@ -56,9 +48,11 @@ MetadataMusicBackend::~MetadataMusicBackend()
 void MetadataMusicBackend::init()
 {
     AbstractMetadataBackend::init();
-    if (metadataModel()) {
-        m_metadataMusicModel = new MetadataMusicModel(this);
-    }
+    m_albumsModel->showMediaForProperty(Nepomuk::Vocabulary::NMM::musicAlbum());
+    m_artistsModel->showMediaForProperty(Nepomuk::Vocabulary::NMM::performer());
+    m_musicModel->showMediaType(MediaCenter::Music);
+    emit musicModelChanged();
+
     updateModelAccordingToFilters();
 }
 
@@ -112,17 +106,16 @@ void MetadataMusicBackend::setArtistFilter(const QString& filter)
 
 void MetadataMusicBackend::updateModelAccordingToFilters()
 {
+    m_musicModel->clearAllFilters();
     QList<Nepomuk::Query::Term> termsList;
     termsList.append(Nepomuk::Query::ResourceTypeTerm(Nepomuk::Vocabulary::NFO::Audio()));
 
     if (!m_albumFilter.isEmpty()) {
-        termsList.append(Nepomuk::Query::ComparisonTerm(Nepomuk::Vocabulary::NMM::musicAlbum(), Nepomuk::Query::ResourceTerm(m_albumFilter)));
+        m_musicModel->addFilter(Nepomuk::Vocabulary::NMM::musicAlbum(), Nepomuk::Query::ResourceTerm(m_albumFilter));
     }
     if (!m_artistFilter.isEmpty()) {
-        termsList.append(Nepomuk::Query::ComparisonTerm(Nepomuk::Vocabulary::NMM::performer(), Nepomuk::Query::ResourceTerm(m_artistFilter)));
+        m_musicModel->addFilter(Nepomuk::Vocabulary::NMM::performer(), Nepomuk::Query::ResourceTerm(m_artistFilter));
     }
-
-    m_musicModel->setTerm(Nepomuk::Query::AndTerm(termsList), "amarok");
 }
 
 QObject* MetadataMusicBackend::musicModel() const

@@ -26,7 +26,7 @@
 #include <QHash>
 
 namespace Phonon {
-    class MediaSource;
+class MediaSource;
 }
 
 namespace MediaCenter {
@@ -37,7 +37,14 @@ enum AdditionalMediaRoles {
     MediaTypeRole,
     DecorationTypeRole,
     HideLabelRole,
-    ResourceIdRole
+    ResourceIdRole,
+    MediaThumbnailRole
+};
+
+enum MediaType {
+    Music,
+    Picture,
+    Video
 };
 
 MEDIACENTER_EXPORT QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> &roles);

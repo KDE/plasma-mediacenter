@@ -26,16 +26,9 @@
 #include <QEvent>
 
 MetadataPictureModel::MetadataPictureModel (QObject* parent)
-    : AbstractMetadataModel (parent)
+    : PmcMetadataModel (parent)
 {
-    if (metadataModel()) {
-        resetMetadataModel();
-        metadataModel()->setProperty("resourceType", "nfo:Image");
-        metadataModel()->setProperty("mimeType", "");
-    }
-    else {
-        kDebug() << "WARNING: Constructor called before metadataModel set :/";
-    }
+    showMediaType(MediaCenter::Picture);
 }
 
 MetadataPictureModel::~MetadataPictureModel()
@@ -45,20 +38,16 @@ MetadataPictureModel::~MetadataPictureModel()
 
 QVariant MetadataPictureModel::data (const QModelIndex& index, int role) const
 {
-    if (!metadataModel()) {
-        return QVariant();
-    }
-
     switch (role) {
     case Qt::DecorationRole:
-        return AbstractMetadataModel::data (index, MediaCenter::MediaUrlRole);
+        return PmcMetadataModel::data (index, MediaCenter::MediaUrlRole);
     case MediaCenter::MediaTypeRole:
         return "image";
     case MediaCenter::HideLabelRole:
         return true;
     }
 
-    return AbstractMetadataModel::data(index, role);
+    return PmcMetadataModel::data(index, role);
 }
 
 #include "metadatapicturemodel.moc"

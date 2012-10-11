@@ -39,10 +39,7 @@ MetadataPictureBackend::~MetadataPictureBackend()
 
 void MetadataPictureBackend::init()
 {
-    AbstractMetadataBackend::init();
-    if (metadataModel()) {
-        setModel(new MetadataPictureModel(this));
-    }
+    setModel(new MetadataPictureModel(this));
 }
 
 QString MetadataPictureBackend::backendCategory() const
