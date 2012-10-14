@@ -57,10 +57,9 @@ public:
 
 public Q_SLOTS:
     void clearAllFilters();
+    void saveMetadata(const QPersistentModelIndex &persistentIndex, const QHash< int, QVariant >& values);
 
 protected Q_SLOTS:
-    void newEntries(const QList< Nepomuk::Query::Result > &entries);
-    void entriesRemoved(QList< QUrl > entries);
     void finishedListing();
     void updateModel();
     void error(const QString &message);
@@ -70,8 +69,11 @@ protected:
     QString fetchPreview(const KUrl& url, const QModelIndex& index);
     QString urlForResource(const Nepomuk::Resource &resource) const;
     QString mimetypeForResource(const Nepomuk::Resource &resource) const;
+    inline QList<int> rolesNeeded() const;
+    bool fetchMetadataIfRequired(const QModelIndex &index);
 
 private Q_SLOTS:
+    void newEntries(const QList<Nepomuk::Query::Result> &results);
     void showPreview(const KFileItem &item, const QPixmap &preview);
     void previewFailed(const KFileItem &item);
 

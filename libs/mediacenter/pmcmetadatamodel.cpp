@@ -22,6 +22,7 @@
 #include "pmcmetadatamodel.h"
 #include "pmcimagecache.h"
 #include "pmcimageprovider.h"
+#include "metadataupdater.h"
 
 #include <nepomuk/comparisonterm.h>
 #include <nepomuk/query.h>
@@ -33,6 +34,7 @@
 #include <Nepomuk/Query/QueryServiceClient>
 #include <Nepomuk/Query/Result>
 #include <Nepomuk/Variant>
+#include <nepomuk/resourcewatcher.h>
 
 #include <KIO/PreviewJob>
 #include <KDebug>
@@ -44,6 +46,7 @@ class PmcMetadataModel::Private
 public:
     Private()
         : thumbnailerPlugins(new QStringList(KIO::PreviewJob::availablePlugins()))
+        , queryClient(0), resourceWatcher(0)
     {
     }
     Nepomuk::Query::Term term;
@@ -57,6 +60,10 @@ public:
     QTimer previewTimer;
     QTimer updateTimer;
     Nepomuk::Query::ResourceTypeTerm resourceTypeTerm;
+    Nepomuk::Query::QueryServiceClient *queryClient;
+    QHash<int, QHash<int, QVariant> > metadataValues;
+    MetadataUpdater *metadataUpdater;
+    QList<Nepomuk::Query::Result> results;
 };
 
 PmcMetadataModel::PmcMetadataModel(QObject* parent):
@@ -71,32 +78,41 @@ PmcMetadataModel::PmcMetadataModel(QObject* parent):
     connect(&d->updateTimer, SIGNAL(timeout()), SLOT(updateModel()));
 
     d->thumbnailSize = QSize(512, 512);
+
+    d->metadataUpdater = new MetadataUpdater(rolesNeeded(), this);
+    connect(d->metadataUpdater, SIGNAL(gotMetadata(QPersistentModelIndex, QHash<int,QVariant>)),
+            SLOT(saveMetadata(QPersistentModelIndex,QHash<int,QVariant>)), Qt::BlockingQueuedConnection);
+    d->metadataUpdater->start();
 }
 
 PmcMetadataModel::~PmcMetadataModel()
 {
+    d->metadataUpdater->quit();
+    kDebug() << "Waiting for metadata thread to quit...";
+    d->metadataUpdater->wait();
     delete d;
 }
 
 void PmcMetadataModel::updateModel()
 {
-    Nepomuk::Query::Query myQuery;
-    Nepomuk::Query::QueryServiceClient *queryClient = new Nepomuk::Query::QueryServiceClient(this);
+    beginResetModel();
+    d->results.clear();
+    d->metadataValues.clear();
+    endResetModel();
 
-    connect(queryClient, SIGNAL(newEntries(QList<Nepomuk::Query::Result>)),
+    Nepomuk::Query::Query myQuery;
+    Nepomuk::Query::QueryServiceClient *queryServiceClient = new Nepomuk::Query::QueryServiceClient(this);
+
+    connect(queryServiceClient, SIGNAL(newEntries(QList<Nepomuk::Query::Result>)),
             this, SLOT(newEntries(QList<Nepomuk::Query::Result>)));
-    connect(queryClient, SIGNAL(entriesRemoved(QList<QUrl>)),SLOT(entriesRemoved(QList<QUrl>)));
-    connect(queryClient, SIGNAL(error(QString)), SLOT(error(QString)));
-    connect(queryClient, SIGNAL(finishedListing()), this, SLOT(finishedListing()));
+//     connect(queryServiceClient, SIGNAL(entriesRemoved(QList<QUrl>)),SLOT(entriesRemoved(QList<QUrl>)));
+//     connect(queryServiceClient, SIGNAL(error(QString)), SLOT(error(QString)));
+    connect(queryServiceClient, SIGNAL(finishedListing()), this, SLOT(finishedListing()));
 
     myQuery.setTerm(d->term);
     kDebug()<< "Sparql query:"<< myQuery.toSparqlQuery();
 
-    beginResetModel();
-    d->queryResults.clear();
-    endResetModel();
-
-    queryClient->query(myQuery);
+    queryServiceClient->query(myQuery);
 }
 
 void PmcMetadataModel::showMediaType(MediaCenter::MediaType mediaType)
@@ -131,31 +147,40 @@ void PmcMetadataModel::setTerm(const Nepomuk::Query::Term& term)
 
 QVariant PmcMetadataModel::data(const QModelIndex& index, int role) const
 {
-    Nepomuk::Query::Result result = d->queryResults.at(index.row());
+    if (const_cast<PmcMetadataModel*>(this)->fetchMetadataIfRequired(index))
+        return QVariant();
+    QVariant metadataValue = d->metadataValues.value(index.row()).value(role);
     switch(role) {
-    case Qt::DecorationRole: {
-        if (mimetypeForResource(result.resource()).startsWith("video")) {
-            return const_cast<PmcMetadataModel*>(this)->fetchPreview(urlForResource(result.resource()), index);
-        }
-        const QString icon = result.resource().genericIcon();
-        if (!icon.isEmpty()) return icon;
-        return "kde"; }
-    case Qt::DisplayRole:
-        return result.resource().genericLabel();
     case MediaCenter::ResourceIdRole:
-        return result.resource().resourceUri();
     case MediaCenter::MediaUrlRole:
-        return urlForResource(result.resource());
-    case MediaCenter::MediaThumbnailRole:
-        return const_cast<PmcMetadataModel*>(this)->fetchPreview(urlForResource(result.resource()), index);
     case MediaCenter::MediaTypeRole:
-        //TODO: Put null checks here
-        return result.resource().property(Nepomuk::Vocabulary::NIE::mimeType()).toString().split("/").at(0);
-    case MediaCenter::DecorationTypeRole: {
-            return "image"; }
+    case Qt::DecorationRole:
+    case Qt::DisplayRole:
+        return metadataValue;
+    case MediaCenter::MediaThumbnailRole:
+        if (d->metadataValues.value(index.row()).value(MediaCenter::MediaTypeRole) == "video")
+            return const_cast<PmcMetadataModel*>(this)->fetchPreview(d->metadataValues.value(index.row()).value(MediaCenter::MediaUrlRole).toUrl(), index);
     }
 
     return QVariant();
+}
+
+bool PmcMetadataModel::fetchMetadataIfRequired(const QModelIndex& index)
+{
+    if (!d->metadataValues.keys().contains(index.row())) {
+        d->metadataUpdater->addResultToQueue(QPersistentModelIndex(index), d->results.at(index.row()));
+        return true;
+    }
+    return false;
+}
+
+QList< int > PmcMetadataModel::rolesNeeded() const
+{
+    return QList<int>() << Qt::DisplayRole
+                        << MediaCenter::ResourceIdRole
+                        << MediaCenter::MediaUrlRole
+                        << MediaCenter::MediaTypeRole
+                        << Qt::DecorationRole;
 }
 
 QString PmcMetadataModel::mimetypeForResource(const Nepomuk::Resource& resource) const
@@ -165,28 +190,20 @@ QString PmcMetadataModel::mimetypeForResource(const Nepomuk::Resource& resource)
 
 int PmcMetadataModel::rowCount(const QModelIndex& parent) const
 {
-    return d->queryResults.count();
+    return d->results.size();
 }
 
-void PmcMetadataModel::newEntries(const QList< Nepomuk::Query::Result >& entries)
+void PmcMetadataModel::saveMetadata(const QPersistentModelIndex& persistentIndex, const QHash< int, QVariant >& values )
 {
-    Q_FOREACH (const Nepomuk::Query::Result &res, entries) {
-//         kDebug() << "RESOURCE " << res.resource().genericLabel();
-//         Q_FOREACH (const QString &key, res.resource().allProperties().keys()) {
-//             kDebug() << key << " = " << res.resource().allProperties().value(key);
-//         }
-        d->queryResults.append(res);
-    }
-}
-
-void PmcMetadataModel::entriesRemoved(QList< QUrl > entries)
-{
+    if (!persistentIndex.isValid() || d->metadataValues.contains(persistentIndex.row()))
+        return;
+    d->metadataValues.insert(persistentIndex.row(), values);
+    emit dataChanged(persistentIndex, persistentIndex);
 }
 
 void PmcMetadataModel::finishedListing()
 {
-    beginResetModel();
-    endResetModel();
+    sender()->deleteLater();
 }
 
 void PmcMetadataModel::error(const QString &message)
@@ -231,7 +248,7 @@ void PmcMetadataModel::delayedPreview()
     if (list.size() > 0) {
         KIO::PreviewJob* job = KIO::filePreview(list, d->thumbnailSize, d->thumbnailerPlugins);
         connect(job, SIGNAL(gotPreview(KFileItem,QPixmap)), SLOT(showPreview(KFileItem,QPixmap)));
-        connect(job, SIGNAL(failed(KFileItem)), SLOT(previewFailed()));
+        connect(job, SIGNAL(failed(KFileItem)), SLOT(previewFailed(KFileItem)));
     }
 
     d->filesToPreview.clear();
@@ -250,6 +267,7 @@ void PmcMetadataModel::showPreview(const KFileItem &item, const QPixmap &preview
 
 void PmcMetadataModel::previewFailed(const KFileItem &item)
 {
+    kDebug() << "FAILED TO FETCH PREVIEW FOR " << item.url();
     //TODO: don't fail silently, let the view know
     d->previewJobs.remove(item.url());
 }
@@ -269,6 +287,14 @@ void PmcMetadataModel::clearAllFilters()
 {
     d->term = d->resourceTypeTerm;
     d->updateTimer.start(100);
+}
+
+void PmcMetadataModel::newEntries(const QList< Nepomuk::Query::Result >& results)
+{
+    int count = rowCount();
+    beginInsertRows(QModelIndex(), count, count);
+    d->results.append(results);
+    endInsertRows();
 }
 
 #include "pmcmetadatamodel.moc"

@@ -3,6 +3,7 @@ set (plasmamediacenter_SRCS
     mediacenter.cpp
     abstractbrowsingbackend.cpp
     backendsmodel.cpp
+    metadataupdater.cpp
     playlistmodel.cpp
     pmcmetadatamodel.cpp
     pmcimagecache.cpp

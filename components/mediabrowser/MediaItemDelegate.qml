@@ -77,8 +77,6 @@ Item {
                 Component {
                     id: delegateItemImageComponent
                     Item {
-                        width: parent.width;
-                        height: parent.height;
                         Rectangle {
                             width: parent.width - 6
                             height: parent.height - 6

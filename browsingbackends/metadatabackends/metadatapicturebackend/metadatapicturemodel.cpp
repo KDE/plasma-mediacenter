@@ -45,6 +45,10 @@ QVariant MetadataPictureModel::data (const QModelIndex& index, int role) const
         return "image";
     case MediaCenter::HideLabelRole:
         return true;
+    case MediaCenter::DecorationTypeRole:
+        return "image";
+    case MediaCenter::IsExpandableRole:
+        return false;
     }
 
     return PmcMetadataModel::data(index, role);
