@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2011  Shantanu Tushar <shaan7in@gmail.com>
+    Copyright (C) 2011  Shantanu Tushar <shantanu@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -72,7 +72,7 @@ bool LocalFilesAbstractModel::goOneLevelUp()
 {
     KUrl url = dirLister()->url();
 
-    if (QDir(url.toLocalFile()) == QDir(QDir::rootPath())) {
+    if (QDir(url.toLocalFile()) == QDir(QDir::homePath())) {
         return false;
     }
 

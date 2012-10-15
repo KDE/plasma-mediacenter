@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Plasma Media Center
 Name[da]=Plasma Mediecenter
+Name[es]=Centro Multimedia de Plasma
 Name[et]=Plasma meediakeskus
 Name[fi]=Plasma-mediakeskus
 Name[fr]=Centre multimédia pour Plasma
@@ -15,6 +16,7 @@ Name[uk]=Медіацентр Плазми
 Name[x-test]=xxPlasma Media Centerxx
 Comment=Plasma Media Center
 Comment[da]=Plasma Mediecenter
+Comment[es]=Centro multimedia de Plasma
 Comment[et]=Plasma meediakeskus
 Comment[fi]=Plasma-mediakeskus
 Comment[fr]=Centre multimédia pour Plasma
@@ -32,7 +34,7 @@ Type=Service
 Icon=plasma
 X-KDE-ParentApp=
 X-KDE-PluginInfo-Author=Shantanu Tushar
-X-KDE-PluginInfo-Email=shaan7in@gmail.com
+X-KDE-PluginInfo-Email=shantanu@kde.org
 X-KDE-PluginInfo-Name=org.kde.plasma.mediacenter
 X-KDE-PluginInfo-Version=1.0
 X-KDE-PluginInfo-Website=http://plasma.kde.org
