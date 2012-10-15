@@ -34,10 +34,7 @@
 MEDIACENTER_EXPORT_BROWSINGBACKEND(MetadataMusicBackend)
 
 MetadataMusicBackend::MetadataMusicBackend(QObject* parent, const QVariantList& args)
-    : AbstractMetadataBackend(parent, args),
-    m_albumsModel(new PmcMetadataModel(this)),
-    m_artistsModel(new PmcMetadataModel(this)),
-    m_musicModel(new PmcMetadataModel(this))
+    : AbstractMetadataBackend(parent, args)
 {
 }
 
@@ -48,6 +45,9 @@ MetadataMusicBackend::~MetadataMusicBackend()
 void MetadataMusicBackend::init()
 {
     AbstractMetadataBackend::init();
+    m_albumsModel = new PmcMetadataModel(this);
+    m_artistsModel = new PmcMetadataModel(this);
+    m_musicModel = new PmcMetadataModel(this);
     m_albumsModel->showMediaForProperty(Nepomuk::Vocabulary::NMM::musicAlbum());
     m_artistsModel->showMediaForProperty(Nepomuk::Vocabulary::NMM::performer());
     m_musicModel->showMediaType(MediaCenter::Music);

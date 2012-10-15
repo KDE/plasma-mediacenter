@@ -44,30 +44,46 @@ class MetadataUpdater : public QThread
 public:
     explicit MetadataUpdater(const QList<int> &rolesRequested, QObject* parent = 0);
     virtual ~MetadataUpdater();
-    void addResultToQueue(const QPersistentModelIndex &index, const Nepomuk::Query::Result& result);
+    void fetchMetadata(int row);
+    void fetchMetadata(const QList<int> &rows);
+    void setTerm(const Nepomuk::Query::Term &term);
     void quit();
 
 signals:
-    void gotMetadata(const QPersistentModelIndex &index, const QHash<int, QVariant> &values);
+    void gotMetadata(int row, const QHash<int, QVariant> &values);
+    void newResults(int count);
 
 protected:
     virtual void run();
 
+protected slots:
+    void runQuery();
+    void processPendingIndices();
+
+private slots:
+    void newEntries(const QList<Nepomuk::Query::Result> &results);
+    void finishedListing();
+
 private:
-    QList< int > m_rolesRequested;
-    QList<QPersistentModelIndex> m_indices;
-    QHash<QPersistentModelIndex, Nepomuk::Query::Result> m_results;
+    QList<int> m_rolesRequested;
+    QList<int> m_indices;
     bool m_shouldQuit;
+    bool m_termChanged;
+    Nepomuk::Query::Term m_term;
+    QMutex m_termMutex;
     QMutex m_resultsMutex;
     QMutex m_quitMutex;
+    QMutex m_indicesMutex;
+    QList<Nepomuk::Query::Result> m_resultList;
 
     QString mimetypeForResource(const Nepomuk::Resource& resource) const;
     QString urlForResource(const Nepomuk::Resource &resource) const;
-    void fetchValuesForResult(const QPersistentModelIndex& index, const Nepomuk::Query::Result& result);
+    void fetchValuesForResult(int i, const Nepomuk::Query::Result& result);
     bool areThereResultsToProcess();
-    QPersistentModelIndex nextIndexToProcess();
-    Nepomuk::Query::Result resultForIndex(const QPersistentModelIndex &index);
+    int nextIndexToProcess();
+    Nepomuk::Query::Result resultForRow(int row);
     bool shouldQuit();
+    bool hasTermChanged();
 };
 
 #endif // METADATAUPDATER_H

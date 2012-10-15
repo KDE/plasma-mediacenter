@@ -26,11 +26,15 @@
 #include <Nepomuk/Resource>
 #include <Nepomuk/Variant>
 #include <nepomuk/nie.h>
+#include <nepomuk/resourcetypeterm.h>
+#include <nepomuk/nfo.h>
 
 #include <KDebug>
 
+#include <QtCore/QTimer>
+
 MetadataUpdater::MetadataUpdater(const QList< int >& rolesRequested, QObject* parent)
-    : QThread(parent), m_rolesRequested(rolesRequested), m_shouldQuit(false)
+    : QThread(parent), m_rolesRequested(rolesRequested), m_shouldQuit(false), m_termChanged(false)
 {
 }
 
@@ -40,16 +44,73 @@ MetadataUpdater::~MetadataUpdater()
 
 void MetadataUpdater::run()
 {
-    while (!shouldQuit()) {
-        while (areThereResultsToProcess()) {
-            const QPersistentModelIndex &index = nextIndexToProcess();
-            fetchValuesForResult(index, resultForIndex(index));
-        }
-        msleep(100);
-    }
+    QTimer::singleShot(0, this, SLOT(processPendingIndices()));
+    exec();
 }
 
-void MetadataUpdater::fetchValuesForResult(const QPersistentModelIndex &index, const Nepomuk::Query::Result& result)
+void MetadataUpdater::setTerm(const Nepomuk::Query::Term& term)
+{
+    QMutexLocker locker(&m_termMutex);
+    m_term = term;
+    m_termChanged = true;
+}
+
+bool MetadataUpdater::hasTermChanged()
+{
+    QMutexLocker locker(&m_termMutex);
+    bool isChanged = m_termChanged;
+    if (isChanged) {
+        m_termChanged = false;
+    }
+    return isChanged;
+}
+
+void MetadataUpdater::runQuery()
+{
+    m_resultList.clear();
+
+    Nepomuk::Query::Query myQuery;
+    myQuery.setLimit(10000);
+    Nepomuk::Query::QueryServiceClient *queryServiceClient = new Nepomuk::Query::QueryServiceClient(this);
+
+    connect(queryServiceClient, SIGNAL(newEntries(QList<Nepomuk::Query::Result>)),
+            this, SLOT(newEntries(QList<Nepomuk::Query::Result>)));
+//     connect(queryServiceClient, SIGNAL(entriesRemoved(QList<QUrl>)),SLOT(entriesRemoved(QList<QUrl>)));
+//     connect(queryServiceClient, SIGNAL(error(QString)), SLOT(error(QString)));
+    connect(queryServiceClient, SIGNAL(finishedListing()), SLOT(finishedListing()));
+
+    QMutexLocker locker(&m_termMutex);
+    myQuery.setTerm(m_term);
+    kDebug()<< "SSparql query: " << myQuery.toSparqlQuery();
+
+    queryServiceClient->query(myQuery);
+}
+
+void MetadataUpdater::newEntries(const QList< Nepomuk::Query::Result >& results)
+{
+    m_resultList.append(results);
+    emit newResults(results.size());
+}
+
+void MetadataUpdater::processPendingIndices()
+{
+    if (shouldQuit())
+        exit();
+
+    if (hasTermChanged())
+        runQuery();
+
+    if (areThereResultsToProcess()) {
+        if (shouldQuit())
+            exit();
+
+        const int i = nextIndexToProcess();
+        fetchValuesForResult(i, resultForRow(i));
+    }
+    QTimer::singleShot(100, this, SLOT(processPendingIndices()));
+}
+
+void MetadataUpdater::fetchValuesForResult(int i, const Nepomuk::Query::Result& result)
 {
     QHash<int, QVariant> values;
     foreach(int role, m_rolesRequested) {
@@ -78,32 +139,37 @@ void MetadataUpdater::fetchValuesForResult(const QPersistentModelIndex &index, c
         }
     }
 
-    emit gotMetadata(index, values);
+    emit gotMetadata(i, values);
 }
 
-void MetadataUpdater::addResultToQueue(const QPersistentModelIndex& index, const Nepomuk::Query::Result& result)
+void MetadataUpdater::fetchMetadata(int row)
 {
-    QMutexLocker lock(&m_resultsMutex);
-    m_indices.append(index);
-    m_results.insert(index, result);
+    QMutexLocker lock(&m_indicesMutex);
+    m_indices.append(row);
 }
 
-QPersistentModelIndex MetadataUpdater::nextIndexToProcess()
+void MetadataUpdater::fetchMetadata(const QList< int >& rows)
 {
-    QMutexLocker lock(&m_resultsMutex);
-    return m_indices.takeFirst();
+    QMutexLocker lock(&m_indicesMutex);
+    m_indices.append(rows);
 }
 
-Nepomuk::Query::Result MetadataUpdater::resultForIndex(const QPersistentModelIndex& index)
+int MetadataUpdater::nextIndexToProcess()
+{
+    QMutexLocker lock(&m_indicesMutex);
+    return m_indices.takeLast();
+}
+
+Nepomuk::Query::Result MetadataUpdater::resultForRow(int row)
 {
     QMutexLocker lock(&m_resultsMutex);
-    return m_results.take(index);
+    return m_resultList.at(row);
 }
 
 bool MetadataUpdater::areThereResultsToProcess()
 {
-    QMutexLocker lock(&m_resultsMutex);
-    return !m_indices.empty();
+    QMutexLocker lock(&m_indicesMutex);
+    return !m_indices.isEmpty();
 }
 
 QString MetadataUpdater::mimetypeForResource(const Nepomuk::Resource& resource) const
@@ -128,3 +194,10 @@ bool MetadataUpdater::shouldQuit()
     QMutexLocker locker(&m_quitMutex);
     return m_shouldQuit;
 }
+
+void MetadataUpdater::finishedListing()
+{
+    qobject_cast<Nepomuk::Query::QueryServiceClient*>(sender())->close();
+}
+
+#include "metadataupdater.moc"

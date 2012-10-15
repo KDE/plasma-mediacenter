@@ -58,10 +58,11 @@ Row {
     }
 
     ListView {
+        id: listViewAllSongs
         width: parent.width/3 ; height: parent.height
         model: backend.musicModel
         header: PlasmaComponents.Button {
-            text: "All Songs"; width: parent.width; height: 96
+            text: "All Songs " + listViewAllSongs.count; width: parent.width; height: 96
             onClicked: backend.albumFilter = backend.artistFilter = ""
         }
         delegate: MusicDelegate { width: parent.width; height: 64 }

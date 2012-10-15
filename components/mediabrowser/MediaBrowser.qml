@@ -72,6 +72,12 @@ FocusScope {
             }
             flow: GridView.TopToBottom
             model: mediaBrowser.currentBrowsingBackendModel
+
+            Text {
+                font.pointSize: 20
+                color: "white"
+                text: mediaBrowserGridViewId.count
+            }
         }
     }
 
