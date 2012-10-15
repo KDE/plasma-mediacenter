@@ -191,7 +191,7 @@ int PmcMetadataModel::rowCount(const QModelIndex& parent) const
 
 void PmcMetadataModel::saveMetadata(int row, const QHash< int, QVariant >& values )
 {
-    if (row >= rowCount())
+    if (row >= rowCount() || d->metadataValues.contains(row))
         return;
 
     d->metadataValues.insert(row, values);
