@@ -62,9 +62,6 @@ FocusScope {
             clip: true
             cellWidth: width / 5
             cellHeight: cellWidth
-            preferredHighlightBegin: parent.width*0.1
-            preferredHighlightEnd: parent.width*0.9
-            highlightRangeMode: GridView.ApplyRange
             delegate: MediaItemDelegate {
                 backend: currentBrowsingBackend
                 onPlayRequested: mediaBrowser.playRequested(index, url, currentMediaType)
