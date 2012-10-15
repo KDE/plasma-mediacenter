@@ -51,6 +51,7 @@ public:
 
    void query(const QString &searchTerm, const QString &request);
    void getTokenAndQuery(const QString &username, const QString &password, const QString &request);
+   bool browseToAlbum(int row);
 
 signals:
     /**
@@ -84,6 +85,7 @@ private:
     QString m_request;
     QString m_username;
     QString m_albumid;
+    bool m_expandable;
 
     void listAllAlbums(KJob *job);
     void listAllPhotos(KJob *job);

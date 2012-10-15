@@ -38,6 +38,7 @@ public:
     virtual bool supportsSearch() const;
     virtual QString mediaBrowserSidePanel() const;
     Q_INVOKABLE void userInfo(const QString& username, const QString& password);
+    bool expand (int row);
 
 public Q_SLOTS:
     virtual void init();

@@ -33,6 +33,7 @@
 PicasaModel::PicasaModel(QObject* parent, const QString& username, const QString& password): QAbstractListModel(parent)
 {
 
+    setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
     getTokenAndQuery(username, password,"album");
 }
 
@@ -44,7 +45,7 @@ PicasaModel::~PicasaModel()
 
 int PicasaModel::rowCount(const QModelIndex& parent) const
 {
-    return m_albums.count();
+    return (m_expandable ?  m_albums.count() : m_photos.count());
 }
 
 
@@ -54,15 +55,15 @@ QVariant PicasaModel::data(const QModelIndex& index, int role) const
         case MediaCenter::HideLabelRole:
             return false;
         case Qt::DecorationRole:
-            return m_albums.at(index.row()).thumbnail;
+            return (m_expandable ? m_albums.at(index.row()).thumbnail : m_photos.at(index.row()).thumbnail144);
         case MediaCenter::MediaUrlRole:
-            return m_albums.at(index.row()).link;
+            return (m_expandable ? m_albums.at(index.row()).link : m_photos.at(index.row()).link);
         case Qt::DisplayRole:
-            return (m_albums.at(index.row()).title + " (" + m_albums.at(index.row()).noOfPhotos + "Photos)");
+            return (m_expandable ? (m_albums.at(index.row()).title + " (" + m_albums.at(index.row()).noOfPhotos + "Photos)") : "");
         case MediaCenter::MediaTypeRole:
             return "image";
         case MediaCenter::IsExpandableRole:
-            return true;
+            return m_expandable;
     }
     return QVariant();
 }
@@ -75,7 +76,7 @@ void PicasaModel::query(const QString &username, const QString &request)
 
     // if we require photos from an album, we have to split request to
     // obtain the albumid; ex: photo/32323232432
-    if (request.contains("/")) {
+    if (request.contains("/")) {;
         m_albumid = request.split("/").last();
         m_request = request.split("/").first();
     } else {
@@ -135,6 +136,7 @@ void PicasaModel::listAllAlbums(KJob *job)
     document.setContent(m_datas[static_cast<KIO::Job*>(job)]);
 
     QDomNodeList entries = document.elementsByTagName("entry");
+    m_expandable = true;
     m_albums.clear();
     for (int i = 0; i < entries.count(); i++) {
 
@@ -188,6 +190,7 @@ void PicasaModel::listAllPhotos(KJob *job)
     document.setContent(m_datas[static_cast<KIO::Job*>(job)]);
 
     QDomNodeList entries = document.elementsByTagName("entry");
+    m_expandable = false;
     m_photos.clear();
     for (int i = 0; i < entries.count(); i++) {
 
@@ -283,4 +286,10 @@ void PicasaModel::passwordJob(KJob *job)
     }
 
     query(m_username, m_request);
+}
+
+bool PicasaModel::browseToAlbum(int row)
+{
+    query(m_username, ("photos/" + m_albums.at(row).id));
+    return true;
 }
