@@ -70,7 +70,7 @@ void MetadataUpdater::runQuery()
     m_resultList.clear();
 
     Nepomuk::Query::Query myQuery;
-    myQuery.setLimit(10000);
+    myQuery.setLimit(2000);
     Nepomuk::Query::QueryServiceClient *queryServiceClient = new Nepomuk::Query::QueryServiceClient(this);
 
     connect(queryServiceClient, SIGNAL(newEntries(QList<Nepomuk::Query::Result>)),
