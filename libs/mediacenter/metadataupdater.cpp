@@ -164,6 +164,8 @@ int MetadataUpdater::nextIndexToProcess()
 Nepomuk::Query::Result MetadataUpdater::resultForRow(int row)
 {
     QMutexLocker lock(&m_resultsMutex);
+    if (row >= m_resultList.size())
+        return Nepomuk::Query::Result();
     return m_resultList.at(row);
 }
 

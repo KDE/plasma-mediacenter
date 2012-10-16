@@ -83,7 +83,6 @@ PmcMetadataModel::PmcMetadataModel(QObject* parent):
     d->thumbnailSize = QSize(512, 512);
 
     qRegisterMetaType< QHash<int,QVariant> >("QHash<int,QVariant>");
-    qRegisterMetaType<Nepomuk::Resource>("Resource");
     d->metadataUpdater = new MetadataUpdater(rolesNeeded());
     connect(d->metadataUpdater, SIGNAL(gotMetadata(int, QHash<int,QVariant>)),
             SLOT(saveMetadata(int,QHash<int,QVariant>)));
