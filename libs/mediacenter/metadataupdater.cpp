@@ -36,6 +36,7 @@
 MetadataUpdater::MetadataUpdater(const QList< int >& rolesRequested, QObject* parent)
     : QThread(parent), m_rolesRequested(rolesRequested), m_shouldQuit(false), m_termChanged(false)
 {
+    moveToThread(this);
 }
 
 MetadataUpdater::~MetadataUpdater()
