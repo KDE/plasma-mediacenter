@@ -35,6 +35,7 @@ public:
     virtual QString mediaBrowserSidePanel() const;
     Q_INVOKABLE QObject *placesModel();
     Q_INVOKABLE void browseToPlace(int row);
+    Q_INVOKABLE void browseOneLevelUp();
 
 protected:
     virtual void initImpl();

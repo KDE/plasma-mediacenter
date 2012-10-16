@@ -32,11 +32,14 @@ void LocalFilesAbstractBackend::initImpl()
     initModel();
 }
 
+void LocalFilesAbstractBackend::browseOneLevelUp()
+{
+    qobject_cast<LocalFilesAbstractModel*>(model())->goOneLevelUp();
+}
+
 bool LocalFilesAbstractBackend::goOneLevelUp()
 {
-    LocalFilesAbstractModel *filesModel = qobject_cast<LocalFilesAbstractModel*>(model());
-
-    return filesModel->goOneLevelUp();
+    return false;
 }
 
 bool LocalFilesAbstractBackend::expand (int row)

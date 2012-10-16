@@ -72,10 +72,6 @@ bool LocalFilesAbstractModel::goOneLevelUp()
 {
     KUrl url = dirLister()->url();
 
-    if (QDir(url.toLocalFile()) == QDir(QDir::homePath())) {
-        return false;
-    }
-
     url.addPath("..");
     bool success = dirLister()->openUrl(url);
 

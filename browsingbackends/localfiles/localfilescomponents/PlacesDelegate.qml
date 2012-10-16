@@ -21,31 +21,34 @@ import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.kde.qtextracomponents 0.1 as QtExtraComponents
 
-Rectangle {
-    color: "black"
-    opacity: 0.8
-    border.color: "white"
-    Row {
-        anchors { fill: parent; margins: 5 }
-        spacing: 10
-        QtExtraComponents.QIconItem {
-            id: delegateItemIcon
-            anchors.verticalCenter: parent.verticalCenter
-            height: parent.height; width: height
-            icon: decoration
-        }
+Item {
+    Rectangle {
+        anchors { fill: parent; margins: 2 }
+        color: "black"
+        opacity: 0.8
+        border.color: "white"
+        Row {
+            anchors { fill: parent; margins: 5 }
+            spacing: 10
+            QtExtraComponents.QIconItem {
+                id: delegateItemIcon
+                anchors.verticalCenter: parent.verticalCenter
+                height: parent.height; width: height
+                icon: decoration
+            }
 
-        PlasmaComponents.Label {
-            anchors.verticalCenter: parent.verticalCenter
-            text: display
-            font.pointSize: 14
-            color: "white"
-        }
+            PlasmaComponents.Label {
+                anchors.verticalCenter: parent.verticalCenter
+                text: display
+                font.pointSize: 14
+                color: "white"
+            }
 
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                backend.browseToPlace(index)
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    backend.browseToPlace(index)
+                }
             }
         }
     }

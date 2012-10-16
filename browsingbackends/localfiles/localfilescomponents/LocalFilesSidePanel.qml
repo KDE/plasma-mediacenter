@@ -26,9 +26,24 @@ Item {
     anchors.fill: parent
     property QtObject backend
 
+    PlasmaComponents.Button {
+        id: backButton
+        anchors {
+            left: parent.left; right: parent.right; top: parent.top
+        }
+        height: 64
+        iconSource: "go-up";
+        text: "One level up"
+        onClicked: backend.browseOneLevelUp()
+    }
+
     ListView {
         id: placesListView
-        anchors { fill: parent; margins: 10 }
+        anchors {
+            left: parent.left; right: parent.right; top: backButton.bottom
+            bottom: parent.bottom; margins: 10
+        }
+        clip: true
         model: backend.placesModel()
         spacing: 10
         header: PlasmaComponents.Label {
