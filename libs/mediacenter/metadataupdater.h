@@ -47,7 +47,6 @@ public:
     void fetchMetadata(int row);
     void fetchMetadata(const QList<int> &rows);
     void setTerm(const Nepomuk::Query::Term &term);
-    void quit();
 
 signals:
     void gotMetadata(int row, const QHash<int, QVariant> &values);
@@ -67,12 +66,10 @@ private slots:
 private:
     QList<int> m_rolesRequested;
     QList<int> m_indices;
-    bool m_shouldQuit;
     bool m_termChanged;
     Nepomuk::Query::Term m_term;
     QMutex m_termMutex;
     QMutex m_resultsMutex;
-    QMutex m_quitMutex;
     QMutex m_indicesMutex;
     QList<Nepomuk::Query::Result> m_resultList;
 
@@ -82,7 +79,6 @@ private:
     bool areThereResultsToProcess();
     int nextIndexToProcess();
     Nepomuk::Query::Result resultForRow(int row);
-    bool shouldQuit();
     bool hasTermChanged();
 };
 

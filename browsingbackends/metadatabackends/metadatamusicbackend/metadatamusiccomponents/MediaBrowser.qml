@@ -52,7 +52,7 @@ Row {
             font.pointSize: 14
             color: "white"
         }
-        delegate: CategoriesDelegate { width: parent.width; height: 96; categoryName: "album" }
+        delegate: CategoriesDelegate { width: parent ? parent.width : 0; height: 96; categoryName: "album" }
         spacing: 5
         snapMode: ListView.SnapToItem
     }

@@ -22,8 +22,8 @@ import org.kde.plasma.components 0.1 as PlasmaComponents
 
 PlasmaComponents.Button {
     property string categoryName: ""
-    text: display
-    iconSource: decoration
+    text: display ? display : ""
+    iconSource: decoration ? decoration : ""
 
     onClicked: categoryName == "album" ? backend.albumFilter = resourceId : backend.artistFilter = resourceId
 }

@@ -83,7 +83,7 @@ PmcMetadataModel::PmcMetadataModel(QObject* parent):
     d->thumbnailSize = QSize(512, 512);
 
     qRegisterMetaType< QHash<int,QVariant> >("QHash<int,QVariant>");
-    d->metadataUpdater = new MetadataUpdater(rolesNeeded(), this);
+    d->metadataUpdater = new MetadataUpdater(rolesNeeded());
     connect(d->metadataUpdater, SIGNAL(gotMetadata(int, QHash<int,QVariant>)),
             SLOT(saveMetadata(int,QHash<int,QVariant>)));
     connect(d->metadataUpdater, SIGNAL(newResults(int)), SLOT(newEntries(int)));

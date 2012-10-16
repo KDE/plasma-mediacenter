@@ -34,13 +34,14 @@
 #include <QtCore/QTimer>
 
 MetadataUpdater::MetadataUpdater(const QList< int >& rolesRequested, QObject* parent)
-    : QThread(parent), m_rolesRequested(rolesRequested), m_shouldQuit(false), m_termChanged(false)
+    : QThread(parent), m_rolesRequested(rolesRequested), m_termChanged(false)
 {
     moveToThread(this);
 }
 
 MetadataUpdater::~MetadataUpdater()
 {
+    deleteLater();
 }
 
 void MetadataUpdater::run()
@@ -94,16 +95,10 @@ void MetadataUpdater::newEntries(const QList< Nepomuk::Query::Result >& results)
 
 void MetadataUpdater::processPendingIndices()
 {
-    if (shouldQuit())
-        exit();
-
     if (hasTermChanged())
         runQuery();
 
     if (areThereResultsToProcess()) {
-        if (shouldQuit())
-            exit();
-
         const int i = nextIndexToProcess();
         fetchValuesForResult(i, resultForRow(i));
     }
@@ -181,18 +176,6 @@ QString MetadataUpdater::mimetypeForResource(const Nepomuk::Resource& resource) 
 QString MetadataUpdater::urlForResource(const Nepomuk::Resource &resource) const
 {
     return resource.property(Nepomuk::Vocabulary::NIE::url()).toUrl().toString();
-}
-
-void MetadataUpdater::quit()
-{
-    QMutexLocker locker(&m_quitMutex);
-    m_shouldQuit = true;
-}
-
-bool MetadataUpdater::shouldQuit()
-{
-    QMutexLocker locker(&m_quitMutex);
-    return m_shouldQuit;
 }
 
 void MetadataUpdater::finishedListing()
