@@ -71,7 +71,6 @@ void MetadataUpdater::runQuery()
     m_resultList.clear();
 
     Nepomuk::Query::Query myQuery;
-    myQuery.setLimit(2000);
     Nepomuk::Query::QueryServiceClient *queryServiceClient = new Nepomuk::Query::QueryServiceClient(this);
 
     connect(queryServiceClient, SIGNAL(newEntries(QList<Nepomuk::Query::Result>)),
@@ -108,7 +107,7 @@ void MetadataUpdater::processPendingIndices()
         const int i = nextIndexToProcess();
         fetchValuesForResult(i, resultForRow(i));
     }
-    QTimer::singleShot(100, this, SLOT(processPendingIndices()));
+    QTimer::singleShot(0, this, SLOT(processPendingIndices()));
 }
 
 void MetadataUpdater::fetchValuesForResult(int i, const Nepomuk::Query::Result& result)
