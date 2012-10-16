@@ -38,7 +38,8 @@ public:
     cfInterface(false),
     model(0),
     metadataModel(0),
-    declarativeEngine(0)
+    declarativeEngine(0),
+    hasInitialized(false)
     {}
 
     AbstractBrowsingBackend *q;
@@ -48,6 +49,7 @@ public:
     QAbstractItemModel * model;
     QAbstractItemModel * metadataModel;
     QDeclarativeEngine *declarativeEngine;
+    bool hasInitialized;
 };
 
 AbstractBrowsingBackend::AbstractBrowsingBackend(QObject *parent, const QVariantList &args) : QObject(parent),
@@ -109,9 +111,6 @@ KConfigGroup AbstractBrowsingBackend::config()
 {
     return KConfigGroup(KGlobal::config(), name());
 }
-
-void AbstractBrowsingBackend::init()
-{}
 
 QString AbstractBrowsingBackend::name() const
 {
@@ -197,4 +196,12 @@ bool AbstractBrowsingBackend::supportsSearch() const
 void AbstractBrowsingBackend::search(const QString& searchTerm)
 {
     // Does nothing
+}
+
+void AbstractBrowsingBackend::init()
+{
+    if (!d->hasInitialized) {
+        d->hasInitialized = true;
+        initImpl();
+    }
 }

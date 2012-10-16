@@ -34,7 +34,7 @@ public:
     virtual bool supportsSearch() const;
 
 public Q_SLOTS:
-    virtual void init();
+    virtual void initImpl();
     virtual bool goOneLevelUp();
 };
 

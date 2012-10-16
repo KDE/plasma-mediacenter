@@ -47,7 +47,11 @@ Item {
     MouseArea {
         anchors.fill: parent
         hoverEnabled: true
-        onClicked: { homeScreenRootItem.selectedBackend = modelObject; homeScreenRootItem.backendSelected() }
+        onClicked: {
+            modelObject.init()
+            homeScreenRootItem.selectedBackend = modelObject;
+            homeScreenRootItem.backendSelected();
+        }
         onEntered: rootItem.ListView.view.currentIndex = index
     }
 

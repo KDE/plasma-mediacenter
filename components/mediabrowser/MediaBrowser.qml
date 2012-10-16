@@ -79,8 +79,6 @@ FocusScope {
     }
 
     onCurrentBrowsingBackendChanged: {
-        currentBrowsingBackend.init();
-
         //Check if there is a custom browser, if yes, load that
         var object;
         if (currentBrowsingBackend.mediaBrowserOverride()) {

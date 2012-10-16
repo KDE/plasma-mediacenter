@@ -30,7 +30,6 @@ class LocalFilesAbstractBackend : public MediaCenter::AbstractBrowsingBackend
 public:
     LocalFilesAbstractBackend (QObject* parent, const QVariantList& args);
 
-    virtual void init();
     virtual bool goOneLevelUp();
     virtual bool expand (int row);
     virtual QString mediaBrowserSidePanel() const;
@@ -38,6 +37,7 @@ public:
     Q_INVOKABLE void browseToPlace(int row);
 
 protected:
+    virtual void initImpl();
     virtual void initModel() = 0;
     KFilePlacesModel *m_placeModel;
 };

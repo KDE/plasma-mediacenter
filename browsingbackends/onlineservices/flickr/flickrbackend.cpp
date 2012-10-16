@@ -36,7 +36,7 @@ FlickrBackend::~FlickrBackend()
 
 }
 
-void FlickrBackend::init()
+void FlickrBackend::initImpl()
 {
     setModel(new FlickrModel(this));
 }

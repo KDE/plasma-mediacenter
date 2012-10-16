@@ -37,7 +37,7 @@ MetadataPictureBackend::~MetadataPictureBackend()
 {
 }
 
-void MetadataPictureBackend::init()
+void MetadataPictureBackend::initImpl()
 {
     setModel(new MetadataPictureModel(this));
 }

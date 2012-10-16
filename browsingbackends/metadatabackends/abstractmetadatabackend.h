@@ -29,8 +29,10 @@ public:
     AbstractMetadataBackend (QObject* parent, const QVariantList& args);
 
 public Q_SLOTS:
-    virtual void init();
     virtual bool goOneLevelUp();
+
+protected:
+    virtual void initImpl();
 };
 
 #endif // ABSTRACTMETADATABACKEND_H

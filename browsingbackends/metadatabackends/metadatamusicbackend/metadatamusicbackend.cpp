@@ -42,9 +42,9 @@ MetadataMusicBackend::~MetadataMusicBackend()
 {
 }
 
-void MetadataMusicBackend::init()
+void MetadataMusicBackend::initImpl()
 {
-    AbstractMetadataBackend::init();
+    AbstractMetadataBackend::initImpl();
     m_albumsModel = new PmcMetadataModel(this);
     m_artistsModel = new PmcMetadataModel(this);
     m_musicModel = new PmcMetadataModel(this);

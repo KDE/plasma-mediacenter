@@ -33,8 +33,8 @@ public:
     virtual ~MetadataPictureBackend();
     virtual QString backendCategory() const;
 
-public Q_SLOTS:
-    virtual void init();
+protected:
+    virtual void initImpl();
 };
 
 #endif // METADATAPICTUREBACKEND_H

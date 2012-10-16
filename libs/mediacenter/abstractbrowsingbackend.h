@@ -117,13 +117,7 @@ public:
      */
     KConfigGroup config();
 
-    /**
-     * This method is called whenever the package has been chosen by the user
-     * to be the current navigation helper and just before the model is set
-     * to the view.
-     * Use this method for general initialization purposes.
-     */
-    Q_INVOKABLE virtual void init();
+    Q_INVOKABLE void init();
 
     QString name() const;
 
@@ -261,6 +255,15 @@ protected:
      */
     QString constructQmlSource(const QString& componentDirName, const QString& versionString,
                                const QString& itemName) const;
+
+    /**
+     * This method is called whenever the package has been chosen by the user
+     * to be the current navigation helper and just before the model is set
+     * to the view.
+     * Use this method for general initialization purposes.
+     */
+    virtual void initImpl() = 0;
+
 
 private:
     class AbstractBrowsingBackendPrivate;

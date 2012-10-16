@@ -42,7 +42,6 @@ public:
     MetadataMusicBackend (QObject* parent, const QVariantList& args);
     virtual ~MetadataMusicBackend();
 
-    virtual void init();
     virtual QString backendCategory() const;
 
     virtual QString mediaBrowserOverride() const;
@@ -66,6 +65,7 @@ Q_SIGNALS:
 
 protected:
     void updateModelAccordingToFilters();
+    virtual void initImpl();
 
 private:
     PmcMetadataModel* m_artistsModel;
