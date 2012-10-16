@@ -48,7 +48,8 @@ void PicasaBackend::init()
 
 bool PicasaBackend::goOneLevelUp()
 {
-    return MediaCenter::AbstractBrowsingBackend::goOneLevelUp();
+    PicasaModel *picasaModel = qobject_cast<PicasaModel*>(model());
+    return picasaModel->goBack();
 }
 
 void PicasaBackend::search(const QString& searchTerm)

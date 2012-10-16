@@ -52,6 +52,7 @@ public:
    void query(const QString &searchTerm, const QString &request);
    void getTokenAndQuery(const QString &username, const QString &password, const QString &request);
    bool browseToAlbum(int row);
+   bool goBack();
 
 signals:
     /**

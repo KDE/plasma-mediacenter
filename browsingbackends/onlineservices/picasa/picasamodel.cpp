@@ -293,3 +293,13 @@ bool PicasaModel::browseToAlbum(int row)
     query(m_username, ("photos/" + m_albums.at(row).id));
     return true;
 }
+
+bool PicasaModel::goBack()
+{
+    if(m_expandable) {
+        return false;
+    } else {
+        query(m_username, "album");
+        return true;
+    }
+}
