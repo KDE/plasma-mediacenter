@@ -27,53 +27,84 @@ Row {
     spacing: 10
     clip: true
 
-    ListView {
+    Column {
         width: parent.width/3 * 0.9; height: parent.height
-        model: backend.artistsModel();
-        header: PlasmaComponents.Label {
-            text: "Artists"; width: parent.width; height: 96
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            font.pointSize: 14
-            color: "white"
+        PlasmaComponents.TextField {
+            width: parent.width
+            height: 30
+            clearButtonShown: true
+            placeholderText: "Search Artists"
+            onTextChanged: searchArtistTimer.restart()
+            Timer {
+                id: searchArtistTimer
+                interval: 2000
+                onTriggered: backend.searchArtist(parent.text)
+            }
         }
-        delegate: CategoriesDelegate { width: parent ? parent.width : 0; height: 96; categoryName: "artist" }
-        spacing: 5
-        snapMode: ListView.SnapToItem
+        ListView {
+            width: parent.width; height: parent.height - 30
+            model: backend.artistsModel();
+            delegate: CategoriesDelegate { width: parent ? parent.width : 0; height: 48; categoryName: "artist" }
+            spacing: 5
+            snapMode: ListView.SnapToItem
+            clip: true
+        }
     }
 
-    ListView {
+    Column {
         width: parent.width/3; height: parent.height
-        model: backend.albumsModel();
-        header: PlasmaComponents.Label {
-            text: "Albums"; width: parent.width; height: 96
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            font.pointSize: 14
-            color: "white"
+        PlasmaComponents.TextField {
+            width: parent.width
+            height: 30
+            clearButtonShown: true
+            placeholderText: "Search Albums"
+            onTextChanged: searchAlbumTimer.restart()
+            Timer {
+                id: searchAlbumTimer
+                interval: 2000
+                onTriggered: backend.searchAlbum(parent.text)
+            }
         }
-        delegate: CategoriesDelegate { width: parent ? parent.width : 0; height: 96; categoryName: "album" }
-        spacing: 5
-        snapMode: ListView.SnapToItem
+        ListView {
+            width: parent.width; height: parent.height - 30
+            model: backend.albumsModel();
+            delegate: CategoriesDelegate { width: parent ? parent.width : 0; height: 48; categoryName: "album" }
+            spacing: 5
+            snapMode: ListView.SnapToItem
+            clip: true
+        }
     }
 
-    ListView {
-        id: listViewAllSongs
+    Column {
         width: parent.width/3 ; height: parent.height
-        model: backend.musicModel
-        header: PlasmaComponents.Button {
-            text: "All Songs " + listViewAllSongs.count; width: parent.width; height: 96
-            onClicked: backend.albumFilter = backend.artistFilter = ""
+        PlasmaComponents.TextField {
+            visible: backend.albumFilter == "" && backend.artistFilter == ""
+            width: parent.width
+            height: 30
+            clearButtonShown: true
+            placeholderText: "Search Music"
+            onTextChanged: searchMusicTimer.restart()
+            Timer {
+                id: searchMusicTimer
+                interval: 2000
+                onTriggered: backend.searchMusic(parent.text)
+            }
         }
-        delegate: MusicDelegate { width: parent ? parent.width : 0; height: 64 }
-        spacing: 5
-        highlight: MediaItemHighlight { z: 1 }
-        highlightFollowsCurrentItem: true
+        ListView {
+            id: listViewAllSongs
+            width: parent.width; height: parent.height - 30
+            model: backend.musicModel
+            delegate: MusicDelegate { width: parent ? parent.width : 0; height: 64 }
+            spacing: 5
+            highlight: MediaItemHighlight { z: 1 }
+            highlightFollowsCurrentItem: true
+            clip: true
 
-        PlasmaComponents.BusyIndicator {
-            anchors.centerIn: parent
-            running: parent.count == 0
-            visible: running
+            PlasmaComponents.BusyIndicator {
+                anchors.centerIn: parent
+                running: parent.count == 0
+                visible: running
+            }
         }
     }
 }

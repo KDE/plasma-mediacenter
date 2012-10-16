@@ -128,4 +128,19 @@ QString MetadataMusicBackend::backendCategory() const
     return "audio";
 }
 
+void MetadataMusicBackend::searchAlbum(const QString& album)
+{
+    m_albumsModel->setSearchTerm(album);
+}
+
+void MetadataMusicBackend::searchArtist(const QString& artist)
+{
+    m_artistsModel->setSearchTerm(artist);
+}
+
+void MetadataMusicBackend::searchMusic(const QString& music)
+{
+    m_musicModel->setSearchTerm(music);
+}
+
 #include "metadatamusicbackend.moc"
