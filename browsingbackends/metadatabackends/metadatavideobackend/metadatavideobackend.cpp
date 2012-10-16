@@ -24,6 +24,8 @@
 
 #include "metadatavideomodel.h"
 
+#include <nepomuk/queryparser.h>
+
 #include <QDebug>
 
 MEDIACENTER_EXPORT_BROWSINGBACKEND(MetadataVideoBackend)
@@ -46,6 +48,16 @@ void MetadataVideoBackend::initImpl()
 QString MetadataVideoBackend::backendCategory() const
 {
     return "video";
+}
+
+void MetadataVideoBackend::search(const QString& searchTerm)
+{
+    qobject_cast<PmcMetadataModel*>(model())->setSearchTerm(searchTerm);
+}
+
+bool MetadataVideoBackend::supportsSearch() const
+{
+    return true;
 }
 
 #include "metadatavideobackend.moc"

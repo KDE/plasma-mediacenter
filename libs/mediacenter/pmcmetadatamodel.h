@@ -53,7 +53,9 @@ public:
     void showMediaType(MediaCenter::MediaType mediaType);
     void showMediaForProperty(Nepomuk::Types::Property property);
     void setTerm(const Nepomuk::Query::Term &term);
+    void addTerm(const Nepomuk::Query::Term &term);
     void addFilter(const Nepomuk::Types::Property& property, const Nepomuk::Query::Term& term, Nepomuk::Query::ComparisonTerm::Comparator comparator = Nepomuk::Query::ComparisonTerm::Contains);
+    void setSearchTerm(const QString &searchTerm);
 
 public Q_SLOTS:
     void clearAllFilters();

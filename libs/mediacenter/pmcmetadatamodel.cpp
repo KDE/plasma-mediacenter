@@ -35,6 +35,7 @@
 #include <Nepomuk/Query/Result>
 #include <Nepomuk/Variant>
 #include <nepomuk/resourcewatcher.h>
+#include <nepomuk/queryparser.h>
 
 #include <KIO/PreviewJob>
 #include <KDebug>
@@ -47,9 +48,12 @@ public:
     Private()
         : thumbnailerPlugins(new QStringList(KIO::PreviewJob::availablePlugins()))
         , numberOfEntries(0)
+        , isSearchTermValid(false)
     {
     }
     Nepomuk::Query::Term term;
+    Nepomuk::Query::Term searchTerm;
+    bool isSearchTermValid;
     QList< Nepomuk::Query::Result > queryResults;
 
     //Thumbnail stuff
@@ -101,7 +105,7 @@ PmcMetadataModel::~PmcMetadataModel()
 
 void PmcMetadataModel::updateModel()
 {
-    d->metadataUpdater->setTerm(d->term);
+    d->metadataUpdater->setTerm(d->isSearchTermValid ? Nepomuk::Query::AndTerm(d->term, d->searchTerm) : d->term);
 }
 
 void PmcMetadataModel::showMediaType(MediaCenter::MediaType mediaType)
@@ -131,6 +135,12 @@ void PmcMetadataModel::setTerm(const Nepomuk::Query::Term& term)
 {
      d->term = term;
      d->updateTimer.start(100);
+}
+
+void PmcMetadataModel::addTerm(const Nepomuk::Query::Term& term)
+{
+    d->term = Nepomuk::Query::AndTerm(d->term, term);
+    d->updateTimer.start(100);
 }
 
 QVariant PmcMetadataModel::data(const QModelIndex& index, int role) const
@@ -300,6 +310,17 @@ void PmcMetadataModel::resetModel()
     d->numberOfEntries = 0;
     d->metadataValues.clear();
     endResetModel();
+}
+
+void PmcMetadataModel::setSearchTerm(const QString& searchTerm)
+{
+    if (searchTerm.isEmpty()) {
+        d->isSearchTermValid = false;
+    } else {
+        d->searchTerm = Nepomuk::Query::QueryParser::parseQuery(searchTerm).term();
+        d->isSearchTermValid = true;
+    }
+    d->updateTimer.start(100);
 }
 
 #include "pmcmetadatamodel.moc"
