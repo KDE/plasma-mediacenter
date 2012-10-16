@@ -83,10 +83,12 @@ PmcMetadataModel::PmcMetadataModel(QObject* parent):
     d->thumbnailSize = QSize(512, 512);
 
     qRegisterMetaType< QHash<int,QVariant> >("QHash<int,QVariant>");
+    qRegisterMetaType<Nepomuk::Resource>("Resource");
     d->metadataUpdater = new MetadataUpdater(rolesNeeded());
     connect(d->metadataUpdater, SIGNAL(gotMetadata(int, QHash<int,QVariant>)),
             SLOT(saveMetadata(int,QHash<int,QVariant>)));
     connect(d->metadataUpdater, SIGNAL(newResults(int)), SLOT(newEntries(int)));
+    connect(d->metadataUpdater, SIGNAL(reset()), SLOT(handleUpdaterReset()));
     d->metadataUpdater->start(QThread::IdlePriority);
 }
 
@@ -100,11 +102,6 @@ PmcMetadataModel::~PmcMetadataModel()
 
 void PmcMetadataModel::updateModel()
 {
-    beginResetModel();
-    d->numberOfEntries = 0;
-    d->metadataValues.clear();
-    endResetModel();
-
     d->metadataUpdater->setTerm(d->term);
 }
 
@@ -128,8 +125,7 @@ void PmcMetadataModel::showMediaForProperty(Nepomuk::Types::Property property)
 {
     Nepomuk::Query::ComparisonTerm ct(property, Nepomuk::Query::Term());
     ct.setInverted(true);
-    d->term = ct;
-    d->updateTimer.start(100);
+    setTerm(ct);
 }
 
 void PmcMetadataModel::setTerm(const Nepomuk::Query::Term& term)
@@ -292,6 +288,19 @@ void PmcMetadataModel::clearAllFilters()
 {
     d->term = d->resourceTypeTerm;
     d->updateTimer.start(100);
+}
+
+void PmcMetadataModel::handleUpdaterReset()
+{
+    resetModel();
+}
+
+void PmcMetadataModel::resetModel()
+{
+    beginResetModel();
+    d->numberOfEntries = 0;
+    d->metadataValues.clear();
+    endResetModel();
 }
 
 #include "pmcmetadatamodel.moc"

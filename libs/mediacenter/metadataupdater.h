@@ -51,6 +51,7 @@ public:
 signals:
     void gotMetadata(int row, const QHash<int, QVariant> &values);
     void newResults(int count);
+    void reset();
 
 protected:
     virtual void run();
@@ -72,6 +73,7 @@ private:
     QMutex m_resultsMutex;
     QMutex m_indicesMutex;
     QList<Nepomuk::Query::Result> m_resultList;
+    Nepomuk::Query::QueryServiceClient *m_queryServiceClient;
 
     QString mimetypeForResource(const Nepomuk::Resource& resource) const;
     QString urlForResource(const Nepomuk::Resource &resource) const;

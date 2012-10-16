@@ -26,7 +26,7 @@ Rectangle {
     opacity: mouseArea.pressed ? 1 : 0.8
 
     Text {
-        text: display
+        text: display ? display : ""
         anchors.fill: parent
         anchors.margins: 5
         font.pointSize: 16

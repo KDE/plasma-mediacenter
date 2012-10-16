@@ -37,7 +37,7 @@ Row {
             font.pointSize: 14
             color: "white"
         }
-        delegate: CategoriesDelegate { width: parent.width; height: 96; categoryName: "artist" }
+        delegate: CategoriesDelegate { width: parent ? parent.width : 0; height: 96; categoryName: "artist" }
         spacing: 5
         snapMode: ListView.SnapToItem
     }
@@ -65,7 +65,7 @@ Row {
             text: "All Songs " + listViewAllSongs.count; width: parent.width; height: 96
             onClicked: backend.albumFilter = backend.artistFilter = ""
         }
-        delegate: MusicDelegate { width: parent.width; height: 64 }
+        delegate: MusicDelegate { width: parent ? parent.width : 0; height: 64 }
         spacing: 5
         highlight: MediaItemHighlight { z: 1 }
         highlightFollowsCurrentItem: true

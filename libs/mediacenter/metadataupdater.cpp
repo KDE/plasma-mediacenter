@@ -34,7 +34,7 @@
 #include <QtCore/QTimer>
 
 MetadataUpdater::MetadataUpdater(const QList< int >& rolesRequested, QObject* parent)
-    : QThread(parent), m_rolesRequested(rolesRequested), m_termChanged(false)
+    : QThread(parent), m_rolesRequested(rolesRequested), m_termChanged(false), m_queryServiceClient(0)
 {
     moveToThread(this);
 }
@@ -69,22 +69,28 @@ bool MetadataUpdater::hasTermChanged()
 
 void MetadataUpdater::runQuery()
 {
+    m_indices.clear();
     m_resultList.clear();
 
     Nepomuk::Query::Query myQuery;
-    Nepomuk::Query::QueryServiceClient *queryServiceClient = new Nepomuk::Query::QueryServiceClient(this);
+    if (m_queryServiceClient) {
+        m_queryServiceClient->close();
+        m_queryServiceClient->deleteLater();
+    }
+    m_queryServiceClient = new Nepomuk::Query::QueryServiceClient(this);
 
-    connect(queryServiceClient, SIGNAL(newEntries(QList<Nepomuk::Query::Result>)),
+    connect(m_queryServiceClient, SIGNAL(newEntries(QList<Nepomuk::Query::Result>)),
             this, SLOT(newEntries(QList<Nepomuk::Query::Result>)));
 //     connect(queryServiceClient, SIGNAL(entriesRemoved(QList<QUrl>)),SLOT(entriesRemoved(QList<QUrl>)));
 //     connect(queryServiceClient, SIGNAL(error(QString)), SLOT(error(QString)));
-    connect(queryServiceClient, SIGNAL(finishedListing()), SLOT(finishedListing()));
+    connect(m_queryServiceClient, SIGNAL(finishedListing()), SLOT(finishedListing()));
 
+    emit reset();
     QMutexLocker locker(&m_termMutex);
     myQuery.setTerm(m_term);
     kDebug()<< "SSparql query: " << myQuery.toSparqlQuery();
 
-    queryServiceClient->query(myQuery);
+    m_queryServiceClient->query(myQuery);
 }
 
 void MetadataUpdater::newEntries(const QList< Nepomuk::Query::Result >& results)
