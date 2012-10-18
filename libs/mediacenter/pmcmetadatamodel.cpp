@@ -34,7 +34,6 @@
 #include <Nepomuk/Query/QueryServiceClient>
 #include <Nepomuk/Query/Result>
 #include <Nepomuk/Variant>
-#include <nepomuk/resourcewatcher.h>
 #include <nepomuk/queryparser.h>
 
 #include <KIO/PreviewJob>

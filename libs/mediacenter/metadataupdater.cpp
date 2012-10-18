@@ -75,7 +75,6 @@ void MetadataUpdater::runQuery()
     m_resultList.clear();
 
     Nepomuk::Query::Query myQuery;
-    myQuery.setLimit(s_queryLimit);
     if (m_queryServiceClient) {
         m_queryServiceClient->close();
         m_queryServiceClient->deleteLater();
