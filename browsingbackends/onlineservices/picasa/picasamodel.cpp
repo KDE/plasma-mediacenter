@@ -32,7 +32,6 @@
 
 PicasaModel::PicasaModel(QObject* parent, const QString& username, const QString& password): QAbstractListModel(parent)
 {
-
     setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
     getTokenAndQuery(username, password,"album");
 }

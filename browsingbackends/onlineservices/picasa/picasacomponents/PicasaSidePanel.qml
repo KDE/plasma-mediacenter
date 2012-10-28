@@ -64,10 +64,10 @@ Rectangle {
         anchors.top: margin2.bottom
         width: 100
         height: 32
-        text: "Submit"
+        text: "Login"
         anchors.horizontalCenter: parent.horizontalCenter
         onClicked: {
-            backend.userInfo(userid.text, password.text, "album");
+            backend.login(userid.text, password.text, "album");
         }
     }
 }

@@ -29,21 +29,14 @@ PicasaBackend::PicasaBackend(QObject* parent, const QVariantList& args):
 
 }
 
-
-
-PicasaBackend::~PicasaBackend()
-{
-
-}
-
 QString PicasaBackend::backendCategory() const
 {
     return "image";
 }
 
-void PicasaBackend::init()
+void PicasaBackend::initImpl()
 {
-//     setModel(new PicasaModel(this));
+
 }
 
 bool PicasaBackend::goOneLevelUp()
@@ -52,22 +45,12 @@ bool PicasaBackend::goOneLevelUp()
     return picasaModel->goBack();
 }
 
-void PicasaBackend::search(const QString& searchTerm)
-{
-    MediaCenter::AbstractBrowsingBackend::search(searchTerm);
-}
-
-bool PicasaBackend::supportsSearch() const
-{
-    return true;
-}
-
 QString PicasaBackend::mediaBrowserSidePanel() const
 {
     return constructQmlSource("picasacomponents", "0.1", "PicasaSidePanel");
 }
 
-void PicasaBackend::userInfo(const QString& username, const QString& password)
+void PicasaBackend::login(const QString& username, const QString& password)
 {
     setModel(new PicasaModel(this, username, password));
 }

@@ -32,16 +32,14 @@ class PicasaBackend : public MediaCenter::AbstractBrowsingBackend
     Q_OBJECT
 public:
     PicasaBackend(QObject *parent, const QVariantList &args);
-    virtual ~PicasaBackend();
+    Q_INVOKABLE void login(const QString& username, const QString& password);
+
     virtual QString backendCategory() const;
-    virtual void search(const QString& searchTerm);
-    virtual bool supportsSearch() const;
     virtual QString mediaBrowserSidePanel() const;
-    Q_INVOKABLE void userInfo(const QString& username, const QString& password);
     bool expand (int row);
+    virtual void initImpl();
 
 public Q_SLOTS:
-    virtual void init();
     virtual bool goOneLevelUp();
 };
 
