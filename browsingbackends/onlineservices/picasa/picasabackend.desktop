@@ -2,6 +2,16 @@
 Type=Service
 Icon=image-x-generic
 Name=Picasa
+Name[de]=Picasa
+Name[es]=Picasa
+Name[et]=Picasa
+Name[ja]=Picasa
+Name[nds]=Picasa
+Name[nl]=Picasa
+Name[pl]=Picasa
+Name[sv]=Picasa
+Name[ug]=Picasa
+Name[uk]=Picasa
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 
