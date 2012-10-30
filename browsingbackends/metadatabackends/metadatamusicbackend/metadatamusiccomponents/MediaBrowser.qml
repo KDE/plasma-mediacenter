@@ -44,10 +44,15 @@ Row {
         ListView {
             width: parent.width; height: parent.height - 30
             model: backend.artistsModel();
-            delegate: CategoriesDelegate { width: parent ? parent.width : 0; height: 48; categoryName: "artist" }
+            delegate: CategoriesDelegate { width: parent ? parent.width - artistScrollBar.width : 0; height: 48; categoryName: "artist" }
             spacing: 5
             snapMode: ListView.SnapToItem
             clip: true
+
+            PlasmaComponents.ScrollBar {
+                id: artistScrollBar
+                flickableItem: parent
+            }
         }
     }
 
@@ -68,10 +73,15 @@ Row {
         ListView {
             width: parent.width; height: parent.height - 30
             model: backend.albumsModel();
-            delegate: CategoriesDelegate { width: parent ? parent.width : 0; height: 48; categoryName: "album" }
+            delegate: CategoriesDelegate { width: parent ? parent.width - albumScrollBar.width : 0; height: 48; categoryName: "album" }
             spacing: 5
             snapMode: ListView.SnapToItem
             clip: true
+
+            PlasmaComponents.ScrollBar {
+                id: albumScrollBar
+                flickableItem: parent
+            }
         }
     }
 
@@ -94,7 +104,7 @@ Row {
             id: listViewAllSongs
             width: parent.width; height: parent.height - 30
             model: backend.musicModel
-            delegate: MusicDelegate { width: parent ? parent.width : 0; height: 64 }
+            delegate: MusicDelegate { width: parent ? parent.width - musicScrollBar.width : 0; height: 64 }
             spacing: 5
             highlight: MediaItemHighlight { z: 1 }
             highlightFollowsCurrentItem: true
@@ -104,6 +114,11 @@ Row {
                 anchors.centerIn: parent
                 running: parent.count == 0
                 visible: running
+            }
+
+            PlasmaComponents.ScrollBar {
+                id: musicScrollBar
+                flickableItem: listViewAllSongs
             }
         }
     }
