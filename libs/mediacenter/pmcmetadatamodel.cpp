@@ -105,7 +105,20 @@ PmcMetadataModel::~PmcMetadataModel()
 
 void PmcMetadataModel::updateModel()
 {
-    d->metadataUpdater->setTerm(d->isSearchTermValid ? Nepomuk::Query::AndTerm(d->term, d->searchTerm) : d->term);
+    QList<Nepomuk::Query::Term> listOfTerms;
+    listOfTerms.append(d->term);
+
+    if (d->resourceTypeTerm.isValid()) {
+        Nepomuk::Query::ComparisonTerm sortTerm(Nepomuk::Vocabulary::NIE::lastModified(), Nepomuk::Query::Term());
+        sortTerm.setSortWeight(1, Qt::DescendingOrder);
+        listOfTerms.append(sortTerm);
+    }
+
+    if (d->isSearchTermValid) {
+        listOfTerms.append(d->searchTerm);
+    }
+
+    d->metadataUpdater->setTerm(Nepomuk::Query::AndTerm(listOfTerms));
 }
 
 void PmcMetadataModel::showMediaType(MediaCenter::MediaType mediaType)
