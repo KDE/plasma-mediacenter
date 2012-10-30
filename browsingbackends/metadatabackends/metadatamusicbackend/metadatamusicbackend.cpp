@@ -107,8 +107,6 @@ void MetadataMusicBackend::setArtistFilter(const QString& filter)
 void MetadataMusicBackend::updateModelAccordingToFilters()
 {
     m_musicModel->clearAllFilters();
-    QList<Nepomuk::Query::Term> termsList;
-    termsList.append(Nepomuk::Query::ResourceTypeTerm(Nepomuk::Vocabulary::NFO::Audio()));
 
     if (!m_albumFilter.isEmpty()) {
         m_musicModel->addFilter(Nepomuk::Vocabulary::NMM::musicAlbum(), Nepomuk::Query::ResourceTerm(m_albumFilter));

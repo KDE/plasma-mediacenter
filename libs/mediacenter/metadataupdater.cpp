@@ -57,6 +57,7 @@ void MetadataUpdater::setTerm(const Nepomuk::Query::Term& term)
     QMutexLocker locker(&m_termMutex);
     m_term = term;
     m_termChanged = true;
+    QTimer::singleShot(0, this, SLOT(processPendingIndices()));
 }
 
 bool MetadataUpdater::hasTermChanged()
@@ -90,8 +91,8 @@ void MetadataUpdater::runQuery()
     emit reset();
     QMutexLocker locker(&m_termMutex);
     myQuery.setTerm(m_term);
-    kDebug()<< "SSparql query: " << myQuery.toSparqlQuery();
 
+    kDebug() << "SPARQL Query " << myQuery.toSparqlQuery();
     m_queryServiceClient->query(myQuery);
 }
 
@@ -103,14 +104,15 @@ void MetadataUpdater::newEntries(const QList< Nepomuk::Query::Result >& results)
 
 void MetadataUpdater::processPendingIndices()
 {
+    Q_ASSERT(thread() == this);
+
     if (hasTermChanged())
         runQuery();
 
-    if (areThereResultsToProcess()) {
+    while (areThereResultsToProcess()) {
         const int i = nextIndexToProcess();
         fetchValuesForResult(i, resultForRow(i));
     }
-    QTimer::singleShot(0, this, SLOT(processPendingIndices()));
 }
 
 void MetadataUpdater::fetchValuesForResult(int i, const Nepomuk::Query::Result& result)
@@ -124,7 +126,7 @@ void MetadataUpdater::fetchValuesForResult(int i, const Nepomuk::Query::Result& 
             values.insert(role, icon);
             break;
         }
-        values.insert(role, "kde");
+        values.insert(role, QString());
             break; }
         case Qt::DisplayRole:
             values.insert(role, result.resource().genericLabel());
@@ -149,12 +151,14 @@ void MetadataUpdater::fetchMetadata(int row)
 {
     QMutexLocker lock(&m_indicesMutex);
     m_indices.append(row);
+    QTimer::singleShot(0, this, SLOT(processPendingIndices()));
 }
 
 void MetadataUpdater::fetchMetadata(const QList< int >& rows)
 {
     QMutexLocker lock(&m_indicesMutex);
     m_indices.append(rows);
+    QTimer::singleShot(0, this, SLOT(processPendingIndices()));
 }
 
 int MetadataUpdater::nextIndexToProcess()

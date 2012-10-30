@@ -60,7 +60,7 @@ FocusScope {
             id: mediaBrowserGridViewId
             anchors { fill: parent; topMargin: 10; bottomMargin: 10 + searchMedia.height }
             clip: true
-            cellWidth: width / 5
+            cellWidth: width / 7
             cellHeight: cellWidth
             delegate: MediaItemDelegate {
                 backend: currentBrowsingBackend
@@ -71,6 +71,7 @@ FocusScope {
             model: mediaBrowser.currentBrowsingBackendModel
 
             Text {
+                visible: false
                 font.pointSize: 20
                 color: "white"
                 text: mediaBrowserGridViewId.count

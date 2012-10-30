@@ -29,6 +29,7 @@
 #include <nepomuk/term.h>
 
 #include <QtCore/QMutex>
+#include <QtCore/QWaitCondition>
 #include <QtCore/QAbstractItemModel>
 
 namespace Nepomuk {

@@ -50,7 +50,7 @@ Item {
         onCheckedChanged: if (checked) rootItem.slideShowStarted()
         Timer {
             id: slideshowTimer
-            interval: 4000; running: slideshow.checked && !rootItem.slideshowPaused ; repeat: true
+            interval: 2000; running: slideshow.checked && !rootItem.slideshowPaused ; repeat: true
             onTriggered: {
                 var i = imageList.currentIndex;
                 if (i<imageList.count-1) {

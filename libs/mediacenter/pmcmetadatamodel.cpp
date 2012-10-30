@@ -68,6 +68,7 @@ public:
     MetadataUpdater *metadataUpdater;
     int numberOfEntries;
     QList<int> rowsToFetchMetadataFor;
+    QStringList mediaUrlWhichFailedThumbnailGeneration;
 };
 
 PmcMetadataModel::PmcMetadataModel(QObject* parent):
@@ -161,8 +162,12 @@ QVariant PmcMetadataModel::data(const QModelIndex& index, int role) const
     case Qt::DisplayRole:
         return metadataValue;
     case MediaCenter::MediaThumbnailRole:
-        if (d->metadataValues.value(index.row()).value(MediaCenter::MediaTypeRole) == "video")
-            return const_cast<PmcMetadataModel*>(this)->fetchPreview(d->metadataValues.value(index.row()).value(MediaCenter::MediaUrlRole).toUrl(), index);
+        if (d->metadataValues.value(index.row()).value(MediaCenter::MediaTypeRole) == "video") {
+            KUrl url = d->metadataValues.value(index.row()).value(MediaCenter::MediaUrlRole).toUrl();
+            if (d->mediaUrlWhichFailedThumbnailGeneration.contains(url.prettyUrl()))
+                return "image-missing";
+            return const_cast<PmcMetadataModel*>(this)->fetchPreview(url, index);
+        }
     }
 
     return QVariant();
@@ -234,7 +239,7 @@ QString PmcMetadataModel::fetchPreview(const KUrl &url, const QModelIndex& index
 
     d->filesToPreview.insert(url, QPersistentModelIndex(index));
     d->previewTimer.start(100);
-    return "kde";
+    return QString();
 }
 
 void PmcMetadataModel::delayedPreview()
