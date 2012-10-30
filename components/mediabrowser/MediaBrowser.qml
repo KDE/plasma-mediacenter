@@ -76,6 +76,11 @@ FocusScope {
                 color: "white"
                 text: mediaBrowserGridViewId.count
             }
+
+            PlasmaComponents.ScrollBar {
+                orientation: Qt.Horizontal
+                flickableItem: mediaBrowserGridViewId
+            }
         }
     }
 
