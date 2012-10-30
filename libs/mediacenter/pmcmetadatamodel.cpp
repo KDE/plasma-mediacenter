@@ -294,9 +294,12 @@ void PmcMetadataModel::showPreview(const KFileItem &item, const QPixmap &preview
 
 void PmcMetadataModel::previewFailed(const KFileItem &item)
 {
-    kDebug() << "FAILED TO FETCH PREVIEW FOR " << item.url();
-    //TODO: don't fail silently, let the view know
+    QPersistentModelIndex index = d->previewJobs.value(item.url());
     d->previewJobs.remove(item.url());
+    if (index.isValid()) {
+        d->mediaUrlWhichFailedThumbnailGeneration.append(item.url().prettyUrl());
+        emit dataChanged(index, index);
+    }
 }
 
 void PmcMetadataModel::addFilter(const Nepomuk::Types::Property& property, const Nepomuk::Query::Term& term, Nepomuk::Query::ComparisonTerm::Comparator comparator)
