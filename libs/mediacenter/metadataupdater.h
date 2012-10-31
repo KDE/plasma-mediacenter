@@ -24,15 +24,15 @@
 
 #include <QtCore/QThread>
 
-#include <Nepomuk/Query/Result>
-#include <Nepomuk/Query/QueryServiceClient>
-#include <nepomuk/term.h>
+#include <Nepomuk2/Query/Result>
+#include <Nepomuk2/Query/QueryServiceClient>
+#include <Nepomuk2/Query/Term>
 
 #include <QtCore/QMutex>
 #include <QtCore/QWaitCondition>
 #include <QtCore/QAbstractItemModel>
 
-namespace Nepomuk {
+namespace Nepomuk2 {
     namespace Query {
         class Term;
     }
@@ -47,7 +47,7 @@ public:
     virtual ~MetadataUpdater();
     void fetchMetadata(int row);
     void fetchMetadata(const QList<int> &rows);
-    void setTerm(const Nepomuk::Query::Term &term);
+    void setTerm(const Nepomuk2::Query::Term &term);
 
 signals:
     void gotMetadata(int row, const QHash<int, QVariant> &values);
@@ -62,26 +62,26 @@ protected slots:
     void processPendingIndices();
 
 private slots:
-    void newEntries(const QList<Nepomuk::Query::Result> &results);
+    void newEntries(const QList<Nepomuk2::Query::Result> &results);
     void finishedListing();
 
 private:
     QList<int> m_rolesRequested;
     QList<int> m_indices;
     bool m_termChanged;
-    Nepomuk::Query::Term m_term;
+    Nepomuk2::Query::Term m_term;
     QMutex m_termMutex;
     QMutex m_resultsMutex;
     QMutex m_indicesMutex;
-    QList<Nepomuk::Query::Result> m_resultList;
-    Nepomuk::Query::QueryServiceClient *m_queryServiceClient;
+    QList<Nepomuk2::Query::Result> m_resultList;
+    Nepomuk2::Query::QueryServiceClient *m_queryServiceClient;
 
-    QString mimetypeForResource(const Nepomuk::Resource& resource) const;
-    QString urlForResource(const Nepomuk::Resource &resource) const;
-    void fetchValuesForResult(int i, const Nepomuk::Query::Result& result);
+    QString mimetypeForResource(const Nepomuk2::Resource& resource) const;
+    QString urlForResource(const Nepomuk2::Resource &resource) const;
+    void fetchValuesForResult(int i, const Nepomuk2::Query::Result& result);
     bool areThereResultsToProcess();
     int nextIndexToProcess();
-    Nepomuk::Query::Result resultForRow(int row);
+    Nepomuk2::Query::Result resultForRow(int row);
     bool hasTermChanged();
 };
 

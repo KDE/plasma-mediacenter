@@ -24,12 +24,12 @@
 
 #include <libs/mediacenter/pmcmetadatamodel.h>
 
-#include <nepomuk/nmm.h>
-#include <nepomuk/nfo.h>
-#include <nepomuk/andterm.h>
-#include <nepomuk/comparisonterm.h>
-#include <nepomuk/resourcetypeterm.h>
-#include <nepomuk/resourceterm.h>
+#include <Nepomuk2/Vocabulary/NMM>
+#include <Nepomuk2/Vocabulary/NFO>
+#include <Nepomuk2/Query/AndTerm>
+#include <Nepomuk2/Query/ComparisonTerm>
+#include <Nepomuk2/Query/ResourceTypeTerm>
+#include <Nepomuk2/Query/ResourceTerm>
 
 MEDIACENTER_EXPORT_BROWSINGBACKEND(MetadataMusicBackend)
 
@@ -48,8 +48,8 @@ void MetadataMusicBackend::initImpl()
     m_albumsModel = new PmcMetadataModel(this);
     m_artistsModel = new PmcMetadataModel(this);
     m_musicModel = new PmcMetadataModel(this);
-    m_albumsModel->showMediaForProperty(Nepomuk::Vocabulary::NMM::musicAlbum());
-    m_artistsModel->showMediaForProperty(Nepomuk::Vocabulary::NMM::performer());
+    m_albumsModel->showMediaForProperty(Nepomuk2::Vocabulary::NMM::musicAlbum());
+    m_artistsModel->showMediaForProperty(Nepomuk2::Vocabulary::NMM::performer());
     m_musicModel->showMediaType(MediaCenter::Music);
     emit musicModelChanged();
 
@@ -109,10 +109,10 @@ void MetadataMusicBackend::updateModelAccordingToFilters()
     m_musicModel->clearAllFilters();
 
     if (!m_albumFilter.isEmpty()) {
-        m_musicModel->addFilter(Nepomuk::Vocabulary::NMM::musicAlbum(), Nepomuk::Query::ResourceTerm(m_albumFilter));
+        m_musicModel->addFilter(Nepomuk2::Vocabulary::NMM::musicAlbum(), Nepomuk2::Query::ResourceTerm(m_albumFilter));
     }
     if (!m_artistFilter.isEmpty()) {
-        m_musicModel->addFilter(Nepomuk::Vocabulary::NMM::performer(), Nepomuk::Query::ResourceTerm(m_artistFilter));
+        m_musicModel->addFilter(Nepomuk2::Vocabulary::NMM::performer(), Nepomuk2::Query::ResourceTerm(m_artistFilter));
     }
 }
 

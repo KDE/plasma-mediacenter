@@ -15,8 +15,8 @@ target_link_libraries(pmc_localmusic
     ${KDE4_KDECORE_LIBS}
     ${KDE4_KIO_LIBS}
     ${KDE4_KFILE_LIBS}
-    ${NEPOMUK_LIBRARIES}
-    ${NEPOMUK_QUERY_LIBRARIES}
+    ${NEPOMUK_CORE_LIBRARY}
+    
     ${SOPRANO_LIBRARIES}
     ${TAGLIB_LIBRARIES}
 )

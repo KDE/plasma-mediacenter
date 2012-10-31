@@ -23,16 +23,16 @@
 
 #include <QtCore/QAbstractItemModel>
 
-#include <Nepomuk/Query/Result>
-#include <Nepomuk/Query/Term>
-#include <Nepomuk/Types/Property>
-#include <nepomuk/resource.h>
-#include <nepomuk/comparisonterm.h>
+#include <Nepomuk2/Query/Result>
+#include <Nepomuk2/Query/Term>
+#include <Nepomuk2/Types/Property>
+#include <Nepomuk2/Resource>
+#include <Nepomuk2/Query/ComparisonTerm>
 
 #include "mediacenter_export.h"
 #include "mediacenter.h"
 
-namespace Nepomuk {
+namespace Nepomuk2 {
 namespace Query {
 class ResourceTypeTerm;
 }
@@ -51,10 +51,10 @@ public:
     virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
 
     void showMediaType(MediaCenter::MediaType mediaType);
-    void showMediaForProperty(Nepomuk::Types::Property property);
-    void setTerm(const Nepomuk::Query::Term &term);
-    void addTerm(const Nepomuk::Query::Term &term);
-    void addFilter(const Nepomuk::Types::Property& property, const Nepomuk::Query::Term& term, Nepomuk::Query::ComparisonTerm::Comparator comparator = Nepomuk::Query::ComparisonTerm::Contains);
+    void showMediaForProperty(Nepomuk2::Types::Property property);
+    void setTerm(const Nepomuk2::Query::Term &term);
+    void addTerm(const Nepomuk2::Query::Term &term);
+    void addFilter(const Nepomuk2::Types::Property& property, const Nepomuk2::Query::Term& term, Nepomuk2::Query::ComparisonTerm::Comparator comparator = Nepomuk2::Query::ComparisonTerm::Contains);
     void setSearchTerm(const QString &searchTerm);
 
 public Q_SLOTS:
@@ -69,8 +69,8 @@ protected Q_SLOTS:
 
 protected:
     QString fetchPreview(const KUrl& url, const QModelIndex& index);
-    QString urlForResource(const Nepomuk::Resource &resource) const;
-    QString mimetypeForResource(const Nepomuk::Resource &resource) const;
+    QString urlForResource(const Nepomuk2::Resource &resource) const;
+    QString mimetypeForResource(const Nepomuk2::Resource &resource) const;
     inline QList<int> rolesNeeded() const;
     void resetModel();
 

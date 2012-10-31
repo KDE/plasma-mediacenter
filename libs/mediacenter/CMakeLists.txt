@@ -1,3 +1,5 @@
+find_package(NepomukCore REQUIRED)
+
 set (plasmamediacenter_SRCS
     filteredbackendsmodel.cpp
     mediacenter.cpp
@@ -19,8 +21,8 @@ target_link_libraries(plasmamediacenter
     ${KDE4_PLASMA_LIBS}
     ${KDE4_SOLID_LIBS}
     ${TAGLIB_LIBRARIES}
-    ${NEPOMUK_LIBRARIES}
-    ${NEPOMUK_QUERY_LIBRARIES})
+    ${NEPOMUK_CORE_LIBRARY}
+    )
 set_target_properties(plasmamediacenter PROPERTIES VERSION 0.9 SOVERSION 0.9)
 
 install(TARGETS plasmamediacenter ${INSTALL_TARGETS_DEFAULT_ARGS})

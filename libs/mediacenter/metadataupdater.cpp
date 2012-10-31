@@ -23,11 +23,11 @@
 
 #include "mediacenter.h"
 
-#include <Nepomuk/Resource>
-#include <Nepomuk/Variant>
-#include <nepomuk/nie.h>
-#include <nepomuk/resourcetypeterm.h>
-#include <nepomuk/nfo.h>
+#include <Nepomuk2/Resource>
+#include <Nepomuk2/Variant>
+#include <Nepomuk2/Vocabulary/NIE>
+#include <Nepomuk2/Vocabulary/NFO>
+#include <Nepomuk2/Query/ResourceTypeTerm>
 
 #include <KDebug>
 
@@ -52,7 +52,7 @@ void MetadataUpdater::run()
     exec();
 }
 
-void MetadataUpdater::setTerm(const Nepomuk::Query::Term& term)
+void MetadataUpdater::setTerm(const Nepomuk2::Query::Term& term)
 {
     QMutexLocker locker(&m_termMutex);
     m_term = term;
@@ -75,15 +75,15 @@ void MetadataUpdater::runQuery()
     m_indices.clear();
     m_resultList.clear();
 
-    Nepomuk::Query::Query myQuery;
+    Nepomuk2::Query::Query myQuery;
     if (m_queryServiceClient) {
         m_queryServiceClient->close();
         m_queryServiceClient->deleteLater();
     }
-    m_queryServiceClient = new Nepomuk::Query::QueryServiceClient(this);
+    m_queryServiceClient = new Nepomuk2::Query::QueryServiceClient(this);
 
-    connect(m_queryServiceClient, SIGNAL(newEntries(QList<Nepomuk::Query::Result>)),
-            this, SLOT(newEntries(QList<Nepomuk::Query::Result>)));
+    connect(m_queryServiceClient, SIGNAL(newEntries(QList<Nepomuk2::Query::Result>)),
+            this, SLOT(newEntries(QList<Nepomuk2::Query::Result>)));
 //     connect(queryServiceClient, SIGNAL(entriesRemoved(QList<QUrl>)),SLOT(entriesRemoved(QList<QUrl>)));
 //     connect(queryServiceClient, SIGNAL(error(QString)), SLOT(error(QString)));
     connect(m_queryServiceClient, SIGNAL(finishedListing()), SLOT(finishedListing()));
@@ -96,7 +96,7 @@ void MetadataUpdater::runQuery()
     m_queryServiceClient->query(myQuery);
 }
 
-void MetadataUpdater::newEntries(const QList< Nepomuk::Query::Result >& results)
+void MetadataUpdater::newEntries(const QList< Nepomuk2::Query::Result >& results)
 {
     m_resultList.append(results);
     emit newResults(results.size());
@@ -115,7 +115,7 @@ void MetadataUpdater::processPendingIndices()
     }
 }
 
-void MetadataUpdater::fetchValuesForResult(int i, const Nepomuk::Query::Result& result)
+void MetadataUpdater::fetchValuesForResult(int i, const Nepomuk2::Query::Result& result)
 {
     QHash<int, QVariant> values;
     foreach(int role, m_rolesRequested) {
@@ -132,7 +132,7 @@ void MetadataUpdater::fetchValuesForResult(int i, const Nepomuk::Query::Result& 
             values.insert(role, result.resource().genericLabel());
             break;
         case MediaCenter::ResourceIdRole:
-            values.insert(role, result.resource().resourceUri());
+            values.insert(role, result.resource().uri());
             break;
         case MediaCenter::MediaUrlRole:
             values.insert(role, urlForResource(result.resource()));
@@ -167,11 +167,11 @@ int MetadataUpdater::nextIndexToProcess()
     return m_indices.takeLast();
 }
 
-Nepomuk::Query::Result MetadataUpdater::resultForRow(int row)
+Nepomuk2::Query::Result MetadataUpdater::resultForRow(int row)
 {
     QMutexLocker lock(&m_resultsMutex);
     if (row >= m_resultList.size())
-        return Nepomuk::Query::Result();
+        return Nepomuk2::Query::Result();
     return m_resultList.at(row);
 }
 
@@ -181,20 +181,20 @@ bool MetadataUpdater::areThereResultsToProcess()
     return !m_indices.isEmpty();
 }
 
-QString MetadataUpdater::mimetypeForResource(const Nepomuk::Resource& resource) const
+QString MetadataUpdater::mimetypeForResource(const Nepomuk2::Resource& resource) const
 {
-    const QString mime = resource.property(Nepomuk::Vocabulary::NIE::mimeType()).toString();
+    const QString mime = resource.property(Nepomuk2::Vocabulary::NIE::mimeType()).toString();
     return mime;
 }
 
-QString MetadataUpdater::urlForResource(const Nepomuk::Resource &resource) const
+QString MetadataUpdater::urlForResource(const Nepomuk2::Resource &resource) const
 {
-    return resource.property(Nepomuk::Vocabulary::NIE::url()).toUrl().toString();
+    return resource.property(Nepomuk2::Vocabulary::NIE::url()).toUrl().toString();
 }
 
 void MetadataUpdater::finishedListing()
 {
-    qobject_cast<Nepomuk::Query::QueryServiceClient*>(sender())->close();
+    qobject_cast<Nepomuk2::Query::QueryServiceClient*>(sender())->close();
 }
 
 #include "metadataupdater.moc"

@@ -24,7 +24,7 @@
 
 #include "metadatavideomodel.h"
 
-#include <nepomuk/queryparser.h>
+#include <Nepomuk2/Query/QueryParser>
 
 #include <QDebug>
 
