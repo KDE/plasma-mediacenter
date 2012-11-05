@@ -37,5 +37,5 @@ ListView {
         width: categoriesList.height
     }
 
-    Component.onCompleted: currentIndex = 2
+    Component.onCompleted: currentIndex = model.defaultIndex
 }
