@@ -43,7 +43,6 @@ Rectangle {
                 id: delegateItem
                 width: rootListView.width
                 height: rootListView.delegateHeight
-                anchors.verticalCenter: rootListView
                 Rectangle {
                     anchors.fill: parent
                     id: popupDelegateItem
