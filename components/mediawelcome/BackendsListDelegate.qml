@@ -22,17 +22,18 @@ import org.kde.qtextracomponents 0.1 as QtExtraComponents
 
 Item {
     id: rootItem
-    property int finalHeight: 0
+    opacity: 0
 
     Row {
         anchors.fill: parent
+        anchors.margins: parent.anchors.margins
         spacing: 20
 
         QtExtraComponents.QIconItem {
             id: backendIcon
             icon: decoration
             height: parent.height
-            width: finalHeight
+            width: height
         }
 
         HomeScreenText {
@@ -57,8 +58,38 @@ Item {
 
     ListView.onIsCurrentItemChanged: if (ListView.isCurrentItem) homeScreenRootItem.selectedBackend = modelObject
 
-    Component.onCompleted: SequentialAnimation {
-        PropertyAction { target: rootItem; property: "height"; value: 0 }
-        NumberAnimation { target: rootItem; property: "height"; to: rootItem.finalHeight; easing.type: Easing.InOutQuad }
+    //TODO: make the text appear from the opposite side of the movement of the list?
+    //      this looks nice for the from-the-left direction: -width / 2
+    property int appearDelta: width * 2 / 3
+
+    states: [
+    State {
+        name: "appear"
+        when: visible
     }
+    ]
+    transitions: [
+    Transition {
+        to: "appear"
+        ParallelAnimation {
+            PropertyAnimation {
+                target: rootItem;
+                property: "x";
+                from: x + appearDelta;
+                to: x;
+                easing.type: Easing.OutQuad;
+                duration: 400
+            }
+
+            NumberAnimation {
+                target: rootItem;
+                property: "opacity";
+                to: 1.0;
+                easing.type:
+                Easing.InQuad;
+                duration: 250
+            }
+        }
+    }
+    ]
 }
