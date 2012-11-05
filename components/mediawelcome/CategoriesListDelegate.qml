@@ -32,7 +32,10 @@ Item {
     }
 
     Column {
-        anchors { fill: parent; margins: 20 }
+        anchors {
+            fill: parent
+            margins: 20
+        }
         spacing: 10
 
         QtExtraComponents.QIconItem {
@@ -45,7 +48,10 @@ Item {
 
     MouseArea {
         anchors.fill: parent
-        onClicked: { root.ListView.view.currentIndex = index; root.ListView.view.focus = true }
+        onClicked: {
+            root.ListView.view.currentIndex = index;
+            root.ListView.view.focus = true;
+        }
     }
 
     Behavior on opacity {
