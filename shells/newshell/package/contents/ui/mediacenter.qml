@@ -110,10 +110,11 @@ Rectangle {
 
         function hideToolbars()
         {
+            if (mediaPlayer.state == "minimize")
+                mediaImageViewer.visible = false
             mediaController.state = mediaController.state ? "" : "hidden"
             mediaImageViewer.stripState = mediaImageViewer.stripState ? "" : "hidden"
             mediaBrowser.visible = false
-            mediaImageViewer.visible = false
         }
     }
 
