@@ -101,6 +101,28 @@ Item {
                                     running: delegateItemImage.status == Image.Loading
                                     visible: running
                                 }
+
+                                states: [
+                                    State {
+                                        name: "appear"
+                                        when: delegateItemImage.status == Image.Ready
+                                    }
+                                ]
+                                transitions: [
+                                Transition {
+                                    to: "appear"
+                                    ParallelAnimation {
+                                        PropertyAnimation {
+                                            target: delegateItemImage;
+                                            property: "scale";
+                                            from: 0.1
+                                            to: 1
+                                            easing.type: Easing.OutBack;
+                                            duration: 200
+                                        }
+                                    }
+                                }
+                                ]
                             }
                         }
                         Rectangle {
@@ -113,6 +135,7 @@ Item {
                             height:  finalHeight*delegateItemImage.progress
                             border.color: mediaItemDelegateItem.GridView.isCurrentItem ? theme.viewHoverColor : "#666"
                             border.width: 1
+                            visible: delegateItemImage.status == Image.Ready && delegateItemImage.scale == 1
                         }
                     }
                 }
