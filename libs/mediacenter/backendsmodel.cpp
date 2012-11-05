@@ -19,22 +19,26 @@
 
 #include "backendsmodel.h"
 
-#include <libs/mediacenter/abstractbrowsingbackend.h>
+#include <QDeclarativeEngine>
 
 #include <KDebug>
 
-BackendsModel::BackendsModel (QDeclarativeEngine* engine, QObject* parent) : QAbstractListModel (parent)
+#include <libs/mediacenter/abstractbrowsingbackend.h>
+
+bool pluginLessThan(const KPluginInfo &lh, const KPluginInfo &rh)
 {
-    MediaCenter::AbstractBrowsingBackend *backend;
-    KSharedPtr<KService> service;
+    return lh.name().compare(rh.name(), Qt::CaseInsensitive) < 0;
+}
 
-    KService::List list = MediaCenter::AbstractBrowsingBackend::availableBackends();
-
-    for (int i=0; i<list.size(); ++i) {
-        service = list.at(i);
-        backend = service->createInstance<MediaCenter::AbstractBrowsingBackend>(0, QVariantList() << service->storageId());
-        loadBrowsingBackend(backend, engine);
-    }
+BackendsModel::BackendsModel(QDeclarativeEngine *engine, QObject* parent)
+    : QAbstractListModel(parent),
+      m_declarativeEngine(engine)
+{
+    m_declarativeEngine = engine;
+    KService::List services = MediaCenter::AbstractBrowsingBackend::availableBackends();
+    m_backendInfo = KPluginInfo::fromServices(services);
+    qStableSort(m_backendInfo.begin(), m_backendInfo.end(), pluginLessThan);
+    kDebug() << "***********************" << m_backendInfo.count();
 
     QHash<int, QByteArray> roles = roleNames();
     roles[ModelObjectRole] = "modelObject";
@@ -42,23 +46,32 @@ BackendsModel::BackendsModel (QDeclarativeEngine* engine, QObject* parent) : QAb
     setRoleNames(roles);
 }
 
-bool BackendsModel::loadBrowsingBackend(MediaCenter::AbstractBrowsingBackend* backend, QDeclarativeEngine* engine)
+MediaCenter::AbstractBrowsingBackend *BackendsModel::loadBrowsingBackend(const KPluginInfo &info) const
 {
-    if (!backend) {
+    MediaCenter::AbstractBrowsingBackend *backend = m_backends.value(info.pluginName());
+    if (backend) {
+        return backend;
+    }
+
+    // no? well then, let's load it.
+    KService::Ptr service = info.service();
+    backend = service->createInstance<MediaCenter::AbstractBrowsingBackend>(0, QVariantList() << service->storageId());
+    const_cast<BackendsModel *>(this)->m_backends.insert(info.pluginName(), backend);
+
+    if (backend) {
+        if (backend->okToLoad()) {
+            backend->setParent(const_cast<BackendsModel *>(this));
+            if (m_declarativeEngine) {
+                backend->setDeclarativeEngine(m_declarativeEngine.data());
+            }
+        } else {
+            kDebug() << "Backend " << backend->name() << " doesn't want to be loaded";
+        }
+    } else {
         kDebug() << "OUCH! Something's wrong with the backend";
-        return false;
     }
 
-    backend->setParent(this);
-    backend->setDeclarativeEngine(engine);
-
-    if (!backend->okToLoad()) {
-        kDebug() << "Backend " << backend->name() << " doesn't want to be loaded";
-        return false;
-    }
-
-    backends.append(backend);
-    return true;
+    return backend;
 }
 
 QVariant BackendsModel::data (const QModelIndex& index, int role) const
@@ -67,25 +80,28 @@ QVariant BackendsModel::data (const QModelIndex& index, int role) const
         return QVariant();
     }
 
+    const KPluginInfo &info = m_backendInfo.at(index.row());
+    kDebug() << "getting data for row" << index.row() << info.name();
     switch (role) {
         case Qt::DisplayRole:
-            return backends.at(index.row())->name();
+            return info.name();
         case Qt::DecorationRole:
-            return backends.at(index.row())->icon();
+            return info.icon();
         case BackendCategoryRole:
-            return backends.at(index.row())->backendCategory();
+            return info.category();
         case ModelObjectRole:
+            QObject *backend = loadBrowsingBackend(info);
             QVariant ptr;
-            ptr.setValue(qobject_cast<QObject*>(backends.at(index.row())));
+            ptr.setValue(backend);
             return ptr;
     }
 
     return QVariant();
 }
 
-int BackendsModel::rowCount (const QModelIndex& parent) const
+int BackendsModel::rowCount(const QModelIndex &) const
 {
-    return backends.count();
+    return m_backendInfo.count();
 }
 
 #include "backendsmodel.moc"

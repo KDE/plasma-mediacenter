@@ -23,6 +23,9 @@
 #include "mediacenter_export.h"
 
 #include <QAbstractItemModel>
+#include <QWeakPointer>
+
+#include <KPluginInfo>
 
 class QDeclarativeEngine;
 
@@ -44,9 +47,11 @@ public:
     virtual int rowCount (const QModelIndex& parent = QModelIndex()) const;
 
 private:
-    bool loadBrowsingBackend(MediaCenter::AbstractBrowsingBackend *backend, QDeclarativeEngine *engine);
+    MediaCenter::AbstractBrowsingBackend *loadBrowsingBackend(const KPluginInfo &info) const;
 
-    QList<MediaCenter::AbstractBrowsingBackend*> backends;
+    QWeakPointer<QDeclarativeEngine> m_declarativeEngine;
+    QHash<QString, MediaCenter::AbstractBrowsingBackend*> m_backends;
+    KPluginInfo::List m_backendInfo;
 };
 
 #endif // BACKENDSMODEL_H
