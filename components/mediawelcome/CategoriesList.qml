@@ -25,8 +25,8 @@ ListView {
 
     currentIndex: 2
     spacing: 20
-    preferredHighlightBegin: width*0.45
-    preferredHighlightEnd: width*0.55
+    preferredHighlightBegin: width / 2 - height / 2
+    preferredHighlightEnd: width / 2 + height / 2
     highlightRangeMode: GridView.StrictlyEnforceRange
     highlightMoveDuration: 400
     orientation: ListView.Horizontal
