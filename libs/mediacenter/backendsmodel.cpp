@@ -87,7 +87,6 @@ QVariant BackendsModel::data (const QModelIndex& index, int role) const
     }
 
     const KPluginInfo &info = m_backendInfo.at(index.row());
-    kDebug() << "getting data for row" << index.row() << info.name();
     switch (role) {
         case Qt::DisplayRole:
             return info.name();
