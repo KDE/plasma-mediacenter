@@ -20,24 +20,30 @@
 import QtQuick 1.1
 
 ListModel {
+    property int defaultIndex: 1
     ListElement {
         display: "Music"
-        decoration: "tools-rip-audio-cd"
+        decoration: "audio-headphones"
         category: "audio"
     }
     ListElement {
-        display: "Pictures"
-        decoration: "image-x-generic"
-        category: "image"
+        display: "Videos"
+        decoration: "video-television"
+        category: "video"
     }
     ListElement {
-        display: "Videos"
-        decoration: "tools-rip-video-cd"
-        category: "video"
+        display: "Pictures"
+        decoration: "camera-photo"
+        category: "image"
     }
     ListElement {
         display: "Others"
         decoration: "plasma"
         category: "other"
+    }
+    ListElement {
+        display: "Settings"
+        decoration: "configure"
+        category: "settings"
     }
 }
