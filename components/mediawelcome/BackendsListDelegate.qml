@@ -23,6 +23,20 @@ import org.kde.qtextracomponents 0.1 as QtExtraComponents
 Item {
     id: rootItem
     opacity: 0
+    visible: false
+
+    function launch() {
+        modelObject.init();
+        homeScreenRootItem.selectedBackend = modelObject;
+        homeScreenRootItem.backendSelected();
+    }
+
+    Timer {
+        id: showTimer
+        interval: 100
+        repeat: false
+        onTriggered: rootItem.visible = true
+    }
 
     Row {
         anchors.fill: parent
@@ -48,19 +62,11 @@ Item {
     MouseArea {
         anchors.fill: parent
         hoverEnabled: true
-        onClicked: {
-            modelObject.init()
-            homeScreenRootItem.selectedBackend = modelObject;
-            homeScreenRootItem.backendSelected();
-        }
+        onClicked: launch()
         onEntered: rootItem.ListView.view.currentIndex = index
     }
 
     ListView.onIsCurrentItemChanged: if (ListView.isCurrentItem) homeScreenRootItem.selectedBackend = modelObject
-
-    //TODO: make the text appear from the opposite side of the movement of the list?
-    //      this looks nice for the from-the-left direction: -width / 2
-    property int appearDelta: width * 2 / 3
 
     states: [
     State {
@@ -75,10 +81,12 @@ Item {
             PropertyAnimation {
                 target: rootItem;
                 property: "x";
-                from: x + appearDelta;
+                //TODO: make the text appear from the opposite side of the movement of the list?
+                //      this looks nice for the from-the-left direction: -width / 2
+                from: x + categoriesList.height * 2 / 3;
                 to: x;
                 easing.type: Easing.OutQuad;
-                duration: 400
+                duration: 300
             }
 
             NumberAnimation {
@@ -87,9 +95,13 @@ Item {
                 to: 1.0;
                 easing.type:
                 Easing.InQuad;
-                duration: 250
+                duration: 150
             }
         }
     }
     ]
+
+    Component.onCompleted: {
+        showTimer.start()
+    }
 }
