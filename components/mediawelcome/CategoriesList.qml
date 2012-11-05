@@ -21,7 +21,6 @@ import QtQuick 1.1
 
 ListView {
     id: categoriesList
-    property int delegateWidth: parent.height
     property string currentCategory: currentItem.currentCategory
 
     currentIndex: 2
@@ -29,10 +28,11 @@ ListView {
     preferredHighlightBegin: width*0.45
     preferredHighlightEnd: width*0.55
     highlightRangeMode: GridView.StrictlyEnforceRange
+    highlightMoveDuration: 400
     orientation: ListView.Horizontal
     model: CategoriesModel { }
     delegate: CategoriesListDelegate {
         height: categoriesList.height
-        width: categoriesList.delegateWidth
+        width: categoriesList.height
     }
 }
