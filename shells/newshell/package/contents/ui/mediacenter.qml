@@ -113,6 +113,7 @@ Rectangle {
             mediaController.state = mediaController.state ? "" : "hidden"
             mediaImageViewer.stripState = mediaImageViewer.stripState ? "" : "hidden"
             mediaBrowser.visible = false
+            mediaImageViewer.visible = false
         }
     }
 
