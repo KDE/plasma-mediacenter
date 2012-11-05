@@ -19,6 +19,7 @@
 
 import QtQuick 1.1
 import org.kde.plasma.mediacentercomponents 0.1 as MediaCenterComponents
+import org.kde.plasma.components 0.1 as PlasmaComponents
 
 Item {
     id: filterBackend
@@ -27,8 +28,7 @@ Item {
 
     MediaCenterComponents.FilteredBackendsModel {
         id: filteredModel
-
-        onBackendCategoryChanged: console.log(backendCategory)
+        //onBackendCategoryChanged: console.log(backendCategory)
     }
 
     ListView {
@@ -37,12 +37,14 @@ Item {
         spacing: 20
 
         model: filteredModel
-        delegate: BackendsListDelegate { width: listView.width; finalHeight: 64 }
-        highlight: Rectangle {
-            radius: 10
-            color: "white"
-            opacity: 0.5
-        }
+
+        highlight: PlasmaComponents.Highlight { }
         highlightFollowsCurrentItem: true
+
+        delegate: BackendsListDelegate {
+            width: listView.width
+            height: 64 + anchors.margins
+            anchors.margins: 6
+        }
     }
 }
