@@ -41,28 +41,20 @@ Item {
             height: 0.2 * parent.height
         }
 
-        Item {
-            id: homeScreenBodyLeft
-            width: parent.width
+        CategoriesList {
+            id: categoriesList
+            anchors.horizontalCenter: parent.horizontalCenter
             height: 0.3 * parent.height
+            width: parent.width
             clip: true
-
-            CategoriesList {
-                id: categoriesList
-                anchors { top: parent.top; horizontalCenter: parent.horizontalCenter }
-                height: delegateWidth; width: parent.width
-            }
         }
 
-        Item {
-            width: parent.width
+        FilteredBackendsList {
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: 400
             height: 0.4 * parent.height
-            FilteredBackendsList {
-                height: parent.height; width: 400
-                anchors.centerIn: parent
-                backendsModel: homeScreenRootItem.model
-                categoryFilter: categoriesList.currentCategory
-            }
+            backendsModel: homeScreenRootItem.model
+            categoryFilter: categoriesList.currentCategory
         }
 
         HomeScreenFooter {
