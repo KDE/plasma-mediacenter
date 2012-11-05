@@ -41,6 +41,7 @@ ListView {
 
     delegate: BackendsListDelegate {
         height: 64 + anchors.margins
+        width: listView.width
         anchors.margins: 6
     }
 }
