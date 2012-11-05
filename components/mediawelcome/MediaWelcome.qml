@@ -50,7 +50,9 @@ Item {
         }
 
         FilteredBackendsList {
-            anchors.horizontalCenter: parent.horizontalCenter
+            id: backendsList
+            // the x aligns with the selection in categoriesList
+            x: categoriesList.width / 2 - categoriesList.height / 2 + categoriesList.spacing * 2
             width: 400
             height: 0.4 * parent.height
             backendsModel: homeScreenRootItem.model
