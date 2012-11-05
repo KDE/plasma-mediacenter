@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Service
 Icon=image-x-generic
-Name=All Pictures
+Name=All pictures
 Name[cs]=Všechny obrázky
 Name[da]=Alle billeder
 Name[de]=Alle Bilder
@@ -25,7 +25,7 @@ X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 X-KDE-PluginInfo-Author=Sinny Kumari
 X-KDE-PluginInfo-Email=ksinny@gmail.com
 X-KDE-PluginInfo-Version=1.0
-X-KDE-PluginInfo-Category=Service
+X-KDE-PluginInfo-Category=image
 X-KDE-PluginInfo-License=GPL
 X-KDE-PluginInfo-EnabledByDefault=true
 X-KDE-Library=pmc_metadatapicturebackend

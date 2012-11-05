@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Service
 Icon=tools-rip-video-cd
-Name=All Videos
+Name=All videos
 Name[da]=Alle videoer
 Name[de]=Alle Videos
 Name[es]=Todos los vídeos
@@ -24,7 +24,7 @@ X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 X-KDE-PluginInfo-Author=Sinny Kumari
 X-KDE-PluginInfo-Email=ksinny@gmail.com
 X-KDE-PluginInfo-Version=1.0
-X-KDE-PluginInfo-Category=Service
+X-KDE-PluginInfo-Category=video
 X-KDE-PluginInfo-License=GPL
 X-KDE-PluginInfo-EnabledByDefault=true
 X-KDE-Library=pmc_metadatavideobackend
