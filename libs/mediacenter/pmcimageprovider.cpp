@@ -39,14 +39,20 @@ PmcImageProvider::~PmcImageProvider()
 QImage PmcImageProvider::requestImage(const QString& id, QSize* size, const QSize& requestedSize)
 {
     QImage image = PmcImageCache::instance()->getImage(id);
-    *size = image.size();
+
+    if (size) {
+        *size = image.size();
+    }
+
     QSize reqSize = requestedSize;
-    if (reqSize.isValid()) {
+    if (!image.size().isEmpty() && reqSize.isValid()) {
         if (reqSize.width() == 0)
             reqSize.setWidth(reqSize.height()/image.size().height()*image.size().width());
-        if (reqSize.height() == 0)
+        else if (reqSize.height() == 0) {
             reqSize.setHeight(reqSize.width()/image.size().width()*image.size().height());
+        }
     }
+
     return reqSize.isValid() ? image.scaled(reqSize, Qt::KeepAspectRatioByExpanding) : image;
 }
 
