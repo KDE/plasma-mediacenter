@@ -21,18 +21,21 @@ import QtQuick 1.1
 
 ListView {
     id: categoriesList
+    spacing: 20
+
+    model: CategoriesModel { }
     property string currentCategory: currentItem.currentCategory
 
-    currentIndex: 2
-    spacing: 20
     preferredHighlightBegin: width / 2 - height / 2
     preferredHighlightEnd: width / 2 + height / 2
     highlightRangeMode: GridView.StrictlyEnforceRange
     highlightMoveDuration: 400
     orientation: ListView.Horizontal
-    model: CategoriesModel { }
+
     delegate: CategoriesListDelegate {
         height: categoriesList.height
         width: categoriesList.height
     }
+
+    Component.onCompleted: currentIndex = 2
 }
