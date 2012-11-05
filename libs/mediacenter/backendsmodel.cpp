@@ -47,15 +47,20 @@ BackendsModel::BackendsModel(QDeclarativeEngine *engine, QObject* parent)
 
 MediaCenter::AbstractBrowsingBackend *BackendsModel::loadBrowsingBackend(const KPluginInfo &info) const
 {
-    MediaCenter::AbstractBrowsingBackend *backend = m_backends.value(info.pluginName());
+    KService::Ptr service = info.service();
+    if (!service) {
+        return 0;
+    }
+
+    const QString key = service->library();
+    MediaCenter::AbstractBrowsingBackend *backend = m_backends.value(key);
     if (backend) {
         return backend;
     }
 
     // no? well then, let's load it.
-    KService::Ptr service = info.service();
     backend = service->createInstance<MediaCenter::AbstractBrowsingBackend>(0, QVariantList() << service->storageId());
-    const_cast<BackendsModel *>(this)->m_backends.insert(info.pluginName(), backend);
+    const_cast<BackendsModel *>(this)->m_backends.insert(key, backend);
 
     if (backend) {
         backend->setName(info.pluginName());
