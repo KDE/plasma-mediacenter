@@ -66,4 +66,6 @@ Item {
             //text: homeScreenRootItem.metaData.title
         }
     }
+
+    Keys.forwardTo: [ categoriesList, backendsList ]
 }
