@@ -44,11 +44,12 @@ PlasmaCore.FrameSvgItem {
     Row {
         id: mediaController
         anchors {
-            horizontalCenter: parent.horizontalCenter
+            fill: parent
+            leftMargin: controlBarFrame.margins.left
+            rightMargin: controlBarFrame.margins.right
+            bottomMargin: controlBarFrame.margins.bottom
         }
 
-        width: parent.width * 0.8
-        height: parent.height * 0.8
         spacing: 10
 
         PlasmaComponents.ToolButton {
