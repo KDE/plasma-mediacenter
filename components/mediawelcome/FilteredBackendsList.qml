@@ -28,6 +28,7 @@ ListView {
     property alias backendsModel: filteredModel.sourceBackendsModel
     property alias categoryFilter: filteredModel.backendCategory
 
+    //FIXME: this is really bad looking :/
     highlight: PlasmaComponents.Highlight { }
     highlightFollowsCurrentItem: true
 
