@@ -208,7 +208,7 @@ public:
      * This method is called by the PMC runtime to find out which category should
      * this backend be placed in
      *
-     * @return one of these strings - "music", "image", "video", "other"
+     * @return one of these strings - "audio", "image", "video", "other"
      */
     Q_INVOKABLE virtual QString backendCategory() const = 0;
 
