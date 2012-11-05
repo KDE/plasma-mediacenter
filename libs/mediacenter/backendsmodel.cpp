@@ -38,7 +38,6 @@ BackendsModel::BackendsModel(QDeclarativeEngine *engine, QObject* parent)
     KService::List services = MediaCenter::AbstractBrowsingBackend::availableBackends();
     m_backendInfo = KPluginInfo::fromServices(services);
     qStableSort(m_backendInfo.begin(), m_backendInfo.end(), pluginLessThan);
-    kDebug() << "***********************" << m_backendInfo.count();
 
     QHash<int, QByteArray> roles = roleNames();
     roles[ModelObjectRole] = "modelObject";
@@ -59,13 +58,15 @@ MediaCenter::AbstractBrowsingBackend *BackendsModel::loadBrowsingBackend(const K
     const_cast<BackendsModel *>(this)->m_backends.insert(info.pluginName(), backend);
 
     if (backend) {
+        backend->setName(info.pluginName());
+
         if (backend->okToLoad()) {
             backend->setParent(const_cast<BackendsModel *>(this));
             if (m_declarativeEngine) {
                 backend->setDeclarativeEngine(m_declarativeEngine.data());
             }
         } else {
-            kDebug() << "Backend " << backend->name() << " doesn't want to be loaded";
+            kDebug() << "Backend " << info.name() << " doesn't want to be loaded";
         }
     } else {
         kDebug() << "OUCH! Something's wrong with the backend";

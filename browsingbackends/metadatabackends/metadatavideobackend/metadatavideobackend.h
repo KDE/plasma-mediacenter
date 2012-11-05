@@ -31,7 +31,6 @@ class MetadataVideoBackend : public AbstractMetadataBackend
 public:
     MetadataVideoBackend (QObject* parent, const QVariantList& args);
     virtual ~MetadataVideoBackend();
-    virtual QString backendCategory() const;
 
     virtual bool supportsSearch() const;
     virtual void search(const QString& searchTerm);

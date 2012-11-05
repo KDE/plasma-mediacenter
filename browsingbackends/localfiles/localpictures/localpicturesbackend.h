@@ -27,7 +27,6 @@ class LocalPicturesBackend : public LocalFilesAbstractBackend
 public:
     LocalPicturesBackend(QObject *parent, const QVariantList &args);
     ~LocalPicturesBackend();
-    virtual QString backendCategory() const;
 
 protected:
     virtual void initModel();

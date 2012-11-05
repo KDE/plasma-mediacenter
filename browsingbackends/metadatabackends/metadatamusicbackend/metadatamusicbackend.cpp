@@ -121,11 +121,6 @@ QObject* MetadataMusicBackend::musicModel() const
     return m_musicModel;
 }
 
-QString MetadataMusicBackend::backendCategory() const
-{
-    return "audio";
-}
-
 void MetadataMusicBackend::searchAlbum(const QString& album)
 {
     m_albumsModel->setSearchTerm(album);

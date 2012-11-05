@@ -35,7 +35,3 @@ void LocalPicturesBackend::initModel()
     setModel(new LocalPicturesModel(this));
 }
 
-QString LocalPicturesBackend::backendCategory() const
-{
-    return "image";
-}

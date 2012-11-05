@@ -32,8 +32,7 @@ using namespace MediaCenter;
 class AbstractBrowsingBackend::AbstractBrowsingBackendPrivate
 {
 public:
-    AbstractBrowsingBackendPrivate(KService::Ptr service, AbstractBrowsingBackend *q) :
-    backendInfo(service),
+    AbstractBrowsingBackendPrivate(AbstractBrowsingBackend *q) :
     q(q),
     cfInterface(false),
     model(0),
@@ -44,30 +43,39 @@ public:
 
     AbstractBrowsingBackend *q;
     bool cfInterface;
-    KPluginInfo backendInfo;
     BrowsingType browsingType;
     QAbstractItemModel * model;
     QAbstractItemModel * metadataModel;
     QDeclarativeEngine *declarativeEngine;
     bool hasInitialized;
+    QString name;
 };
 
-AbstractBrowsingBackend::AbstractBrowsingBackend(QObject *parent, const QVariantList &args) : QObject(parent),
-d(new AbstractBrowsingBackendPrivate(KService::serviceByStorageId(args.count() ? args.first().toString() : QString()), this))
+AbstractBrowsingBackend::AbstractBrowsingBackend(QObject *parent, const QVariantList &args)
+    : QObject(parent),
+      d(new AbstractBrowsingBackendPrivate(this))
 {
     Q_UNUSED(args);
     qRegisterMetaType<QAbstractItemModel*>("QAbstractItemModel*");
 }
 
-AbstractBrowsingBackend::AbstractBrowsingBackend(QObject * parent)
-  : QObject(parent),
-    d(new AbstractBrowsingBackendPrivate(KService::serviceByStorageId(QString()), this))
-{
-}
-
 AbstractBrowsingBackend::~AbstractBrowsingBackend()
 {
     delete d;
+}
+
+void AbstractBrowsingBackend::setName(const QString &name)
+{
+    d->name = name;
+}
+
+QString AbstractBrowsingBackend::name() const
+{
+    if (d->name.isEmpty()) {
+        return "generic-backend";
+    }
+
+    return d->name;
 }
 
 void AbstractBrowsingBackend::setModel(QAbstractItemModel * model)
@@ -112,16 +120,6 @@ KConfigGroup AbstractBrowsingBackend::config()
     return KConfigGroup(KGlobal::config(), name());
 }
 
-QString AbstractBrowsingBackend::name() const
-{
-    return d->backendInfo.name();
-}
-
-QString AbstractBrowsingBackend::icon() const
-{
-    return d->backendInfo.icon();
-}
-
 AbstractBrowsingBackend::BrowsingType AbstractBrowsingBackend::browsingType() const
 {
     return d->browsingType;
@@ -151,8 +149,9 @@ bool AbstractBrowsingBackend::goOneLevelUp()
     return false;
 }
 
-bool AbstractBrowsingBackend::expand (int row)
+bool AbstractBrowsingBackend::expand(int row)
 {
+    Q_UNUSED(row)
     return false;
 }
 
@@ -169,7 +168,7 @@ void AbstractBrowsingBackend::setDeclarativeEngine(QDeclarativeEngine *declarati
 QString AbstractBrowsingBackend::constructQmlSource(const QString& componentDirName, const QString &versionString,
                                                     const QString& itemName) const
 {
-    return QString("import QtQuick 1.1\n\import org.kde.plasma.mediacentercomponents.%1 %2 as %3\n\%3.%4 {\n\}\n")
+    return QString("import QtQuick 1.1\nimport org.kde.plasma.mediacentercomponents.%1 %2 as %3\n\%3.%4 {\n}\n")
         .arg(componentDirName).arg(versionString).arg(componentDirName.toUpper()).arg(itemName);
 }
 
@@ -195,6 +194,7 @@ bool AbstractBrowsingBackend::supportsSearch() const
 
 void AbstractBrowsingBackend::search(const QString& searchTerm)
 {
+    Q_UNUSED(searchTerm)
     // Does nothing
 }
 

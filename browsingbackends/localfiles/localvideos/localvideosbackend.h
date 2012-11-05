@@ -27,7 +27,6 @@ class LocalVideosBackend : public LocalFilesAbstractBackend
 public:
     LocalVideosBackend(QObject *parent, const QVariantList &args);
     ~LocalVideosBackend();
-    virtual QString backendCategory() const;
 
 protected:
     virtual void initModel();

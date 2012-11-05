@@ -25,14 +25,20 @@ FilteredBackendsModel::FilteredBackendsModel(QObject *parent) : QSortFilterProxy
 
 }
 
-bool FilteredBackendsModel::filterAcceptsRow(int source_row, const QModelIndex& source_parent) const
+bool FilteredBackendsModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
 {
-    if (!sourceModel())
+    Q_UNUSED(source_parent)
+
+    if (!sourceModel()) {
         return false;
-    if (m_category.isEmpty())
+    }
+
+    if (m_category.isEmpty()) {
         return true;
+    }
+
     return sourceModel()->data(sourceModel()->index(source_row, 0),
-                               BackendsModel::BackendCategoryRole).toString()  == m_category;
+                               BackendsModel::BackendCategoryRole).toString() == m_category;
 }
 
 void FilteredBackendsModel::setBackendCategory(const QString& category)

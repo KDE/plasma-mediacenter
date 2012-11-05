@@ -45,11 +45,6 @@ void MetadataVideoBackend::initImpl()
     setModel(new MetadataVideoModel(this));
 }
 
-QString MetadataVideoBackend::backendCategory() const
-{
-    return "video";
-}
-
 void MetadataVideoBackend::search(const QString& searchTerm)
 {
     qobject_cast<PmcMetadataModel*>(model())->setSearchTerm(searchTerm);

@@ -42,9 +42,4 @@ void MetadataPictureBackend::initImpl()
     setModel(new MetadataPictureModel(this));
 }
 
-QString MetadataPictureBackend::backendCategory() const
-{
-    return "image";
-}
-
 #include "metadatapicturebackend.moc"

@@ -50,8 +50,6 @@ namespace MediaCenter {
 class MEDIACENTER_EXPORT AbstractBrowsingBackend : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString name READ name CONSTANT)
-    Q_PROPERTY(QString icon READ icon CONSTANT)
     Q_PROPERTY(QObject* backendModel READ model NOTIFY modelChanged)
     Q_PROPERTY(QObject* metadataModel READ metadataModel WRITE setMetadataModel NOTIFY metadataModelChanged)
 
@@ -69,9 +67,19 @@ public:
      * Used to load a backend instance via a plugin loader through KService.
      * The first argument of @param args must be the unique storageID of the service.
      * */
-    AbstractBrowsingBackend(QObject *parent, const QVariantList &args);
-    AbstractBrowsingBackend(QObject *parent = 0);
+    AbstractBrowsingBackend(QObject *parent, const QVariantList &args = QVariantList());
     virtual ~AbstractBrowsingBackend();
+
+    /**
+     * Sets the plugin name for this backend; used for things such as configuration group naming
+     * @param name the plugin name to use
+     */
+    void setName(const QString &name);
+
+    /**
+     * @return the plugin name for this backend
+     */
+    QString name() const;
 
     /**
      * @returns the model of the browsing backend
@@ -118,10 +126,6 @@ public:
     KConfigGroup config();
 
     Q_INVOKABLE void init();
-
-    QString name() const;
-
-    QString icon() const;
 
     /**
      * Convenience function that returns the list of
@@ -203,14 +207,6 @@ public:
      * @param searchTerm string entered by the user
      */
     Q_INVOKABLE virtual void search(const QString &searchTerm);
-
-    /**
-     * This method is called by the PMC runtime to find out which category should
-     * this backend be placed in
-     *
-     * @return one of these strings - "audio", "image", "video", "other"
-     */
-    Q_INVOKABLE virtual QString backendCategory() const = 0;
 
     /**
      * Override this method if you want your backend to show custom items on a
