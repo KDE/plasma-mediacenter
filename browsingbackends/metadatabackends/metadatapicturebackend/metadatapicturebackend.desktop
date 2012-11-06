@@ -2,23 +2,6 @@
 Type=Service
 Icon=image-x-generic
 Name=All pictures
-Name[cs]=Všechny obrázky
-Name[da]=Alle billeder
-Name[de]=Alle Bilder
-Name[es]=Todas las imágenes
-Name[et]=Kõik pildid
-Name[fi]=Kaikki kuvat
-Name[fr]=Toutes les images
-Name[hu]=Minden kép
-Name[km]=រូបភាព​ទាំងអស់
-Name[nl]=Alle afbeeldingen
-Name[pl]=Wszystkie zdjęcia
-Name[pt]=Todas as Imagens
-Name[pt_BR]=Todas as imagens
-Name[sk]=Všetky obrázky
-Name[sv]=Alla bilder
-Name[uk]=Всі зображення
-Name[x-test]=xxAll Picturesxx
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 
