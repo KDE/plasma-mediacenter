@@ -46,6 +46,8 @@ Row {
             model: backend.artistsModel();
             delegate: CategoriesDelegate { width: parent ? parent.width - artistScrollBar.width : 0; height: 48; categoryName: "artist" }
             spacing: 5
+            highlight: PlasmaComponents.Highlight { }
+            highlightFollowsCurrentItem: true
             snapMode: ListView.SnapToItem
             clip: true
 
@@ -75,6 +77,8 @@ Row {
             model: backend.albumsModel();
             delegate: CategoriesDelegate { width: parent ? parent.width - albumScrollBar.width : 0; height: 48; categoryName: "album" }
             spacing: 5
+            highlight: PlasmaComponents.Highlight { }
+            highlightFollowsCurrentItem: true
             snapMode: ListView.SnapToItem
             clip: true
 
@@ -106,7 +110,7 @@ Row {
             model: backend.musicModel
             delegate: MusicDelegate { width: parent ? parent.width - musicScrollBar.width : 0; height: 64 }
             spacing: 5
-            highlight: MediaItemHighlight { z: 1 }
+            highlight: PlasmaComponents.Highlight { }
             highlightFollowsCurrentItem: true
             clip: true
 

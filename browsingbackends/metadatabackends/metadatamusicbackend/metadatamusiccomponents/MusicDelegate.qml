@@ -20,23 +20,22 @@
 import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
 
-Rectangle {
-    id: musicDelegateRootRectangle
-    radius: 10
-    opacity: mouseArea.pressed ? 1 : 0.8
+Item {
+    id: musicDelegateRootItem
 
     Text {
         text: display ? display : ""
         anchors.fill: parent
         anchors.margins: 5
         font.pointSize: 16
+        color: "white"
         elide: Text.ElideRight
         verticalAlignment: Text.AlignVCenter
 
         MouseArea {
             id: mouseArea
             hoverEnabled: true
-            onEntered: musicDelegateRootRectangle.ListView.view.currentIndex = index
+            onEntered: musicDelegateRootItem.ListView.view.currentIndex = index
             anchors.fill: parent
             onClicked: mediaBrowser.playRequested(0, mediaUrl, mediaType)
         }
@@ -46,7 +45,7 @@ Rectangle {
         id: addToPlaylistButton
         iconSource: "list-add"
         anchors { right: parent.right; top: parent.top }
-        visible: musicDelegateRootRectangle.ListView.isCurrentItem
+        visible: musicDelegateRootItem.ListView.isCurrentItem
         onClicked: {
             playlistModel.addToPlaylist (mediaUrl, display);
         }

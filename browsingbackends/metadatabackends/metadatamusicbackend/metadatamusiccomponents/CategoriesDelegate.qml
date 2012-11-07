@@ -20,10 +20,25 @@
 import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
 
-PlasmaComponents.Button {
+Item {
+    id: musicDelegateRootItem
     property string categoryName: ""
-    text: display ? display : ""
-    iconSource: decoration ? decoration : ""
 
-    onClicked: categoryName == "album" ? backend.albumFilter = resourceId : backend.artistFilter = resourceId
+    Text {
+        text: display ? display : ""
+        anchors.fill: parent
+        anchors.margins: 5
+        font.pointSize: 16
+        color: "white"
+        elide: Text.ElideRight
+        verticalAlignment: Text.AlignVCenter
+
+        MouseArea {
+            id: mouseArea
+            hoverEnabled: true
+            onEntered: musicDelegateRootItem.ListView.view.currentIndex = index
+            anchors.fill: parent
+            onClicked: categoryName == "album" ? backend.albumFilter = resourceId : backend.artistFilter = resourceId
+        }
+    }
 }
