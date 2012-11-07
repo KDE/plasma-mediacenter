@@ -2,6 +2,11 @@
 Type=Service
 Icon=tools-rip-video-cd
 Name=All videos
+Name[cs]=Všechna videa
+Name[pt]=Todos os vídeos
+Name[sk]=Všetky videá
+Name[uk]=Всі відео
+Name[x-test]=xxAll videosxx
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 

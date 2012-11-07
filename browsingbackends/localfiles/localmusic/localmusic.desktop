@@ -2,6 +2,7 @@
 Type=Service
 Icon=folder-sound
 Name=Browse music
+Name[cs]=Procházet hudbu
 Name[da]=Gennemse musik
 Name[de]=Musik durchsuchen
 Name[es]=Explorar música
