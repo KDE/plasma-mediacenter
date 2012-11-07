@@ -23,6 +23,14 @@ import org.kde.plasma.components 0.1 as PlasmaComponents
 Item {
     id: musicDelegateRootItem
     property string categoryName: ""
+    visible: false
+
+    Timer {
+        id: showTimer
+        interval: 100
+        repeat: false
+        onTriggered: musicDelegateRootItem.visible = true
+    }
 
     Text {
         text: display ? display : ""
@@ -40,5 +48,29 @@ Item {
             anchors.fill: parent
             onClicked: categoryName == "album" ? backend.albumFilter = resourceId : backend.artistFilter = resourceId
         }
+    }
+
+    states: [
+    State {
+        name: "appear"
+        when: visible
+    }
+    ]
+    transitions: [
+    Transition {
+        to: "appear"
+        NumberAnimation {
+            target: musicDelegateRootItem;
+            property: "opacity";
+            from: 0.0
+            to: 1.0;
+            easing.type: Easing.InQuad;
+            duration: 500
+        }
+    }
+    ]
+
+    Component.onCompleted: {
+        showTimer.start()
     }
 }
