@@ -20,27 +20,27 @@
 
 #include "subtitleprovider.h"
 
-
-
 void SubtitleProvider::processFile()
 {
-    currentSubtitleStartTime = currentSubtitleEndTime  = 0;
-    QString temp;
+    currentSubtitleStartTime = currentSubtitleEndTime = 0;
     struct Subtitle t;
+
     QUrl f(subtitleFilename.toString().replace(QRegExp("(.*)\\.(.*)$"), "\\1.srt"));
     QFile file(f.toLocalFile());
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qDebug() << "Unable to open file";
+        qDebug() << "Unable to open subtitle file " << file.fileName();
         return;
     }
+
     QTextStream in(&file);
     QRegExp re("(\\d+)(?:\\s+)(\\d\\d):(\\d\\d):(\\d\\d),(\\d+)\\s*-->\\s*(\\d\\d):(\\d\\d):(\\d\\d),(\\d+)(?:\\s+)(.*)$");
 
     while (!in.atEnd()) {
+        QString temp;
         QString line = in.readLine();
 
-        if(line=="") {
+        if(line.isEmpty()) {
             re.indexIn(temp);
             t.id = re.cap(1).toInt();
             t.startHr = re.cap(2).toInt();
@@ -55,7 +55,7 @@ void SubtitleProvider::processFile()
             t.totalEndMillisec = ( (t.endHr * 3600) + (t.endMin * 60) + (t.endSec) ) * 1000;
             t.text = re.cap(10);
             subs.append(t);
-            temp = "";
+            temp.clear();
         }
         else {
             temp = temp + " " + line;
@@ -63,7 +63,6 @@ void SubtitleProvider::processFile()
 
     }
     file.close();
-
 }
 
 
@@ -98,11 +97,11 @@ void SubtitleProvider::subtitleAt(qint64 input)
         }
         else if( input > sub.totalEndMillisec && input < next.totalStartMillisec && !isLast)
         {
-            currentSubtitle = "";
+            currentSubtitle.clear();
             return;
         }
     }
-    currentSubtitle = "";
+    currentSubtitle.clear();
 }
 
 
