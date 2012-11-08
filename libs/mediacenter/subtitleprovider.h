@@ -73,7 +73,7 @@ private:
     QUrl subtitleFilename;
 
     void processFile();
-    void subtitleAt(qint64 input);
+    void computeAndStoreSubtitle(qint64 input);
 };
 
 #endif // SUBTITLEPROVIDER_H

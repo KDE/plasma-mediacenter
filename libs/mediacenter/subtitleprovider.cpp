@@ -65,7 +65,7 @@ void SubtitleProvider::processFile()
     file.close();
 }
 
-void SubtitleProvider::subtitleAt(qint64 input)
+void SubtitleProvider::computeAndStoreSubtitle(qint64 input)
 {
     struct Subtitle sub;
     struct Subtitle next;
@@ -100,7 +100,7 @@ void SubtitleProvider::subtitleAt(qint64 input)
 
 QString SubtitleProvider::subtitle()
 {
-    subtitleAt(currentVideoTime);
+    computeAndStoreSubtitle(currentVideoTime);
     return currentSubtitle;
 }
 
@@ -126,3 +126,4 @@ void SubtitleProvider::setFilename(const QUrl &name)
     subtitleFilename = name;
     processFile();
 }
+
