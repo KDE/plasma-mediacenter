@@ -21,7 +21,6 @@
 #ifndef SUBTITLEPROVIDER_H
 #define SUBTITLEPROVIDER_H
 
-
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 #include <QtCore/QRegExp>
@@ -29,7 +28,9 @@
 #include <QtCore/QList>
 #include <QtCore/QStringList>
 #include <QtCore/QUrl>
+
 #include "mediacenter_export.h"
+
 struct Subtitle {
     int id;
     int startHr;
@@ -52,17 +53,7 @@ class MEDIACENTER_EXPORT SubtitleProvider : public QObject
     Q_PROPERTY ( QUrl filename READ filename WRITE setFilename );
     Q_PROPERTY ( qint64 subtitleTime READ subtitleTime WRITE setSubtitleTime NOTIFY subtitleTimeChanged );
 
-
 public:
-    QList<Subtitle> subs;
-    QString currentSubtitle;
-    qint64 currentSubtitleStartTime;
-    qint64 currentSubtitleEndTime;
-    qint64 currentVideoTime;
-    QUrl subtitleFilename;
-
-    void processFile();
-    void subtitleAt(qint64 input);
     QString subtitle();
     qint64 subtitleTime();
     void setSubtitleTime(const qint64 &currtime);
@@ -73,6 +64,16 @@ signals:
     void subtitleChanged();
     void subtitleTimeChanged();
 
+private:
+    QList<Subtitle> subs;
+    QString currentSubtitle;
+    qint64 currentSubtitleStartTime;
+    qint64 currentSubtitleEndTime;
+    qint64 currentVideoTime;
+    QUrl subtitleFilename;
+
+    void processFile();
+    void subtitleAt(qint64 input);
 };
 
 #endif // SUBTITLEPROVIDER_H
