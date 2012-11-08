@@ -19,6 +19,7 @@
 
 import QtQuick 1.1
 import QtMultimediaKit 1.1 as QtMultimediaKit
+import org.kde.plasma.mediacentercomponents 0.1 as MediaCenterComponents
 
 FocusScope {
     id: mediaPlayerRootRect
@@ -36,13 +37,32 @@ FocusScope {
     signal mediaFinished
     signal mediaStarted
     signal escapePressed
-
+    MediaCenterComponents.SubtitleProvider {
+        id: subs
+        filename: video.source
+        subtitleTime: video.position
+    }
     QtMultimediaKit.Video {
         id: video
         anchors.fill: parent
 
         onStopped: mediaPlayerRootRect.mediaFinished()
         onStarted: mediaPlayerRootRect.mediaStarted()
+	Text {
+            anchors {
+                bottom: parent.bottom
+                horizontalCenter: parent.horizontalCenter
+                bottomMargin: 20
+            }
+            horizontalAlignment: Text.AlignHCenter
+            color: "white"
+	    width: 0.7 * parent.width
+	    wrapMode: Text.WordWrap
+            text: subs.subtitle
+            style: Text.Outline
+            styleColor: "black"
+            font.pixelSize: parent.height * 0.03
+        }
     }
 
     onPlayingChanged: if (playing) video.play();

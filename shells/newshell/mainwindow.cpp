@@ -22,6 +22,7 @@
 #include <libs/mediacenter/backendsmodel.h>
 #include <libs/mediacenter/playlistmodel.h>
 #include <libs/mediacenter/filteredbackendsmodel.h>
+#include <libs/mediacenter/subtitleprovider.h>
 #include <libs/mediacenter/pmcimageprovider.h>
 
 #include <Plasma/Package>
@@ -75,6 +76,7 @@ MainWindow::MainWindow(QWidget *parent) : KMainWindow(parent)
     m_kdeclarative.setupBindings();
 
     qmlRegisterType<FilteredBackendsModel>("org.kde.plasma.mediacentercomponents", 0, 1, "FilteredBackendsModel");
+    qmlRegisterType<SubtitleProvider>("org.kde.plasma.mediacentercomponents", 0, 1, "SubtitleProvider");
     BackendsModel *backendsModel = new BackendsModel(view->engine(), this);
     view->rootContext()->setContextProperty("backendsModel", backendsModel);
     PlaylistModel *playlistModel = new PlaylistModel(this);
