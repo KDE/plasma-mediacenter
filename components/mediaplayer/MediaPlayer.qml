@@ -56,12 +56,13 @@ FocusScope {
             }
             horizontalAlignment: Text.AlignHCenter
             color: "white"
-	    width: 0.7 * parent.width
-	    wrapMode: Text.WordWrap
+            width: 0.7 * parent.width
+            wrapMode: Text.WordWrap
             text: subs.subtitle
             style: Text.Outline
             styleColor: "black"
             font.pixelSize: parent.height * 0.03
+            smooth: true
         }
     }
 
