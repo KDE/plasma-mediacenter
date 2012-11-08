@@ -66,11 +66,11 @@ signals:
 
 private:
     QList<Subtitle> subs;
-    QString currentSubtitle;
+    QString m_currentSubtitle;
     qint64 currentSubtitleStartTime;
     qint64 currentSubtitleEndTime;
-    qint64 currentVideoTime;
-    QUrl subtitleFilename;
+    qint64 m_currentVideoTime;
+    QUrl m_subtitleFilename;
 
     void processFile();
     void computeAndStoreSubtitle(qint64 input);

@@ -203,7 +203,7 @@ Rectangle {
     MediaCenterComponents.MediaBrowser {
         id: mediaBrowser
         anchors {
-            left: parent.left; right: playlist.left; top: mediaController.bottom; bottom:parent.bottom
+            left: parent.left; right: parent.right; top: mediaController.bottom; bottom:parent.bottom
         }
         height: parent.height
         visible: false
@@ -264,8 +264,9 @@ Rectangle {
             margins: 10
          }
          width: parent.width/4
+         z: anchors.right ? 1 : 0
+
          onPlayRequested: {
-            z = 0
             mediaPlayer.visible = true
             runtimeData.playing = true
             mediaPlayer.url = url

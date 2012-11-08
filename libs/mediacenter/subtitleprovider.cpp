@@ -25,7 +25,7 @@ void SubtitleProvider::processFile()
     currentSubtitleStartTime = currentSubtitleEndTime = 0;
     struct Subtitle t;
 
-    QUrl f(subtitleFilename.toString().replace(QRegExp("(.*)\\.(.*)$"), "\\1.srt"));
+    QUrl f(m_subtitleFilename.toString().replace(QRegExp("(.*)\\.(.*)$"), "\\1.srt"));
     QFile file(f.toLocalFile());
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -35,9 +35,9 @@ void SubtitleProvider::processFile()
 
     QTextStream in(&file);
     QRegExp re("(\\d+)(?:\\s+)(\\d\\d):(\\d\\d):(\\d\\d),(\\d+)\\s*-->\\s*(\\d\\d):(\\d\\d):(\\d\\d),(\\d+)(?:\\s+)(.*)$");
+    QString temp;
 
     while (!in.atEnd()) {
-        QString temp;
         QString line = in.readLine();
 
         if(line.isEmpty()) {
@@ -83,47 +83,47 @@ void SubtitleProvider::computeAndStoreSubtitle(qint64 input)
             isLast = true;
         }
         if(input > sub.totalStartMillisec && input < sub.totalEndMillisec) {
-            currentSubtitle = sub.text;
+            m_currentSubtitle = sub.text;
             currentSubtitleStartTime = sub.totalStartMillisec;
             currentSubtitleEndTime = sub.totalEndMillisec;
             return;
 
         }
         else if( input > sub.totalEndMillisec && input < next.totalStartMillisec && !isLast) {
-            currentSubtitle.clear();
+            m_currentSubtitle.clear();
             return;
         }
     }
-    currentSubtitle.clear();
+    m_currentSubtitle.clear();
 }
 
 
 QString SubtitleProvider::subtitle()
 {
-    computeAndStoreSubtitle(currentVideoTime);
-    return currentSubtitle;
+    computeAndStoreSubtitle(m_currentVideoTime);
+    return m_currentSubtitle;
 }
 
 qint64 SubtitleProvider::subtitleTime()
 {
-    return currentVideoTime;
+    return m_currentVideoTime;
 }
 
 void SubtitleProvider::setSubtitleTime(const qint64 &currtime)
 {
-    currentVideoTime = currtime;
+    m_currentVideoTime = currtime;
     emit subtitleTimeChanged();
     emit subtitleChanged();
 }
 
 QUrl SubtitleProvider::filename()
 {
-    return subtitleFilename;
+    return m_subtitleFilename;
 }
 
 void SubtitleProvider::setFilename(const QUrl &name)
 {
-    subtitleFilename = name;
+    m_subtitleFilename = name;
     processFile();
 }
 
