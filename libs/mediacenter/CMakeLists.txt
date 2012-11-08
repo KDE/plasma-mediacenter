@@ -1,4 +1,5 @@
 find_package(NepomukCore REQUIRED)
+find_package(Taglib REQUIRED)
 
 set (plasmamediacenter_SRCS
     filteredbackendsmodel.cpp
