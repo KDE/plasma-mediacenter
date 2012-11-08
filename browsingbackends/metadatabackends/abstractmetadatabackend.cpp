@@ -20,8 +20,11 @@
 
 #include "abstractmetadatabackend.h"
 
+#include <libs/mediacenter/pmcmetadatamodel.h>
+
 AbstractMetadataBackend::AbstractMetadataBackend(QObject* parent, const QVariantList& args)
     : AbstractBrowsingBackend(parent, args)
+    , m_busy(false)
 {
 }
 
@@ -32,6 +35,29 @@ void AbstractMetadataBackend::initImpl()
 bool AbstractMetadataBackend::goOneLevelUp()
 {
     return false;
+}
+
+bool AbstractMetadataBackend::busy() const
+{
+    return m_busy;
+}
+
+void AbstractMetadataBackend::handleBusySignals ( PmcMetadataModel* emitter )
+{
+    connect(emitter, SIGNAL(queryStarted()), SLOT(makeBusy()));
+    connect(emitter, SIGNAL(queryFinished()), SLOT(makeFree()));
+}
+
+void AbstractMetadataBackend::makeBusy()
+{
+    m_busy = true;
+    emit busyChanged();
+}
+
+void AbstractMetadataBackend::makeFree()
+{
+    m_busy = false;
+    emit busyChanged();
 }
 
 #include "abstractmetadatabackend.moc"

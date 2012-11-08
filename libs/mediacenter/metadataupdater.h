@@ -53,6 +53,8 @@ signals:
     void gotMetadata(int row, const QHash<int, QVariant> &values);
     void newResults(int count);
     void reset();
+    void queryStarted();
+    void queryFinished();
 
 protected:
     virtual void run();
@@ -64,6 +66,7 @@ protected slots:
 private slots:
     void newEntries(const QList<Nepomuk2::Query::Result> &results);
     void finishedListing();
+    void error(const QString &message);
 
 private:
     QList<int> m_rolesRequested;

@@ -205,3 +205,8 @@ void AbstractBrowsingBackend::init()
         initImpl();
     }
 }
+
+bool AbstractBrowsingBackend::busy() const
+{
+    return false;
+}

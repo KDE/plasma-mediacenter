@@ -61,6 +61,10 @@ public Q_SLOTS:
     void clearAllFilters();
     void saveMetadata(int row, const QHash< int, QVariant >& values);
 
+signals:
+    void queryStarted();
+    void queryFinished();
+
 protected Q_SLOTS:
     void finishedListing();
     void updateModel();

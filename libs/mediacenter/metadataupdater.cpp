@@ -85,7 +85,7 @@ void MetadataUpdater::runQuery()
     connect(m_queryServiceClient, SIGNAL(newEntries(QList<Nepomuk2::Query::Result>)),
             this, SLOT(newEntries(QList<Nepomuk2::Query::Result>)));
 //     connect(queryServiceClient, SIGNAL(entriesRemoved(QList<QUrl>)),SLOT(entriesRemoved(QList<QUrl>)));
-//     connect(queryServiceClient, SIGNAL(error(QString)), SLOT(error(QString)));
+    connect(m_queryServiceClient, SIGNAL(error(QString)), SLOT(e(QString)));
     connect(m_queryServiceClient, SIGNAL(finishedListing()), SLOT(finishedListing()));
 
     emit reset();
@@ -94,6 +94,8 @@ void MetadataUpdater::runQuery()
 
     kDebug() << "SPARQL Query " << myQuery.toSparqlQuery();
     m_queryServiceClient->query(myQuery);
+
+    emit queryStarted();
 }
 
 void MetadataUpdater::newEntries(const QList< Nepomuk2::Query::Result >& results)
@@ -194,7 +196,13 @@ QString MetadataUpdater::urlForResource(const Nepomuk2::Resource &resource) cons
 
 void MetadataUpdater::finishedListing()
 {
+    emit queryFinished();
     qobject_cast<Nepomuk2::Query::QueryServiceClient*>(sender())->close();
+}
+
+void MetadataUpdater::error ( const QString& message )
+{
+    emit queryFinished();
 }
 
 #include "metadataupdater.moc"

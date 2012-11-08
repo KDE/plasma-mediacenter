@@ -39,7 +39,9 @@ MetadataPictureBackend::~MetadataPictureBackend()
 
 void MetadataPictureBackend::initImpl()
 {
-    setModel(new MetadataPictureModel(this));
+    PmcMetadataModel *pmcMetadataModel = new MetadataPictureModel(this);
+    handleBusySignals(pmcMetadataModel);
+    setModel(pmcMetadataModel);
 }
 
 #include "metadatapicturebackend.moc"

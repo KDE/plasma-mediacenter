@@ -52,6 +52,7 @@ class MEDIACENTER_EXPORT AbstractBrowsingBackend : public QObject
     Q_OBJECT
     Q_PROPERTY(QObject* backendModel READ model NOTIFY modelChanged)
     Q_PROPERTY(QObject* metadataModel READ metadataModel WRITE setMetadataModel NOTIFY metadataModelChanged)
+    Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
 
 public:
     enum BrowsingType {
@@ -216,9 +217,18 @@ public:
      */
     Q_INVOKABLE virtual QString mediaBrowserSidePanel() const;
 
+    /**
+     * Override this method and emit the busyChanged() signal to tell the mediacenter
+     * that the backend is busy doing something
+     *
+     * @return whether the backend is busy
+     */
+    virtual bool busy() const;
+
 signals:
     void modelChanged();
     void metadataModelChanged();
+    void busyChanged();
 
 protected:
     /**

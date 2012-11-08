@@ -90,6 +90,8 @@ PmcMetadataModel::PmcMetadataModel(QObject* parent):
             SLOT(saveMetadata(int,QHash<int,QVariant>)));
     connect(d->metadataUpdater, SIGNAL(newResults(int)), SLOT(newEntries(int)));
     connect(d->metadataUpdater, SIGNAL(reset()), SLOT(handleUpdaterReset()));
+    connect(d->metadataUpdater, SIGNAL(queryStarted()), SIGNAL(queryStarted()));
+    connect(d->metadataUpdater, SIGNAL(queryFinished()), SIGNAL(queryFinished()));
     d->metadataUpdater->start(QThread::IdlePriority);
 }
 
@@ -117,6 +119,7 @@ void PmcMetadataModel::updateModel()
     }
 
     d->metadataUpdater->setTerm(Nepomuk2::Query::AndTerm(listOfTerms));
+    emit queryStarted();
 }
 
 void PmcMetadataModel::showMediaType(MediaCenter::MediaType mediaType)

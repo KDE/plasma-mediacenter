@@ -22,17 +22,27 @@
 
 #include <libs/mediacenter/abstractbrowsingbackend.h>
 
+class PmcMetadataModel;
 class AbstractMetadataBackend : public MediaCenter::AbstractBrowsingBackend
 {
     Q_OBJECT
 public:
     AbstractMetadataBackend (QObject* parent, const QVariantList& args);
+    virtual bool busy() const;
 
 public Q_SLOTS:
     virtual bool goOneLevelUp();
 
 protected:
     virtual void initImpl();
+    void handleBusySignals(PmcMetadataModel *emitter);
+
+private Q_SLOTS:
+    void makeBusy();
+    void makeFree();
+
+private:
+    bool m_busy;
 };
 
 #endif // ABSTRACTMETADATABACKEND_H

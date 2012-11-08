@@ -81,6 +81,12 @@ FocusScope {
                 orientation: Qt.Horizontal
                 flickableItem: mediaBrowserGridViewId
             }
+
+            PlasmaComponents.BusyIndicator {
+                anchors { bottom: parent.bottom; horizontalCenter: parent.horizontalCenter }
+                running: currentBrowsingBackend.busy
+                visible: running
+            }
         }
     }
 

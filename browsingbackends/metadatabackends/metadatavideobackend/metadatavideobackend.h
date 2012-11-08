@@ -21,8 +21,6 @@
 #ifndef METADATAVIDEOBACKEND_H
 #define METADATAVIDEOBACKEND_H
 
-#include <libs/mediacenter/abstractbrowsingbackend.h>
-
 #include "../abstractmetadatabackend.h"
 
 class MetadataVideoBackend : public AbstractMetadataBackend
