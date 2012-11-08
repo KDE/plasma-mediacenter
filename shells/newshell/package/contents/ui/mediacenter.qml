@@ -326,5 +326,4 @@ Rectangle {
         anchors { bottom: mediaBrowser.bottom; right: mediaBrowser.right; margins: 40 }
         height: 128; width: 256
     }
-
 }
