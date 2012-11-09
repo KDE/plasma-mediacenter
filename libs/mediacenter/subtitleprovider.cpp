@@ -29,7 +29,8 @@ void SubtitleProvider::processFile()
     QFile file(f.toLocalFile());
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qDebug() << "Unable to open subtitle file " << file.fileName();
+//         qDebug() << "Unable to open subtitle file " << file.fileName();
+        subs.clear();
         return;
     }
 
