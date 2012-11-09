@@ -84,11 +84,10 @@ Rectangle {
         }
 
         onMediaFinished: {
-            if ((currentTime == totalTime) && (playlistModel.currentIndex != -1)) {
+            if (playlistModel.currentIndex != -1 && totalTime != -1) {
                 playlist.playRequested(playlistModel.getNextUrl());
                 console.log("playlist");
             } else {
-                console.log(" not playlist" + currentTime + " = " + totalTime);
                 runtimeData.currentTime= 0;
                 runtimeData.stopped = true;
             }
