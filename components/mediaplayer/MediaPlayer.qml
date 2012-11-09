@@ -32,6 +32,7 @@ FocusScope {
     property alias currentTime: video.position
     property alias volume: video.volume
     property alias metaData: video.metaData
+    property bool showMusicStats: true
 
     signal clicked
     signal mediaFinished
@@ -64,6 +65,13 @@ FocusScope {
             font.pixelSize: parent.height * 0.03
             smooth: true
         }
+    }
+
+    MusicStats {
+        anchors.fill: parent
+        visible: video.hasAudio && !video.hasVideo && showMusicStats
+
+        metaData: video.metaData
     }
 
     onPlayingChanged: if (playing) video.play();

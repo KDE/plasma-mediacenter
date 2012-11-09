@@ -54,6 +54,7 @@ Rectangle {
         paused: runtimeData.paused
         stopped: runtimeData.stopped
         volume: runtimeData.volume
+        showMusicStats: !mediaWelcome.visible && !mediaBrowser.visible
 
         onClicked: hideToolbars()
         onEscapePressed: mediaBrowser.visible = true
