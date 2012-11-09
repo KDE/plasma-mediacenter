@@ -40,6 +40,8 @@ Item {
         color: "white"
         elide: Text.ElideRight
         verticalAlignment: Text.AlignVCenter
+        style: Text.Outline
+        styleColor: "black"
 
         MouseArea {
             id: mouseArea
