@@ -65,7 +65,6 @@ void SubtitleProvider::processFile()
     }
     file.close();
 }
-
 void SubtitleProvider::computeAndStoreSubtitle(qint64 input)
 {
     struct Subtitle sub;
@@ -75,27 +74,29 @@ void SubtitleProvider::computeAndStoreSubtitle(qint64 input)
     if( input >= currentSubtitleStartTime && input <= currentSubtitleEndTime )
         return;
 
-    for(int i=0; i < subs.size(); ++i) {
-        sub = subs[i];
-        if( i < subs.size() -1 ) {
-            next = subs[i+1];
-        }
-        else {
-            isLast = true;
-        }
-        if(input > sub.totalStartMillisec && input < sub.totalEndMillisec) {
-            m_currentSubtitle = sub.text;
-            currentSubtitleStartTime = sub.totalStartMillisec;
-            currentSubtitleEndTime = sub.totalEndMillisec;
-            return;
+    //Binary search
+    int start = 0;
+    int end = subs.size() - 1;
+    bool found = false;
+    while(end >= start) {
+      int mid = (start + end)/2;
 
-        }
-        else if( input > sub.totalEndMillisec && input < next.totalStartMillisec && !isLast) {
-            m_currentSubtitle.clear();
-            return;
-        }
+      if( input < subs[mid].totalStartMillisec )
+	  end = mid - 1;
+      else if( input > subs[mid].totalEndMillisec )
+	  start = mid + 1;
+      else {
+	  found = true;
+	  m_currentSubtitle = subs[mid].text;
+	  currentSubtitleStartTime = subs[mid].totalStartMillisec;
+	  currentSubtitleEndTime = subs[mid].totalEndMillisec;
+	  return;
+      }
+ 
     }
-    m_currentSubtitle.clear();
+    if(!found){
+      m_currentSubtitle.clear();
+    }
 }
 
 
