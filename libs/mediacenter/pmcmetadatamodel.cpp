@@ -67,6 +67,7 @@ public:
     int numberOfEntries;
     QList<int> rowsToFetchMetadataFor;
     QStringList mediaUrlWhichFailedThumbnailGeneration;
+    QVariant defaultDecoration;
 };
 
 PmcMetadataModel::PmcMetadataModel(QObject* parent):
@@ -172,8 +173,14 @@ QVariant PmcMetadataModel::data(const QModelIndex& index, int role) const
     case MediaCenter::ResourceIdRole:
     case MediaCenter::MediaUrlRole:
     case MediaCenter::MediaTypeRole:
-    case Qt::DecorationRole:
     case Qt::DisplayRole:
+        return metadataValue;
+    case Qt::DecorationRole:
+        if (metadataValue.type() == QVariant::String
+            && metadataValue.toString().isEmpty()
+            && d->defaultDecoration.isValid()) {
+            return d->defaultDecoration;
+        }
         return metadataValue;
     case MediaCenter::MediaThumbnailRole:
         if (d->metadataValues.value(index.row()).value(MediaCenter::MediaTypeRole) == "video") {
@@ -342,6 +349,11 @@ void PmcMetadataModel::setSearchTerm(const QString& searchTerm)
         d->isSearchTermValid = true;
     }
     d->updateTimer.start(100);
+}
+
+void PmcMetadataModel::setDefaultDecoration ( const QVariant& decoration )
+{
+    d->defaultDecoration = decoration;
 }
 
 #include "pmcmetadatamodel.moc"

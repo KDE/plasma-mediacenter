@@ -56,6 +56,7 @@ public:
     void addTerm(const Nepomuk2::Query::Term &term);
     void addFilter(const Nepomuk2::Types::Property& property, const Nepomuk2::Query::Term& term, Nepomuk2::Query::ComparisonTerm::Comparator comparator = Nepomuk2::Query::ComparisonTerm::Contains);
     void setSearchTerm(const QString &searchTerm);
+    void setDefaultDecoration(const QVariant &decoration);
 
 public Q_SLOTS:
     void clearAllFilters();
