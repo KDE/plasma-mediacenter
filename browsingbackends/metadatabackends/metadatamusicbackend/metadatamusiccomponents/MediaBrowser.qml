@@ -20,15 +20,91 @@
 import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
 
-Row {
+Item {
     id: rootRow
     anchors.fill: parent
     property QtObject backend
-    spacing: 10
-    clip: true
+    //spacing: 10
+    //clip: true
 
-    Column {
-        width: parent.width/3 * 0.9; height: parent.height
+     // Navigationbar
+    Row {
+        id: header
+        height: 60
+        width: 700
+        spacing: 10
+        anchors.top: parent.top
+
+        Item {
+            height: 50
+            width: 200
+            Text {
+                anchors.centerIn: parent
+                text: "Artist"
+                color: artistListView.visible ? theme.viewHoverColor : "white"
+            }
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    rootRow.backend.artistFilter = ""
+                    artistListView.visible = true
+                    albumListView.visible = false
+                    musicListView.visible = false
+                }
+            }
+        }
+        Item {
+            height: 50
+            width: 200
+            Text {
+                anchors.centerIn: parent
+                text: "Albums"
+                color: albumListView.visible ? theme.viewHoverColor : "white"
+            }
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    rootRow.backend.artistFilter = ""
+                    artistListView.visible = false
+                    albumListView.visible = true
+                    musicListView.visible = false
+                }
+            }
+        }
+        Item {
+            height: 50
+            width: 200
+            Text {
+                anchors.centerIn: parent
+                text: "Songs"
+                color: musicListView.visible ? theme.viewHoverColor : "white"
+            }
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    rootRow.backend.artistFilter = ""
+                    rootRow.backend.albumFilter = ""
+                    artistListView.visible = false
+                    albumListView.visible = false
+                    musicListView.visible = true
+                }
+            }
+        }
+    }
+    
+    /*Rectangle {
+        anchors.top: header.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        width: parent.width - 100
+        height: 1
+        color: "white"
+    }*/
+    
+    Item {
+        id: artistListView
+        width: parent.width; 
+        height: parent.height - header.height - 2
+        anchors.top: header.bottom
         PlasmaComponents.TextField {
             width: parent.width
             height: 30
@@ -41,25 +117,70 @@ Row {
                 onTriggered: backend.searchArtist(parent.text)
             }
         }
-        ListView {
-            width: parent.width; height: parent.height - 30
+        GridView {
+            anchors.bottom: parent.bottom
+            width: parent.width;
+            height: parent.height - 30
             model: backend.artistsModel();
-            delegate: CategoriesDelegate { width: parent ? parent.width - artistScrollBar.width : 0; height: 48; categoryName: "artist" }
+            cellWidth: width / 5
+            cellHeight: cellWidth
+            preferredHighlightBegin: parent.width*0.1
+            preferredHighlightEnd: parent.width*0.9
+            highlightRangeMode: GridView.ApplyRange
+            flow: GridView.TopToBottom
+            
+            delegate: Item {
+                id: mediaItemDelegateItem
+                width: GridView.view.cellWidth
+                height: GridView.view.cellHeight
+                scale: (GridView.isCurrentItem ? 1.3 : 1)
+                clip: !GridView.isCurrentItem
+                z: GridView.isCurrentItem ? 1 : 0
+                MediaItem {
+                    onClicked: {
+                        console.log("artist icon " + mediaThumbnail)
+                        console.log("artist clicked " + resourceId)
+                        rootRow.backend.artistFilter = resourceId
+                        artistListView.visible = false
+                        albumListView.visible = false
+                        musicListView.visible = true
+                    }
+                }
+
+                Behavior on scale {
+                    NumberAnimation {
+                        duration: 500
+                        easing.type: Easing.OutExpo
+                    }
+                }
+
+                Keys.onReturnPressed: {
+                    rootRow.backend.artistFilter = resourceId
+                    artistListView.visible = false
+                    albumListView.visible = true
+                }
+            }
+            /*delegate: CategoriesDelegate { width: parent ? parent.width - artistScrollBar.width : 0; height: 48; categoryName: "artist" }
             spacing: 5
             highlight: PlasmaComponents.Highlight { }
             highlightFollowsCurrentItem: true
             snapMode: ListView.SnapToItem
-            clip: true
+            clip: true*/
 
             PlasmaComponents.ScrollBar {
                 id: artistScrollBar
                 flickableItem: parent
+                orientation: Qt.Horizontal
             }
         }
     }
 
-    Column {
-        width: parent.width/3; height: parent.height
+    Item {
+        id: albumListView
+        visible: false
+        width: parent.width; 
+        height: parent.height - header.height - 2
+        anchors.top: header.bottom
         PlasmaComponents.TextField {
             width: parent.width
             height: 30
@@ -72,25 +193,71 @@ Row {
                 onTriggered: backend.searchAlbum(parent.text)
             }
         }
-        ListView {
-            width: parent.width; height: parent.height - 30
+        GridView {
+            anchors.bottom: parent.bottom
+            width: parent.width;
+            height: parent.height - 30
             model: backend.albumsModel();
-            delegate: CategoriesDelegate { width: parent ? parent.width - albumScrollBar.width : 0; height: 48; categoryName: "album" }
+            cellWidth: width / 5
+            cellHeight: cellWidth
+            preferredHighlightBegin: parent.width*0.1
+            preferredHighlightEnd: parent.width*0.9
+            highlightRangeMode: GridView.ApplyRange
+            flow: GridView.TopToBottom
+            
+            delegate: Item {
+                id: mediaItemDelegateItem
+                width: GridView.view.cellWidth
+                height: GridView.view.cellHeight
+                scale: (GridView.isCurrentItem ? 1.3 : 1)
+                clip: !GridView.isCurrentItem
+                z: GridView.isCurrentItem ? 1 : 0
+        
+                MediaItem {
+                    onClicked: {
+                        console.log("album clicked " + resourceId)
+                        rootRow.backend.albumFilter = resourceId
+                        albumListView.visible = false
+                        musicListView.visible = true
+                        cover.source = decoration
+                        cover.visible = true;
+                    }
+                }
+
+                Behavior on scale {
+                    NumberAnimation {
+                        duration: 500
+                        easing.type: Easing.OutExpo
+                    }
+                }
+
+                Keys.onReturnPressed: {
+                    rootRow.backend.albumFilter = resourceId
+                    albumListView.visible = false
+                    musicListView.visible = true
+                }
+            }
+            /*delegate: CategoriesDelegate { width: parent ? parent.width - albumScrollBar.width : 0; height: 48; categoryName: "album" }
             spacing: 5
             highlight: PlasmaComponents.Highlight { }
             highlightFollowsCurrentItem: true
             snapMode: ListView.SnapToItem
-            clip: true
+            clip: true*/
 
             PlasmaComponents.ScrollBar {
                 id: albumScrollBar
                 flickableItem: parent
+                orientation: Qt.Horizontal
             }
         }
     }
 
-    Column {
-        width: parent.width/3 ; height: parent.height
+    Item {
+        id: musicListView
+        visible: false
+        width: parent.width; 
+        height: parent.height - header.height - 2
+        anchors.top: header.bottom
         PlasmaComponents.TextField {
             visible: backend.albumFilter == "" && backend.artistFilter == ""
             width: parent.width

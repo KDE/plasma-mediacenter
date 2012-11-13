@@ -1,1 +1,2 @@
 MediaBrowser 0.1 MediaBrowser.qml
+MediaItem 0.1 ../mediabrowser/MediaItem.qml

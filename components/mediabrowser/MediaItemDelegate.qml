@@ -36,177 +36,18 @@ Item {
     signal popupMenuRequested(int index, string mediaUrl, string mediaType, string display)
     signal playRequested(int index, string url, string currentMediaType)
 
-    Item {
-        anchors { fill: parent; margins: 20 }
-        clip: true
-
-        Item {
-            anchors {
-                fill: parent
-                margins: 2
+    MediaItem {
+        onClicked: {
+            if (isExpandable) {
+                backend.expand(index, mediaUrl, mediaType);
+            } else {
+                playlistModel.currentIndex = -1;
+                mediaItemDelegateItem.playRequested(index, mediaUrl, mediaType)
             }
-            clip: true
-            PlasmaCore.Theme {
-                id:theme
-            }
-
-            Column {
-                id: rootColumn
-                anchors.fill: parent
-                property variant source
-
-                Loader {
-                    id: iconImageLoader
-                    width: parent.width
-                    height: parent.height - (itemText.visible ? itemText.height : 0 );
-
-                    function checkAndLoad()
-                    {
-                        Logic.checkAndLoad(iconImageLoader);
-                    }
-
-                    Component.onCompleted: checkAndLoad()
-
-                    PlasmaComponents.BusyIndicator {
-                        anchors.centerIn: parent
-                        running: workaroundForDecorationUpdate.text.length == 0
-                        visible: running
-                    }
-                }
-
-                Component {
-                    id: delegateItemImageComponent
-                    Item {
-                        Rectangle {
-                            width: parent.width - 6
-                            height: parent.height - 6
-                            clip: true
-                            anchors.centerIn: parent
-                            color: "transparent"
-                            Image {
-                                id: delegateItemImage
-                                width: parent.width - 6
-                                height: parent.height - 6
-                                anchors.centerIn: parent
-                                fillMode: Image.PreserveAspectCrop
-                                sourceSize.width: width * 2
-                                sourceSize.height: 0
-                                asynchronous: true
-                                cache: true
-                                source: rootColumn.source
-                                z: 1
-
-                                PlasmaComponents.BusyIndicator {
-                                    anchors.centerIn: parent
-                                    running: delegateItemImage.status == Image.Loading
-                                    visible: running
-                                }
-
-                                states: [
-                                    State {
-                                        name: "appear"
-                                        when: delegateItemImage.status == Image.Ready
-                                    }
-                                ]
-                                transitions: [
-                                Transition {
-                                    to: "appear"
-                                    ParallelAnimation {
-                                        PropertyAnimation {
-                                            target: delegateItemImage;
-                                            property: "scale";
-                                            from: 0.1
-                                            to: 1
-                                            easing.type: Easing.OutBack;
-                                            duration: 200
-                                        }
-                                    }
-                                }
-                                ]
-                            }
-                        }
-                        Rectangle {
-                            anchors.centerIn: parent
-                            radius: 2
-                            z: 2
-                            color: "transparent"
-                            width: parent.width - 2
-                            property int finalHeight: parent.height - 2
-                            height:  finalHeight*delegateItemImage.progress
-                            border.color: mediaItemDelegateItem.GridView.isCurrentItem ? theme.viewHoverColor : "#666"
-                            border.width: 1
-                            visible: delegateItemImage.status == Image.Ready && delegateItemImage.scale == 1
-                        }
-                    }
-                }
-
-                Component {
-                    id: delegateItemIconComponent
-                    QtExtraComponents.QIconItem {
-                        id: delegateItemIcon
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        icon: {
-                            if (typeof rootColumn.source == "string")
-                                QIcon(rootColumn.source);
-                            else
-                                if (decorationType == "qimage")
-                                    QIcon(rootColumn.source);
-                                else
-                                    rootColumn.source
-                        }
-                    }
-                }
-
-                PlasmaComponents.Label {
-                    id: itemText
-                    text: display
-                    visible: !hideLabel
-                    font.pointSize: 14
-                    color: mediaItemDelegateItem.GridView.isCurrentItem ? theme.viewHoverColor : "white"
-                    elide: mediaItemDelegateItem.GridView.isCurrentItem ? Text.ElideNone : Text.ElideMiddle
-                    width: parent.width
-                    wrapMode: mediaItemDelegateItem.GridView.isCurrentItem ? Text.Wrap : Text.NoWrap
-
-                    horizontalAlignment: Text.AlignHCenter
-                }
-            }
-
-            MouseArea {
-                id: mediaItemDelegateItemMouseArea
-                hoverEnabled: true
-                anchors.fill: parent
-                onEntered: mediaItemDelegateItem.GridView.view.currentIndex = index
-                onClicked: {
-                    if (isExpandable) {
-                        backend.expand(index);
-                    } else {
-                        playlistModel.currentIndex = -1;
-                        mediaItemDelegateItem.playRequested(index, mediaUrl, mediaType)
-                    }
-                }
-                onPressAndHold: {
-                    if( mediaType == "audio" || mediaType == "video") {
-                        popupMenuRequested(index, mediaUrl, mediaType, display);
-                    }
-                }
-            }
-
-            Text {
-                id: workaroundForDecorationUpdate
-                text: decoration ? decoration.toString() : ""
-                visible: false
-
-                onTextChanged: iconImageLoader.checkAndLoad()
-            }
-
-            PlasmaComponents.ToolButton {
-                id: addToPlaylistButton
-                iconSource: "list-add"
-                anchors { right: parent.right; top: parent.top }
-                visible: !isExpandable && mediaType != "image" &&  mediaItemDelegateItem.GridView.isCurrentItem
-                onClicked: {
-                    playlistModel.addToPlaylist (mediaUrl, display);
-                }
+        }
+        onPressAndHold: {
+            if( mediaType == "audio" || mediaType == "video") {
+                popupMenuRequested(index, mediaUrl, mediaType, display);
             }
         }
     }
