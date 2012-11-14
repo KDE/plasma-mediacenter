@@ -63,12 +63,12 @@ FocusScope {
             cellWidth: width / 5
             cellHeight: cellWidth
             delegate: MediaItemDelegate {
-                backend: currentBrowsingBackend
+                backend: mediaBrowser.currentBrowsingBackend
                 onPlayRequested: mediaBrowser.playRequested(index, url, currentMediaType)
                 onPopupMenuRequested: mediaBrowser.popupMenuRequested(index,mediaUrl,mediaType, display)
             }
             flow: GridView.TopToBottom
-            model: mediaBrowser.currentBrowsingBackendModel
+            model: mediaBrowser.currentBrowsingBackend.backendModel
 
             Text {
                 visible: false

@@ -29,7 +29,6 @@ Item {
     anchors { fill: parent; margins: 20 }
     clip: true
 
-    property QtObject backend
     signal clicked(int index)
     signal pressAndHold(int index, string url, string currentMediaType)
 
