@@ -3,10 +3,12 @@ Type=Service
 Icon=image-x-generic
 Name=All pictures
 Name[cs]=Všechny obrázky
+Name[et]=Kõik pildid
 Name[nl]=Alle afbeeldingen
 Name[pt]=Todas as imagens
 Name[pt_BR]=Todas as imagens
 Name[sk]=Všetky obrázky
+Name[sv]=Alla bilder
 Name[uk]=Всі зображення
 Name[x-test]=xxAll picturesxx
 

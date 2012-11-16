@@ -3,10 +3,12 @@ Type=Service
 Icon=tools-rip-video-cd
 Name=All videos
 Name[cs]=Všechna videa
+Name[et]=Kõik videod
 Name[nl]=Alle video's
 Name[pt]=Todos os vídeos
 Name[pt_BR]=Todos os vídeos
 Name[sk]=Všetky videá
+Name[sv]=Alla videor
 Name[uk]=Всі відео
 Name[x-test]=xxAll videosxx
 
