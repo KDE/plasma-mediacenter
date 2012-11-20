@@ -18,6 +18,7 @@
  ***************************************************************************/
 
 import QtQuick 1.1
+import org.kde.qtextracomponents 0.1 as QtExtraComponents
 import org.kde.plasma.components 0.1 as PlasmaComponents
 
 Item {
@@ -87,6 +88,9 @@ Item {
                     artistListView.visible = false
                     albumListView.visible = false
                     musicListView.visible = true
+                    // Hide cover
+                    cover.source = null
+                    cover.visible = false;
                 }
             }
         }
@@ -144,6 +148,9 @@ Item {
                         artistListView.visible = false
                         albumListView.visible = false
                         musicListView.visible = true
+                        // Hide cover
+                        cover.source = null
+                        cover.visible = false;
                     }
                 }
 
@@ -271,25 +278,69 @@ Item {
                 onTriggered: backend.searchMusic(parent.text)
             }
         }
-        ListView {
-            id: listViewAllSongs
-            width: parent.width; height: parent.height - 30
-            model: backend.musicModel
-            delegate: MusicDelegate { width: parent ? parent.width - musicScrollBar.width : 0; height: 64 }
-            spacing: 5
-            highlight: PlasmaComponents.Highlight { }
-            highlightFollowsCurrentItem: true
-            clip: true
 
-            PlasmaComponents.BusyIndicator {
-                anchors.centerIn: parent
-                running: parent.count == 0
-                visible: running
+        // Album cover
+        Item {
+            id: cover
+            width: parent.width / 3
+            height: delegateItemIcon.height * ( 1 + 0.5 )
+            property variant source
+            visible: false;
+            clip: true
+            anchors {
+                top: parent.top
+                topMargin: (parent.height - delegateItemIcon.height) / 3
             }
 
-            PlasmaComponents.ScrollBar {
-                id: musicScrollBar
-                flickableItem: listViewAllSongs
+            QtExtraComponents.QIconItem {
+                id: delegateItemIcon
+                width: 280
+                height: 280
+                anchors {
+                    horizontalCenter: parent.horizontalCenter
+                    top: parent.top
+                }
+                icon: QIcon("tools-media-optical-copy")
+            }
+            // TODO Replace icon with image
+            // Add reflectiong cover?
+            /*Image {
+                id: coverImage
+                width: 280
+                anchors.centerIn: parent
+                fillMode: Image.PreserveAspectCrop
+                sourceSize.width: width
+                sourceSize.height: 0
+                asynchronous: true
+            }*/
+        }
+
+        Item {
+            width: cover.visible ? parent.width - cover.width : parent.width
+            height: parent.height - 30
+            anchors.right: parent.right
+            clip: true
+
+            ListView {
+                id: listViewAllSongs
+                anchors.fill: parent
+                model: backend.musicModel
+                delegate: MusicDelegate { width: parent ? parent.width - musicScrollBar.width : 0; height: 64 }
+                spacing: 5
+                highlight: PlasmaComponents.Highlight { }
+                highlightFollowsCurrentItem: true
+                clip: true
+
+                PlasmaComponents.BusyIndicator {
+                    anchors.centerIn: parent
+                    running: parent.count == 0
+                    visible: running
+                }
+
+                PlasmaComponents.ScrollBar {
+                    id: musicScrollBar
+                    flickableItem: listViewAllSongs
+                }
             }
         }
     }
