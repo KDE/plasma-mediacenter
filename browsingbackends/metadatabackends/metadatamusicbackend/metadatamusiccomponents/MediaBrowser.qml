@@ -49,6 +49,7 @@ Item {
                 onClicked: {
                     rootRow.backend.artistFilter = ""
                     artistListView.visible = true
+                    artistListView.state = ''
                     albumListView.visible = false
                     musicListView.visible = false
                 }
@@ -68,6 +69,7 @@ Item {
                     rootRow.backend.artistFilter = ""
                     artistListView.visible = false
                     albumListView.visible = true
+                    albumListView.state = ''
                     musicListView.visible = false
                 }
             }
@@ -110,6 +112,7 @@ Item {
         height: parent.height - header.height - 2
         anchors.top: header.bottom
         PlasmaComponents.TextField {
+            id: artistSearchBar
             width: parent.width
             height: 30
             clearButtonShown: true
@@ -180,15 +183,26 @@ Item {
                 orientation: Qt.Horizontal
             }
         }
+        states: [
+            State {
+                name: "minimized"
+                PropertyChanges { target: artistListView; height: 100; anchors.top: undefined; anchors.bottom: rootRow.bottom;}
+                PropertyChanges { target: artistListViewGrid;  height: 100; cellWidth: 100; cellHeight: 100;}
+                PropertyChanges { target: artistSearchBar; visible: false;}
+                PropertyChanges { target: artistScrollBar; visible: false;}
+                //PropertyChanges { target:albumMediaItem; state: "minimized";}
+            }
+        ]
     }
 
     Item {
         id: albumListView
         visible: false
         width: parent.width; 
-        height: parent.height - header.height - 2
+        height: parent.height - header.height - 2 - 100
         anchors.top: header.bottom
         PlasmaComponents.TextField {
+            id: albumSearchBar
             width: parent.width
             height: 30
             clearButtonShown: true
@@ -201,6 +215,7 @@ Item {
             }
         }
         GridView {
+            id: albumListViewGrid
             anchors.bottom: parent.bottom
             width: parent.width;
             height: parent.height - 30
@@ -224,10 +239,11 @@ Item {
                     onClicked: {
                         console.log("album clicked " + resourceId)
                         rootRow.backend.albumFilter = resourceId
-                        albumListView.visible = false
+                        //albumListView.visible = false
                         musicListView.visible = true
                         cover.source = decoration
                         cover.visible = true;
+                        albumListView.state = 'minimized'
                     }
                 }
 
@@ -257,13 +273,23 @@ Item {
                 orientation: Qt.Horizontal
             }
         }
+        states: [
+            State {
+                name: "minimized"
+                PropertyChanges { target: albumListView; height: 100; anchors.top: undefined; anchors.bottom: rootRow.bottom;}
+                PropertyChanges { target: albumListViewGrid;  height: 100; cellWidth: 100; cellHeight: 100;}
+                PropertyChanges { target: albumSearchBar; visible: false;}
+                PropertyChanges { target: albumScrollBar; visible: false;}
+                //PropertyChanges { target:albumMediaItem; state: "minimized";}
+            }
+        ]
     }
 
     Item {
         id: musicListView
         visible: false
         width: parent.width; 
-        height: parent.height - header.height - 2
+        height: parent.height - header.height - 2 - 100
         anchors.top: header.bottom
         PlasmaComponents.TextField {
             visible: backend.albumFilter == "" && backend.artistFilter == ""
@@ -292,7 +318,15 @@ Item {
                 topMargin: (parent.height - delegateItemIcon.height) / 3
             }
 
-            QtExtraComponents.QIconItem {
+            ReflectionImage {
+                id: delegateItemIcon
+                anchors {
+                    horizontalCenter: parent.horizontalCenter
+                    top: parent.top
+                }
+                source: "tools-media-optical-copy"
+            }
+            /*QtExtraComponents.QIconItem {
                 id: delegateItemIcon
                 width: 280
                 height: 280
@@ -301,7 +335,7 @@ Item {
                     top: parent.top
                 }
                 icon: QIcon("tools-media-optical-copy")
-            }
+            }*/
             // TODO Replace icon with image
             // Add reflectiong cover?
             /*Image {

@@ -195,4 +195,15 @@ Item {
             }
         }
     }
+    states: 
+    [
+        State {
+            name: "minimized"
+            when: mediaItem.height <= 100
+            PropertyChanges { target: mediaItem; anchors.margins: 0;}
+            PropertyChanges { target: itemText; visible: false;}
+            PropertyChanges { target: addToPlaylistButton; visible: false;}
+            PropertyChanges { target: delegateItemImageComponent.item; width: 80; height: 80;}
+        }
+    ]
 }
