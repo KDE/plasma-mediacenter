@@ -249,7 +249,7 @@ Rectangle {
                 mediaBrowser.visible = false
                 mediaPlayer.visible = true
                 mediaPlayer.focus = true
-                mediaImageViewer.visible = (currentMediaType == "audio")
+                mediaImageViewer.visible = (currentMediaType == "audio" && mediaImageViewer.source != "")
             }
         }
 
