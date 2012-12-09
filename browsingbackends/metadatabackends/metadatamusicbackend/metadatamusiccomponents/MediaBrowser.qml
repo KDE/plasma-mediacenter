@@ -107,8 +107,7 @@ Item {
     Item {
         id: artistListView
         width: parent.width; 
-        height: parent.height - header.height - 2
-        anchors.top: header.bottom
+        anchors { top: header.bottom; bottom: parent.bottom }
         PlasmaComponents.TextField {
             width: parent.width
             height: 30
@@ -263,9 +262,9 @@ Item {
         id: musicListView
         visible: false
         width: parent.width; 
-        height: parent.height - header.height - 2
-        anchors.top: header.bottom
+        anchors { top: header.bottom; bottom: parent.bottom }
         PlasmaComponents.TextField {
+            id: searchField
             visible: backend.albumFilter == "" && backend.artistFilter == ""
             width: parent.width
             height: 30
@@ -283,7 +282,7 @@ Item {
         Item {
             id: cover
             width: parent.width / 3
-            height: delegateItemIcon.height * ( 1 + 0.5 )
+            height: delegateItemIcon.height * 1.5
             property variant source
             visible: false;
             clip: true
@@ -317,8 +316,7 @@ Item {
 
         Item {
             width: cover.visible ? parent.width - cover.width : parent.width
-            height: parent.height - 30
-            anchors.right: parent.right
+            anchors { top: searchField.bottom; right: parent.right; bottom: parent.bottom }
             clip: true
 
             ListView {
