@@ -286,22 +286,6 @@ Rectangle {
         transitions: [ Transition { AnchorAnimation { duration: 200 } } ]
      }
 
-    MediaCenterComponents.AboutPMC {
-        id: aboutPmc
-        listWidth: parent.width*0.8; listHeight: parent.height*0.8
-        anchors.centerIn: parent
-    }
-
-    PlasmaComponents.ToolButton {
-        anchors.right: parent.right; anchors.bottom: parent.bottom
-        width: 64
-        height: 64
-        visible: mediaWelcome.visible
-
-        iconSource: "plasma"
-        onClicked: aboutPmc.open()
-    }
-
     PlasmaComponents.ToolButton {
         anchors.right: parent.right; anchors.top: parent.top;
         width: 64
