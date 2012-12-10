@@ -62,6 +62,6 @@ Rectangle {
         spacing: 3
         clip: true
 
-        delegate: PlaylistDelegate { width: parent.width; height: 32 }
+        delegate: PlaylistDelegate { width: playlistList.width; height: 32 }
     }
 }

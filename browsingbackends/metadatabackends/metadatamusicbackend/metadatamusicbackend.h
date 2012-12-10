@@ -26,6 +26,7 @@
 #include "../abstractmetadatabackend.h"
 #include "categoriesmodel.h"
 
+class PlaylistModel;
 class CategoriesModel;
 class NepomukMusicModel;
 class PmcMetadataModel;
@@ -60,6 +61,8 @@ public:
     Q_INVOKABLE void searchAlbum(const QString &album);
     Q_INVOKABLE void searchMusic(const QString &music);
 
+    Q_INVOKABLE void addAllSongsToPlaylist( QObject* playlistModel );
+
 Q_SIGNALS:
     void artistFilterChanged();
     void albumFilterChanged();
@@ -69,10 +72,15 @@ protected:
     void updateModelAccordingToFilters();
     virtual void initImpl();
 
+private slots:
+    void musicModelDataChanged ( const QModelIndex& startIndex, const QModelIndex& endIndex );
+    void musicModelReset();
+
 private:
     PmcMetadataModel* m_artistsModel;
     PmcMetadataModel* m_albumsModel;
     PmcMetadataModel* m_musicModel;
+    PlaylistModel* m_playlistModel;
 
     QString m_artistFilter;
     QString m_albumFilter;

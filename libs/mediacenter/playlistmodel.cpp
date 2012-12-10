@@ -19,10 +19,11 @@
 
 #include "playlistmodel.h"
 #include <KDebug>
-#include <QtCore/QStringList>
 #include <KDE/KStandardDirs>
 #include <KDE/KCmdLineArgs>
 #include <QtCore/QDir>
+#include <QtCore/QStringList>
+#include <QtCore/QDateTime>
 
 PlaylistModel::PlaylistModel(QObject* parent): QAbstractListModel(parent)
 {
@@ -44,6 +45,8 @@ PlaylistModel::PlaylistModel(QObject* parent): QAbstractListModel(parent)
     }
     m_currentIndex = -1;
     setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
+
+    qsrand(QDateTime::currentMSecsSinceEpoch());
 }
 
 PlaylistModel::~PlaylistModel()
@@ -78,14 +81,15 @@ int PlaylistModel::rowCount(const QModelIndex& parent) const
 
 void PlaylistModel::addToPlaylist(const QString& url, const QString& name)
 {
-    beginResetModel();
+    const int n = rowCount();
+    beginInsertRows(QModelIndex(), n, n);
 
     PlaylistItem item;
     item.setMediaName(name);
     item.setMediaUrl(url);
     m_musicList.append(item);
 
-    endResetModel();
+    endInsertRows();
 }
 
 void PlaylistModel::removeFromPlaylist(const int& index)
@@ -98,8 +102,11 @@ void PlaylistModel::removeFromPlaylist(const int& index)
     endResetModel();
 }
 
-QString PlaylistModel::getNextUrl()
+QString PlaylistModel::getNextUrl( bool random )
 {
+    if (random) {
+        return m_musicList.at(qrand() % m_musicList.size()).mediaUrl();
+    }
     if (m_currentIndex == m_musicList.count() - 1) {
         setCurrentIndex(0);
     } else {
@@ -108,8 +115,11 @@ QString PlaylistModel::getNextUrl()
     return m_musicList.at(m_currentIndex).mediaUrl();
 }
 
-QString PlaylistModel::getPreviousUrl()
+QString PlaylistModel::getPreviousUrl( bool random )
 {
+    if (random) {
+        return m_musicList.at(qrand() % m_musicList.size()).mediaUrl();
+    }
     if (m_currentIndex == 0) {
         setCurrentIndex(m_musicList.count() - 1);
     } else {

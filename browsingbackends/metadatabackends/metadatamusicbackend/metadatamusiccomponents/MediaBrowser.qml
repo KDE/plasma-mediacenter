@@ -263,18 +263,28 @@ Item {
         visible: false
         width: parent.width; 
         anchors { top: header.bottom; bottom: parent.bottom }
-        PlasmaComponents.TextField {
+
+        Row {
             id: searchField
-            visible: backend.albumFilter == "" && backend.artistFilter == ""
             width: parent.width
             height: 30
-            clearButtonShown: true
-            placeholderText: "Search Music"
-            onTextChanged: searchMusicTimer.restart()
-            Timer {
-                id: searchMusicTimer
-                interval: 2000
-                onTriggered: backend.searchMusic(parent.text)
+            PlasmaComponents.TextField {
+                visible: backend.albumFilter == "" && backend.artistFilter == ""
+                width: parent.width - playAllButton.width; height: parent.height
+                clearButtonShown: true
+                placeholderText: "Search Music"
+                onTextChanged: searchMusicTimer.restart()
+                Timer {
+                    id: searchMusicTimer
+                    interval: 2000
+                    onTriggered: backend.searchMusic(parent.text)
+                }
+            }
+            PlasmaComponents.Button {
+                id: playAllButton
+                text: "Play All"
+                height: parent.height
+                onClicked: backend.addAllSongsToPlaylist(playlistModel);
             }
         }
 

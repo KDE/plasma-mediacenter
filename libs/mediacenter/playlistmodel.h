@@ -20,21 +20,22 @@
 #ifndef PLAYLISTMODEL_H
 #define PLAYLISTMODEL_H
 
-#include <QAbstractItemModel>
-#include <QString>
-#include <QList>
-#include <QFile>
+#include <QtCore/QAbstractItemModel>
+#include <QtCore/QString>
+#include <QtCore/QList>
+#include <QtCore/QFile>
+
 #include "mediacenter_export.h"
 #include "mediacenter.h"
 
 class PlaylistItem
 {
-
 public:
     void setMediaName(const QString name);
     void setMediaUrl(const QString url);
     QString mediaName() const;
     QString mediaUrl() const;
+
     QString intoString();
     static PlaylistItem fromString(QString text);
 
@@ -54,8 +55,8 @@ public:
     virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
     virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
     Q_INVOKABLE  void addToPlaylist(const QString &url, const QString &name);
-    Q_INVOKABLE QString getNextUrl();
-    Q_INVOKABLE QString getPreviousUrl();
+    Q_INVOKABLE QString getNextUrl(bool random = false);
+    Q_INVOKABLE QString getPreviousUrl(bool random = false);
     Q_INVOKABLE void clearPlaylist();
     Q_INVOKABLE void removeFromPlaylist(const int &index);
     int currentIndex();
