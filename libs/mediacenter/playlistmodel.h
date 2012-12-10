@@ -48,6 +48,7 @@ class MEDIACENTER_EXPORT PlaylistModel : public QAbstractListModel
 {
     Q_OBJECT
     Q_PROPERTY(int currentIndex READ currentIndex WRITE setCurrentIndex NOTIFY currentIndexChanged)
+    Q_PROPERTY(bool random READ random WRITE setRandom NOTIFY randomChanged)
 
 public:
     explicit PlaylistModel(QObject* parent = 0);
@@ -55,21 +56,25 @@ public:
     virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
     virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
     Q_INVOKABLE  void addToPlaylist(const QString &url, const QString &name);
-    Q_INVOKABLE QString getNextUrl(bool random = false);
-    Q_INVOKABLE QString getPreviousUrl(bool random = false);
+    Q_INVOKABLE QString getNextUrl();
+    Q_INVOKABLE QString getPreviousUrl();
     Q_INVOKABLE void clearPlaylist();
     Q_INVOKABLE void removeFromPlaylist(const int &index);
-    int currentIndex();
+    int currentIndex() const;
     void setCurrentIndex(int index);
+    bool random() const;
+    void setRandom(bool random);
 
 signals:
     void currentIndexChanged();
+    void randomChanged();
 
 private:
     QList<PlaylistItem> m_musicList;
     int m_currentIndex;
     QFile m_file;
     QString m_filePath;
+    bool m_random;
 };
 
 #endif // PLAYLISTMODEL_H

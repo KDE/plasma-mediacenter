@@ -34,7 +34,7 @@ Rectangle {
 
         Item {
             height: parent.height
-            width: parent.width - clearPlaylist.width
+            width: parent.width - clearPlaylist.width - randomButton.width
             Text {
                 id: mediaCount
                 anchors.centerIn: parent
@@ -42,6 +42,16 @@ Rectangle {
                 font.pixelSize: 18
                 color: "white"
             }
+        }
+
+        PlasmaComponents.ToolButton {
+            id: randomButton
+            width: height
+            height: parent.height
+            iconSource: "media-playlist-shuffle"
+            checkable: true
+
+            Component.onCompleted: playlistModel.random = function() { return randomButton.checked }
         }
 
         PlasmaComponents.ToolButton {

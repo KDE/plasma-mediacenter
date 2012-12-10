@@ -25,7 +25,9 @@
 #include <QtCore/QStringList>
 #include <QtCore/QDateTime>
 
-PlaylistModel::PlaylistModel(QObject* parent): QAbstractListModel(parent)
+PlaylistModel::PlaylistModel(QObject* parent):
+    QAbstractListModel(parent),
+    m_random(false)
 {
     KStandardDirs dir;
     QString dirPath = dir.saveLocation("data") + KCmdLineArgs::appName();
@@ -102,12 +104,11 @@ void PlaylistModel::removeFromPlaylist(const int& index)
     endResetModel();
 }
 
-QString PlaylistModel::getNextUrl( bool random )
+QString PlaylistModel::getNextUrl()
 {
-    if (random) {
-        return m_musicList.at(qrand() % m_musicList.size()).mediaUrl();
-    }
-    if (m_currentIndex == m_musicList.count() - 1) {
+    if (random()) {
+        setCurrentIndex(qrand() % m_musicList.size());
+    } else if (m_currentIndex == m_musicList.count() - 1) {
         setCurrentIndex(0);
     } else {
         setCurrentIndex(m_currentIndex + 1);
@@ -115,12 +116,11 @@ QString PlaylistModel::getNextUrl( bool random )
     return m_musicList.at(m_currentIndex).mediaUrl();
 }
 
-QString PlaylistModel::getPreviousUrl( bool random )
+QString PlaylistModel::getPreviousUrl()
 {
-    if (random) {
-        return m_musicList.at(qrand() % m_musicList.size()).mediaUrl();
-    }
-    if (m_currentIndex == 0) {
+    if (random()) {
+        setCurrentIndex(qrand() % m_musicList.size());
+    } else if (m_currentIndex == 0) {
         setCurrentIndex(m_musicList.count() - 1);
     } else {
         setCurrentIndex(m_currentIndex - 1);
@@ -138,7 +138,7 @@ void PlaylistModel::clearPlaylist()
     endResetModel();
 }
 
-int PlaylistModel::currentIndex()
+int PlaylistModel::currentIndex() const
 {
     return m_currentIndex;
 }
@@ -181,4 +181,14 @@ void PlaylistItem::setMediaName(const QString name)
 void PlaylistItem::setMediaUrl(const QString url)
 {
     m_mediaUrl =  url;
+}
+
+bool PlaylistModel::random() const
+{
+    return m_random;
+}
+
+void PlaylistModel::setRandom ( bool random )
+{
+    m_random = random;
 }
