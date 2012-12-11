@@ -36,6 +36,7 @@ public:
     Q_INVOKABLE QObject *placesModel();
     Q_INVOKABLE void browseToPlace(int row);
     Q_INVOKABLE void browseOneLevelUp();
+    virtual bool okToLoad() const;
 
 protected:
     virtual void initImpl();

@@ -43,41 +43,40 @@ BackendsModel::BackendsModel(QDeclarativeEngine *engine, QObject* parent)
     roles[ModelObjectRole] = "modelObject";
     roles[BackendCategoryRole] = "backendCategory";
     setRoleNames(roles);
+
+    loadBrowsingBackends();
 }
 
-MediaCenter::AbstractBrowsingBackend *BackendsModel::loadBrowsingBackend(const KPluginInfo &info) const
+void BackendsModel::loadBrowsingBackends()
 {
-    KService::Ptr service = info.service();
-    if (!service) {
-        return 0;
-    }
+    if (!m_backends.isEmpty())
+        return;
 
-    const QString key = service->library();
-    MediaCenter::AbstractBrowsingBackend *backend = m_backends.value(key);
-    if (backend) {
-        return backend;
-    }
+    Q_FOREACH (KPluginInfo info, m_backendInfo) {
+        KService::Ptr service = info.service();
+        if (!service) {
+            kDebug() << "Could not get the service for the backend " << info.name();
+            continue;
+        }
 
-    // no? well then, let's load it.
-    backend = service->createInstance<MediaCenter::AbstractBrowsingBackend>(0, QVariantList() << service->storageId());
-    const_cast<BackendsModel *>(this)->m_backends.insert(key, backend);
-
-    if (backend) {
-        backend->setName(info.pluginName());
-
-        if (backend->okToLoad()) {
+        const QString key = service->library();
+        MediaCenter::AbstractBrowsingBackend *backend = service->createInstance<MediaCenter::AbstractBrowsingBackend>(0, QVariantList() << service->storageId());
+        if (backend) {
+            if (!backend->okToLoad()) {
+                kDebug() << "Backend " << info.name() << " doesn't want to be loaded";
+                continue;
+            }
+            backend->setName(info.pluginName());
             backend->setParent(const_cast<BackendsModel *>(this));
             if (m_declarativeEngine) {
                 backend->setDeclarativeEngine(m_declarativeEngine.data());
             }
+            const_cast<BackendsModel *>(this)->m_backends.insert(key, backend);
+            m_loadedBackendsInfo.append(info);
         } else {
-            kDebug() << "Backend " << info.name() << " doesn't want to be loaded";
+            kDebug() << "Could not create a instance for the backend " << info.name();
         }
-    } else {
-        kDebug() << "OUCH! Something's wrong with the backend";
     }
-
-    return backend;
 }
 
 QVariant BackendsModel::data (const QModelIndex& index, int role) const
@@ -86,7 +85,7 @@ QVariant BackendsModel::data (const QModelIndex& index, int role) const
         return QVariant();
     }
 
-    const KPluginInfo &info = m_backendInfo.at(index.row());
+    const KPluginInfo &info = m_loadedBackendsInfo.at(index.row());
     switch (role) {
         case Qt::DisplayRole:
             return info.name();
@@ -95,7 +94,7 @@ QVariant BackendsModel::data (const QModelIndex& index, int role) const
         case BackendCategoryRole:
             return info.category();
         case ModelObjectRole:
-            QObject *backend = loadBrowsingBackend(info);
+            QObject *backend = m_backends.value(info.service()->library());
             QVariant ptr;
             ptr.setValue(backend);
             return ptr;
@@ -106,7 +105,7 @@ QVariant BackendsModel::data (const QModelIndex& index, int role) const
 
 int BackendsModel::rowCount(const QModelIndex &) const
 {
-    return m_backendInfo.count();
+    return m_loadedBackendsInfo.count();
 }
 
 #include "backendsmodel.moc"

@@ -68,4 +68,10 @@ void LocalFilesAbstractBackend::browseToPlace(int row)
     filesModel->browseToUrl(url);
 }
 
+bool LocalFilesAbstractBackend::okToLoad() const
+{
+    KConfigGroup cg(KSharedConfig::openConfig("plasmamediacenterrc"), "Backends");
+    return !cg.readEntry("hideLocalBrowsing", false);
+}
+
 #include "localfilesabstractbackend.h"

@@ -47,11 +47,12 @@ public:
     virtual int rowCount (const QModelIndex& parent = QModelIndex()) const;
 
 private:
-    MediaCenter::AbstractBrowsingBackend *loadBrowsingBackend(const KPluginInfo &info) const;
+    void loadBrowsingBackends();
 
     QWeakPointer<QDeclarativeEngine> m_declarativeEngine;
     QHash<QString, MediaCenter::AbstractBrowsingBackend*> m_backends;
     KPluginInfo::List m_backendInfo;
+    KPluginInfo::List m_loadedBackendsInfo;
 };
 
 #endif // BACKENDSMODEL_H
