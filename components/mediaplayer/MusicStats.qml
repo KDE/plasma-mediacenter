@@ -30,6 +30,7 @@ Row {
         Image {
             anchors { centerIn: parent; margins: 10 }
             source: "image://pmccoverart/" + url
+            smooth: true
             QtExtraComponents.QIconItem {
                 icon: metaData ? "media-optical-audio" : ""
                 anchors.centerIn: parent
