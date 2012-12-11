@@ -72,6 +72,7 @@ FocusScope {
         visible: video.hasAudio && !video.hasVideo && showMusicStats
 
         metaData: video.metaData
+        path: video.source
     }
 
     onPlayingChanged: if (playing) video.play();

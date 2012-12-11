@@ -22,13 +22,21 @@ import org.kde.qtextracomponents 0.1 as QtExtraComponents
 
 Row {
     property variant metaData
+    property url path
 
     Item {
         id: musicStatsLeftPane
         height: parent.height; width: parent.width*0.4
-        QtExtraComponents.QIconItem {
-            icon: metaData ? "media-optical-audio" : ""
-            anchors { fill: parent; margins: 10 }
+        Image {
+            anchors { centerIn: parent; margins: 10 }
+            source: "image://pmccoverart/" + url
+            QtExtraComponents.QIconItem {
+                icon: metaData ? "media-optical-audio" : ""
+                anchors.centerIn: parent
+                width: musicStatsLeftPane.width * 0.9
+                height: musicStatsLeftPane.height * 0.9
+                visible: parent.status != Image.Ready
+            }
         }
     }
     Item {

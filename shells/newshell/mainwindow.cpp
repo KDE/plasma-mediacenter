@@ -24,6 +24,7 @@
 #include <libs/mediacenter/filteredbackendsmodel.h>
 #include <libs/mediacenter/subtitleprovider.h>
 #include <libs/mediacenter/pmcimageprovider.h>
+#include <libs/mediacenter/pmccoverartprovider.h>
 
 #include <Plasma/Package>
 #include <KDE/KCmdLineArgs>
@@ -84,6 +85,7 @@ MainWindow::MainWindow(QWidget *parent) : KMainWindow(parent)
     view->rootContext()->setContextProperty("mainwindow", this);
     view->rootContext()->setContextProperty("startedFullScreen", isFullScreen());
     view->engine()->addImageProvider(PmcImageProvider::identificationString, new PmcImageProvider());
+    view->engine()->addImageProvider(PmcCoverArtProvider::identificationString, new PmcCoverArtProvider());
 
     m_structure = Plasma::PackageStructure::load("Plasma/Generic");
     Plasma::Package *package = new Plasma::Package(QString(), "org.kde.plasma.mediacenter", m_structure);

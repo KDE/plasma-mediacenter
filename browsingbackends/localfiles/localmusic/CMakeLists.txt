@@ -1,3 +1,6 @@
+find_package(Taglib)
+include_directories (${TAGLIB_INCLUDES})
+
 set(localmusicbackend_SRCS
   localmusicmodel.cpp
   ../localfilesabstractbackend.cpp

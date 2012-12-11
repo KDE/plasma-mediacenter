@@ -1,5 +1,6 @@
 find_package(NepomukCore REQUIRED)
 find_package(Taglib REQUIRED)
+include_directories (${TAGLIB_INCLUDES})
 
 set (plasmamediacenter_SRCS
     filteredbackendsmodel.cpp
@@ -8,6 +9,7 @@ set (plasmamediacenter_SRCS
     backendsmodel.cpp
     metadataupdater.cpp
     playlistmodel.cpp
+    pmccoverartprovider.cpp
     pmcmetadatamodel.cpp
     pmcimagecache.cpp
     pmcimageprovider.cpp
