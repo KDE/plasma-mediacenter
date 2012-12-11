@@ -155,7 +155,7 @@ Item {
 
                 PlasmaComponents.Label {
                     id: itemText
-                    text: display
+                    text: display ? display : ""
                     visible: !hideLabel
                     font.pointSize: 14
                     color: mediaItemDelegateItem.GridView.isCurrentItem ? theme.viewHoverColor : "white"
