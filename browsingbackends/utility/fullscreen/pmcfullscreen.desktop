@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Service
+Icon=view-fullscreen
+Name=Fullscreen
+Comment=A plugin for the mediacenter to allow toggling fullscreen
+X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
+
+X-KDE-PluginInfo-Author=Shantanu Tushar
+X-KDE-PluginInfo-Email=shantanu@kde.org
+X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-Category=settings
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
+X-KDE-Library=pmc_fullscreen
