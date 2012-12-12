@@ -72,6 +72,11 @@ Rectangle {
         spacing: 3
         clip: true
 
+        PlasmaComponents.ScrollBar {
+           orientation: Qt.Vertical
+           anchors {right: playlistList.right; top: playlistItem.top}
+           flickableItem: playlistList
+        }
         delegate: PlaylistDelegate { width: playlistList.width; height: 32 }
     }
 }
