@@ -29,69 +29,34 @@ Item {
     //clip: true
 
      // Navigationbar
-    Row {
+    PlasmaComponents.TabBar {
         id: header
-        height: 60
-        width: 700
-        spacing: 10
+        width: parent.width
         anchors.top: parent.top
 
-        Item {
-            height: 50
-            width: 200
-            Text {
-                anchors.centerIn: parent
-                text: "Artist"
-                color: artistListView.visible ? theme.viewHoverColor : "white"
-            }
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    rootRow.backend.artistFilter = ""
-                    artistListView.visible = true
-                    albumListView.visible = false
-                    musicListView.visible = false
-                }
+        PlasmaComponents.TabButton {
+            text: "Artist"
+            onClicked: {
+                rootRow.backend.artistFilter = ""
+                artistListView.currentTab = albumListView
             }
         }
-        Item {
-            height: 50
-            width: 200
-            Text {
-                anchors.centerIn: parent
-                text: "Albums"
-                color: albumListView.visible ? theme.viewHoverColor : "white"
-            }
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    rootRow.backend.artistFilter = ""
-                    artistListView.visible = false
-                    albumListView.visible = true
-                    musicListView.visible = false
-                }
+        PlasmaComponents.TabButton {
+            text: "Albums"
+            onClicked: {
+                rootRow.backend.artistFilter = ""
+                mediaBrowser.currentTab = albumListView
             }
         }
-        Item {
-            height: 50
-            width: 200
-            Text {
-                anchors.centerIn: parent
-                text: "Songs"
-                color: musicListView.visible ? theme.viewHoverColor : "white"
-            }
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    rootRow.backend.artistFilter = ""
-                    rootRow.backend.albumFilter = ""
-                    artistListView.visible = false
-                    albumListView.visible = false
-                    musicListView.visible = true
-                    // Hide cover
-                    cover.source = null
-                    cover.visible = false;
-                }
+        PlasmaComponents.TabButton {
+           text: "Songs"
+           onClicked: {
+                rootRow.backend.artistFilter = ""
+                rootRow.backend.albumFilter = ""
+                mediaBrowser.currentTab = musicListView
+                // Hide cover
+                cover.source = null
+                cover.visible = false;
             }
         }
     }
@@ -104,250 +69,242 @@ Item {
         color: "white"
     }*/
     
-    Item {
-        id: artistListView
-        width: parent.width; 
-        anchors { top: header.bottom; bottom: parent.bottom }
-        PlasmaComponents.TextField {
-            width: parent.width
-            height: 30
-            clearButtonShown: true
-            placeholderText: "Search Artists"
-            onTextChanged: searchArtistTimer.restart()
-            Timer {
-                id: searchArtistTimer
-                interval: 2000
-                onTriggered: backend.searchArtist(parent.text)
-            }
-        }
-        GridView {
-            anchors.bottom: parent.bottom
-            width: parent.width;
-            height: parent.height - 30
-            model: backend.artistsModel();
-            cellWidth: width / 5
-            cellHeight: cellWidth
-            preferredHighlightBegin: parent.width*0.1
-            preferredHighlightEnd: parent.width*0.9
-            highlightRangeMode: GridView.ApplyRange
-            flow: GridView.TopToBottom
-            
-            delegate: Item {
-                id: mediaItemDelegateItem
-                width: GridView.view.cellWidth
-                height: GridView.view.cellHeight
-                scale: (GridView.isCurrentItem ? 1.3 : 1)
-                clip: !GridView.isCurrentItem
-                z: GridView.isCurrentItem ? 1 : 0
-                MediaItem {
-                    onClicked: {
-                        console.log("artist icon " + mediaThumbnail)
-                        console.log("artist clicked " + resourceId)
-                        rootRow.backend.artistFilter = resourceId
-                        artistListView.visible = false
-                        albumListView.visible = false
-                        musicListView.visible = true
-                        // Hide cover
-                        cover.source = null
-                        cover.visible = false;
-                    }
-                }
-
-                Behavior on scale {
-                    NumberAnimation {
-                        duration: 500
-                        easing.type: Easing.OutExpo
-                    }
-                }
-
-                Keys.onReturnPressed: {
-                    rootRow.backend.artistFilter = resourceId
-                    artistListView.visible = false
-                    albumListView.visible = true
-                }
-            }
-            /*delegate: CategoriesDelegate { width: parent ? parent.width - artistScrollBar.width : 0; height: 48; categoryName: "artist" }
-            spacing: 5
-            highlight: PlasmaComponents.Highlight { }
-            highlightFollowsCurrentItem: true
-            snapMode: ListView.SnapToItem
-            clip: true*/
-
-            PlasmaComponents.ScrollBar {
-                id: artistScrollBar
-                flickableItem: parent
-                orientation: Qt.Horizontal
-            }
-        }
-    }
-
-    Item {
-        id: albumListView
-        visible: false
-        width: parent.width; 
-        height: parent.height - header.height - 2
-        anchors.top: header.bottom
-        PlasmaComponents.TextField {
-            width: parent.width
-            height: 30
-            clearButtonShown: true
-            placeholderText: "Search Albums"
-            onTextChanged: searchAlbumTimer.restart()
-            Timer {
-                id: searchAlbumTimer
-                interval: 2000
-                onTriggered: backend.searchAlbum(parent.text)
-            }
-        }
-        GridView {
-            anchors.bottom: parent.bottom
-            width: parent.width;
-            height: parent.height - 30
-            model: backend.albumsModel();
-            cellWidth: width / 5
-            cellHeight: cellWidth
-            preferredHighlightBegin: parent.width*0.1
-            preferredHighlightEnd: parent.width*0.9
-            highlightRangeMode: GridView.ApplyRange
-            flow: GridView.TopToBottom
-            
-            delegate: Item {
-                id: mediaItemDelegateItem
-                width: GridView.view.cellWidth
-                height: GridView.view.cellHeight
-                scale: (GridView.isCurrentItem ? 1.3 : 1)
-                clip: !GridView.isCurrentItem
-                z: GridView.isCurrentItem ? 1 : 0
-        
-                MediaItem {
-                    onClicked: {
-                        console.log("album clicked " + resourceId)
-                        rootRow.backend.albumFilter = resourceId
-                        albumListView.visible = false
-                        musicListView.visible = true
-                        cover.source = decoration
-                        cover.visible = true;
-                    }
-                }
-
-                Behavior on scale {
-                    NumberAnimation {
-                        duration: 500
-                        easing.type: Easing.OutExpo
-                    }
-                }
-
-                Keys.onReturnPressed: {
-                    rootRow.backend.albumFilter = resourceId
-                    albumListView.visible = false
-                    musicListView.visible = true
-                }
-            }
-            /*delegate: CategoriesDelegate { width: parent ? parent.width - albumScrollBar.width : 0; height: 48; categoryName: "album" }
-            spacing: 5
-            highlight: PlasmaComponents.Highlight { }
-            highlightFollowsCurrentItem: true
-            snapMode: ListView.SnapToItem
-            clip: true*/
-
-            PlasmaComponents.ScrollBar {
-                id: albumScrollBar
-                flickableItem: parent
-                orientation: Qt.Horizontal
-            }
-        }
-    }
-
-    Item {
-        id: musicListView
-        visible: false
+    PlasmaComponents.TabGroup {
+        id: mediaBrowser
         width: parent.width; 
         anchors { top: header.bottom; bottom: parent.bottom }
 
-        Row {
-            id: searchField
-            width: parent.width
-            height: 30
+        PlasmaComponents.Page {
+            id: artistListView
             PlasmaComponents.TextField {
-                visible: backend.albumFilter == "" && backend.artistFilter == ""
-                width: parent.width - playAllButton.width; height: parent.height
+                width: parent.width
+                height: 30
                 clearButtonShown: true
-                placeholderText: "Search Music"
-                onTextChanged: searchMusicTimer.restart()
+                placeholderText: "Search Artists"
+                onTextChanged: searchArtistTimer.restart()
                 Timer {
-                    id: searchMusicTimer
+                    id: searchArtistTimer
                     interval: 2000
-                    onTriggered: backend.searchMusic(parent.text)
+                    onTriggered: backend.searchArtist(parent.text)
                 }
             }
-            PlasmaComponents.Button {
-                id: playAllButton
-                text: "Play All"
-                height: parent.height
-                onClicked: backend.addAllSongsToPlaylist(playlistModel);
-            }
-        }
+            GridView {
+                anchors.bottom: parent.bottom
+                width: parent.width;
+                height: parent.height - 30
+                model: backend.artistsModel();
+                cellWidth: width / 5
+                cellHeight: cellWidth
+                preferredHighlightBegin: parent.width*0.1
+                preferredHighlightEnd: parent.width*0.9
+                highlightRangeMode: GridView.ApplyRange
+                flow: GridView.TopToBottom
+                
+                delegate: Item {
+                    id: mediaItemDelegateItem
+                    width: GridView.view.cellWidth
+                    height: GridView.view.cellHeight
+                    scale: (GridView.isCurrentItem ? 1.3 : 1)
+                    clip: !GridView.isCurrentItem
+                    z: GridView.isCurrentItem ? 1 : 0
+                    MediaItem {
+                        onClicked: {
+                            console.log("artist icon " + mediaThumbnail)
+                            console.log("artist clicked " + resourceId)
+                            rootRow.backend.artistFilter = resourceId
+                            mediaBrowser.currentTab = musicListView
+                            // Hide cover
+                            cover.source = null
+                            cover.visible = false;
+                        }
+                    }
 
-        // Album cover
-        Item {
-            id: cover
-            width: parent.width / 3
-            height: delegateItemIcon.height * 1.5
-            property variant source
-            visible: false;
-            clip: true
-            anchors {
-                top: parent.top
-                topMargin: (parent.height - delegateItemIcon.height) / 3
-            }
+                    Behavior on scale {
+                        NumberAnimation {
+                            duration: 500
+                            easing.type: Easing.OutExpo
+                        }
+                    }
 
-            QtExtraComponents.QIconItem {
-                id: delegateItemIcon
-                width: 280
-                height: 280
-                anchors {
-                    horizontalCenter: parent.horizontalCenter
-                    top: parent.top
+                    Keys.onReturnPressed: {
+                        rootRow.backend.artistFilter = resourceId
+                        mediaBrowser.currentTab = musicListView
+                    }
                 }
-                icon: QIcon("tools-media-optical-copy")
-            }
-            // TODO Replace icon with image
-            // Add reflectiong cover?
-            /*Image {
-                id: coverImage
-                width: 280
-                anchors.centerIn: parent
-                fillMode: Image.PreserveAspectCrop
-                sourceSize.width: width
-                sourceSize.height: 0
-                asynchronous: true
-            }*/
-        }
-
-        Item {
-            width: cover.visible ? parent.width - cover.width : parent.width
-            anchors { top: searchField.bottom; right: parent.right; bottom: parent.bottom }
-            clip: true
-
-            ListView {
-                id: listViewAllSongs
-                anchors.fill: parent
-                model: backend.musicModel
-                delegate: MusicDelegate { width: parent ? parent.width - musicScrollBar.width : 0; height: 64 }
+                /*delegate: CategoriesDelegate { width: parent ? parent.width - artistScrollBar.width : 0; height: 48; categoryName: "artist" }
                 spacing: 5
                 highlight: PlasmaComponents.Highlight { }
                 highlightFollowsCurrentItem: true
-                clip: true
-
-                PlasmaComponents.BusyIndicator {
-                    anchors.centerIn: parent
-                    running: parent.count == 0
-                    visible: running
-                }
+                snapMode: ListView.SnapToItem
+                clip: true*/
 
                 PlasmaComponents.ScrollBar {
-                    id: musicScrollBar
-                    flickableItem: listViewAllSongs
+                    id: artistScrollBar
+                    flickableItem: parent
+                    orientation: Qt.Horizontal
+                }
+            }
+        }
+
+        PlasmaComponents.Page {
+            id: albumListView
+            PlasmaComponents.TextField {
+                width: parent.width
+                height: 30
+                clearButtonShown: true
+                placeholderText: "Search Albums"
+                onTextChanged: searchAlbumTimer.restart()
+                Timer {
+                    id: searchAlbumTimer
+                    interval: 2000
+                    onTriggered: backend.searchAlbum(parent.text)
+                }
+            }
+            GridView {
+                anchors.bottom: parent.bottom
+                width: parent.width;
+                height: parent.height - 30
+                model: backend.albumsModel();
+                cellWidth: width / 5
+                cellHeight: cellWidth
+                preferredHighlightBegin: parent.width*0.1
+                preferredHighlightEnd: parent.width*0.9
+                highlightRangeMode: GridView.ApplyRange
+                flow: GridView.TopToBottom
+                
+                delegate: Item {
+                    id: mediaItemDelegateItem
+                    width: GridView.view.cellWidth
+                    height: GridView.view.cellHeight
+                    scale: (GridView.isCurrentItem ? 1.3 : 1)
+                    clip: !GridView.isCurrentItem
+                    z: GridView.isCurrentItem ? 1 : 0
+            
+                    MediaItem {
+                        onClicked: {
+                            console.log("album clicked " + resourceId)
+                            rootRow.backend.albumFilter = resourceId
+                            mediaBrowser.currentTab = musicListView
+                            coverImage.source = decoration
+                            cover.visible = true;
+                        }
+                    }
+
+                    Behavior on scale {
+                        NumberAnimation {
+                            duration: 500
+                            easing.type: Easing.OutExpo
+                        }
+                    }
+
+                    Keys.onReturnPressed: {
+                        rootRow.backend.albumFilter = resourceId
+                        mediaBrowser.currentTab = musicListView
+                    }
+                }
+                /*delegate: CategoriesDelegate { width: parent ? parent.width - albumScrollBar.width : 0; height: 48; categoryName: "album" }
+                spacing: 5
+                highlight: PlasmaComponents.Highlight { }
+                highlightFollowsCurrentItem: true
+                snapMode: ListView.SnapToItem
+                clip: true*/
+
+                PlasmaComponents.ScrollBar {
+                    id: albumScrollBar
+                    flickableItem: parent
+                    orientation: Qt.Horizontal
+                }
+            }
+        }
+
+        PlasmaComponents.Page {
+            id: musicListView
+
+            Row {
+                id: searchField
+                width: parent.width
+                height: 30
+                PlasmaComponents.TextField {
+                    visible: backend.albumFilter == "" && backend.artistFilter == ""
+                    width: parent.width - playAllButton.width; height: parent.height
+                    clearButtonShown: true
+                    placeholderText: "Search Music"
+                    onTextChanged: searchMusicTimer.restart()
+                    Timer {
+                        id: searchMusicTimer
+                        interval: 2000
+                        onTriggered: backend.searchMusic(parent.text)
+                    }
+                }
+                PlasmaComponents.Button {
+                    id: playAllButton
+                    text: "Play All"
+                    height: parent.height
+                    onClicked: backend.addAllSongsToPlaylist(playlistModel);
+                }
+            }
+
+            // Album cover
+            Item {
+                id: cover
+                width: parent.width / 3
+                height: delegateItemIcon.height * 1.5
+                property variant source
+                visible: false;
+                clip: true
+                anchors {
+                    top: parent.top
+                    topMargin: (parent.height - delegateItemIcon.height) / 3
+                }
+
+                QtExtraComponents.QIconItem {
+                    id: delegateItemIcon
+                    width: 280
+                    height: 280
+                    anchors {
+                        horizontalCenter: parent.horizontalCenter
+                        top: parent.top
+                    }
+                    icon: QIcon("tools-media-optical-copy")
+                }
+                // TODO Replace icon with image
+                // Add reflectiong cover?
+                /*Image {
+                    id: coverImage
+                    width: 280
+                    anchors.centerIn: parent
+                    fillMode: Image.PreserveAspectCrop
+                    sourceSize.width: width
+                    sourceSize.height: 0
+                    asynchronous: true
+                }*/
+            }
+
+            Item {
+                width: cover.visible ? parent.width - cover.width : parent.width
+                anchors { top: searchField.bottom; right: parent.right; bottom: parent.bottom }
+                clip: true
+
+                ListView {
+                    id: listViewAllSongs
+                    anchors.fill: parent
+                    model: backend.musicModel
+                    delegate: MusicDelegate { width: parent ? parent.width - musicScrollBar.width : 0; height: 64 }
+                    spacing: 5
+                    highlight: PlasmaComponents.Highlight { }
+                    highlightFollowsCurrentItem: true
+                    clip: true
+
+                    PlasmaComponents.BusyIndicator {
+                        anchors.centerIn: parent
+                        running: parent.count == 0
+                        visible: running
+                    }
+
+                    PlasmaComponents.ScrollBar {
+                        id: musicScrollBar
+                        flickableItem: listViewAllSongs
+                    }
                 }
             }
         }
