@@ -34,7 +34,7 @@ public Q_SLOTS:
     virtual bool goOneLevelUp();
 
 protected:
-    virtual void initImpl();
+    virtual bool initImpl();
     void handleBusySignals(PmcMetadataModel *emitter);
 
 private Q_SLOTS:

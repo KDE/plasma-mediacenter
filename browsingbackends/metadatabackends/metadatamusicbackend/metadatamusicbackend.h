@@ -70,7 +70,7 @@ Q_SIGNALS:
 
 protected:
     void updateModelAccordingToFilters();
-    virtual void initImpl();
+    virtual bool initImpl();
 
 private slots:
     void musicModelDataChanged ( const QModelIndex& startIndex, const QModelIndex& endIndex );

@@ -34,7 +34,7 @@ public:
     virtual void search(const QString& searchTerm);
 
 protected:
-    virtual void initImpl();
+    virtual bool initImpl();
 };
 
 #endif // METADATAVIDEOBACKEND_H

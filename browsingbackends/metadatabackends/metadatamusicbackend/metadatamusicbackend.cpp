@@ -47,7 +47,7 @@ MetadataMusicBackend::~MetadataMusicBackend()
 {
 }
 
-void MetadataMusicBackend::initImpl()
+bool MetadataMusicBackend::initImpl()
 {
     AbstractMetadataBackend::initImpl();
     m_albumsModel = new PmcMetadataModel(this);
@@ -62,6 +62,7 @@ void MetadataMusicBackend::initImpl()
     connect(m_musicModel, SIGNAL(modelReset()), SLOT(musicModelReset()));
 
     updateModelAccordingToFilters();
+    return true;
 }
 
 QString MetadataMusicBackend::mediaBrowserOverride() const

@@ -26,7 +26,6 @@ Item {
     visible: false
 
     function launch() {
-        modelObject.init();
         homeScreenRootItem.selectedBackend = modelObject;
         homeScreenRootItem.backendSelected();
     }

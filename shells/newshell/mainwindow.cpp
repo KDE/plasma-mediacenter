@@ -63,7 +63,7 @@ MainWindow::MainWindow(QWidget *parent) : KMainWindow(parent)
 #endif
     }
     args->clear();
-      
+
     view->setAttribute(Qt::WA_OpaquePaintEvent);
     view->setAttribute(Qt::WA_NoSystemBackground);
     view->viewport()->setAttribute(Qt::WA_OpaquePaintEvent);

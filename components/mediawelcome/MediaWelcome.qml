@@ -24,7 +24,7 @@ import org.kde.plasma.mediacentercomponents 0.1 as MediaCenterComponents
 Item {
     id: homeScreenRootItem
     property QtObject model
-    property variant selectedBackend
+    property QtObject selectedBackend
     property QtObject metaData
 
     signal backendSelected

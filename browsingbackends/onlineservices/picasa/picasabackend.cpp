@@ -34,9 +34,9 @@ QString PicasaBackend::backendCategory() const
     return "image";
 }
 
-void PicasaBackend::initImpl()
+bool PicasaBackend::initImpl()
 {
-
+    return true;
 }
 
 bool PicasaBackend::goOneLevelUp()

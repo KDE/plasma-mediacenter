@@ -37,11 +37,12 @@ MetadataPictureBackend::~MetadataPictureBackend()
 {
 }
 
-void MetadataPictureBackend::initImpl()
+bool MetadataPictureBackend::initImpl()
 {
     PmcMetadataModel *pmcMetadataModel = new MetadataPictureModel(this);
     handleBusySignals(pmcMetadataModel);
     setModel(pmcMetadataModel);
+    return true;
 }
 
 #include "metadatapicturebackend.moc"

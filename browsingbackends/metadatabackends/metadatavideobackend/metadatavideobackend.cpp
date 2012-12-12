@@ -39,12 +39,13 @@ MetadataVideoBackend::~MetadataVideoBackend()
 {
 }
 
-void MetadataVideoBackend::initImpl()
+bool MetadataVideoBackend::initImpl()
 {
     AbstractMetadataBackend::initImpl();
     PmcMetadataModel *pmcMetadataModel = new MetadataVideoModel(this);
     handleBusySignals(pmcMetadataModel);
     setModel(pmcMetadataModel);
+    return true;
 }
 
 void MetadataVideoBackend::search(const QString& searchTerm)

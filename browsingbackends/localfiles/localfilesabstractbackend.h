@@ -39,7 +39,7 @@ public:
     virtual bool okToLoad() const;
 
 protected:
-    virtual void initImpl();
+    virtual bool initImpl();
     virtual void initModel() = 0;
     KFilePlacesModel *m_placeModel;
 };

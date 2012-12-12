@@ -190,15 +190,19 @@ Rectangle {
 
         model: backendsModel
         metaData: mediaPlayer.metaData
-        onBackendSelected: { runtimeData.currentBrowsingBackend = selectedBackend; visible = false }
+        onBackendSelected: {
+            if (!mediaWelcome.selectedBackend.init())
+                return;
+            runtimeData.currentBrowsingBackend = selectedBackend;
+            visible = false;
+        }
         onVisibleChanged: {
             mediaController.visible = !visible
             if (visible && mediaController.playlistButtonChecked) {
                 mediaController.playlistButtonChecked = false
                 mediaController.playlistButtonClicked()
             }
-        }
-    }
+        }}
 
     MediaCenterComponents.MediaBrowser {
         id: mediaBrowser

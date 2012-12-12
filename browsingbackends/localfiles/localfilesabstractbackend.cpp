@@ -27,9 +27,10 @@ LocalFilesAbstractBackend::LocalFilesAbstractBackend (QObject* parent, const QVa
 
 }
 
-void LocalFilesAbstractBackend::initImpl()
+bool LocalFilesAbstractBackend::initImpl()
 {
     initModel();
+    return true;
 }
 
 void LocalFilesAbstractBackend::browseOneLevelUp()

@@ -28,8 +28,9 @@ AbstractMetadataBackend::AbstractMetadataBackend(QObject* parent, const QVariant
 {
 }
 
-void AbstractMetadataBackend::initImpl()
+bool AbstractMetadataBackend::initImpl()
 {
+    return true;
 }
 
 bool AbstractMetadataBackend::goOneLevelUp()

@@ -36,9 +36,10 @@ FlickrBackend::~FlickrBackend()
 
 }
 
-void FlickrBackend::initImpl()
+bool FlickrBackend::initImpl()
 {
     setModel(new FlickrModel(this));
+    return true;
 }
 
 bool FlickrBackend::goOneLevelUp()

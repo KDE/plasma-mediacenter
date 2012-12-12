@@ -126,7 +126,7 @@ public:
      */
     KConfigGroup config();
 
-    Q_INVOKABLE void init();
+    Q_INVOKABLE bool init();
 
     /**
      * Convenience function that returns the list of
@@ -268,7 +268,7 @@ protected:
      * to the view.
      * Use this method for general initialization purposes.
      */
-    virtual void initImpl() = 0;
+    virtual bool initImpl() = 0;
 
 
 private:

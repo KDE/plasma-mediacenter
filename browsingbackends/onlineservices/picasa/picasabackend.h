@@ -37,7 +37,7 @@ public:
     virtual QString backendCategory() const;
     virtual QString mediaBrowserSidePanel() const;
     bool expand (int row);
-    virtual void initImpl();
+    virtual bool initImpl();
 
 public Q_SLOTS:
     virtual bool goOneLevelUp();

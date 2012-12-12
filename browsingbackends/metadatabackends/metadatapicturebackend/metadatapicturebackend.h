@@ -33,7 +33,7 @@ public:
     virtual ~MetadataPictureBackend();
 
 protected:
-    virtual void initImpl();
+    virtual bool initImpl();
 };
 
 #endif // METADATAPICTUREBACKEND_H

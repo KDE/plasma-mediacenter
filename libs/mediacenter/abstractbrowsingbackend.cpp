@@ -198,12 +198,12 @@ void AbstractBrowsingBackend::search(const QString& searchTerm)
     // Does nothing
 }
 
-void AbstractBrowsingBackend::init()
+bool AbstractBrowsingBackend::init()
 {
     if (!d->hasInitialized) {
-        d->hasInitialized = true;
-        initImpl();
+        d->hasInitialized = initImpl();
     }
+    return d->hasInitialized;
 }
 
 bool AbstractBrowsingBackend::busy() const
