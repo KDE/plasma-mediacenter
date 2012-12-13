@@ -32,7 +32,7 @@ Rectangle {
 
     MediaCenterComponents.RuntimeData {
         id: runtimeData
-totalTime: mediaPlayer.totalTime
+        totalTime: mediaPlayer.totalTime
 
         onCurrentTimeChanged: {
             if (currentTimeDirty) {
@@ -265,7 +265,8 @@ totalTime: mediaPlayer.totalTime
          anchors {
             top: mediaController.bottom; bottom: parent.bottom
             left: parent.right; right: undefined
-            margins: 10
+            leftMargin: 20;
+            topMargin: margins.left; bottomMargin: margins.top;
          }
          width: parent.width/4
          z: anchors.right ? 1 : 0

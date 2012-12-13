@@ -29,9 +29,12 @@ Item{
         Rectangle {
             width: parent.width - removeFromPlaylistButton.width; height: parent.height
             color: listViewItem.ListView.isCurrentItem ? "#002378" : "lightsteelblue"
-            opacity: 0.4
+            opacity: 0.4;
             Text {
-                anchors { fill: parent; verticalCenter: parent.verticalCenter }
+                anchors {
+                    fill: parent; verticalCenter: parent.verticalCenter;
+                    margins: 5
+                }
                 text: display
                 color: (index == playlistModel.currentIndex) ? "red" : "white"
                 elide: Text.ElideRight
