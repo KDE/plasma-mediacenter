@@ -54,8 +54,7 @@ Item {
     }
     Behavior on scale {
         NumberAnimation {
-            duration: 500
-            easing.type: Easing.OutExpo
+            duration: 100
         }
     }
 

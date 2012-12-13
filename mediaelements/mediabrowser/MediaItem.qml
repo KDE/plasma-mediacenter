@@ -100,7 +100,13 @@ Item {
                                             property: "scale";
                                             from: 0.1
                                             to: 1
-                                            easing.type: Easing.OutBack;
+                                            duration: 100
+                                        }
+                                        PropertyAnimation {
+                                            target: delegateItemImage;
+                                            property: "opacity";
+                                            from: 0.1
+                                            to: 1
                                             duration: 200
                                         }
                                     }
