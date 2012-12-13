@@ -61,12 +61,6 @@ Item {
                     }
 
                     Component.onCompleted: checkAndLoad()
-
-                    PlasmaComponents.BusyIndicator {
-                        anchors.centerIn: parent
-                        running: workaroundForDecorationUpdate.text.length == 0
-                        visible: running
-                    }
                 }
 
                 Component {
@@ -90,12 +84,6 @@ Item {
                                 cache: true
                                 source: rootColumn.source
                                 z: 1
-
-                                PlasmaComponents.BusyIndicator {
-                                    anchors.centerIn: parent
-                                    running: delegateItemImage.status == Image.Loading
-                                    visible: running
-                                }
 
                                 states: [
                                     State {
