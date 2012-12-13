@@ -21,16 +21,20 @@ import QtQuick 1.1
 import org.kde.qtextracomponents 0.1 as QtExtraComponents
 
 Row {
+    id: root
     property variant metaData
     property url path
+    property bool minimized
 
     Item {
         id: musicStatsLeftPane
-        height: parent.height; width: parent.width*0.4
+        height: parent.height; width: root.minimized ? parent.width : parent.width*0.4
         Image {
             anchors { centerIn: parent; margins: 10 }
             source: "image://pmccoverart/" + path
             smooth: true
+            width: Math.min(sourceSize.width, parent.width)
+            height: Math.min(sourceSize.height, parent.height)
             QtExtraComponents.QIconItem {
                 icon: metaData ? "media-optical-audio" : ""
                 anchors.centerIn: parent
@@ -43,6 +47,7 @@ Row {
     Item {
         id: musicStatsRightPane
         height: parent.height; width: parent.width*0.6
+        visible: !root.minimized
 
         Column {
             anchors.centerIn: parent

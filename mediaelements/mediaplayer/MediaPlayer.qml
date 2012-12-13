@@ -70,6 +70,7 @@ FocusScope {
     MusicStats {
         anchors.fill: parent
         visible: video.hasAudio && !video.hasVideo && showMusicStats
+        minimized: mediaPlayerRootRect.state == "minimize"
 
         metaData: video.metaData
         path: video.source

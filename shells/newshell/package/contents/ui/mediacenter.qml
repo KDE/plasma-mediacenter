@@ -53,7 +53,7 @@ totalTime: mediaPlayer.totalTime
         paused: runtimeData.paused
         stopped: runtimeData.stopped
         volume: runtimeData.volume
-        showMusicStats: !mediaWelcome.visible && !mediaBrowser.visible
+        showMusicStats: !mediaWelcome.visible
 
         onClicked: hideToolbars()
         onEscapePressed: mediaBrowser.visible = true
