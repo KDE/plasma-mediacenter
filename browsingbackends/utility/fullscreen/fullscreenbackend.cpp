@@ -21,6 +21,13 @@
 #include <QtGui/QMainWindow>
 #include <QtCore/QMetaObject>
 
+MEDIACENTER_EXPORT_BROWSINGBACKEND(FullscreenBackend)
+
+FullscreenBackend::FullscreenBackend(QObject* parent, const QVariantList& args): AbstractBrowsingBackend(parent, args)
+{
+
+}
+
 bool FullscreenBackend::initImpl()
 {
     QMainWindow *mainWindow = 0;

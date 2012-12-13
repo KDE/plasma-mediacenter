@@ -32,8 +32,7 @@ Rectangle {
 
     MediaCenterComponents.RuntimeData {
         id: runtimeData
-
-        totalTime: mediaPlayer.totalTime
+totalTime: mediaPlayer.totalTime
 
         onCurrentTimeChanged: {
             if (currentTimeDirty) {
@@ -289,25 +288,6 @@ Rectangle {
 
         transitions: [ Transition { AnchorAnimation { duration: 200 } } ]
      }
-
-    PlasmaComponents.ToolButton {
-        anchors.right: parent.right; anchors.top: parent.top;
-        width: 64
-        height: 64
-        visible: mediaWelcome.visible ? true : false
-
-        property bool fullScreen
-
-        iconSource: startedFullScreen ? "view-restore" : "view-fullscreen"
-        onClicked: {
-            fullScreen =  mainwindow.toggleFullScreen();
-            if(fullScreen) {
-                iconSource = "view-restore"
-            } else {
-                iconSource = "view-fullscreen"
-            }
-        }
-    }
 
     Item {
         id: previewArea
