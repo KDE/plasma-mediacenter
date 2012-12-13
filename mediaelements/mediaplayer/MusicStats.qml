@@ -29,7 +29,7 @@ Row {
         height: parent.height; width: parent.width*0.4
         Image {
             anchors { centerIn: parent; margins: 10 }
-            source: "image://pmccoverart/" + url
+            source: "image://pmccoverart/" + path
             smooth: true
             QtExtraComponents.QIconItem {
                 icon: metaData ? "media-optical-audio" : ""
@@ -47,7 +47,7 @@ Row {
         Column {
             anchors.centerIn: parent
             width: 0.9*parent.width; height: 0.7*parent.height
-            StatsLabel { text: metaData.title ? metaData.title : "" }
+            StatsLabel { text: metaData.title ? metaData.title : String(path).split("/").reverse()[0] }
             StatsLabel { text: metaData.albumArtist ? metaData.albumArtist : "" }
             StatsLabel { text: metaData.albumTitle ? metaData.albumTitle : "" }
             StatsLabel { text: metaData.genre ? metaData.genre : "" }
