@@ -130,7 +130,8 @@ totalTime: mediaPlayer.totalTime
         width: parent.width
 
         anchors {
-            horizontalCenter: parent.horizontalCenter; top: parent.top
+            right: mediaPlayer.state == "minimize" ? previewArea.left : parent.right;
+            left: parent.left; top: parent.top
         }
 
         onPlaylistButtonClicked: {
@@ -291,7 +292,9 @@ totalTime: mediaPlayer.totalTime
 
     Item {
         id: previewArea
-        anchors { bottom: mediaBrowser.bottom; right: mediaBrowser.right; margins: 40 }
-        height: 128; width: 256
+        anchors {
+            top: parent.top; right: parent.right; margins: 5;
+        }
+        height: mediaController.height*0.9; width: 1.2*height;
     }
 }
