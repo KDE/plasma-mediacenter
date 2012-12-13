@@ -160,7 +160,7 @@ PlasmaCore.FrameSvgItem {
         PlasmaComponents.Slider {
             id: volumeSlider
             height: parent.height
-            width: volumeButton.checked ? parent.width * 0.2 : 1
+            width: volumeButton.checked ? parent.width * 0.1 : 1
             visible: volumeButton.checked
             minimumValue: 0
             maximumValue: 100

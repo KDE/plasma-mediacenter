@@ -28,7 +28,7 @@ Item {
     id: mediaItemDelegateItem
     width: GridView.view.cellWidth
     height: GridView.view.cellHeight
-    scale: (GridView.isCurrentItem ? 1.3 : 1)
+    scale: (GridView.isCurrentItem ? 1.1 : 1)
     clip: !GridView.isCurrentItem
     z: GridView.isCurrentItem ? 1 : 0
 
@@ -37,6 +37,7 @@ Item {
     signal playRequested(int index, string url, string currentMediaType)
 
     MediaItem {
+        anchors.fill: parent;
         onClicked: {
             if (isExpandable) {
                 backend.expand(index, mediaUrl, mediaType);

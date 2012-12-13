@@ -26,14 +26,13 @@ import org.kde.plasma.mediacentercomponents 0.1 as MediaCenterComponents
 
 Item {
     id: mediaItem
-    anchors { fill: parent; margins: 20 }
     clip: true
 
     signal clicked(int index)
     signal pressAndHold(int index, string url, string currentMediaType)
 
     Item {
-        anchors { fill: parent; margins: 20 }
+        anchors { fill: parent; margins: 10 }
         clip: true
 
         Item {
@@ -129,8 +128,6 @@ Item {
                             width: parent.width - 2
                             property int finalHeight: parent.height - 2
                             height:  finalHeight*delegateItemImage.progress
-                            border.color: mediaItemDelegateItem.GridView.isCurrentItem ? theme.viewHoverColor : "#666"
-                            border.width: 1
                             visible: delegateItemImage.status == Image.Ready && delegateItemImage.scale == 1
                         }
                     }
