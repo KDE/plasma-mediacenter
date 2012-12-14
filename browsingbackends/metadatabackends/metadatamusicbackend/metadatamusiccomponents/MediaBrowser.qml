@@ -131,19 +131,17 @@ Item {
             preferredHighlightEnd: parent.width*0.9
             highlightRangeMode: GridView.ApplyRange
             flow: GridView.TopToBottom
-            
+
             delegate: Item {
                 id: mediaItemDelegateItem
                 width: GridView.view.cellWidth
                 height: GridView.view.cellHeight
-                scale: (GridView.isCurrentItem ? 1.3 : 1)
+                scale: (GridView.isCurrentItem ? 1.1 : 1)
                 clip: !GridView.isCurrentItem
                 z: GridView.isCurrentItem ? 1 : 0
                 MediaItem {
                     anchors.fill: parent
                     onClicked: {
-                        console.log("artist icon " + mediaThumbnail)
-                        console.log("artist clicked " + resourceId)
                         rootRow.backend.artistFilter = resourceId
                         artistListView.visible = false
                         albumListView.visible = false
@@ -216,11 +214,12 @@ Item {
                 id: mediaItemDelegateItem
                 width: GridView.view.cellWidth
                 height: GridView.view.cellHeight
-                scale: (GridView.isCurrentItem ? 1.3 : 1)
+                scale: (GridView.isCurrentItem ? 1.1 : 1)
                 clip: !GridView.isCurrentItem
                 z: GridView.isCurrentItem ? 1 : 0
         
                 MediaItem {
+                    anchors.fill: parent
                     onClicked: {
                         console.log("album clicked " + resourceId)
                         rootRow.backend.albumFilter = resourceId
