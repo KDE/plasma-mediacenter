@@ -140,6 +140,7 @@ Item {
                 clip: !GridView.isCurrentItem
                 z: GridView.isCurrentItem ? 1 : 0
                 MediaItem {
+                    anchors.fill: parent
                     onClicked: {
                         console.log("artist icon " + mediaThumbnail)
                         console.log("artist clicked " + resourceId)
