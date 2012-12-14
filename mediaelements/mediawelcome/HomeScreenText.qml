@@ -21,7 +21,7 @@ import QtQuick 1.1
 
 Text {
     verticalAlignment: Text.AlignVCenter
-    color: "white"
+    color: theme.textColor
     smooth: true
     style: Text.Raised
 }

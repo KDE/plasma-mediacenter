@@ -27,7 +27,7 @@ Rectangle {
 
     opacity: 0.8
     z: 2
-    color: "black"
+    color: theme.backgroundColor
     visible: false
 
     MouseArea {
@@ -47,10 +47,10 @@ Rectangle {
                     anchors.fill: parent
                     id: popupDelegateItem
                     radius: 10
-                    color: "black"
+                    color: theme.backgroundColor
                     Text {
                         text: name
-                        color: "white"
+                        color: theme.textColor
                         font.pointSize: 24
                         anchors { centerIn: parent; margins: 10 }
                     }

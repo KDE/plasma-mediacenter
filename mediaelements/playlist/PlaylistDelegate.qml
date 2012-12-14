@@ -28,7 +28,7 @@ Item{
         anchors.fill: parent
         Rectangle {
             width: parent.width - removeFromPlaylistButton.width; height: parent.height
-            color: listViewItem.ListView.isCurrentItem ? "#002378" : "lightsteelblue"
+            color: listViewItem.ListView.isCurrentItem ? "#002378" : theme.backgroundColor
             opacity: 0.8;
             Text {
                 anchors {
@@ -36,7 +36,7 @@ Item{
                     margins: 5
                 }
                 text: display
-                color: (index == playlistModel.currentIndex) ? "red" : "black"
+                color: (index == playlistModel.currentIndex) ? "red" : theme.textColor
                 elide: Text.ElideRight
                 font.pixelSize: 18
             }

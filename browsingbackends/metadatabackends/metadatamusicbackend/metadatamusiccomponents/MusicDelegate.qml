@@ -36,11 +36,11 @@ Item {
         anchors.fill: parent
         anchors.margins: 5
         font.pointSize: 16
-        color: "white"
+        color: theme.textColor
         elide: Text.ElideRight
         verticalAlignment: Text.AlignVCenter
         style: Text.Outline
-        styleColor: "black"
+        styleColor: theme.backgroundColor
 
         MouseArea {
             id: mouseArea

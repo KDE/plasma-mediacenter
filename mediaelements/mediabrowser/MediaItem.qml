@@ -149,7 +149,7 @@ Item {
                     text: display ? display : ""
                     visible: !hideLabel
                     font.pointSize: 14
-                    color: mediaItemDelegateItem.GridView.isCurrentItem ? theme.viewHoverColor : "white"
+                    color: mediaItemDelegateItem.GridView.isCurrentItem ? theme.viewHoverColor : theme.textColor
                     elide: mediaItemDelegateItem.GridView.isCurrentItem ? Text.ElideNone : Text.ElideMiddle
                     width: parent.width
                     wrapMode: mediaItemDelegateItem.GridView.isCurrentItem ? Text.Wrap : Text.NoWrap

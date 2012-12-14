@@ -20,9 +20,9 @@
 import QtQuick 1.1
 
 Text {
-    color: "white"
+    color: theme.textColor
     style: Text.Outline
-    styleColor: "black"
+    styleColor: theme.backgroundColor
     font.pixelSize: parent.height * 0.08
     smooth: true
 }

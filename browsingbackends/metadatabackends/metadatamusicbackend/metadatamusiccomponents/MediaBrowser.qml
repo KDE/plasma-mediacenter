@@ -42,7 +42,7 @@ Item {
             Text {
                 anchors.centerIn: parent
                 text: "Artist"
-                color: artistListView.visible ? theme.viewHoverColor : "white"
+                color: artistListView.visible ? theme.viewHoverColor : theme.textColor
             }
             MouseArea {
                 anchors.fill: parent
@@ -60,7 +60,7 @@ Item {
             Text {
                 anchors.centerIn: parent
                 text: "Albums"
-                color: albumListView.visible ? theme.viewHoverColor : "white"
+                color: albumListView.visible ? theme.viewHoverColor : theme.textColor
             }
             MouseArea {
                 anchors.fill: parent
@@ -78,7 +78,7 @@ Item {
             Text {
                 anchors.centerIn: parent
                 text: "Songs"
-                color: musicListView.visible ? theme.viewHoverColor : "white"
+                color: musicListView.visible ? theme.viewHoverColor : theme.textColor
             }
             MouseArea {
                 anchors.fill: parent

@@ -73,7 +73,7 @@ FocusScope {
             Text {
                 visible: false
                 font.pointSize: 20
-                color: "white"
+                color: theme.textColor
                 text: mediaBrowserGridViewId.count
             }
 

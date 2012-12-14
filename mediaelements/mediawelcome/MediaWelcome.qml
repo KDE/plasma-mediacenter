@@ -35,12 +35,6 @@ Item {
             topMargin: 10; bottomMargin: 10
         }
 
-        HomeScreenHeader {
-            id: homeScreenHeader
-            width: parent.width
-            height: 0.2 * parent.height
-        }
-
         CategoriesList {
             id: categoriesList
             anchors.horizontalCenter: parent.horizontalCenter
@@ -59,12 +53,6 @@ Item {
             categoryFilter: categoriesList.currentCategory
         }
 
-        HomeScreenFooter {
-            id: homeScreenFooter
-            width: parent.width
-            height: 0.1 * parent.height
-            //text: homeScreenRootItem.metaData.title
-        }
     }
 
     Keys.forwardTo: [ categoriesList, backendsList ]

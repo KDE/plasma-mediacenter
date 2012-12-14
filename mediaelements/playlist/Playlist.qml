@@ -43,7 +43,7 @@ PlasmaCore.FrameSvgItem {
                     anchors.centerIn: parent
                     text: playlistList.count + " items"
                     font.pixelSize: 18
-                    color: "black"
+                    color: theme.textColor
                 }
             }
 
