@@ -29,7 +29,7 @@ Item {
     clip: true
 
     signal clicked(int index)
-    signal pressAndHold(int index, string url, string currentMediaType)
+    signal pressAndHold(int index)
 
     Item {
         anchors { fill: parent; margins: 10 }
