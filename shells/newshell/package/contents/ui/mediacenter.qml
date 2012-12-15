@@ -22,13 +22,14 @@ import org.kde.plasma.mediacentercomponents 0.1 as MediaCenterComponents
 import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.components 0.1 as PlasmaComponents
 
-Rectangle {
+Image {
     id: mediaCenterRootItem
-    gradient: Gradient {
-        GradientStop { position: 0.0; color: "#000000" }
-        GradientStop { position: 0.5; color: "#222222" }
-        GradientStop { position: 1.0; color: "#000000" }
-    }
+    source: _pmc_background_image_path
+    fillMode: Image.Tile
+
+Image {
+    anchors.fill: parent
+    source: _pmc_gradient_image_path
 
     MediaCenterComponents.RuntimeData {
         id: runtimeData
@@ -300,4 +301,5 @@ Rectangle {
         }
         height: mediaController.height*0.9; width: 1.2*height;
     }
+}
 }

@@ -26,21 +26,19 @@ import org.kde.plasma.mediacentercomponents 0.1 as MediaCenterComponents
 
 Item {
     id: mediaItem
-    clip: true
 
     signal clicked(int index)
     signal pressAndHold(int index)
 
     Item {
         anchors { fill: parent; margins: 10 }
-        clip: true
 
         Item {
             anchors {
                 fill: parent
                 margins: 2
             }
-            clip: true
+
             PlasmaCore.Theme {
                 id:theme
             }
@@ -66,22 +64,36 @@ Item {
                 Component {
                     id: delegateItemImageComponent
                     Item {
+                        BorderImage {
+                            source: _pmc_shadow_image_path
+                            width:delegateItemImageComponentRect.width+42
+                            height: delegateItemImageComponentRect.height+42
+                            border.left: 50; border.top: 50
+                            border.right: 54; border.bottom: 54
+                            anchors.horizontalCenter: delegateItemImageComponentRect.horizontalCenter
+                            anchors.verticalCenter: delegateItemImageComponentRect.verticalCenter
+                            opacity: delegateItemImage.status == Image.Ready ? 0.9 : 0.0
+
+                            Behavior on opacity { NumberAnimation { duration: 500 } }
+                        }
                         Rectangle {
+                            id: delegateItemImageComponentRect
                             width: parent.width - 6
                             height: parent.height - 6
                             clip: true
                             anchors.centerIn: parent
                             color: "transparent"
+
                             Image {
                                 id: delegateItemImage
                                 width: parent.width - 6
                                 height: parent.height - 6
                                 anchors.centerIn: parent
                                 fillMode: Image.PreserveAspectCrop
-                                sourceSize.width: width * 2
+                                sourceSize.width: width * 1.5
                                 sourceSize.height: 0
                                 asynchronous: true
-                                cache: true
+                                cache: false
                                 source: rootColumn.source
                                 z: 1
 
@@ -98,16 +110,16 @@ Item {
                                         PropertyAnimation {
                                             target: delegateItemImage;
                                             property: "scale";
-                                            from: 0.1
+                                            from: 0.4
                                             to: 1
-                                            duration: 100
+                                            duration: 50
                                         }
                                         PropertyAnimation {
                                             target: delegateItemImage;
                                             property: "opacity";
                                             from: 0.1
                                             to: 1
-                                            duration: 200
+                                            duration: 50
                                         }
                                     }
                                 }

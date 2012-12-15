@@ -82,13 +82,20 @@ MainWindow::MainWindow(QWidget *parent) : KMainWindow(parent)
     view->rootContext()->setContextProperty("backendsModel", backendsModel);
     PlaylistModel *playlistModel = new PlaylistModel(this);
     view->rootContext()->setContextProperty("playlistModel", playlistModel);
+
     view->rootContext()->setContextProperty("mainwindow", this);
     view->rootContext()->setContextProperty("startedFullScreen", isFullScreen());
+
     view->engine()->addImageProvider(PmcImageProvider::identificationString, new PmcImageProvider());
     view->engine()->addImageProvider(PmcCoverArtProvider::identificationString, new PmcCoverArtProvider());
 
     m_structure = Plasma::PackageStructure::load("Plasma/Generic");
     Plasma::Package *package = new Plasma::Package(QString(), "org.kde.plasma.mediacenter", m_structure);
+
+    view->rootContext()->setContextProperty("_pmc_background_image_path", QUrl(package->filePath("images", "noiselight.png")));
+    view->rootContext()->setContextProperty("_pmc_gradient_image_path", QUrl(package->filePath("images", "gradient.png")));
+    view->rootContext()->setContextProperty("_pmc_shadow_image_path", QUrl(package->filePath("images", "shadow.png")));
+
     view->setSource(QUrl(package->filePath("mainscript")));
 
     resize(1024, 768);
