@@ -38,7 +38,6 @@ ListView {
 
     model: MediaCenterComponents.FilteredBackendsModel {
         id: filteredModel
-        //onBackendCategoryChanged: console.log(backendCategory)
     }
 
     delegate: BackendsListDelegate {

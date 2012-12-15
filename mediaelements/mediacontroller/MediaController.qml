@@ -148,6 +148,7 @@ PlasmaCore.FrameSvgItem {
 
             text: checked ? '- ' + controlBarFrame.remainingMediaTime : controlBarFrame.curMediaTime
             height: parent.height
+            font.pointSize: 14
 
             verticalAlignment: Text.AlignVCenter
 
