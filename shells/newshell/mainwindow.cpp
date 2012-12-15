@@ -27,6 +27,7 @@
 #include <libs/mediacenter/pmccoverartprovider.h>
 
 #include <Plasma/Package>
+#include <Plasma/Theme>
 #include <KDE/KCmdLineArgs>
 
 #include <QtDeclarative/QDeclarativeEngine>
@@ -88,6 +89,9 @@ MainWindow::MainWindow(QWidget *parent) : KMainWindow(parent)
 
     view->engine()->addImageProvider(PmcImageProvider::identificationString, new PmcImageProvider());
     view->engine()->addImageProvider(PmcCoverArtProvider::identificationString, new PmcCoverArtProvider());
+
+    Plasma::Theme::defaultTheme()->setUseGlobalSettings(false);
+    Plasma::Theme::defaultTheme()->setThemeName("oxygen");
 
     m_structure = Plasma::PackageStructure::load("Plasma/Generic");
     Plasma::Package *package = new Plasma::Package(QString(), "org.kde.plasma.mediacenter", m_structure);
