@@ -1,5 +1,4 @@
 /***************************************************************************
- *   Copyright 2010 by Alessandro Diaferia <alediaferia@gmail.com>         *
  *   Copyright 2012 by Sinny Kumari <ksinny@gmail.com>                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -19,47 +18,11 @@
  ***************************************************************************/
 
 import QtQuick 1.1
-import org.kde.plasma.mediacentercomponents 0.1 as MediaCenterComponents
 
 Item {
-    id: homeScreenRootItem
-    property QtObject model
-    property QtObject selectedBackend
-    property QtObject metaData
-
-    signal backendSelected
-
-    Column {
-        anchors {
-            fill: parent
-            topMargin: 10; bottomMargin: 10
-        }
-
-        HomeScreenHeader {
-            id: homeScreenHeader
-            width: parent.width
-            height: 0.2 * parent.height
-        }
-
-        CategoriesList {
-            id: categoriesList
-            anchors.horizontalCenter: parent.horizontalCenter
-            height: 0.3 * parent.height
-            width: parent.width
-            clip: true
-        }
-
-        FilteredBackendsList {
-            id: backendsList
-            // the x aligns with the selection in categoriesList
-            x: categoriesList.width / 2 - categoriesList.height / 2 + categoriesList.spacing * 2
-            width: 400
-            height: 0.4 * parent.height
-            backendsModel: homeScreenRootItem.model
-            categoryFilter: categoriesList.currentCategory
-        }
-
+    HomeScreenText {
+        anchors.centerIn: parent
+        text: "Plasma Media Center"
+        font.pointSize: 24
     }
-
-    Keys.forwardTo: [ categoriesList, backendsList ]
 }
