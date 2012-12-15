@@ -95,7 +95,7 @@ Item {
                                 asynchronous: true
                                 cache: false
                                 source: rootColumn.source
-                                smooth: true
+                                smooth: !imageAnimation.running
                                 z: 1
 
                                 states: [
@@ -108,6 +108,7 @@ Item {
                                 Transition {
                                     to: "appear"
                                     ParallelAnimation {
+                                        id: imageAnimation
                                         PropertyAnimation {
                                             target: delegateItemImage;
                                             property: "scale";
