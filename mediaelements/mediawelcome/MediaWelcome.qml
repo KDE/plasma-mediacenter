@@ -35,6 +35,12 @@ Item {
             topMargin: 10; bottomMargin: 10
         }
 
+        Item {
+           id: headerMargin
+           width: parent.width
+           height: 0.15 * parent.height
+        }
+
         CategoriesList {
             id: categoriesList
             anchors.horizontalCenter: parent.horizontalCenter

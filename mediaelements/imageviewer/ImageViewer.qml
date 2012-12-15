@@ -39,8 +39,8 @@ Rectangle {
     color: "black"
 
     Rectangle {
-        border.color: "white"; radius: 5; width: parent.width/2; height: 24
-        color: "black"; anchors.centerIn: parent
+        border.color: theme.textColor; radius: 5; width: parent.width/2; height: 24
+        color: theme.backgroundColor; anchors.centerIn: parent
         visible: mainImage.status == Image.Loading
         PlasmaComponents.ProgressBar {
             anchors { fill: parent; margins: 4 }
