@@ -90,11 +90,12 @@ Item {
                                 height: parent.height - 6
                                 anchors.centerIn: parent
                                 fillMode: Image.PreserveAspectCrop
-                                sourceSize.width: width * 1.5
+                                sourceSize.width: width
                                 sourceSize.height: 0
                                 asynchronous: true
                                 cache: false
                                 source: rootColumn.source
+                                smooth: true
                                 z: 1
 
                                 states: [
