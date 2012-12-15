@@ -25,6 +25,7 @@ PlasmaCore.FrameSvgItem {
     id: controlBarFrame
     imagePath: "widgets/background"
     enabledBorders: "LeftBorder|RightBorder|BottomBorder"
+    opacity: 0.9
     visible: false
 
     property QtObject runtimeDataObject

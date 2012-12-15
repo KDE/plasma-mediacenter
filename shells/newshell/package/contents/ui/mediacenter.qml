@@ -55,6 +55,7 @@ Image {
         stopped: runtimeData.stopped
         volume: runtimeData.volume
         showMusicStats: !mediaWelcome.visible
+        dimVideo: mediaWelcome.visible
 
         onClicked: hideToolbars()
         onEscapePressed: mediaBrowser.visible = true

@@ -33,6 +33,7 @@ FocusScope {
     property alias volume: video.volume
     property alias metaData: video.metaData
     property bool showMusicStats: true
+    property alias dimVideo: videoDimRectangle.visible
 
     signal clicked
     signal mediaFinished
@@ -64,6 +65,14 @@ FocusScope {
             styleColor: theme.backgroundColor
             font.pixelSize: parent.height * 0.03
             smooth: true
+        }
+
+        Rectangle {
+            id: videoDimRectangle
+            anchors.fill: parent
+            color: "black"
+            opacity: 0.7
+            visible: false
         }
     }
 
