@@ -20,6 +20,7 @@ Name[sv]=Picasa
 Name[ug]=Picasa
 Name[uk]=Picasa
 Name[x-test]=xxPicasaxx
+Comment=See pictures from your Picasa account
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 X-KDE-PluginInfo-Author=Sinny Kumari

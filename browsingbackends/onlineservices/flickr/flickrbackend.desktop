@@ -21,6 +21,7 @@ Name[sv]=Flickr
 Name[ug]=Flickr
 Name[uk]=Flickr
 Name[x-test]=xxFlickrxx
+Comment=Discover pictures from flickr for your chosen tag
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 

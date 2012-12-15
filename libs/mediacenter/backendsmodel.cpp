@@ -91,6 +91,8 @@ QVariant BackendsModel::data (const QModelIndex& index, int role) const
             return info.name();
         case Qt::DecorationRole:
             return info.icon();
+        case Qt::ToolTipRole:
+            return info.comment();
         case BackendCategoryRole:
             return info.category();
         case ModelObjectRole:

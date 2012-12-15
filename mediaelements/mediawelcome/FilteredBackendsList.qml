@@ -27,6 +27,7 @@ ListView {
 
     property alias backendsModel: filteredModel.sourceBackendsModel
     property alias categoryFilter: filteredModel.backendCategory
+    property string currentBackendDescription: currentItem ? currentItem.currentBackendDescription : ""
 
     //FIXME: this is really bad looking :/
     highlight: PlasmaComponents.Highlight { }

@@ -22,12 +22,19 @@ import org.kde.qtextracomponents 0.1 as QtExtraComponents
 
 Item {
     id: rootItem
+    property alias currentBackendDescription: workaround.text
     opacity: 0
     visible: false
 
     function launch() {
         homeScreenRootItem.selectedBackend = modelObject;
         homeScreenRootItem.backendSelected();
+    }
+
+    Text {
+        id: workaround
+        visible: false
+        text: toolTip
     }
 
     Timer {

@@ -20,22 +20,7 @@ Name[sv]=Bläddra i musik
 Name[uk]=Навігація музикою
 Name[x-test]=xxBrowse musicxx
 
-Comment=A plugin for the mediabrowser applet that allows local music browsing
-Comment[da]=Et plugin til mediebrowser-appletten som muliggør at gennemse lokal musik
-Comment[es]=Un complemento para la miniaplicación del explorador multimedia que permite explorar la música local
-Comment[et]=Meediasirvija plugin kohaliku muusika sirvimiseks
-Comment[fi]=Mediaselainliitännäinen, joka mahdollistaa paikallisen musiikin selaamisen
-Comment[fr]=Un module externe pour l'applet du navigateur multimédia permettant de parcourir la musique locale
-Comment[hu]=Egy bővítmény a médiaböngésző kisalkalmazáshoz, amely lehetővé teszi a helyi zenék böngészését
-Comment[km]=កម្មវិធី​ជំនួយ​សម្រាប់​អាប់ភ្លេត​កម្មវិធី​រុករក​មេឌៀ​ដែល​អនុញ្ញាត​ឲ្យ​រកមើល​តន្ត្រី​មូលដ្ឋាន
-Comment[nl]=Een plugin voor de mediabrowser-applet die bladeren door lokale muziek mogelijk maakt
-Comment[pl]=Wtyczka dla apletu przeglądarki mediów, która pozwala na przeglądanie muzyki lokalnej
-Comment[pt]=Um 'plugin' para a 'applet' de leitura multimédia, que permite a navegação pela música local
-Comment[pt_BR]=Um plugin para o miniaplicativo leitor multimídia, que permite a navegação nas músicas locais
-Comment[sk]=Plugin pre applet prehliadača médií, ktorý umožňuje prehliadanie miestnej hudby
-Comment[sv]=Ett insticksprogram för miniprogrammet Mediabläddrare som tillåter bläddring i lokal musik
-Comment[uk]=Додаток до аплету переглядача носіїв, який надає змогу прослуховувати локальні музичні файли
-Comment[x-test]=xxA plugin for the mediabrowser applet that allows local music browsingxx
+Comment=Browse your device for music
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 

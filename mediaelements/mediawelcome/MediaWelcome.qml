@@ -38,7 +38,7 @@ Item {
         HomeScreenHeader {
             id: homeScreenHeader
             width: parent.width
-            height: 0.2 * parent.height
+            height: 0.1 * parent.height
         }
 
         CategoriesList {
@@ -54,11 +54,17 @@ Item {
             // the x aligns with the selection in categoriesList
             x: categoriesList.width / 2 - categoriesList.height / 2 + categoriesList.spacing * 2
             width: 400
-            height: 0.4 * parent.height
+            height: 0.5 * parent.height
             backendsModel: homeScreenRootItem.model
             categoryFilter: categoriesList.currentCategory
         }
 
+        HomeScreenFooter {
+            id: homeScreenFooter
+            width: parent.width
+            height: 0.1 * parent.height
+            text: backendsList.currentBackendDescription
+        }
     }
 
     Keys.forwardTo: [ categoriesList, backendsList ]

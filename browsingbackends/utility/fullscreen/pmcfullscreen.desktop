@@ -8,13 +8,8 @@ Name[sk]=Celá obrazovka
 Name[sv]=Fullskärmsläge
 Name[uk]=На весь екран
 Name[x-test]=xxFullscreenxx
-Comment=A plugin for the mediacenter to allow toggling fullscreen
-Comment[nl]=Een plugin voor het mediacentrum die schakelen van/naar volledig scherm mogelijk maakt
-Comment[pt]=Um 'plugin' para a 'applet' de leitura multimédia, que permite a visualização em todo o ecrã
-Comment[sk]=Plugin pre mediálne centrum, ktorý umožňuje prepnutie na celú obrazovku
-Comment[sv]=Ett insticksprogram för Mediacenter som tillåter fullskärmsläge
-Comment[uk]=Додаток до аплету медіацентру, який надає змогу перемикати програму у повноекранний режим
-Comment[x-test]=xxA plugin for the mediacenter to allow toggling fullscreenxx
+Comment=Toggle fullscreen mode
+
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 
 X-KDE-PluginInfo-Author=Shantanu Tushar

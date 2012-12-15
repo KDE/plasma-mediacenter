@@ -14,6 +14,7 @@ Name[sk]=Všetky videá
 Name[sv]=Alla videor
 Name[uk]=Всі відео
 Name[x-test]=xxAll videosxx
+Comment=Watch the videos on your device
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 

@@ -18,6 +18,7 @@ Name[sk]=Všetka hudba
 Name[sv]=All musik
 Name[uk]=Вся музика
 Name[x-test]=xxAll Musicxx
+Comment=Listen to the music on your device
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 
