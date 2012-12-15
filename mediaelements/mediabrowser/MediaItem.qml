@@ -66,15 +66,22 @@ Item {
                     Item {
                         BorderImage {
                             source: _pmc_shadow_image_path
-                            width:delegateItemImageComponentRect.width+42
-                            height: delegateItemImageComponentRect.height+42
+                            width: mediaItemDelegateItem.GridView.isCurrentItem ?
+                                    delegateItemImageComponentRect.width+48
+                                    : delegateItemImageComponentRect.width+32
+                            height: mediaItemDelegateItem.GridView.isCurrentItem ?
+                                    delegateItemImageComponentRect.height+48
+                                    : delegateItemImageComponentRect.height+32
                             border.left: 50; border.top: 50
                             border.right: 54; border.bottom: 54
                             anchors.horizontalCenter: delegateItemImageComponentRect.horizontalCenter
                             anchors.verticalCenter: delegateItemImageComponentRect.verticalCenter
-                            opacity: delegateItemImage.status == Image.Ready ? 0.9 : 0.0
+                            opacity: delegateItemImage.status == Image.Ready ?
+                                       (mediaItemDelegateItem.GridView.isCurrentItem ? 0.4 : 1) : 0.0
 
-                            Behavior on opacity { NumberAnimation { duration: 500 } }
+                            Behavior on opacity { NumberAnimation { duration: 200 } }
+                            Behavior on height { NumberAnimation { duration: 200 } }
+                            Behavior on width { NumberAnimation { duration: 200 } }
                         }
                         Rectangle {
                             id: delegateItemImageComponentRect
