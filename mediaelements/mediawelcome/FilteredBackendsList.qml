@@ -46,4 +46,6 @@ ListView {
         width: listView.width
         anchors.margins: 6
     }
+
+    onCategoryFilterChanged: currentIndex = 0
 }
