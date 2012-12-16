@@ -60,7 +60,8 @@ Item {
         onCheckedChanged: if (checked) rootItem.slideShowStarted()
         Timer {
             id: slideshowTimer
-            interval: 2000; running: slideshow.checked && !rootItem.slideshowPaused ; repeat: true
+            interval: 2000; repeat: true
+            running: slideshow.checked && !rootItem.slideshowPaused
             onTriggered: {
                 var i = imageList.currentIndex;
                 if (i<imageList.count-1) {
@@ -91,6 +92,8 @@ Item {
         focus: true
         snapMode: ListView.SnapToItem
         clip: true
+
+        onFlickStarted: slideshow.checked = false
     }
 
     PlasmaComponents.ToolButton {

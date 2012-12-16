@@ -26,21 +26,19 @@ import org.kde.plasma.mediacentercomponents 0.1 as MediaCenterComponents
 
 Item {
     id: mediaItem
-    clip: true
 
     signal clicked(int index)
-    signal pressAndHold(int index, string url, string currentMediaType)
+    signal pressAndHold(int index)
 
     Item {
         anchors { fill: parent; margins: 10 }
-        clip: true
 
         Item {
             anchors {
                 fill: parent
                 margins: 2
             }
-            clip: true
+
             PlasmaCore.Theme {
                 id:theme
             }
@@ -66,23 +64,45 @@ Item {
                 Component {
                     id: delegateItemImageComponent
                     Item {
+                        BorderImage {
+                            source: _pmc_shadow_image_path
+                            width: mediaItemDelegateItem.GridView.isCurrentItem ?
+                                    delegateItemImageComponentRect.width+48
+                                    : delegateItemImageComponentRect.width+32
+                            height: mediaItemDelegateItem.GridView.isCurrentItem ?
+                                    delegateItemImageComponentRect.height+48
+                                    : delegateItemImageComponentRect.height+32
+                            border.left: 50; border.top: 50
+                            border.right: 54; border.bottom: 54
+                            anchors.horizontalCenter: delegateItemImageComponentRect.horizontalCenter
+                            anchors.verticalCenter: delegateItemImageComponentRect.verticalCenter
+                            opacity: delegateItemImage.status == Image.Ready ?
+                                       (mediaItemDelegateItem.GridView.isCurrentItem ? 0.4 : 1) : 0.0
+
+                            Behavior on opacity { NumberAnimation { duration: 200 } }
+                            Behavior on height { NumberAnimation { duration: 200 } }
+                            Behavior on width { NumberAnimation { duration: 200 } }
+                        }
                         Rectangle {
+                            id: delegateItemImageComponentRect
                             width: parent.width - 6
                             height: parent.height - 6
                             clip: true
                             anchors.centerIn: parent
                             color: "transparent"
+
                             Image {
                                 id: delegateItemImage
                                 width: parent.width - 6
                                 height: parent.height - 6
                                 anchors.centerIn: parent
                                 fillMode: Image.PreserveAspectCrop
-                                sourceSize.width: width * 2
+                                sourceSize.width: width
                                 sourceSize.height: 0
                                 asynchronous: true
-                                cache: true
+                                cache: false
                                 source: rootColumn.source
+                                smooth: !imageAnimation.running
                                 z: 1
 
                                 states: [
@@ -95,19 +115,20 @@ Item {
                                 Transition {
                                     to: "appear"
                                     ParallelAnimation {
+                                        id: imageAnimation
                                         PropertyAnimation {
                                             target: delegateItemImage;
                                             property: "scale";
-                                            from: 0.1
+                                            from: 0.4
                                             to: 1
-                                            duration: 100
+                                            duration: 50
                                         }
                                         PropertyAnimation {
                                             target: delegateItemImage;
                                             property: "opacity";
                                             from: 0.1
                                             to: 1
-                                            duration: 200
+                                            duration: 50
                                         }
                                     }
                                 }
@@ -149,7 +170,7 @@ Item {
                     text: display ? display : ""
                     visible: !hideLabel
                     font.pointSize: 14
-                    color: mediaItemDelegateItem.GridView.isCurrentItem ? theme.viewHoverColor : "white"
+                    color: mediaItemDelegateItem.GridView.isCurrentItem ? theme.viewHoverColor : theme.textColor
                     elide: mediaItemDelegateItem.GridView.isCurrentItem ? Text.ElideNone : Text.ElideMiddle
                     width: parent.width
                     wrapMode: mediaItemDelegateItem.GridView.isCurrentItem ? Text.Wrap : Text.NoWrap
