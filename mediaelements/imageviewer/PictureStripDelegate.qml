@@ -33,6 +33,7 @@ Item {
         asynchronous: true
         cache: true
         scale: (pictureStripDelegate.ListView.isCurrentItem ? 1.5 : 1)
+        smooth: true
 
         Behavior on scale {
             NumberAnimation {

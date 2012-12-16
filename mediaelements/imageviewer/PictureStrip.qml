@@ -19,15 +19,22 @@
 
 import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
+import org.kde.plasma.core 0.1 as PlasmaCore
 
-Item {
+PlasmaCore.FrameSvgItem {
     id: rootItem
     property alias model: imageList.model
     property alias currentIndex: imageList.currentIndex
     property bool slideshowPaused: false
     signal imageClicked(string url)
     signal slideShowStarted
+    imagePath: "widgets/background"
+    enabledBorders: "LeftBorder|RightBorder|TopBorder"
+    opacity: 0.9
+    visible: false
 
+Item {
+    anchors.fill: parent
     PlasmaComponents.ToolButton {
         id: button1
         height: parent.height; width: height
@@ -35,7 +42,10 @@ Item {
         iconSource: "go-previous"
         onClicked: {
             var i = imageList.currentIndex
-            if (i>0) imageList.currentIndex = i - 1
+            if (i>0) {
+                imageList.currentIndex = i - 1;
+                imageList.currentItem.emitClicked();
+            }
         }
     }
 
@@ -67,9 +77,12 @@ Item {
 
         orientation: ListView.Horizontal
         spacing: 2
+        highlight: Item { }
         preferredHighlightBegin: parent.width*0.4
         preferredHighlightEnd: parent.width*0.6
         highlightRangeMode: GridView.ApplyRange
+        highlightFollowsCurrentItem: true
+        highlightMoveSpeed: -1
         delegate: PictureStripDelegate {
             height: 64
             width: isExpandable ? 0 : height
@@ -87,7 +100,11 @@ Item {
         iconSource: "go-next"
         onClicked: {
             var i = imageList.currentIndex
-            if (i<imageList.count-1) imageList.currentIndex = i + 1
+            if (i<imageList.count-1) {
+                imageList.currentIndex = i + 1;
+                imageList.currentItem.emitClicked();
+            }
         }
     }
+}
 }

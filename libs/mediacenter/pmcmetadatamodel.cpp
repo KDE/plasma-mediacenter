@@ -100,7 +100,7 @@ PmcMetadataModel::~PmcMetadataModel()
 {
     d->metadataUpdater->quit();
     kDebug() << "Waiting for metadata thread to quit...";
-    d->metadataUpdater->wait();
+    d->metadataUpdater->wait(5000);
     delete d;
 }
 
