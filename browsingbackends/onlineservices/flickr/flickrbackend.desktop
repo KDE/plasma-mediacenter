@@ -22,6 +22,10 @@ Name[ug]=Flickr
 Name[uk]=Flickr
 Name[x-test]=xxFlickrxx
 Comment=Discover pictures from flickr for your chosen tag
+Comment[pt]=Descobrir imagens do Flickr para a sua marca escolhida
+Comment[pt_BR]=Descobrir imagens do Flickr para a sua etiqueta escolhida
+Comment[uk]=Ознайомитися з зображеннями flickr за вказаною вами міткою
+Comment[x-test]=xxDiscover pictures from flickr for your chosen tagxx
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 

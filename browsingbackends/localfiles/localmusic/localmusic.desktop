@@ -21,6 +21,10 @@ Name[uk]=Навігація музикою
 Name[x-test]=xxBrowse musicxx
 
 Comment=Browse your device for music
+Comment[pt]=Navegar pela música do seu dispositivo
+Comment[pt_BR]=Navega pelas músicas do seu dispositivo
+Comment[uk]=Переглянути записи музики на вашому пристрої
+Comment[x-test]=xxBrowse your device for musicxx
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 

@@ -21,6 +21,10 @@ Name[uk]=Навігація відео
 Name[x-test]=xxBrowse videosxx
 
 Comment=Browse your device for videos
+Comment[pt]=Navegar pelos vídeos do seu dispositivo
+Comment[pt_BR]=Navega pelos vídeos do seu dispositivo
+Comment[uk]=Переглянути записи відео на вашому пристрої
+Comment[x-test]=xxBrowse your device for videosxx
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 
