@@ -72,5 +72,9 @@ QImage PmcCoverArtProvider::requestImage(const QString& id, QSize* size, const Q
     }
     TagLib::ID3v2::AttachedPictureFrame *frame = static_cast<TagLib::ID3v2::AttachedPictureFrame *>(l.front());
     image.loadFromData((const uchar *) frame->picture().data(), frame->picture().size());
+
+    if (size) {
+        *size = image.size();
+    }
     return image;
 }

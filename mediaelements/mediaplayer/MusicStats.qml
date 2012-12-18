@@ -30,11 +30,11 @@ Row {
         id: musicStatsLeftPane
         height: parent.height; width: root.minimized ? parent.width : parent.width*0.4
         Image {
-            anchors { centerIn: parent; margins: 10 }
+            anchors.centerIn: parent
             source: "image://pmccoverart/" + path
             smooth: true
-            width: Math.min(sourceSize.width, parent.width)
-            height: Math.min(sourceSize.height, parent.height)
+            width: Math.min(sourceSize.width, parent.width*0.9)
+            height: sourceSize.height*width/sourceSize.width
             QtExtraComponents.QIconItem {
                 icon: metaData ? "media-optical-audio" : ""
                 anchors.centerIn: parent
