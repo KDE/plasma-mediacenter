@@ -58,7 +58,7 @@ FocusScope {
             }
             horizontalAlignment: Text.AlignHCenter
             color: theme.textColor
-            width: 0.7 * parent.width
+            width: 0.5 * parent.width
             wrapMode: Text.WordWrap
             text: subs.subtitle
             style: Text.Outline
