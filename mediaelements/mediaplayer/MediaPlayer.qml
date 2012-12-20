@@ -71,7 +71,7 @@ FocusScope {
             id: videoDimRectangle
             anchors.fill: parent
             color: "black"
-            opacity: 0.5
+            opacity: video.hasVideo ? 0.5 : 0
             visible: false
         }
     }
