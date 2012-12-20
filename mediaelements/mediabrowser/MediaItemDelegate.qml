@@ -42,7 +42,6 @@ Item {
             if (isExpandable) {
                 backend.expand(index, mediaUrl, mediaType);
             } else {
-                playlistModel.currentIndex = -1;
                 mediaItemDelegateItem.playRequested(index, mediaUrl, mediaType)
             }
         }
