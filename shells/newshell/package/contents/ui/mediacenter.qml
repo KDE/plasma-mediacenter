@@ -94,7 +94,9 @@ Image {
                 runtimeData.stopped = true;
             }
         }
-        onMediaStarted: runtimeData.playing = true
+        onMediaStarted: {
+            runtimeData.playing = true;
+        }
 
         states: [
             State {
@@ -280,9 +282,7 @@ Image {
             runtimeData.playing = true
             mediaPlayer.url = url
             mediaPlayer.play()
-            mediaBrowser.visible = false
             mediaPlayer.focus = true
-            mediaImageViewer.visible = false
         }
 
          states: [

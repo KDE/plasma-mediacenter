@@ -29,7 +29,7 @@ Item {
         anchors { leftMargin: anchors.rightMargin; bottomMargin: anchors.topMargin }
         sourceSize.width: width
         sourceSize.height: 0
-        source: mediaUrl
+        source: mediaUrl ? mediaUrl : ""
         asynchronous: true
         cache: true
         scale: (pictureStripDelegate.ListView.isCurrentItem ? 1.5 : 1)
