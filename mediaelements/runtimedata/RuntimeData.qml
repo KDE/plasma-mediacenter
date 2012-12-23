@@ -29,6 +29,7 @@ Item {
     property int currentTime: 0
     property bool currentTimeDirty: false
     property real volume: 1.0
+    property bool userTrigerredStop: false
 
     onStoppedChanged: if (stopped) playing = false
     onPausedChanged: if (paused) playing = false

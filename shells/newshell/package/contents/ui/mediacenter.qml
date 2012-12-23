@@ -86,7 +86,7 @@ Image {
         }
 
         onMediaFinished: {
-            if (playlistModel.currentIndex != -1 && totalTime != -1) {
+            if (playlistModel.currentIndex != -1 && totalTime != -1 && !runtimeDataObject.userTrigerredStop) {
                 playlist.playRequested(playlistModel.getNextUrl());
                 console.log("playlist");
             } else {
