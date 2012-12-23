@@ -114,7 +114,7 @@ void MetadataUpdater::processPendingIndices()
     if (areThereResultsToProcess()) {
         const int i = nextIndexToProcess();
         fetchValuesForResult(i, resultForRow(i));
-        QTimer::singleShot(0, this, SLOT(processPendingIndices()));
+        QTimer::singleShot(10, this, SLOT(processPendingIndices()));
     }
 }
 
