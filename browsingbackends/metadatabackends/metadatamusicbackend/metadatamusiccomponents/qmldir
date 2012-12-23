@@ -1,1 +1,4 @@
 MediaBrowser 0.1 MediaBrowser.qml
+TabBrowser 0.1 ../TabBrowser.qml
+MediaGridBrowser 0.1 ../MediaGridBrowser.qml
+MediaListBrowser 0.1 ../MediaListBrowser.qml

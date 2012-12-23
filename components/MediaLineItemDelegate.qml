@@ -18,61 +18,70 @@
  ***************************************************************************/
 
 import QtQuick 1.1
-import org.kde.qtextracomponents 0.1 as QtExtraComponents
 import org.kde.plasma.components 0.1 as PlasmaComponents
 
 Item {
-    id: rootRow
-    anchors.fill: parent
-    property QtObject backend
-    //spacing: 10
-    //clip: true
+    id: musicDelegateRootItem
+    visible: false
 
-    TabBrowser {
-        id: mediaBrowser
+    Timer {
+        id: showTimer
+        interval: 100
+        repeat: false
+        onTriggered: musicDelegateRootItem.visible = true
+    }
 
-        MediaGridBrowser {
-            id: artistListView
-            model: rootRow.backend.artistsModel();
-            title: "Artists"
-            placeholderText: "Search Artists"
+    Text {
+        text: display ? display : ""
+        anchors.fill: parent
+        anchors.margins: 5
+        font.pointSize: 16
+        color: "white"
+        elide: Text.ElideRight
+        verticalAlignment: Text.AlignVCenter
+        style: Text.Outline
+        styleColor: "black"
 
-            onSearch: {
-                rootRow.backend.searchArtist(term)
-            }
-            onItemSelected: {
-                rootRow.backend.artistFilter = eventParams.resourceId
-                mediaBrowser.openTab(2)
+        MouseArea {
+            id: mouseArea
+            hoverEnabled: true
+            onEntered: musicDelegateRootItem.ListView.view.currentIndex = index
+            anchors.fill: parent
+            onClicked: mediaBrowser.playRequested(0, mediaUrl, mediaType)
+        }
+    }
+
+    PlasmaComponents.ToolButton {
+        id: addToPlaylistButton
+        iconSource: "list-add"
+        anchors { right: parent.right; top: parent.top }
+        visible: musicDelegateRootItem.ListView.isCurrentItem
+        onClicked: {
+            playlistModel.addToPlaylist (mediaUrl, display);
+        }
+    }
+
+    states: [
+        State {
+            name: "appear"
+            when: visible
+        }
+    ]
+    transitions: [
+        Transition {
+            to: "appear"
+            NumberAnimation {
+                target: musicDelegateRootItem;
+                property: "opacity";
+                from: 0.0
+                to: 1.0;
+                easing.type: Easing.InQuad;
+                duration: 500
             }
         }
+    ]
 
-        MediaGridBrowser {
-            id: albumListView
-            model: rootRow.backend.albumsModel();
-            title: "Albums"
-            placeholderText: "Search Albums"
-
-            onSearch: {
-                rootRow.backend.searchAlbum(term)
-            }
-            onItemSelected: {
-                rootRow.backend.albumFilter = eventParams.resourceId
-                mediaBrowser.openTab(2)
-            }
-        }
-        
-        MediaListBrowser {
-            id: musicListView
-            model: rootRow.backend.musicModel;
-            title: "Songs"
-            placeholderText: "Search Songs"
-
-            onSearch: {
-                rootRow.backend.searchMusic(term)
-            }
-            onPlayAll: {
-                rootRow.backend.addAllSongsToPlaylist(playlistModel);
-            }
-        }
+    Component.onCompleted: {
+        showTimer.start()
     }
 }

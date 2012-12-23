@@ -1,0 +1,1 @@
+install(DIRECTORY . DESTINATION ${IMPORTS_INSTALL_DIR}/org/kde/plasma/mediacentercomponents)
