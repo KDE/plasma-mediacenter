@@ -21,9 +21,10 @@
 #ifndef LOCALFILESABSTRACTMODEL_H
 #define LOCALFILESABSTRACTMODEL_H
 
-#include <KDE/KDirModel>
+#include <KDE/KDirSortFilterProxyModel>
+#include <KDE/KUrl>
 
-class LocalFilesAbstractModel : public KDirModel
+class LocalFilesAbstractModel : public KDirSortFilterProxyModel
 {
     Q_OBJECT
 public:

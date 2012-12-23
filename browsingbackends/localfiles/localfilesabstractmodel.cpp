@@ -21,20 +21,20 @@
 
 #include <mediacenter/mediacenter.h>
 
-#include <KDirModel>
-#include <KDirLister>
+#include <KDE/KDirModel>
+#include <KDE/KDirLister>
 
 class LocalFilesAbstractModel::Private
 {
 public:
     QStringList mimeTypes;
+    KDirModel dirModel;
 };
 
 LocalFilesAbstractModel::LocalFilesAbstractModel (QObject* parent, const QString& acceptedMimetypes)
-    : KDirModel (parent)
+    : KDirSortFilterProxyModel (parent)
     , d(new Private())
 {
-    setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
     KMimeType::List mimeList = KMimeType::allMimeTypes();
 
     d->mimeTypes << "inode/directory";
@@ -44,11 +44,16 @@ LocalFilesAbstractModel::LocalFilesAbstractModel (QObject* parent, const QString
         }
     }
 
-    if (dirLister()) {
-        dirLister()->setMimeFilter(d->mimeTypes);
+    if (d->dirModel.dirLister()) {
+        d->dirModel.dirLister()->setMimeFilter(d->mimeTypes);
     }
 
-    dirLister()->openUrl(KUrl::fromLocalFile(QDir::homePath()));
+    d->dirModel.dirLister()->openUrl(KUrl::fromLocalFile(QDir::homePath()));
+
+    setSourceModel(&d->dirModel);
+    setSortFoldersFirst(true);
+
+    setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
 }
 
 QVariant LocalFilesAbstractModel::data (const QModelIndex& index, int role) const
@@ -65,31 +70,31 @@ QVariant LocalFilesAbstractModel::data (const QModelIndex& index, int role) cons
             if (mime == "audio" || mime == "image" || mime == "video")
                 return mime;
     }
-    return KDirModel::data (index, role);
+    return KDirSortFilterProxyModel::data (index, role);
 }
 
 bool LocalFilesAbstractModel::goOneLevelUp()
 {
-    KUrl url = dirLister()->url();
+    KUrl url = d->dirModel.dirLister()->url();
 
     url.addPath("..");
-    bool success = dirLister()->openUrl(url);
+    bool success = d->dirModel.dirLister()->openUrl(url);
 
     return success;
 }
 
 bool LocalFilesAbstractModel::browseTo (int row)
 {
-    KUrl url = dirLister()->url();
+    KUrl url = d->dirModel.dirLister()->url();
     url.addPath(data(index(row, 0)).toString());
-    bool success = dirLister()->openUrl(url);
+    bool success = d->dirModel.dirLister()->openUrl(url);
 
     return success;
 }
 
 void LocalFilesAbstractModel::browseToUrl(const KUrl& url)
 {
-    dirLister()->openUrl(url);
+    d->dirModel.dirLister()->openUrl(url);
 }
 
 #include "localfilesabstractmodel.moc"
