@@ -17,7 +17,7 @@ add_subdirectory(browsingbackends)
 add_subdirectory(mediaelements)
 add_subdirectory(libs)
 add_subdirectory(shells)
+add_subdirectory(components)
 
 message("*** QtMultimediaKit (included in Qt-Mobility) is required at runtime to play multimedia.")
 message("*** You can download it from http://get.qt.nokia.com/qt/add-ons/qt-mobility-opensource-src-1.2.0.zip .")
-

@@ -20,65 +20,66 @@
 import QtQuick 1.1
 import org.kde.qtextracomponents 0.1 as QtExtraComponents
 import org.kde.plasma.components 0.1 as PlasmaComponents
-import org.kde.plasma.mediacentercomponents 0.1 as MediaCenterComponents
 
-Item {
-    id: rootRow
-    anchors.fill: parent
-    property QtObject backend
 
-    signal popupMenuRequested(int index, string mediaUrl, string mediaType, string display)
 
-    //spacing: 10
-    //clip: true
+PlasmaComponents.Page {
+    id: page
+    property string title
+    property variant backend
+    property alias model: view.model
+    property alias showSearch: search.visible
+    property alias placeholderText: search.placeholderText
 
-    TabBrowser {
-        id: mediaBrowser
+    signal search(string term)
+    signal itemSelected(variant eventParams)
+    signal itemContextMenu(variant eventParams)
+    signal itemAdded(variant eventParams)
 
-        MediaGridBrowser {
-            id: artistListView
-            model: rootRow.backend.artistsModel();
-            title: i18n("Artists")
-            placeholderText: i18n("Search Artists")
+    // Searchfield
+    PlasmaComponents.TextField {
+        id: search
+        width: parent.width
+        height: 30
+        clearButtonShown: true
+        onTextChanged: timer.restart()
+        Timer {
+            id: timer
+            interval: 2000
+            onTriggered: page.search(parent.text)
+        }
+    }
 
-            onSearch: {
-                rootRow.backend.searchArtist(term)
-            }
+   GridView {
+        id: view
+        anchors.bottom: parent.bottom
+        width: parent.width;
+        height: search.visible ? parent.height - 30 : parent.height
 
+        cellWidth: cellHeight
+        cellHeight: height/2.1
+        flow: _pmc_is_desktop ? GridView.LeftToRight : GridView.TopToBottom
+        clip: true
+
+        //preferredHighlightBegin: parent.width*0.1
+        //preferredHighlightEnd: parent.width*0.9
+        //highlightRangeMode: GridView.ApplyRange
+
+        delegate: MediaGridItemDelegate {
             onItemSelected: {
-                rootRow.backend.artistFilter = eventParams.resourceId
-                mediaBrowser.openTab(2)
+                page.itemSelected(eventParams)
+            }
+            onItemContextMenu: {
+                page.itemContextMenu(eventParams)
+            }
+            onItemAdded: {
+                page.itemAdded(eventParams)
             }
         }
 
-        MediaGridBrowser {
-            id: albumListView
-            model: rootRow.backend.albumsModel();
-            title: i18n("Albums")
-            placeholderText: i18n("Search Albums")
-
-            onSearch: {
-                rootRow.backend.searchAlbum(term)
-            }
-            onItemSelected: {
-                rootRow.backend.albumFilter = eventParams.resourceId
-                mediaBrowser.openTab(2)
-            }
-        }
-
-        MediaListBrowser {
-            id: musicListView
-            model: rootRow.backend.musicModel;
-            title: i18n("Songs")
-            placeholderText: i18n("Search Songs")
-
-            onSearch: {
-                rootRow.backend.searchMusic(term)
-            }
-
-            onPlayAll: {
-                rootRow.backend.addAllSongsToPlaylist(playlistModel);
-            }
+        PlasmaComponents.ScrollBar {
+            flickableItem: parent
+            orientation: _pmc_is_desktop ? GridView.LeftToRight : GridView.TopToBottom
         }
     }
 }
