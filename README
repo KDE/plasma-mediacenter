@@ -2,7 +2,7 @@ Required:
 ==========
 
 1) qt-mobility from http://qt.gitorious.org/qt-mobility/qt-mobility for QtMultimediaKit
-2) plasma-mobile from https://projects.kde.org/projects/kdereview/plasma-mobile is needed in order to get features of different metadatamodel backends.
+2) Standard KDE Oxygen Plasma theme
 
 To know Plasma Media Center architecture and other related information browse through http://community.kde.org/Plasma/Plasma_Media_Center
 
