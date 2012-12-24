@@ -48,12 +48,12 @@ LocalFilesAbstractModel::LocalFilesAbstractModel (QObject* parent, const QString
         d->dirModel.dirLister()->setMimeFilter(d->mimeTypes);
     }
 
-    d->dirModel.dirLister()->openUrl(KUrl::fromLocalFile(QDir::homePath()));
 
     setSourceModel(&d->dirModel);
     setSortFoldersFirst(true);
 
     setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
+    browseToUrl(KUrl::fromLocalFile(QDir::homePath()));
 }
 
 QVariant LocalFilesAbstractModel::data (const QModelIndex& index, int role) const
