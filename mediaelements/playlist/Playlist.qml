@@ -20,6 +20,7 @@
 import QtQuick 1.1
 import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.components 0.1 as PlasmaComponents
+import org.kde.plasma.mediacentercomponents 0.1 as MediaCenterComponents
 
 PlasmaCore.FrameSvgItem {
     id: playlistItem
@@ -65,20 +66,31 @@ PlasmaCore.FrameSvgItem {
                 onClicked: playlistModel.clearPlaylist();
             }
         }
+        PlasmaComponents.TextField {
+            anchors { top: topRow.bottom; left: parent.left; right: parent.right }
+            id: filterText
+            width: parent.width
+            height: 30
+            clearButtonShown: true
+            placeholderText: "Search Playlist"
+        }
 
         ListView {
             id: playlistList
-            anchors { top: topRow.bottom; left: parent.left; right: parent.right }
+            anchors { top: filterText.bottom; left: parent.left; right: parent.right }
             anchors.bottom: parent.bottom
             anchors.margins: 5
-            model: playlistModel
+            model: MediaCenterComponents.FilterPlaylistModel {
+              sourcePlaylistModel : playlistModel
+              filterString: filterText.text
+            }
             spacing: 3
             clip: true
 
             PlasmaComponents.ScrollBar {
-            id: playlistScrollbar
-            orientation: Qt.Vertical
-            flickableItem: playlistList
+                id: playlistScrollbar
+                orientation: Qt.Vertical
+                flickableItem: playlistList
             }
             delegate: PlaylistDelegate { width: playlistList.width - playlistScrollbar.width ; height: 32 }
         }
