@@ -60,7 +60,8 @@ void BackendsModel::loadBrowsingBackends()
         }
 
         const QString key = service->library();
-        MediaCenter::AbstractBrowsingBackend *backend = service->createInstance<MediaCenter::AbstractBrowsingBackend>(0, QVariantList() << service->storageId());
+        QString errorMessage;
+        MediaCenter::AbstractBrowsingBackend *backend = service->createInstance<MediaCenter::AbstractBrowsingBackend>(0, QVariantList() << service->storageId(), &errorMessage);
         if (backend) {
             if (!backend->okToLoad()) {
                 kDebug() << "Backend " << info.name() << " doesn't want to be loaded";
@@ -74,7 +75,7 @@ void BackendsModel::loadBrowsingBackends()
             const_cast<BackendsModel *>(this)->m_backends.insert(key, backend);
             m_loadedBackendsInfo.append(info);
         } else {
-            kDebug() << "Could not create a instance for the backend " << info.name();
+            kDebug() << "Could not create a instance for the backend " << info.name() << errorMessage;
         }
     }
 }
