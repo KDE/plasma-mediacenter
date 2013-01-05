@@ -29,7 +29,18 @@ Row {
     Item {
         id: musicStatsLeftPane
         height: parent.height; width: root.minimized ? parent.width : parent.width*0.4
+
+        BorderImage {
+            source: _pmc_shadow_image_path
+            width: musicStatsAlbumCoverImage.width+40
+            height: musicStatsAlbumCoverImage.height+40
+            border.left: 50; border.top: 50
+            border.right: 54; border.bottom: 54
+            anchors.horizontalCenter: musicStatsAlbumCoverImage.horizontalCenter
+            anchors.verticalCenter: musicStatsAlbumCoverImage.verticalCenter
+        }
         Image {
+            id: musicStatsAlbumCoverImage
             anchors.centerIn: parent
             source: "image://pmccoverart/" + path
             smooth: true
