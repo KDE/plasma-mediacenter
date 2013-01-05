@@ -183,7 +183,9 @@ Item {
                 id: mediaItemDelegateItemMouseArea
                 hoverEnabled: true
                 anchors.fill: parent
-                onEntered: mediaItemDelegateItem.GridView.view.currentIndex = index
+                onEntered: if(!mediaItemDelegateItem.GridView.view.moving &&
+                                !mediaItemDelegateItem.GridView.view.flicking)
+                                    mediaItemDelegateItem.GridView.view.currentIndex = index
                 onClicked: mediaItem.clicked(index)
                 onPressAndHold: mediaItem.pressAndHold(index);
             }
