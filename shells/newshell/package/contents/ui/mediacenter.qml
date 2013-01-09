@@ -59,7 +59,7 @@ Image {
             id: mediaPlayer
             runtimeDataObject: runtimeData
             anchors { left: parent.left; right: parent.right; top: parent.top; bottom: parent.bottom }
-            focus: !mediaBrowser.activeFocus && !mediaWelcome.activeFocus
+            //focus: !mediaBrowser.activeFocus && !mediaWelcome.activeFocus
             state: mediaBrowser.visible ? "minimize" : ""
             z: mediaBrowser.visible ? 2 : 0
 

@@ -20,6 +20,7 @@
 
 import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
+import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.mediacentercomponents 0.1 as MediaCenterComponents
 
 FocusScope {
@@ -28,6 +29,10 @@ FocusScope {
 
     signal playRequested(int index, string url, string currentMediaType)
     signal popupMenuRequested(int index, string mediaUrl, string mediaType, string display)
+    
+    PlasmaCore.Theme {
+        id:theme
+    }
 
     Item {
         id: mediaBrowserSidePanel
@@ -46,6 +51,7 @@ FocusScope {
         }
     }
 
+    // Item containing the browser in the main stage
     Item {
         id: mediaBrowserViewItem
         property QtObject mediaBrowserGridView
@@ -58,37 +64,23 @@ FocusScope {
 
     Component {
         id: mediaBrowserViewComponent
-        GridView {
+        MediaGridBrowser {
             id: mediaBrowserGridViewId
-            anchors { fill: parent; topMargin: 10; bottomMargin: 10 + bottomPanel.height }
-            clip: true
-            cellWidth: cellHeight
-            cellHeight: height/2.1
-            delegate: MediaItemDelegate {
-                backend: mediaBrowser.currentBrowsingBackend
-                onPlayRequested: mediaBrowser.playRequested(index, url, currentMediaType)
-                onPopupMenuRequested: mediaBrowser.popupMenuRequested(index,mediaUrl,mediaType, display)
-            }
-            flow: _pmc_is_desktop ? GridView.LeftToRight : GridView.TopToBottom
             model: mediaBrowser.currentBrowsingBackend.backendModel
-            cacheBuffer: width*2
+            anchors { fill: parent; topMargin: 10; bottomMargin: 10 + searchMedia.height }
+            visible: true
+            showSearch: true
+            placeholderText: i18n("Search ...")
 
-            Text {
-                visible: false
-                font.pointSize: 20
-                color: theme.textColor
-                text: mediaBrowserGridViewId.count
+            onItemSelected: {
+                console.log(eventParams.index + " : " + eventParams.mediaUrl);
+                mediaBrowser.playRequested(eventParams.index, eventParams.mediaUrl, eventParams.currentMediaType)
             }
-
-            PlasmaComponents.ScrollBar {
-                orientation: _pmc_is_desktop ? Qt.Vertical : Qt.Horizontal
-                flickableItem: mediaBrowserGridViewId
+            onItemContextMenu: {
+                mediaBrowser.popupMenuRequested(eventParams.index,eventParams.mediaUrl,eventParams.mediaType, display)
             }
-
-            PlasmaComponents.BusyIndicator {
-                anchors { bottom: parent.bottom; horizontalCenter: parent.horizontalCenter }
-                running: currentBrowsingBackend.busy
-                visible: running
+            onSearch: {
+                currentBrowsingBackend.search(term);
             }
         }
     }
@@ -97,20 +89,26 @@ FocusScope {
         //Check if there is a custom browser, if yes, load that
         var object;
         if (currentBrowsingBackend.mediaBrowserOverride()) {
+            console.log("setting special backend")
             var qmlSource = currentBrowsingBackend.mediaBrowserOverride();
             object = Qt.createQmlObject(qmlSource, mediaBrowserViewItem);
             mediaBrowserViewItem.mediaBrowserGridView = object;
             object.backend = (function() { return currentBrowsingBackend; });
         } else {
+            console.log("setting default backend")
             object = mediaBrowserViewComponent.createObject(mediaBrowserViewItem);
+           
         }
         mediaBrowserViewItem.mediaBrowserGridView = object;
         object.focus = true
 
-        if (currentBrowsingBackend.supportsSearch()) {
-            searchMedia.visible = true
-        } else {
-            searchMedia.visible = false
+        // Check if there should be a search bar
+        if (typeof object.showSearch !== "undefined") {
+            if (currentBrowsingBackend.supportsSearch()) {
+                object.showSearch= true
+            } else {
+                object.showSearch = false
+            }
         }
 
         if (mediaBrowserSidePanel.child) mediaBrowserSidePanel.child.destroy()
@@ -183,7 +181,7 @@ FocusScope {
         }
     }
 
-     onPopupMenuRequested: {
+    onPopupMenuRequested: {
         popupMenu.visible = true
         popupMenu.mediaUrl = mediaUrl
         popupMenu.display = display
@@ -215,4 +213,14 @@ FocusScope {
              popupMenu.visible = false
          }
     }
+
+    /*onFocusChanged: {
+        if (page.focus) {
+            if (!view.currentItem) {
+                view.indexAt(0,0)
+                //view.currentItem.scale: 1.3
+            }
+            view.focus = true
+        }
+    }*/
 }
