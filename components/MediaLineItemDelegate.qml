@@ -21,14 +21,22 @@ import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
 
 Item {
-    id: musicDelegateRootItem
+    id: mediaItem
     visible: false
+    
+    
+    signal itemSelected(variant eventParams)
+    signal itemContextMenu(variant eventParams)
+    signal itemAdded(variant eventParams)
 
     Timer {
         id: showTimer
         interval: 100
         repeat: false
-        onTriggered: musicDelegateRootItem.visible = true
+        onTriggered: {
+            mediaItem.visible = true
+            mediaItem.focus = false
+        }
     }
 
     Text {
@@ -45,9 +53,11 @@ Item {
         MouseArea {
             id: mouseArea
             hoverEnabled: true
-            onEntered: musicDelegateRootItem.ListView.view.currentIndex = index
+            onEntered: mediaItem.ListView.view.currentIndex = index
             anchors.fill: parent
-            onClicked: mediaBrowser.playRequested(0, mediaUrl, mediaType)
+            onClicked: {
+                mediaItem.itemSelected(getEventParams())
+            }
         }
     }
 
@@ -55,9 +65,15 @@ Item {
         id: addToPlaylistButton
         iconSource: "list-add"
         anchors { right: parent.right; top: parent.top }
-        visible: musicDelegateRootItem.ListView.isCurrentItem
+        visible: mediaItem.ListView.isCurrentItem
         onClicked: {
-            playlistModel.addToPlaylist (mediaUrl, display);
+            mediaItem.itemAdded(getEventParams())
+        }
+    }
+    
+    Keys.onReturnPressed: {
+        onClicked: {
+            mediaItem.itemSelected(getEventParams())
         }
     }
 
@@ -71,7 +87,7 @@ Item {
         Transition {
             to: "appear"
             NumberAnimation {
-                target: musicDelegateRootItem;
+                target: mediaItem;
                 property: "opacity";
                 from: 0.0
                 to: 1.0;
@@ -83,5 +99,29 @@ Item {
 
     Component.onCompleted: {
         showTimer.start()
+    }
+
+    function getEventParams() {
+        // returning "resourceId", "index", "mediaUrl", "mediaType", "display" if available
+        var eventParams = {}
+        if (resourceId) {
+            eventParams.resourceId = resourceId
+        }
+        if (index) {
+            eventParams.index = index
+        }
+        /*if (url) {
+            eventParams.url = url
+        }*/
+        if (mediaUrl) {
+            eventParams.mediaUrl = mediaUrl
+        }
+        if (mediaType) {
+            eventParams.mediaType = mediaType
+        }
+        if (display) {
+            eventParams.display = display
+        }
+        return eventParams;
     }
 }

@@ -41,8 +41,9 @@ Item {
                 rootRow.backend.searchArtist(term)
             }
             onItemSelected: {
+                // TODO focus is sometimes lost if activate is faster then the clear() on musicModel
                 rootRow.backend.artistFilter = eventParams.resourceId
-                mediaBrowser.openTab(2)
+                mediaBrowser.activateTab(2)
             }
         }
 
@@ -56,11 +57,12 @@ Item {
                 rootRow.backend.searchAlbum(term)
             }
             onItemSelected: {
+                // TODO focus is sometimes lost if activate is faster then the clear() on musicModel
                 rootRow.backend.albumFilter = eventParams.resourceId
-                mediaBrowser.openTab(2)
+                mediaBrowser.activateTab(2)
             }
         }
-        
+
         MediaListBrowser {
             id: musicListView
             model: rootRow.backend.musicModel;
@@ -69,10 +71,38 @@ Item {
 
             onSearch: {
                 rootRow.backend.searchMusic(term)
+            } 
+            onItemSelected: {
+                mediaBrowser.playRequested(0, eventParams.mediaUrl, eventParams.mediaType)
+            }
+            onItemAdded: {
+                playlistModel.addToPlaylist (mediaUrl, display);
             }
             onPlayAll: {
                 rootRow.backend.addAllSongsToPlaylist(playlistModel);
             }
         }
+        
+        onActivatedTab: {
+            // TODO Reset filter
+            // Chrashs pmc every other time
+            /*if (n == 0) {
+                rootRow.backend.artistFilter = ""
+            }
+            if (n == 1) {
+                rootRow.backend.albumFilter = ""
+            }
+            if (n == 3) {
+                rootRow.backend.artistFilter = ""
+                rootRow.backend.albumFilter = ""
+            }*/
+        }
+    }
+    
+    onFocusChanged: {
+       if (focus) {
+           focus = false
+           mediaBrowser.focus = true
+       }
     }
 }

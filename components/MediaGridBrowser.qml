@@ -20,14 +20,15 @@
 import QtQuick 1.1
 import org.kde.qtextracomponents 0.1 as QtExtraComponents
 import org.kde.plasma.components 0.1 as PlasmaComponents
-
+import org.kde.plasma.core 0.1 as PlasmaCore
 
 
 PlasmaComponents.Page {
     id: page
     property string title
     property variant backend
-    property alias model: view.model
+    property Item ancestor  // used for focus the "ui parent"
+    property alias model: mediaView.model
     property alias showSearch: search.visible
     property alias placeholderText: search.placeholderText
 
@@ -35,6 +36,22 @@ PlasmaComponents.Page {
     signal itemSelected(variant eventParams)
     signal itemContextMenu(variant eventParams)
     signal itemAdded(variant eventParams)
+
+    PlasmaCore.FrameSvgItem {
+        id: hover
+        anchors {
+            fill: mediaView
+            leftMargin: -margins.left
+            topMargin: -margins.top
+            rightMargin: -margins.right
+            bottomMargin: -margins.bottom
+        }
+
+        imagePath: "widgets/button"
+        prefix: "hover"
+        //visible:mediaView.focus || (mediaView.currentItem &&  mediaView.currentItem.focus)  // this does not get updated
+        visible: false
+    }
 
     // Searchfield
     PlasmaComponents.TextField {
@@ -50,8 +67,8 @@ PlasmaComponents.Page {
         }
     }
 
-   GridView {
-        id: view
+    GridView {
+        id: mediaView
         anchors.bottom: parent.bottom
         width: parent.width;
         height: search.visible ? parent.height - 30 : parent.height
@@ -62,6 +79,8 @@ PlasmaComponents.Page {
         preferredHighlightBegin: parent.width*0.1
         preferredHighlightEnd: parent.width*0.9
         highlightRangeMode: GridView.ApplyRange
+        highlightFollowsCurrentItem: true
+
         flow: GridView.TopToBottom
 
         delegate: MediaGridItemDelegate {
@@ -79,6 +98,50 @@ PlasmaComponents.Page {
         PlasmaComponents.ScrollBar {
             flickableItem: parent
             orientation: Qt.Horizontal
+        }
+
+        Keys.onPressed: {
+            // Leaving the GridView
+            if (event.key == Qt.Key_Up && currentIndex === 0) {
+                forceFocus(false);
+            }
+        }
+
+        onFocusChanged: {
+            // Leaving the GridView and set focus to ancestor
+            // TODO save focus and restore on new focus
+            if (!mediaView.focus) {
+
+            }
+        }
+    }
+
+    // onFocus activate gridview and select the first item if none is selected
+    onFocusChanged: {
+        if (page.focus) {
+            forceFocus(true);
+        }
+    }
+    function forceFocus(val) {
+        if (val) {
+            console.log("set focus to gridview")
+            mediaView.focus = true
+            page.focus = false
+            hover.visible = true
+            
+            if (!mediaView.currentItem || mediaView.currentIndex == -1) {
+                mediaView.indexAt(0,0)
+            }
+            mediaView.moveCurrentIndexDown()
+            mediaView.moveCurrentIndexUp()
+        }
+        else {
+            console.log("remove focus gridview")
+            console.log(page.ancestor.focus)
+            page.ancestor.focus = true
+            mediaView.focus = false
+            mediaView.currentIndex = -1
+            hover.visible = false
         }
     }
 }

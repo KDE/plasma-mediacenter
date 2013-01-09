@@ -26,13 +26,10 @@ import org.kde.plasma.mediacentercomponents 0.1 as MediaCenterComponents
 
 Item {
     id: mediaItem
-    width: view.cellWidth
-    height: view.cellHeight
-
-    scale: (GridView.isCurrentItem ? 1.3 : 1)
-    clip: !GridView.isCurrentItem
-    z: GridView.isCurrentItem ? 1 : 0
-
+    width: mediaView.cellWidth
+    height: mediaView.cellHeight
+    state: GridView.isCurrentItem ? "active" : "" 
+    
     signal itemSelected(variant eventParams)
     signal itemContextMenu(variant eventParams)
     signal itemAdded(variant eventParams)
@@ -44,10 +41,6 @@ Item {
             anchors {
                 fill: parent
                 margins: 2
-            }
-
-            PlasmaCore.Theme {
-                id:theme
             }
 
             Column {
@@ -216,10 +209,24 @@ Item {
                 mediaItem.itemAdded(getEventParams())
             }
         }
-        Keys.onReturnPressed: {
-            mediaItem.itemSelected(getEventParams())
-        }
+        
     }
+    
+    Keys.onReturnPressed: {
+        mediaItem.itemSelected(getEventParams())
+    }
+    
+    states: [
+        State {
+            name: "active"
+            PropertyChanges {
+                target: mediaItem;
+                scale: 1.3;
+                clip: false;
+                z: 1;
+            }
+        }
+    ]
 
     Behavior on scale {
         NumberAnimation {
@@ -229,7 +236,7 @@ Item {
     }
 
     function getEventParams() {
-        // returning "resourceId", "index", "url", "mediaUrl", "mediaType", "display" if available
+        // returning "resourceId", "index", "mediaUrl", "mediaType", "display" if available
         var eventParams = {}
         if (resourceId) {
             eventParams.resourceId = resourceId
