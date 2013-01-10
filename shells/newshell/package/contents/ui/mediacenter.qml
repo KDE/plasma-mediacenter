@@ -30,6 +30,12 @@ Image {
 Image {
     anchors.fill: parent
     source: _pmc_gradient_image_path
+    
+    QtObject {
+        id: __theme
+        property int margin : 20
+        property int radius : 5
+    }
 
     MediaCenterComponents.RuntimeData {
         id: runtimeData

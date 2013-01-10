@@ -71,18 +71,37 @@ PlasmaComponents.Page {
         id: mediaView
         anchors.bottom: parent.bottom
         width: parent.width;
-        height: search.visible ? parent.height - 30 : parent.height
+        height: search.visible ? parent.height - (30 + __theme.margin) : parent.height - __theme.margin
 
-        cellWidth: width / 5
+        cellWidth: width / 6
         cellHeight: cellWidth
 
-        preferredHighlightBegin: parent.width*0.1
-        preferredHighlightEnd: parent.width*0.9
+        preferredHighlightBegin: parent.width * 0.1
+        preferredHighlightEnd: parent.width * 0.9
         highlightRangeMode: GridView.ApplyRange
         highlightFollowsCurrentItem: true
-
         flow: GridView.TopToBottom
+        snapMode: GridView.SnapToRow
 
+        highlight: Rectangle {
+            color: theme.viewBackgroundColor
+            width: mediaView.cellWidth
+            height: mediaView.cellHeight
+            PlasmaCore.FrameSvgItem {
+                id: hover
+                anchors {
+                    fill: parent
+                    leftMargin: -margins.left
+                    topMargin: -margins.top
+                    rightMargin: -margins.right
+                    bottomMargin: -margins.bottom
+                }
+
+                imagePath: "widgets/button"
+                prefix: "hover"
+                //visible:mediaView.focus || (mediaView.currentItem &&  mediaView.currentItem.focus)  // this does not get updated
+            }
+        }
         delegate: MediaGridItemDelegate {
             onItemSelected: {
                 page.itemSelected(eventParams)
@@ -94,7 +113,6 @@ PlasmaComponents.Page {
                 page.itemAdded(eventParams)
             }
         }
-
         PlasmaComponents.ScrollBar {
             flickableItem: parent
             orientation: Qt.Horizontal
@@ -127,7 +145,7 @@ PlasmaComponents.Page {
             console.log("set focus to gridview")
             mediaView.focus = true
             page.focus = false
-            hover.visible = true
+            //hover.visible = true
             
             if (!mediaView.currentItem || mediaView.currentIndex == -1) {
                 mediaView.indexAt(0,0)
@@ -141,7 +159,7 @@ PlasmaComponents.Page {
             page.ancestor.focus = true
             mediaView.focus = false
             mediaView.currentIndex = -1
-            hover.visible = false
+            //hover.visible = false
         }
     }
 }

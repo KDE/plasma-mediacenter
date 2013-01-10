@@ -24,18 +24,36 @@ import org.kde.plasma.core 0.1 as PlasmaCore
 import "MediaItemDelegateLogic.js" as Logic
 import org.kde.plasma.mediacentercomponents 0.1 as MediaCenterComponents
 
-Item {
+Rectangle {
     id: mediaItem
     width: mediaView.cellWidth
     height: mediaView.cellHeight
     state: GridView.isCurrentItem ? "active" : "" 
-    
+    color: "transparent"
+    radius: __theme.radius
+
     signal itemSelected(variant eventParams)
     signal itemContextMenu(variant eventParams)
     signal itemAdded(variant eventParams)
+    
+    PlasmaCore.FrameSvgItem {
+        id: hover
+        anchors {
+            fill: mediaItem
+            leftMargin: -margins.left
+            topMargin: -margins.top
+            rightMargin: -margins.right
+            bottomMargin: -margins.bottom
+        }
+
+        imagePath: "widgets/button"
+        prefix: "hover"
+        //visible:mediaView.focus || (mediaView.currentItem &&  mediaView.currentItem.focus)  // this does not get updated
+        visible: false
+    }
 
     Item {
-        anchors { fill: parent; margins: 20}
+        anchors { fill: parent; margins: 10}
 
         Item {
             anchors {
@@ -221,16 +239,33 @@ Item {
             name: "active"
             PropertyChanges {
                 target: mediaItem;
-                scale: 1.3;
+                //scale: 1.15;
                 clip: false;
-                z: 1;
+                z: 2;
+                //color: theme.viewBackgroundColor
+            }
+            PropertyChanges {
+                target: hover;
+                //visible: 1
             }
         }
     ]
 
     Behavior on scale {
         NumberAnimation {
-            duration: 500
+            duration: 200
+            easing.type: Easing.OutExpo
+        }
+    }
+    Behavior on color {
+        ColorAnimation  {
+            duration: 200
+            easing.type: Easing.OutExpo
+        }
+    }
+    Behavior on visible {
+        NumberAnimation  {
+            duration: 200
             easing.type: Easing.OutExpo
         }
     }
