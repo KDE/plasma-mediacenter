@@ -27,7 +27,7 @@ import org.kde.plasma.core 0.1 as PlasmaCore
 Item {
     id: tabBrowser
     anchors.fill: parent
-    anchors.margins: margin
+    anchors.margins: __theme.margin
     property QtObject backend
     property alias currentTab: mediaTabGroup.currentTab
     property alias currentTabButton: mediaTabGroup.currentTab
@@ -35,7 +35,6 @@ Item {
     property QtObject mediaPage0
     property QtObject mediaPage1
     property QtObject mediaPage2
-    property int margin: 5
 
     signal activatedTab(int n) // n = number of the tab
 
@@ -149,7 +148,7 @@ Item {
     PlasmaComponents.TabGroup {
         id: mediaTabGroup
         width: parent.width; 
-        anchors { top: mediaTabBar.bottom; bottom: parent.bottom }
+        anchors { top: mediaTabBar.bottom; bottom: parent.bottom; topMargin: __theme.margin }
 
         onFocusChanged: {
             if (focus) {

@@ -71,7 +71,7 @@ PlasmaComponents.Page {
         id: mediaView
         anchors.bottom: parent.bottom
         width: parent.width;
-        height: search.visible ? parent.height - 30 : parent.height
+        height: search.visible ? parent.height - (30 + __theme.margin) : parent.height - __theme.margin
 
         cellWidth: cellHeight
         cellHeight: height/2.1
@@ -94,7 +94,6 @@ PlasmaComponents.Page {
                 page.itemAdded(eventParams)
             }
         }
-
         PlasmaComponents.ScrollBar {
             flickableItem: parent
             orientation: _pmc_is_desktop ? GridView.LeftToRight : GridView.TopToBottom
@@ -127,7 +126,12 @@ PlasmaComponents.Page {
             console.log("set focus to gridview")
             mediaView.focus = true
             page.focus = false
+<<<<<<< HEAD
             hover.visible = true
+=======
+            //hover.visible = true
+            
+>>>>>>> improved margins
             if (!mediaView.currentItem || mediaView.currentIndex == -1) {
                 mediaView.indexAt(0,0)
             }
@@ -140,7 +144,7 @@ PlasmaComponents.Page {
             page.ancestor.focus = true
             mediaView.focus = false
             mediaView.currentIndex = -1
-            hover.visible = false
+            //hover.visible = false
         }
     }
 }

@@ -28,9 +28,16 @@ Image {
     source: _pmc_background_image_path
     fillMode: Image.Tile
 
+
     Image {
         anchors.fill: parent
         source: _pmc_gradient_image_path
+
+        QtObject {
+            id: __theme
+            property int margin : 20
+            property int radius : 5
+        }
 
         MediaCenterComponents.KeyHandler {
             id: keyHandler
