@@ -42,7 +42,10 @@ bool PicasaBackend::initImpl()
 bool PicasaBackend::goOneLevelUp()
 {
     PicasaModel *picasaModel = qobject_cast<PicasaModel*>(model());
-    return picasaModel->goBack();
+    if(picasaModel != NULL) {
+        return picasaModel->goBack();
+    }
+    return MediaCenter::AbstractBrowsingBackend::goOneLevelUp();
 }
 
 QString PicasaBackend::mediaBrowserSidePanel() const

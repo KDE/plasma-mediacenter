@@ -32,6 +32,8 @@
 
 PicasaModel::PicasaModel(QObject* parent, const QString& username, const QString& password): QAbstractListModel(parent)
 {
+    m_flag = false;
+    m_expandable = false;
     setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
     getTokenAndQuery(username, password,"album");
 }
@@ -70,6 +72,7 @@ QVariant PicasaModel::data(const QModelIndex& index, int role) const
 void PicasaModel::query(const QString &username, const QString &request)
 {
     if (username.isEmpty()) {
+       m_flag = false;
         return;
     }
 
@@ -95,6 +98,7 @@ void PicasaModel::query(const QString &username, const QString &request)
     KIO::TransferJob *job = KIO::get(query, KIO::NoReload, KIO::HideProgressInfo);
 
     if (!m_token.isEmpty()) {
+        m_flag = true;
         QString auth_string = "GoogleLogin auth=" + m_token;
         job->addMetaData("content-type", "Content-Type: application/x-www-form-urlencoded");
         job->addMetaData("customHTTPHeader", "Authorization: " + auth_string);
@@ -135,13 +139,14 @@ void PicasaModel::listAllAlbums(KJob *job)
     document.setContent(m_datas[static_cast<KIO::Job*>(job)]);
 
     QDomNodeList entries = document.elementsByTagName("entry");
-    m_expandable = true;
+
     m_albums.clear();
     for (int i = 0; i < entries.count(); i++) {
 
         QString id = entries.at(i).namedItem("id").toElement().text().split("/").last();
         QString published = entries.at(i).namedItem("published").toElement().text();
         QString updated = entries.at(i).namedItem("updated").toElement().text();
+        m_expandable = true;
 
         // link is the direct link to the album
         QDomElement domElement = entries.at(i).firstChildElement("link");
@@ -295,10 +300,10 @@ bool PicasaModel::browseToAlbum(int row)
 
 bool PicasaModel::goBack()
 {
-    if(m_expandable) {
-        return false;
-    } else {
+    if(!m_expandable && m_flag) {
         query(m_username, "album");
         return true;
+    } else {
+        return false;
     }
 }

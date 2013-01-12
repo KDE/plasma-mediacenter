@@ -87,6 +87,7 @@ private:
     QString m_username;
     QString m_albumid;
     bool m_expandable;
+    bool m_flag;       //to check whether valid data is present in picasa plugin or not
 
     void listAllAlbums(KJob *job);
     void listAllPhotos(KJob *job);
