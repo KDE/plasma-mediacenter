@@ -36,11 +36,11 @@ ListModel {
         decoration: "camera-photo"
         category: "image"
     }
-    ListElement {
-        display: "Others"
-        decoration: "plasma"
-        category: "other"
-    }
+//     ListElement {
+//         display: "Others"
+//         decoration: "plasma"
+//         category: "other"
+//     }
     ListElement {
         display: "Settings"
         decoration: "configure"
