@@ -54,7 +54,7 @@ PlasmaComponents.Page {
     }
 
     // Searchfield
-    PlasmaComponents.TextField {
+    /*PlasmaComponents.TextField {
         id: search
         width: parent.width
         height: 30
@@ -64,6 +64,12 @@ PlasmaComponents.Page {
             id: timer
             interval: 2000
             onTriggered: page.search(parent.text)
+        }
+    }*/
+    Search {
+        id: search
+        onSearch: {
+            page.search(term)
         }
     }
 
@@ -82,6 +88,28 @@ PlasmaComponents.Page {
         //preferredHighlightBegin: parent.width*0.1
         //preferredHighlightEnd: parent.width*0.9
         //highlightRangeMode: GridView.ApplyRange
+
+        highlight: Rectangle {
+            color: "transparent" //theme.viewBackgroundColor
+            width: mediaView.cellWidth
+            height: mediaView.cellHeight
+            PlasmaComponents.Highlight {
+                id: hover
+                anchors {
+                    fill: parent
+                }
+                //visible:mediaView.focus || (mediaView.currentItem &&  mediaView.currentItem.focus)  // this does not get updated
+            }
+            PlasmaComponents.ToolButton {
+                id: addToPlaylistButton
+                iconSource: "list-add"
+                anchors { right: parent.right; top: parent.top }
+                visible: !isExpandable && mediaType != "image" &&  mediaItem.GridView.isCurrentItem
+                onClicked: {
+                    mediaView.currentItem.itemAdded(mediaView.currentItem.getEventParams())
+                }
+            }
+        }
 
         delegate: MediaGridItemDelegate {
             onItemSelected: {
@@ -104,6 +132,7 @@ PlasmaComponents.Page {
             if (event.key == Qt.Key_Up && currentIndex === 0) {
                 forceFocus(false);
             }
+            // TODO Shortcuts for search
         }
 
         onFocusChanged: {

@@ -217,16 +217,6 @@ Rectangle {
 
             onTextChanged: iconImageLoader.checkAndLoad()
         }
-
-        PlasmaComponents.ToolButton {
-            id: addToPlaylistButton
-            iconSource: "list-add"
-            anchors { right: parent.right; top: parent.top }
-            visible: !isExpandable && mediaType != "image" &&  mediaItem.GridView.isCurrentItem
-            onClicked: {
-                mediaItem.itemAdded(getEventParams())
-            }
-        }
     }
 
     Keys.onReturnPressed: {

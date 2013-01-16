@@ -42,6 +42,7 @@ Item {
             placeholderText: i18n("Search Artists")
 
             onSearch: {
+                console.log(term)
                 rootRow.backend.searchArtist(term)
             }
 
@@ -49,6 +50,10 @@ Item {
                 // TODO focus is sometimes lost if activate is faster then the clear() on musicModel
                 rootRow.backend.artistFilter = eventParams.resourceId
                 mediaBrowser.activateTab(2)
+            }
+            onItemAdded: {
+                console.log("item add" + eventParams.resourceId);
+                playlistModel.addToPlaylist(eventParams.mediaUrl, eventParams.display);
             }
         }
 
@@ -66,6 +71,10 @@ Item {
                 rootRow.backend.albumFilter = eventParams.resourceId
                 mediaBrowser.activateTab(2)
             }
+            onItemAdded: {
+                console.log("item add" + eventParams.mediaUrl);
+                playlistModel.addToPlaylist(eventParams.mediaUrl, eventParams.display);
+            }
         }
 
         MediaListBrowser {
@@ -81,7 +90,8 @@ Item {
                 mediaBrowser.playRequested(0, eventParams.mediaUrl, eventParams.mediaType)
             }
             onItemAdded: {
-                playlistModel.addToPlaylist (mediaUrl, display);
+                console.log("item add" + eventParams.mediaUrl);
+                playlistModel.addToPlaylist(eventParams.mediaUrl, eventParams.display);
             }
 
             onPlayAll: {
