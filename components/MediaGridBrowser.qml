@@ -54,7 +54,7 @@ PlasmaComponents.Page {
     }
 
     // Searchfield
-    PlasmaComponents.TextField {
+    /*PlasmaComponents.TextField {
         id: search
         width: parent.width
         height: 30
@@ -64,6 +64,12 @@ PlasmaComponents.Page {
             id: timer
             interval: 2000
             onTriggered: page.search(parent.text)
+        }
+    }*/
+    Search {
+        id: search
+        onSearch: {
+            page.search(term)
         }
     }
 
@@ -84,22 +90,24 @@ PlasmaComponents.Page {
         snapMode: GridView.SnapToRow
 
         highlight: Rectangle {
-            color: theme.viewBackgroundColor
+            color: "transparent" //theme.viewBackgroundColor
             width: mediaView.cellWidth
             height: mediaView.cellHeight
-            PlasmaCore.FrameSvgItem {
+            PlasmaComponents.Highlight {
                 id: hover
                 anchors {
                     fill: parent
-                    leftMargin: -margins.left
-                    topMargin: -margins.top
-                    rightMargin: -margins.right
-                    bottomMargin: -margins.bottom
                 }
-
-                imagePath: "widgets/button"
-                prefix: "hover"
                 //visible:mediaView.focus || (mediaView.currentItem &&  mediaView.currentItem.focus)  // this does not get updated
+            }
+            PlasmaComponents.ToolButton {
+                id: addToPlaylistButton
+                iconSource: "list-add"
+                anchors { right: parent.right; top: parent.top }
+                visible: !isExpandable && mediaType != "image" &&  mediaItem.GridView.isCurrentItem
+                onClicked: {
+                    mediaView.currentItem.itemAdded(mediaView.currentItem.getEventParams())
+                }
             }
         }
         delegate: MediaGridItemDelegate {
@@ -123,6 +131,7 @@ PlasmaComponents.Page {
             if (event.key == Qt.Key_Up && currentIndex === 0) {
                 forceFocus(false);
             }
+            // TODO Shortcuts for search
         }
 
         onFocusChanged: {

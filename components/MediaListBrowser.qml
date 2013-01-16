@@ -44,16 +44,10 @@ PlasmaComponents.Page {
         width: parent.width
         height: 30
         // Searchfield
-        PlasmaComponents.TextField {
+        Search {
             id: search
-            width: parent.width - playAllButton.width;
-            height: parent.height
-            clearButtonShown: true
-            onTextChanged: timer.restart()
-            Timer {
-                id: timer
-                interval: 2000
-                onTriggered: page.search(parent.text)
+            onSearch: {
+                page.search(term)
             }
         }
         PlasmaComponents.Button {
