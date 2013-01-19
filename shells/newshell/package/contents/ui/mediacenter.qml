@@ -260,6 +260,7 @@ Image {
                 mediaPlayer.visible = true
                 mediaPlayer.focus = true
                 mediaImageViewer.visible = (currentMediaType == "audio" && mediaImageViewer.source != "")
+                playlistModel.currentIndex = -1
             }
         }
 
