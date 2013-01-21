@@ -49,6 +49,6 @@ Comment[uk]=Інтерфейс користувача медіацентру с�
 Comment[x-test]=xxA mediacenter user interface written with the Plasma frameworkxx
 Exec=plasma-mediacenter -graphicssystem raster %u
 Terminal=false
-Icon=plasma
+Icon=applications-multimedia
 Type=Application
 Categories=Qt;KDE;AudioVideo;
