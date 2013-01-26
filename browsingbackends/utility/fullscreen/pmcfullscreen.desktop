@@ -2,6 +2,7 @@
 Type=Service
 Icon=view-fullscreen
 Name=Fullscreen
+Name[ca]=Pantalla completa
 Name[cs]=Celá obrazovka
 Name[da]=Fuldskærm
 Name[de]=Vollbild
@@ -14,6 +15,7 @@ Name[sv]=Fullskärmsläge
 Name[uk]=На весь екран
 Name[x-test]=xxFullscreenxx
 Comment=Toggle fullscreen mode
+Comment[ca]=Commuta el mode de pantalla completa
 Comment[cs]=Přepnout do celoobrazovkového režimu
 Comment[da]=Slå fuldskærmstilstand til/fra
 Comment[de]=Vollbildmodus umschalten

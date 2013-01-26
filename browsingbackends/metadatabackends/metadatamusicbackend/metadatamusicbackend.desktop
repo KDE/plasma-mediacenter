@@ -2,6 +2,7 @@
 Type=Service
 Icon=tools-rip-audio-cd
 Name=All Music
+Name[ca]=Tota la música
 Name[cs]=Všechna hudba
 Name[da]=Al musik
 Name[de]=Alle Musik
@@ -20,6 +21,7 @@ Name[sv]=All musik
 Name[uk]=Вся музика
 Name[x-test]=xxAll Musicxx
 Comment=Listen to the music on your device
+Comment[ca]=Escolta la música en el dispositiu
 Comment[cs]=Poslouchejte hudbu z vašeho zařízení
 Comment[da]=Lyt til musikken på din enhed
 Comment[et]=Seadmel leiduva muusika kuulamine

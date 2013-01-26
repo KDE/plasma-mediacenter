@@ -2,6 +2,7 @@
 Type=Service
 Icon=folder-sound
 Name=Browse music
+Name[ca]=Explora la música
 Name[cs]=Procházet hudbu
 Name[da]=Gennemse musik
 Name[de]=Musik durchsuchen
@@ -21,6 +22,7 @@ Name[uk]=Навігація музикою
 Name[x-test]=xxBrowse musicxx
 
 Comment=Browse your device for music
+Comment[ca]=Cerca al dispositiu per a la música
 Comment[cs]=Vyhledat hudbu na zařízení
 Comment[da]=Gennemse din enhed for musik
 Comment[et]=Seadme sirvimine muusika leidmiseks

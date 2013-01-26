@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Plasma Media Center
+Name[ca]=Centre multimèdia de Plasma
 Name[da]=Plasma Mediecenter
 Name[es]=Centro Multimedia de Plasma
 Name[et]=Plasma meediakeskus
@@ -16,6 +17,7 @@ Name[sv]=Plasma Media Center
 Name[uk]=Медіацентр Плазми
 Name[x-test]=xxPlasma Media Centerxx
 Comment=Plasma Media Center
+Comment[ca]=Centre multimèdia de Plasma
 Comment[da]=Plasma Mediecenter
 Comment[es]=Centro multimedia de Plasma
 Comment[et]=Plasma meediakeskus
