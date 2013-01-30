@@ -28,7 +28,7 @@ Item {
     id: mediaItem
 
     signal clicked(int index)
-    signal pressAndHold(int index)
+  //  signal pressAndHold(int index)
 
     Item {
         anchors { fill: parent; margins: 10 }
@@ -185,7 +185,7 @@ Item {
                 anchors.fill: parent
                 onEntered: mediaItemDelegateItem.GridView.view.currentIndex = index
                 onClicked: mediaItem.clicked(index)
-                onPressAndHold: mediaItem.pressAndHold(index);
+              //  onPressAndHold: mediaItem.pressAndHold(index);
             }
         }
 
@@ -196,15 +196,16 @@ Item {
 
             onTextChanged: iconImageLoader.checkAndLoad()
         }
+        /* currently not in use */
 
-        PlasmaComponents.ToolButton {
-            id: addToPlaylistButton
-            iconSource: "list-add"
-            anchors { right: parent.right; top: parent.top }
-            visible: !isExpandable && mediaType != "image" &&  mediaItemDelegateItem.GridView.isCurrentItem
-            onClicked: {
-                playlistModel.addToPlaylist (mediaUrl, display);
-            }
-        }
+//         PlasmaComponents.ToolButton {
+//             id: addToPlaylistButton
+//             iconSource: "list-add"
+//             anchors { right: parent.right; top: parent.top }
+//             visible: !isExpandable && mediaType != "image" &&  mediaItemDelegateItem.GridView.isCurrentItem
+//             onClicked: {
+//                 playlistModel.addToPlaylist (mediaUrl, display);
+//             }
+//         }
     }
 }

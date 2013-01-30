@@ -25,6 +25,9 @@ Item {
     id: rootRow
     anchors.fill: parent
     property QtObject backend
+
+    signal popupMenuRequested(int index, string mediaUrl, string mediaType, string display)
+
     //spacing: 10
     //clip: true
 
@@ -333,7 +336,10 @@ Item {
                 id: listViewAllSongs
                 anchors.fill: parent
                 model: backend.musicModel
-                delegate: MusicDelegate { width: parent ? parent.width - musicScrollBar.width : 0; height: 64 }
+                delegate: MusicDelegate {
+                    width: parent ? parent.width - musicScrollBar.width : 0; height: 64
+                    onPopupMenuRequested: mediaBrowser.popupMenuRequested(index,mediaUrl,mediaType, display)
+                }
                 spacing: 5
                 highlight: PlasmaComponents.Highlight { }
                 highlightFollowsCurrentItem: true

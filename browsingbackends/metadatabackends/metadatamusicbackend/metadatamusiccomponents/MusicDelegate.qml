@@ -23,6 +23,7 @@ import org.kde.plasma.components 0.1 as PlasmaComponents
 Item {
     id: musicDelegateRootItem
     visible: false
+    signal popupMenuRequested(int index, string mediaUrl, string mediaType, string display)
 
     Timer {
         id: showTimer
@@ -47,6 +48,7 @@ Item {
             hoverEnabled: true
             onEntered: musicDelegateRootItem.ListView.view.currentIndex = index
             anchors.fill: parent
+            onPressAndHold: popupMenuRequested(index, mediaUrl, mediaType, display);
             onClicked: mediaBrowser.playRequested(0, mediaUrl, mediaType)
         }
     }
