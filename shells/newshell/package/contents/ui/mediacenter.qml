@@ -252,6 +252,7 @@ Image {
                 mediaImageViewer.focus = true
                 mediaImageViewer.source = url
                 mediaBrowser.visible = false
+                mediaPlayer.hideToolbars();
             } else {
                 runtimeData.playing = true
                 mediaPlayer.url = url
