@@ -3,6 +3,7 @@ Type=Service
 Icon=folder-video
 Name=Browse videos
 Name[ca]=Explora els vídeos
+Name[ca@valencia]=Explora els vídeos
 Name[cs]=Procházet videa
 Name[da]=Gennemse videoer
 Name[de]=Videos durchsuchen
@@ -23,6 +24,7 @@ Name[x-test]=xxBrowse videosxx
 
 Comment=Browse your device for videos
 Comment[ca]=Cerca al dispositiu per als vídeos
+Comment[ca@valencia]=Cerca al dispositiu per als vídeos
 Comment[cs]=Vyhledat videa na zařízení
 Comment[da]=Gennemse din enhed for videoer
 Comment[et]=Seadme sirvimine videode leidmiseks
