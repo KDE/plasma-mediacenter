@@ -15,7 +15,7 @@ cd build
 cmake .. -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix`
 make install
 
-Run PMC using "plasma-mediacenter"
+Run PMC using "plasma-mediacenter" or by using the "Plasma Media Center" icon in your launcher
 
 (some of the old code can be found in the "old" branch, just in case somebody wants to browse)
 
