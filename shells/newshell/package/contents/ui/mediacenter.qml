@@ -69,7 +69,8 @@ Image {
         }
 
         Keys.onPressed: {
-            if(event.key == 16777344) { //Media Play key
+            if(event.key == 16777344) { //Media Play/pause key
+                // doesn't work as expected
                 if(mediaPlayer.playing) {
                     mediaPlayer.playing = false;
                     mediaPlayer.paused = true;
@@ -77,6 +78,16 @@ Image {
                     mediaPlayer.playing = true;
                     mediaPlayer.paused = false;
                 }
+            } else if(event.key == 16777345) {    // stop media key
+
+            } else if(event.key == 16777346) {     // previous media key
+                if (playlistModel.currentIndex != -1) {
+                    playlist.playRequested(playlistModel.getPreviousUrl());
+                }
+            } else if(event.key == 16777347) {   // next media key
+                if (playlistModel.currentIndex != -1) {
+                      playlist.playRequested(playlistModel.getNextUrl());
+                   }
             }
         }
 
@@ -90,7 +101,7 @@ Image {
                 playlist.playRequested(playlistModel.getNextUrl());
                 console.log("playlist");
             } else {
-                runtimeData.currentTime= 0;
+                runtimeData.currentTime = 0;
                 runtimeData.stopped = true;
             }
         }
