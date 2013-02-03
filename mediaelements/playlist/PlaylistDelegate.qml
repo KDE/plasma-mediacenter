@@ -46,7 +46,7 @@ Item{
                 onEntered: listViewItem.ListView.view.currentIndex = index
                 anchors.fill: parent
                 onClicked: {
-                    playlistModel.currentIndex = index
+                    listViewItem.ListView.view.model.currentIndex = index
                     playlistItem.playRequested(mediaUrl)
                 }
             }

@@ -29,7 +29,7 @@ class MEDIACENTER_EXPORT FilterPlaylistModel: public QSortFilterProxyModel
     Q_OBJECT
     Q_PROPERTY(QString filterString READ filterString WRITE setFilterString NOTIFY filterStringChanged)
     Q_PROPERTY(QObject* sourcePlaylistModel READ sourcePlaylistModel WRITE setSourcePlaylistModel NOTIFY sourcePlaylistModelChanged)
-    //Q_PROPERTY(QString filterString READ getFilter WRITE setFilter NOTIFY filterDataChanged)
+    Q_PROPERTY(int currentIndex READ currentIndex WRITE setCurrentIndex NOTIFY currentIndexChanged)
 
 public:
     FilterPlaylistModel(QObject* parent = 0);
@@ -37,10 +37,13 @@ public:
     QString filterString() const;
     QObject *sourcePlaylistModel();
     void setSourcePlaylistModel(QObject *model);
+    int currentIndex() const;
+    void setCurrentIndex(int presentIndex);
 
 signals:
     void filterStringChanged();
     void sourcePlaylistModelChanged();
+    void currentIndexChanged();
 
 protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;

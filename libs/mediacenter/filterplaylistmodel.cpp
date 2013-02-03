@@ -18,6 +18,7 @@
  ***************************************************************************/
 
 #include "filterplaylistmodel.h"
+#include "playlistmodel.h"
 #include <KDebug>
 
 
@@ -58,6 +59,20 @@ void FilterPlaylistModel::setSourcePlaylistModel(QObject* model)
 QObject* FilterPlaylistModel::sourcePlaylistModel()
 {
     return static_cast<QObject*>(sourceModel());
+}
+
+int FilterPlaylistModel::currentIndex() const
+{
+    PlaylistModel *playlistmodel = static_cast<PlaylistModel*>(sourceModel());
+    return mapFromSource(sourceModel()->index(playlistmodel->currentIndex(), 0)).row();
+}
+
+void FilterPlaylistModel::setCurrentIndex(int presentIndex)
+{
+    QModelIndex i = index(presentIndex, 0);
+    PlaylistModel *playlistmodel = static_cast<PlaylistModel*>(sourceModel());
+    playlistmodel->setCurrentIndex(mapToSource(i).row());
+    emit currentIndexChanged();
 }
 
 #include "filterplaylistmodel.moc"
