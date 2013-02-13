@@ -77,6 +77,10 @@ PlasmaCore.FrameSvgItem {
 
         ListView {
             id: playlistList
+            currentIndex: playlistModel.currentIndex
+            onCurrentIndexChanged: {
+                positionViewAtIndex(currentIndex, ListView.Contain);
+            }
             anchors { top: filterText.bottom; left: parent.left; right: parent.right }
             anchors.bottom: parent.bottom
             anchors.margins: 5

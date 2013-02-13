@@ -43,7 +43,6 @@ Item{
 
             MouseArea {
                 hoverEnabled: true
-                onEntered: listViewItem.ListView.view.currentIndex = index
                 anchors.fill: parent
                 onClicked: {
                     listViewItem.ListView.view.model.currentIndex = index
