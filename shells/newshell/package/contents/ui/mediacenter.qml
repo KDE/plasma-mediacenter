@@ -45,6 +45,7 @@ Image {
 
     MediaCenterComponents.MediaPlayer {
         id: mediaPlayer
+        runtimeDataObject: runtimeData
         anchors { left: parent.left; right: parent.right; top: parent.top; bottom: parent.bottom }
         focus: !mediaBrowser.activeFocus && !mediaWelcome.activeFocus
         state: mediaBrowser.visible ? "minimize" : ""
@@ -92,6 +93,7 @@ Image {
         }
 
         onTotalTimeChanged: {
+            runtimeDataObject.volume = volume;
             var dateTimeObject = new Date(0, 0, 0, 0, 0, 0, totalTime);
             mediaController.totalMediaTime = Qt.formatTime(dateTimeObject, "hh:mm:ss");
         }

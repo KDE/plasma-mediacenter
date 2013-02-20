@@ -24,6 +24,7 @@ import org.kde.plasma.mediacentercomponents 0.1 as MediaCenterComponents
 FocusScope {
     id: mediaPlayerRootRect
 
+    property QtObject runtimeDataObject
     property alias url: video.source
     property bool playing: false
     property bool paused: false
@@ -39,6 +40,7 @@ FocusScope {
     signal mediaFinished
     signal mediaStarted
     signal escapePressed
+
     MediaCenterComponents.SubtitleProvider {
         id: subs
         filename: video.source
@@ -73,6 +75,10 @@ FocusScope {
             color: "black"
             opacity: video.hasVideo ? 0.5 : 0
             visible: false
+        }
+
+        Component.onCompleted: {
+          runtimeDataObject.volume = video.volume
         }
     }
 
