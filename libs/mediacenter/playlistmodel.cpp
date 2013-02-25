@@ -128,6 +128,15 @@ QString PlaylistModel::getPreviousUrl()
     return m_musicList.at(m_currentIndex).mediaUrl();
 }
 
+QString PlaylistModel::getUrlofFirstIndex()
+{
+    /*if (! m_musicList.isEmpty()) {
+        return m_musicList.at(0).mediaUrl();
+    }
+    return QString();*/
+    return m_musicList.isEmpty() ? QString() : m_musicList.at(0).mediaUrl();
+}
+
 void PlaylistModel::clearPlaylist()
 {
     beginResetModel();

@@ -60,6 +60,7 @@ public:
     Q_INVOKABLE QString getPreviousUrl();
     Q_INVOKABLE void clearPlaylist();
     Q_INVOKABLE void removeFromPlaylist(const int &index);
+    Q_INVOKABLE QString getUrlofFirstIndex();
     int currentIndex() const;
     void setCurrentIndex(int index);
     bool random() const;

@@ -20,6 +20,7 @@
 import QtQuick 1.1
 import org.kde.qtextracomponents 0.1 as QtExtraComponents
 import org.kde.plasma.components 0.1 as PlasmaComponents
+import org.kde.plasma.mediacentercomponents 0.1 as MediaCenterComponents
 
 Item {
     id: rootRow
@@ -287,7 +288,17 @@ Item {
                 id: playAllButton
                 text: "Play All"
                 height: parent.height
-                onClicked: backend.addAllSongsToPlaylist(playlistModel);
+                onClicked: {
+                  playlistModel.clearPlaylist();
+                  backend.addAllSongsToPlaylist(playlistModel);
+                  if(playlistModel.currentIndex != 0) {
+                     playlistModel.currentIndex = 0;
+                     firstUrl = playlistModel.getUrlofFirstIndex();
+                     if(firstUrl != "") {
+                        playlist.playRequested(firstUrl);
+                     }
+                  }
+                }
             }
         }
 
