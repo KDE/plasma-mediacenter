@@ -291,6 +291,7 @@ Image {
          }
          width: parent.width/4
          z: anchors.right ? 1 : 0
+         backend: runtimeData.currentBrowsingBackend
 
          onPlayRequested: {
             mediaPlayer.visible = true

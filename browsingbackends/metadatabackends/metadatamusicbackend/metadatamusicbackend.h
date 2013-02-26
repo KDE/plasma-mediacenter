@@ -62,6 +62,7 @@ public:
     Q_INVOKABLE void searchMusic(const QString &music);
 
     Q_INVOKABLE void addAllSongsToPlaylist( QObject* playlistModel );
+    Q_INVOKABLE void stopAddingSongsToPlaylist();
 
 Q_SIGNALS:
     void artistFilterChanged();
@@ -84,6 +85,7 @@ private:
 
     QString m_artistFilter;
     QString m_albumFilter;
+    bool shallAddMediaToPlaylist = false;
 };
 
 #endif // METADATAMUSICBACKEND_H

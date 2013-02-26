@@ -147,6 +147,7 @@ void MetadataMusicBackend::searchMusic(const QString& music)
 
 void MetadataMusicBackend::addAllSongsToPlaylist ( QObject* playlistModel )
 {
+    shallAddMediaToPlaylist = true;
     m_playlistModel = qobject_cast<PlaylistModel*>(playlistModel);
     if (!m_playlistModel)
         return;
@@ -164,7 +165,7 @@ void MetadataMusicBackend::addAllSongsToPlaylist ( QObject* playlistModel )
 
 void MetadataMusicBackend::musicModelDataChanged ( const QModelIndex &startIndex, const QModelIndex &endIndex )
 {
-    if ( !(startIndex.isValid() && endIndex.isValid()) )
+    if ( !(startIndex.isValid() && endIndex.isValid() && shallAddMediaToPlaylist ))
         return;
     for (int i=startIndex.row(); i<=endIndex.row(); ++i) {
         const QString url = m_musicModel->data(m_musicModel->index(i), MediaCenter::MediaUrlRole).toString();
@@ -179,5 +180,12 @@ void MetadataMusicBackend::musicModelReset()
 {
     disconnect(m_musicModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(musicModelDataChanged(QModelIndex,QModelIndex)));
 }
+
+void MetadataMusicBackend::stopAddingSongsToPlaylist()
+{
+    shallAddMediaToPlaylist = false;
+}
+
+
 
 #include "metadatamusicbackend.moc"

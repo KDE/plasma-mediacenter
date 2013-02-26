@@ -26,6 +26,7 @@ PlasmaCore.FrameSvgItem {
     id: playlistItem
     imagePath: "widgets/background"
     enabledBorders: "LeftBorder|TopBorder|BottomBorder"
+    property QtObject backend
     signal playRequested(string url)
 
     Item {
@@ -63,7 +64,10 @@ PlasmaCore.FrameSvgItem {
                 width: height
                 height: parent.height
                 iconSource: "edit-clear-list"
-                onClicked: playlistModel.clearPlaylist();
+                onClicked: {
+                    playlistItem.backend.stopAddingSongsToPlaylist();
+                    playlistModel.clearPlaylist();
+                }
             }
         }
         PlasmaComponents.TextField {
