@@ -21,6 +21,7 @@ import QtQuick 1.1
 import org.kde.plasma.mediacentercomponents 0.1 as MediaCenterComponents
 import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.components 0.1 as PlasmaComponents
+import org.kde.plasma.extras 0.1 as PlasmaExtraComponents
 
 Image {
     id: mediaCenterRootItem
@@ -43,6 +44,10 @@ Image {
         }
     }
 
+    PlasmaExtraComponents.ResourceInstance {
+        id: resourceInstance
+        uri: mediaImageViewer.visible && mediaImageViewer.source !== "" && !mediaBrowser.visible ? mediaImageViewer.source : mediaPlayer.url
+    }
     MediaCenterComponents.MediaPlayer {
         id: mediaPlayer
         runtimeDataObject: runtimeData
