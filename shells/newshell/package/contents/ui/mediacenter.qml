@@ -89,7 +89,6 @@ Image {
                 remainingMediaTimeObject = new Date(0, 0, 0, 0, 0, 0, totalTime-currentTime)
                 mediaController.remainingMediaTime = Qt.formatTime(remainingMediaTimeObject, "hh:mm:ss");
             }
->>>>>>> Fix tabs
 
             Keys.onPressed: {
                 if(event.key == 16777344) { //Media Play/pause key
