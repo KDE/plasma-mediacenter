@@ -28,300 +28,302 @@ Image {
     source: _pmc_background_image_path
     fillMode: Image.Tile
 
-Image {
-    anchors.fill: parent
-    source: _pmc_gradient_image_path
+    Image {
+        anchors.fill: parent
+        source: _pmc_gradient_image_path
 
-    MediaCenterComponents.RuntimeData {
-        id: runtimeData
-        totalTime: mediaPlayer.totalTime
+        MediaCenterComponents.RuntimeData {
+            id: runtimeData
+            totalTime: mediaPlayer.totalTime
 
-        onCurrentTimeChanged: {
-            if (currentTimeDirty) {
-                currentTimeDirty = false
-                mediaPlayer.currentTime = currentTime
+            onCurrentTimeChanged: {
+                if (currentTimeDirty) {
+                    currentTimeDirty = false
+                    mediaPlayer.currentTime = currentTime
+                }
             }
         }
-    }
 
-    PlasmaExtraComponents.ResourceInstance {
-        id: resourceInstance
-        uri: mediaImageViewer.visible && mediaImageViewer.source !== "" && !mediaBrowser.visible ? mediaImageViewer.source : mediaPlayer.url
-    }
-    MediaCenterComponents.MediaPlayer {
-        id: mediaPlayer
-        runtimeDataObject: runtimeData
-        anchors { left: parent.left; right: parent.right; top: parent.top; bottom: parent.bottom }
-        focus: !mediaBrowser.activeFocus && !mediaWelcome.activeFocus
-        state: mediaBrowser.visible ? "minimize" : ""
-        z: mediaBrowser.visible ? 2 : 0
-
-        playing: runtimeData.playing
-        paused: runtimeData.paused
-        stopped: runtimeData.stopped
-        volume: runtimeData.volume
-        showMusicStats: !mediaWelcome.visible
-        dimVideo: mediaWelcome.visible
-
-        onClicked: hideToolbars()
-        onEscapePressed: mediaBrowser.visible = true
-
-        onCurrentTimeChanged: {
-            runtimeData.currentTime = currentTime
-            var dateTimeObject = new Date(0, 0, 0, 0, 0, 0, currentTime);
-            mediaController.curMediaTime = Qt.formatTime(dateTimeObject, "hh:mm:ss");
-            remainingMediaTimeObject = new Date(0, 0, 0, 0, 0, 0, totalTime-currentTime)
-            mediaController.remainingMediaTime = Qt.formatTime(remainingMediaTimeObject, "hh:mm:ss");
+        PlasmaExtraComponents.ResourceInstance {
+            id: resourceInstance
+            uri: mediaImageViewer.visible && mediaImageViewer.source !== "" && !mediaBrowser.visible ? mediaImageViewer.source : mediaPlayer.url
         }
 
-        Keys.onPressed: {
-            if(event.key == 16777344) { //Media Play/pause key
-                // doesn't work as expected
-                if(mediaPlayer.playing) {
-                    mediaPlayer.playing = false;
-                    mediaPlayer.paused = true;
-                } else {
-                    mediaPlayer.playing = true;
-                    mediaPlayer.paused = false;
-                }
-            } else if(event.key == 16777345) {    // stop media key
+        MediaCenterComponents.MediaPlayer {
+            id: mediaPlayer
+            runtimeDataObject: runtimeData
+            anchors { left: parent.left; right: parent.right; top: parent.top; bottom: parent.bottom }
+            focus: !mediaBrowser.activeFocus && !mediaWelcome.activeFocus
+            state: mediaBrowser.visible ? "minimize" : ""
+            z: mediaBrowser.visible ? 2 : 0
 
-            } else if(event.key == 16777346) {     // previous media key
+            playing: runtimeData.playing
+            paused: runtimeData.paused
+            stopped: runtimeData.stopped
+            volume: runtimeData.volume
+            showMusicStats: !mediaWelcome.visible
+            dimVideo: mediaWelcome.visible
+
+            onClicked: hideToolbars()
+            onEscapePressed: mediaBrowser.visible = true
+
+            onCurrentTimeChanged: {
+                runtimeData.currentTime = currentTime
+                var dateTimeObject = new Date(0, 0, 0, 0, 0, 0, currentTime);
+                mediaController.curMediaTime = Qt.formatTime(dateTimeObject, "hh:mm:ss");
+                remainingMediaTimeObject = new Date(0, 0, 0, 0, 0, 0, totalTime-currentTime)
+                mediaController.remainingMediaTime = Qt.formatTime(remainingMediaTimeObject, "hh:mm:ss");
+            }
+>>>>>>> Fix tabs
+
+            Keys.onPressed: {
+                if(event.key == 16777344) { //Media Play/pause key
+                    // doesn't work as expected
+                    if(mediaPlayer.playing) {
+                        mediaPlayer.playing = false;
+                        mediaPlayer.paused = true;
+                    } else {
+                        mediaPlayer.playing = true;
+                        mediaPlayer.paused = false;
+                    }
+                } else if(event.key == 16777345) {    // stop media key
+
+                } else if(event.key == 16777346) {     // previous media key
+                    if (playlistModel.currentIndex != -1) {
+                        playlist.playRequested(playlistModel.getPreviousUrl());
+                    }
+                } else if(event.key == 16777347) {   // next media key
+                    if (playlistModel.currentIndex != -1) {
+                        playlist.playRequested(playlistModel.getNextUrl());
+                    }
+                }
+            }
+
+            onTotalTimeChanged: {
+                runtimeDataObject.volume = volume;
+                var dateTimeObject = new Date(0, 0, 0, 0, 0, 0, totalTime);
+                mediaController.totalMediaTime = Qt.formatTime(dateTimeObject, "hh:mm:ss");
+            }
+
+            onMediaFinished: {
+                if (playlistModel.currentIndex != -1 && totalTime != -1 && !runtimeData.userTrigerredStop) {
+                    playlist.playRequested(playlistModel.getNextUrl());
+                    console.log("playlist");
+                } else {
+                    runtimeData.currentTime = 0;
+                    runtimeData.stopped = true;
+                }
+            }
+            onMediaStarted: {
+                runtimeData.playing = true;
+            }
+
+            states: [
+                State {
+                    name: "minimize"
+                    AnchorChanges {
+                        target: mediaPlayer; anchors.left: previewArea.left;
+                        anchors.top: previewArea.top; anchors.bottom: previewArea.bottom;
+                        anchors.right: previewArea.right
+                    }
+                }
+            ]
+
+            transitions: [ Transition { AnchorAnimation { duration: 200 } } ]
+
+            function hideToolbars()
+            {
+                if (mediaPlayer.state == "minimize")
+                    mediaImageViewer.visible = false
+                mediaController.state = mediaController.state ? "" : "hidden"
+                mediaImageViewer.stripState = mediaImageViewer.stripState ? "" : "hidden"
+                mediaBrowser.visible = false
+                playlist.state = ""
+                mediaController.playlistButtonChecked = false
+            }
+        }
+
+        MediaCenterComponents.ImageViewer {
+            id: mediaImageViewer
+            visible: false
+            stripVisible: visible && !mediaBrowser.visible && !mediaWelcome.visible
+            onSlideshowStarted: mediaPlayer.hideToolbars()
+        }
+
+        MediaCenterComponents.MediaController {
+            id: mediaController
+            height: parent.height * 0.08
+            width: parent.width
+
+            anchors {
+                right: mediaPlayer.state == "minimize" ? previewArea.left : parent.right;
+                left: parent.left; top: parent.top
+            }
+
+            onPlaylistButtonClicked: {
+                if(playlistButtonChecked) {
+                    playlist.state = "playlistShow"
+                } else {
+                    mediaBrowser.state = ""
+                    playlist.state = ""
+                }
+            }
+
+            onPlayNext: {
+                if (playlistModel.currentIndex != -1) {
+                    playlist.playRequested(playlistModel.getNextUrl());
+                }
+            }
+
+            onPlayPrevious: {
                 if (playlistModel.currentIndex != -1) {
                     playlist.playRequested(playlistModel.getPreviousUrl());
                 }
-            } else if(event.key == 16777347) {   // next media key
-                if (playlistModel.currentIndex != -1) {
-                      playlist.playRequested(playlistModel.getNextUrl());
-                   }
             }
-        }
 
-        onTotalTimeChanged: {
-            runtimeDataObject.volume = volume;
-            var dateTimeObject = new Date(0, 0, 0, 0, 0, 0, totalTime);
-            mediaController.totalMediaTime = Qt.formatTime(dateTimeObject, "hh:mm:ss");
-        }
-
-        onMediaFinished: {
-            if (playlistModel.currentIndex != -1 && totalTime != -1 && !runtimeData.userTrigerredStop) {
-                playlist.playRequested(playlistModel.getNextUrl());
-                console.log("playlist");
-            } else {
-                runtimeData.currentTime = 0;
-                runtimeData.stopped = true;
-            }
-        }
-        onMediaStarted: {
-            runtimeData.playing = true;
-        }
-
-        states: [
-            State {
-                name: "minimize"
-                AnchorChanges {
-                    target: mediaPlayer; anchors.left: previewArea.left;
-                    anchors.top: previewArea.top; anchors.bottom: previewArea.bottom;
-                    anchors.right: previewArea.right
+            onBackButtonClicked: {
+                if(!mediaBrowser.currentBrowsingBackend.goOneLevelUp()) {
+                    mediaBrowser.destroyGridView()
+                    backStopped = true
                 }
             }
-        ]
 
-        transitions: [ Transition { AnchorAnimation { duration: 200 } } ]
-
-        function hideToolbars()
-        {
-            if (mediaPlayer.state == "minimize")
-                mediaImageViewer.visible = false
-            mediaController.state = mediaController.state ? "" : "hidden"
-            mediaImageViewer.stripState = mediaImageViewer.stripState ? "" : "hidden"
-            mediaBrowser.visible = false
-            playlist.state = ""
-            mediaController.playlistButtonChecked = false
-        }
-    }
-
-    MediaCenterComponents.ImageViewer {
-        id: mediaImageViewer
-        visible: false
-        stripVisible: visible && !mediaBrowser.visible && !mediaWelcome.visible
-        onSlideshowStarted: mediaPlayer.hideToolbars()
-    }
-
-    MediaCenterComponents.MediaController {
-        id: mediaController
-        height: parent.height * 0.08
-        width: parent.width
-
-        anchors {
-            right: mediaPlayer.state == "minimize" ? previewArea.left : parent.right;
-            left: parent.left; top: parent.top
-        }
-
-        onPlaylistButtonClicked: {
-            if(playlistButtonChecked) {
-                playlist.state = "playlistShow"
-            } else {
-                mediaBrowser.state = ""
-                playlist.state = ""
+            onBackStoppedChanged: {
+                if(backStopped) {
+                    runtimeData.currentBrowsingBackend = null
+                    mediaBrowser.visible = false
+                    mediaWelcome.visible = true
+                    backStopped = false
+                }
             }
+            runtimeDataObject: runtimeData
+            onRequestToggleBrowser: mediaBrowser.visible = !mediaBrowser.visible
+
+            states: [
+                State {
+                    name: "hidden"
+                    AnchorChanges { target: mediaController; anchors.top: undefined; anchors.bottom: parent.top }
+                }
+            ]
+
+            transitions: [ Transition { AnchorAnimation { duration: 500 } } ]
         }
 
-        onPlayNext: {
-            if (playlistModel.currentIndex != -1) {
-                playlist.playRequested(playlistModel.getNextUrl());
+        MediaCenterComponents.MediaWelcome {
+            id: mediaWelcome
+            anchors.fill: parent
+            focus: visible
+
+            model: backendsModel
+            metaData: mediaPlayer.metaData
+            onBackendSelected: {
+                if (!mediaWelcome.selectedBackend.init())
+                    return;
+                runtimeData.currentBrowsingBackend = selectedBackend;
+                visible = false;
             }
-        }
+            onVisibleChanged: {
+                mediaController.visible = !visible
+                if (visible && mediaController.playlistButtonChecked) {
+                    mediaController.playlistButtonChecked = false
+                    mediaController.playlistButtonClicked()
+                }
+            }}
 
-        onPlayPrevious: {
-            if (playlistModel.currentIndex != -1) {
-                playlist.playRequested(playlistModel.getPreviousUrl());
+        MediaCenterComponents.MediaBrowser {
+            id: mediaBrowser
+            anchors {
+                left: parent.left; right: parent.right; top: mediaController.bottom; bottom:parent.bottom
             }
-        }
+            height: parent.height
+            visible: false
+            focus: visible
 
-        onBackButtonClicked: {
-            if(!mediaBrowser.currentBrowsingBackend.goOneLevelUp()) {
-                mediaBrowser.destroyGridView()
-                backStopped = true
+            z: 1
+
+            currentBrowsingBackend: runtimeData.currentBrowsingBackend
+            onCurrentBrowsingBackendChanged: visible = true
+            onVisibleChanged: {
+                if (visible) { loadModel(); focus = true }
             }
-        }
 
-        onBackStoppedChanged: {
-            if(backStopped) {
-                runtimeData.currentBrowsingBackend = null
-                mediaBrowser.visible = false
-                mediaWelcome.visible = true
-                backStopped = false
+            Keys.onEscapePressed: {
+                if(!currentBrowsingBackend.goOneLevelUp()) {
+                    destroyGridView();
+                    mediaController.backStopped = true
+                }
             }
-        }
-        runtimeDataObject: runtimeData
-        onRequestToggleBrowser: mediaBrowser.visible = !mediaBrowser.visible
-
-        states: [
-            State {
-                name: "hidden"
-                AnchorChanges { target: mediaController; anchors.top: undefined; anchors.bottom: parent.top }
+            Keys.onPressed: {
+                if(event.key == 16777344) { //Media Play key
+                    if(mediaPlayer.playing) {
+                        mediaPlayer.playing = false;
+                        mediaPlayer.paused = true;
+                    } else {
+                        mediaPlayer.playing = true;
+                        mediaPlayer.paused = false;
+                    }
+                }
             }
-        ]
-
-        transitions: [ Transition { AnchorAnimation { duration: 500 } } ]
-    }
-
-    MediaCenterComponents.MediaWelcome {
-        id: mediaWelcome
-        anchors.fill: parent
-        focus: visible
-
-        model: backendsModel
-        metaData: mediaPlayer.metaData
-        onBackendSelected: {
-            if (!mediaWelcome.selectedBackend.init())
-                return;
-            runtimeData.currentBrowsingBackend = selectedBackend;
-            visible = false;
-        }
-        onVisibleChanged: {
-            mediaController.visible = !visible
-            if (visible && mediaController.playlistButtonChecked) {
-                mediaController.playlistButtonChecked = false
-                mediaController.playlistButtonClicked()
-            }
-        }}
-
-    MediaCenterComponents.MediaBrowser {
-        id: mediaBrowser
-        anchors {
-            left: parent.left; right: parent.right; top: mediaController.bottom; bottom:parent.bottom
-        }
-        height: parent.height
-        visible: false
-        focus: visible
-
-        z: 1
-
-        currentBrowsingBackend: runtimeData.currentBrowsingBackend
-        onCurrentBrowsingBackendChanged: visible = true
-        onVisibleChanged: {
-            if (visible) { loadModel(); focus = true }
-        }
-
-        Keys.onEscapePressed: {
-            if(!currentBrowsingBackend.goOneLevelUp()) {
-                destroyGridView();
-                mediaController.backStopped = true
-            }
-        }
-        Keys.onPressed: {
-            if(event.key == 16777344) { //Media Play key
-                if(mediaPlayer.playing) {
-                    mediaPlayer.playing = false;
-                    mediaPlayer.paused = true;
+            onPlayRequested: {
+                if (currentMediaType == "image") {
+                    mediaImageViewer.visible = true
+                    mediaImageViewer.stripModel = mediaBrowser.currentBrowsingBackend.backendModel
+                    mediaImageViewer.stripCurrentIndex = index
+                    mediaImageViewer.focus = true
+                    mediaImageViewer.source = url
+                    mediaBrowser.visible = false
+                    mediaPlayer.hideToolbars();
                 } else {
-                    mediaPlayer.playing = true;
-                    mediaPlayer.paused = false;
+                    runtimeData.playing = true
+                    mediaPlayer.url = url
+                    mediaPlayer.play()
+                    mediaBrowser.visible = false
+                    mediaPlayer.visible = true
+                    mediaPlayer.focus = true
+                    mediaImageViewer.visible = (currentMediaType == "audio" && mediaImageViewer.source != "")
+                    playlistModel.currentIndex = -1
                 }
             }
+
+            transitions: [ Transition { AnchorAnimation { duration: 500 } } ]
         }
-        onPlayRequested: {
-            if (currentMediaType == "image") {
-                mediaImageViewer.visible = true
-                mediaImageViewer.stripModel = mediaBrowser.currentBrowsingBackend.backendModel
-                mediaImageViewer.stripCurrentIndex = index
-                mediaImageViewer.focus = true
-                mediaImageViewer.source = url
-                mediaBrowser.visible = false
-                mediaPlayer.hideToolbars();
-            } else {
+
+        MediaCenterComponents.Playlist {
+            id: playlist
+            anchors {
+                top: mediaController.bottom; bottom: parent.bottom
+                left: parent.right; right: undefined
+                leftMargin: 20;
+                topMargin: margins.left; bottomMargin: margins.top;
+            }
+            width: parent.width/4
+            z: anchors.right ? 1 : 0
+            backend: runtimeData.currentBrowsingBackend
+
+            onPlayRequested: {
+                mediaPlayer.visible = true
                 runtimeData.playing = true
                 mediaPlayer.url = url
                 mediaPlayer.play()
-                mediaBrowser.visible = false
-                mediaPlayer.visible = true
                 mediaPlayer.focus = true
-                mediaImageViewer.visible = (currentMediaType == "audio" && mediaImageViewer.source != "")
-                playlistModel.currentIndex = -1
             }
+
+            states: [
+                State {
+                    name: "playlistShow"
+                    AnchorChanges { target: playlist; anchors.right: parent.right; anchors.left: undefined}
+                }
+            ]
+
+            transitions: [ Transition { AnchorAnimation { duration: 200 } } ]
         }
 
-        transitions: [ Transition { AnchorAnimation { duration: 500 } } ]
-    }
-
-     MediaCenterComponents.Playlist {
-         id: playlist
-         anchors {
-            top: mediaController.bottom; bottom: parent.bottom
-            left: parent.right; right: undefined
-            leftMargin: 20;
-            topMargin: margins.left; bottomMargin: margins.top;
-         }
-         width: parent.width/4
-         z: anchors.right ? 1 : 0
-         backend: runtimeData.currentBrowsingBackend
-
-         onPlayRequested: {
-            mediaPlayer.visible = true
-            runtimeData.playing = true
-            mediaPlayer.url = url
-            mediaPlayer.play()
-            mediaPlayer.focus = true
-        }
-
-         states: [
-            State {
-                name: "playlistShow"
-                AnchorChanges { target: playlist; anchors.right: parent.right; anchors.left: undefined}
+        Item {
+            id: previewArea
+            anchors {
+                top: parent.top; right: parent.right; margins: 5;
             }
-        ]
-
-        transitions: [ Transition { AnchorAnimation { duration: 200 } } ]
-     }
-
-    Item {
-        id: previewArea
-        anchors {
-            top: parent.top; right: parent.right; margins: 5;
+            height: mediaController.height*0.9; width: 1.2*height;
         }
-        height: mediaController.height*0.9; width: 1.2*height;
     }
-}
 }
