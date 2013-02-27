@@ -32,6 +32,21 @@ Image {
         anchors.fill: parent
         source: _pmc_gradient_image_path
 
+        MediaCenterComponents.KeyHandler {
+            id: keyHandler
+            mainwindow: _pmc_mainwindow
+
+            onSpacePressed: {
+                if (mediaPlayer.state == "minimize")
+                    return;
+                if (runtimeData.playing) {
+                    runtimeData.playing = false; runtimeData.paused = true;
+                } else if (runtimeData.paused || runtimeData.stopped) {
+                    runtimeData.playing = true; runtimeData.paused = false;
+                }
+            }
+        }
+
         MediaCenterComponents.RuntimeData {
             id: runtimeData
             totalTime: mediaPlayer.totalTime

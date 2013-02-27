@@ -44,7 +44,8 @@
 #endif
 
 #include <QtOpenGL/QGLWidget>
-#include <QApplication>
+#include <QtGui/QApplication>
+#include <QtGui/QKeyEvent>
 #include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) : KMainWindow(parent)
@@ -94,7 +95,7 @@ MainWindow::MainWindow(QWidget *parent) : KMainWindow(parent)
     PlaylistModel *playlistModel = new PlaylistModel(this);
     view->rootContext()->setContextProperty("playlistModel", playlistModel);
 
-    view->rootContext()->setContextProperty("mainwindow", this);
+    view->rootContext()->setContextProperty("_pmc_mainwindow", this);
     view->rootContext()->setContextProperty("startedFullScreen", isFullScreen());
 
     view->engine()->addImageProvider(PmcImageProvider::identificationString, new PmcImageProvider());
@@ -135,4 +136,9 @@ MainWindow::~MainWindow()
 void MainWindow::closeMediaCenter()
 {
     QApplication::quit();
+}
+
+void MainWindow::keyPressEvent(QKeyEvent* event)
+{
+    emit keyPressed(event->key());
 }

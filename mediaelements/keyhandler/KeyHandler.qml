@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright 2009 by Alessandro Diaferia <alediaferia@gmail.com>         *
+ *   Copyright 2013 Shantanu Tushar <shantanu@kde.org>                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,36 +16,22 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
 
-#include <KMainWindow>
+import QtQuick 1.1
 
-#include <Plasma/PackageStructure>
-#include <kdeclarative.h>
+Item {
+    id: keyHandlerRootItem
+    property QtObject mainwindow
 
-class QKeyEvent;
+    signal spacePressed()
 
-class MainWindow : public KMainWindow
-{
-    Q_OBJECT
-public:
-    MainWindow(QWidget *parent = 0);
-    ~MainWindow();
-    Q_INVOKABLE void closeMediaCenter();
+    Component.onCompleted: keyHandlerRootItem.mainwindow.keyPressed.connect(handleKey);
 
-public Q_SLOTS:
-    Q_INVOKABLE bool toggleFullScreen();
-
-Q_SIGNALS:
-    void keyPressed(int key);
-
-protected:
-    void keyPressEvent(QKeyEvent * event);
-
-private:
-    Plasma::PackageStructure::Ptr m_structure;
-    KDeclarative m_kdeclarative;
-};
-
-#endif // MAINWINDOW_H
+    function handleKey(key) {
+        switch (key) {
+            case Qt.Key_Space:
+                keyHandlerRootItem.spacePressed();
+                break;
+        }
+    }
+}
