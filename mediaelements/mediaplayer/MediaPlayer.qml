@@ -49,6 +49,7 @@ FocusScope {
     QtMultimediaKit.Video {
         id: video
         anchors.fill: parent
+        visible: hasVideo
 
         onStopped: mediaPlayerRootRect.mediaFinished()
         onStarted: mediaPlayerRootRect.mediaStarted()
