@@ -40,6 +40,7 @@ MetadataMusicBackend::MetadataMusicBackend(QObject* parent, const QVariantList& 
     , m_albumsModel(0)
     , m_musicModel(0)
     , m_playlistModel(0)
+    , m_shallAddMediaToPlaylist(false)
 {
 }
 
@@ -147,7 +148,7 @@ void MetadataMusicBackend::searchMusic(const QString& music)
 
 void MetadataMusicBackend::addAllSongsToPlaylist ( QObject* playlistModel )
 {
-    shallAddMediaToPlaylist = true;
+    m_shallAddMediaToPlaylist = true;
     m_playlistModel = qobject_cast<PlaylistModel*>(playlistModel);
     if (!m_playlistModel)
         return;
@@ -165,7 +166,7 @@ void MetadataMusicBackend::addAllSongsToPlaylist ( QObject* playlistModel )
 
 void MetadataMusicBackend::musicModelDataChanged ( const QModelIndex &startIndex, const QModelIndex &endIndex )
 {
-    if ( !(startIndex.isValid() && endIndex.isValid() && shallAddMediaToPlaylist ))
+    if ( !(startIndex.isValid() && endIndex.isValid() && m_shallAddMediaToPlaylist ))
         return;
     for (int i=startIndex.row(); i<=endIndex.row(); ++i) {
         const QString url = m_musicModel->data(m_musicModel->index(i), MediaCenter::MediaUrlRole).toString();
@@ -183,7 +184,7 @@ void MetadataMusicBackend::musicModelReset()
 
 void MetadataMusicBackend::stopAddingSongsToPlaylist()
 {
-    shallAddMediaToPlaylist = false;
+    m_shallAddMediaToPlaylist = false;
 }
 
 

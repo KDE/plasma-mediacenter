@@ -85,7 +85,7 @@ private:
 
     QString m_artistFilter;
     QString m_albumFilter;
-    bool shallAddMediaToPlaylist = false;
+    bool m_shallAddMediaToPlaylist : 1;
 };
 
 #endif // METADATAMUSICBACKEND_H
