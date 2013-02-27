@@ -24,11 +24,14 @@
 #include <QtCore/QDir>
 #include <QtCore/QStringList>
 #include <QtCore/QDateTime>
+#include <KConfigGroup>
+#include <kconfig.h>
 
 PlaylistModel::PlaylistModel(QObject* parent):
-    QAbstractListModel(parent),
-    m_random(false)
+    QAbstractListModel(parent)
 {
+    KConfigGroup cfgGroup = KGlobal::config()->group("General");
+    setRandom(cfgGroup.readEntry("randomplaylist",false));
     KStandardDirs dir;
     QString dirPath = dir.saveLocation("data") + KCmdLineArgs::appName();
     QDir().mkdir(dirPath);
@@ -53,6 +56,9 @@ PlaylistModel::PlaylistModel(QObject* parent):
 
 PlaylistModel::~PlaylistModel()
 {
+    KConfigGroup cfgGroup = KGlobal::config()->group("General");
+    cfgGroup.writeEntry("randomplaylist",m_random);
+    cfgGroup.sync();
     QFile file(m_filePath);
     if (file.open(QIODevice::WriteOnly)) {
          QTextStream out(&file);
@@ -130,10 +136,6 @@ QString PlaylistModel::getPreviousUrl()
 
 QString PlaylistModel::getUrlofFirstIndex()
 {
-    /*if (! m_musicList.isEmpty()) {
-        return m_musicList.at(0).mediaUrl();
-    }
-    return QString();*/
     return m_musicList.isEmpty() ? QString() : m_musicList.at(0).mediaUrl();
 }
 
@@ -200,4 +202,5 @@ bool PlaylistModel::random() const
 void PlaylistModel::setRandom ( bool random )
 {
     m_random = random;
+    emit randomChanged();
 }

@@ -30,6 +30,8 @@
 
 #include <Plasma/Package>
 #include <Plasma/Theme>
+#include <KConfigGroup>
+#include <kconfig.h>
 #include <KDE/KCmdLineArgs>
 
 #include <QtDeclarative/QDeclarativeEngine>
@@ -50,6 +52,11 @@ MainWindow::MainWindow(QWidget *parent) : KMainWindow(parent)
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
     if (args->isSet("fullscreen")) {
         toggleFullScreen();
+    }
+    KConfigGroup cfgGroup = KGlobal::config()->group("General");
+    bool toggleCheck = cfgGroup.readEntry("fullscreen",false);
+    if (toggleCheck) {
+       toggleFullScreen();
     }
 
     QDeclarativeView *view = new QDeclarativeView(this);
@@ -120,6 +127,9 @@ bool MainWindow::toggleFullScreen()
 
 MainWindow::~MainWindow()
 {
+   KConfigGroup cfgGroup = KGlobal::config()->group("General");
+   windowState() & Qt::WindowFullScreen ? cfgGroup.writeEntry("fullscreen",true) : cfgGroup.writeEntry("fullscreen",false);
+   cfgGroup.sync();
 }
 
 void MainWindow::closeMediaCenter()
