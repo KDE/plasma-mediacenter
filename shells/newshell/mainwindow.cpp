@@ -33,6 +33,7 @@
 #include <KConfigGroup>
 #include <kconfig.h>
 #include <KDE/KCmdLineArgs>
+#include <KDE/KApplication>
 
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/QDeclarativeView>
@@ -47,8 +48,11 @@
 #include <QtGui/QApplication>
 #include <QtGui/QKeyEvent>
 #include <QDebug>
+#include <QTimer>
 
-MainWindow::MainWindow(QWidget *parent) : KMainWindow(parent)
+MainWindow::MainWindow(QWidget *parent)
+    : KMainWindow(parent)
+    , m_mousePointerAutoHide(false)
 {
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
     if (args->isSet("fullscreen")) {
@@ -114,6 +118,12 @@ MainWindow::MainWindow(QWidget *parent) : KMainWindow(parent)
     view->setSource(QUrl(package->filePath("mainscript")));
 
     resize(1024, 768);
+
+    installEventFilter(this);
+
+    m_mousePointerAutoHideTimer.setInterval(2000);
+    connect(this, SIGNAL(mousePointerAutoHideChanged()), SLOT(enableMousePointerAutoHideIfNeeded()));
+    connect(&m_mousePointerAutoHideTimer, SIGNAL(timeout()), SLOT(hideMousePointer()));
 }
 
 bool MainWindow::toggleFullScreen()
@@ -141,4 +151,48 @@ void MainWindow::closeMediaCenter()
 void MainWindow::keyPressEvent(QKeyEvent* event)
 {
     emit keyPressed(event->key());
+}
+
+void MainWindow::hideMousePointer()
+{
+    kapp->setOverrideCursor(Qt::BlankCursor);
+    m_mousePointerHidden = true;
+}
+
+void MainWindow::showMousePointer()
+{
+    kapp->setOverrideCursor(Qt::ArrowCursor);
+    m_mousePointerHidden = false;
+}
+
+bool MainWindow::mousePointerAutoHide() const
+{
+    return m_mousePointerAutoHide;
+}
+
+void MainWindow::setMousePointerAutoHide(bool value)
+{
+    m_mousePointerAutoHide = value;
+    emit mousePointerAutoHideChanged();
+}
+
+void MainWindow::enableMousePointerAutoHideIfNeeded()
+{
+    if (m_mousePointerAutoHide) {
+        m_mousePointerAutoHideTimer.start();
+    } else {
+        m_mousePointerAutoHideTimer.stop();
+        showMousePointer();
+    }
+}
+
+bool MainWindow::eventFilter(QObject *obj, QEvent *event)
+{
+    if (event->type() == QEvent::HoverMove) {
+        if (m_mousePointerHidden) {
+            showMousePointer();
+            enableMousePointerAutoHideIfNeeded();
+        }
+    }
+    return false;
 }

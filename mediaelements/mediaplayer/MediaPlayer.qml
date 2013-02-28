@@ -35,6 +35,7 @@ FocusScope {
     property alias metaData: video.metaData
     property bool showMusicStats: true
     property alias dimVideo: videoDimRectangle.visible
+    property alias hasVideo: video.hasVideo
 
     signal clicked
     signal mediaFinished

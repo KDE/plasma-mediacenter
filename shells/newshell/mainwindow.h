@@ -24,28 +24,47 @@
 #include <Plasma/PackageStructure>
 #include <kdeclarative.h>
 
+#include <QtCore/QTimer>
+
 class QKeyEvent;
+class QMouseEvent;
 
 class MainWindow : public KMainWindow
 {
     Q_OBJECT
+    Q_PROPERTY(bool mousePointerAutoHide READ mousePointerAutoHide
+                WRITE setMousePointerAutoHide NOTIFY mousePointerAutoHideChanged)
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    Q_INVOKABLE void closeMediaCenter();
+
+    bool mousePointerAutoHide() const;
+    void setMousePointerAutoHide(bool value);
 
 public Q_SLOTS:
-    Q_INVOKABLE bool toggleFullScreen();
+    void closeMediaCenter();
+    bool toggleFullScreen();
+    void hideMousePointer();
+    void showMousePointer();
 
 Q_SIGNALS:
     void keyPressed(int key);
+    void mousePointerAutoHideChanged();
+
+private Q_SLOTS:
+    void enableMousePointerAutoHideIfNeeded();
 
 protected:
     void keyPressEvent(QKeyEvent * event);
+    bool eventFilter(QObject *obj, QEvent *event);
 
 private:
     Plasma::PackageStructure::Ptr m_structure;
     KDeclarative m_kdeclarative;
+
+    bool m_mousePointerAutoHide;
+    bool m_mousePointerHidden;
+    QTimer m_mousePointerAutoHideTimer;
 };
 
 #endif // MAINWINDOW_H

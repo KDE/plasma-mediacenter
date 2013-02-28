@@ -130,6 +130,7 @@ Image {
             }
             onMediaStarted: {
                 runtimeData.playing = true;
+                _pmc_mainwindow.mousePointerAutoHide = hasVideo;
             }
 
             states: [
