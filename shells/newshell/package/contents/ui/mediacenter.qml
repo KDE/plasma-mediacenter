@@ -126,6 +126,7 @@ Image {
                 } else {
                     runtimeData.currentTime = 0;
                     runtimeData.stopped = true;
+                    mediaBrowser.visible = true;
                 }
             }
             onMediaStarted: {
