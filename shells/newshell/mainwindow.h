@@ -55,7 +55,6 @@ private Q_SLOTS:
     void enableMousePointerAutoHideIfNeeded();
 
 protected:
-    void keyPressEvent(QKeyEvent * event);
     bool eventFilter(QObject *obj, QEvent *event);
 
 private:

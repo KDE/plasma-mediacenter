@@ -120,6 +120,7 @@ MainWindow::MainWindow(QWidget *parent)
     resize(1024, 768);
 
     installEventFilter(this);
+    centralWidget()->installEventFilter(this);
 
     m_mousePointerAutoHideTimer.setInterval(2000);
     connect(this, SIGNAL(mousePointerAutoHideChanged()), SLOT(enableMousePointerAutoHideIfNeeded()));
@@ -146,11 +147,6 @@ MainWindow::~MainWindow()
 void MainWindow::closeMediaCenter()
 {
     QApplication::quit();
-}
-
-void MainWindow::keyPressEvent(QKeyEvent* event)
-{
-    emit keyPressed(event->key());
 }
 
 void MainWindow::hideMousePointer()
@@ -193,6 +189,8 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
             showMousePointer();
             enableMousePointerAutoHideIfNeeded();
         }
+    } else if (event->type() == QEvent::KeyPress) {
+        emit keyPressed(static_cast<QKeyEvent*>(event)->key());
     }
     return false;
 }

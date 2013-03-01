@@ -24,6 +24,8 @@ Item {
     property QtObject mainwindow
 
     signal spacePressed()
+    signal leftArrowPressed()
+    signal rightArrowPressed()
 
     Component.onCompleted: keyHandlerRootItem.mainwindow.keyPressed.connect(handleKey);
 
@@ -31,6 +33,12 @@ Item {
         switch (key) {
             case Qt.Key_Space:
                 keyHandlerRootItem.spacePressed();
+                break;
+            case Qt.Key_Left:
+                keyHandlerRootItem.leftArrowPressed();
+                break;
+            case Qt.Key_Right:
+                keyHandlerRootItem.rightArrowPressed();
                 break;
         }
     }

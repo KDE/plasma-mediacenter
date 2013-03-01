@@ -102,6 +102,11 @@ FocusScope {
         video.play();
     }
 
+    function seekBy(value)
+    {
+        video.position += value*1000;
+    }
+
     MouseArea {
         anchors.fill: parent
         onClicked: mediaPlayerRootRect.clicked()
