@@ -50,7 +50,7 @@ bool MetadataVideoBackend::initImpl()
 
 void MetadataVideoBackend::search(const QString& searchTerm)
 {
-    qobject_cast<PmcMetadataModel*>(model())->setSearchTerm(searchTerm);
+    qobject_cast<PmcMetadataModel*>(model())->setSearchTerm(QString(searchTerm).prepend("*").append("*"));
 }
 
 bool MetadataVideoBackend::supportsSearch() const
