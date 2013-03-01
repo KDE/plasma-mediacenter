@@ -93,7 +93,7 @@ Image {
             onEscapePressed: mediaBrowser.visible = true
 
             onCurrentTimeChanged: {
-                runtimeData.currentTime = currentTime
+                runtimeData.currentTime = currentTime;
                 var dateTimeObject = new Date(0, 0, 0, 0, 0, 0, currentTime);
                 mediaController.curMediaTime = Qt.formatTime(dateTimeObject, "hh:mm:ss");
                 remainingMediaTimeObject = new Date(0, 0, 0, 0, 0, 0, totalTime-currentTime)

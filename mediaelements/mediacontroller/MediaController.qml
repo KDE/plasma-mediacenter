@@ -145,10 +145,8 @@ PlasmaCore.FrameSvgItem {
                 }
             }
 
-            Component.onCompleted: {
-                maximumValue = (function() { return runtimeDataObject.totalTime; })
-                value = (function() { return runtimeDataObject.currentTime; })
-            }
+            value: runtimeDataObject.currentTime
+            maximumValue: runtimeDataObject.totalTime
         }
 
         PlasmaComponents.Label {
