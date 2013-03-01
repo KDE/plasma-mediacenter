@@ -92,16 +92,15 @@ Image {
 
             Keys.onPressed: {
                 if(event.key == 16777344) { //Media Play/pause key
-                    // doesn't work as expected
-                    if(mediaPlayer.playing) {
-                        mediaPlayer.playing = false;
-                        mediaPlayer.paused = true;
-                    } else {
-                        mediaPlayer.playing = true;
-                        mediaPlayer.paused = false;
+                    if (runtimeDataObject.playing) {
+                        runtimeDataObject.playing = false; runtimeDataObject.paused = true;
+                    } else if (runtimeDataObject.paused || runtimeDataObject.stopped) {
+                        runtimeDataObject.playing = true; runtimeDataObject.paused = false;
                     }
                 } else if(event.key == 16777345) {    // stop media key
-
+                    runtimeDataObject.userTrigerredStop = true;
+                    runtimeDataObject.stopped = true;
+                    runtimeDataObject.userTrigerredStop = false;
                 } else if(event.key == 16777346) {     // previous media key
                     if (playlistModel.currentIndex != -1) {
                         playlist.playRequested(playlistModel.getPreviousUrl());
