@@ -69,6 +69,7 @@ FocusScope {
             }
             flow: GridView.TopToBottom
             model: mediaBrowser.currentBrowsingBackend.backendModel
+            cacheBuffer: width*2
 
             Text {
                 visible: false
