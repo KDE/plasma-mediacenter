@@ -22,6 +22,7 @@ target_link_libraries(pmc_localmusic
     
     ${SOPRANO_LIBRARIES}
     ${TAGLIB_LIBRARIES}
+    ${KDE4_SOLID_LIBS}
 )
 
 install(TARGETS pmc_localmusic DESTINATION ${PLUGIN_INSTALL_DIR})

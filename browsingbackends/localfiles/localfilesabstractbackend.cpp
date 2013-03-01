@@ -64,9 +64,13 @@ QObject* LocalFilesAbstractBackend::placesModel()
 
 void LocalFilesAbstractBackend::browseToPlace(int row)
 {
-    KUrl url =  m_placeModel->url(m_placeModel->index(row, 0));
-    LocalFilesAbstractModel *filesModel = qobject_cast<LocalFilesAbstractModel*>(model());
-    filesModel->browseToUrl(url);
+    //TODO:Check if the device is already mounted.
+    Solid::Device device;
+    placesRow = row;
+    device = m_placeModel->deviceForIndex(m_placeModel->index(row,0));
+    Solid::StorageAccess *access = device.as<Solid::StorageAccess>();
+    connect(access, SIGNAL(setupDone(Solid::ErrorType,QVariant,QString)), this, SLOT(slotStorageSetupDone(Solid::ErrorType,QVariant,QString)));
+    access->setup();
 }
 
 bool LocalFilesAbstractBackend::okToLoad() const
@@ -75,4 +79,12 @@ bool LocalFilesAbstractBackend::okToLoad() const
     return !cg.readEntry("hideLocalBrowsing", false);
 }
 
+void LocalFilesAbstractBackend::slotStorageSetupDone(Solid::ErrorType error,
+                                           const QVariant& errorData,
+                                           const QString& udi)
+{
+    KUrl url =  m_placeModel->url(m_placeModel->index(placesRow, 0));
+    LocalFilesAbstractModel *filesModel = qobject_cast<LocalFilesAbstractModel*>(model());
+    filesModel->browseToUrl(url);
+}
 #include "localfilesabstractbackend.h"

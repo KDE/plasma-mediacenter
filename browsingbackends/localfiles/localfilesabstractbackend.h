@@ -23,6 +23,8 @@
 
 #include <libs/mediacenter/abstractbrowsingbackend.h>
 #include <KDE/KFilePlacesModel>
+#include <Solid/Device>
+#include <Solid/StorageAccess>
 
 class LocalFilesAbstractBackend : public MediaCenter::AbstractBrowsingBackend
 {
@@ -42,6 +44,12 @@ protected:
     virtual bool initImpl();
     virtual void initModel() = 0;
     KFilePlacesModel *m_placeModel;
+
+private slots:
+    void slotStorageSetupDone(Solid::ErrorType error, const QVariant& errorData, const QString& udi);
+
+private:
+    int placesRow;
 };
 
 #endif // LOCALFILESABSTRACTBACKEND_H
