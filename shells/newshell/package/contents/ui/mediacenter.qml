@@ -45,8 +45,16 @@ Image {
                     runtimeData.playing = true; runtimeData.paused = false;
                 }
             }
-            onLeftArrowPressed: mediaPlayer.seekBy(-5);
-            onRightArrowPressed: mediaPlayer.seekBy(5);
+            onLeftArrowPressed: {
+                if (mediaPlayer.state == "minimize" || mediaWelcome.visible)
+                    return;
+                mediaPlayer.seekBy(-5);
+            }
+            onRightArrowPressed: {
+                if (mediaPlayer.state == "minimize" || mediaWelcome.visible)
+                    return;
+                mediaPlayer.seekBy(5);
+            }
         }
 
         MediaCenterComponents.RuntimeData {
