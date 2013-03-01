@@ -122,11 +122,12 @@ Image {
             onMediaFinished: {
                 if (playlistModel.currentIndex != -1 && totalTime != -1 && !runtimeData.userTrigerredStop) {
                     playlist.playRequested(playlistModel.getNextUrl());
-                    console.log("playlist");
                 } else {
                     runtimeData.currentTime = 0;
                     runtimeData.stopped = true;
-                    mediaBrowser.visible = true;
+                    if (!runtimeData.userTrigerredStop) {
+                        mediaBrowser.visible = true;
+                    }
                 }
             }
             onMediaStarted: {

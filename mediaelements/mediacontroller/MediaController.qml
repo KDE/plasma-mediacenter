@@ -80,7 +80,9 @@ PlasmaCore.FrameSvgItem {
             iconSource: "media-skip-backward"
 
             onClicked: {
+                runtimeDataObject.userTrigerredStop = true;
                 playPrevious();
+                runtimeDataObject.userTrigerredStop = false;
             }
         }
 
@@ -123,7 +125,9 @@ PlasmaCore.FrameSvgItem {
             iconSource: "media-skip-forward"
 
             onClicked: {
+                runtimeDataObject.userTrigerredStop = true;
                 playNext();
+                runtimeDataObject.userTrigerredStop = false;
             }
         }
 
