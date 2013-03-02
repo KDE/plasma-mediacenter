@@ -232,7 +232,7 @@ Image {
                 }
             ]
 
-            transitions: [ Transition { AnchorAnimation { duration: 500 } } ]
+            transitions: [ Transition { AnchorAnimation { duration: 200 } } ]
         }
 
         MediaCenterComponents.MediaWelcome {
@@ -310,8 +310,6 @@ Image {
                     playlistModel.currentIndex = -1
                 }
             }
-
-            transitions: [ Transition { AnchorAnimation { duration: 500 } } ]
         }
 
         MediaCenterComponents.Playlist {
