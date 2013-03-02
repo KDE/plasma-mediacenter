@@ -38,6 +38,7 @@
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/QDeclarativeView>
 #include <QtDeclarative/QDeclarativeContext>
+#include <QDeclarativeProperty>
 #include <qdeclarative.h>
 
 #ifdef QT_MULTIMEDIA_KIT_FOUND
@@ -64,7 +65,7 @@ MainWindow::MainWindow(QWidget *parent)
        toggleFullScreen();
     }
 
-    QDeclarativeView *view = new QDeclarativeView(this);
+    view = new QDeclarativeView(this);
 
     if (!args->isSet("disable-opengl")) {
         QGLWidget *glWidget = new QGLWidget;
@@ -125,6 +126,9 @@ MainWindow::MainWindow(QWidget *parent)
     m_mousePointerAutoHideTimer.setInterval(2000);
     connect(this, SIGNAL(mousePointerAutoHideChanged()), SLOT(enableMousePointerAutoHideIfNeeded()));
     connect(&m_mousePointerAutoHideTimer, SIGNAL(timeout()), SLOT(hideMousePointer()));
+
+    qreal volumeRead = cfgGroup.readEntry("volumelevel",1.0);
+    view->rootObject()->findChild<QObject*>("runtimeData")->setProperty("volume",volumeRead);
 }
 
 bool MainWindow::toggleFullScreen()
@@ -141,6 +145,11 @@ MainWindow::~MainWindow()
 {
    KConfigGroup cfgGroup = KGlobal::config()->group("General");
    windowState() & Qt::WindowFullScreen ? cfgGroup.writeEntry("fullscreen",true) : cfgGroup.writeEntry("fullscreen",false);
+
+   QObject *volumeLevel = view->rootObject()->findChild<QObject*>("runtimeData");
+   if (volumeLevel) {
+       cfgGroup.writeEntry("volumelevel",QDeclarativeProperty::read(volumeLevel,"volume").toReal());
+   }
    cfgGroup.sync();
 }
 

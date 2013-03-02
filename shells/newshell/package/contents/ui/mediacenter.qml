@@ -59,6 +59,7 @@ Image {
 
         MediaCenterComponents.RuntimeData {
             id: runtimeData
+            objectName: "runtimeData"
             totalTime: mediaPlayer.totalTime
 
             onCurrentTimeChanged: {
@@ -123,7 +124,6 @@ Image {
             }
 
             onTotalTimeChanged: {
-                runtimeDataObject.volume = volume;
                 var dateTimeObject = new Date(0, 0, 0, 0, 0, 0, totalTime);
                 mediaController.totalMediaTime = Qt.formatTime(dateTimeObject, "hh:mm:ss");
             }

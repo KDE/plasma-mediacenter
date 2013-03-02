@@ -24,6 +24,7 @@
 #include <Plasma/PackageStructure>
 #include <kdeclarative.h>
 
+#include <QDeclarativeView>
 #include <QtCore/QTimer>
 
 class QKeyEvent;
@@ -64,6 +65,8 @@ private:
     bool m_mousePointerAutoHide;
     bool m_mousePointerHidden;
     QTimer m_mousePointerAutoHideTimer;
+
+    QDeclarativeView *view;
 };
 
 #endif // MAINWINDOW_H
