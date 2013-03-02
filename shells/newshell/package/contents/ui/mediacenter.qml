@@ -37,7 +37,7 @@ Image {
             mainwindow: _pmc_mainwindow
 
             onSpacePressed: {
-                if (mediaPlayer.state == "minimize")
+                if (mediaPlayer.state == "minimize" || playlist.state == "playlistShow")
                     return;
                 if (runtimeData.playing) {
                     runtimeData.playing = false; runtimeData.paused = true;
