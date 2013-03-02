@@ -206,7 +206,7 @@ PlasmaCore.FrameSvgItem {
         PlasmaComponents.ToolButton {
             id: playlistButton
             width: parent.height
-            height: parent.height
+            height: width
             font.pointSize: 12
             iconSource: "format-list-ordered"
             checkable: true

@@ -60,8 +60,8 @@ FocusScope {
             id: mediaBrowserGridViewId
             anchors { fill: parent; topMargin: 10; bottomMargin: 10 + searchMedia.height }
             clip: true
-            cellWidth: width / 5
-            cellHeight: cellWidth
+            cellWidth: cellHeight
+            cellHeight: height/2.1
             delegate: MediaItemDelegate {
                 backend: mediaBrowser.currentBrowsingBackend
                 onPlayRequested: mediaBrowser.playRequested(index, url, currentMediaType)

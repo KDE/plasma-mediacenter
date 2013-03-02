@@ -129,11 +129,8 @@ Item {
             width: parent.width;
             height: parent.height - 30
             model: backend.artistsModel();
-            cellWidth: width / 5
-            cellHeight: cellWidth
-            preferredHighlightBegin: parent.width*0.1
-            preferredHighlightEnd: parent.width*0.9
-            highlightRangeMode: GridView.ApplyRange
+            cellWidth: cellHeight
+            cellHeight: height/2.1
             flow: GridView.TopToBottom
 
             delegate: Item {
@@ -207,11 +204,8 @@ Item {
             width: parent.width;
             height: parent.height - 30
             model: backend.albumsModel();
-            cellWidth: width / 5
-            cellHeight: cellWidth
-            preferredHighlightBegin: parent.width*0.1
-            preferredHighlightEnd: parent.width*0.9
-            highlightRangeMode: GridView.ApplyRange
+            cellWidth: cellHeight
+            cellHeight: height/2.1
             flow: GridView.TopToBottom
             
             delegate: Item {
