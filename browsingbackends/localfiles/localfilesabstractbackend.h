@@ -39,6 +39,7 @@ public:
     Q_INVOKABLE void browseToPlace(int row);
     Q_INVOKABLE void browseOneLevelUp();
     virtual bool okToLoad() const;
+    void loadUrl(int placeRow);
 
 protected:
     virtual bool initImpl();
@@ -46,10 +47,10 @@ protected:
     KFilePlacesModel *m_placeModel;
 
 private slots:
-    void slotStorageSetupDone(Solid::ErrorType error, const QVariant& errorData, const QString& udi);
+    void slotStorageSetupDone(Solid::ErrorType error, const QVariant& errordata, const QString& udi);
 
 private:
-    int placesRow;
+    int m_placesRow;
 };
 
 #endif // LOCALFILESABSTRACTBACKEND_H
