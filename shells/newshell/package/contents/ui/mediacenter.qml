@@ -48,12 +48,18 @@ Image {
             onLeftArrowPressed: {
                 if (mediaPlayer.state == "minimize" || mediaWelcome.visible)
                     return;
-                mediaPlayer.seekBy(-5);
+                if (mediaImageViewer.visible)
+                    mediaImageViewer.previousImage();
+                else
+                    mediaPlayer.seekBy(-5);
             }
             onRightArrowPressed: {
                 if (mediaPlayer.state == "minimize" || mediaWelcome.visible)
                     return;
-                mediaPlayer.seekBy(5);
+                if (mediaImageViewer.visible)
+                    mediaImageViewer.nextImage();
+                else
+                    mediaPlayer.seekBy(5);
             }
         }
 

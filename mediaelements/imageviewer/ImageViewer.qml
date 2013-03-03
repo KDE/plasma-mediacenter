@@ -91,4 +91,7 @@ Rectangle {
         ]
         transitions: [ Transition { AnchorAnimation { duration: 100 } } ]
     }
+
+    function nextImage() { mediaPictureStrip.nextImage(); }
+    function previousImage() { mediaPictureStrip.previousImage(); }
 }
