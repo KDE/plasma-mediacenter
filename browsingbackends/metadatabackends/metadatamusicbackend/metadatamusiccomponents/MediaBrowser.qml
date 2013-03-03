@@ -131,7 +131,8 @@ Item {
             model: backend.artistsModel();
             cellWidth: cellHeight
             cellHeight: height/2.1
-            flow: GridView.TopToBottom
+            flow: _pmc_is_desktop ? GridView.LeftToRight : GridView.TopToBottom
+            clip: true
 
             delegate: Item {
                 id: mediaItemDelegateItem
@@ -176,7 +177,7 @@ Item {
             PlasmaComponents.ScrollBar {
                 id: artistScrollBar
                 flickableItem: parent
-                orientation: Qt.Horizontal
+                orientation: _pmc_is_desktop ? Qt.Vertical : Qt.Horizontal
             }
         }
     }
@@ -206,7 +207,7 @@ Item {
             model: backend.albumsModel();
             cellWidth: cellHeight
             cellHeight: height/2.1
-            flow: GridView.TopToBottom
+            flow: _pmc_is_desktop ? GridView.LeftToRight : GridView.TopToBottom
             
             delegate: Item {
                 id: mediaItemDelegateItem
@@ -251,7 +252,7 @@ Item {
             PlasmaComponents.ScrollBar {
                 id: albumScrollBar
                 flickableItem: parent
-                orientation: Qt.Horizontal
+                orientation: _pmc_is_desktop ? Qt.Vertical : Qt.Horizontal
             }
         }
     }

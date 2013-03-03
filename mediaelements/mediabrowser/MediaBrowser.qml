@@ -67,7 +67,7 @@ FocusScope {
                 onPlayRequested: mediaBrowser.playRequested(index, url, currentMediaType)
                 onPopupMenuRequested: mediaBrowser.popupMenuRequested(index,mediaUrl,mediaType, display)
             }
-            flow: GridView.TopToBottom
+            flow: _pmc_is_desktop ? GridView.LeftToRight : GridView.TopToBottom
             model: mediaBrowser.currentBrowsingBackend.backendModel
             cacheBuffer: width*2
 
@@ -79,7 +79,7 @@ FocusScope {
             }
 
             PlasmaComponents.ScrollBar {
-                orientation: Qt.Horizontal
+                orientation: _pmc_is_desktop ? Qt.Vertical : Qt.Horizontal
                 flickableItem: mediaBrowserGridViewId
             }
 
