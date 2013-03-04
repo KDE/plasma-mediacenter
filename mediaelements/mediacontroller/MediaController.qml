@@ -138,6 +138,13 @@ PlasmaCore.FrameSvgItem {
                 - playlistButton.width - curMediaTime.width) * 0.8
             height: parent.height
 
+            Binding {
+                when: !progressSlider.pressed
+                target: progressSlider
+                property: "value"
+                value: runtimeDataObject.currentTime
+            }
+
             onValueChanged: {
                 if (pressed) {
                     runtimeDataObject.currentTimeDirty = true;
