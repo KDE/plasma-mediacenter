@@ -67,6 +67,7 @@ signals:
      * @param image is the result entry retrieved after the search.
      */
     void result(const QString &searchTerm, const QString &id, const Plasma::DataEngine::Data &image);
+    void loginSuccessful(bool status);
 
 protected slots:
     void picasaDataReady(KIO::Job *job, const QByteArray &data);

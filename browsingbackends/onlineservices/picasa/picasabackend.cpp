@@ -27,6 +27,7 @@ PicasaBackend::PicasaBackend(QObject* parent, const QVariantList& args):
                              MediaCenter::AbstractBrowsingBackend(parent, args)
 {
 
+    m_login_status = false;
 }
 
 QString PicasaBackend::backendCategory() const
@@ -55,11 +56,24 @@ QString PicasaBackend::mediaBrowserSidePanel() const
 
 void PicasaBackend::login(const QString& username, const QString& password)
 {
-    setModel(new PicasaModel(this, username, password));
+    PicasaModel * picasaModel = new PicasaModel(this, username, password);
+    setModel(picasaModel);
+    connect (picasaModel, SIGNAL (loginSuccessful(bool)), this, SLOT (currentLoginStatus(bool)));
 }
 
 bool PicasaBackend::expand(int row)
 {
     PicasaModel *picasaModel = qobject_cast<PicasaModel*>(model());
     return picasaModel->browseToAlbum(row);
+}
+
+void PicasaBackend::currentLoginStatus(bool status)
+{
+    m_login_status = status;
+    emit loginStatusChanged();
+}
+
+bool PicasaBackend::loginStatus()
+{
+    return m_login_status;
 }

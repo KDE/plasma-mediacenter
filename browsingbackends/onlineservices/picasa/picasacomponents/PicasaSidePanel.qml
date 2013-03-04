@@ -26,6 +26,17 @@ Rectangle {
     property QtObject backend
     color: "black"
     opacity: 0.7
+    visible: !backend.loginStatus
+
+    Text {
+        id: picasaText
+        y: rootItem.height / 9
+        color: theme.textColor
+        width: parent.width
+        wrapMode: Text.Wrap
+        font.pointSize: 12
+        text: "Enter your Google credentials and browse through your picasa albums"
+    }
 
      PlasmaComponents.TextField {
          id: userid

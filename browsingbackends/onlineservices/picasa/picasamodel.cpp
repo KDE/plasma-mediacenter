@@ -274,6 +274,12 @@ void PicasaModel::token(KIO::Job *job, const QByteArray &data)
     QString output(data);
 
     if (output.contains("Auth=")) {
+        emit loginSuccessful(true);
+    } else {
+        emit loginSuccessful(false);
+    }
+
+    if (output.contains("Auth=")) {
         QStringList strList = output.split("Auth=");
         if (strList.count() > 0) {
             m_token = strList[1].trimmed();
