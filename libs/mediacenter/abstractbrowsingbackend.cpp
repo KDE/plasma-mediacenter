@@ -49,6 +49,7 @@ public:
     QDeclarativeEngine *declarativeEngine;
     bool hasInitialized;
     QString name;
+    QString mediaBrowserSidePanelText;
 };
 
 AbstractBrowsingBackend::AbstractBrowsingBackend(QObject *parent, const QVariantList &args)
@@ -57,6 +58,7 @@ AbstractBrowsingBackend::AbstractBrowsingBackend(QObject *parent, const QVariant
 {
     Q_UNUSED(args);
     qRegisterMetaType<QAbstractItemModel*>("QAbstractItemModel*");
+    d->mediaBrowserSidePanelText = QString();
 }
 
 AbstractBrowsingBackend::~AbstractBrowsingBackend()
@@ -179,8 +181,15 @@ QString AbstractBrowsingBackend::mediaBrowserOverride() const
 
 QString AbstractBrowsingBackend::mediaBrowserSidePanel() const
 {
-    return QString();
+    return d->mediaBrowserSidePanelText;
 }
+
+void AbstractBrowsingBackend::setMediaBrowserSidePanel(QString text)
+{
+    d->mediaBrowserSidePanelText = text;
+    emit mediaBrowserSidePanelChanged();
+}
+
 
 bool AbstractBrowsingBackend::okToLoad() const
 {

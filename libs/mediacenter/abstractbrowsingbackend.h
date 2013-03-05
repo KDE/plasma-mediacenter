@@ -53,6 +53,7 @@ class MEDIACENTER_EXPORT AbstractBrowsingBackend : public QObject
     Q_PROPERTY(QObject* backendModel READ model NOTIFY modelChanged)
     Q_PROPERTY(QObject* metadataModel READ metadataModel WRITE setMetadataModel NOTIFY metadataModelChanged)
     Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
+    Q_PROPERTY(QString mediaBrowserSidePanel READ mediaBrowserSidePanel WRITE setMediaBrowserSidePanel NOTIFY mediaBrowserSidePanelChanged)
 
 public:
     enum BrowsingType {
@@ -215,7 +216,9 @@ public:
      *
      * @return Valid QML string, use constructQmlSource for convenience
      */
-    Q_INVOKABLE virtual QString mediaBrowserSidePanel() const;
+     virtual QString mediaBrowserSidePanel() const;
+
+     virtual void setMediaBrowserSidePanel(QString text);
 
     /**
      * Override this method and emit the busyChanged() signal to tell the mediacenter
@@ -229,6 +232,7 @@ signals:
     void modelChanged();
     void metadataModelChanged();
     void busyChanged();
+    void mediaBrowserSidePanelChanged();
 
 protected:
     /**

@@ -24,9 +24,9 @@ Rectangle {
     id: rootItem
     anchors.fill: parent
     property QtObject backend
+    property bool loginStatus: backend.loginStatus
     color: "black"
     opacity: 0.7
-    visible: !backend.loginStatus
 
     Text {
         id: picasaText
@@ -79,6 +79,11 @@ Rectangle {
         anchors.horizontalCenter: parent.horizontalCenter
         onClicked: {
             backend.login(userid.text, password.text, "album");
+        }
+    }
+    onLoginStatusChanged: {
+        if (loginStatus) {
+            hideMediaBrowserSidePanel()
         }
     }
 }

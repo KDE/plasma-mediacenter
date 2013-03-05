@@ -37,6 +37,7 @@ public:
 
     virtual QString backendCategory() const;
     virtual QString mediaBrowserSidePanel() const;
+    virtual void setMediaBrowserSidePanel(QString text);
     bool expand (int row);
     virtual bool initImpl();
     bool loginStatus();
@@ -49,6 +50,7 @@ public Q_SLOTS:
     void currentLoginStatus(bool status);
 private:
     bool m_login_status;
+    QString m_loginText;
 };
 
 #endif

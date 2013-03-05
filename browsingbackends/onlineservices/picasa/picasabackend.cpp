@@ -28,6 +28,7 @@ PicasaBackend::PicasaBackend(QObject* parent, const QVariantList& args):
 {
 
     m_login_status = false;
+    m_loginText =  constructQmlSource("picasacomponents", "0.1", "PicasaSidePanel");
 }
 
 QString PicasaBackend::backendCategory() const
@@ -51,7 +52,7 @@ bool PicasaBackend::goOneLevelUp()
 
 QString PicasaBackend::mediaBrowserSidePanel() const
 {
-    return constructQmlSource("picasacomponents", "0.1", "PicasaSidePanel");
+    return m_loginText;
 }
 
 void PicasaBackend::login(const QString& username, const QString& password)
@@ -76,4 +77,10 @@ void PicasaBackend::currentLoginStatus(bool status)
 bool PicasaBackend::loginStatus()
 {
     return m_login_status;
+}
+
+void PicasaBackend::setMediaBrowserSidePanel(QString text)
+{
+    m_loginText = text;
+    emit mediaBrowserSidePanelChanged();
 }

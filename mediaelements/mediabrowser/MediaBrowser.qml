@@ -31,8 +31,10 @@ FocusScope {
 
     Item {
         id: mediaBrowserSidePanel
-        property bool enabled: false
         property QtObject child
+        property bool enabled
+
+        enabled: (currentBrowsingBackend.mediaBrowserSidePanel == "" ) ? false : true
         anchors { top: parent.top; bottom: parent.bottom; left: parent.left }
         width: enabled ? parent.width*0.2 : 0
         clip: true
@@ -113,14 +115,11 @@ FocusScope {
 
         if (mediaBrowserSidePanel.child) mediaBrowserSidePanel.child.destroy()
         //Load the panel if the backend supports one
-        if (currentBrowsingBackend.mediaBrowserSidePanel()) {
-            var qmlSource = currentBrowsingBackend.mediaBrowserSidePanel();
+        if (currentBrowsingBackend.mediaBrowserSidePanel) {
+            var qmlSource = currentBrowsingBackend.mediaBrowserSidePanel;
             object = Qt.createQmlObject(qmlSource, mediaBrowserSidePanel);
             mediaBrowserSidePanel.child = object
             object.backend = (function() { return currentBrowsingBackend; });
-            mediaBrowserSidePanel.enabled = true
-        } else {
-            mediaBrowserSidePanel.enabled = false
         }
     }
 
@@ -132,6 +131,11 @@ FocusScope {
     {
         //JS snippet to do mediaBrowserGridView.model: currentBrowsingBackend.backendModel
         mediaBrowserViewItem.mediaBrowserGridView.model = (function() { return currentBrowsingBackend.backendModel; });
+    }
+
+    function hideMediaBrowserSidePanel()
+    {
+        currentBrowsingBackend.mediaBrowserSidePanel = ""
     }
 
      PlasmaComponents.TextField {
