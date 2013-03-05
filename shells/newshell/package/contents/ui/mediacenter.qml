@@ -119,13 +119,17 @@ Image {
                     runtimeDataObject.stopped = true;
                     runtimeDataObject.userTrigerredStop = false;
                 } else if(event.key == 16777346) {     // previous media key
+                    runtimeDataObject.userTrigerredStop = true;
                     if (playlistModel.currentIndex != -1) {
                         playlist.playRequested(playlistModel.getPreviousUrl());
                     }
+                    runtimeDataObject.userTrigerredStop = false;
                 } else if(event.key == 16777347) {   // next media key
+                    runtimeDataObject.userTrigerredStop = true;
                     if (playlistModel.currentIndex != -1) {
                         playlist.playRequested(playlistModel.getNextUrl());
                     }
+                    runtimeDataObject.userTrigerredStop = false;
                 }
             }
 
