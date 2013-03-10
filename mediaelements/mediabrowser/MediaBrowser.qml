@@ -60,7 +60,7 @@ FocusScope {
         id: mediaBrowserViewComponent
         GridView {
             id: mediaBrowserGridViewId
-            anchors { fill: parent; topMargin: 10; bottomMargin: 10 + searchMedia.height }
+            anchors { fill: parent; topMargin: 10; bottomMargin: 10 + bottomPanel.height }
             clip: true
             cellWidth: cellHeight
             cellHeight: height/2.1
@@ -138,28 +138,49 @@ FocusScope {
         currentBrowsingBackend.mediaBrowserSidePanel = ""
     }
 
-     PlasmaComponents.TextField {
-         id: searchMedia
-         width: parent.width
-         height: 30
-         clearButtonShown: true
+    Item {
+        id: bottomPanel
+        width: parent.width
+        height: 30
+        anchors {
+            left: parent.left
+            bottom: parent.bottom
+            right: parent.right
+            margins: 10
+        }
 
-         anchors {
-             left: parent.left
-             bottom: parent.bottom
-             right: parent.right
-             margins: 10
-         }
+        PlasmaComponents.TextField {
+            id: searchMedia
+            clearButtonShown: true
+            anchors {
+                left: parent.left
+                bottom: parent.bottom
+                top: parent.top
+                right: mediaCountLabel.left
+            }
 
-         placeholderText: "Search..."
-         onTextChanged: searchMediaTimer.restart()
+            placeholderText: "Search..."
+            onTextChanged: searchMediaTimer.restart()
 
-         Timer {
-            id: searchMediaTimer
-            interval: 1000
-            onTriggered: currentBrowsingBackend.search(searchMedia.text);
-         }
-     }
+            Timer {
+                id: searchMediaTimer
+                interval: 1000
+                onTriggered: currentBrowsingBackend.search(searchMedia.text);
+            }
+        }
+
+        PlasmaComponents.Label {
+            id: mediaCountLabel
+            text: mediaBrowserViewItem.mediaBrowserGridView.count + ' Items'
+
+            anchors {
+                bottom: parent.bottom
+                top: parent.top
+                right: parent.right
+                margins: 10
+            }
+        }
+    }
 
      onPopupMenuRequested: {
         popupMenu.visible = true
