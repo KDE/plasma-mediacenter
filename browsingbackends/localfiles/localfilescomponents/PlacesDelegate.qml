@@ -27,8 +27,9 @@ Item {
         color: "black"
         opacity: 0.8
         border.color: "white"
+        clip: true
         Row {
-            anchors { fill: parent; margins: 5 }
+            anchors { fill: parent; margins: 12 }
             spacing: 10
             QtExtraComponents.QIconItem {
                 id: delegateItemIcon
@@ -38,10 +39,14 @@ Item {
             }
 
             PlasmaComponents.Label {
+                id: displayLabel
                 anchors.verticalCenter: parent.verticalCenter
                 text: display
                 font.pointSize: 14
                 color: "white"
+                elide: Text.ElideRight
+                //width: Math.min(parent.width, 120)
+                width: parent.width - delegateItemIcon.width
             }
 
             MouseArea {
