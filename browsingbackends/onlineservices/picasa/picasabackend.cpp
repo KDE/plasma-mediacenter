@@ -72,6 +72,7 @@ void PicasaBackend::updateLoginStatus(bool status)
         emit loginSuccessful();
     } else {
         emit loginFailed();
+        sender()->deleteLater();
     }
 }
 
