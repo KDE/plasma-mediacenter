@@ -77,6 +77,7 @@ Rectangle {
         height: 32
         text: "Login"
         anchors.horizontalCenter: parent.horizontalCenter
+        enabled: userid.text != '' && password.text != ''
         onClicked: {
             backend.login(userid.text, password.text, "album");
             busyIndicator.running = true;
