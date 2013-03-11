@@ -43,7 +43,7 @@ Rectangle {
          width: parent.width
          height: 30
          clearButtonShown: true
-         placeholderText: "Google account"
+         placeholderText: i18n("Google account")
      }
 
      Item {
@@ -59,7 +59,7 @@ Rectangle {
          width: parent.width
          height: 30
          clearButtonShown: true
-         placeholderText: "Password"
+         placeholderText: i18n("Password")
          echoMode: TextInput.Password
      }
 

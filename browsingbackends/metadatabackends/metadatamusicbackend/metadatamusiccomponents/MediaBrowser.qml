@@ -45,7 +45,7 @@ Item {
             width: 200
             Text {
                 anchors.centerIn: parent
-                text: "Artist"
+                text: i18n("Artist")
                 color: artistListView.visible ? theme.viewHoverColor : theme.textColor
             }
             MouseArea {
@@ -63,7 +63,7 @@ Item {
             width: 200
             Text {
                 anchors.centerIn: parent
-                text: "Albums"
+                text: i18n("Albums")
                 color: albumListView.visible ? theme.viewHoverColor : theme.textColor
             }
             MouseArea {
@@ -81,7 +81,7 @@ Item {
             width: 200
             Text {
                 anchors.centerIn: parent
-                text: "Songs"
+                text: i18n("Songs")
                 color: musicListView.visible ? theme.viewHoverColor : theme.textColor
             }
             MouseArea {
@@ -116,7 +116,7 @@ Item {
             width: parent.width
             height: 30
             clearButtonShown: true
-            placeholderText: "Search Artists"
+            placeholderText: i18n("Search Artists")
             onTextChanged: searchArtistTimer.restart()
             Timer {
                 id: searchArtistTimer
@@ -192,7 +192,7 @@ Item {
             width: parent.width
             height: 30
             clearButtonShown: true
-            placeholderText: "Search Albums"
+            placeholderText: i18n("Search Albums")
             onTextChanged: searchAlbumTimer.restart()
             Timer {
                 id: searchAlbumTimer
@@ -271,7 +271,7 @@ Item {
                 visible: backend.albumFilter == "" && backend.artistFilter == ""
                 width: parent.width - playAllButton.width; height: parent.height
                 clearButtonShown: true
-                placeholderText: "Search Music"
+                placeholderText: i18n("Search Music")
                 onTextChanged: searchMusicTimer.restart()
                 Timer {
                     id: searchMusicTimer
@@ -281,7 +281,7 @@ Item {
             }
             PlasmaComponents.Button {
                 id: playAllButton
-                text: "Play All"
+                text: i18n("Play All")
                 height: parent.height
                 onClicked: {
                   playlistModel.clearPlaylist();

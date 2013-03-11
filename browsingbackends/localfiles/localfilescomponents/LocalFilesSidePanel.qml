@@ -33,7 +33,7 @@ Item {
         }
         height: 64
         iconSource: "go-up";
-        text: "One level up"
+        text: i18n("One level up")
         onClicked: backend.browseOneLevelUp()
     }
 
@@ -50,7 +50,7 @@ Item {
             id: placesLabel
             anchors.right: parent.right
             font.pointSize: 16
-            text: "Places"
+            text: i18n("Places")
             color: "white"
         }
         delegate: PlacesDelegate { height: 64; width: placesListView.width }
