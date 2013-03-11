@@ -34,7 +34,7 @@ Rectangle {
         width: parent.width
         wrapMode: Text.Wrap
         font.pointSize: 12
-        text: "Enter your Google credentials and browse through your picasa albums"
+        text: i18n ("Enter your Google credentials and browse through your picasa albums")
     }
 
      PlasmaComponents.TextField {
@@ -75,10 +75,11 @@ Rectangle {
         anchors.top: margin2.bottom
         width: 100
         height: 32
-        text: "Login"
+        text: i18n("Login")
         anchors.horizontalCenter: parent.horizontalCenter
         enabled: userid.text != '' && password.text != ''
         onClicked: {
+            loginFailedText.visible = false
             backend.login(userid.text, password.text, "album");
             busyIndicator.running = true;
         }
@@ -98,6 +99,16 @@ Rectangle {
         anchors.horizontalCenter: parent.horizontalCenter
     }
 
+    Text {
+        id: loginFailedText
+        anchors.top: margin3.bottom
+        width: parent.width
+        font.pointSize: 12
+        wrapMode: Text.Wrap
+        text: i18n("Incorrect Username or Password")
+        color: "red"
+        visible: false
+    }
     onBackendChanged: {
         backend.loginSuccessful.connect(loginSuccessful);
         backend.loginFailed.connect(loginFailed);
@@ -109,5 +120,6 @@ Rectangle {
     }
     function loginFailed() {
         busyIndicator.running = false;
+        loginFailedText.visible = true
     }
 }
