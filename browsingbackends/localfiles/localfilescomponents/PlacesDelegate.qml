@@ -45,7 +45,6 @@ Item {
                 font.pointSize: 14
                 color: "white"
                 elide: Text.ElideRight
-                //width: Math.min(parent.width, 120)
                 width: parent.width - delegateItemIcon.width
             }
 
