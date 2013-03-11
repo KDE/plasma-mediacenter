@@ -33,23 +33,21 @@ class PicasaBackend : public MediaCenter::AbstractBrowsingBackend
 public:
     PicasaBackend(QObject *parent, const QVariantList &args);
     Q_INVOKABLE void login(const QString& username, const QString& password);
-    Q_PROPERTY(bool loginStatus READ loginStatus NOTIFY loginStatusChanged);
 
     virtual QString backendCategory() const;
     virtual QString mediaBrowserSidePanel() const;
     virtual void setMediaBrowserSidePanel(QString text);
     bool expand (int row);
     virtual bool initImpl();
-    bool loginStatus();
 
 signals:
-    void loginStatusChanged();
+    void loginSuccessful();
+    void loginFailed();
 
 public Q_SLOTS:
     virtual bool goOneLevelUp();
-    void currentLoginStatus(bool status);
+    void updateLoginStatus(bool status);
 private:
-    bool m_login_status;
     QString m_loginText;
 };
 

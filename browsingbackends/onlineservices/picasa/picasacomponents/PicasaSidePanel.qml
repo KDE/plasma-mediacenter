@@ -24,7 +24,6 @@ Rectangle {
     id: rootItem
     anchors.fill: parent
     property QtObject backend
-    property bool loginStatus: backend.loginStatus
     color: "black"
     opacity: 0.7
 
@@ -72,6 +71,7 @@ Rectangle {
      }
 
     PlasmaComponents.Button {
+        id: loginButton
         anchors.top: margin2.bottom
         width: 100
         height: 32
@@ -79,11 +79,34 @@ Rectangle {
         anchors.horizontalCenter: parent.horizontalCenter
         onClicked: {
             backend.login(userid.text, password.text, "album");
+            busyIndicator.running = true;
         }
     }
-    onLoginStatusChanged: {
-        if (loginStatus) {
-            hideMediaBrowserSidePanel()
-        }
+
+    Item {
+        id: margin3
+        anchors.top: loginButton.bottom
+        width: parent.width
+        height: 20
+     }
+
+    PlasmaComponents.BusyIndicator {
+        id: busyIndicator
+        anchors.top: margin3.bottom
+        visible: running
+        anchors.horizontalCenter: parent.horizontalCenter
+    }
+
+    onBackendChanged: {
+        backend.loginSuccessful.connect(loginSuccessful);
+        backend.loginFailed.connect(loginFailed);
+    }
+
+    function loginSuccessful() {
+        busyIndicator.running = false;
+        hideMediaBrowserSidePanel();
+    }
+    function loginFailed() {
+        busyIndicator.running = false;
     }
 }

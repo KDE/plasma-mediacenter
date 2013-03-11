@@ -274,9 +274,9 @@ void PicasaModel::token(KIO::Job *job, const QByteArray &data)
     QString output(data);
 
     if (output.contains("Auth=")) {
-        emit loginSuccessful(true);
+        emit loginComplete(true);
     } else {
-        emit loginSuccessful(false);
+        emit loginComplete(false);
     }
 
     if (output.contains("Auth=")) {

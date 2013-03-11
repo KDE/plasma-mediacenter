@@ -26,8 +26,6 @@ MEDIACENTER_EXPORT_BROWSINGBACKEND(PicasaBackend)
 PicasaBackend::PicasaBackend(QObject* parent, const QVariantList& args):
                              MediaCenter::AbstractBrowsingBackend(parent, args)
 {
-
-    m_login_status = false;
     m_loginText =  constructQmlSource("picasacomponents", "0.1", "PicasaSidePanel");
 }
 
@@ -59,7 +57,7 @@ void PicasaBackend::login(const QString& username, const QString& password)
 {
     PicasaModel * picasaModel = new PicasaModel(this, username, password);
     setModel(picasaModel);
-    connect (picasaModel, SIGNAL (loginSuccessful(bool)), this, SLOT (currentLoginStatus(bool)));
+    connect (picasaModel, SIGNAL (loginComplete(bool)), this, SLOT (updateLoginStatus(bool)));
 }
 
 bool PicasaBackend::expand(int row)
@@ -68,15 +66,13 @@ bool PicasaBackend::expand(int row)
     return picasaModel->browseToAlbum(row);
 }
 
-void PicasaBackend::currentLoginStatus(bool status)
+void PicasaBackend::updateLoginStatus(bool status)
 {
-    m_login_status = status;
-    emit loginStatusChanged();
-}
-
-bool PicasaBackend::loginStatus()
-{
-    return m_login_status;
+    if (status) {
+        emit loginSuccessful();
+    } else {
+        emit loginFailed();
+    }
 }
 
 void PicasaBackend::setMediaBrowserSidePanel(QString text)
