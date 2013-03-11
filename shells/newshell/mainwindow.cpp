@@ -116,10 +116,8 @@ MainWindow::MainWindow(QWidget *parent)
     view->rootContext()->setContextProperty("_pmc_gradient_image_path", QUrl(package->filePath("images", "gradient.png")));
     view->rootContext()->setContextProperty("_pmc_shadow_image_path", QUrl(package->filePath("images", "shadow.png")));
 
-    if (!qgetenv("DESKTOP").isNull() && !qgetenv("DESKTOP").isEmpty())
-        view->rootContext()->setContextProperty("_pmc_is_desktop", true);
-    else
-        view->rootContext()->setContextProperty("_pmc_is_desktop", false);
+    cfgGroup = KGlobal::config()->group("MediaBrowsing");
+    view->rootContext()->setContextProperty("_pmc_is_desktop", cfgGroup.readEntry("isDesktop",false));
 
     view->setSource(QUrl(package->filePath("mainscript")));
 
