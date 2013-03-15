@@ -7,14 +7,6 @@ include_directories(${KDE4_INCLUDES})
 set(QT_USE_QTOPENGL TRUE)
 include(${QT_USE_FILE})
 
-pkg_check_modules(QT_MULTIMEDIAKIT QtMultimediaKit)
-macro_log_feature(QT_MULTIMEDIAKIT_FOUND "QtMultimediaKit" "Delivers an easy to use interface to multimedia functions" "http://doc.qt.nokia.com/qtmobility-1.1-tp/qtmultimediakit.html" FALSE "" "Needed for better video playback performance")
-if (QT_MULTIMEDIAKIT_FOUND)
-    add_definitions(-DQT_MULTIMEDIA_KIT_FOUND)
-    include_directories(${QT_MULTIMEDIAKIT_INCLUDE_DIRS})
-    link_directories(${QT_MULTIMEDIAKIT_LIBRARY_DIRS})
-endif (QT_MULTIMEDIAKIT_FOUND)
-
 set(plasma-mediacenter_SRCS
     main.cpp
     mainwindow.cpp

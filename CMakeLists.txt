@@ -17,3 +17,6 @@ add_subdirectory(browsingbackends)
 add_subdirectory(mediaelements)
 add_subdirectory(libs)
 add_subdirectory(shells)
+
+message("*** QtMultimediaKit (http://doc.qt.nokia.com/qtmobility-1.1-tp/qtmultimediakit.html) is required at runtime to play multimedia.")
+

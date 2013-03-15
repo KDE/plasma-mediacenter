@@ -41,10 +41,6 @@
 #include <QDeclarativeProperty>
 #include <qdeclarative.h>
 
-#ifdef QT_MULTIMEDIA_KIT_FOUND
-#include <QtMultimediaKit/QVideoWidget>
-#endif
-
 #include <QtOpenGL/QGLWidget>
 #include <QtGui/QApplication>
 #include <QtGui/QKeyEvent>
