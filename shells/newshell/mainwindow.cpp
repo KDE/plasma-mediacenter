@@ -126,8 +126,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(this, SIGNAL(mousePointerAutoHideChanged()), SLOT(enableMousePointerAutoHideIfNeeded()));
     connect(&m_mousePointerAutoHideTimer, SIGNAL(timeout()), SLOT(hideMousePointer()));
 
-    qreal volumeRead = cfgGroup.readEntry("volumelevel",1.0);
-    view->rootObject()->findChild<QObject*>("runtimeData")->setProperty("volume",volumeRead);
+    if (view->errors().isEmpty()) {
+        qreal volumeRead = cfgGroup.readEntry("volumelevel",1.0);
+        view->rootObject()->findChild<QObject*>("runtimeData")->setProperty("volume",volumeRead);
+    }
 }
 
 bool MainWindow::toggleFullScreen()
