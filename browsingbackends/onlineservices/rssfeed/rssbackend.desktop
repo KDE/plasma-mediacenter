@@ -1,0 +1,15 @@
+[Desktop Entry]
+Type=Service
+Icon=image-x-generic
+Name=Rss
+Comment=Load Rss Feeds
+
+X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
+
+X-KDE-PluginInfo-Author=Gregor Taetzner
+X-KDE-PluginInfo-Email=Plasma-devel@kde.org
+X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-Category=video
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
+X-KDE-Library=pmc_rssbackend

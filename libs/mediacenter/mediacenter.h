@@ -32,7 +32,7 @@ class MediaSource;
 namespace MediaCenter {
 
 enum AdditionalMediaRoles {
-    MediaUrlRole = Qt::UserRole + 1,
+    MediaUrlRole = 0x01200000,
     IsExpandableRole,
     MediaTypeRole,
     DecorationTypeRole,
