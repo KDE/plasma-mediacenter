@@ -21,7 +21,6 @@ import QtQuick 1.1
 import org.kde.qtextracomponents 0.1 as QtExtraComponents
 import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.kde.plasma.core 0.1 as PlasmaCore
-import "MediaItemDelegateLogic.js" as Logic
 import org.kde.plasma.mediacentercomponents 0.1 as MediaCenterComponents
 
 Item {

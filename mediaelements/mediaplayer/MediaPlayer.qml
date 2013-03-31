@@ -114,4 +114,25 @@ FocusScope {
     }
 
     Keys.onEscapePressed: mediaPlayerRootRect.escapePressed()
+
+    function handleKey(key)
+    {
+        if (mediaPlayerRootRect.state == "minimize")
+            return false;
+        switch (key) {
+        case Qt.Key_Space:
+            if (runtimeDataObject.playing) {
+                runtimeDataObject.playing = false; runtimeDataObject.paused = true;
+            } else if (runtimeDataObject.paused || runtimeDataObject.stopped) {
+                runtimeDataObject.playing = true; runtimeDataObject.paused = false;
+            }
+            return true;
+        case Qt.Key_Left:
+            seekBy(-5);
+            return true;
+        case Qt.Key_Right:
+            seekBy(5);
+            return true;
+        }
+    }
 }

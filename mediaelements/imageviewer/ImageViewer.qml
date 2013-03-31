@@ -94,4 +94,18 @@ Rectangle {
 
     function nextImage() { mediaPictureStrip.nextImage(); }
     function previousImage() { mediaPictureStrip.previousImage(); }
+
+    function handleKey(key)
+    {
+        if (!imageRect.visible)
+            return false;
+        switch (key) {
+        case Qt.Key_Left:
+            previousImage();
+            return true;
+        case Qt.Key_Right:
+            nextImage();
+            return true;
+        }
+    }
 }
