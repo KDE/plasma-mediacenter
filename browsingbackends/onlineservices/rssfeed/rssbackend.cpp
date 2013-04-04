@@ -1,17 +1,3 @@
-
-#include "rssbackend.h"
-
-#include <Akonadi/CachePolicy>
-#include <Akonadi/Collection>
-#include <Akonadi/CollectionCreateJob>
-#include <Akonadi/EntityDisplayAttribute>
-#include <Akonadi/ChangeRecorder>
-#include <Akonadi/EntityTreeModel>
-#include <Akonadi/Session>
-#include <Akonadi/CollectionFetchScope>
-#include <Akonadi/ItemFetchScope>
-#include <Akonadi/AgentManager>
-#include <Akonadi/AgentInstanceCreateJob>
 /*
  * Copyright 2013 Gregor Taetzner gregor@freenet.de
  *
@@ -31,6 +17,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+#include "rssbackend.h"
+
+#include <Akonadi/CachePolicy>
+#include <Akonadi/Collection>
+#include <Akonadi/CollectionCreateJob>
+#include <Akonadi/EntityDisplayAttribute>
+#include <Akonadi/ChangeRecorder>
+#include <Akonadi/EntityTreeModel>
+#include <Akonadi/Session>
+#include <Akonadi/CollectionFetchScope>
+#include <Akonadi/ItemFetchScope>
+#include <Akonadi/AgentManager>
+#include <Akonadi/AgentInstanceCreateJob>
+
 #include <krss/feedcollection.h>
 #include <KRss/Item>
 

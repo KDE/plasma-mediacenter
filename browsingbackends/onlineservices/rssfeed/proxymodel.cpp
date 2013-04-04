@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 #include "proxymodel.h"
 
 #include <libs/mediacenter/mediacenter.h>
@@ -30,6 +31,8 @@
 
 #include <KRss/FeedCollection>
 
+#include <QStack>
+
 
 class ProxyModel::Private
 {
@@ -39,8 +42,8 @@ public:
 	KDescendantsProxyModel* m_flatmodel;
 	Akonadi::ChangeRecorder* m_recorder;
 	Akonadi::Session* m_session;
-	Akonadi::Collection* m_parentcollection;
-	QRegExp m_parentcollectionfilter;
+	Akonadi::Collection* m_rootcollection;
+	QStack<QString>* m_parentcollection;
 	QRegExp m_collectionfilter;
 };
 
@@ -53,11 +56,12 @@ ProxyModel::ProxyModel ( Akonadi::ChangeRecorder* monitor, Akonadi::Session* ses
 	d->m_recorder = monitor;
 	d->m_session = session;
 
-	d->m_parentcollection = new Akonadi::Collection(monitor->collectionsMonitored().first());
+	d->m_rootcollection = new Akonadi::Collection(monitor->collectionsMonitored().first());
 
-	d->m_collectionfilter = QRegExp(d->m_parentcollection->remoteId(), Qt::CaseSensitive,
+	d->m_collectionfilter = QRegExp(d->m_rootcollection->remoteId(), Qt::CaseSensitive,
 									QRegExp::FixedString);
 	d->m_treemodel = new RssModel(d->m_recorder, this);
+	d->m_parentcollection = new QStack<QString>;
 
 	setFilterRole(Akonadi::EntityTreeModel::RemoteIdRole);
 	setFilterRegExp(d->m_collectionfilter);
@@ -73,8 +77,7 @@ bool ProxyModel::expand ( int row )
 	KDescendantsProxyModel* m = qobject_cast<KDescendantsProxyModel*>(sourceModel());
 	Akonadi::Collection selectedColl = m->index(row, 0).data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
 	QString remoteId = m->index(row, 0).data(Akonadi::EntityTreeModel::RemoteIdRole).toString();
-	kDebug() << "remoteId" << m->index(row, 0).data(Akonadi::EntityTreeModel::RemoteIdRole).toString();
-	d->m_parentcollectionfilter = d->m_collectionfilter;
+	d->m_parentcollection->push(selectedColl.parentCollection().remoteId());
 	d->m_collectionfilter.setPattern(remoteId);
 	setFilterRegExp(d->m_collectionfilter);
 	return true;
@@ -83,8 +86,10 @@ bool ProxyModel::expand ( int row )
 bool ProxyModel::goOneLevelUp()
 {
 	if(d->m_parentcollection) {
-		const QString parent = d->m_parentcollection->remoteId();
-		d->m_collectionfilter.setPattern(parent);
+		if(d->m_parentcollection->isEmpty()) {
+			return false;
+		}
+		d->m_collectionfilter.setPattern(d->m_parentcollection->pop());
 		setFilterRegExp(d->m_collectionfilter);
 		return true;
 	}
