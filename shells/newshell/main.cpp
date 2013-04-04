@@ -33,24 +33,28 @@ int main(int argc, char *argv[])
     KAboutData aboutData("plasma-mediacenter",
                          0,
                          ki18n("Plasma Mediacenter Shell"),
-                         "0.1",
+                         "1.0.0",
                          ki18n("A convenient shell for the Plasma Media Center Components"),
                          KAboutData::License_GPL_V2,
-                         ki18n("Copyright (c) 2009-2011"));
+                         ki18n("Copyright (c) 2009-2013"));
     aboutData.addAuthor(ki18n("Alessandro Diaferia"),
-                        ki18n("Maintainer and main developer"),
+                        ki18n("developer"),
                         "alediaferia@gmail.com",
                         "http://alediaferia.wordpress.com");
     aboutData.addAuthor(ki18n("Sinny Kumari"),
                         ki18n("Maintainer and main developer"),
                         "ksinny@gmail.com",
-                        "http://www.sinny.in");
+                        "http://www.sinny.in"),
+    aboutData.addAuthor(ki18n("Shantanu Tushar"),
+                        ki18n("developer"),
+                        "shantanu@kde.org",
+                        "http://www.shantanutushar.com");
     aboutData.addCredit(ki18n("Marco Martin"), ki18n("GSoC project mentor"), "notmart@gmail.com", "");
 
     KCmdLineArgs::init(argc, argv, &aboutData);
     KCmdLineOptions options;
-    options.add("fullscreen", ki18n("Starts Plasma Media Center in fullscreen mode (the default)"));
-    options.add("disable-opengl", ki18n("Starts Plasma Media Center with OpenGL support"));
+    options.add("fullscreen", ki18n("Starts Plasma Media Center in fullscreen mode"));
+    options.add("disable-opengl", ki18n("Starts Plasma Media Center without OpenGL support"));
     KCmdLineArgs::addCmdLineOptions(options);
 
     KApplication app;
