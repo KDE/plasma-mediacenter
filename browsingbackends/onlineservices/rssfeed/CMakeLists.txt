@@ -23,3 +23,4 @@ target_link_libraries(pmc_rssbackend
 
 install(TARGETS pmc_rssbackend DESTINATION ${PLUGIN_INSTALL_DIR})
 install(FILES rssbackend.desktop DESTINATION ${SERVICES_INSTALL_DIR})
+install(DIRECTORY rsscomponents DESTINATION ${IMPORTS_INSTALL_DIR}/org/kde/plasma/mediacentercomponents)

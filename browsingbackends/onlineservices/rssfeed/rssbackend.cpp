@@ -51,6 +51,7 @@ RssBackend::RssBackend (QObject* parent, const QVariantList& args):
 	m_agentmanager(0),
 	m_feeditemmodel(0)
 {
+	m_rsspanelqml =  constructQmlSource("rsscomponents", "0.1", "RssSidePanel");
 }
 
 QString RssBackend::backendCategory() const
@@ -90,6 +91,38 @@ bool RssBackend::initImpl()
     return true;
 }
 
+QString RssBackend::mediaBrowserSidePanel() const
+{
+    return m_rsspanelqml;
+}
+
+void RssBackend::setMediaBrowserSidePanel ( QString text )
+{
+	m_rsspanelqml = text;
+	emit mediaBrowserSidePanelChanged();
+}
+
+void RssBackend::addFeed ( const QString& feedurl )
+{
+	CachePolicy policy;
+	policy.setInheritFromParent( false );
+	policy.setSyncOnDemand( false );
+	policy.setLocalParts( QStringList() << KRss::Item::HeadersPart << KRss::Item::ContentPart << Item::FullPayload );
+
+	KRss::FeedCollection feed;
+	feed.setRemoteId( feedurl );
+	feed.setXmlUrl( feedurl );
+	feed.setContentMimeTypes( QStringList( KRss::Item::mimeType() ) );
+	feed.setCachePolicy( policy );
+	feed.attribute<EntityDisplayAttribute>( Collection::AddIfMissing )->setIconName( KRss::Item::mimeType() );
+	feed.setParentCollection( m_collection );
+	feed.setName( feedurl + KRandom::randomString( 8 ) );
+	feed.setTitle( feedurl );
+	CollectionCreateJob* job = new CollectionCreateJob( feed );
+	connect( job, SIGNAL(finished(KJob*)), this, SLOT(creationDone(KJob*)) );
+	job->start();
+}
+
 void RssBackend::collectionTreeFetched ( const Akonadi::Collection::List& collections )
 {
 	// search for rss collection
@@ -119,20 +152,19 @@ void RssBackend::collectionTreeFetched ( const Akonadi::Collection::List& collec
 
 void RssBackend::collectionPopulated ()
 {
-    if (m_feeditemmodel->rowCount() == 0) {
-        populateRessource();
-    } else {
-        setModel(m_feeditemmodel);
-    }
+	setModel(m_feeditemmodel);
 }
 
 
 void RssBackend::creationDone( KJob* job )
 {
+	// TODO additional checks if feed is even valid at all
     if ( job->error() ) {
         qDebug() << i18n("Could not add feed: %1", job->errorString());
+		emit addFeedFailed();
     } else {
         setModel(m_feeditemmodel);
+		emit addFeedSuccessfull();
     }
 }
 
@@ -182,28 +214,3 @@ void RssBackend::agentCreated ( KJob* job )
         createEntityModel();
 	}
 }
-
-void RssBackend::populateRessource()
-{
-    // TODO feed configuration would be nice
-    QString url = "http://feeds2.feedburner.com/AllJupiterVideos?format=xml";
-    CachePolicy policy;
-    policy.setInheritFromParent( false );
-    policy.setSyncOnDemand( false );
-    policy.setLocalParts( QStringList() << KRss::Item::HeadersPart << KRss::Item::ContentPart << Item::FullPayload );
-
-    KRss::FeedCollection feed;
-    feed.setRemoteId( url );
-    feed.setXmlUrl( url );
-    feed.setContentMimeTypes( QStringList( KRss::Item::mimeType() ) );
-    feed.setCachePolicy( policy );
-    feed.attribute<EntityDisplayAttribute>( Collection::AddIfMissing )->setIconName( KRss::Item::mimeType() );
-    feed.setParentCollection( m_collection );
-    feed.setName( url + KRandom::randomString( 8 ) );
-    feed.setTitle( url );
-    CollectionCreateJob* job = new CollectionCreateJob( feed );
-    connect( job, SIGNAL(finished(KJob*)), this, SLOT(creationDone(KJob*)) );
-    job->start();
-}
-
-

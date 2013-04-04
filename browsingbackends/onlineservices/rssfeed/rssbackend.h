@@ -44,21 +44,31 @@ class RssBackend : public MediaCenter::AbstractBrowsingBackend
 public:
 	RssBackend(QObject *parent, const QVariantList &args);
 
+	Q_INVOKABLE void addFeed(const QString& feedurl);
+
 	virtual QString backendCategory() const;
 	virtual bool expand(int row);
 	virtual bool initImpl();
+	virtual QString mediaBrowserSidePanel() const;
+	virtual void setMediaBrowserSidePanel(QString text);
+
 private:
     void createEntityModel();
     QString checkAgentInstance();
     bool requestNewAgent();
-    void populateRessource();
+
+signals:
+	void addFeedSuccessfull();
+	void addFeedFailed();
+
+public Q_SLOTS:
+	virtual bool goOneLevelUp();
+
 private Q_SLOTS:
 	void collectionTreeFetched( const Akonadi::Collection::List & collections );
 	void collectionPopulated();
 	void agentCreated( KJob* job );
     void creationDone( KJob* job );
-public Q_SLOTS:
-	virtual bool goOneLevelUp();
 
 private:
 	Akonadi::EntityTreeModel *m_model;
@@ -68,6 +78,7 @@ private:
 	Akonadi::Collection m_collection;
 	Akonadi::AgentManager* m_agentmanager;
 	ProxyModel *m_feeditemmodel;
+	QString m_rsspanelqml;
 
 };
 
