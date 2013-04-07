@@ -43,6 +43,7 @@ typedef struct {
     uint duration;
     QString category;
     QString embeddedHTML;
+    QString url;
     // rating stuff?
 } VideoPackage;
 

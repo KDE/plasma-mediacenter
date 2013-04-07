@@ -48,3 +48,13 @@ bool YoutubeBackend::goOneLevelUp()
 {
     return MediaCenter::AbstractBrowsingBackend::goOneLevelUp();
 }
+
+bool YoutubeBackend::supportsSearch() const
+{
+    return true;
+}
+
+void YoutubeBackend::search(const QString& searchTerm)
+{
+    qobject_cast<YoutubeModel*>(model())->query(searchTerm);
+}

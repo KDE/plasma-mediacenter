@@ -35,6 +35,8 @@ public:
     virtual QString backendCategory() const;
     bool expand (int row);
     virtual bool initImpl();
+    virtual void search(const QString& searchTerm);
+    virtual bool supportsSearch() const;
 
 signals:
 

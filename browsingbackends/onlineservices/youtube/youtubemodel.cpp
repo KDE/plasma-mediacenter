@@ -46,7 +46,7 @@ QVariant YoutubeModel::data(const QModelIndex& index, int role) const
         case Qt::DecorationRole:
             return m_videos.at(index.row()).thumbnail;
         case MediaCenter::MediaUrlRole:
-            return m_videos.at(index.row()).title;
+            return m_videos.at(index.row()).url;
         case Qt::DisplayRole:
             return m_videos.at(index.row()).title;
         case MediaCenter::MediaTypeRole:
@@ -68,7 +68,8 @@ void YoutubeModel::query(const QString &searchTerm)
         return;
     }
 
-    QString searchString = "kde"; //searchTerm;
+    m_videos.clear();
+    QString searchString = searchTerm;
     searchString.replace(' ', '+');
     // TODO: maybe reduce maximum results number allowed
     const QString url = "http://gdata.youtube.com/feeds/api/videos?q="
@@ -151,6 +152,7 @@ void YoutubeModel::parseResults(KJob *job)
         video.duration = 0;
         video.embeddedHTML = embeddedHTML;
         video.thumbnail = thumbnail;
+        video.url = MEDIA_CONTENT_URL;
 
         m_videos << video;
         reset();
