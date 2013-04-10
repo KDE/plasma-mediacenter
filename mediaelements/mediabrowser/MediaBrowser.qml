@@ -136,7 +136,7 @@ FocusScope {
         currentBrowsingBackend.mediaBrowserSidePanel = ""
     }
 
-    Item {
+    /*Item {
         id: bottomPanel
         width: parent.width
         height: 30
@@ -179,7 +179,7 @@ FocusScope {
                 margins: 10
             }
         }
-    }
+    }*/
 
     onPopupMenuRequested: {
         popupMenu.visible = true

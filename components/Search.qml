@@ -26,11 +26,10 @@ import org.kde.plasma.core 0.1 as PlasmaCore
 Item {
     property alias placeholderText: searchField.placeholderText
     signal search(string term)
-    
+
     id: search
     height: 32
     width: 32 + __theme.margin
-    
 
     PlasmaComponents.ToolButton {
         id: icon

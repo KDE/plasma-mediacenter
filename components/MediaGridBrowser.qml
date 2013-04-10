@@ -53,21 +53,9 @@ PlasmaComponents.Page {
         visible: false
     }
 
-    // Searchfield
-    /*PlasmaComponents.TextField {
-        id: search
-        width: parent.width
-        height: 30
-        clearButtonShown: true
-        onTextChanged: timer.restart()
-        Timer {
-            id: timer
-            interval: 2000
-            onTriggered: page.search(parent.text)
-        }
-    }*/
     Search {
         id: search
+        anchors.bottom: parent.top
         onSearch: {
             page.search(term)
         }
@@ -77,7 +65,7 @@ PlasmaComponents.Page {
         id: mediaView
         anchors.bottom: parent.bottom
         width: parent.width;
-        height: search.visible ? parent.height - (30 + __theme.margin) : parent.height - __theme.margin
+        height: search.visible ? parent.height - (search.height + __theme.margin) : parent.height - __theme.margin
 
         cellWidth: cellHeight
         cellHeight: height/2.1
@@ -85,9 +73,9 @@ PlasmaComponents.Page {
         clip: true
         cacheBuffer: width*2
 
-        //preferredHighlightBegin: parent.width*0.1
-        //preferredHighlightEnd: parent.width*0.9
-        //highlightRangeMode: GridView.ApplyRange
+        preferredHighlightBegin: mediaView.cellWidth + __theme.margin
+        preferredHighlightEnd: mediaView.width - mediaView.cellHeight - __theme.margin
+        highlightRangeMode: GridView.ApplyRange
 
         highlight: Rectangle {
             color: "transparent" //theme.viewBackgroundColor
@@ -155,12 +143,8 @@ PlasmaComponents.Page {
             console.log("set focus to gridview")
             mediaView.focus = true
             page.focus = false
-<<<<<<< HEAD
-            hover.visible = true
-=======
             //hover.visible = true
-            
->>>>>>> improved margins
+
             if (!mediaView.currentItem || mediaView.currentIndex == -1) {
                 mediaView.indexAt(0,0)
             }
