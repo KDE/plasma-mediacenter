@@ -36,7 +36,7 @@ class MainWindow : public KMainWindow
     Q_PROPERTY(bool mousePointerAutoHide READ mousePointerAutoHide
                 WRITE setMousePointerAutoHide NOTIFY mousePointerAutoHideChanged)
 public:
-    MainWindow(QWidget *parent = 0);
+    explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
     bool mousePointerAutoHide() const;

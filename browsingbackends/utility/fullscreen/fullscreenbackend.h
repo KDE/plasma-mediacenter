@@ -27,7 +27,7 @@ class FullscreenBackend : public MediaCenter::AbstractBrowsingBackend
 {
     Q_OBJECT
 public:
-    FullscreenBackend(QObject* parent, const QVariantList& args = QVariantList());
+    explicit FullscreenBackend(QObject* parent, const QVariantList& args = QVariantList());
     virtual bool initImpl();
 };
 
