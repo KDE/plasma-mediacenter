@@ -138,6 +138,22 @@ FocusScope {
         currentBrowsingBackend.mediaBrowserSidePanel = ""
     }
 
+    /*function handleKey(key) {
+      switch (key) {
+        case Qt.Key_Up:
+           console.log("Up1 key pressed...");
+           mediaBrowserViewItem.mediaBrowserGridView.handleKey(Qt.Key_Up);
+           return true;
+        case Qt.Key_Down:
+           console.log("Down1 key pressed...");
+           mediaBrowserViewItem.mediaBrowserGridView.handleKey(Qt.Key_Down);
+           return true;
+        case Qt.Key_Return:
+           mediaBrowserViewItem.mediaBrowserGridView.handleKey(Qt.Key_Return);
+           return true;
+      }
+    }*/
+
     Item {
         id: bottomPanel
         width: parent.width
@@ -207,7 +223,7 @@ FocusScope {
                      playlistModel.addToPlaylist(mediaUrl, display);
                      break;
                  case 1:
-                      mediaBrowser.playRequested(currentMediaDelegateIndex, mediaUrl, mediaType)
+                      mediaBrowser.playRequested(currentMediaDelegateIndex, mediaUrl, mediaType);
                      break;
                  case 2:
                      break;

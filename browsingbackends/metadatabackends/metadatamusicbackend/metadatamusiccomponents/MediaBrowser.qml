@@ -343,6 +343,7 @@ Item {
                 anchors.fill: parent
                 model: backend.musicModel
                 delegate: MusicDelegate {
+                    focus: true
                     width: parent ? parent.width - musicScrollBar.width : 0; height: 64
                     onPopupMenuRequested: mediaBrowser.popupMenuRequested(index,mediaUrl,mediaType, display)
                 }
@@ -350,6 +351,16 @@ Item {
                 highlight: PlasmaComponents.Highlight { }
                 highlightFollowsCurrentItem: true
                 clip: true
+
+                //focus: true
+                Keys.onPressed: { console.log("I am called...");}
+                Keys.onReturnPressed: { console.log("Return...."); }
+                Keys.onUpPressed: {
+                  console.log("New up pressed...");
+                }
+                Keys.onDownPressed: {
+                   console.log("New Down pressed...");
+                }
 
                 PlasmaComponents.BusyIndicator {
                     anchors.centerIn: parent
@@ -361,7 +372,39 @@ Item {
                     id: musicScrollBar
                     flickableItem: listViewAllSongs
                 }
+                /*Component.onCompleted: {
+                   mediaBrowser.keyHandle(event.key);
+                }*/
             }
+            //Keys.forwardTo: [listViewAllSongs]
+            //focus: true
         }
     }
+    /*function handleKey(key) {
+      switch (key) {
+        case Qt.Key_Up:
+           console.log("Up1 key pressed grid view...");
+           var totalCount = listViewAllSongs.count;
+           if( listViewAllSongs.currentIndex == 0 ) {
+               listViewAllSongs.currentIndex = totalCount;
+               return true;
+           }
+           listViewAllSongs.currentIndex -= 1;
+           return true;
+        case Qt.Key_Down:
+           console.log("Down1 key pressed grid view...");
+           if( listViewAllSongs.currentIndex == listViewAllSongs.count ) {
+               listViewAllSongs.currentIndex = 0;
+               return true;
+           }
+           listViewAllSongs.currentIndex += 1;
+           return true;
+        case Qt.Key_Return:
+           console.log("Enter key pressed....");
+           console.log(listViewAllSongs.currentIndex);
+           console.log(mediaUrl);
+           mediaBrowser.playRequested(listViewAllSongs.currentIndex, mediaUrl, mediaType);
+           return true;
+      }
+    }*/
 }
