@@ -33,7 +33,7 @@ Item {
     //clip: true
 
     TabBrowser {
-        id: mediaBrowser
+        id: tabBrowser
 
         MediaGridBrowser {
             id: artistListView
@@ -49,7 +49,7 @@ Item {
             onItemSelected: {
                 // TODO focus is sometimes lost if activate is faster then the clear() on musicModel
                 rootRow.backend.artistFilter = eventParams.resourceId
-                mediaBrowser.activateTab(2)
+                tabBrowser.activateTab(2)
             }
             onItemAdded: {
                 console.log("item add" + eventParams.resourceId);
@@ -69,7 +69,7 @@ Item {
             onItemSelected: {
                 // TODO focus is sometimes lost if activate is faster then the clear() on musicModel
                 rootRow.backend.albumFilter = eventParams.resourceId
-                mediaBrowser.activateTab(2)
+                tabBrowser.activateTab(2)
             }
             onItemAdded: {
                 console.log("item add" + eventParams.mediaUrl);
@@ -114,11 +114,11 @@ Item {
             }*/
         }
     }
-    
+
     onFocusChanged: {
        if (focus) {
            focus = false
-           mediaBrowser.focus = true
+           tabBrowser.focus = true
        }
     }
 }

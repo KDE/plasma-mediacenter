@@ -68,12 +68,12 @@ Item {
 
         for (i = 0; i <= 2; i++) {
             var object = children[3]
-
             pages.append({
                 "page": object
             });
             object.parent = mediaTabGroup
             object.ancestor = tabBrowser
+            object.forceFocus(false);
             buttons.get(i).button.text = object.title
         }
     }

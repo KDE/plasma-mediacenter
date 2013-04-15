@@ -70,7 +70,7 @@ Item {
             mediaItem.itemAdded(getEventParams())
         }
     }
-    
+
     Keys.onReturnPressed: {
         onClicked: {
             mediaItem.itemSelected(getEventParams())

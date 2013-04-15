@@ -29,7 +29,7 @@ FocusScope {
 
     signal playRequested(int index, string url, string currentMediaType)
     signal popupMenuRequested(int index, string mediaUrl, string mediaType, string display)
-    
+
     PlasmaCore.Theme {
         id:theme
     }
@@ -97,7 +97,6 @@ FocusScope {
         } else {
             console.log("setting default backend")
             object = mediaBrowserViewComponent.createObject(mediaBrowserViewItem);
-           
         }
         mediaBrowserViewItem.mediaBrowserGridView = object;
         object.focus = true
