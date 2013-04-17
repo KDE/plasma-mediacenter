@@ -201,7 +201,7 @@ PlasmaComponents.Page {
             if (!mediaView.currentItem || mediaView.currentIndex == -1) {
                 console.log("setting index")
                 mediaView.indexAt(0,0)
-                mediaView.currentIndex = 0
+                mediaView.currentIndex = -1
             }
             mediaView.decrementCurrentIndex()
             mediaView.incrementCurrentIndex()
