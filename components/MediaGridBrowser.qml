@@ -121,6 +121,10 @@ PlasmaComponents.Page {
                 forceFocus(false);
             }
             // TODO Shortcuts for search
+            if (event.key == Qt.Key_F && (event.modifiers & Qt.ControlModifier)) {
+                search.state = "active";
+                searchField.focus = true;
+            }
         }
 
         onFocusChanged: {
