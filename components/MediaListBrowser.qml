@@ -162,6 +162,10 @@ PlasmaComponents.Page {
                     if (event.key == Qt.Key_Up && currentIndex === 0) {
                         forceFocus(false);
                     }
+                    if (event.key == Qt.Key_F && (event.modifiers & Qt.ControlModifier)) {
+                        search.state = "active";
+                        searchField.focus = true;
+                    }
                 }
 
                 onFocusChanged: {
