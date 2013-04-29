@@ -35,32 +35,6 @@ Image {
         MediaCenterComponents.KeyHandler {
             id: keyHandler
             mainwindow: _pmc_mainwindow
-
-            onSpacePressed: {
-                if (mediaPlayer.state == "minimize" || playlist.state == "playlistShow")
-                    return;
-                if (runtimeData.playing) {
-                    runtimeData.playing = false; runtimeData.paused = true;
-                } else if (runtimeData.paused || runtimeData.stopped) {
-                    runtimeData.playing = true; runtimeData.paused = false;
-                }
-            }
-            onLeftArrowPressed: {
-                if (mediaPlayer.state == "minimize" || mediaWelcome.visible)
-                    return;
-                if (mediaImageViewer.visible)
-                    mediaImageViewer.previousImage();
-                else
-                    mediaPlayer.seekBy(-5);
-            }
-            onRightArrowPressed: {
-                if (mediaPlayer.state == "minimize" || mediaWelcome.visible)
-                    return;
-                if (mediaImageViewer.visible)
-                    mediaImageViewer.nextImage();
-                else
-                    mediaPlayer.seekBy(5);
-            }
         }
 
         MediaCenterComponents.RuntimeData {
@@ -105,32 +79,6 @@ Image {
                 mediaController.curMediaTime = Qt.formatTime(dateTimeObject, "hh:mm:ss");
                 remainingMediaTimeObject = new Date(0, 0, 0, 0, 0, 0, totalTime-currentTime)
                 mediaController.remainingMediaTime = Qt.formatTime(remainingMediaTimeObject, "hh:mm:ss");
-            }
-
-            Keys.onPressed: {
-                if(event.key == 16777344) { //Media Play/pause key
-                    if (runtimeDataObject.playing) {
-                        runtimeDataObject.playing = false; runtimeDataObject.paused = true;
-                    } else if (runtimeDataObject.paused || runtimeDataObject.stopped) {
-                        runtimeDataObject.playing = true; runtimeDataObject.paused = false;
-                    }
-                } else if(event.key == 16777345) {    // stop media key
-                    runtimeDataObject.userTrigerredStop = true;
-                    runtimeDataObject.stopped = true;
-                    runtimeDataObject.userTrigerredStop = false;
-                } else if(event.key == 16777346) {     // previous media key
-                    runtimeDataObject.userTrigerredStop = true;
-                    if (playlistModel.currentIndex != -1) {
-                        playlist.playRequested(playlistModel.getPreviousUrl());
-                    }
-                    runtimeDataObject.userTrigerredStop = false;
-                } else if(event.key == 16777347) {   // next media key
-                    runtimeDataObject.userTrigerredStop = true;
-                    if (playlistModel.currentIndex != -1) {
-                        playlist.playRequested(playlistModel.getNextUrl());
-                    }
-                    runtimeDataObject.userTrigerredStop = false;
-                }
             }
 
             onTotalTimeChanged: {
@@ -289,17 +237,7 @@ Image {
                     mediaController.backStopped = true
                 }
             }
-            Keys.onPressed: {
-                if(event.key == 16777344) { //Media Play key
-                    if(mediaPlayer.playing) {
-                        mediaPlayer.playing = false;
-                        mediaPlayer.paused = true;
-                    } else {
-                        mediaPlayer.playing = true;
-                        mediaPlayer.paused = false;
-                    }
-                }
-            }
+
             onPlayRequested: {
                 if (currentMediaType == "image") {
                     mediaImageViewer.visible = true
@@ -359,5 +297,13 @@ Image {
             }
             height: mediaController.height*0.9; width: 1.2*height;
         }
+    }
+
+    Component.onCompleted: {
+        keyHandler.registerHandler(mediaImageViewer);
+        keyHandler.registerHandler(mediaPlayer);
+        keyHandler.registerHandler(mediaBrowser);
+        keyHandler.registerHandler(mediaController);
+        keyHandler.registerHandler(playlist);
     }
 }

@@ -220,4 +220,36 @@ PlasmaCore.FrameSvgItem {
             onClicked: playlistButtonClicked();
         }
     }
+
+    function handleKey(key)
+    {
+        switch (key) {
+        case 16777344: //Media Play/pause key
+            if (runtimeDataObject.playing) {
+                runtimeDataObject.playing = false; runtimeDataObject.paused = true;
+            } else if (runtimeDataObject.paused || runtimeDataObject.stopped) {
+                runtimeDataObject.playing = true; runtimeDataObject.paused = false;
+            }
+            return true;
+        case 16777345:    // stop media key
+            runtimeDataObject.userTrigerredStop = true;
+            runtimeDataObject.stopped = true;
+            runtimeDataObject.userTrigerredStop = false;
+            return true;
+        case 16777346:     // previous media key
+            runtimeDataObject.userTrigerredStop = true;
+            if (playlistModel.currentIndex != -1) {
+                playlist.playRequested(playlistModel.getPreviousUrl());
+            }
+            runtimeDataObject.userTrigerredStop = false;
+            return true;
+        case 16777347:   // next media key
+            runtimeDataObject.userTrigerredStop = true;
+            if (playlistModel.currentIndex != -1) {
+                playlist.playRequested(playlistModel.getNextUrl());
+            }
+            runtimeDataObject.userTrigerredStop = false;
+            return true;
+        }
+    }
 }

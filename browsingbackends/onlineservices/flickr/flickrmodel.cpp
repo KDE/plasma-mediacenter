@@ -63,9 +63,9 @@ void FlickrModel::query (const QString& searchTerm)
     KIO::TransferJob *job = KIO::get(query, KIO::NoReload, KIO::HideProgressInfo);
 
     m_queries[job] = searchTerm;
-    connect ( job, SIGNAL (data(KIO::Job*, const QByteArray &)), this,
-              SLOT(flickrDataReady(KIO::Job*, const QByteArray &)) );
-    connect ( job, SIGNAL( result(KJob*)), this, SLOT (parseResults(KJob*)) );
+    connect ( job, SIGNAL(data(KIO::Job*,const QByteArray &)), this,
+              SLOT(flickrDataReady(KIO::Job*,const QByteArray &)) );
+    connect ( job, SIGNAL(result(KJob*)), this, SLOT (parseResults(KJob*)) );
 }
 
 void FlickrModel::flickrDataReady (KIO::Job* job, const QByteArray& data)

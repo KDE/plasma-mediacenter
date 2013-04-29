@@ -79,8 +79,8 @@ void PicasaModel::query(const QString &username, const QString &request)
     // if we require photos from an album, we have to split request to
     // obtain the albumid; ex: photo/32323232432
     if (request.contains("/")) {;
-        m_albumid = request.split("/").last();
-        m_request = request.split("/").first();
+        m_albumid = request.split('/').last();
+        m_request = request.split('/').first();
     } else {
         m_request = request;
     }
@@ -104,7 +104,7 @@ void PicasaModel::query(const QString &username, const QString &request)
         job->addMetaData("customHTTPHeader", "Authorization: " + auth_string);
     }
     m_queries[job] = username;
-    connect (job, SIGNAL(data(KIO::Job*, const QByteArray &)), this, SLOT(picasaDataReady(KIO::Job*, const QByteArray &)));
+    connect (job, SIGNAL(data(KIO::Job*,const QByteArray &)), this, SLOT(picasaDataReady(KIO::Job*,const QByteArray &)));
     connect (job, SIGNAL(result(KJob *)), this, SLOT(parseResults(KJob*)));
 }
 
@@ -143,7 +143,7 @@ void PicasaModel::listAllAlbums(KJob *job)
     m_albums.clear();
     for (int i = 0; i < entries.count(); i++) {
 
-        QString id = entries.at(i).namedItem("id").toElement().text().split("/").last();
+        QString id = entries.at(i).namedItem("id").toElement().text().split('/').last();
         QString published = entries.at(i).namedItem("published").toElement().text();
         QString updated = entries.at(i).namedItem("updated").toElement().text();
         m_expandable = true;
@@ -198,7 +198,7 @@ void PicasaModel::listAllPhotos(KJob *job)
     m_photos.clear();
     for (int i = 0; i < entries.count(); i++) {
 
-        QString id = entries.at(i).namedItem("id").toElement().text().split("/").last();
+        QString id = entries.at(i).namedItem("id").toElement().text().split('/').last();
         QString published = entries.at(i).namedItem("published").toElement().text();
         QString updated = entries.at(i).namedItem("updated").toElement().text();
         QString title = entries.at(i).namedItem("title").toElement().text();
@@ -259,7 +259,7 @@ void PicasaModel::getTokenAndQuery(const QString &username, const QString &passw
 
     KIO::TransferJob *job = KIO::http_post(url, buffer, KIO::HideProgressInfo);
     job->addMetaData("content-type", "Content-Type: application/x-www-form-urlencoded" );
-    connect (job, SIGNAL(data(KIO::Job*, const QByteArray &)), this, SLOT(token(KIO::Job*, const QByteArray &)));
+    connect (job, SIGNAL(data(KIO::Job*,const QByteArray &)), this, SLOT(token(KIO::Job*,const QByteArray &)));
     connect (job, SIGNAL(result(KJob *)), this, SLOT(passwordJob(KJob *)));
 
 }

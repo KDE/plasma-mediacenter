@@ -36,7 +36,7 @@ class VideoThumbnailProvider : public QObject, public QDeclarativeImageProvider
 {
     Q_OBJECT
 public:
-    VideoThumbnailProvider(QObject* parent = 0);
+    explicit VideoThumbnailProvider(QObject* parent = 0);
     virtual ~VideoThumbnailProvider();
 
     virtual QPixmap requestPixmap(const QString& id, QSize* size, const QSize& requestedSize);

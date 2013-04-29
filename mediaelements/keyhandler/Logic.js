@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright 2013 Shantanu Tushar <shantanu@kde.org>                     *
+ *   Copyright 2012 Sinny Kumari <ksinny@gmail.com>                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,19 +17,20 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-import QtQuick 1.1
-import "Logic.js" as Logic
+var registeredHandlers = [];
 
-Item {
-    id: keyHandlerRootItem
-    property QtObject mainwindow
-    property variant registeredHandlers
+function registerHandler(obj) {
+    console.log(registeredHandlers);
+    registeredHandlers.push(obj);
+}
 
-    Component.onCompleted: {
-        keyHandlerRootItem.mainwindow.keyPressed.connect(Logic.handleKey);
-    }
-
-    function registerHandler(obj) {
-        Logic.registerHandler(obj);
+function handleKey(key) {
+    for (i=0; i<registeredHandlers.length; i++) {
+        var obj = registeredHandlers[i];
+        if (obj.handleKey) {
+            if (obj.handleKey(key)) {
+                break;
+            }
+        }
     }
 }

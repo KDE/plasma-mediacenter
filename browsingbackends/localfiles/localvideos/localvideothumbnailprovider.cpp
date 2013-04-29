@@ -55,7 +55,7 @@ void VideoThumbnailProvider::loadThumbnails(const KUrl::List& fileList, const QS
     *plugins = KIO::PreviewJob::availablePlugins();
 
     KIO::PreviewJob* job = KIO::filePreview(fileItems, QSize(256, 256), plugins);
-    connect(job, SIGNAL(gotPreview(KFileItem, QPixmap)), SLOT(processPreview(KFileItem, QPixmap)));
+    connect(job, SIGNAL(gotPreview(KFileItem,QPixmap)), SLOT(processPreview(KFileItem,QPixmap)));
 }
 
 void VideoThumbnailProvider::loadThumbnail(const KUrl& file, const QSize& size)
