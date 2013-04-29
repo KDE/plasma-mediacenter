@@ -90,6 +90,23 @@ Rectangle {
 		visible: false
 	}
 
+	PlasmaComponents.Button {
+		id: addTopList
+
+		anchors {
+			top: addFeedFailedText.bottom
+			topMargin: addFeedButton.font.pointSize
+			horizontalCenter: rootItem.horizontalCenter
+		}
+
+		text: i18n("Add gpodder toplist")
+		onClicked: {
+			addFeedFailedText.visible = false;
+			backend.addToplist();
+			busyIndicator.running = true;
+		}
+	}
+
 	onBackendChanged: {
 		backend.addFeedFailed.connect(addFeedFailed);
 		backend.addFeedSuccessfull.connect(addFeedSuccess)

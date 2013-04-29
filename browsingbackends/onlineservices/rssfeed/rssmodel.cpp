@@ -30,6 +30,7 @@ RssModel::RssModel ( Akonadi::ChangeRecorder* monitor, QObject* parent )
 	: KRss::FeedItemModel( monitor, parent )
 {
 	setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
+	setItemPopulationStrategy(Akonadi::EntityTreeModel::ImmediatePopulation);
 }
 
 RssModel::~RssModel()
@@ -53,7 +54,10 @@ QVariant RssModel::data ( const QModelIndex& index, int role ) const
 			const KRss::Item item = akonadiItem.payload<KRss::Item>();
 			QList<KRss::Enclosure> media = item.enclosures();
 			// TODO handle multiple media links
-			return media.first().url();
+            if (!media.isEmpty()) {
+                return media.first().url();
+            }
+            return QString();
 		}
 		case MediaCenter::MediaTypeRole:
 			return "video";

@@ -28,7 +28,6 @@
 
 namespace Akonadi {
 	class EntityTreeModel;
-	class Session;
 	class ChangeRecorder;
 }
 
@@ -39,18 +38,20 @@ class ProxyModel : public QSortFilterProxyModel
 {
 	Q_OBJECT
 public:
-	explicit ProxyModel( Akonadi::ChangeRecorder* monitor, Akonadi::Session* session, QObject* parent = 0 );
+	explicit ProxyModel( Akonadi::ChangeRecorder* monitor, QObject* parent = 0 );
     virtual ~ProxyModel();
 public:
 	bool expand(int row);
 	bool goOneLevelUp();
+public:
+	const Akonadi::Collection& parent() const;
 protected:
 	bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
 private slots:
-	void collPopulated(Akonadi::Collection::Id cid);
-	void treemodelrdy();
+// 	void collPopulated(Akonadi::Collection::Id cid);
+	void treemodelrdy( Akonadi::Collection::Id id );
 signals:
-	void collectionPopulated();
+	void collectionPopulated(Akonadi::Entity::Id id);
 private:
 	class Private;
 	Private * const d;

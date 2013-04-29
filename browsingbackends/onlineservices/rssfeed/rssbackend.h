@@ -23,63 +23,34 @@
 
 #include <libs/mediacenter/abstractbrowsingbackend.h>
 
-#include <Akonadi/Collection>
 
-#include "proxymodel.h"
-#include "rssmodel.h"
-
-namespace Akonadi {
-	class EntityTreeModel;
-	class Session;
-	class ChangeRecorder;
-	class AgentManager;
-}
-
-class KJob;
-
+class RssManager;
+class ProxyModel;
 
 class RssBackend : public MediaCenter::AbstractBrowsingBackend
 {
 	Q_OBJECT
 public:
 	RssBackend(QObject *parent, const QVariantList &args);
-
-	Q_INVOKABLE void addFeed(const QString& feedurl);
-
+	virtual bool initImpl();
 	virtual QString backendCategory() const;
 	virtual bool expand(int row);
-	virtual bool initImpl();
 	virtual QString mediaBrowserSidePanel() const;
 	virtual void setMediaBrowserSidePanel(QString text);
-
-private:
-    void createEntityModel();
-    QString checkAgentInstance();
-    bool requestNewAgent();
-
+public:
+	Q_INVOKABLE void addFeed(const QString& feedurl);
+	Q_INVOKABLE void addToplist();
 signals:
 	void addFeedSuccessfull();
 	void addFeedFailed();
-
-public Q_SLOTS:
+public slots:
 	virtual bool goOneLevelUp();
-
-private Q_SLOTS:
-	void collectionTreeFetched( const Akonadi::Collection::List & collections );
-	void collectionPopulated();
-	void agentCreated( KJob* job );
-    void creationDone( KJob* job );
-
+	void feedOperation( bool result );
+private slots:
+	void loadModel(ProxyModel* model);
 private:
-	Akonadi::EntityTreeModel *m_model;
-	Akonadi::Session *m_session;
-	Akonadi::ChangeRecorder* m_rootrecorder;
-	Akonadi::ChangeRecorder* m_feedrecorder;
-	Akonadi::Collection m_collection;
-	Akonadi::AgentManager* m_agentmanager;
-	ProxyModel *m_feeditemmodel;
+	RssManager* m_rssmanager;
 	QString m_rsspanelqml;
-
 };
 
 #endif // RSSBACKEND_H

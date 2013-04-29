@@ -1,10 +1,15 @@
 set(rssbackend_SRCS
+feedcontroller.cpp
+agentmanager.cpp
+rssmanager.cpp
 rssmodel.cpp
 proxymodel.cpp
 rssbackend.cpp
+gpodder/gpodderclient.cpp
 )
 
 find_package (KdepimLibs REQUIRED)
+find_package (Mygpo-qt REQUIRED)
 
 include_directories( ${KDE4_INCLUDES} ${KDEPIMLIBS_INCLUDE_DIRS} ${QT_INCLUDES} )
 
@@ -19,6 +24,8 @@ target_link_libraries(pmc_rssbackend
     ${KDEPIMLIBS_AKONADI_LIBS}
     ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
     ${KDEPIMLIBS_KMIME_LIBS}
+    ${KDE4_KIO_LIBS}
+    mygpo-qt
 )
 
 install(TARGETS pmc_rssbackend DESTINATION ${PLUGIN_INSTALL_DIR})
