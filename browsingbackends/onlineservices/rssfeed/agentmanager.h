@@ -18,33 +18,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef GPODDERCLIENT_H
-#define GPODDERCLIENT_H
+#ifndef AGENTMANAGER_H
+#define AGENTMANAGER_H
 
 #include <QtCore/QObject>
-#include <QNetworkReply>
-
-#include <mygpo-qt/PodcastList.h>
 
 
-class QNetworkAccessManager;
+namespace Akonadi {
+	class EntityTreeModel;
+	class Session;
+	class ChangeRecorder;
+	class AgentManager;
+}
 
-class GpodderClient : public QObject
+class KJob;
+
+class AgentManager : public QObject
 {
 	Q_OBJECT
 public:
-    GpodderClient ( QObject* parent = 0 );
-    ~GpodderClient();
+    AgentManager ( QObject* parent = 0 );
 public:
-	void topFeeds(const int count);
-signals:
-	void podcastList( const QList<QUrl> *list );
-private slots:
-	void networkError(QNetworkReply::NetworkError err);
-	void requestFinished();
+	void requestAgent();
 private:
-	QNetworkAccessManager *m_nam;
-	mygpo::PodcastListPtr *m_podcastlist;
+	void setup();
+	bool requestNewAgent();
+signals:
+	void agentRdy(const QString* agentid);
+private Q_SLOTS:
+	void agentCreated( KJob* job );
+private:
+	Akonadi::AgentManager* m_agentmanager;
+	QString* m_agentid;
 };
 
-#endif // GPODDERCLIENT_H
+#endif // AGENTMANAGER_H

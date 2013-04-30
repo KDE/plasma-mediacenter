@@ -18,33 +18,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef GPODDERCLIENT_H
-#define GPODDERCLIENT_H
+#ifndef FEEDCONTROLLER_H
+#define FEEDCONTROLLER_H
 
 #include <QtCore/QObject>
-#include <QNetworkReply>
 
-#include <mygpo-qt/PodcastList.h>
+namespace Akonadi {
+	class Collection;
+}
 
+class KJob;
 
-class QNetworkAccessManager;
-
-class GpodderClient : public QObject
+class FeedController : public QObject
 {
 	Q_OBJECT
 public:
-    GpodderClient ( QObject* parent = 0 );
-    ~GpodderClient();
+    FeedController ( QObject* parent = 0 );
 public:
-	void topFeeds(const int count);
+	void addFeed( const QString& feedurl, const Akonadi::Collection& parent );
+	void deleteFeed( const QString& feedurl );
+	void modifyFeed( const QString& feedurl );
+	void addCollection( const QString& name, const Akonadi::Collection& parent );
 signals:
-	void podcastList( const QList<QUrl> *list );
+	void feedOperation( const Akonadi::Collection& coll );
 private slots:
-	void networkError(QNetworkReply::NetworkError err);
-	void requestFinished();
-private:
-	QNetworkAccessManager *m_nam;
-	mygpo::PodcastListPtr *m_podcastlist;
+	void collectionCreated( KJob* job );
 };
 
-#endif // GPODDERCLIENT_H
+#endif // FEEDCONTROLLER_H
