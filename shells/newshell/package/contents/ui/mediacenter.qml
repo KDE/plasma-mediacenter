@@ -28,6 +28,10 @@ Image {
     source: _pmc_background_image_path
     fillMode: Image.Tile
 
+    function play() {
+        playlist.playRequested(playlistModel.getNextUrl());
+    }
+
     Image {
         anchors.fill: parent
         source: _pmc_gradient_image_path

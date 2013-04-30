@@ -52,6 +52,16 @@ MainWindow::MainWindow(QWidget *parent)
     , m_mousePointerAutoHide(false)
 {
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    
+    const int argsCount = args->count();
+
+    QList<KUrl> urls;
+    for (int i = 0; i < argsCount; ++i) {
+        const KUrl url = args->url(i);
+        if (url.isValid()) {
+            urls.append(url);
+        }
+    }
     if (args->isSet("fullscreen")) {
         toggleFullScreen();
     }
@@ -94,6 +104,9 @@ MainWindow::MainWindow(QWidget *parent)
     BackendsModel *backendsModel = new BackendsModel(view->engine(), this);
     view->rootContext()->setContextProperty("backendsModel", backendsModel);
     PlaylistModel *playlistModel = new PlaylistModel(this);
+    foreach (const KUrl &url, urls) {
+        playlistModel->addToPlaylist(url.prettyUrl(), QFile(url.prettyUrl()).fileName());
+    }
     view->rootContext()->setContextProperty("playlistModel", playlistModel);
 
     view->rootContext()->setContextProperty("_pmc_mainwindow", this);
@@ -117,6 +130,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     view->setSource(QUrl(package->filePath("mainscript")));
 
+    if (view->rootObject() && urls.count() > 0) {
+        view->rootObject()->metaObject()->invokeMethod(view->rootObject(), "play");
+    }
     resize(1024, 768);
 
     installEventFilter(this);
