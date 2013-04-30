@@ -104,8 +104,11 @@ MainWindow::MainWindow(QWidget *parent)
     BackendsModel *backendsModel = new BackendsModel(view->engine(), this);
     view->rootContext()->setContextProperty("backendsModel", backendsModel);
     PlaylistModel *playlistModel = new PlaylistModel(this);
-    foreach (const KUrl &url, urls) {
-        playlistModel->addToPlaylist(url.prettyUrl(), QFile(url.prettyUrl()).fileName());
+    if (urls.length() > 0) {
+        playlistModel->clearPlaylist();
+        foreach (const KUrl &url, urls) {
+            playlistModel->addToPlaylist(url.prettyUrl(), QFile(url.prettyUrl()).fileName());
+        }
     }
     view->rootContext()->setContextProperty("playlistModel", playlistModel);
 
