@@ -16,6 +16,7 @@ Name[pt]=Ecrã completo
 Name[pt_BR]=Tela cheia
 Name[sk]=Celá obrazovka
 Name[sv]=Fullskärmsläge
+Name[tr]=Tam ekran
 Name[uk]=На весь екран
 Name[x-test]=xxFullscreenxx
 Comment=Toggle fullscreen mode
@@ -33,6 +34,7 @@ Comment[pt]=Comutar o modo de ecrã completo
 Comment[pt_BR]=Alterna para o modo de tela cheia
 Comment[sk]=Prepnúť celoobrazovkový režim
 Comment[sv]=Växla fullskärmsläge
+Comment[tr]=Tam ekran kipine geç
 Comment[uk]=Увімкнути або вимкнути повноекранний режим
 Comment[x-test]=xxToggle fullscreen modexx
 
