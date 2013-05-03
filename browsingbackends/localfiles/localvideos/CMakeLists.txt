@@ -6,8 +6,6 @@ set(localvideosbackend_SRCS
   localvideothumbnailprovider.cpp
 )
 
-soprano_add_ontology(localvideosbackend_SRCS ${SHAREDDESKTOPONTOLOGIES_ROOT_DIR}/nie/nfo.trig "NFO" "Vocabulary" "trig")
-soprano_add_ontology(localvideosbackend_SRCS ${SHAREDDESKTOPONTOLOGIES_ROOT_DIR}/nie/nie.trig "NIE" "Vocabulary" "trig")
 
 kde4_add_plugin(pmc_localvideos ${localvideosbackend_SRCS})
 target_link_libraries(pmc_localvideos 
@@ -15,9 +13,6 @@ plasmamediacenter
 ${KDE4_KDECORE_LIBS}
 ${KDE4_KIO_LIBS}
 ${KDE4_KFILE_LIBS}
-${NEPOMUK_CORE_LIBRARY}
-
-${SOPRANO_LIBRARIES}
 ${QT_QTDECLARATIVE_LIBRARIES}
 ${KDE4_SOLID_LIBS}
 )
