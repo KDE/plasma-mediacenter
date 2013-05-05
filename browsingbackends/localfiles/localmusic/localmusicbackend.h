@@ -17,8 +17,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#ifndef LOCALMUSICPACKAGE_H
-#define LOCALMUSICPACKAGE_H
+#ifndef LOCALMUSICBACKEND_H
+#define LOCALMUSICBACKEND_H
 
 #include "../localfilesabstractbackend.h"
 
@@ -33,4 +33,4 @@ protected:
     virtual void initModel();
 };
 
-#endif // LOCALMUSICPACKAGE_H
+#endif // LOCALMUSICBACKEND_H

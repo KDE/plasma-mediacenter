@@ -16,8 +16,8 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#ifndef LOCALPICTURESPACKAGE_H
-#define LOCALPICTURESPACKAGE_H
+#ifndef LOCALPICTURESBACKEND_H
+#define LOCALPICTURESBACKEND_H
 
 #include "../localfilesabstractbackend.h"
 
@@ -32,4 +32,4 @@ protected:
     virtual void initModel();
 };
 
-#endif // LOCALPICTURESPACKAGE_H
+#endif // LOCALPICTURESBACKEND_H
