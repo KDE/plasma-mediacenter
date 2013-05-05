@@ -276,7 +276,7 @@ protected:
 
 private:
     class AbstractBrowsingBackendPrivate;
-    AbstractBrowsingBackendPrivate *d;
+    AbstractBrowsingBackendPrivate * const d;
 
 };
 

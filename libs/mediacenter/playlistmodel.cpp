@@ -26,28 +26,39 @@
 #include <KConfigGroup>
 #include <kconfig.h>
 
+class PlaylistModel::Private
+{
+public:
+    QList<PlaylistItem> musicList;
+    int currentIndex;
+    QFile file;
+    QString filePath;
+    bool random;
+};
+
 PlaylistModel::PlaylistModel(QObject* parent):
-    QAbstractListModel(parent)
+    QAbstractListModel(parent),
+    d(new Private)
 {
     KConfigGroup cfgGroup = KGlobal::config()->group("General");
     setRandom(cfgGroup.readEntry("randomplaylist",false));
     KStandardDirs dir;
     QString dirPath = dir.saveLocation("data") + KCmdLineArgs::appName();
     QDir().mkdir(dirPath);
-    m_filePath = dirPath + "/playlist";
+    d->filePath = dirPath + "/playlist";
 
-    if (QFile::exists(m_filePath)) {
-        QFile file(m_filePath);
+    if (QFile::exists(d->filePath)) {
+        QFile file(d->filePath);
         if (file.open(QIODevice::ReadOnly)) {
             QTextStream in(&file);
             while (!in.atEnd()) {
                 QString line = in.readLine();
-                m_musicList.append(PlaylistItem::fromString(line));
+                d->musicList.append(PlaylistItem::fromString(line));
             }
         }
         file.close();
     }
-    m_currentIndex = -1;
+    d->currentIndex = -1;
     setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
 
     qsrand(QDateTime::currentMSecsSinceEpoch());
@@ -56,12 +67,12 @@ PlaylistModel::PlaylistModel(QObject* parent):
 PlaylistModel::~PlaylistModel()
 {
     KConfigGroup cfgGroup = KGlobal::config()->group("General");
-    cfgGroup.writeEntry("randomplaylist",m_random);
+    cfgGroup.writeEntry("randomplaylist",d->random);
     cfgGroup.sync();
-    QFile file(m_filePath);
+    QFile file(d->filePath);
     if (file.open(QIODevice::WriteOnly)) {
          QTextStream out(&file);
-         foreach (const PlaylistItem &item, m_musicList) {
+         foreach (const PlaylistItem &item, d->musicList) {
              out << item.intoString() << "\n";
          }
     }
@@ -71,11 +82,11 @@ PlaylistModel::~PlaylistModel()
 QVariant PlaylistModel::data(const QModelIndex& index, int role) const
 {
     if (role == Qt::DisplayRole) {
-        return m_musicList.at(index.row()).mediaName();
+        return d->musicList.at(index.row()).mediaName();
     }
 
     if (role == MediaCenter::MediaUrlRole) {
-        return m_musicList.at(index.row()).mediaUrl();
+        return d->musicList.at(index.row()).mediaUrl();
     }
 
     return QVariant();
@@ -83,7 +94,7 @@ QVariant PlaylistModel::data(const QModelIndex& index, int role) const
 
 int PlaylistModel::rowCount(const QModelIndex& parent) const
 {
-    return m_musicList.count();
+    return d->musicList.count();
 }
 
 void PlaylistModel::addToPlaylist(const QString& url, const QString& name)
@@ -94,7 +105,7 @@ void PlaylistModel::addToPlaylist(const QString& url, const QString& name)
     PlaylistItem item;
     item.setMediaName(name);
     item.setMediaUrl(url);
-    m_musicList.append(item);
+    d->musicList.append(item);
 
     endInsertRows();
 }
@@ -102,9 +113,9 @@ void PlaylistModel::addToPlaylist(const QString& url, const QString& name)
 void PlaylistModel::removeFromPlaylist(const int& index)
 {
     beginResetModel();
-    m_musicList.removeAt(index);
-    if (index <= m_currentIndex) {
-        m_currentIndex -= 1;
+    d->musicList.removeAt(index);
+    if (index <= d->currentIndex) {
+        d->currentIndex -= 1;
     }
     endResetModel();
 }
@@ -112,50 +123,50 @@ void PlaylistModel::removeFromPlaylist(const int& index)
 QString PlaylistModel::getNextUrl()
 {
     if (random()) {
-        setCurrentIndex(qrand() % m_musicList.size());
-    } else if (m_currentIndex == m_musicList.count() - 1) {
+        setCurrentIndex(qrand() % d->musicList.size());
+    } else if (d->currentIndex == d->musicList.count() - 1) {
         setCurrentIndex(0);
     } else {
-        setCurrentIndex(m_currentIndex + 1);
+        setCurrentIndex(d->currentIndex + 1);
     }
-    return m_musicList.at(m_currentIndex).mediaUrl();
+    return d->musicList.at(d->currentIndex).mediaUrl();
 }
 
 QString PlaylistModel::getPreviousUrl()
 {
     if (random()) {
-        setCurrentIndex(qrand() % m_musicList.size());
-    } else if (m_currentIndex == 0) {
-        setCurrentIndex(m_musicList.count() - 1);
+        setCurrentIndex(qrand() % d->musicList.size());
+    } else if (d->currentIndex == 0) {
+        setCurrentIndex(d->musicList.count() - 1);
     } else {
-        setCurrentIndex(m_currentIndex - 1);
+        setCurrentIndex(d->currentIndex - 1);
     }
-    return m_musicList.at(m_currentIndex).mediaUrl();
+    return d->musicList.at(d->currentIndex).mediaUrl();
 }
 
 QString PlaylistModel::getUrlofFirstIndex()
 {
-    return m_musicList.isEmpty() ? QString() : m_musicList.at(0).mediaUrl();
+    return d->musicList.isEmpty() ? QString() : d->musicList.at(0).mediaUrl();
 }
 
 void PlaylistModel::clearPlaylist()
 {
     beginResetModel();
 
-    m_musicList.clear();
-    m_currentIndex = -1;
+    d->musicList.clear();
+    d->currentIndex = -1;
 
     endResetModel();
 }
 
 int PlaylistModel::currentIndex() const
 {
-    return m_currentIndex;
+    return d->currentIndex;
 }
 
 void PlaylistModel::setCurrentIndex(int index)
 {
-    m_currentIndex = index;
+    d->currentIndex = index;
     emit currentIndexChanged();
 }
 
@@ -195,11 +206,11 @@ void PlaylistItem::setMediaUrl(const QString url)
 
 bool PlaylistModel::random() const
 {
-    return m_random;
+    return d->random;
 }
 
 void PlaylistModel::setRandom ( bool random )
 {
-    m_random = random;
+    d->random = random;
     emit randomChanged();
 }

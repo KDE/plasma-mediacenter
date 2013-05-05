@@ -29,14 +29,23 @@ bool pluginLessThan(const KPluginInfo &lh, const KPluginInfo &rh)
     return lh.name().compare(rh.name(), Qt::CaseInsensitive) < 0;
 }
 
-BackendsModel::BackendsModel(QDeclarativeEngine *engine, QObject* parent)
-    : QAbstractListModel(parent),
-      m_declarativeEngine(engine)
+class BackendsModel::Private
 {
-    m_declarativeEngine = engine;
+public:
+    QWeakPointer<QDeclarativeEngine> declarativeEngine;
+    QHash<QString, MediaCenter::AbstractBrowsingBackend*> backends;
+    KPluginInfo::List backendInfo;
+    KPluginInfo::List loadedBackendsInfo;
+};
+
+BackendsModel::BackendsModel(QDeclarativeEngine *engine, QObject* parent)
+    : QAbstractListModel(parent)
+    , d(new Private)
+{
+    d->declarativeEngine = engine;
     KService::List services = MediaCenter::AbstractBrowsingBackend::availableBackends();
-    m_backendInfo = KPluginInfo::fromServices(services);
-    qStableSort(m_backendInfo.begin(), m_backendInfo.end(), pluginLessThan);
+    d->backendInfo = KPluginInfo::fromServices(services);
+    qStableSort(d->backendInfo.begin(), d->backendInfo.end(), pluginLessThan);
 
     QHash<int, QByteArray> roles = roleNames();
     roles[ModelObjectRole] = "modelObject";
@@ -48,10 +57,10 @@ BackendsModel::BackendsModel(QDeclarativeEngine *engine, QObject* parent)
 
 void BackendsModel::loadBrowsingBackends()
 {
-    if (!m_backends.isEmpty())
+    if (!d->backends.isEmpty())
         return;
 
-    Q_FOREACH (KPluginInfo info, m_backendInfo) {
+    Q_FOREACH (KPluginInfo info, d->backendInfo) {
         KService::Ptr service = info.service();
         if (!service) {
             kDebug() << "Could not get the service for the backend " << info.name();
@@ -68,11 +77,11 @@ void BackendsModel::loadBrowsingBackends()
             }
             backend->setName(info.pluginName());
             backend->setParent(const_cast<BackendsModel *>(this));
-            if (m_declarativeEngine) {
-                backend->setDeclarativeEngine(m_declarativeEngine.data());
+            if (d->declarativeEngine) {
+                backend->setDeclarativeEngine(d->declarativeEngine.data());
             }
-            const_cast<BackendsModel *>(this)->m_backends.insert(key, backend);
-            m_loadedBackendsInfo.append(info);
+            const_cast<BackendsModel *>(this)->d->backends.insert(key, backend);
+            d->loadedBackendsInfo.append(info);
         } else {
             kDebug() << "Could not create a instance for the backend " << info.name() << errorMessage;
         }
@@ -85,7 +94,7 @@ QVariant BackendsModel::data (const QModelIndex& index, int role) const
         return QVariant();
     }
 
-    const KPluginInfo &info = m_loadedBackendsInfo.at(index.row());
+    const KPluginInfo &info = d->loadedBackendsInfo.at(index.row());
     switch (role) {
         case Qt::DisplayRole:
             return info.name();
@@ -96,7 +105,7 @@ QVariant BackendsModel::data (const QModelIndex& index, int role) const
         case BackendCategoryRole:
             return info.category();
         case ModelObjectRole:
-            QObject *backend = m_backends.value(info.service()->library());
+            QObject *backend = d->backends.value(info.service()->library());
             QVariant ptr;
             ptr.setValue(backend);
             return ptr;
@@ -107,7 +116,7 @@ QVariant BackendsModel::data (const QModelIndex& index, int role) const
 
 int BackendsModel::rowCount(const QModelIndex &) const
 {
-    return m_loadedBackendsInfo.count();
+    return d->loadedBackendsInfo.count();
 }
 
 #include "backendsmodel.moc"

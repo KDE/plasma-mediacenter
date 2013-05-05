@@ -70,11 +70,8 @@ Q_SIGNALS:
     void randomChanged();
 
 private:
-    QList<PlaylistItem> m_musicList;
-    int m_currentIndex;
-    QFile m_file;
-    QString m_filePath;
-    bool m_random;
+    class Private;
+    Private * const d;
 };
 
 #endif // PLAYLISTMODEL_H

@@ -46,12 +46,10 @@ public:
     virtual int rowCount (const QModelIndex& parent = QModelIndex()) const;
 
 private:
-    void loadBrowsingBackends();
+    class Private;
+    Private * const d;
 
-    QWeakPointer<QDeclarativeEngine> m_declarativeEngine;
-    QHash<QString, MediaCenter::AbstractBrowsingBackend*> m_backends;
-    KPluginInfo::List m_backendInfo;
-    KPluginInfo::List m_loadedBackendsInfo;
+    void loadBrowsingBackends();
 };
 
 #endif // BACKENDSMODEL_H
