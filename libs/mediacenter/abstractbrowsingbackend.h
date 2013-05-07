@@ -16,8 +16,8 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef MODELBACKEND_H
-#define MODELBACKEND_H
+#ifndef ABSTRACTBROWSINGBACKEND_H
+#define ABSTRACTBROWSINGBACKEND_H
 
 #include <QObject>
 #include <QVariantList>
@@ -286,4 +286,4 @@ private:
         K_PLUGIN_FACTORY( MediaBrowserFactory, registerPlugin< c >(); ) \
         K_EXPORT_PLUGIN( MediaBrowserFactory("c") )
 
-#endif // MODELBACKEND_H
+#endif // ABSTRACTBROWSINGBACKEND_H

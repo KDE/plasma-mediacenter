@@ -18,8 +18,8 @@
 */
 
 
-#ifndef LOCALFILESABSTRACTBACKEND_H
-#define LOCALFILESABSTRACTBACKEND_H
+#ifndef FULLSCREENBACKEND_H
+#define FULLSCREENBACKEND_H
 
 #include <libs/mediacenter/abstractbrowsingbackend.h>
 
@@ -31,4 +31,4 @@ public:
     virtual bool initImpl();
 };
 
-#endif // LOCALFILESABSTRACTBACKEND_H
+#endif // FULLSCREENBACKEND_H

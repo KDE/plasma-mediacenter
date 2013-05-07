@@ -105,7 +105,7 @@ void PicasaModel::query(const QString &username, const QString &request)
     }
     m_queries[job] = username;
     connect (job, SIGNAL(data(KIO::Job*,QByteArray)), this, SLOT(picasaDataReady(KIO::Job*,QByteArray)));
-    connect (job, SIGNAL(result(KJob *)), this, SLOT(parseResults(KJob*)));
+    connect (job, SIGNAL(result(KJob*)), this, SLOT(parseResults(KJob*)));
 }
 
 void PicasaModel::picasaDataReady(KIO::Job *job, const QByteArray &data)
@@ -260,8 +260,7 @@ void PicasaModel::getTokenAndQuery(const QString &username, const QString &passw
     KIO::TransferJob *job = KIO::http_post(url, buffer, KIO::HideProgressInfo);
     job->addMetaData("content-type", "Content-Type: application/x-www-form-urlencoded" );
     connect (job, SIGNAL(data(KIO::Job*,QByteArray)), this, SLOT(token(KIO::Job*,QByteArray)));
-    connect (job, SIGNAL(result(KJob *)), this, SLOT(passwordJob(KJob *)));
-
+    connect (job, SIGNAL(result(KJob*)), this, SLOT(passwordJob(KJob*)));
 }
 
 void PicasaModel::token(KIO::Job *job, const QByteArray &data)
