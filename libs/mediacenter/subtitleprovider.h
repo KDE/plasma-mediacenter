@@ -48,16 +48,16 @@ struct Subtitle {
 class MEDIACENTER_EXPORT SubtitleProvider : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY ( QString subtitle READ subtitle NOTIFY subtitleChanged );
-    Q_PROPERTY ( QUrl filename READ filename WRITE setFilename );
-    Q_PROPERTY ( qint64 subtitleTime READ subtitleTime WRITE setSubtitleTime NOTIFY subtitleTimeChanged );
+    Q_PROPERTY(QString subtitle READ subtitle NOTIFY subtitleChanged);
+    Q_PROPERTY(QUrl filename READ filename WRITE setFilename);
+    Q_PROPERTY(qint64 subtitleTime READ subtitleTime WRITE setSubtitleTime NOTIFY subtitleTimeChanged);
 
 public:
     QString subtitle();
     qint64 subtitleTime();
-    void setSubtitleTime(const qint64 &currtime);
+    void setSubtitleTime(const qint64& currtime);
     QUrl filename();
-    void setFilename(const QUrl &name);
+    void setFilename(const QUrl& name);
 
 signals:
     void subtitleChanged();

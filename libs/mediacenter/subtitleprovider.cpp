@@ -40,24 +40,23 @@ void SubtitleProvider::processFile()
     while (!in.atEnd()) {
         QString line = in.readLine();
 
-        if(line.isEmpty()) {
+        if (line.isEmpty()) {
             re.indexIn(temp);
             t.id = re.cap(1).toInt();
             t.startHr = re.cap(2).toInt();
             t.startMin = re.cap(3).toInt();
             t.startSec = re.cap(4).toInt();
             t.startMillisec = re.cap(5).toInt();
-            t.totalStartMillisec = ( (t.startHr * 3600) + (t.startMin * 60) + (t.startSec) ) * 1000;
+            t.totalStartMillisec = ((t.startHr * 3600) + (t.startMin * 60) + (t.startSec)) * 1000;
             t.endHr = re.cap(6).toInt();
             t.endMin = re.cap(7).toInt();
             t.endSec = re.cap(8).toInt();
             t.endMillisec = re.cap(9).toInt();
-            t.totalEndMillisec = ( (t.endHr * 3600) + (t.endMin * 60) + (t.endSec) ) * 1000;
+            t.totalEndMillisec = ((t.endHr * 3600) + (t.endMin * 60) + (t.endSec)) * 1000;
             t.text = re.cap(10);
             subs.append(t);
             temp.clear();
-        }
-        else {
+        } else {
             temp = temp + ' ' + line;
         }
 
@@ -70,31 +69,31 @@ void SubtitleProvider::computeAndStoreSubtitle(qint64 input)
     struct Subtitle next;
     bool isLast = false;
 
-    if( input >= currentSubtitleStartTime && input <= currentSubtitleEndTime )
+    if (input >= currentSubtitleStartTime && input <= currentSubtitleEndTime)
         return;
 
     //Binary search
     int start = 0;
     int end = subs.size() - 1;
     bool found = false;
-    while(end >= start) {
-      int mid = (start + end)/2;
+    while (end >= start) {
+        int mid = (start + end) / 2;
 
-      if( input < subs[mid].totalStartMillisec )
-	  end = mid - 1;
-      else if( input > subs[mid].totalEndMillisec )
-	  start = mid + 1;
-      else {
-	  found = true;
-	  m_currentSubtitle = subs[mid].text;
-	  currentSubtitleStartTime = subs[mid].totalStartMillisec;
-	  currentSubtitleEndTime = subs[mid].totalEndMillisec;
-	  return;
-      }
- 
+        if (input < subs[mid].totalStartMillisec)
+            end = mid - 1;
+        else if (input > subs[mid].totalEndMillisec)
+            start = mid + 1;
+        else {
+            found = true;
+            m_currentSubtitle = subs[mid].text;
+            currentSubtitleStartTime = subs[mid].totalStartMillisec;
+            currentSubtitleEndTime = subs[mid].totalEndMillisec;
+            return;
+        }
+
     }
-    if(!found){
-      m_currentSubtitle.clear();
+    if (!found) {
+        m_currentSubtitle.clear();
     }
 }
 
@@ -110,7 +109,7 @@ qint64 SubtitleProvider::subtitleTime()
     return m_currentVideoTime;
 }
 
-void SubtitleProvider::setSubtitleTime(const qint64 &currtime)
+void SubtitleProvider::setSubtitleTime(const qint64& currtime)
 {
     m_currentVideoTime = currtime;
     emit subtitleTimeChanged();
@@ -122,7 +121,7 @@ QUrl SubtitleProvider::filename()
     return m_subtitleFilename;
 }
 
-void SubtitleProvider::setFilename(const QUrl &name)
+void SubtitleProvider::setFilename(const QUrl& name)
 {
     m_subtitleFilename = name;
     processFile();
