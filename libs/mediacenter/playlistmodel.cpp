@@ -42,8 +42,7 @@ PlaylistModel::PlaylistModel(QObject* parent):
 {
     KConfigGroup cfgGroup = KGlobal::config()->group("General");
     setRandom(cfgGroup.readEntry("randomplaylist",false));
-    KStandardDirs dir;
-    QString dirPath = dir.saveLocation("data") + KCmdLineArgs::appName();
+    QString dirPath = KGlobal::dirs()->saveLocation("data") + KCmdLineArgs::appName();
     QDir().mkdir(dirPath);
     d->filePath = dirPath + "/playlist";
 
