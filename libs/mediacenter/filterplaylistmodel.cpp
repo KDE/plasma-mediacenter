@@ -34,9 +34,8 @@ QString FilterPlaylistModel::filterString() const
 
 void FilterPlaylistModel::setFilterString(const QString& customString)
 {
-    beginResetModel();
     m_searchString = customString;
-    endResetModel();
+    invalidateFilter();
     emit filterStringChanged();
 }
 
