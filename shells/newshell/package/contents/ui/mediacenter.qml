@@ -64,7 +64,7 @@ Image {
             runtimeDataObject: runtimeData
             anchors { left: parent.left; right: parent.right; top: parent.top; bottom: parent.bottom }
             focus: !mediaBrowser.activeFocus && !mediaWelcome.activeFocus
-            state: mediaBrowser.visible ? "minimize" : ""
+            state: mediaBrowser.visible || playlist.state == "playlistShow" ? "minimize" : ""
             z: mediaBrowser.visible ? 2 : 0
 
             playing: runtimeData.playing
@@ -269,10 +269,9 @@ Image {
             anchors {
                 top: mediaController.bottom; bottom: parent.bottom
                 left: parent.right; right: undefined
-                leftMargin: 20;
                 topMargin: margins.left; bottomMargin: margins.top;
             }
-            width: parent.width/4
+            width: parent.width*0.9
             z: anchors.right ? 1 : 0
             backend: runtimeData.currentBrowsingBackend
 
