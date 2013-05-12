@@ -18,41 +18,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef RSSBACKEND_H
-#define RSSBACKEND_H
+#ifndef GPODDERREQUESTHANDLER_H
+#define GPODDERREQUESTHANDLER_H
 
-#include <libs/mediacenter/abstractbrowsingbackend.h>
+#include <QtCore/QObject>
 
+#include <mygpo-qt/PodcastList.h>
 
-class RssManager;
-class ProxyModel;
+#include <Akonadi/Collection>
 
-class RssBackend : public MediaCenter::AbstractBrowsingBackend
+namespace Akonadi {
+    class Collection;
+}
+
+class FeedController;
+
+class GpodderRequestHandler : public QObject
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	RssBackend(QObject *parent, const QVariantList &args);
-	virtual bool initImpl();
-	virtual QString backendCategory() const;
-	virtual bool expand(int row);
-	virtual QString mediaBrowserSidePanel() const;
-	virtual void setMediaBrowserSidePanel(QString text);
-    virtual QString mediaBrowserOverride() const;
-public:
-	Q_INVOKABLE void addFeed(const QString& feedurl);
-	Q_INVOKABLE void addToplist();
-signals:
-	void addFeedSuccessfull();
-	void addFeedFailed();
-    void modelRdy(bool status);
+    GpodderRequestHandler ( QObject* parent, mygpo::PodcastListPtr podcasts, FeedController* controller, const Akonadi::Collection& parentcollection );
+    virtual ~GpodderRequestHandler();
+
 public slots:
-	virtual bool goOneLevelUp();
-	void feedOperation( bool result );
-private slots:
-	void loadModel(ProxyModel* model);
+    void finished();
+    void requestError( QNetworkReply::NetworkError error );
+    void parseError();
+
 private:
-	RssManager* m_rssmanager;
-	QString m_rsspanelqml;
+    mygpo::PodcastListPtr m_podcasts;
+    FeedController *m_feedcontroller;
+    Akonadi::Collection m_parent;
 };
 
-#endif // RSSBACKEND_H
+#endif // GPODDERREQUESTHANDLER_H

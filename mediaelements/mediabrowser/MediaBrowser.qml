@@ -94,12 +94,15 @@ FocusScope {
     }
 
     onCurrentBrowsingBackendChanged: {
+        print("BB changed")
         //Check if there is a custom browser, if yes, load that
         var object;
         if (currentBrowsingBackend.mediaBrowserOverride()) {
             var qmlSource = currentBrowsingBackend.mediaBrowserOverride();
+            print ("override BB: " + qmlSource)
             object = Qt.createQmlObject(qmlSource, mediaBrowserViewItem);
             mediaBrowserViewItem.mediaBrowserGridView = object;
+            print("set backend " + currentBrowsingBackend)
             object.backend = (function() { return currentBrowsingBackend; });
         } else {
             object = mediaBrowserViewComponent.createObject(mediaBrowserViewItem);
@@ -130,6 +133,7 @@ FocusScope {
     function loadModel()
     {
         //JS snippet to do mediaBrowserGridView.model: currentBrowsingBackend.backendModel
+        print ("loadModel")
         mediaBrowserViewItem.mediaBrowserGridView.model = (function() { return currentBrowsingBackend.backendModel; });
     }
 

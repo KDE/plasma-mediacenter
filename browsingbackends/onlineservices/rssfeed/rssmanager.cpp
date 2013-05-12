@@ -33,6 +33,7 @@
 #include <Akonadi/EntityDisplayAttribute>
 
 #include <QEventLoop>
+#include <QTimer>
 
 #include <KRss/FeedCollection>
 #include <KRss/Item>
@@ -41,29 +42,35 @@
 #include "feedcontroller.h"
 #include "agentmanager.h"
 #include "gpodder/gpodderclient.h"
+#include "createfolderjob.h"
 
 RssManager::RssManager ( QObject* parent, QString name ) :
 	QObject ( parent ),
 	m_session(0),
 	m_feedrecorder(0),
 	m_feedcontroller(0),
+	m_agentmanager(0),
+	m_feeditemmodel(0),
 	m_rootcollname(name),
 	m_gpoclient(0)
 {
 	KRss::FeedCollection::registerAttributes();
 	m_session = new Akonadi::Session( "PMC Rss Session" );
 	m_agentmanager = new AgentManager(this);
-	connect(m_agentmanager, SIGNAL(agentRdy(const QString*)), this, SLOT(agentRdy(const QString*)));
+	connect(m_agentmanager, SIGNAL(agentRdy(const QString&)), this, SLOT(agentRdy(const QString&)));
 	m_agentmanager->requestAgent();
 	m_feedcontroller = new FeedController(this);
-	connect(m_feedcontroller, SIGNAL(feedOperation(Akonadi::Collection)), this, SLOT(feedOperation(Akonadi::Collection)));
-	m_gpoclient = new GpodderClient(this);
+	m_gpoclient = new GpodderClient(this, m_feedcontroller);
 }
 
 void RssManager::addFeed ( const QString& feedurl )
 {
 	if (m_feeditemmodel) {
-		m_feedcontroller->addFeed(feedurl, m_feeditemmodel->parent());
+        Akonadi::CollectionCreateJob* job = new Akonadi::CollectionCreateJob(
+            m_feedcontroller->newFeed(feedurl, m_feeditemmodel->parent()) );
+
+        connect( job, SIGNAL(finished(KJob*)), SLOT(createCollectionResult(KJob*)) );
+        job->start();
 	}
 }
 
@@ -79,12 +86,37 @@ void RssManager::modifyFeed ( const QString& feedurl )
 
 void RssManager::addToplist()
 {
-	m_feedcontroller->addCollection(QString("Gpodder toplist"), m_feeditemmodel->parent());
-	connect(m_feedcontroller, SIGNAL(feedOperation(Akonadi::Collection)), this, SLOT(loadToplistItems(Akonadi::Collection)));
+    if (m_feeditemmodel) {
+        Akonadi::CollectionCreateJob* job = new Akonadi::CollectionCreateJob(
+            m_feedcontroller->newFolder(QString("Gpodder toplist"), m_feeditemmodel->parent()) );
+
+        connect( job, SIGNAL(finished(KJob*)), SLOT(loadToplistItems(KJob*)) );
+        job->start();
+    }
+}
+
+void RssManager::createRootResult ( KJob* job )
+{
+    if (!job->error()) {
+        Akonadi::CollectionCreateJob* createJob = qobject_cast<Akonadi::CollectionCreateJob*>(job);
+        Q_ASSERT(createJob);
+        createModel(createJob->collection());
+    }
+}
+
+void RssManager::createCollectionResult ( KJob* job )
+{
+    if (job->error()) {
+        kDebug() << job->errorText();
+        emit feedOperation(false);
+    } else {
+        emit feedOperation(true);
+    }
 }
 
 void RssManager::createModel ( const Akonadi::Collection& coll )
 {
+    kDebug() << "createModel" << coll;
 	// create model
 	Akonadi::CollectionFetchScope cscope;
 	cscope.setIncludeStatistics( true );
@@ -99,20 +131,16 @@ void RssManager::createModel ( const Akonadi::Collection& coll )
 	m_feedrecorder->itemFetchScope().fetchFullPayload();
 	m_feedrecorder->itemFetchScope().fetchAllAttributes();
 	m_feeditemmodel = new ProxyModel( m_feedrecorder, this );
-	connect( m_feeditemmodel, SIGNAL(collectionPopulated(Akonadi::Entity::Id)), this, SLOT(modelPopulated()));
+
+    emit modelPopulated(m_feeditemmodel);
 }
 
-void RssManager::modelPopulated()
-{
-	emit modelPopulated(m_feeditemmodel);
-}
-
-void RssManager::agentRdy ( const QString* id )
+void RssManager::agentRdy ( const QString& id )
 {
 	Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob( Akonadi::Collection::root(),
 																		Akonadi::CollectionFetchJob::Recursive,
 																	 this );
-	job->fetchScope().setResource(*id);
+	job->fetchScope().setResource(id);
 	connect( job, SIGNAL( result( KJob* ) ), this, SLOT( collectionFetchResult( KJob* ) ) );
 }
 
@@ -125,6 +153,7 @@ void RssManager::collectionFetchResult ( KJob* job )
 		// look for our parent collection
 		Q_FOREACH( const Akonadi::Collection &coll, collList ) {
 			if( coll.name() == m_rootcollname ) {
+                kDebug() << "foundrootcoll";
 				createModel(coll);
 				return;
 			}
@@ -135,8 +164,10 @@ void RssManager::collectionFetchResult ( KJob* job )
 			if(coll.isValid() && coll.isFolder()) {
 				if (coll.parentCollection() == Akonadi::Collection::root()) {
 					const KRss::FeedCollection rootCool = KRss::FeedCollection(coll);
-					m_feedcontroller->addCollection(m_rootcollname, rootCool);
-					connect(m_feedcontroller, SIGNAL(feedOperation(Akonadi::Collection)), this, SLOT(createModel(Akonadi::Collection)));
+                    kDebug() << "add" << m_rootcollname;
+                    Akonadi::CollectionCreateJob* job = new Akonadi::CollectionCreateJob( m_feedcontroller->newFolder(m_rootcollname, rootCool) );
+                    connect( job, SIGNAL(finished(KJob*)), SLOT(createRootResult(KJob*)) );
+                    job->start();
 					return;
 				}
 			}
@@ -144,30 +175,11 @@ void RssManager::collectionFetchResult ( KJob* job )
 	}
 }
 
-void RssManager::loadToplistItems ( const Akonadi::Collection& parent )
+void RssManager::loadToplistItems ( KJob* job )
 {
-	if (parent.isValid()) {
-		m_gpotoplist = new Akonadi::Collection(parent);
-		kDebug() << "valid" << parent.isValid() << parent;
-		connect(m_gpoclient, SIGNAL(podcastList(const QList<QUrl>*)), this, SLOT(podcastReceived(const QList<QUrl>*)));
-		m_gpoclient->topFeeds(3);
-	}
-}
-
-void RssManager::podcastReceived ( const QList< QUrl >* list)
-{
-	disconnect(m_gpoclient, SIGNAL(podcastList(const QList<QUrl>*)), this, SLOT(podcastReceived(const QList<QUrl>*)));
-	Q_FOREACH(const QUrl url, *list) {
-		kDebug() << url.toString();
-		m_feedcontroller->addFeed(url.toString(), *m_gpotoplist);
-	}
-}
-
-void RssManager::feedOperation ( const Akonadi::Collection& coll )
-{
-	if (coll.isValid()) {
-		emit feedOperation(true);
-	} else {
-		emit feedOperation(false);
+    if (!job->error()) {
+        Akonadi::CollectionCreateJob* createJob = qobject_cast<Akonadi::CollectionCreateJob*>(job);
+        Q_ASSERT(createJob);
+		m_gpoclient->topFeeds(3, createJob->collection());
 	}
 }

@@ -27,6 +27,10 @@ namespace Akonadi {
 	class Collection;
 }
 
+namespace KRss {
+    class FeedCollection;
+}
+
 class KJob;
 
 class FeedController : public QObject
@@ -36,9 +40,11 @@ public:
     FeedController ( QObject* parent = 0 );
 public:
 	void addFeed( const QString& feedurl, const Akonadi::Collection& parent );
+    KRss::FeedCollection newFeed( const QString& feedurl, const Akonadi::Collection& parent );
 	void deleteFeed( const QString& feedurl );
 	void modifyFeed( const QString& feedurl );
-	void addCollection( const QString& name, const Akonadi::Collection& parent );
+	void addFolder( const QString& name, const Akonadi::Collection& parent );
+    KRss::FeedCollection newFolder(const QString& name, const Akonadi::Collection& parent);
 signals:
 	void feedOperation( const Akonadi::Collection& coll );
 private slots:

@@ -47,11 +47,8 @@ public:
 	const Akonadi::Collection& parent() const;
 protected:
 	bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
-private slots:
-// 	void collPopulated(Akonadi::Collection::Id cid);
-	void treemodelrdy( Akonadi::Collection::Id id );
 signals:
-	void collectionPopulated(Akonadi::Entity::Id id);
+    void collectionTreeFetched(Akonadi::Collection::List colllist);
 private:
 	class Private;
 	Private * const d;

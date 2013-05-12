@@ -44,12 +44,12 @@ private:
 	void setup();
 	bool requestNewAgent();
 signals:
-	void agentRdy(const QString* agentid);
+	void agentRdy(const QString& agentid);
 private Q_SLOTS:
 	void agentCreated( KJob* job );
 private:
 	Akonadi::AgentManager* m_agentmanager;
-	QString* m_agentid;
+	QString m_agentid;
 };
 
 #endif // AGENTMANAGER_H

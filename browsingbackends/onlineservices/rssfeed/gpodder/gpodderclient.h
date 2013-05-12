@@ -28,23 +28,29 @@
 
 
 class QNetworkAccessManager;
+class FeedController;
+
+namespace mygpo {
+    class ApiRequest;
+}
+
+namespace Akonadi {
+    class Collection;
+}
 
 class GpodderClient : public QObject
 {
 	Q_OBJECT
 public:
-    GpodderClient ( QObject* parent = 0 );
+    GpodderClient ( QObject* parent, FeedController* controller );
     ~GpodderClient();
-public:
-	void topFeeds(const int count);
-signals:
-	void podcastList( const QList<QUrl> *list );
-private slots:
-	void networkError(QNetworkReply::NetworkError err);
-	void requestFinished();
+public slots:
+    void topFeeds( const int count, const Akonadi::Collection& parent );
+    void searchFeed(const QString &query);
 private:
 	QNetworkAccessManager *m_nam;
-	mygpo::PodcastListPtr *m_podcastlist;
+    mygpo::ApiRequest *m_apirequest;
+    FeedController *m_feedcontroller;
 };
 
 #endif // GPODDERCLIENT_H

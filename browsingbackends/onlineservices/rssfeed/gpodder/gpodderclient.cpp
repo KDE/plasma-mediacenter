@@ -19,6 +19,11 @@
  */
 
 #include "gpodderclient.h"
+#include "gpodderrequesthandler.h"
+
+#include <Solid/Networking>
+
+#include <QTimer>
 
 #include <mygpo-qt/ApiRequest.h>
 
@@ -26,12 +31,14 @@
 
 using namespace mygpo;
 
-GpodderClient::GpodderClient ( QObject* parent ) :
+GpodderClient::GpodderClient ( QObject* parent, FeedController* controller ) :
 	QObject ( parent ),
 	m_nam(0),
-	m_podcastlist(0)
+	m_apirequest(0),
+	m_feedcontroller(controller)
 {
 	m_nam = new QNetworkAccessManager(this);
+    m_apirequest = new ApiRequest(m_nam);
 }
 
 GpodderClient::~GpodderClient()
@@ -39,30 +46,22 @@ GpodderClient::~GpodderClient()
 	m_nam->deleteLater();
 }
 
-void GpodderClient::topFeeds ( const int count )
+void GpodderClient::topFeeds ( const int count, const Akonadi::Collection& parent )
 {
-	ApiRequest req(m_nam);
-	m_podcastlist = new PodcastListPtr(req.toplist(count));
-	connect(m_podcastlist->data(), SIGNAL(requestError(QNetworkReply::NetworkError)), this, SLOT(networkError(QNetworkReply::NetworkError)));
-	connect(m_podcastlist->data(), SIGNAL(finished()), this, SLOT(requestFinished()));
+    if( Solid::Networking::status() == Solid::Networking::Unconnected )
+    {
+        QTimer::singleShot( 10000, this, SLOT(topFeeds()) );
+        return;
+    }
+
+	PodcastListPtr topfeeds = m_apirequest->toplist(count);
+    GpodderRequestHandler *rhandler = new GpodderRequestHandler(this, topfeeds, m_feedcontroller, parent);
+	connect(topfeeds.data(), SIGNAL(requestError(QNetworkReply::NetworkError)), rhandler, SLOT(requestError(QNetworkReply::NetworkError)));
+    connect(topfeeds.data(), SIGNAL(parseError()), rhandler, SLOT(parseError()));
+    connect(topfeeds.data(), SIGNAL(finished()), rhandler, SLOT(finished()));
 }
 
-void GpodderClient::networkError ( QNetworkReply::NetworkError err )
+void GpodderClient::searchFeed ( const QString& query )
 {
-	//TODO
-	kDebug() << "network err" << err;
-}
-
-void GpodderClient::requestFinished()
-{
-	QList<QUrl> urllist;
-	QList<PodcastPtr> list;
-	QList<PodcastPtr>::const_iterator iterator;
-
-	list = m_podcastlist->data()->list();
-	for (iterator = list.constBegin(); iterator != list.constEnd(); ++iterator) {
-		urllist.append(iterator->data()->url());
-	}
-
-	emit podcastList(&urllist);
+    ApiRequest req(m_nam);
 }

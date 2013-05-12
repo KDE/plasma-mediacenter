@@ -38,6 +38,14 @@ Rectangle {
 		addFeedFailedText.visible = false;
 	}
 
+	function modelRdy(status) {
+        if (status) {
+            addTopList.enabled = true;
+        } else {
+            addTopList.enabled = false;
+        }
+	}
+
 	PlasmaComponents.TextField {
 		id: feedid
 		anchors {
@@ -100,6 +108,7 @@ Rectangle {
 		}
 
 		text: i18n("Add gpodder toplist")
+        enabled: false
 		onClicked: {
 			addFeedFailedText.visible = false;
 			backend.addToplist();
@@ -109,6 +118,7 @@ Rectangle {
 
 	onBackendChanged: {
 		backend.addFeedFailed.connect(addFeedFailed);
-		backend.addFeedSuccessfull.connect(addFeedSuccess)
+		backend.addFeedSuccessfull.connect(addFeedSuccess);
+        backend.modelRdy.connect(modelRdy);
 	}
 }

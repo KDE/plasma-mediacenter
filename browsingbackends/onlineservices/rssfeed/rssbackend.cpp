@@ -35,7 +35,7 @@ RssBackend::RssBackend(QObject *parent, const QVariantList &args):
 
 bool RssBackend::initImpl()
 {
-	m_rssmanager = new RssManager(this, QString("My Feeds"));
+	m_rssmanager = new RssManager(this, QString("PMC Feeds"));
 	connect(m_rssmanager, SIGNAL(modelPopulated(ProxyModel*)), this, SLOT(loadModel(ProxyModel*)));
 	connect(m_rssmanager, SIGNAL(feedOperation(bool)), this , SLOT(feedOperation(bool)));
 	return true;
@@ -67,6 +67,7 @@ bool RssBackend::goOneLevelUp()
 void RssBackend::loadModel ( ProxyModel* model )
 {
 	setModel(model);
+    emit modelRdy(true);
 }
 
 QString RssBackend::mediaBrowserSidePanel() const
@@ -78,6 +79,11 @@ void RssBackend::setMediaBrowserSidePanel ( QString text )
 {
 	m_rsspanelqml = text;
 	emit mediaBrowserSidePanelChanged();
+}
+
+QString RssBackend::mediaBrowserOverride() const
+{
+    return constructQmlSource("rsscomponents", "0.1", "MediaBrowser");
 }
 
 void RssBackend::addFeed ( const QString& feedurl )

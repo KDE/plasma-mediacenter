@@ -39,6 +39,7 @@ FeedController::FeedController ( QObject* parent ) :
 
 void FeedController::addFeed( const QString& feedurl, const Akonadi::Collection& parent )
 {
+    kDebug() << "addFeed" << feedurl << parent;
 	Akonadi::CachePolicy policy;
 	policy.setInheritFromParent( false );
 	policy.setSyncOnDemand( false );
@@ -58,6 +59,27 @@ void FeedController::addFeed( const QString& feedurl, const Akonadi::Collection&
 	job->start();
 }
 
+KRss::FeedCollection FeedController::newFeed ( const QString& feedurl, const Akonadi::Collection& parent )
+{
+    Akonadi::CachePolicy policy;
+    policy.setInheritFromParent( false );
+    policy.setSyncOnDemand( false );
+    policy.setLocalParts( QStringList() << KRss::Item::HeadersPart << KRss::Item::ContentPart << Akonadi::Item::FullPayload );
+
+    KRss::FeedCollection feed;
+    feed.setRemoteId( feedurl );
+    feed.setXmlUrl( feedurl );
+    feed.setContentMimeTypes( QStringList( KRss::Item::mimeType() ) );
+    feed.setCachePolicy( policy );
+    feed.attribute<Akonadi::EntityDisplayAttribute>( Akonadi::Collection::AddIfMissing )->setIconName( KRss::Item::mimeType() );
+    feed.setParentCollection( parent );
+    feed.setName( feedurl );
+    feed.setTitle( feedurl );
+
+    return feed;
+}
+
+
 void FeedController::deleteFeed ( const QString& feedurl )
 {
 	return;
@@ -68,13 +90,13 @@ void FeedController::modifyFeed ( const QString& feedurl )
 	return;
 }
 
-void FeedController::addCollection ( const QString& name, const Akonadi::Collection& parent )
+void FeedController::addFolder ( const QString& name, const Akonadi::Collection& parent )
 {
 	KRss::FeedCollection folder;
 	folder.setParentCollection( parent );
 	folder.setRemoteId( name );
 	folder.setIsFolder( true );
-	folder.setName( name );
+    folder.setName( name + KRandom::randomString( 8 ));
 	folder.setTitle( name );
 	folder.setContentMimeTypes( QStringList() << Akonadi::Collection::mimeType() << KRss::Item::mimeType() );
 	folder.attribute<Akonadi::EntityDisplayAttribute>( Akonadi::Collection::AddIfMissing )->setDisplayName( name );
@@ -85,15 +107,30 @@ void FeedController::addCollection ( const QString& name, const Akonadi::Collect
 	job->start();
 }
 
+KRss::FeedCollection FeedController::newFolder ( const QString& name, const Akonadi::Collection& parent )
+{
+    KRss::FeedCollection folder;
+    folder.setParentCollection( parent );
+    folder.setRemoteId( name );
+    folder.setIsFolder( true );
+    folder.setName( name );
+    folder.setTitle( name );
+    folder.setContentMimeTypes( QStringList() << Akonadi::Collection::mimeType() << KRss::Item::mimeType() );
+    folder.attribute<Akonadi::EntityDisplayAttribute>( Akonadi::Collection::AddIfMissing )->setDisplayName( name );
+    folder.setRights( Akonadi::Collection::CanCreateCollection );
+
+    return folder;
+}
+
+
 void FeedController::collectionCreated ( KJob* job )
 {
 	kDebug() << job->errorString();
 	if ( job->error() == KJob::NoError ) {
 		Akonadi::CollectionCreateJob* createJob = qobject_cast<Akonadi::CollectionCreateJob*>(job);
 		Q_ASSERT(createJob);
-// 		KRss::FeedCollection* fcoll = new KRss::FeedCollection(createJob->collection());
 		emit feedOperation(createJob->collection());
-		return;
-	}
-	emit feedOperation(Akonadi::Collection());
+	} else {
+        emit feedOperation(Akonadi::Collection());
+    }
 }

@@ -55,13 +55,12 @@ signals:
 	void modelPopulated( ProxyModel* model );
 	void feedOperation(bool result);
 private slots:
+    void createRootResult( KJob* job );
+    void createCollectionResult( KJob* job );
 	void createModel( const Akonadi::Collection& coll );
-	void agentRdy( const QString* id );
+	void agentRdy( const QString& id );
 	void collectionFetchResult( KJob* job );
-	void loadToplistItems( const Akonadi::Collection& parent );
-	void podcastReceived( const QList< QUrl >* list );
-	void feedOperation(	const Akonadi::Collection& coll );
-	void modelPopulated();
+    void loadToplistItems( KJob* job );
 private:
 	Akonadi::Session *m_session;
 	Akonadi::ChangeRecorder* m_feedrecorder;
@@ -70,7 +69,6 @@ private:
 	ProxyModel *m_feeditemmodel;
 	QString m_rootcollname;
 	GpodderClient *m_gpoclient;
-	Akonadi::Collection *m_gpotoplist;
 };
 
 #endif // AKONADIMODEL_H

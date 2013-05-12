@@ -38,8 +38,7 @@
 
 AgentManager::AgentManager ( QObject* parent ) :
 	QObject ( parent ),
-	m_agentmanager(0),
-	m_agentid(0)
+	m_agentmanager(0)
 {
 	setup();
 }
@@ -51,13 +50,10 @@ void AgentManager::setup()
 
 void AgentManager::requestAgent()
 {
-	if (m_agentid) {
-		delete m_agentid;
-	}
 	Akonadi::AgentInstance::List instances = m_agentmanager->instances();
 	foreach ( const Akonadi::AgentInstance& instance, instances ) {
 		if (instance.type().capabilities().contains("RssResource") && instance.type().mimeTypes().contains(KRss::Item::mimeType())) {
-			m_agentid = new QString(instance.identifier());
+			m_agentid = instance.identifier();
 			emit agentRdy(m_agentid);
 			return;
 		}
@@ -84,9 +80,9 @@ void AgentManager::agentCreated ( KJob* job )
 		Akonadi::AgentInstance instance = createJob->instance();
 		instance.setName(i18n("Plasma Media Center Rss Feeds"));
 		instance.synchronizeCollectionTree();
-		m_agentid = new QString(instance.identifier());
+		m_agentid = instance.identifier();
 	} else {
-		m_agentid = new QString();
+		m_agentid = QString();
 	}
 	emit agentRdy(m_agentid);
 }

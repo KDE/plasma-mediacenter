@@ -58,11 +58,18 @@ ProxyModel::ProxyModel ( Akonadi::ChangeRecorder* monitor, QObject* parent ) :
 
 	d->m_collectionfilter = QRegExp(d->m_parentcollection->top().remoteId(), Qt::CaseSensitive,
 									QRegExp::FixedString);
-	d->m_treemodel = new RssModel(d->m_recorder, this);
 
-	setFilterRole(Akonadi::EntityTreeModel::RemoteIdRole);
+    d->m_treemodel = new RssModel(d->m_recorder, this);
+    d->m_flatmodel = new KDescendantsProxyModel(this);
+    d->m_flatmodel->setDisplayAncestorData(true);
+    d->m_flatmodel->setSourceModel(d->m_treemodel);
+    setSourceModel(d->m_flatmodel);
+    // fetch items
+    QModelIndex i1 = index(0,0,QModelIndex());
+    fetchMore(i1);
+
+    setFilterRole(Akonadi::EntityTreeModel::RemoteIdRole);
 	setFilterRegExp(d->m_collectionfilter);
-	connect(d->m_treemodel, SIGNAL(collectionPopulated(Akonadi::Collection::Id)), this, SLOT(treemodelrdy(Akonadi::Collection::Id)));
 }
 
 ProxyModel::~ProxyModel () {
@@ -111,17 +118,5 @@ bool ProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent
     }
 
 	return QSortFilterProxyModel::filterAcceptsRow( sourceRow, sourceParent );
-}
-
-void ProxyModel::treemodelrdy(Akonadi::Collection::Id id)
-{
-	d->m_flatmodel = new KDescendantsProxyModel(this);
-	d->m_flatmodel->setDisplayAncestorData(true);
-	d->m_flatmodel->setSourceModel(d->m_treemodel);
-	setSourceModel(d->m_flatmodel);
-	// fetch items
-	QModelIndex i1 = index(0,0,QModelIndex());
-	fetchMore(i1);
-	emit collectionPopulated(id);
 }
 

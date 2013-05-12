@@ -1,4 +1,4 @@
-set(rssbackend_SRCS
+set(rssbackend_SRCS createfolderjob.cpp
 feedcontroller.cpp
 agentmanager.cpp
 rssmanager.cpp
@@ -6,6 +6,7 @@ rssmodel.cpp
 proxymodel.cpp
 rssbackend.cpp
 gpodder/gpodderclient.cpp
+gpodder/gpodderrequesthandler.cpp
 )
 
 find_package (KdepimLibs REQUIRED)
@@ -20,12 +21,13 @@ kde4_add_plugin(pmc_rssbackend ${rssbackend_SRCS})
 target_link_libraries(pmc_rssbackend
     plasmamediacenter
     ${KDE4_KDECORE_LIBS}
+    ${KDE4_SOLID_LIBRARY}
     ${KDEPIMLIBS_KRSS_LIBS}
     ${KDEPIMLIBS_AKONADI_LIBS}
     ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
     ${KDEPIMLIBS_KMIME_LIBS}
     ${KDE4_KIO_LIBS}
-    mygpo-qt
+    ${LIBMYGPO_QT_LIBRARIES}
 )
 
 install(TARGETS pmc_rssbackend DESTINATION ${PLUGIN_INSTALL_DIR})
