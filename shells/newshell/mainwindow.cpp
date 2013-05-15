@@ -136,7 +136,7 @@ MainWindow::MainWindow(QWidget *parent)
     if (view->rootObject() && urls.count() > 0) {
         view->rootObject()->metaObject()->invokeMethod(view->rootObject(), "play");
     }
-    resize(1024, 768);
+    resize(1366, 768);
 
     installEventFilter(this);
     centralWidget()->installEventFilter(this);
