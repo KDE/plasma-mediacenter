@@ -34,7 +34,7 @@ FocusScope {
         property QtObject child
         property bool enabled
 
-        enabled: (currentBrowsingBackend.mediaBrowserSidePanel == "" ) ? false : true
+        enabled: currentBrowsingBackend ? (currentBrowsingBackend.mediaBrowserSidePanel == "" ? false : true ) : false
         anchors { top: parent.top; bottom: parent.bottom; left: parent.left }
         width: enabled ? parent.width*0.2 : 0
         clip: true
@@ -94,6 +94,8 @@ FocusScope {
     }
 
     onCurrentBrowsingBackendChanged: {
+        if (!currentBrowsingBackend)
+            return;
         //Check if there is a custom browser, if yes, load that
         var object;
         if (currentBrowsingBackend.mediaBrowserOverride()) {
@@ -130,7 +132,8 @@ FocusScope {
     function loadModel()
     {
         //JS snippet to do mediaBrowserGridView.model: currentBrowsingBackend.backendModel
-        mediaBrowserViewItem.mediaBrowserGridView.model = (function() { return currentBrowsingBackend.backendModel; });
+        if (mediaBrowserViewItem && mediaBrowserViewItem.mediaBrowserGridView)
+            mediaBrowserViewItem.mediaBrowserGridView.model = (function() { return currentBrowsingBackend.backendModel; });
     }
 
     function hideMediaBrowserSidePanel()
@@ -171,8 +174,8 @@ FocusScope {
 
         PlasmaComponents.Label {
             id: mediaCountLabel
-            text: i18nc("%1 item", "%1 items", mediaBrowserViewItem.mediaBrowserGridView.count)
-            visible: mediaBrowserViewItem.mediaBrowserGridView.count != undefined
+            text: mediaBrowserViewItem.mediaBrowserGridView ? i18nc("%1 item", "%1 items", mediaBrowserViewItem.mediaBrowserGridView.count) : ""
+            visible: mediaBrowserViewItem.mediaBrowserGridView ? (mediaBrowserViewItem.mediaBrowserGridView.count != undefined) : false
 
             anchors {
                 bottom: parent.bottom

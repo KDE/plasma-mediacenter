@@ -216,7 +216,8 @@ Image {
                     mediaController.playlistButtonChecked = false
                     mediaController.playlistButtonClicked()
                 }
-            }}
+            }
+        }
 
         MediaCenterComponents.MediaBrowser {
             id: mediaBrowser

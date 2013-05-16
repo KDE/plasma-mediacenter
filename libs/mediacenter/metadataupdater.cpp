@@ -83,7 +83,7 @@ void MetadataUpdater::runQuery()
     connect(m_queryServiceClient, SIGNAL(newEntries(QList<Nepomuk2::Query::Result>)),
             this, SLOT(newEntries(QList<Nepomuk2::Query::Result>)));
 //     connect(queryServiceClient, SIGNAL(entriesRemoved(QList<QUrl>)),SLOT(entriesRemoved(QList<QUrl>)));
-    connect(m_queryServiceClient, SIGNAL(error(QString)), SLOT(e(QString)));
+    connect(m_queryServiceClient, SIGNAL(error(QString)), SLOT(error(QString)));
     connect(m_queryServiceClient, SIGNAL(finishedListing()), SLOT(finishedListing()));
 
     emit reset();

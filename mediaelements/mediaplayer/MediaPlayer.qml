@@ -76,7 +76,6 @@ FocusScope {
             anchors.fill: parent
             color: "black"
             opacity: video.hasVideo ? 0.5 : 0
-            visible: false
         }
 
         Component.onCompleted: {
@@ -117,7 +116,7 @@ FocusScope {
 
     function handleKey(key)
     {
-        if (mediaPlayerRootRect.state == "minimize")
+        if (mediaPlayerRootRect.state == "minimize" || mediaPlayerRootRect.dimVideo)
             return false;
         switch (key) {
         case Qt.Key_Space:
