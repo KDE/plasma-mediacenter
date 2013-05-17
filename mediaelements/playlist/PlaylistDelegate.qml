@@ -39,6 +39,7 @@ Item{
                 color: (index == playlistModel.currentIndex) ? "red" : theme.textColor
                 elide: Text.ElideRight
                 font.pixelSize: 18
+                style: Text.Sunken
             }
 
             MouseArea {
@@ -55,7 +56,6 @@ Item{
             id: removeFromPlaylistButton
             width: height
             height: parent.height
-            visible: listViewItem.ListView.isCurrentItem
             iconSource: "list-remove"
             onClicked: {
                 playlistModel.removeFromPlaylist (index);
