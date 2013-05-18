@@ -33,7 +33,7 @@ PlaylistItem::PlaylistItem(const QString& url, QObject* parent)
     , m_mediaUrl(url)
     , m_mediaLength(-1)
 {
-    m_updateTimer.setInterval(0);
+    m_updateTimer.setInterval(1000);
     m_updateTimer.setSingleShot(true);
     connect(&m_updateTimer, SIGNAL(timeout()), SLOT(update()));
 }
