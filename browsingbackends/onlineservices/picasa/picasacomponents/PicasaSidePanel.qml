@@ -44,6 +44,8 @@ Rectangle {
          height: 30
          clearButtonShown: true
          placeholderText: i18n("Google account")
+         focus: true
+         KeyNavigation.tab: password
      }
 
      Item {
@@ -61,7 +63,6 @@ Rectangle {
          clearButtonShown: true
          placeholderText: i18n("Password")
          echoMode: TextInput.Password         
-         focus: true
          Keys.onPressed: {
              if(event.key==16777220) {
                  enabled: userid.text != '' && password.text != ''
@@ -71,6 +72,7 @@ Rectangle {
                  event.accepted=true;
                  }
          }
+         KeyNavigation.tab: loginButton
      }
 
      Item {
@@ -93,6 +95,7 @@ Rectangle {
             backend.login(userid.text, password.text, "album");
             busyIndicator.running = true;
         }
+        KeyNavigation.tab: userid
     }
 
     Item {
