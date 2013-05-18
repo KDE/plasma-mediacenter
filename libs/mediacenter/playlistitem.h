@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2009-2010 by Alessandro Diaferia <alediaferia@gmail.com>            *
+ *  Copyright 2012 by Sinny Kumari <ksinny@gmail.com>                              *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,38 +16,35 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef MEDIACENTER_H
-#define MEDIACENTER_H
+#ifndef PLAYLISTITEM_H
+#define PLAYLISTITEM_H
 
-#include "mediacenter_export.h"
+#include <QtCore/QObject>
+#include <QtCore/QTimer>
 
-#include <QPair>
-#include <QHash>
+class PlaylistItem : public QObject
+{
+    Q_OBJECT
+public:
+    explicit PlaylistItem(const QString &url, QObject *parent);
 
-namespace Phonon {
-class MediaSource;
-}
+    QString mediaUrl() const;
+    QString mediaName() const;
+    QString mediaArtist() const;
+    int mediaLength() const;
 
-namespace MediaCenter {
+Q_SIGNALS:
+    void updated();
 
-enum AdditionalMediaRoles {
-    MediaUrlRole = Qt::UserRole + 1,
-    IsExpandableRole,
-    MediaTypeRole,
-    DecorationTypeRole,
-    HideLabelRole,
-    ResourceIdRole,
-    MediaThumbnailRole,
-    AdditionalRoles     //If additional roles are needed to be defined
+private Q_SLOTS:
+    void update();
+
+private:
+    mutable QTimer m_updateTimer;
+    QString m_mediaUrl;
+    QString m_mediaName;
+    QString m_mediaArtist;
+    int m_mediaLength;
 };
 
-enum MediaType {
-    Music,
-    Picture,
-    Video
-};
-
-MEDIACENTER_EXPORT QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> &roles);
-} // namespace MediaCenter
-
-#endif // MEDIACENTER_H
+#endif // PLAYLISTITEM_H

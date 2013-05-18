@@ -8,6 +8,7 @@ set (plasmamediacenter_SRCS
     abstractbrowsingbackend.cpp
     backendsmodel.cpp
     metadataupdater.cpp
+    playlistitem.cpp
     playlistmodel.cpp
     pmccoverartprovider.cpp
     pmcmetadatamodel.cpp

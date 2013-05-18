@@ -27,22 +27,6 @@
 #include "mediacenter_export.h"
 #include "mediacenter.h"
 
-class PlaylistItem
-{
-public:
-    void setMediaName(const QString name);
-    void setMediaUrl(const QString url);
-    QString mediaName() const;
-    QString mediaUrl() const;
-
-    QString intoString() const;
-    static PlaylistItem fromString(QString text);
-
-private:
-    QString m_mediaName;
-    QString m_mediaUrl;
-};
-
 class MEDIACENTER_EXPORT PlaylistModel : public QAbstractListModel
 {
     Q_OBJECT
@@ -50,8 +34,14 @@ class MEDIACENTER_EXPORT PlaylistModel : public QAbstractListModel
     Q_PROPERTY(bool random READ random WRITE setRandom NOTIFY randomChanged)
 
 public:
+    enum Roles {
+        MediaArtistRole = MediaCenter::AdditionalRoles + 1,
+        MediaLengthRole
+    };
+
     explicit PlaylistModel(QObject* parent = 0);
     ~PlaylistModel();
+
     virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
     virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
     Q_INVOKABLE  void addToPlaylist(const QString &url, const QString &name);
@@ -68,6 +58,9 @@ public:
 Q_SIGNALS:
     void currentIndexChanged();
     void randomChanged();
+
+private Q_SLOTS:
+    void playlistItemUpdated();
 
 private:
     class Private;

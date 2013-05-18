@@ -32,12 +32,37 @@ Item{
             opacity: 0.8;
             Text {
                 anchors {
-                    fill: parent; verticalCenter: parent.verticalCenter;
-                    margins: 5
+                    left: parent.left; verticalCenter: parent.verticalCenter
+                    right: artistText.left; margins: 5
                 }
                 text: display
                 color: (index == playlistModel.currentIndex) ? "red" : theme.textColor
                 elide: Text.ElideRight
+                font.pixelSize: 18
+                style: Text.Sunken
+            }
+
+            Text {
+                id: artistText
+                anchors {
+                    right: lengthText.left; verticalCenter: parent.verticalCenter
+                }
+                width: parent.width*0.4
+                text: mediaArtist
+                color: (index == playlistModel.currentIndex) ? "red" : theme.textColor
+                elide: Text.ElideRight
+                font.pixelSize: 18
+                style: Text.Sunken
+            }
+
+            Text {
+                id: lengthText
+                anchors {
+                    right: parent.right; verticalCenter: parent.verticalCenter
+                    margins: 5
+                }
+                text: mediaLength ? Math.floor(mediaLength/60) + ":" + mediaLength%60 : ""
+                color: (index == playlistModel.currentIndex) ? "red" : theme.textColor
                 font.pixelSize: 18
                 style: Text.Sunken
             }

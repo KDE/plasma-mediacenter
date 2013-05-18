@@ -17,6 +17,8 @@
  ***********************************************************************************/
 
 #include "playlistmodel.h"
+#include "playlistitem.h"
+
 #include <KDebug>
 #include <KDE/KStandardDirs>
 #include <KDE/KCmdLineArgs>
@@ -29,7 +31,7 @@
 class PlaylistModel::Private
 {
 public:
-    QList<PlaylistItem> musicList;
+    QList<PlaylistItem*> musicList;
     int currentIndex;
     QFile file;
     QString filePath;
@@ -52,13 +54,20 @@ PlaylistModel::PlaylistModel(QObject* parent):
             QTextStream in(&file);
             while (!in.atEnd()) {
                 QString line = in.readLine();
-                d->musicList.append(PlaylistItem::fromString(line));
+                PlaylistItem *item = new PlaylistItem(line, this);
+                connect(item, SIGNAL(updated()), SLOT(playlistItemUpdated()));
+                d->musicList.append(item);
             }
         }
         file.close();
     }
     d->currentIndex = -1;
     setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
+
+    QHash<int, QByteArray> newRoles(roleNames());
+    newRoles[MediaLengthRole] = "mediaLength";
+    newRoles[MediaArtistRole] = "mediaArtist";
+    setRoleNames(newRoles);
 
     qsrand(QDateTime::currentMSecsSinceEpoch());
 }
@@ -71,8 +80,8 @@ PlaylistModel::~PlaylistModel()
     QFile file(d->filePath);
     if (file.open(QIODevice::WriteOnly)) {
          QTextStream out(&file);
-         foreach (const PlaylistItem &item, d->musicList) {
-             out << item.intoString() << "\n";
+         Q_FOREACH (const PlaylistItem *item, d->musicList) {
+             out << item->mediaUrl() << "\n";
          }
     }
     file.close();
@@ -80,14 +89,16 @@ PlaylistModel::~PlaylistModel()
 
 QVariant PlaylistModel::data(const QModelIndex& index, int role) const
 {
-    if (role == Qt::DisplayRole) {
-        return d->musicList.at(index.row()).mediaName();
+    switch(role) {
+    case Qt::DisplayRole:
+        return d->musicList.at(index.row())->mediaName();
+    case MediaCenter::MediaUrlRole:
+        return d->musicList.at(index.row())->mediaUrl();
+    case PlaylistModel::MediaArtistRole:
+        return d->musicList.at(index.row())->mediaArtist();
+    case PlaylistModel::MediaLengthRole:
+        return d->musicList.at(index.row())->mediaLength();
     }
-
-    if (role == MediaCenter::MediaUrlRole) {
-        return d->musicList.at(index.row()).mediaUrl();
-    }
-
     return QVariant();
 }
 
@@ -101,9 +112,8 @@ void PlaylistModel::addToPlaylist(const QString& url, const QString& name)
     const int n = rowCount();
     beginInsertRows(QModelIndex(), n, n);
 
-    PlaylistItem item;
-    item.setMediaName(name);
-    item.setMediaUrl(url);
+    PlaylistItem *item = new PlaylistItem(url, this);
+    connect(item, SIGNAL(updated()), SLOT(playlistItemUpdated()));
     d->musicList.append(item);
 
     endInsertRows();
@@ -112,7 +122,7 @@ void PlaylistModel::addToPlaylist(const QString& url, const QString& name)
 void PlaylistModel::removeFromPlaylist(const int& index)
 {
     beginResetModel();
-    d->musicList.removeAt(index);
+    d->musicList.takeAt(index)->deleteLater();
     if (index <= d->currentIndex) {
         d->currentIndex -= 1;
     }
@@ -128,7 +138,7 @@ QString PlaylistModel::getNextUrl()
     } else {
         setCurrentIndex(d->currentIndex + 1);
     }
-    return d->musicList.at(d->currentIndex).mediaUrl();
+    return d->musicList.at(d->currentIndex)->mediaUrl();
 }
 
 QString PlaylistModel::getPreviousUrl()
@@ -140,17 +150,21 @@ QString PlaylistModel::getPreviousUrl()
     } else {
         setCurrentIndex(d->currentIndex - 1);
     }
-    return d->musicList.at(d->currentIndex).mediaUrl();
+    return d->musicList.at(d->currentIndex)->mediaUrl();
 }
 
 QString PlaylistModel::getUrlofFirstIndex()
 {
-    return d->musicList.isEmpty() ? QString() : d->musicList.at(0).mediaUrl();
+    return d->musicList.isEmpty() ? QString() : d->musicList.at(0)->mediaUrl();
 }
 
 void PlaylistModel::clearPlaylist()
 {
     beginResetModel();
+
+    Q_FOREACH(PlaylistItem *item, d->musicList) {
+        item->deleteLater();
+    }
 
     d->musicList.clear();
     d->currentIndex = -1;
@@ -169,40 +183,6 @@ void PlaylistModel::setCurrentIndex(int index)
     emit currentIndexChanged();
 }
 
-QString PlaylistItem::intoString() const
-{
-    return  (mediaName() + '/' + mediaUrl());
-}
-
-PlaylistItem PlaylistItem::fromString(QString text)
-{
-    int pos = text.indexOf('/');
-    PlaylistItem item;
-    item.setMediaUrl(text.right(text.length() - pos - 1));
-    item.setMediaName(text.left(pos));
-    return item;
-}
-
-QString PlaylistItem::mediaName() const
-{
-    return m_mediaName;
-}
-
-QString PlaylistItem::mediaUrl() const
-{
-    return m_mediaUrl;
-}
-
-void PlaylistItem::setMediaName(const QString name)
-{
-    m_mediaName = name;
-}
-
-void PlaylistItem::setMediaUrl(const QString url)
-{
-    m_mediaUrl =  url;
-}
-
 bool PlaylistModel::random() const
 {
     return d->random;
@@ -212,4 +192,12 @@ void PlaylistModel::setRandom ( bool random )
 {
     d->random = random;
     emit randomChanged();
+}
+
+void PlaylistModel::playlistItemUpdated()
+{
+    PlaylistItem *item = qobject_cast<PlaylistItem*>(sender());
+
+    int i = d->musicList.indexOf(item);
+    emit dataChanged(createIndex(i, 0), createIndex(i, 0)); 
 }
