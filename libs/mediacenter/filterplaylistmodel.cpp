@@ -42,7 +42,10 @@ void FilterPlaylistModel::setFilterString(const QString& customString)
 bool FilterPlaylistModel::filterAcceptsRow(int sourceRow, const QModelIndex& sourceParent) const
 {
     QModelIndex index = sourceModel()->index(sourceRow, 0 , sourceParent);
-    return (sourceModel()->data(index).toString().contains(m_searchString, Qt::CaseInsensitive));
+    const QString title = sourceModel()->data(index).toString();
+    const QString artist = sourceModel()->data(index, PlaylistModel::MediaArtistRole).toString();
+    return title.contains(m_searchString, Qt::CaseInsensitive)
+            || artist.contains(m_searchString, Qt::CaseInsensitive);
 }
 
 void FilterPlaylistModel::setSourcePlaylistModel(QObject* model)
