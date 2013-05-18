@@ -207,8 +207,6 @@ PlasmaComponents.Page {
                 mediaView.indexAt(0,0)
                 mediaView.currentIndex = -1
             }
-            mediaView.decrementCurrentIndex()
-            mediaView.incrementCurrentIndex()
         }
         else {
             console.log(page.ancestor.focus)
