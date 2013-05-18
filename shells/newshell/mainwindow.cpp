@@ -107,7 +107,7 @@ MainWindow::MainWindow(QWidget *parent)
     if (urls.length() > 0) {
         playlistModel->clearPlaylist();
         foreach (const KUrl &url, urls) {
-            playlistModel->addToPlaylist(url.prettyUrl(), QFile(url.prettyUrl()).fileName());
+            playlistModel->addToPlaylist(url.prettyUrl());
         }
     }
     view->rootContext()->setContextProperty("playlistModel", playlistModel);

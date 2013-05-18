@@ -207,7 +207,7 @@ FocusScope {
          onPopupMenuItemClicked: {
              switch(index) {
                  case 0:
-                     playlistModel.addToPlaylist(mediaUrl, display);
+                     playlistModel.addToPlaylist(mediaUrl);
                      break;
                  case 1:
                       mediaBrowser.playRequested(currentMediaDelegateIndex, mediaUrl, mediaType)

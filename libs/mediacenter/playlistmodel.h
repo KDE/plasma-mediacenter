@@ -44,7 +44,7 @@ public:
 
     virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
     virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
-    Q_INVOKABLE  void addToPlaylist(const QString &url, const QString &name);
+    Q_INVOKABLE  void addToPlaylist(const QString &url);
     Q_INVOKABLE QString getNextUrl();
     Q_INVOKABLE QString getPreviousUrl();
     Q_INVOKABLE void clearPlaylist();

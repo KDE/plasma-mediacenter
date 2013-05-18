@@ -107,7 +107,7 @@ int PlaylistModel::rowCount(const QModelIndex& parent) const
     return d->musicList.count();
 }
 
-void PlaylistModel::addToPlaylist(const QString& url, const QString& name)
+void PlaylistModel::addToPlaylist(const QString& url)
 {
     const int n = rowCount();
     beginInsertRows(QModelIndex(), n, n);

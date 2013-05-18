@@ -204,7 +204,7 @@ Item {
 //             anchors { right: parent.right; top: parent.top }
 //             visible: !isExpandable && mediaType != "image" &&  mediaItemDelegateItem.GridView.isCurrentItem
 //             onClicked: {
-//                 playlistModel.addToPlaylist (mediaUrl, display);
+//                 playlistModel.addToPlaylist (mediaUrl);
 //             }
 //         }
     }
