@@ -61,10 +61,18 @@ Item{
                     right: parent.right; verticalCenter: parent.verticalCenter
                     margins: 5
                 }
-                text: mediaLength ? Math.floor(mediaLength/60) + ":" + mediaLength%60 : ""
+                text: mediaLength ? Math.floor(mediaLength/60) + ":" + fixMediaLength(mediaLength) : ""
                 color: (index == playlistModel.currentIndex) ? "red" : theme.textColor
                 font.pixelSize: 18
                 style: Text.Sunken
+                function fixMediaLength(mediaLength) {
+                    digitCount = (mediaLength % 60)
+                    convertToString = digitCount + ""
+                    if (convertToString.length < 2) {
+                        return "0" + digitCount
+                    }
+                    return digitCount
+                }
             }
 
             MouseArea {
