@@ -63,6 +63,7 @@ int PlaylistItem::mediaLength() const
 {
     if (m_mediaLength == -1) {
         m_updateTimer.start();
+        return 0;
     }
     return m_mediaLength;
 }
