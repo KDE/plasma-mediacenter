@@ -3,6 +3,7 @@ find_package(Taglib REQUIRED)
 include_directories (${TAGLIB_INCLUDES})
 
 set (plasmamediacenter_SRCS
+    mediainfoserviceproxy.cpp
     mediainforesult.cpp
     mediainforequest.cpp
     filteredbackendsmodel.cpp

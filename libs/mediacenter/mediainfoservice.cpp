@@ -32,8 +32,6 @@
 #include <QFileInfo>
 #include <klocalizedstring.h>
 
-MediaInfoService *MediaInfoService::m_instance = 0;
-
 class MediaInfoService::Private
 {
 public:
@@ -41,16 +39,6 @@ public:
     QList<quint64> requestQueue; QMutex requestQueueMutex;
     QHash<quint64, MediaInfoRequest*> requestHash; QMutex requestHashMutex;
 };
-
-MediaInfoService* MediaInfoService::instance()
-{
-    if (!m_instance) {
-        qRegisterMetaType<MediaInfoResult>("MediaInfoResult");
-        m_instance = new MediaInfoService();
-        m_instance->start();
-    }
-    return m_instance;
-}
 
 MediaInfoService::MediaInfoService(QObject* parent)
     : QThread(parent)

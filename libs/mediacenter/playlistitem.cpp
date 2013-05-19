@@ -19,6 +19,7 @@
 #include "playlistitem.h"
 #include "mediainforequest.h"
 #include "mediainfoservice.h"
+#include "mediainfoserviceproxy.h"
 
 #include <QtCore/QTimer>
 #include <QtCore/QFileInfo>
@@ -75,9 +76,11 @@ void PlaylistItem::update()
            ->addRequest(MediaInfoRequest::Artist)
            ->addRequest(MediaInfoRequest::Length);
 
-    MediaInfoService *service = MediaInfoService::instance();
-    connect(service, SIGNAL(info(quint64,MediaInfoResult)), SLOT(processMediaInfo(quint64,MediaInfoResult)));
-    m_serviceRequestNumber = service->processRequest(request);
+    MediaInfoServiceProxy *serviceProxy = MediaInfoServiceProxy::instance();
+
+    QPair<quint64, MediaInfoService*> values = serviceProxy->processRequest(request);
+    connect(values.second, SIGNAL(info(quint64,MediaInfoResult)), SLOT(processMediaInfo(quint64,MediaInfoResult)));
+    m_serviceRequestNumber = values.first;
 }
 
 void PlaylistItem::processMediaInfo(quint64 requestNumber, MediaInfoResult info)

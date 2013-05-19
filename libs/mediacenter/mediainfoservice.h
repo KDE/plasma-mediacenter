@@ -29,7 +29,7 @@ class MediaInfoService : public QThread
 {
     Q_OBJECT
 public:
-    static MediaInfoService *instance();
+    explicit MediaInfoService(QObject* parent = 0);
     ~MediaInfoService();
 
     quint64 processRequest(MediaInfoRequest* request);
@@ -44,9 +44,6 @@ private slots:
     void processPendingRequests();
 
 private:
-    static MediaInfoService *m_instance;
-    explicit MediaInfoService(QObject* parent = 0);
-
     bool areThereResultsToProcess() const;
     void fetchDataForRequest(quint64 requestNumber);
     quint64 nextRequestToProcess() const;

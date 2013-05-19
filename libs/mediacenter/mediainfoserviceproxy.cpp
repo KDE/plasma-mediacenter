@@ -16,42 +16,62 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#include "mediainforesult.h"
-
-#include "mediainforequest.h"
+#include "mediainfoserviceproxy.h"
+#include "mediainfoservice.h"
 
 #include <QtCore/QList>
-#include <QtCore/QHash>
-#include <QtCore/QVariant>
 
-class MediaInfoResult::Private
+#include <QDebug>
+
+static const int s_maxThreads = 2;
+MediaInfoServiceProxy *MediaInfoServiceProxy::m_instance = 0;
+
+class MediaInfoServiceProxy::Private
 {
 public:
-    QHash<MediaInfoRequest::InformationField, QVariant> data;
+    Private() { counter = 0; }
+    QList<MediaInfoService*> threads;
+    int counter;
 };
 
-MediaInfoResult::MediaInfoResult()
-    : d(new Private())
+MediaInfoServiceProxy* MediaInfoServiceProxy::instance()
 {
-    qRegisterMetaType<MediaInfoResult>("MediaInfoResult");
+    if (!m_instance) {
+        m_instance = new MediaInfoServiceProxy();
+    }
+    return m_instance;
 }
 
-MediaInfoResult::~MediaInfoResult()
+MediaInfoServiceProxy::MediaInfoServiceProxy()
+    :d(new Private)
 {
-
+    for (int i=0; i<s_maxThreads; ++i) {
+        MediaInfoService *service = new MediaInfoService;
+        d->threads.append(service);
+        service->start();
+    }
 }
 
-void MediaInfoResult::addData(MediaInfoRequest::InformationField field, QVariant data)
+MediaInfoServiceProxy::~MediaInfoServiceProxy()
 {
-    d->data.insert(field, data);
+    foreach(MediaInfoService *service, d->threads) {
+        service->deleteLater();
+    }
 }
 
-QList< MediaInfoRequest::InformationField > MediaInfoResult::availableFields() const
+QPair< quint64, MediaInfoService* > MediaInfoServiceProxy::processRequest(MediaInfoRequest* request)
 {
-    return d->data.keys();
+    MediaInfoService *thread = d->threads.at(d->counter);
+    incrementCounter();
+
+    int requestNumber = thread->processRequest(request);
+    return QPair< quint64, MediaInfoService* >(requestNumber, thread);
 }
 
-QVariant MediaInfoResult::data(MediaInfoRequest::InformationField field) const
+void MediaInfoServiceProxy::incrementCounter()
 {
-    return d->data.value(field);
+    d->counter++;
+    if (d->counter == s_maxThreads) {
+        d->counter = 0;
+    }
 }

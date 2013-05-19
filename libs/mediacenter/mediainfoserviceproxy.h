@@ -16,42 +16,29 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#include "mediainforesult.h"
+#ifndef MEDIAINFOSERVICEPROXY_H
+#define MEDIAINFOSERVICEPROXY_H
 
-#include "mediainforequest.h"
+#include <QtCore/QPair>
 
-#include <QtCore/QList>
-#include <QtCore/QHash>
-#include <QtCore/QVariant>
+class MediaInfoRequest;
+class MediaInfoService;
 
-class MediaInfoResult::Private
+class MediaInfoServiceProxy
 {
 public:
-    QHash<MediaInfoRequest::InformationField, QVariant> data;
+    static MediaInfoServiceProxy *instance();
+    ~MediaInfoServiceProxy();
+
+    QPair<quint64, MediaInfoService*> processRequest(MediaInfoRequest* request);
+
+private:
+    MediaInfoServiceProxy();
+    static MediaInfoServiceProxy *m_instance;
+    void incrementCounter();
+
+    class Private;
+    Private * const d;
 };
 
-MediaInfoResult::MediaInfoResult()
-    : d(new Private())
-{
-    qRegisterMetaType<MediaInfoResult>("MediaInfoResult");
-}
-
-MediaInfoResult::~MediaInfoResult()
-{
-
-}
-
-void MediaInfoResult::addData(MediaInfoRequest::InformationField field, QVariant data)
-{
-    d->data.insert(field, data);
-}
-
-QList< MediaInfoRequest::InformationField > MediaInfoResult::availableFields() const
-{
-    return d->data.keys();
-}
-
-QVariant MediaInfoResult::data(MediaInfoRequest::InformationField field) const
-{
-    return d->data.value(field);
-}
+#endif // MEDIAINFOSERVICEPROXY_H
