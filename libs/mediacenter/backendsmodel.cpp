@@ -1,5 +1,5 @@
 /***********************************************************************************
- *  Copyright 2012 by Sinny Kumari <ksinny@gmai.com>                               *
+ *  Copyright 2012 by Sinny Kumari <ksinny@gmail.com>                               *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
