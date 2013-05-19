@@ -1,5 +1,5 @@
 /***********************************************************************************
- *  Copyright 2012 by Sinny Kumari <ksinny@gmail.com>                              *
+ *   Copyright 2013 by Shantanu Tushar <shantanu@kde.org>                          *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,40 +16,30 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef PLAYLISTITEM_H
-#define PLAYLISTITEM_H
 
-#include <QtCore/QObject>
-#include <QtCore/QTimer>
+#ifndef MEDIAINFOREQUEST_H
+#define MEDIAINFOREQUEST_H
 
-class MediaInfoResult;
-class PlaylistItem : public QObject
+#include <QtCore/QString>
+
+class MediaInfoRequest
 {
-    Q_OBJECT
 public:
-    explicit PlaylistItem(const QString &url, QObject *parent);
+    enum InformationField {
+        Title,
+        Artist,
+        Length
+    };
 
-    QString mediaUrl() const;
-    QString mediaName() const;
-    QString mediaArtist() const;
-    int mediaLength() const;
-
-Q_SIGNALS:
-    void updated();
-
-private Q_SLOTS:
-    void update();
-    void processMediaInfo(quint64 requestNumber, MediaInfoResult info);
+    MediaInfoRequest(const QString &mediaPath);
+    MediaInfoRequest *addRequest(InformationField field);
+    bool hasFields() const;
+    MediaInfoRequest::InformationField takeField();
+    QString mediaPath() const;
 
 private:
-    mutable QTimer m_updateTimer;
-    QString m_mediaUrl;
-    QString m_mediaName;
-    QString m_mediaArtist;
-    int m_mediaLength;
-    int m_serviceRequestNumber;
+    class Private;
+    Private * const d;
 };
 
-#endif // PLAYLISTITEM_H
-
-class MediaInfoResult;
+#endif // MEDIAINFOREQUEST_H

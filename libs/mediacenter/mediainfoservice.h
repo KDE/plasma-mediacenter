@@ -1,5 +1,5 @@
 /***********************************************************************************
- *  Copyright 2012 by Sinny Kumari <ksinny@gmail.com>                              *
+ *   Copyright 2013 by Shantanu Tushar <shantanu@kde.org>                          *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,40 +16,43 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef PLAYLISTITEM_H
-#define PLAYLISTITEM_H
+#ifndef MEDIAINFOSERVICE_H
+#define MEDIAINFOSERVICE_H
 
-#include <QtCore/QObject>
-#include <QtCore/QTimer>
+#include <QtCore/QThread>
 
-class MediaInfoResult;
-class PlaylistItem : public QObject
+#include "mediainforesult.h"
+
+class MediaInfoRequest;
+
+class MediaInfoService : public QThread
 {
     Q_OBJECT
 public:
-    explicit PlaylistItem(const QString &url, QObject *parent);
+    static MediaInfoService *instance();
+    ~MediaInfoService();
 
-    QString mediaUrl() const;
-    QString mediaName() const;
-    QString mediaArtist() const;
-    int mediaLength() const;
+    quint64 processRequest(MediaInfoRequest* request);
 
-Q_SIGNALS:
-    void updated();
+signals:
+    void info(quint64 requestNumber, MediaInfoResult result);
 
-private Q_SLOTS:
-    void update();
-    void processMediaInfo(quint64 requestNumber, MediaInfoResult info);
+protected:
+    virtual void run();
+
+private slots:
+    void processPendingRequests();
 
 private:
-    mutable QTimer m_updateTimer;
-    QString m_mediaUrl;
-    QString m_mediaName;
-    QString m_mediaArtist;
-    int m_mediaLength;
-    int m_serviceRequestNumber;
+    static MediaInfoService *m_instance;
+    explicit MediaInfoService(QObject* parent = 0);
+
+    bool areThereResultsToProcess() const;
+    void fetchDataForRequest(quint64 requestNumber);
+    quint64 nextRequestToProcess() const;
+
+    class Private;
+    Private * const d;
 };
 
-#endif // PLAYLISTITEM_H
-
-class MediaInfoResult;
+#endif // MEDIAINFOSERVICE_H

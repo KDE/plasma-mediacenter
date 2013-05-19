@@ -17,10 +17,8 @@
  ***********************************************************************************/
 
 #include "playlistitem.h"
-
-#include <fileref.h>
-
-#include <KLocalizedString>
+#include "mediainforequest.h"
+#include "mediainfoservice.h"
 
 #include <QtCore/QTimer>
 #include <QtCore/QFileInfo>
@@ -47,6 +45,7 @@ QString PlaylistItem::mediaName() const
 {
     if (m_mediaName.isEmpty()) {
         m_updateTimer.start();
+        return QFileInfo(m_mediaUrl).fileName();
     }
     return m_mediaName;
 }
@@ -55,6 +54,7 @@ QString PlaylistItem::mediaArtist() const
 {
     if (m_mediaArtist.isEmpty()) {
         m_updateTimer.start();
+        return "--";
     }
     return m_mediaArtist;
 }
@@ -69,23 +69,25 @@ int PlaylistItem::mediaLength() const
 
 void PlaylistItem::update()
 {
-    TagLib::FileRef f(QUrl(m_mediaUrl).toLocalFile().toUtf8().constData());
+    MediaInfoRequest *request = new MediaInfoRequest(m_mediaUrl);
+    request->addRequest(MediaInfoRequest::Title)
+           ->addRequest(MediaInfoRequest::Artist)
+           ->addRequest(MediaInfoRequest::Length);
 
-    if(!f.isNull() && f.tag()) {
-        m_mediaName = f.tag()->title().toCString(true);
-        m_mediaArtist = f.tag()->artist().toCString(true);
-        if (m_mediaName.isEmpty()) {
-            m_mediaName = QFileInfo(m_mediaUrl).fileName();
-        }
-    } else {
-        m_mediaName = QFileInfo(m_mediaUrl).fileName();
-    }
+    MediaInfoService *service = MediaInfoService::instance();
+    connect(service, SIGNAL(info(quint64,MediaInfoResult)), SLOT(processMediaInfo(quint64,MediaInfoResult)));
+    m_serviceRequestNumber = service->processRequest(request);
+}
 
-    if (!f.isNull() && f.audioProperties()) {
-        m_mediaLength = f.audioProperties()->length();
-    } else {
-        m_mediaLength = 0;
-    }
+void PlaylistItem::processMediaInfo(quint64 requestNumber, MediaInfoResult info)
+{
+    disconnect(sender());
+    if (requestNumber != m_serviceRequestNumber)
+        return;
+
+    m_mediaName = info.data(MediaInfoRequest::Title).toString();
+    m_mediaArtist = info.data(MediaInfoRequest::Artist).toString();
+    m_mediaLength = info.data(MediaInfoRequest::Length).toInt();
 
     emit updated();
 }

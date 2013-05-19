@@ -1,5 +1,5 @@
 /***********************************************************************************
- *  Copyright 2012 by Sinny Kumari <ksinny@gmail.com>                              *
+ *   Copyright 2013 by Shantanu Tushar <shantanu@kde.org>                          *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,40 +16,42 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef PLAYLISTITEM_H
-#define PLAYLISTITEM_H
+#include "mediainforesult.h"
 
-#include <QtCore/QObject>
-#include <QtCore/QTimer>
+#include "mediainforequest.h"
 
-class MediaInfoResult;
-class PlaylistItem : public QObject
+#include <QtCore/QList>
+#include <QtCore/QHash>
+#include <QtCore/QVariant>
+
+class MediaInfoResult::Private
 {
-    Q_OBJECT
 public:
-    explicit PlaylistItem(const QString &url, QObject *parent);
-
-    QString mediaUrl() const;
-    QString mediaName() const;
-    QString mediaArtist() const;
-    int mediaLength() const;
-
-Q_SIGNALS:
-    void updated();
-
-private Q_SLOTS:
-    void update();
-    void processMediaInfo(quint64 requestNumber, MediaInfoResult info);
-
-private:
-    mutable QTimer m_updateTimer;
-    QString m_mediaUrl;
-    QString m_mediaName;
-    QString m_mediaArtist;
-    int m_mediaLength;
-    int m_serviceRequestNumber;
+    QHash<MediaInfoRequest::InformationField, QVariant> data;
 };
 
-#endif // PLAYLISTITEM_H
+MediaInfoResult::MediaInfoResult()
+    : d(new Private())
+{
 
-class MediaInfoResult;
+}
+
+MediaInfoResult::~MediaInfoResult()
+{
+
+}
+
+void MediaInfoResult::addData(MediaInfoRequest::InformationField field, QVariant data)
+{
+    d->data.insert(field, data);
+}
+
+QList< MediaInfoRequest::InformationField > MediaInfoResult::availableFields() const
+{
+    return d->data.keys();
+}
+
+QVariant MediaInfoResult::data(MediaInfoRequest::InformationField field) const
+{
+    return d->data.value(field);
+}
