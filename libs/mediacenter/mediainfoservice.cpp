@@ -22,6 +22,7 @@
 #include "mediainforesult.h"
 
 #include <fileref.h>
+#include <tag.h>
 
 #include <QtCore/QMutex>
 #include <QtCore/QHash>
