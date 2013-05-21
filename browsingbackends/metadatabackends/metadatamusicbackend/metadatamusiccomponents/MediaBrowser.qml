@@ -128,7 +128,7 @@ Item {
             anchors.bottom: parent.bottom
             width: parent.width;
             height: parent.height - 30
-            model: backend.artistsModel();
+            model: backend ? backend.artistsModel() : undefined
             cellWidth: cellHeight
             cellHeight: height/2.1
             flow: _pmc_is_desktop ? GridView.LeftToRight : GridView.TopToBottom
@@ -204,7 +204,7 @@ Item {
             anchors.bottom: parent.bottom
             width: parent.width;
             height: parent.height - 30
-            model: backend.albumsModel();
+            model: backend ? backend.albumsModel() : undefined
             cellWidth: cellHeight
             cellHeight: height/2.1
             flow: _pmc_is_desktop ? GridView.LeftToRight : GridView.TopToBottom
@@ -268,7 +268,7 @@ Item {
             width: parent.width
             height: 30
             PlasmaComponents.TextField {
-                visible: backend.albumFilter == "" && backend.artistFilter == ""
+                visible: backend ? backend.albumFilter == "" && backend.artistFilter == "" : false
                 width: parent.width - playAllButton.width; height: parent.height
                 clearButtonShown: true
                 placeholderText: i18n("Search Music")
@@ -341,7 +341,7 @@ Item {
             ListView {
                 id: listViewAllSongs
                 anchors.fill: parent
-                model: backend.musicModel
+                model: backend ? backend.musicModel : undefined
                 delegate: MusicDelegate {
                     width: parent ? parent.width - musicScrollBar.width : 0; height: 64
                     onPopupMenuRequested: mediaBrowser.popupMenuRequested(index,mediaUrl,mediaType, display)

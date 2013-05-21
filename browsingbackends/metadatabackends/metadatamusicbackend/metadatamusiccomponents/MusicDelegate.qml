@@ -59,7 +59,7 @@ Item {
         anchors { right: parent.right; top: parent.top }
         visible: musicDelegateRootItem.ListView.isCurrentItem
         onClicked: {
-            playlistModel.addToPlaylist (mediaUrl, display);
+            playlistModel.addToPlaylist (mediaUrl);
         }
     }
 

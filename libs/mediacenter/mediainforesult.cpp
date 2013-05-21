@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2009-2010 by Alessandro Diaferia <alediaferia@gmail.com>            *
+ *   Copyright 2013 by Shantanu Tushar <shantanu@kde.org>                          *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,38 +16,42 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef MEDIACENTER_H
-#define MEDIACENTER_H
+#include "mediainforesult.h"
 
-#include "mediacenter_export.h"
+#include "mediainforequest.h"
 
-#include <QPair>
-#include <QHash>
+#include <QtCore/QList>
+#include <QtCore/QHash>
+#include <QtCore/QVariant>
 
-namespace Phonon {
-class MediaSource;
+class MediaInfoResult::Private
+{
+public:
+    QHash<MediaInfoRequest::InformationField, QVariant> data;
+};
+
+MediaInfoResult::MediaInfoResult()
+    : d(new Private())
+{
+    qRegisterMetaType<MediaInfoResult>("MediaInfoResult");
 }
 
-namespace MediaCenter {
+MediaInfoResult::~MediaInfoResult()
+{
 
-enum AdditionalMediaRoles {
-    MediaUrlRole = 0x01200000,
-    IsExpandableRole,
-    MediaTypeRole,
-    DecorationTypeRole,
-    HideLabelRole,
-    ResourceIdRole,
-    MediaThumbnailRole,
-    AdditionalRoles     //If additional roles are needed to be defined
-};
+}
 
-enum MediaType {
-    Music,
-    Picture,
-    Video
-};
+void MediaInfoResult::addData(MediaInfoRequest::InformationField field, QVariant data)
+{
+    d->data.insert(field, data);
+}
 
-MEDIACENTER_EXPORT QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> &roles);
-} // namespace MediaCenter
+QList< MediaInfoRequest::InformationField > MediaInfoResult::availableFields() const
+{
+    return d->data.keys();
+}
 
-#endif // MEDIACENTER_H
+QVariant MediaInfoResult::data(MediaInfoRequest::InformationField field) const
+{
+    return d->data.value(field);
+}

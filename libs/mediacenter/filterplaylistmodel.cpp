@@ -34,16 +34,16 @@ QString FilterPlaylistModel::filterString() const
 
 void FilterPlaylistModel::setFilterString(const QString& customString)
 {
-    beginResetModel();
     m_searchString = customString;
-    endResetModel();
+    invalidateFilter();
     emit filterStringChanged();
 }
 
 bool FilterPlaylistModel::filterAcceptsRow(int sourceRow, const QModelIndex& sourceParent) const
 {
     QModelIndex index = sourceModel()->index(sourceRow, 0 , sourceParent);
-    return (sourceModel()->data(index).toString().contains(m_searchString, Qt::CaseInsensitive));
+    return sourceModel()->data(index).toString().contains(m_searchString, Qt::CaseInsensitive)
+        || sourceModel()->data(index, PlaylistModel::MediaArtistRole).toString().contains(m_searchString, Qt::CaseInsensitive);
 }
 
 void FilterPlaylistModel::setSourcePlaylistModel(QObject* model)

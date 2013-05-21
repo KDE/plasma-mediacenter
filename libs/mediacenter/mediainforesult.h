@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2009-2010 by Alessandro Diaferia <alediaferia@gmail.com>            *
+ *   Copyright 2013 by Shantanu Tushar <shantanu@kde.org>                          *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,38 +16,28 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef MEDIACENTER_H
-#define MEDIACENTER_H
+#ifndef MEDIAINFORESULT_H
+#define MEDIAINFORESULT_H
 
-#include "mediacenter_export.h"
+#include "mediainforequest.h"
 
-#include <QPair>
-#include <QHash>
+#include "mediainforequest.h"
 
-namespace Phonon {
-class MediaSource;
-}
+#include <QtCore/QVariant>
 
-namespace MediaCenter {
+class MediaInfoResult
+{
+public:
+    MediaInfoResult();
+    ~MediaInfoResult();
 
-enum AdditionalMediaRoles {
-    MediaUrlRole = 0x01200000,
-    IsExpandableRole,
-    MediaTypeRole,
-    DecorationTypeRole,
-    HideLabelRole,
-    ResourceIdRole,
-    MediaThumbnailRole,
-    AdditionalRoles     //If additional roles are needed to be defined
+    void addData(MediaInfoRequest::InformationField field, QVariant data);
+    QList<MediaInfoRequest::InformationField> availableFields() const;
+    QVariant data(MediaInfoRequest::InformationField field) const;
+
+private:
+    class Private;
+    Private *const d;
 };
 
-enum MediaType {
-    Music,
-    Picture,
-    Video
-};
-
-MEDIACENTER_EXPORT QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> &roles);
-} // namespace MediaCenter
-
-#endif // MEDIACENTER_H
+#endif // MEDIAINFORESULT_H

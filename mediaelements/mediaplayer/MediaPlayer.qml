@@ -25,16 +25,18 @@ FocusScope {
     id: mediaPlayerRootRect
 
     property QtObject runtimeDataObject
-    property alias url: video.source
+
     property bool playing: false
     property bool paused: false
     property bool stopped: true
+    property bool showMusicStats: true
+    property bool dimVideo: false
+
     property alias totalTime: video.duration
+    property alias url: video.source
     property alias currentTime: video.position
     property alias volume: video.volume
     property alias metaData: video.metaData
-    property bool showMusicStats: true
-    property alias dimVideo: videoDimRectangle.visible
     property alias hasVideo: video.hasVideo
 
     signal clicked
@@ -76,7 +78,7 @@ FocusScope {
             anchors.fill: parent
             color: "black"
             opacity: video.hasVideo ? 0.5 : 0
-            visible: false
+            visible: mediaPlayerRootRect.dimVideo
         }
 
         Component.onCompleted: {
@@ -117,7 +119,7 @@ FocusScope {
 
     function handleKey(key)
     {
-        if (mediaPlayerRootRect.state == "minimize")
+        if (mediaPlayerRootRect.state == "minimize" || mediaPlayerRootRect.dimVideo)
             return false;
         switch (key) {
         case Qt.Key_Space:

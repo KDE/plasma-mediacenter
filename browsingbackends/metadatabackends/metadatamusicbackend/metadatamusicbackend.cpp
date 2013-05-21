@@ -156,7 +156,7 @@ void MetadataMusicBackend::addAllSongsToPlaylist ( QObject* playlistModel )
         const QString url = m_musicModel->data(m_musicModel->index(i), MediaCenter::MediaUrlRole).toString();
         const QString name = m_musicModel->data(m_musicModel->index(i), Qt::DisplayRole).toString();
         if (!url.isEmpty() && !name.isEmpty()) {
-            m_playlistModel->addToPlaylist(url, name);
+            m_playlistModel->addToPlaylist(url);
         }
     }
 
@@ -172,7 +172,7 @@ void MetadataMusicBackend::musicModelDataChanged ( const QModelIndex &startIndex
         const QString url = m_musicModel->data(m_musicModel->index(i), MediaCenter::MediaUrlRole).toString();
         const QString name = m_musicModel->data(m_musicModel->index(i), Qt::DisplayRole).toString();
         if (!url.isEmpty() && !name.isEmpty()) {
-            m_playlistModel->addToPlaylist(url, name);
+            m_playlistModel->addToPlaylist(url);
         }
     }
 }

@@ -36,7 +36,7 @@ private slots:
 
 private:
     VideoThumbnailProvider *m_thumbProvider;
-    mutable QHash<QString, QModelIndex> m_pendingThumbs;        //aw mutable, any other way to let data() change this?
+    mutable QHash<QString, QPersistentModelIndex> m_pendingThumbs;        //aw mutable, any other way to let data() change this?
 };
 
 #endif // LOCALVIDEOSMODEL_H

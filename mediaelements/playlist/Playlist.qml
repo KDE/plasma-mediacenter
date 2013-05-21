@@ -71,7 +71,8 @@ PlasmaCore.FrameSvgItem {
                 height: parent.height
                 iconSource: "edit-clear-list"
                 onClicked: {
-                    playlistItem.backend.stopAddingSongsToPlaylist();
+                    if(playlistItem.backend.stopAddingSongsToPlaylist)
+                        playlistItem.backend.stopAddingSongsToPlaylist
                     playlistModel.clearPlaylist();
                 }
             }

@@ -19,6 +19,7 @@ Name[pt]=Navegar pela música
 Name[pt_BR]=Navegar pelas músicas
 Name[sk]=Prehľadávať hudbu
 Name[sv]=Bläddra i musik
+Name[tr]=Müziğe gözat
 Name[uk]=Навігація музикою
 Name[x-test]=xxBrowse musicxx
 
@@ -30,12 +31,14 @@ Comment[da]=Gennemse din enhed for musik
 Comment[de]=Durchsuchen Sie Ihr Gerät nach Musik
 Comment[es]=Examinar su dispositivo para buscar música
 Comment[et]=Seadme sirvimine muusika leidmiseks
+Comment[fi]=Selaa laitteellasi olevia musiikkia
 Comment[fr]=Parcourt les fichiers musicaux sur votre périphérique
 Comment[nl]=Door uw apparaat bladeren naar muziek
 Comment[pt]=Navegar pela música do seu dispositivo
 Comment[pt_BR]=Navega pelas músicas do seu dispositivo
 Comment[sk]=Prehľadať hudbu na vašom zariadení
 Comment[sv]=Bläddra på en enhet efter musik
+Comment[tr]=Cihazınızdaki müziğe göz atın
 Comment[uk]=Переглянути записи музики на вашому пристрої
 Comment[x-test]=xxBrowse your device for musicxx
 

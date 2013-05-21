@@ -55,6 +55,7 @@ int main(int argc, char *argv[])
     KCmdLineOptions options;
     options.add("fullscreen", ki18n("Starts Plasma Media Center in fullscreen mode"));
     options.add("disable-opengl", ki18n("Starts Plasma Media Center without OpenGL support"));
+    options.add("+[Url]", ki18nc("@info:shell", "Document to open"));
     KCmdLineArgs::addCmdLineOptions(options);
 
     KApplication app;

@@ -1,5 +1,5 @@
 /***********************************************************************************
- *  Copyright 2012 by Sinny Kumari <ksinny@gmail.com>                               *
+ *   Copyright 2013 by Shantanu Tushar <shantanu@kde.org>                          *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,55 +16,40 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef PLAYLISTMODEL_H
-#define PLAYLISTMODEL_H
+#ifndef MEDIAINFOSERVICE_H
+#define MEDIAINFOSERVICE_H
 
-#include <QtCore/QAbstractItemModel>
-#include <QtCore/QString>
-#include <QtCore/QList>
-#include <QtCore/QFile>
+#include <QtCore/QThread>
 
-#include "mediacenter_export.h"
-#include "mediacenter.h"
+#include "mediainforesult.h"
 
-class MEDIACENTER_EXPORT PlaylistModel : public QAbstractListModel
+class MediaInfoRequest;
+
+class MediaInfoService : public QThread
 {
     Q_OBJECT
-    Q_PROPERTY(int currentIndex READ currentIndex WRITE setCurrentIndex NOTIFY currentIndexChanged)
-    Q_PROPERTY(bool random READ random WRITE setRandom NOTIFY randomChanged)
-
 public:
-    enum Roles {
-        MediaArtistRole = MediaCenter::AdditionalRoles + 1,
-        MediaLengthRole
-    };
+    explicit MediaInfoService(QObject* parent = 0);
+    ~MediaInfoService();
 
-    explicit PlaylistModel(QObject* parent = 0);
-    ~PlaylistModel();
+    quint64 processRequest(MediaInfoRequest* request);
 
-    virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-    virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
-    Q_INVOKABLE  void addToPlaylist(const QString &url);
-    Q_INVOKABLE QString getNextUrl();
-    Q_INVOKABLE QString getPreviousUrl();
-    Q_INVOKABLE void clearPlaylist();
-    Q_INVOKABLE void removeFromPlaylist(const int &index);
-    Q_INVOKABLE QString getUrlofFirstIndex();
-    int currentIndex() const;
-    void setCurrentIndex(int index);
-    bool random() const;
-    void setRandom(bool random);
+signals:
+    void info(quint64 requestNumber, MediaInfoResult result);
 
-Q_SIGNALS:
-    void currentIndexChanged();
-    void randomChanged();
+protected:
+    virtual void run();
 
-private Q_SLOTS:
-    void playlistItemUpdated();
+private slots:
+    void processPendingRequests();
 
 private:
+    bool areThereResultsToProcess() const;
+    void fetchDataForRequest(quint64 requestNumber);
+    quint64 nextRequestToProcess() const;
+
     class Private;
     Private * const d;
 };
 
-#endif // PLAYLISTMODEL_H
+#endif // MEDIAINFOSERVICE_H

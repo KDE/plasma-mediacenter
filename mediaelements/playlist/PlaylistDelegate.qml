@@ -32,13 +32,47 @@ Item{
             opacity: 0.8;
             Text {
                 anchors {
-                    fill: parent; verticalCenter: parent.verticalCenter;
-                    margins: 5
+                    left: parent.left; verticalCenter: parent.verticalCenter
+                    right: artistText.left; margins: 5
                 }
                 text: display
                 color: (index == playlistModel.currentIndex) ? "red" : theme.textColor
                 elide: Text.ElideRight
                 font.pixelSize: 18
+                style: Text.Sunken
+            }
+
+            Text {
+                id: artistText
+                anchors {
+                    right: lengthText.left; verticalCenter: parent.verticalCenter
+                }
+                width: parent.width*0.4
+                text: mediaArtist
+                color: (index == playlistModel.currentIndex) ? "red" : theme.textColor
+                elide: Text.ElideRight
+                font.pixelSize: 18
+                style: Text.Sunken
+            }
+
+            Text {
+                id: lengthText
+                anchors {
+                    right: parent.right; verticalCenter: parent.verticalCenter
+                    margins: 5
+                }
+                text: mediaLength ? Math.floor(mediaLength/60) + ":" + fixMediaLength(mediaLength) : ""
+                color: (index == playlistModel.currentIndex) ? "red" : theme.textColor
+                font.pixelSize: 18
+                style: Text.Sunken
+                function fixMediaLength(mediaLength) {
+                    digitCount = (mediaLength % 60)
+                    convertToString = digitCount + ""
+                    if (convertToString.length < 2) {
+                        return "0" + digitCount
+                    }
+                    return digitCount
+                }
             }
 
             MouseArea {
@@ -55,7 +89,6 @@ Item{
             id: removeFromPlaylistButton
             width: height
             height: parent.height
-            visible: listViewItem.ListView.isCurrentItem
             iconSource: "list-remove"
             onClicked: {
                 playlistModel.removeFromPlaylist (index);

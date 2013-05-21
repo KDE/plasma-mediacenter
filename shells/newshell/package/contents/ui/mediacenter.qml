@@ -28,6 +28,10 @@ Image {
     source: _pmc_background_image_path
     fillMode: Image.Tile
 
+    function play() {
+        playlist.playRequested(playlistModel.getNextUrl());
+    }
+
     Image {
         anchors.fill: parent
         source: _pmc_gradient_image_path
@@ -60,7 +64,7 @@ Image {
             runtimeDataObject: runtimeData
             anchors { left: parent.left; right: parent.right; top: parent.top; bottom: parent.bottom }
             focus: !mediaBrowser.activeFocus && !mediaWelcome.activeFocus
-            state: mediaBrowser.visible ? "minimize" : ""
+            state: mediaBrowser.visible || playlist.state == "playlistShow" ? "minimize" : ""
             z: mediaBrowser.visible ? 2 : 0
 
             playing: runtimeData.playing
@@ -119,7 +123,8 @@ Image {
             {
                 if (mediaPlayer.state == "minimize")
                     mediaImageViewer.visible = false
-                mediaController.state = mediaController.state ? "" : "hidden"
+                else
+                    mediaController.state = mediaController.state ? "" : "hidden"
                 mediaImageViewer.stripState = mediaImageViewer.stripState ? "" : "hidden"
                 mediaBrowser.visible = false
                 playlist.state = ""
@@ -212,7 +217,8 @@ Image {
                     mediaController.playlistButtonChecked = false
                     mediaController.playlistButtonClicked()
                 }
-            }}
+            }
+        }
 
         MediaCenterComponents.MediaBrowser {
             id: mediaBrowser
@@ -265,10 +271,9 @@ Image {
             anchors {
                 top: mediaController.bottom; bottom: parent.bottom
                 left: parent.right; right: undefined
-                leftMargin: 20;
                 topMargin: margins.left; bottomMargin: margins.top;
             }
-            width: parent.width/4
+            width: parent.width*0.9
             z: anchors.right ? 1 : 0
             backend: runtimeData.currentBrowsingBackend
 

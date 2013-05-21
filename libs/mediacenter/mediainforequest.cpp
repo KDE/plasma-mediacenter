@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2009-2010 by Alessandro Diaferia <alediaferia@gmail.com>            *
+ *   Copyright 2013 by Shantanu Tushar <shantanu@kde.org>                          *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,38 +16,41 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef MEDIACENTER_H
-#define MEDIACENTER_H
 
-#include "mediacenter_export.h"
+#include "mediainforequest.h"
 
-#include <QPair>
-#include <QHash>
+#include <QtCore/QList>
 
-namespace Phonon {
-class MediaSource;
+class MediaInfoRequest::Private
+{
+public:
+    QList<InformationField> requestedFields;
+    QString mediaPath;
+};
+
+MediaInfoRequest::MediaInfoRequest(const QString& mediaPath)
+    : d(new Private())
+{
+    d->mediaPath = mediaPath;
 }
 
-namespace MediaCenter {
+MediaInfoRequest* MediaInfoRequest::addRequest(MediaInfoRequest::InformationField field)
+{
+    d->requestedFields.append(field);
+    return this;
+}
 
-enum AdditionalMediaRoles {
-    MediaUrlRole = 0x01200000,
-    IsExpandableRole,
-    MediaTypeRole,
-    DecorationTypeRole,
-    HideLabelRole,
-    ResourceIdRole,
-    MediaThumbnailRole,
-    AdditionalRoles     //If additional roles are needed to be defined
-};
+bool MediaInfoRequest::hasFields() const
+{
+    return !d->requestedFields.isEmpty();
+}
 
-enum MediaType {
-    Music,
-    Picture,
-    Video
-};
+MediaInfoRequest::InformationField MediaInfoRequest::takeField()
+{
+    return d->requestedFields.takeFirst();
+}
 
-MEDIACENTER_EXPORT QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> &roles);
-} // namespace MediaCenter
-
-#endif // MEDIACENTER_H
+QString MediaInfoRequest::mediaPath() const
+{
+    return d->mediaPath;
+}
