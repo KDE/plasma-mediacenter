@@ -47,7 +47,7 @@ Item {
         text: display ? display : ""
         visible: !hideLabel
         font.pointSize: theme.desktopFont.pointSize
-        color: mediaItemDelegateItem.ListView.isCurrentItem ? theme.viewHoverColor : theme.textColor
+        color: hasFetchError ? 'red' : mediaItemDelegateItem.ListView.isCurrentItem ? theme.viewHoverColor : theme.textColor
         elide: mediaItemDelegateItem.ListView.isCurrentItem ? Text.ElideNone : Text.ElideMiddle
         wrapMode: mediaItemDelegateItem.ListView.isCurrentItem ? Text.Wrap : Text.NoWrap
 

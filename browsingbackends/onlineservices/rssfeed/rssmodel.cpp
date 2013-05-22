@@ -30,7 +30,10 @@
 RssModel::RssModel ( Akonadi::ChangeRecorder* monitor, QObject* parent )
 	: KRss::FeedItemModel( monitor, parent )
 {
-	setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
+    QHash<int, QByteArray> roles(MediaCenter::appendAdditionalMediaRoles(roleNames()));
+    roles[KRss::FeedItemModel::HasFetchErrorRole] = "hasFetchError";
+    roles[KRss::FeedItemModel::FetchErrorStringRole] = "fetchErrorString";
+	setRoleNames(roles);
 // 	setItemPopulationStrategy(Akonadi::EntityTreeModel::ImmediatePopulation);
 }
 
@@ -74,7 +77,9 @@ QVariant RssModel::data ( const QModelIndex& index, int role ) const
 			return index.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>().isValid();
 		}
 		default:
+        {
 			return KRss::FeedItemModel::data( index, role );
+        }
 	}
 }
 

@@ -69,7 +69,7 @@ void RssManager::addFeed ( const QString& feedurl )
         Akonadi::CollectionCreateJob* job = new Akonadi::CollectionCreateJob(
             m_feedcontroller->newFeed(feedurl, m_feeditemmodel->parent()) );
 
-        connect( job, SIGNAL(finished(KJob*)), SLOT(createCollectionResult(KJob*)) );
+        connect( job, SIGNAL(result(KJob*)), SLOT(createCollectionResult(KJob*)) );
         job->start();
 	}
 }
