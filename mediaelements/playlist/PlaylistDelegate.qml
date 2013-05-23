@@ -77,13 +77,43 @@ Item{
 
             MouseArea {
                 hoverEnabled: true
+                id: dragItemArea
                 anchors.fill: parent
+                property int pos_startx: 0
+                property int pos_endx: 0
+                property int movedx: Math.floor(pos_endx - pos_startx)
+
+                drag.axis: Drag.XAxis
+                onPressAndHold: {
+                    pos_startx = listViewItem.x
+                    dragItemArea.drag.target = listViewItem
+                    listViewItem.opacity = 0.5
+                    listViewItem.ListView.interactive = true
+                    drag.maximumX = parent.width
+                    drag.minimumX = 0
+                }
+
+                onPositionChanged: {
+                    pos_endx = listViewItem.x
+                }
+
+                onReleased: {
+                    listViewItem.opacity =1
+                    dragItemArea.drag.target = null
+                    if(Math.abs(movedx) >= parent.width/3)
+                        playlistModel.removeFromPlaylist(index)
+                    else
+                        listViewItem.x = pos_startx
+                }
+
                 onClicked: {
                     listViewItem.ListView.view.model.currentIndex = index
                     playlistItem.playRequested(mediaUrl)
                 }
+
             }
-        }
+
+         }
 
         PlasmaComponents.ToolButton {
             id: removeFromPlaylistButton
@@ -96,3 +126,5 @@ Item{
         }
     }
 }
+
+

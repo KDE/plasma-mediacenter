@@ -54,7 +54,7 @@ public:
     void setCurrentIndex(int index);
     bool random() const;
     void setRandom(bool random);
-
+  
 Q_SIGNALS:
     void currentIndexChanged();
     void randomChanged();
