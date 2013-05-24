@@ -137,6 +137,9 @@ Image {
             visible: false
             stripVisible: visible && !mediaBrowser.visible && !mediaWelcome.visible
             onSlideshowStarted: mediaPlayer.hideToolbars()
+            Keys.onEscapePressed: {
+                mediaBrowser.visible=true
+             }
         }
 
         MediaCenterComponents.MediaController {
