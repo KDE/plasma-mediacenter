@@ -129,6 +129,12 @@ void PlaylistModel::removeFromPlaylist(const int& index)
     endResetModel();
 }
 
+void PlaylistModel::moveItem(int firstIndex, int secondIndex)
+{
+    d->musicList.move(firstIndex,secondIndex);
+    emit dataChanged(createIndex(firstIndex, 0), createIndex(secondIndex, 0));
+}
+
 QString PlaylistModel::getNextUrl()
 {
     if (random()) {
@@ -201,3 +207,4 @@ void PlaylistModel::playlistItemUpdated()
     int i = d->musicList.indexOf(item);
     emit dataChanged(createIndex(i, 0), createIndex(i, 0)); 
 }
+
