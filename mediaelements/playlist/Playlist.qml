@@ -43,7 +43,7 @@ PlasmaCore.FrameSvgItem {
                 Text {
                     id: mediaCount
                     anchors.centerIn: parent
-                    text: i18nc("%1 item", "%1 items", playlistList.count)
+                    text: i18np("%1 item", "%1 items", playlistList.count)
                     font.pixelSize: 18
                     color: theme.textColor
                 }

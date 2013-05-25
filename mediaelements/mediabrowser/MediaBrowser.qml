@@ -174,7 +174,7 @@ FocusScope {
 
         PlasmaComponents.Label {
             id: mediaCountLabel
-            text: mediaBrowserViewItem.mediaBrowserGridView ? i18nc("%1 item", "%1 items", mediaBrowserViewItem.mediaBrowserGridView.count) : ""
+            text: mediaBrowserViewItem.mediaBrowserGridView ? i18np("%1 item", "%1 items", mediaBrowserViewItem.mediaBrowserGridView.count) : ""
             visible: mediaBrowserViewItem.mediaBrowserGridView ? (mediaBrowserViewItem.mediaBrowserGridView.count != undefined) : false
 
             anchors {
