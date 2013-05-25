@@ -24,21 +24,26 @@
 #include <fileref.h>
 #include <tag.h>
 
+#include <klocalizedstring.h>
+
 #include <QtCore/QMutex>
 #include <QtCore/QHash>
 #include <QtCore/QTimer>
 #include <QtCore/QUrl>
+#include <QtCore/QFileInfo>
 
 #include <QDebug>
-#include <QFileInfo>
-#include <klocalizedstring.h>
+
+static const int s_updateInterval = 500;
 
 class MediaInfoService::Private
 {
 public:
+    Private() : requestCounter(0) { }
     quint64 requestCounter; QMutex requestCounterMutex;
     QList<quint64> requestQueue; QMutex requestQueueMutex;
     QHash<quint64, MediaInfoRequest*> requestHash; QMutex requestHashMutex;
+    QTimer updateTimer;
 };
 
 MediaInfoService::MediaInfoService(QObject* parent)
@@ -46,6 +51,7 @@ MediaInfoService::MediaInfoService(QObject* parent)
     , d(new Private)
 {
     moveToThread(this);
+    connect(&d->updateTimer, SIGNAL(timeout()), SLOT(processPendingRequests()));
 }
 
 MediaInfoService::~MediaInfoService()
@@ -71,25 +77,30 @@ quint64 MediaInfoService::processRequest(MediaInfoRequest* request)
 
 void MediaInfoService::run()
 {
-    QTimer::singleShot(0, this, SLOT(processPendingRequests()));
+    d->updateTimer.start(s_updateInterval);
     exec();
 }
 
 void MediaInfoService::processPendingRequests()
 {
     Q_ASSERT(thread() == this);
+
     if (areThereResultsToProcess()) {
         fetchDataForRequest(nextRequestToProcess());
-        QTimer::singleShot(0, this, SLOT(processPendingRequests()));
-    } else {
         QTimer::singleShot(0, this, SLOT(processPendingRequests()));
     }
 }
 
 bool MediaInfoService::areThereResultsToProcess() const
 {
-    QMutexLocker locker(&d->requestQueueMutex);
-    return !d->requestQueue.isEmpty();
+    bool returnValue = false;
+
+    if (d->requestQueueMutex.tryLock(10)) {
+        returnValue = !d->requestQueue.isEmpty();
+        d->requestQueueMutex.unlock();
+    }
+
+    return returnValue;
 }
 
 void MediaInfoService::fetchDataForRequest(quint64 requestNumber)
