@@ -3,11 +3,18 @@ project(MediaCenterComponents)
 find_package(KDE4 REQUIRED)
 include(KDE4Defaults)
 
+find_package(KDE4Workspace REQUIRED)
+find_package(NepomukCore REQUIRED)
+find_package(Soprano)
+
 add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_BINARY_DIR}
     ${KDE4_INCLUDES}
+    ${KDE4WORKSPACE_INCLUDE_DIR}
+    ${NEPOMUK_CORE_INCLUDE_DIR}
+    ${SOPRANO_INCLUDE_DIR}
     libs/
 )
 

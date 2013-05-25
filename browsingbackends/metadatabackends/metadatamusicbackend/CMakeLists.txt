@@ -1,5 +1,3 @@
-find_package(NepomukCore REQUIRED)
-
 set(metadatamusicbackend_SRCS
     categoriesmodel.cpp
     ../abstractmetadatabackend.cpp

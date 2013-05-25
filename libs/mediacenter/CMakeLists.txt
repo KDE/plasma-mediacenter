@@ -1,6 +1,8 @@
-find_package(NepomukCore REQUIRED)
 find_package(Taglib REQUIRED)
-include_directories (${TAGLIB_INCLUDES})
+
+include_directories(
+    ${TAGLIB_INCLUDES}
+)
 
 set (plasmamediacenter_SRCS
     mediainfoserviceproxy.cpp
