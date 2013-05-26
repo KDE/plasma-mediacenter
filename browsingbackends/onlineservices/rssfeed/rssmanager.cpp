@@ -42,7 +42,7 @@
 #include "feedcontroller.h"
 #include "agentmanager.h"
 #include "gpodder/gpodderclient.h"
-#include "createfolderjob.h"
+
 
 RssManager::RssManager ( QObject* parent, QString name ) :
 	QObject ( parent ),

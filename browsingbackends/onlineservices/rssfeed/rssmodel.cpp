@@ -34,7 +34,7 @@ RssModel::RssModel ( Akonadi::ChangeRecorder* monitor, QObject* parent )
     roles[KRss::FeedItemModel::HasFetchErrorRole] = "hasFetchError";
     roles[KRss::FeedItemModel::FetchErrorStringRole] = "fetchErrorString";
 	setRoleNames(roles);
-// 	setItemPopulationStrategy(Akonadi::EntityTreeModel::ImmediatePopulation);
+	setItemPopulationStrategy(Akonadi::EntityTreeModel::ImmediatePopulation);
 }
 
 RssModel::~RssModel()

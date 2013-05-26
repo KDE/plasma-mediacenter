@@ -1,4 +1,4 @@
-set(rssbackend_SRCS createfolderjob.cpp
+set(rssbackend_SRCS
 feedcontroller.cpp
 agentmanager.cpp
 rssmanager.cpp
