@@ -52,7 +52,7 @@ MainWindow::MainWindow(QWidget *parent)
     , m_mousePointerAutoHide(false)
 {
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-    
+
     const int argsCount = args->count();
 
     QList<KUrl> urls;

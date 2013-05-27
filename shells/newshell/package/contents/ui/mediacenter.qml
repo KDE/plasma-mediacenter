@@ -174,9 +174,9 @@ Image {
             }
 
             onBackButtonClicked: {
-                if(!mediaBrowser.currentBrowsingBackend.goOneLevelUp()) {
+                backStopped = true
+                if(!mediaBrowser.currentBrowsingBackend.goOneLevelUp() && !mediaBrowser.currentBrowsingBackend) {
                     mediaBrowser.destroyGridView()
-                    backStopped = true
                 }
             }
 
@@ -286,6 +286,8 @@ Image {
                 mediaPlayer.url = url
                 mediaPlayer.play()
                 mediaPlayer.focus = true
+                mediaPlayer.visible = true
+                mediaWelcome.visible = false
             }
 
             states: [
