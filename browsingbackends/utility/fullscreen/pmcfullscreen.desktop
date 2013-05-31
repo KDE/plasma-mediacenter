@@ -11,6 +11,7 @@ Name[pt_BR]=Tela inteira
 Name[sk]=Celá obrazovka
 Name[sv]=Fullskärmsläge
 Name[uk]=На весь екран
+Name[x-test]=xxFullscreenxx
 Comment=Toggle fullscreen mode
 Comment[cs]=Přepnout do celoobrazovkového režimu
 Comment[da]=Slå fuldskærmstilstand til/fra
@@ -21,6 +22,7 @@ Comment[pt_BR]=Alterna para o modo de tela cheia
 Comment[sk]=Prepnúť režim na celú obrazovku
 Comment[sv]=Växla fullskärmsläge
 Comment[uk]=Увімкнути або вимкнути повноекранний режим
+Comment[x-test]=xxToggle fullscreen modexx
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 

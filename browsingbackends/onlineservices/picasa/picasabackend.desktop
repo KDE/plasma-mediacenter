@@ -11,6 +11,7 @@ Name[pt_BR]=Picasa
 Name[sk]=Picasa
 Name[sv]=Picasa
 Name[uk]=Picasa
+Name[x-test]=xxPicasaxx
 Comment=See pictures from your Picasa account
 Comment[cs]=rohlížejte si obrázky z vašeho účtu Picasa
 Comment[da]=Se billeder fra din Picasa-konto
@@ -21,6 +22,7 @@ Comment[pt_BR]=Veja as imagens da sua conta do Picasa
 Comment[sk]=Prezerať obrázky v vášho účtu Picasa
 Comment[sv]=Titta på bilder från ditt Picasa-konto
 Comment[uk]=Переглянути зображення з вашого облікового запису Picasa
+Comment[x-test]=xxSee pictures from your Picasa accountxx
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 X-KDE-PluginInfo-Author=Sinny Kumari

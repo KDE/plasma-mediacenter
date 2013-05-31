@@ -11,6 +11,7 @@ Name[pt_BR]=Todos os vídeos
 Name[sk]=Všetky videá
 Name[sv]=Alla videor
 Name[uk]=Всі відео
+Name[x-test]=xxAll videosxx
 Comment=Watch the videos on your device
 Comment[cs]=Dívejte se na videa na vašem zařízení
 Comment[da]=Se videoerne på din enhed
@@ -21,6 +22,7 @@ Comment[pt_BR]=Assista aos vídeos no seu dispositivo
 Comment[sk]=Pozerať videá vo vašom zariadení
 Comment[sv]=Titta på videorna på en enhet
 Comment[uk]=Переглянути відено з вашого пристрою
+Comment[x-test]=xxWatch the videos on your devicexx
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 

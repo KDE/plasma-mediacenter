@@ -11,6 +11,7 @@ Name[pt_BR]=Todas as músicas
 Name[sk]=Všetka hudba
 Name[sv]=All musik
 Name[uk]=Вся музика
+Name[x-test]=xxAll Musicxx
 Comment=Listen to the music on your device
 Comment[cs]=Poslouchejte hudbu z vašeho zařízení
 Comment[da]=Lyt til musikken på din enhed
@@ -21,6 +22,7 @@ Comment[pt_BR]=Ouça as músicas no seu dispositivo
 Comment[sk]=Počúvať hudbu vo vašom zariadení
 Comment[sv]=Lyssna på musiken på en enhet
 Comment[uk]=Відтворити музичні твори з вашого пристрою
+Comment[x-test]=xxListen to the music on your devicexx
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 

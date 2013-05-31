@@ -11,6 +11,7 @@ Name[pt_BR]=Todas as imagens
 Name[sk]=Všetky obrázky
 Name[sv]=Alla bilder
 Name[uk]=Всі зображення
+Name[x-test]=xxAll picturesxx
 Comment=See the pictures on your device
 Comment[cs]=Prohlížejte si obrázky na vašem zařízení
 Comment[da]=Se billederne på din enhed
@@ -21,6 +22,7 @@ Comment[pt_BR]=Veja as imagens no seu dispositivo
 Comment[sk]=Prezerať obrázky vo vašom zariadení
 Comment[sv]=Titta på bilderna på en enhet
 Comment[uk]=Переглянути зображення на вашому пристрої
+Comment[x-test]=xxSee the pictures on your devicexx
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 

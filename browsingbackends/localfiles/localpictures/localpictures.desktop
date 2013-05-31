@@ -11,6 +11,7 @@ Name[pt_BR]=Navegar pelas imagens
 Name[sk]=Prehľadávať obrázky
 Name[sv]=Bläddra i bilder
 Name[uk]=Навігація зображеннями
+Name[x-test]=xxBrowse Picturesxx
 
 Comment=Browse your device for pictures
 Comment[cs]=Vyhledat obrázky na zařízení
@@ -22,6 +23,7 @@ Comment[pt_BR]=Navega pelas imagens do seu dispositivo
 Comment[sk]=Prehľadávať obrázky vo vašom zariadení
 Comment[sv]=Bläddra på en enhet efter bilder
 Comment[uk]=Переглянути записи зображень на вашому пристрої
+Comment[x-test]=xxBrowse your device for picturesxx
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 

@@ -11,6 +11,7 @@ Name[pt_BR]=Navegar pelos vídeos
 Name[sk]=Prehľadávať videá
 Name[sv]=Bläddra i videor
 Name[uk]=Навігація відео
+Name[x-test]=xxBrowse videosxx
 
 Comment=Browse your device for videos
 Comment[cs]=Vyhledat videa na zařízení
@@ -22,6 +23,7 @@ Comment[pt_BR]=Navega pelos vídeos do seu dispositivo
 Comment[sk]=Prehľadávať videá vo vašom zariadení
 Comment[sv]=Bläddra på en enhet efter videor
 Comment[uk]=Переглянути записи відео на вашому пристрої
+Comment[x-test]=xxBrowse your device for videosxx
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 

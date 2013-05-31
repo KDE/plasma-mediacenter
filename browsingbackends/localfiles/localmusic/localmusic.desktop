@@ -11,6 +11,7 @@ Name[pt_BR]=Navegar pelas músicas
 Name[sk]=Prehľadávať hudbu
 Name[sv]=Bläddra i musik
 Name[uk]=Навігація музикою
+Name[x-test]=xxBrowse musicxx
 
 Comment=Browse your device for music
 Comment[cs]=Vyhledat hudbu na zařízení
@@ -22,6 +23,7 @@ Comment[pt_BR]=Navega pelas músicas do seu dispositivo
 Comment[sk]=Prehľadávať hudbu vo vašom zariadení
 Comment[sv]=Bläddra på en enhet efter musik
 Comment[uk]=Переглянути записи музики на вашому пристрої
+Comment[x-test]=xxBrowse your device for musicxx
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 
