@@ -57,11 +57,12 @@ Item{
 
             Text {
                 id: lengthText
+                property int seconds: mediaLength%60
                 anchors {
                     right: parent.right; verticalCenter: parent.verticalCenter
                     margins: 5
                 }
-                text: mediaLength ? Math.floor(mediaLength/60) + ":" + (mediaLength.toString().length < 2 ? "0" + mediaLength : mediaLength) : ""
+                text: mediaLength ? Math.floor(mediaLength/60) + ":" + (seconds.toString().length < 2 ? "0" + seconds : seconds) : ""
                 color: index == playlistModel.currentIndex ? "red" : theme.textColor
                 font.pixelSize: 18
                 style: Text.Sunken
