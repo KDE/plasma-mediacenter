@@ -62,14 +62,14 @@ Item{
                     margins: 5
                 }
                 text: mediaLength ? Math.floor(mediaLength/60) + ":" + (mediaLength.toString().length < 2 ? "0" + mediaLength : mediaLength) : ""
-                color: (index == playlistModel.currentIndex) ? "red" : theme.textColor
+                color: index == playlistModel.currentIndex ? "red" : theme.textColor
                 font.pixelSize: 18
                 style: Text.Sunken
             }
 
             MouseArea {
-                hoverEnabled: true
                 id: dragItemArea
+                hoverEnabled: true
                 anchors.fill: parent
                 property int posStartX: 0
                 property int posStartY: 0
@@ -81,7 +81,7 @@ Item{
                 property int newPositionY: index + movedY
                 drag.axis: Drag.XandYAxis
                 onPressAndHold: {
-                    listViewItem.z = 2
+                    listViewItem.z = 1
                     posStartX = listViewItem.x
                     posStartY = listViewItem.y
                     delegateHeld = true
@@ -111,7 +111,7 @@ Item{
                     }
                     else
                     {
-                        listViewItem.z = 1
+                        listViewItem.z = 0
                         listViewItem.opacity = 1
                         if(newPositionY < 1)
                             newPositionY = 0
