@@ -30,7 +30,6 @@ Item{
         Rectangle {
             width: parent.width - removeFromPlaylistButton.width; height: parent.height
             color: listViewItem.ListView.isCurrentItem ? "#002378" : theme.backgroundColor
-            opacity: 0.8;
             Text {
                 anchors {
                     left: parent.left; verticalCenter: parent.verticalCenter
@@ -62,18 +61,10 @@ Item{
                     right: parent.right; verticalCenter: parent.verticalCenter
                     margins: 5
                 }
-                text: mediaLength ? Math.floor(mediaLength/60) + ":" + fixMediaLength(mediaLength) : ""
+                text: mediaLength ? Math.floor(mediaLength/60) + ":" + (mediaLength.toString().length < 2 ? "0" + mediaLength : mediaLength) : ""
                 color: (index == playlistModel.currentIndex) ? "red" : theme.textColor
                 font.pixelSize: 18
                 style: Text.Sunken
-                function fixMediaLength(mediaLength) {
-                    digitCount = (mediaLength % 60)
-                    convertToString = digitCount + ""
-                    if (convertToString.length < 2) {
-                        return "0" + digitCount
-                    }
-                    return digitCount
-                }
             }
 
             MouseArea {
