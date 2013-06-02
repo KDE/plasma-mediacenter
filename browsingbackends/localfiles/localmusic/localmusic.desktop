@@ -2,28 +2,47 @@
 Type=Service
 Icon=folder-sound
 Name=Browse music
+Name[ca]=Explora la música
+Name[ca@valencia]=Explora la música
 Name[cs]=Procházet hudbu
 Name[da]=Gennemse musik
+Name[de]=Musik durchsuchen
 Name[es]=Examinar música
+Name[et]=Muusika sirvimine
+Name[fi]=Selaa musiikkia
+Name[fr]=Parcourir la musique
+Name[hu]=Zene tallózása
+Name[km]=រក​មើល​តន្ត្រី
 Name[nl]=Door muziek bladeren
+Name[pl]=Przeglądaj muzykę
 Name[pt]=Navegar pela música
 Name[pt_BR]=Navegar pelas músicas
 Name[sk]=Prehľadávať hudbu
 Name[sv]=Bläddra i musik
+Name[tr]=Müziğe gözat
 Name[uk]=Навігація музикою
 Name[x-test]=xxBrowse musicxx
+Name[zh_TW]=瀏覽音樂
 
 Comment=Browse your device for music
+Comment[ca]=Cerca al dispositiu per a la música
+Comment[ca@valencia]=Cerca al dispositiu per a la música
 Comment[cs]=Vyhledat hudbu na zařízení
 Comment[da]=Gennemse din enhed for musik
+Comment[de]=Durchsuchen Sie Ihr Gerät nach Musik
 Comment[es]=Examinar su dispositivo por música
+Comment[et]=Seadme sirvimine muusika leidmiseks
+Comment[fi]=Selaa laitteellasi olevia musiikkia
+Comment[fr]=Parcourt les fichiers musicaux sur votre périphérique
 Comment[nl]=Door uw apparaat bladeren naar muziek
 Comment[pt]=Navegar pela música do seu dispositivo
 Comment[pt_BR]=Navega pelas músicas do seu dispositivo
 Comment[sk]=Prehľadávať hudbu vo vašom zariadení
 Comment[sv]=Bläddra på en enhet efter musik
+Comment[tr]=Cihazınızdaki müziğe göz atın
 Comment[uk]=Переглянути записи музики на вашому пристрої
 Comment[x-test]=xxBrowse your device for musicxx
+Comment[zh_TW]=瀏覽您的裝置的音樂
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 

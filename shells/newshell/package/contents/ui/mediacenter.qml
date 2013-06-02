@@ -175,10 +175,11 @@ Image {
             }
 
             onBackButtonClicked: {
-                backStopped = true
-                if(!mediaBrowser.currentBrowsingBackend.goOneLevelUp() && !mediaBrowser.currentBrowsingBackend) {
-                    mediaBrowser.destroyGridView()
+                if (mediaBrowser.currentBrowsingBackend && mediaBrowser.currentBrowsingBackend.goOneLevelUp()) {
+                    return;
                 }
+                mediaBrowser.destroyGridView();
+                backStopped = true;
             }
 
             onBackStoppedChanged: {

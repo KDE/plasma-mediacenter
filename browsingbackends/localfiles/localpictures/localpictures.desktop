@@ -2,28 +2,47 @@
 Type=Service
 Icon=folder-image
 Name=Browse Pictures
+Name[ca]=Explora les imatges
+Name[ca@valencia]=Explora les imatges
 Name[cs]=Procházet obrázky
 Name[da]=Gennemse billeder
+Name[de]=Bilder durchsuchen
 Name[es]=Examinar imágenes
+Name[et]=Piltide sirvimine
+Name[fi]=Selaa kuvia
+Name[fr]=Parcourir les images
+Name[hu]=Képek tallózása
+Name[km]=រកមើល​រូបភាព
 Name[nl]=Door afbeeldingen bladeren
+Name[pl]=Przeglądaj zdjęcia
 Name[pt]=Navegar pelas Imagens
 Name[pt_BR]=Navegar pelas imagens
 Name[sk]=Prehľadávať obrázky
 Name[sv]=Bläddra i bilder
+Name[tr]=Resimlere Gözat
 Name[uk]=Навігація зображеннями
 Name[x-test]=xxBrowse Picturesxx
+Name[zh_TW]=瀏覽圖片
 
 Comment=Browse your device for pictures
+Comment[ca]=Cerca al dispositiu per a les imatges
+Comment[ca@valencia]=Cerca al dispositiu per a les imatges
 Comment[cs]=Vyhledat obrázky na zařízení
 Comment[da]=Gennemse din enhed for billeder
+Comment[de]=Durchsuchen Sie Ihr Gerät nach Bildern
 Comment[es]=Examinar su dispositivo por imágenes
+Comment[et]=Seadme sirvimine piltide leidmiseks
+Comment[fi]=Selaa laitteellasi olevia kuvia
+Comment[fr]=Parcourt les images sur votre périphérique
 Comment[nl]=Door uw apparaat bladeren naar afbeeldingen
 Comment[pt]=Navegar pelas imagens do seu dispositivo
 Comment[pt_BR]=Navega pelas imagens do seu dispositivo
 Comment[sk]=Prehľadávať obrázky vo vašom zariadení
 Comment[sv]=Bläddra på en enhet efter bilder
+Comment[tr]=Cihazınızdaki resimlere göz atın
 Comment[uk]=Переглянути записи зображень на вашому пристрої
 Comment[x-test]=xxBrowse your device for picturesxx
+Comment[zh_TW]=瀏覽您的裝置的圖片
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 
