@@ -25,6 +25,7 @@ import org.kde.plasma.mediacentercomponents 0.1 as MediaCenterComponents
 FocusScope {
     id: mediaBrowser
     property QtObject currentBrowsingBackend
+    property QtObject previousBrowsingBackend
 
     signal playRequested(int index, string url, string currentMediaType)
     signal popupMenuRequested(int index, string mediaUrl, string mediaType, string display)

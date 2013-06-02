@@ -28,7 +28,12 @@ Item {
     property QtObject metaData
 
     signal backendSelected
+    signal emptyAreaClicked
 
+    MouseArea {
+        anchors.fill: parent
+        onClicked: emptyAreaClicked()
+    }
     Column {
         anchors {
             fill: parent

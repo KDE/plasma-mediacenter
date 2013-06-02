@@ -139,6 +139,7 @@ Image {
             onSlideshowStarted: mediaPlayer.hideToolbars()
             Keys.onEscapePressed: {
                 mediaBrowser.visible=true
+                runtimeData.currentBrowsingBackend=mediaBrowser.previousBrowsingBackend
              }
         }
 
@@ -221,6 +222,14 @@ Image {
                     mediaController.playlistButtonClicked()
                 }
             }
+
+            onEmptyAreaClicked: {
+                if((mediaImageViewer.source != "") || (mediaPlayer.url != "")) {
+                    mediaImageViewer.focus=true
+                    mediaWelcome.visible=!mediaWelcome.visible
+                    mediaPlayer.hideToolbars()
+                }
+            }
         }
 
         MediaCenterComponents.MediaBrowser {
@@ -235,15 +244,16 @@ Image {
             z: 1
 
             currentBrowsingBackend: runtimeData.currentBrowsingBackend
+            previousBrowsingBackend: currentBrowsingBackend ? currentBrowsingBackend : previousBrowsingBackend
             onCurrentBrowsingBackendChanged: visible = true
             onVisibleChanged: {
                 if (visible) { loadModel(); focus = true }
             }
 
             Keys.onEscapePressed: {
+                mediaController.backStopped = true
                 if(!currentBrowsingBackend.goOneLevelUp()) {
                     destroyGridView();
-                    mediaController.backStopped = true
                 }
             }
 
