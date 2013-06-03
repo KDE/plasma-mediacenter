@@ -252,10 +252,11 @@ Image {
             }
 
             Keys.onEscapePressed: {
-                mediaController.backStopped = true
-                if(!currentBrowsingBackend.goOneLevelUp()) {
-                    destroyGridView();
+                if (mediaBrowser.currentBrowsingBackend && mediaBrowser.currentBrowsingBackend.goOneLevelUp()) {
+                    return;
                 }
+                mediaBrowser.destroyGridView();
+                backStopped = true;
             }
 
             onPlayRequested: {
