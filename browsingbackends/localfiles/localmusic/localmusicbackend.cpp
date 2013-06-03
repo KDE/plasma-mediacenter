@@ -33,6 +33,9 @@ LocalMusicBackend::~LocalMusicBackend()
 
 void LocalMusicBackend::initModel()
 {
-    setModel(new LocalMusicModel(this));
+    if (!m_model) {
+        m_model = new LocalMusicModel(this);
+    }
+    setModel(m_model);
 }
 

@@ -22,6 +22,7 @@
 
 #include "../localfilesabstractbackend.h"
 
+class LocalVideosModel;
 class LocalVideosBackend : public LocalFilesAbstractBackend
 {
     Q_OBJECT
@@ -31,6 +32,9 @@ public:
 
 protected:
     virtual void initModel();
+
+private:
+    LocalVideosModel *m_model;
 };
 
 #endif // LOCALVIDEOSBACKEND_H

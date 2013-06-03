@@ -32,6 +32,9 @@ LocalVideosBackend::~LocalVideosBackend()
 
 void LocalVideosBackend::initModel()
 {
-    setModel(new LocalVideosModel(this));
+    if (!m_model) {
+        m_model = new LocalVideosModel(this);
+    }
+    setModel(m_model);
 }
 

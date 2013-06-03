@@ -32,6 +32,9 @@ LocalPicturesBackend::~LocalPicturesBackend()
 
 void LocalPicturesBackend::initModel()
 {
-    setModel(new LocalPicturesModel(this));
+    if (!m_model) {
+        m_model = new LocalPicturesModel(this);
+    }
+    setModel(m_model);
 }
 
