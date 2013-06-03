@@ -23,6 +23,7 @@ MEDIACENTER_EXPORT_BROWSINGBACKEND(LocalPicturesBackend)
 
 LocalPicturesBackend::LocalPicturesBackend (QObject* parent, const QVariantList& args)
     : LocalFilesAbstractBackend (parent, args)
+    , m_model(0)
 {
 
 }

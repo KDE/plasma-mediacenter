@@ -54,7 +54,7 @@ bool LocalFilesAbstractBackend::expand (int row)
 
 QString LocalFilesAbstractBackend::mediaBrowserSidePanel() const
 {
-    return "";
+    return constructQmlSource("localfilescomponents", "0.1", "LocalFilesSidePanel");
 }
 
 
