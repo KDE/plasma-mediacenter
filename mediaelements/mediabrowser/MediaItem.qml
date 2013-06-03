@@ -157,7 +157,7 @@ Item {
                             if (typeof rootColumn.source == "string")
                                 QIcon(rootColumn.source);
                             else
-                                if (decorationType == "qimage")
+                                if (typeof decorationType !== 'undefined' && decorationType == "qimage")
                                     QIcon(rootColumn.source);
                                 else
                                     rootColumn.source
