@@ -256,7 +256,7 @@ Image {
                     return;
                 }
                 mediaBrowser.destroyGridView();
-                backStopped = true;
+                mediaController.backStopped = true;
             }
 
             onPlayRequested: {
