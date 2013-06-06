@@ -50,11 +50,12 @@ public:
     Q_INVOKABLE void clearPlaylist();
     Q_INVOKABLE void removeFromPlaylist(const int &index);
     Q_INVOKABLE QString getUrlofFirstIndex();
+    Q_INVOKABLE void moveItem(int firstIndex,int secondIndex);
     int currentIndex() const;
     void setCurrentIndex(int index);
     bool random() const;
     void setRandom(bool random);
-
+  
 Q_SIGNALS:
     void currentIndexChanged();
     void randomChanged();
@@ -68,3 +69,4 @@ private:
 };
 
 #endif // PLAYLISTMODEL_H
+

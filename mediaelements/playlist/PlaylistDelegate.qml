@@ -1,6 +1,7 @@
 /***************************************************************************
  *   Copyright 2012 Sinny Kumari <ksinny@gmail.com>                        *
  *   Copyright 2012 Shantanu Tushar <shantanu@kde.org>                     *
+ *   Copyright 2013 Saurabh Jain <saurabhskj@hotmail.com>                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -77,13 +78,72 @@ Item{
 
             MouseArea {
                 hoverEnabled: true
+                id: dragItemArea
                 anchors.fill: parent
+                property int posStartX: 0
+                property int posStartY: 0
+                property int posEndX: 0
+                property int posEndY: 0
+                property int movedX: Math.floor(posEndX - posStartX)
+                property int movedY: Math.floor((posEndY - posStartY)/parent.height)
+                property bool delegateHeld: false
+                property int newPositionY: index + movedY
+                drag.axis: Drag.XandYAxis
+                onPressAndHold: {
+                    listViewItem.z = 2
+                    posStartX = listViewItem.x
+                    posStartY = listViewItem.y
+                    delegateHeld = true
+                    dragItemArea.drag.target = listViewItem
+                    listViewItem.opacity = 0.5
+                    listViewItem.ListView.interactive = false
+                    drag.maximumX = parent.width
+                    drag.minimumX = 0
+                    drag.maximumY = parent.height*listViewItem.ListView.count
+                    drag.minimumY = 0
+                }
+
+                onPositionChanged: {
+                    posEndX = listViewItem.x
+                    posEndY = listViewItem.y
+                }
+
+                onReleased: {
+                    if(!delegateHeld)
+                        return
+                    if(Math.abs(movedX) >= parent.width/3)
+                        playlistModel.removeFromPlaylist(index)
+                    else
+                        listViewItem.x = posStartX
+                    if (Math.abs(movedY) == 0 && delegateHeld == true){
+                        listViewItem.y = posStartY
+                    }
+                    else
+                    {
+                        listViewItem.z = 1
+                        listViewItem.opacity = 1
+                        if(newPositionY < 1)
+                            newPositionY = 0
+                        else if(newPositionY > playlistList.count-1)
+                            newPositionY = playlistList.count - 1
+                        playlistModel.moveItem(index, newPositionY)
+                        listViewItem.x = posStartX
+                        listViewItem.y = posStartY
+                    }
+                    listViewItem.opacity =1
+                    dragItemArea.drag.target = null
+                    listViewItem.ListView.interactive = true
+                    delegateHeld = false
+                }
+
                 onClicked: {
                     listViewItem.ListView.view.model.currentIndex = index
                     playlistItem.playRequested(mediaUrl)
                 }
+
             }
-        }
+
+         }
 
         PlasmaComponents.ToolButton {
             id: removeFromPlaylistButton
@@ -96,3 +156,6 @@ Item{
         }
     }
 }
+
+
+

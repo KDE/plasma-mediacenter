@@ -35,6 +35,8 @@ PlaylistItem::PlaylistItem(const QString& url, QObject* parent)
     m_updateTimer.setInterval(1000);
     m_updateTimer.setSingleShot(true);
     connect(&m_updateTimer, SIGNAL(timeout()), SLOT(update()));
+
+    qRegisterMetaType<MediaInfoResult>("MediaInfoResult");
 }
 
 QString PlaylistItem::mediaUrl() const
@@ -79,16 +81,18 @@ void PlaylistItem::update()
     MediaInfoServiceProxy *serviceProxy = MediaInfoServiceProxy::instance();
 
     QPair<quint64, MediaInfoService*> values = serviceProxy->processRequest(request);
-    connect(values.second, SIGNAL(info(quint64,MediaInfoResult)), SLOT(processMediaInfo(quint64,MediaInfoResult)));
+    connect(values.second, SIGNAL(info(quint64,MediaInfoResult)), SLOT(processMediaInfo(quint64,MediaInfoResult)), Qt::QueuedConnection);
     m_serviceRequestNumber = values.first;
+
+//     qDebug() << "REGISTERED " << m_serviceRequestNumber << " FOR " << m_mediaUrl << " WITH " << values.second;
 }
 
 void PlaylistItem::processMediaInfo(quint64 requestNumber, MediaInfoResult info)
 {
-    disconnect(sender());
     if (requestNumber != m_serviceRequestNumber)
         return;
 
+//     qDebug() << "GOT " << requestNumber << " FOR " << m_mediaUrl;
     m_mediaName = info.data(MediaInfoRequest::Title).toString();
     m_mediaArtist = info.data(MediaInfoRequest::Artist).toString();
     m_mediaLength = info.data(MediaInfoRequest::Length).toInt();

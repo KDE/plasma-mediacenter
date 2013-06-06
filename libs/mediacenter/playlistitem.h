@@ -47,7 +47,7 @@ private:
     QString m_mediaName;
     QString m_mediaArtist;
     int m_mediaLength;
-    int m_serviceRequestNumber;
+    quint64 m_serviceRequestNumber;
 };
 
 #endif // PLAYLISTITEM_H

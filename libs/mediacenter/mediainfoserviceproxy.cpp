@@ -23,7 +23,7 @@
 
 #include <QDebug>
 
-static const int s_maxThreads = 2;
+static const int s_maxThreads = 1;
 MediaInfoServiceProxy *MediaInfoServiceProxy::m_instance = 0;
 
 class MediaInfoServiceProxy::Private
@@ -48,7 +48,7 @@ MediaInfoServiceProxy::MediaInfoServiceProxy()
     for (int i=0; i<s_maxThreads; ++i) {
         MediaInfoService *service = new MediaInfoService;
         d->threads.append(service);
-        service->start();
+        service->start(QThread::LowestPriority);
     }
 }
 
@@ -64,8 +64,7 @@ QPair< quint64, MediaInfoService* > MediaInfoServiceProxy::processRequest(MediaI
     MediaInfoService *thread = d->threads.at(d->counter);
     incrementCounter();
 
-    int requestNumber = thread->processRequest(request);
-    return QPair< quint64, MediaInfoService* >(requestNumber, thread);
+    return QPair< quint64, MediaInfoService* >(thread->processRequest(request), thread);
 }
 
 void MediaInfoServiceProxy::incrementCounter()
