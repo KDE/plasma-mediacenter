@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 import QtQuick 1.1
-import org.kde.plasma.mediacentercomponents 0.1 as MediaCenterComponents
+import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
 
 Item {
     id: homeScreenRootItem

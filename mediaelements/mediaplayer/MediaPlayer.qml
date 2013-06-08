@@ -19,7 +19,7 @@
 
 import QtQuick 1.1
 import QtMultimediaKit 1.1 as QtMultimediaKit
-import org.kde.plasma.mediacentercomponents 0.1 as MediaCenterComponents
+import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
 
 FocusScope {
     id: mediaPlayerRootRect
@@ -44,7 +44,7 @@ FocusScope {
     signal mediaStarted
     signal escapePressed
 
-    MediaCenterComponents.SubtitleProvider {
+    MediaCenterElements.SubtitleProvider {
         id: subs
         filename: video.source
         subtitleTime: video.position

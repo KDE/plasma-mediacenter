@@ -20,7 +20,7 @@
 
 import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
-import org.kde.plasma.mediacentercomponents 0.1 as MediaCenterComponents
+import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
 
 FocusScope {
     id: mediaBrowser
@@ -195,7 +195,7 @@ FocusScope {
         popupMenu.currentMediaDelegateIndex = index
      }
 
-     MediaCenterComponents.PopupMenu {
+     MediaCenterElements.PopupMenu {
          id: popupMenu
 
          property string mediaUrl

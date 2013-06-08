@@ -18,7 +18,7 @@
  ***************************************************************************/
 
 import QtQuick 1.1
-import org.kde.plasma.mediacentercomponents 0.1 as MediaCenterComponents
+import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
 import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.kde.plasma.extras 0.1 as PlasmaExtraComponents
@@ -36,12 +36,12 @@ Image {
         anchors.fill: parent
         source: _pmc_gradient_image_path
 
-        MediaCenterComponents.KeyHandler {
+        MediaCenterElements.KeyHandler {
             id: keyHandler
             mainwindow: _pmc_mainwindow
         }
 
-        MediaCenterComponents.RuntimeData {
+        MediaCenterElements.RuntimeData {
             id: runtimeData
             objectName: "runtimeData"
             totalTime: mediaPlayer.totalTime
@@ -59,7 +59,7 @@ Image {
             uri: mediaImageViewer.visible && mediaImageViewer.source !== "" && !mediaBrowser.visible ? mediaImageViewer.source : mediaPlayer.url
         }
 
-        MediaCenterComponents.MediaPlayer {
+        MediaCenterElements.MediaPlayer {
             id: mediaPlayer
             runtimeDataObject: runtimeData
             anchors { left: parent.left; right: parent.right; top: parent.top; bottom: parent.bottom }
@@ -132,7 +132,7 @@ Image {
             }
         }
 
-        MediaCenterComponents.ImageViewer {
+        MediaCenterElements.ImageViewer {
             id: mediaImageViewer
             visible: false
             stripVisible: visible && !mediaBrowser.visible && !mediaWelcome.visible
@@ -143,7 +143,7 @@ Image {
              }
         }
 
-        MediaCenterComponents.MediaController {
+        MediaCenterElements.MediaController {
             id: mediaController
             height: parent.height * 0.08
             width: parent.width
@@ -203,7 +203,7 @@ Image {
             transitions: [ Transition { AnchorAnimation { duration: 200 } } ]
         }
 
-        MediaCenterComponents.MediaWelcome {
+        MediaCenterElements.MediaWelcome {
             id: mediaWelcome
             anchors.fill: parent
             focus: visible
@@ -233,7 +233,7 @@ Image {
             }
         }
 
-        MediaCenterComponents.MediaBrowser {
+        MediaCenterElements.MediaBrowser {
             id: mediaBrowser
             anchors {
                 left: parent.left; right: parent.right; top: mediaController.bottom; bottom:parent.bottom
@@ -281,7 +281,7 @@ Image {
             }
         }
 
-        MediaCenterComponents.Playlist {
+        MediaCenterElements.Playlist {
             id: playlist
             anchors {
                 top: mediaController.bottom; bottom: parent.bottom

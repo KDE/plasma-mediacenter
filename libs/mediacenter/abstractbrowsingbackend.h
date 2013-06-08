@@ -258,7 +258,7 @@ protected:
      * This is a convenience function which constructs a string representing QML source for
      * loading an item of name itemName which exists in componentDirName
      *
-     * @param componentDirName name of the dir (relative to org.kde.plasma.mediacentercomponents
+     * @param componentDirName name of the dir (relative to org.kde.plasma.mediacenter.elements
      * @param versionString version of the item as specified in qmldir in componentDirName
      * @param itemName name of the item as specified in qmldir in componentDirName
      */
