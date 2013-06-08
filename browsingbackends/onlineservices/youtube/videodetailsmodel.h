@@ -33,7 +33,12 @@ public:
     ~VideoDetailsModel();
     virtual QVariant data (const QModelIndex& index, int role = Qt::DisplayRole) const;
     virtual int rowCount (const QModelIndex& parent = QModelIndex()) const;
-    QString realUrl();
+    void retriveRealUrl();
+    void setVideoUrl(QString url);
+    void setVideoThumbnail(QString thumbnail);
+
+signals:
+    void gotRealUrl();
 public slots:
     void streamUrl(QUrl);
 private:

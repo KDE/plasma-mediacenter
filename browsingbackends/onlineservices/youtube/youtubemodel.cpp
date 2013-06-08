@@ -147,3 +147,13 @@ void YoutubeModel::parseResults(KJob *job)
         reset();
     }
 }
+
+QString YoutubeModel::videoUrl(int index)
+{
+    return m_videos.at(index).url;
+}
+
+QString YoutubeModel::videoThumbnail(int index)
+{
+    return m_videos.at(index).thumbnail;
+}

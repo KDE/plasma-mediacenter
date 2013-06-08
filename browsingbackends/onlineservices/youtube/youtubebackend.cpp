@@ -28,7 +28,10 @@ MEDIACENTER_EXPORT_BROWSINGBACKEND(YoutubeBackend)
 YoutubeBackend::YoutubeBackend(QObject* parent, const QVariantList& args): 
                                MediaCenter::AbstractBrowsingBackend(parent, args)
 {
-
+    youtubeModel = new YoutubeModel(this);
+    videoDetailsModel = new VideoDetailsModel(this);
+    m_expand = true;
+    connect(videoDetailsModel, SIGNAL(gotRealUrl()), this, SLOT(realUrlFound()));
 }
 
 QString YoutubeBackend::backendCategory() const
@@ -38,18 +41,30 @@ QString YoutubeBackend::backendCategory() const
 
 bool YoutubeBackend::expand(int row)
 {
-    return MediaCenter::AbstractBrowsingBackend::expand(row);
+    videoDetailsModel->retriveRealUrl();
+    videoDetailsModel->setVideoUrl(youtubeModel->videoUrl(row));
+    videoDetailsModel->setVideoThumbnail(youtubeModel->videoThumbnail(row));
+    if (m_expand) {
+        m_expand = false;
+    }
+    return true;
 }
 
 bool YoutubeBackend::initImpl()
 {
-    setModel(new YoutubeModel(this));
+    setModel(youtubeModel);
     return true;
 }
 
 bool YoutubeBackend::goOneLevelUp()
 {
-    return MediaCenter::AbstractBrowsingBackend::goOneLevelUp();
+    if (!m_expand) {
+        m_expand = true;
+        setModel(youtubeModel);
+        return true;
+    } else {
+        return false;
+    }
 }
 
 bool YoutubeBackend::supportsSearch() const
@@ -60,4 +75,9 @@ bool YoutubeBackend::supportsSearch() const
 void YoutubeBackend::search(const QString& searchTerm)
 {
     qobject_cast<YoutubeModel*>(model())->query(searchTerm);
+}
+
+void YoutubeBackend::realUrlFound()
+{
+        setModel(videoDetailsModel);
 }

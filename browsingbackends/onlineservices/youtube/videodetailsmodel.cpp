@@ -25,10 +25,8 @@
 
 VideoDetailsModel::VideoDetailsModel(QObject* parent): QAbstractListModel(parent)
 {
-    m_videoThumbnail = "http://i.ytimg.com/vi/gpMoGu81EEI/default.jpg";
-    m_videoTitle = "KDE 4.10 beta 2";
-    m_videoUrl = "http://www.youtube.com/watch?v=gpMoGu81EEI&feature=youtube_gdata_player";
-    setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));realUrl();
+    m_videoTitle = "Play";
+    setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
 }
 
 VideoDetailsModel::~VideoDetailsModel()
@@ -60,17 +58,27 @@ QVariant VideoDetailsModel::data(const QModelIndex& index, int role) const
     return QVariant();
 }
 
-QString VideoDetailsModel::realUrl()
+void VideoDetailsModel::retriveRealUrl()
 {
     Video *video = new Video;
     QUrl videoUrl(m_videoUrl);
     video->setWebpage(videoUrl);
     video->loadStreamUrl();
     connect(video, SIGNAL(gotStreamUrl(QUrl)), this, SLOT(streamUrl(QUrl)));
-return  "";
 }
 
 void VideoDetailsModel::streamUrl(QUrl url)
 {
-    qDebug() << "URLLLLLLLLLLLLLL" << url.toString();
+    m_videoUrl = url.toString();
+    emit gotRealUrl();   // realUrl found
+}
+
+void VideoDetailsModel::setVideoUrl(QString url)
+{
+    m_videoUrl = url;
+}
+
+void VideoDetailsModel::setVideoThumbnail(QString thumbnail)
+{
+    m_videoThumbnail = thumbnail;
 }

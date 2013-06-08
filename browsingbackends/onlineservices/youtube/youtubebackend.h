@@ -20,6 +20,9 @@
 #ifndef YOUTUBEBACKEND_H
 #define YOUTUBEBACKEND_H
 
+#include "youtubemodel.h"
+#include "videodetailsmodel.h"
+
 #include <libs/mediacenter/abstractbrowsingbackend.h>
 
 /**
@@ -38,10 +41,14 @@ public:
     virtual void search(const QString& searchTerm);
     virtual bool supportsSearch() const;
 
-signals:
-
 public Q_SLOTS:
     virtual bool goOneLevelUp();
+    void realUrlFound();
+
+private:
+    YoutubeModel *youtubeModel;
+    VideoDetailsModel *videoDetailsModel;
+    bool m_expand;  // to detrmine which model is currently set into backend
 };
 
 #endif
