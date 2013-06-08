@@ -33,6 +33,7 @@ FocusScope {
 
     ListView {
         id: mediaBrowserListViewId
+        focus: true
         anchors {
             left: parent.left
             right: parent.right
@@ -46,6 +47,7 @@ FocusScope {
             onPopupMenuRequested: mediaBrowser.popupMenuRequested(index,mediaUrl,mediaType, display)
         }
         model: mediaBrowser.model
+        highlight: PlasmaComponents.Highlight {}
 
         PlasmaComponents.ScrollBar {
             orientation: _pmc_is_desktop ? Qt.Vertical : Qt.Horizontal

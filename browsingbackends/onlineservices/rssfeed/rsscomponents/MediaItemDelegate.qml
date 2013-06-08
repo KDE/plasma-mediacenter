@@ -27,13 +27,32 @@ Item {
     id: mediaItemDelegateItem
     width: ListView.view.width
     height: itemText.height
-    scale: (ListView.isCurrentItem ? 1.1 : 1)
     clip: !ListView.isCurrentItem
     z: ListView.isCurrentItem ? 1 : 0
 
     property QtObject backend
     signal popupMenuRequested(int index, string mediaUrl, string mediaType, string display)
     signal playRequested(int index, string url, string currentMediaType)
+
+    function deleteItem() {
+        backend.deleteFeed(index);
+        hideDialog();
+    }
+
+    function hideDialog() {
+        itemText.visible = true;
+        dialogOverlay.source = "";
+    }
+
+    Loader {
+        id: dialogOverlay
+        anchors {
+            left: parent.left
+            right: parent.right
+            leftMargin: font.pointSize * 5
+        }
+        height: itemText.height
+    }
 
     PlasmaComponents.Label {
         id: itemText
@@ -80,11 +99,33 @@ Item {
         }
     }
 
-    Keys.onReturnPressed: {
-        if (isExpandable) {
-            backend.expand(index);
-        } else {
-            mediaItemDelegateItem.playRequested(index, mediaUrl, mediaType)
+    Keys.onPressed: {
+        switch (event.key) {
+            case Qt.Key_Enter:
+            case Qt.Key_Return:
+            {
+                if (isExpandable) {
+                    backend.expand(index);
+                } else {
+                    mediaItemDelegateItem.playRequested(index, mediaUrl, mediaType)
+                }
+                break;
+            }
+            case Qt.Key_D:
+            {
+                if (isExpandable) {
+                    dialogOverlay.source = "DialogOverlay.qml";
+                    dialogOverlay.item.text = i18n("Really wanna delete?");
+                    itemText.visible = false;
+                }
+                break;
+            }
         }
+    }
+
+    Connections {
+        target: dialogOverlay.item
+        onOkClicked: deleteItem()
+        onCancelClicked: hideDialog()
     }
 }

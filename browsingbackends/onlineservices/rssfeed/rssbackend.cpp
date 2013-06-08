@@ -96,6 +96,11 @@ void RssBackend::addToplist()
 	m_rssmanager->addToplist();
 }
 
+void RssBackend::deleteFeed ( int row )
+{
+    m_rssmanager->deleteFeed(row);
+}
+
 void RssBackend::feedOperation ( bool result )
 {
 	if (result) {

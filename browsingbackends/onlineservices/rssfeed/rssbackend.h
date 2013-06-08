@@ -41,6 +41,7 @@ public:
 public:
 	Q_INVOKABLE void addFeed(const QString& feedurl);
 	Q_INVOKABLE void addToplist();
+    Q_INVOKABLE void deleteFeed(int row);
 signals:
 	void addFeedSuccessfull();
 	void addFeedFailed();

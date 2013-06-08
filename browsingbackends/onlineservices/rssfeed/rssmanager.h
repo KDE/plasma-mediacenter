@@ -48,7 +48,7 @@ public:
     RssManager ( QObject* parent = 0, QString name = QString() );
 public:
 	void addFeed( const QString& feedurl );
-	void deleteFeed( const QString& feedurl );
+	void deleteFeed( int row );
 	void modifyFeed( const QString& feedurl );
 	void addToplist();
 signals:
@@ -56,7 +56,7 @@ signals:
 	void feedOperation(bool result);
 private slots:
     void createRootResult( KJob* job );
-    void createCollectionResult( KJob* job );
+    void transactionResult( KJob* job );
 	void createModel( const Akonadi::Collection& coll );
 	void agentRdy( const QString& id );
 	void collectionFetchResult( KJob* job );

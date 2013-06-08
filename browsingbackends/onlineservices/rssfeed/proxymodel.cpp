@@ -63,7 +63,7 @@ ProxyModel::ProxyModel ( Akonadi::ChangeRecorder* monitor, QObject* parent ) :
     flatmodel->setSourceModel(rssmodel);
     setSourceModel(flatmodel);
     // fetch items
-    fetchMore(index(0,0,QModelIndex()));
+//     fetchMore(index(0,0,QModelIndex()));
 
     setFilterRole(Akonadi::EntityTreeModel::RemoteIdRole);
 	setFilterRegExp(d->m_collectionfilter);
@@ -80,7 +80,7 @@ bool ProxyModel::expand ( int row )
     d->m_parentcollection->push(selectedColl.parentCollection());
 	d->m_collectionfilter.setPattern(selectedColl.remoteId());
 	setFilterRegExp(d->m_collectionfilter);
-	m->fetchMore(m->index(row, 0));
+// 	m->fetchMore(m->index(row, 0));
 	return true;
 }
 
@@ -103,6 +103,11 @@ const Akonadi::Collection& ProxyModel::parent() const
 		return d->m_parentcollection->top();
 	}
 	return Akonadi::Collection();
+}
+
+Akonadi::Collection ProxyModel::collection ( int row ) const
+{
+    return mapToSource(index(row, 0)).data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
 }
 
 bool ProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const

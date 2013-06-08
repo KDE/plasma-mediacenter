@@ -28,6 +28,7 @@
 #include <Akonadi/CollectionFetchScope>
 #include <Akonadi/ItemFetchScope>
 #include <Akonadi/CollectionCreateJob>
+#include <Akonadi/CollectionDeleteJob>
 #include <Akonadi/CollectionFetchJob>
 #include <Akonadi/CollectionFetchScope>
 #include <Akonadi/EntityDisplayAttribute>
@@ -69,14 +70,18 @@ void RssManager::addFeed ( const QString& feedurl )
         Akonadi::CollectionCreateJob* job = new Akonadi::CollectionCreateJob(
             m_feedcontroller->newFeed(feedurl, m_feeditemmodel->parent()) );
 
-        connect( job, SIGNAL(result(KJob*)), SLOT(createCollectionResult(KJob*)) );
+        connect( job, SIGNAL(result(KJob*)), SLOT(transactionResult(KJob*)) );
         job->start();
 	}
 }
 
-void RssManager::deleteFeed ( const QString& feedurl )
+void RssManager::deleteFeed ( int row )
 {
-	m_feedcontroller->deleteFeed(feedurl);
+    if (m_feeditemmodel) {
+        Akonadi::CollectionDeleteJob *job = new Akonadi::CollectionDeleteJob( m_feeditemmodel->collection( row ) );
+        connect( job, SIGNAL(result(KJob*)), SLOT(transactionResult(KJob*)) );
+        job->start();
+    }
 }
 
 void RssManager::modifyFeed ( const QString& feedurl )
@@ -104,20 +109,16 @@ void RssManager::createRootResult ( KJob* job )
     }
 }
 
-void RssManager::createCollectionResult ( KJob* job )
+void RssManager::transactionResult ( KJob* job )
 {
     if (job->error()) {
         kDebug() << job->errorText();
-        emit feedOperation(false);
-    } else {
-        emit feedOperation(true);
     }
+    emit feedOperation(job->error());
 }
 
 void RssManager::createModel ( const Akonadi::Collection& coll )
 {
-    kDebug() << "createModel" << coll;
-	// create model
 	Akonadi::CollectionFetchScope cscope;
 	cscope.setIncludeStatistics( true );
 	cscope.setContentMimeTypes( QStringList() << KRss::Item::mimeType() );

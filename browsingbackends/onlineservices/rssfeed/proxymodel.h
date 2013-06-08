@@ -45,6 +45,7 @@ public:
 	bool goOneLevelUp();
 public:
 	const Akonadi::Collection& parent() const;
+    Akonadi::Collection collection(int row) const;
 protected:
 	bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
 signals:
