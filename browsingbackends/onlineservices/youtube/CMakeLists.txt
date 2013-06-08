@@ -1,6 +1,12 @@
 set(youtubebackend_SRCS
+    diskcache.cpp
+    networkaccess.cpp
+    videodefinition.cpp
+    networkaccess.cpp
+    video.cpp
     youtubemodel.cpp
     youtubebackend.cpp
+    videodetailsmodel.cpp
 )
 
 qt4_automoc(${youtubebackend_SRCS})

@@ -17,47 +17,29 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#include "youtubebackend.h"
-#include "youtubemodel.h"
-#include "videodetailsmodel.h"
+#ifndef VIDEODETAILSMODEL_H
+#define VIDEODETAILSMODEL_H
 
-#include "global.h"
+#include <QObject>
+#include <QAbstractListModel>
+#include <QString>
+#include <QUrl>
 
-MEDIACENTER_EXPORT_BROWSINGBACKEND(YoutubeBackend)
-
-YoutubeBackend::YoutubeBackend(QObject* parent, const QVariantList& args): 
-                               MediaCenter::AbstractBrowsingBackend(parent, args)
+class VideoDetailsModel : public QAbstractListModel
 {
+    Q_OBJECT
+public:
+    VideoDetailsModel(QObject *parent = 0);
+    ~VideoDetailsModel();
+    virtual QVariant data (const QModelIndex& index, int role = Qt::DisplayRole) const;
+    virtual int rowCount (const QModelIndex& parent = QModelIndex()) const;
+    QString realUrl();
+public slots:
+    void streamUrl(QUrl);
+private:
+    QString m_videoThumbnail;
+    QString m_videoUrl;
+    QString m_videoTitle;
+};
 
-}
-
-QString YoutubeBackend::backendCategory() const
-{
-    return "video";
-}
-
-bool YoutubeBackend::expand(int row)
-{
-    return MediaCenter::AbstractBrowsingBackend::expand(row);
-}
-
-bool YoutubeBackend::initImpl()
-{
-    setModel(new YoutubeModel(this));
-    return true;
-}
-
-bool YoutubeBackend::goOneLevelUp()
-{
-    return MediaCenter::AbstractBrowsingBackend::goOneLevelUp();
-}
-
-bool YoutubeBackend::supportsSearch() const
-{
-    return true;
-}
-
-void YoutubeBackend::search(const QString& searchTerm)
-{
-    qobject_cast<YoutubeModel*>(model())->query(searchTerm);
-}
+#endif  // VIDEODETAILSMODEL_H

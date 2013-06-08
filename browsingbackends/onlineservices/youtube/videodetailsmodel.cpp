@@ -17,47 +17,60 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#include "youtubebackend.h"
-#include "youtubemodel.h"
 #include "videodetailsmodel.h"
+#include "video.h"
 
-#include "global.h"
+#include <libs/mediacenter/mediacenter.h>
 
-MEDIACENTER_EXPORT_BROWSINGBACKEND(YoutubeBackend)
 
-YoutubeBackend::YoutubeBackend(QObject* parent, const QVariantList& args): 
-                               MediaCenter::AbstractBrowsingBackend(parent, args)
+VideoDetailsModel::VideoDetailsModel(QObject* parent): QAbstractListModel(parent)
+{
+    m_videoThumbnail = "http://i.ytimg.com/vi/gpMoGu81EEI/default.jpg";
+    m_videoTitle = "KDE 4.10 beta 2";
+    m_videoUrl = "http://www.youtube.com/watch?v=gpMoGu81EEI&feature=youtube_gdata_player";
+    setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));realUrl();
+}
+
+VideoDetailsModel::~VideoDetailsModel()
 {
 
 }
 
-QString YoutubeBackend::backendCategory() const
+int VideoDetailsModel::rowCount(const QModelIndex& parent) const
 {
-    return "video";
+    return 1;
 }
 
-bool YoutubeBackend::expand(int row)
+QVariant VideoDetailsModel::data(const QModelIndex& index, int role) const
 {
-    return MediaCenter::AbstractBrowsingBackend::expand(row);
+    switch (role) {
+        case MediaCenter::HideLabelRole:
+            return false;
+        case Qt::DecorationRole:
+            return m_videoThumbnail;
+        case MediaCenter::MediaUrlRole:
+            return m_videoUrl;
+        case Qt::DisplayRole:
+            return m_videoTitle;
+        case MediaCenter::MediaTypeRole:
+            return "video";
+        case MediaCenter::IsExpandableRole:
+            return false;
+    }
+    return QVariant();
 }
 
-bool YoutubeBackend::initImpl()
+QString VideoDetailsModel::realUrl()
 {
-    setModel(new YoutubeModel(this));
-    return true;
+    Video *video = new Video;
+    QUrl videoUrl(m_videoUrl);
+    video->setWebpage(videoUrl);
+    video->loadStreamUrl();
+    connect(video, SIGNAL(gotStreamUrl(QUrl)), this, SLOT(streamUrl(QUrl)));
+return  "";
 }
 
-bool YoutubeBackend::goOneLevelUp()
+void VideoDetailsModel::streamUrl(QUrl url)
 {
-    return MediaCenter::AbstractBrowsingBackend::goOneLevelUp();
-}
-
-bool YoutubeBackend::supportsSearch() const
-{
-    return true;
-}
-
-void YoutubeBackend::search(const QString& searchTerm)
-{
-    qobject_cast<YoutubeModel*>(model())->query(searchTerm);
+    qDebug() << "URLLLLLLLLLLLLLL" << url.toString();
 }

@@ -21,7 +21,6 @@
 // Qt
 #include <QDomDocument>
 #include <QDomNodeList>
-
 // KDE
 #include <kio/job.h>
 #include <KUrl>
@@ -31,6 +30,7 @@
 YoutubeModel::YoutubeModel(QObject* parent): QAbstractListModel(parent)
 {
     query("kde");
+    setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
 }
 
 YoutubeModel::~YoutubeModel()
@@ -52,7 +52,7 @@ QVariant YoutubeModel::data(const QModelIndex& index, int role) const
         case MediaCenter::MediaTypeRole:
             return "video";
         case MediaCenter::IsExpandableRole:
-            return false;
+            return true;
     }
     return QVariant();
 }
@@ -109,20 +109,9 @@ void YoutubeModel::parseResults(KJob *job)
         QDomNode mediaNode = entries.at(i).namedItem("media:group");
         QString description = mediaNode.namedItem("media:description").toElement().text();
         QString keywords = mediaNode.namedItem("media:keywords").toElement().text();
+        QString mediaUrl = mediaNode.namedItem("media:player").toElement().attribute("url");
         // FIXME: more than one media:thumbnail exists
         QString thumbnail = mediaNode.namedItem("media:thumbnail").toElement().attribute("url");
-
-        // The embedding html code for youtube is:
-        //
-        // <object width="425" height="350">
-        // <param name="movie" value="MEDIA_CONTENT_URL"></param>
-        // <embed src="MEDIA_CONTENT_URL"
-        // type="MEDIA_CONTENT_TYPE" width="425" height="350">
-        // </embed>
-        // </object>
-        //
-        // where MEDIA_CONTENT_URL has to be replaced by the url attribute of the media:content node
-        // where the attribute yt:format is 5
 
         QDomNode n = mediaNode.firstChild();
         QString MEDIA_CONTENT_URL;
@@ -152,10 +141,9 @@ void YoutubeModel::parseResults(KJob *job)
         video.duration = 0;
         video.embeddedHTML = embeddedHTML;
         video.thumbnail = thumbnail;
-        video.url = MEDIA_CONTENT_URL;
+        video.url = mediaUrl;
 
         m_videos << video;
         reset();
     }
-
 }
