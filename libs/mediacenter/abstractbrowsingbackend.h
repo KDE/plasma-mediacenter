@@ -52,6 +52,7 @@ class MEDIACENTER_EXPORT AbstractBrowsingBackend : public QObject
     Q_PROPERTY(QObject* backendModel READ model NOTIFY modelChanged)
     Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
     Q_PROPERTY(QString mediaBrowserSidePanel READ mediaBrowserSidePanel WRITE setMediaBrowserSidePanel NOTIFY mediaBrowserSidePanelChanged)
+    Q_PROPERTY(QVariantList models READ models NOTIFY modelsChanged)
 
 public:
     /**
@@ -76,6 +77,11 @@ public:
      * @returns the model of the browsing backend
      */
     QObject *model();
+
+    /**
+     * @returns the models available in the browsing backend
+     */
+    QVariantList models();
 
     /**
      * Request the backend to initialize
@@ -177,6 +183,7 @@ Q_SIGNALS:
     void modelChanged();
     void busyChanged();
     void mediaBrowserSidePanelChanged();
+    void modelsChanged();
 
 protected:
     /**

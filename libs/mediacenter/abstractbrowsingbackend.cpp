@@ -80,6 +80,7 @@ void AbstractBrowsingBackend::setModel(QAbstractItemModel * model)
 {
     d->models.clear();
     d->models.append(model);
+    emit modelsChanged();
     emit modelChanged();
 }
 
@@ -169,4 +170,13 @@ bool AbstractBrowsingBackend::init()
 bool AbstractBrowsingBackend::busy() const
 {
     return false;
+}
+
+QVariantList AbstractBrowsingBackend::models()
+{
+    QVariantList modelList;
+    Q_FOREACH(QAbstractItemModel *model, d->models) {
+        modelList.append(QVariant::fromValue(qobject_cast<QObject*>(model)));
+    }
+    return modelList;
 }

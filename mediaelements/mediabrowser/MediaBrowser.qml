@@ -71,7 +71,7 @@ FocusScope {
                 onPopupMenuRequested: mediaBrowser.popupMenuRequested(index,mediaUrl,mediaType, display)
             }
             flow: _pmc_is_desktop ? GridView.LeftToRight : GridView.TopToBottom
-            model: mediaBrowser.currentBrowsingBackend.backendModel
+            model: mediaBrowser.currentBrowsingBackend.models[0]
             cacheBuffer: width*2
 
             Text {
@@ -134,7 +134,7 @@ FocusScope {
     {
         //JS snippet to do mediaBrowserGridView.model: currentBrowsingBackend.backendModel
         if (mediaBrowserViewItem && mediaBrowserViewItem.mediaBrowserGridView)
-            mediaBrowserViewItem.mediaBrowserGridView.model = (function() { return currentBrowsingBackend.backendModel; });
+            mediaBrowserViewItem.mediaBrowserGridView.model = (function() { return currentBrowsingBackend.models[0]; });
     }
 
     function hideMediaBrowserSidePanel()
