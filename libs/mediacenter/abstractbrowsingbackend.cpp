@@ -35,18 +35,17 @@ public:
     AbstractBrowsingBackendPrivate(AbstractBrowsingBackend *q) :
     q(q),
     cfInterface(false),
-    model(0),
     declarativeEngine(0),
     hasInitialized(false)
     {}
 
     AbstractBrowsingBackend *q;
     bool cfInterface;
-    QAbstractItemModel * model;
     QDeclarativeEngine *declarativeEngine;
     bool hasInitialized;
     QString name;
     QString mediaBrowserSidePanelText;
+    QList<QAbstractItemModel*> models;
 };
 
 AbstractBrowsingBackend::AbstractBrowsingBackend(QObject *parent, const QVariantList &args)
@@ -79,13 +78,14 @@ QString AbstractBrowsingBackend::name() const
 
 void AbstractBrowsingBackend::setModel(QAbstractItemModel * model)
 {
-    d->model = model;
+    d->models.clear();
+    d->models.append(model);
     emit modelChanged();
 }
 
 QObject * AbstractBrowsingBackend::model()
 {
-    return (QObject*)(d->model);
+    return (QObject*)(d->models.first());
 }
 
 KService::List AbstractBrowsingBackend::availableBackends()
