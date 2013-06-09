@@ -88,31 +88,6 @@ QObject * AbstractBrowsingBackend::model()
     return (QObject*)(d->model);
 }
 
-bool AbstractBrowsingBackend::hasConfigurationInterface() const
-{
-    return d->cfInterface;
-}
-
-void AbstractBrowsingBackend::setHasConfigurationInterface(bool hasInterface)
-{
-    d->cfInterface = hasInterface;
-}
-
-void AbstractBrowsingBackend::createConfigurationInterface(KConfigDialog *parent)
-{
-    Q_UNUSED(parent);
-}
-
-KConfigGroup AbstractBrowsingBackend::config()
-{
-    return KConfigGroup(KGlobal::config(), name());
-}
-
-void AbstractBrowsingBackend::openUrl(const KUrl &url)
-{
-    Q_UNUSED(url);
-}
-
 KService::List AbstractBrowsingBackend::availableBackends()
 {
     KService::List plugins = KServiceTypeTrader::self()->query("Plasma/MediaCenter/BrowsingBackend");

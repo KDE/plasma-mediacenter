@@ -54,10 +54,6 @@ class MEDIACENTER_EXPORT AbstractBrowsingBackend : public QObject
     Q_PROPERTY(QString mediaBrowserSidePanel READ mediaBrowserSidePanel WRITE setMediaBrowserSidePanel NOTIFY mediaBrowserSidePanelChanged)
 
 public:
-    enum AdditionalRoles {
-        MediaRole
-    };
-
     /**
      * Used to load a backend instance via a plugin loader through KService.
      * The first argument of @param args must be the unique storageID of the service.
@@ -81,23 +77,9 @@ public:
      */
     QObject *model();
 
-    bool hasConfigurationInterface() const;
-
     /**
-     * As from Plasma::Applet this method should be reimplemented
-     * in order to provide a useful configuration interface for
-     * the model if needed.
-     * @note: the method setHasConfigurationInterface() has to be
-     * called in order for this function to be called by the mediabrowser.
-     * @see setHasConfigurationInterface
+     * Request the backend to initialize
      */
-    virtual void createConfigurationInterface(KConfigDialog *parent);
-
-    /**
-     * @return the appropriate KConfigGroup for this plugin.
-     */
-    KConfigGroup config();
-
     Q_INVOKABLE bool init();
 
     /**
@@ -106,14 +88,7 @@ public:
      */
     static KService::List availableBackends();
 
-    /**
-     * LocalBrowsing. This method will be used to list the media
-     * resources in location specified by @param url
-     */
-    //TODO: Maybe its better to let the model handle this
-    virtual void openUrl(const KUrl &url);
-
-    /**
+    /*
      * This function is used by Media Browser to go to one level
      * up in the browsing structure. Must be reimplemented
      *
@@ -214,13 +189,6 @@ protected:
      * @see MediaRole
      */
     void setModel(QAbstractItemModel * model);
-
-    /**
-     * As from Plasma::Applet this method should be used in order
-     * to inform about the availability of a configuration interface for
-     * the model.
-     */
-    void setHasConfigurationInterface(bool hasInterface);
 
     /**
      * This is a convenience function which constructs a string representing QML source for
