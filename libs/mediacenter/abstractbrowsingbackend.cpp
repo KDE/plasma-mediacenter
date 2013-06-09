@@ -42,7 +42,6 @@ public:
 
     AbstractBrowsingBackend *q;
     bool cfInterface;
-    BrowsingType browsingType;
     QAbstractItemModel * model;
     QDeclarativeEngine *declarativeEngine;
     bool hasInitialized;
@@ -107,16 +106,6 @@ void AbstractBrowsingBackend::createConfigurationInterface(KConfigDialog *parent
 KConfigGroup AbstractBrowsingBackend::config()
 {
     return KConfigGroup(KGlobal::config(), name());
-}
-
-AbstractBrowsingBackend::BrowsingType AbstractBrowsingBackend::browsingType() const
-{
-    return d->browsingType;
-}
-
-void AbstractBrowsingBackend::setBrowsingType(BrowsingType type)
-{
-    d->browsingType = type;
 }
 
 void AbstractBrowsingBackend::openUrl(const KUrl &url)

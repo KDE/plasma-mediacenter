@@ -54,11 +54,6 @@ class MEDIACENTER_EXPORT AbstractBrowsingBackend : public QObject
     Q_PROPERTY(QString mediaBrowserSidePanel READ mediaBrowserSidePanel WRITE setMediaBrowserSidePanel NOTIFY mediaBrowserSidePanelChanged)
 
 public:
-    enum BrowsingType {
-        LocalBrowsing,
-        RemoteBrowsing
-    };
-
     enum AdditionalRoles {
         MediaRole
     };
@@ -86,18 +81,6 @@ public:
      */
     QObject *model();
 
-    /**
-     * @return the browsing type of the model. Typically a remote browsing type
-     * is specific for web services like YouTube.
-     * When using a LocalBrowsing type the expected model is generally a KDirModel
-     * or an inheritance of it.
-     * Specifying a BrowsingType allows the view also using special widgets for navigations purposes
-     * that allow actions like "go backward", "go forward", "go uplevel" that generally change
-     * their meaning if the browsing type is local or remote.
-     */
-    //TODO: May no longer be needed
-    BrowsingType browsingType() const;
-
     bool hasConfigurationInterface() const;
 
     /**
@@ -124,7 +107,6 @@ public:
     static KService::List availableBackends();
 
     /**
-     * This slot must be reimplemented if browsingType returns
      * LocalBrowsing. This method will be used to list the media
      * resources in location specified by @param url
      */
@@ -239,8 +221,6 @@ protected:
      * the model.
      */
     void setHasConfigurationInterface(bool hasInterface);
-
-    void setBrowsingType(BrowsingType);
 
     /**
      * This is a convenience function which constructs a string representing QML source for
