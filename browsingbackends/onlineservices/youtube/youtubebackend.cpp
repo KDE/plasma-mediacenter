@@ -41,9 +41,9 @@ QString YoutubeBackend::backendCategory() const
 
 bool YoutubeBackend::expand(int row)
 {
-    videoDetailsModel->retriveRealUrl();
     videoDetailsModel->setVideoUrl(youtubeModel->videoUrl(row));
     videoDetailsModel->setVideoThumbnail(youtubeModel->videoThumbnail(row));
+    videoDetailsModel->retriveRealUrl();
     if (m_expand) {
         m_expand = false;
     }
