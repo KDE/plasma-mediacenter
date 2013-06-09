@@ -50,7 +50,6 @@ class MEDIACENTER_EXPORT AbstractBrowsingBackend : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QObject* backendModel READ model NOTIFY modelChanged)
-    Q_PROPERTY(QObject* metadataModel READ metadataModel WRITE setMetadataModel NOTIFY metadataModelChanged)
     Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
     Q_PROPERTY(QString mediaBrowserSidePanel READ mediaBrowserSidePanel WRITE setMediaBrowserSidePanel NOTIFY mediaBrowserSidePanelChanged)
 
@@ -86,16 +85,6 @@ public:
      * @returns the model of the browsing backend
      */
     QObject *model();
-
-    /**
-     * @return the metadataModel provided to the backend my the PMC runtime
-     */
-    QObject *metadataModel();
-
-    /**
-     * @param the metadataModel provided to the backend my the PMC runtime
-     */
-    void setMetadataModel(QObject *model);
 
     /**
      * @return the browsing type of the model. Typically a remote browsing type
@@ -229,7 +218,6 @@ public:
 
 Q_SIGNALS:
     void modelChanged();
-    void metadataModelChanged();
     void busyChanged();
     void mediaBrowserSidePanelChanged();
 

@@ -36,7 +36,6 @@ public:
     q(q),
     cfInterface(false),
     model(0),
-    metadataModel(0),
     declarativeEngine(0),
     hasInitialized(false)
     {}
@@ -45,7 +44,6 @@ public:
     bool cfInterface;
     BrowsingType browsingType;
     QAbstractItemModel * model;
-    QAbstractItemModel * metadataModel;
     QDeclarativeEngine *declarativeEngine;
     bool hasInitialized;
     QString name;
@@ -89,17 +87,6 @@ void AbstractBrowsingBackend::setModel(QAbstractItemModel * model)
 QObject * AbstractBrowsingBackend::model()
 {
     return (QObject*)(d->model);
-}
-
-QObject* AbstractBrowsingBackend::metadataModel()
-{
-    return (QObject*)(d->metadataModel);
-}
-
-void AbstractBrowsingBackend::setMetadataModel (QObject* model)
-{
-    d->metadataModel = qobject_cast<QAbstractItemModel*>(model);
-    emit metadataModelChanged();
 }
 
 bool AbstractBrowsingBackend::hasConfigurationInterface() const
