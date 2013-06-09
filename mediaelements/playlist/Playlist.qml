@@ -54,14 +54,8 @@ PlasmaCore.FrameSvgItem {
                 width: height
                 height: parent.height
                 iconSource: "media-playlist-shuffle"
-                checkable: true
                 onClicked: {
-                   playlistModel.random = function() { return randomButton.checked; }
-                }
-                Component.onCompleted: {
-                   if (playlistModel.random) {
-                       randomButton.checked = true;
-		   }
+                   playlistModel.shuffle();
                 }
             }
 

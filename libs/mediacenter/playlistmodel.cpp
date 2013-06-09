@@ -43,7 +43,6 @@ PlaylistModel::PlaylistModel(QObject* parent):
     d(new Private)
 {
     KConfigGroup cfgGroup = KGlobal::config()->group("General");
-    setRandom(cfgGroup.readEntry("randomplaylist",false));
     QString dirPath = KGlobal::dirs()->saveLocation("data") + KCmdLineArgs::appName();
     QDir().mkdir(dirPath);
     d->filePath = dirPath + "/playlist";
@@ -75,7 +74,6 @@ PlaylistModel::PlaylistModel(QObject* parent):
 PlaylistModel::~PlaylistModel()
 {
     KConfigGroup cfgGroup = KGlobal::config()->group("General");
-    cfgGroup.writeEntry("randomplaylist",d->random);
     cfgGroup.sync();
     QFile file(d->filePath);
     if (file.open(QIODevice::WriteOnly)) {
@@ -137,9 +135,7 @@ void PlaylistModel::moveItem(int firstIndex, int secondIndex)
 
 QString PlaylistModel::getNextUrl()
 {
-    if (random()) {
-        setCurrentIndex(qrand() % d->musicList.size());
-    } else if (d->currentIndex == d->musicList.count() - 1) {
+    if (d->currentIndex == d->musicList.count() - 1) {
         setCurrentIndex(0);
     } else {
         setCurrentIndex(d->currentIndex + 1);
@@ -149,9 +145,7 @@ QString PlaylistModel::getNextUrl()
 
 QString PlaylistModel::getPreviousUrl()
 {
-    if (random()) {
-        setCurrentIndex(qrand() % d->musicList.size());
-    } else if (d->currentIndex == 0) {
+    if (d->currentIndex == 0) {
         setCurrentIndex(d->musicList.count() - 1);
     } else {
         setCurrentIndex(d->currentIndex - 1);
@@ -189,16 +183,17 @@ void PlaylistModel::setCurrentIndex(int index)
     emit currentIndexChanged();
 }
 
-bool PlaylistModel::random() const
+void PlaylistModel::shuffle()
 {
-    return d->random;
+    QList<PlaylistItem*> musicListShuffle;
+    while( !d->musicList.isEmpty() ) {
+        musicListShuffle.append(d->musicList.takeAt(qrand() % d->musicList.size()));
+    }
+    beginResetModel();
+    d->musicList = musicListShuffle;
+    endResetModel();
 }
 
-void PlaylistModel::setRandom ( bool random )
-{
-    d->random = random;
-    emit randomChanged();
-}
 
 void PlaylistModel::playlistItemUpdated()
 {
