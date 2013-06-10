@@ -1,0 +1,15 @@
+[Desktop Entry]
+Type=Service
+Icon=system-shutdown
+Name=Exit
+Comment=Exit Plasma Media Center
+
+X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
+
+X-KDE-PluginInfo-Author=Sinny Kumari
+X-KDE-PluginInfo-Email=ksinny@gmail.com
+X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-Category=settings
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
+X-KDE-Library=pmc_exit
