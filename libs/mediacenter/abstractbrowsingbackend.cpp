@@ -85,7 +85,7 @@ void AbstractBrowsingBackend::setModel(QAbstractItemModel * model)
 
 QObject * AbstractBrowsingBackend::model()
 {
-    return (QObject*)(d->models.first());
+    return d->models.length() ? (QObject*)(d->models.first()) : 0;
 }
 
 KService::List AbstractBrowsingBackend::availableBackends()
