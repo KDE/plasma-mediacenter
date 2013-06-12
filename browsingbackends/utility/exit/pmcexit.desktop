@@ -2,7 +2,19 @@
 Type=Service
 Icon=system-shutdown
 Name=Exit
+Name[cs]=Ukončit
+Name[nl]=Afsluiten
+Name[pt]=Sair
+Name[pt_BR]=Sair
+Name[uk]=Вихід
+Name[x-test]=xxExitxx
 Comment=Exit Plasma Media Center
+Comment[cs]=Ukončit Multimediální centrum Plasma
+Comment[nl]=Plasma mediacentrum afsluiten
+Comment[pt]=Sair do Centro Multimédia do Plasma
+Comment[pt_BR]=Sai do Plasma Media Center
+Comment[uk]=Вийти з медіацентру Плазми
+Comment[x-test]=xxExit Plasma Media Centerxx
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 
