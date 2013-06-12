@@ -141,6 +141,7 @@ Image {
                 mediaBrowser.visible=true
                 runtimeData.currentBrowsingBackend=mediaBrowser.previousBrowsingBackend
              }
+            opacity: (mediaBrowser.visible || mediaWelcome.visible) ? 0.25:1
         }
 
         MediaCenterElements.MediaController {
