@@ -75,7 +75,10 @@ Image {
             dimVideo: mediaWelcome.visible
 
             onClicked: hideToolbars()
-            onEscapePressed: mediaBrowser.visible = true
+            onEscapePressed: {
+                mediaBrowser.visible = true
+                runtimeData.currentBrowsingBackend=mediaBrowser.previousBrowsingBackend
+            }
 
             onCurrentTimeChanged: {
                 runtimeData.currentTime = currentTime;
@@ -228,6 +231,7 @@ Image {
             onEmptyAreaClicked: {
                 if((mediaImageViewer.source != "") || (mediaPlayer.url != "")) {
                     mediaImageViewer.focus=true
+                    mediaPlayer.focus=true
                     mediaWelcome.visible=!mediaWelcome.visible
                     mediaPlayer.hideToolbars()
                 }
