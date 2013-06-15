@@ -28,10 +28,10 @@ MEDIACENTER_EXPORT_BROWSINGBACKEND(YoutubeBackend)
 YoutubeBackend::YoutubeBackend(QObject* parent, const QVariantList& args): 
                                MediaCenter::AbstractBrowsingBackend(parent, args)
 {
-    youtubeModel = new YoutubeModel(this);
-    videoDetailsModel = new VideoDetailsModel(this);
-    m_expand = true;
-    connect(videoDetailsModel, SIGNAL(gotRealUrl()), this, SLOT(realUrlFound()));
+    m_youtubeModel = new YoutubeModel(this);
+    m_videoDetailsModel = new VideoDetailsModel(this);
+    m_expanded = true;
+    connect(m_videoDetailsModel, SIGNAL(gotRealUrl()), this, SLOT(realUrlFound()));
 }
 
 QString YoutubeBackend::backendCategory() const
@@ -41,30 +41,29 @@ QString YoutubeBackend::backendCategory() const
 
 bool YoutubeBackend::expand(int row)
 {
-    videoDetailsModel->setVideoUrl(youtubeModel->videoUrl(row));
-    videoDetailsModel->setVideoThumbnail(youtubeModel->videoThumbnail(row));
-    videoDetailsModel->retriveRealUrl();
-    if (m_expand) {
-        m_expand = false;
+    m_videoDetailsModel->setVideoUrl(m_youtubeModel->videoUrl(row));
+    m_videoDetailsModel->setVideoThumbnail(m_youtubeModel->videoThumbnail(row));
+    m_videoDetailsModel->retriveRealUrl();
+    if (m_expanded) {
+        m_expanded = false;
     }
     return true;
 }
 
 bool YoutubeBackend::initImpl()
 {
-    setModel(youtubeModel);
+    setModel(m_youtubeModel);
     return true;
 }
 
 bool YoutubeBackend::goOneLevelUp()
 {
-    if (!m_expand) {
-        m_expand = true;
-        setModel(youtubeModel);
+    if (!m_expanded) {
+        m_expanded = true;
+        setModel(m_youtubeModel);
         return true;
-    } else {
-        return false;
     }
+    return false;
 }
 
 bool YoutubeBackend::supportsSearch() const
@@ -79,5 +78,5 @@ void YoutubeBackend::search(const QString& searchTerm)
 
 void YoutubeBackend::realUrlFound()
 {
-        setModel(videoDetailsModel);
+        setModel(m_videoDetailsModel);
 }

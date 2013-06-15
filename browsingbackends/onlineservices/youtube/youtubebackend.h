@@ -27,7 +27,7 @@
 
 /**
  * @class YoutubeBackend
- * @brief A backend that manages queries to Picasa.
+ * @brief A backend that manages queries to Youtube.
 */
 class YoutubeBackend : public MediaCenter::AbstractBrowsingBackend
 {
@@ -46,9 +46,9 @@ public Q_SLOTS:
     void realUrlFound();
 
 private:
-    YoutubeModel *youtubeModel;
-    VideoDetailsModel *videoDetailsModel;
-    bool m_expand;  // to detrmine which model is currently set into backend
+    YoutubeModel *m_youtubeModel;
+    VideoDetailsModel *m_videoDetailsModel;
+    bool m_expanded;  // to detrmine which model is currently set into backend
 };
 
 #endif

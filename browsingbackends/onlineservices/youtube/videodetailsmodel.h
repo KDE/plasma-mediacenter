@@ -34,13 +34,13 @@ public:
     virtual QVariant data (const QModelIndex& index, int role = Qt::DisplayRole) const;
     virtual int rowCount (const QModelIndex& parent = QModelIndex()) const;
     void retriveRealUrl();
-    void setVideoUrl(QString url);
-    void setVideoThumbnail(QString thumbnail);
+    void setVideoUrl(const QString &url);
+    void setVideoThumbnail(const QString &thumbnail);
 
 signals:
     void gotRealUrl();
 public slots:
-    void streamUrl(QUrl);
+    void streamUrl(QUrl url);
 private:
     QString m_videoThumbnail;
     QString m_videoUrl;

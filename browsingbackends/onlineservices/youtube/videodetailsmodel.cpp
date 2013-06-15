@@ -23,9 +23,9 @@
 #include <libs/mediacenter/mediacenter.h>
 
 
-VideoDetailsModel::VideoDetailsModel(QObject* parent): QAbstractListModel(parent)
+VideoDetailsModel::VideoDetailsModel(QObject* parent): QAbstractListModel(parent),
+                                     m_videoTitle ("Play")
 {
-    m_videoTitle = "Play";
     setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
 }
 
@@ -71,14 +71,15 @@ void VideoDetailsModel::streamUrl(QUrl url)
 {
     m_videoUrl = url.toString();
     emit gotRealUrl();   // realUrl found
+    sender()->deleteLater();
 }
 
-void VideoDetailsModel::setVideoUrl(QString url)
+void VideoDetailsModel::setVideoUrl(const QString &url)
 {
     m_videoUrl = url;
 }
 
-void VideoDetailsModel::setVideoThumbnail(QString thumbnail)
+void VideoDetailsModel::setVideoThumbnail(const QString &thumbnail)
 {
     m_videoThumbnail = thumbnail;
 }
