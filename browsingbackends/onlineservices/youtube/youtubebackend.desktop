@@ -1,18 +1,8 @@
 [Desktop Entry]
 Type=Service
 Icon=tools-rip-video-cd
-Name=YouTube video provider.
-Name[es]=Proveedor de vídeos YouTube
-Name[et]=YouTube'i video pakkuja
-Name[fr]=Fournisseur de vidéos YouTube.
-Name[nl]=Leverancier van YouTube-video's.
-Name[pl]=Dostawca filmów YouTube.
-Name[pt]=Fornecedor de vídeos do YouTube.
-Name[pt_BR]=Fornecedor de vídeos do YouTube.
-Name[sv]=YouTube videoleverantör.
-Name[uk]=Показ відео YouTube.
-Name[x-test]=xxYouTube video provider.xx
-Comment=A plugin that allows browsing through YouTube videos.
+Name=YouTube Videos
+Comment=Watch videos from Youtube
 Comment[es]=Un complemento que le permite explorar vídeos de YouTube.
 Comment[et]=Plugin Youtube'i videode sirvimiseks.
 Comment[fr]=Un module externe permettant de parcourir des vidéos sur YouTube.
