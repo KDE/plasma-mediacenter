@@ -1,0 +1,28 @@
+2013 -06-16 Sinny Kumari <ksinny@gmail.com> - v1.1.0-alpha
+    * Youtube backend for watching online videos 
+    * Option to go back to currently playing media on clicking empty area in home-screen
+
+    * Bug fixes
+      313097: Clearing Playlist search breaks current media highlight in Playlist
+      317451: A way to return to media from main screen
+      318870: Space pauses media when typing into playlist filter 
+      319626: Can't remove an another song from playlist without
+              stopping the current media
+      312102: Play All doesn't really play them
+      320239: When starting PMC directly with a file, the 
+              Welcome screen is shown instead of the correct view
+      318816: Audio and video files cannot be opened from Files with
+              Plasma Media Center
+      319621: Can't reorder the songs from playlist 
+      317810: plasma-mediacenter --version" gives 0.1, while the public
+              known version is 1.0.0
+      317084: Plasma media center crash on startup
+
+2013 -03-15 Sinny Kumari <ksinny@gmail.com> - 1.0.0
+    * First stable release
+
+2012 -10-02 Lamarque V. Souza <lamarque@kde.org> - 0.8.90
+    * Beta release
+
+2012 -04-18 Lamarque V. Souza <lamarque@kde.org> - 0.8.80
+    * Initial tag of Plasma Media Center
