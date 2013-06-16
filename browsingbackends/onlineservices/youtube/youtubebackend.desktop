@@ -3,16 +3,6 @@ Type=Service
 Icon=tools-rip-video-cd
 Name=YouTube Videos
 Comment=Watch videos from Youtube
-Comment[es]=Un complemento que le permite explorar vídeos de YouTube.
-Comment[et]=Plugin Youtube'i videode sirvimiseks.
-Comment[fr]=Un module externe permettant de parcourir des vidéos sur YouTube.
-Comment[nl]=Een plugin voor bladeren door video's in YouTube.
-Comment[pl]=Wtyczka pozwalająca przeglądanie filmów YouTube.
-Comment[pt]=Um 'plugin' que lhe permite pesquisar vídeos no YouTube.
-Comment[pt_BR]=Um plug-in que lhe permite navegar pelos vídeos no YouTube.
-Comment[sv]=Ett insticksprogram som låter dig bläddra igenom videor på YouTube.
-Comment[uk]=Додаток, за допомогою якого ви зможете переглядати відеоматеріали з YouTube.
-Comment[x-test]=xxA plugin that allows browsing through YouTube videos.xx
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 
