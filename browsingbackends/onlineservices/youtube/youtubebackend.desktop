@@ -2,7 +2,17 @@
 Type=Service
 Icon=tools-rip-video-cd
 Name=YouTube Videos
+Name[de]=YouTube-Videos
+Name[pt_BR]=Vídeos do YouTube
+Name[sv]=YouTube-videor
+Name[uk]=Відео з YouTube
+Name[x-test]=xxYouTube Videosxx
 Comment=Watch videos from Youtube
+Comment[de]=Betrachten Sie Videos von Youtube
+Comment[pt_BR]=Assista aos vídeos do YouTube
+Comment[sv]=Titta på videor från YouTube
+Comment[uk]=Перегляд відео з Youtube
+Comment[x-test]=xxWatch videos from Youtubexx
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 
