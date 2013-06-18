@@ -38,6 +38,7 @@ FocusScope {
                 anchors.centerIn: parent
                 text: i18n("Artist")
                 color: artistListView.visible ? theme.viewHoverColor : theme.textColor
+                font.bold: parent.activeFocus
             }
             MouseArea {
                 anchors.fill: parent
@@ -63,6 +64,7 @@ FocusScope {
                 anchors.centerIn: parent
                 text: i18n("Albums")
                 color: albumListView.visible ? theme.viewHoverColor : theme.textColor
+                font.bold: parent.activeFocus
             }
             MouseArea {
                 anchors.fill: parent
@@ -88,6 +90,7 @@ FocusScope {
                 anchors.centerIn: parent
                 text: i18n("Songs")
                 color: musicListView.visible ? theme.viewHoverColor : theme.textColor
+                font.bold: parent.activeFocus
             }
             MouseArea {
                 anchors.fill: parent
