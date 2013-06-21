@@ -41,6 +41,8 @@ FocusScope {
         artistsContent: searchArtistsTextField
         albumsContent: searchAlbumsTextField
         songsContent: searchSongsTextField
+
+        onNeedFocus: focus = true
     }
 
     /*Rectangle {

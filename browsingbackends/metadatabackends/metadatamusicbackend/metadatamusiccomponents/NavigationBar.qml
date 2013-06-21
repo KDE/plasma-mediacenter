@@ -25,6 +25,8 @@ FocusScope {
     property QtObject albumsContent
     property QtObject songsContent
 
+    signal needFocus
+
     Row {
         anchors.fill: parent
         spacing: 10
@@ -42,7 +44,7 @@ FocusScope {
             }
             MouseArea {
                 anchors.fill: parent
-                onClicked: focus = true
+                onClicked: { navBarFocusScope.needFocus(); artistsTab.focus = true }
             }
 
             onActiveFocusChanged: if(activeFocus) {
@@ -68,7 +70,7 @@ FocusScope {
             }
             MouseArea {
                 anchors.fill: parent
-                onClicked: focus = true
+                onClicked: { navBarFocusScope.needFocus(); albumsTab.focus = true }
             }
 
             onActiveFocusChanged: if(activeFocus) {
@@ -94,7 +96,7 @@ FocusScope {
             }
             MouseArea {
                 anchors.fill: parent
-                onClicked: focus = true
+                onClicked: { navBarFocusScope.needFocus(); songsTab.focus = true }
             }
 
             onActiveFocusChanged: if(activeFocus) {
