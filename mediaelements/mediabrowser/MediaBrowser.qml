@@ -27,6 +27,7 @@ FocusScope {
     property QtObject currentBrowsingBackend
     property QtObject previousBrowsingBackend
 
+    signal backRequested
     signal playRequested(int index, string url, string currentMediaType)
     signal popupMenuRequested(int index, string mediaUrl, string mediaType, string display)
 
@@ -93,12 +94,20 @@ FocusScope {
             }
 
             onCurrentIndexChanged: positionViewAtIndex(currentIndex, GridView.Contain)
+            Keys.onEscapePressed: {
+                if(!mediaBrowser.currentBrowsingBackend.goOneLevelUp()) {
+                    mediaBrowser.backRequested();
+                }
+            }
         }
     }
 
     onCurrentBrowsingBackendChanged: {
         if (!currentBrowsingBackend)
             return;
+        if (mediaBrowserViewItem.mediaBrowserGridView) {
+            mediaBrowserViewItem.mediaBrowserGridView.destroy();
+        }
         //Check if there is a custom browser, if yes, load that
         var object;
         if (currentBrowsingBackend.mediaBrowserOverride()) {

@@ -26,9 +26,9 @@ FocusScope {
 
     property QtObject runtimeDataObject
 
-    property bool playing: false
-    property bool paused: false
-    property bool stopped: true
+    property bool playing: runtimeDataObject.playing
+    property bool paused: runtimeDataObject.paused
+    property bool stopped: runtimeDataObject.stopped
     property bool showMusicStats: true
     property bool dimVideo: false
 

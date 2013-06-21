@@ -22,8 +22,9 @@
 import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
 
-Item{
+Item {
     id: listViewItem
+    signal playRequested(string url)
 
     Row {
         anchors.fill: parent
@@ -130,11 +131,9 @@ Item{
 
                 onClicked: {
                     listViewItem.ListView.view.model.currentIndex = index
-                    playlistItem.playRequested(mediaUrl)
+                    listViewItem.playRequested(mediaUrl)
                 }
-
             }
-
          }
 
         PlasmaComponents.ToolButton {
@@ -147,7 +146,9 @@ Item{
             }
         }
     }
+
+    Keys.onReturnPressed: {
+        listViewItem.ListView.view.model.currentIndex = index;
+        listViewItem.playRequested(mediaUrl);
+    }
 }
-
-
-

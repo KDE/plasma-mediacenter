@@ -42,7 +42,7 @@ void LocalFilesAbstractBackend::browseOneLevelUp()
 
 bool LocalFilesAbstractBackend::goOneLevelUp()
 {
-    return false;
+    return qobject_cast<LocalFilesAbstractModel*>(model())->goOneLevelUp();
 }
 
 bool LocalFilesAbstractBackend::expand (int row)

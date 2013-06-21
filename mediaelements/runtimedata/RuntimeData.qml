@@ -21,6 +21,7 @@ import QtQuick 1.1
 
 Item {
     property QtObject currentBrowsingBackend
+
     property bool playing: false
     property bool paused: false
     property bool stopped: false
@@ -30,8 +31,15 @@ Item {
     property bool currentTimeDirty: false
     property real volume: 1.0
     property bool userTrigerredStop: false
+    property string url
 
     onStoppedChanged: if (stopped) playing = false
     onPausedChanged: if (paused) playing = false
     onPlayingChanged: if (playing) { paused = false; stopped = false }
+
+    function playUrl(theUrl) {
+        stopped = true;
+        url = theUrl;
+        playing = true;
+    }
 }

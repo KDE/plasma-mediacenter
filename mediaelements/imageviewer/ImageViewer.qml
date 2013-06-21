@@ -24,7 +24,7 @@ import org.kde.plasma.graphicswidgets 0.1 as PlasmaWidgets
 import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.components 0.1 as PlasmaComponents
 
-Rectangle {
+FocusScope {
     id: imageRect
     property alias source: mainImage.source
     property alias stripModel: mediaPictureStrip.model
@@ -36,7 +36,6 @@ Rectangle {
 
     width: parent.width
     height: parent.height
-    color: "black"
 
     Rectangle {
         border.color: theme.textColor; radius: 5; width: parent.width/2; height: 24
@@ -55,7 +54,6 @@ Rectangle {
         anchors.centerIn: parent
 
         cache: false
-        asynchronous: true
 
         onStatusChanged: {
             if (status == Image.Ready) {
@@ -79,7 +77,7 @@ Rectangle {
         height: 64
         slideshowPaused: mainImage.status == Image.Loading
         onImageClicked: {
-            mediaImageViewer.source = url
+            mainImage.source = url
         }
         onSlideShowStarted: imageRect.slideshowStarted()
         states: [
@@ -95,17 +93,6 @@ Rectangle {
     function nextImage() { mediaPictureStrip.nextImage(); }
     function previousImage() { mediaPictureStrip.previousImage(); }
 
-    function handleKey(key)
-    {
-        if (!imageRect.visible)
-            return false;
-        switch (key) {
-        case Qt.Key_Left:
-            previousImage();
-            return true;
-        case Qt.Key_Right:
-            nextImage();
-            return true;
-        }
-    }
+    Keys.onLeftPressed: previousImage()
+    Keys.onRightPressed: nextImage()
 }

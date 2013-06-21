@@ -25,8 +25,6 @@ PlasmaCore.FrameSvgItem {
     id: controlBarFrame
     imagePath: "widgets/background"
     enabledBorders: "LeftBorder|RightBorder|BottomBorder"
-    opacity: 0.9
-    visible: false
 
     property QtObject runtimeDataObject
 
@@ -216,7 +214,6 @@ PlasmaCore.FrameSvgItem {
             height: width
             font.pointSize: 12
             iconSource: "format-list-ordered"
-            checkable: true
             onClicked: playlistButtonClicked();
         }
     }
