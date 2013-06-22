@@ -38,8 +38,6 @@ FocusScope {
     signal playPrevious()
     signal backButtonClicked()
 
-    signal requestToggleBrowser
-
     PlasmaCore.FrameSvgItem {
         id: controlBarFrameSvg
         imagePath: "widgets/background"
@@ -62,14 +60,6 @@ FocusScope {
                 onClicked: {
                     backButtonClicked();
                 }
-            }
-
-            PlasmaComponents.ToolButton {
-                id: showBrowserButton
-                height: parent.height
-                width: height
-                iconSource: "view-catalog"
-                onClicked: controlBarFrame.requestToggleBrowser()
             }
 
             PlasmaComponents.ToolButton {
