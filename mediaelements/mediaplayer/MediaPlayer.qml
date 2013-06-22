@@ -20,7 +20,6 @@
 import QtQuick 1.1
 import QtMultimediaKit 1.1 as QtMultimediaKit
 import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
-import org.kde.plasma.components 0.1 as PlasmaComponents
 
 FocusScope {
     id: mediaPlayerRootRect
@@ -85,8 +84,6 @@ FocusScope {
         Component.onCompleted: {
           runtimeDataObject.volume = video.volume
         }
-
-        onBufferProgressChanged: console.log(bufferProgress)
     }
 
     MusicStats {
@@ -116,12 +113,6 @@ FocusScope {
     MouseArea {
         anchors.fill: parent
         onClicked: mediaPlayerRootRect.clicked()
-    }
-
-    PlasmaComponents.BusyIndicator {
-        anchors { horizontalCenter: parent.horizontalCenter; bottom: parent.bottom; margins: 10 }
-        visible: running
-        running: !video.bufferProgress
     }
 
     Keys.onEscapePressed: mediaPlayerRootRect.escapePressed()
