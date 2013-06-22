@@ -49,7 +49,6 @@ public Q_SLOTS:
     void showMousePointer();
 
 Q_SIGNALS:
-    void keyPressed(int key);
     void mousePointerAutoHideChanged();
 
 private Q_SLOTS:

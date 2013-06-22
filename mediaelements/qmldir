@@ -6,4 +6,3 @@ RuntimeData 0.1 runtimedata/RuntimeData.qml
 Playlist 0.1 playlist/Playlist.qml
 ImageViewer 0.1 imageviewer/ImageViewer.qml
 PopupMenu 0.1 popupmenu/PopupMenu.qml
-KeyHandler 0.1 keyhandler/KeyHandler.qml

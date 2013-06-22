@@ -219,8 +219,6 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
             showMousePointer();
             enableMousePointerAutoHideIfNeeded();
         }
-    } else if (event->type() == QEvent::KeyPress && obj == centralWidget()) {
-        emit keyPressed(static_cast<QKeyEvent*>(event)->key());
     }
     return false;
 }

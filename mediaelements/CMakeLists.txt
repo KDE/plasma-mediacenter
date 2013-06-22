@@ -7,4 +7,3 @@ install(DIRECTORY runtimedata DESTINATION ${IMPORTS_INSTALL_DIR}/org/kde/plasma/
 install(DIRECTORY playlist DESTINATION ${IMPORTS_INSTALL_DIR}/org/kde/plasma/mediacenter/elements)
 install(DIRECTORY imageviewer DESTINATION ${IMPORTS_INSTALL_DIR}/org/kde/plasma/mediacenter/elements)
 install(DIRECTORY popupmenu DESTINATION ${IMPORTS_INSTALL_DIR}/org/kde/plasma/mediacenter/elements)
-install(DIRECTORY keyhandler DESTINATION ${IMPORTS_INSTALL_DIR}/org/kde/plasma/mediacenter/elements)
