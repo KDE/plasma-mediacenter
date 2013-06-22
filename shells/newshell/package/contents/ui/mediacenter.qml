@@ -381,6 +381,18 @@ Image {
 
             onPlaylistButtonClicked: pmcPageStack.pushAndFocus(getPlaylist())
             onBackButtonClicked: pmcPageStack.popAndFocus()
+            onPlayNext: {
+                if (playlistModel.currentIndex != -1) {
+                    playlistInstance.playRequested(playlistModel.getNextUrl());
+                }
+            }
+
+            onPlayPrevious: {
+                if (playlistModel.currentIndex != -1) {
+                    playlistInstance.playRequested(playlistModel.getPreviousUrl());
+                }
+            }
+
 
             states: [
                 State {
@@ -511,8 +523,8 @@ Image {
             MediaCenterElements.Playlist {
                 backend: runtimeData.currentBrowsingBackend
                 onPlayRequested: {
-                    pmcPageStack.pushAndFocus(getMediaPlayer());
                     runtimeData.playUrl(url);
+                    pmcPageStack.pushAndFocus(getMediaPlayer());
                 }
                 Keys.onEscapePressed: pmcPageStack.popAndFocus()
             }
