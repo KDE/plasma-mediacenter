@@ -351,4 +351,10 @@ FocusScope {
             }
         }
     }
+
+    Keys.onEscapePressed: {
+        if(!mediaBrowser.currentBrowsingBackend.goOneLevelUp()) {
+            mediaBrowser.backRequested();
+        }
+    }
 }
