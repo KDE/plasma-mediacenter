@@ -99,6 +99,12 @@ FocusScope {
                     mediaBrowser.backRequested();
                 }
             }
+            Keys.onPressed: {
+                if (event.key == Qt.Key_Down && currentIndex%2) {
+                    searchMedia.focus = true;
+                    event.accepted = true;
+                }
+            }
         }
     }
 
@@ -176,6 +182,7 @@ FocusScope {
 
             placeholderText: "Search..."
             onTextChanged: searchMediaTimer.restart()
+            Keys.onUpPressed: mediaBrowserViewItem.mediaBrowserGridView.focus = true
 
             Timer {
                 id: searchMediaTimer
