@@ -390,25 +390,39 @@ Image {
             transitions: [ Transition { AnchorAnimation { duration: 200 } } ]
         }
 
-        PlasmaComponents.PageStack {
-            id: pmcPageStack
+        Item {
+            id: pmcPageStackParentItem
             anchors {
                 top: mediaController.bottom; margins: 10
                 right: parent.right; left: parent.left; bottom: parent.bottom
             }
+            PlasmaComponents.PageStack {
+                id: pmcPageStack
+                anchors.fill: parent
 
-            function pushAndFocus(page) {
-                push(page);
-                focusCurrentPage();
-            }
+                function pushAndFocus(page) {
+                    push(page);
+                    focusCurrentPage();
+                }
 
-            function popAndFocus() {
-                pop();
-                focusCurrentPage();
-            }
+                function popAndFocus() {
+                    pop();
+                    focusCurrentPage();
+                }
 
-            function focusCurrentPage() {
-                currentPage.focus = true;
+                function focusCurrentPage() {
+                    currentPage.focus = true;
+                }
+
+                onCurrentPageChanged: {
+                    if ((currentPage === mediaWelcomeInstance) && mediaPlayerInstance) {
+
+                    } else {
+                        if (mediaPlayerInstance && mediaPlayerInstance.z == -1) {
+
+                        }
+                    }
+                }
             }
         }
 
@@ -422,6 +436,32 @@ Image {
                         return;
                     runtimeData.currentBrowsingBackend = selectedBackend;
                     pmcPageStack.pushAndFocus(getMediaBrowser());
+                }
+                onEmptyAreaClicked: pmcPageStack.pushAndFocus(getMediaPlayer());
+
+                onStatusChanged: {
+                    switch (status) {
+                    case PlasmaComponents.PageStatus.Active:
+                        if (mediaPlayerInstance) {
+                            videoBackdropTimer.start();
+                        }
+                    case PlasmaComponents.PageStatus.Deactivating:
+                        if (mediaPlayerInstance) {
+                            mediaPlayerInstance.visible = false;
+                            mediaPlayerInstance.z = 0;
+                            mediaPlayerInstance.dimVideo = false;
+                        }
+                    }
+                }
+
+                Timer {
+                    id: videoBackdropTimer; interval: 300
+                    onTriggered: {
+                        mediaPlayerInstance.parent = pmcPageStackParentItem;
+                        mediaPlayerInstance.visible = true;
+                        mediaPlayerInstance.z = -1;
+                        mediaPlayerInstance.dimVideo = true;
+                    }
                 }
             }
         }

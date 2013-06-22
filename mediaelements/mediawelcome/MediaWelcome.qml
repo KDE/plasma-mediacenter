@@ -20,8 +20,9 @@
 
 import QtQuick 1.1
 import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
+import org.kde.plasma.components 0.1 as PlasmaComponents
 
-Item {
+PlasmaComponents.Page {
     id: homeScreenRootItem
     property QtObject model
     property QtObject selectedBackend
