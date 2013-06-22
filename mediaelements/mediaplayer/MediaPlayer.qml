@@ -86,8 +86,6 @@ FocusScope {
         Component.onCompleted: {
           runtimeDataObject.volume = video.volume
         }
-
-        onBufferProgressChanged: console.log(bufferProgress)
     }
 
     MusicStats {
