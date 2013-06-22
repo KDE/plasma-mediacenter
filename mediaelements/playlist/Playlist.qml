@@ -112,4 +112,16 @@ FocusScope {
             }
         }
     }
+
+    function playNext()
+    {
+        playlistList.currentIndex++;
+        playlistList.currentItem.requestPlayback();
+    }
+
+    function playPrevious()
+    {
+        playlistList.currentIndex--;
+        playlistList.currentItem.requestPlayback();
+    }
 }

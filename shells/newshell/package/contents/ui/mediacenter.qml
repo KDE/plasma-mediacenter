@@ -356,7 +356,7 @@ Image {
             id: runtimeData
             objectName: "runtimeData"
 
-            onCurrentTimeChanged: {
+            onCurrentTimeDirtyChanged: {
                 if (currentTimeDirty) {
                     currentTimeDirty = false;
                     if (mediaPlayerInstance) mediaPlayerInstance.currentTime = currentTime;
@@ -381,17 +381,8 @@ Image {
 
             onPlaylistButtonClicked: pmcPageStack.pushAndFocus(getPlaylist())
             onBackButtonClicked: pmcPageStack.popAndFocus()
-            onPlayNext: {
-                if (playlistModel.currentIndex != -1) {
-                    playlistInstance.playRequested(playlistModel.getNextUrl());
-                }
-            }
-
-            onPlayPrevious: {
-                if (playlistModel.currentIndex != -1) {
-                    playlistInstance.playRequested(playlistModel.getPreviousUrl());
-                }
-            }
+            onPlayNext: playlistInstance.playNext()
+            onPlayPrevious: playlistInstance.playPrevious()
 
 
             states: [
@@ -426,16 +417,6 @@ Image {
 
                 function focusCurrentPage() {
                     currentPage.focus = true;
-                }
-
-                onCurrentPageChanged: {
-                    if ((currentPage === mediaWelcomeInstance) && mediaPlayerInstance) {
-
-                    } else {
-                        if (mediaPlayerInstance && mediaPlayerInstance.z == -1) {
-
-                        }
-                    }
                 }
             }
         }
@@ -510,6 +491,16 @@ Image {
                 onEscapePressed: pmcPageStack.popAndFocus()
                 onClicked: toggleController()
                 onMediaStarted: _pmc_mainwindow.mousePointerAutoHide = hasVideo
+                onMediaFinished: {
+                    if (playlistModel.currentIndex != -1 && totalTime != -1 && !runtimeData.userTrigerredStop) {
+                        playlistInstance.playRequested(playlistModel.getNextUrl());
+                    } else {
+                        runtimeData.stopped = true;
+                        if (!runtimeData.userTrigerredStop) {
+                            pmcPageStack.pushAndFocus(getMediaBrowser())
+                        }
+                    }
+                }
 
                 Component.onCompleted: {
                     runtimeData.currentTime = function() { return currentTime }
@@ -523,8 +514,10 @@ Image {
             MediaCenterElements.Playlist {
                 backend: runtimeData.currentBrowsingBackend
                 onPlayRequested: {
+                    if (!mediaPlayerInstance) {
+                        pmcPageStack.pushAndFocus(getMediaPlayer());
+                    }
                     runtimeData.playUrl(url);
-                    pmcPageStack.pushAndFocus(getMediaPlayer());
                 }
                 Keys.onEscapePressed: pmcPageStack.popAndFocus()
             }
