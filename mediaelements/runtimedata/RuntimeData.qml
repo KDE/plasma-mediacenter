@@ -38,6 +38,7 @@ Item {
     onPlayingChanged: if (playing) { paused = false; stopped = false }
 
     function playUrl(theUrl) {
+        userTrigerredStop = true;
         stopped = true;
         url = theUrl;
         playing = true;
