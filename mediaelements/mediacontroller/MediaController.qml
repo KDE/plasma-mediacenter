@@ -21,18 +21,18 @@ import QtQuick 1.1
 import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.components 0.1 as PlasmaComponents
 
-PlasmaCore.FrameSvgItem {
+FocusScope {
     id: controlBarFrame
-    imagePath: "widgets/background"
-    enabledBorders: "LeftBorder|RightBorder|BottomBorder"
 
     property QtObject runtimeDataObject
 
     property bool backStopped: false
-    property string curMediaTime
-    property string totalMediaTime
-    property string remainingMediaTime
+    property int currentMediaTime
+    property int totalMediaTime
+    property int remainingMediaTime: totalMediaTime - currentMediaTime
+
     property alias playlistButtonChecked: playlistButton.checked
+
     signal playlistButtonClicked()
     signal playNext()
     signal playPrevious()
@@ -40,213 +40,220 @@ PlasmaCore.FrameSvgItem {
 
     signal requestToggleBrowser
 
-    Row {
-        id: mediaController
-        anchors {
-            fill: parent
-            leftMargin: controlBarFrame.margins.left
-            rightMargin: controlBarFrame.margins.right
-            bottomMargin: controlBarFrame.margins.bottom
-        }
+    PlasmaCore.FrameSvgItem {
+        id: controlBarFrameSvg
+        imagePath: "widgets/background"
+        enabledBorders: "LeftBorder|RightBorder|BottomBorder"
+        anchors.fill: parent
 
-        spacing: 10
+        Row {
+            id: mediaController
+            anchors {
+                fill: parent; bottomMargin: 10
+            }
 
-        PlasmaComponents.ToolButton {
-            id: backButton
-            height: parent.height
-            width: height
-            iconSource: "go-previous";
-            onClicked: {
-                backButtonClicked();
+            spacing: 10
+
+            PlasmaComponents.ToolButton {
+                id: backButton
+                height: parent.height
+                width: height
+                iconSource: "go-previous";
+                onClicked: {
+                    backButtonClicked();
+                }
+            }
+
+            PlasmaComponents.ToolButton {
+                id: showBrowserButton
+                height: parent.height
+                width: height
+                iconSource: "view-catalog"
+                onClicked: controlBarFrame.requestToggleBrowser()
+            }
+
+            PlasmaComponents.ToolButton {
+                id: backwardButton
+                height: parent.height
+                width: height
+                visible: true
+
+                iconSource: "media-skip-backward"
+
+                onClicked: {
+                    runtimeDataObject.userTrigerredStop = true;
+                    playPrevious();
+                    runtimeDataObject.userTrigerredStop = false;
+                }
+            }
+
+            PlasmaComponents.ToolButton {
+                id: playPauseButton
+                height: parent.height
+                width: height
+
+                iconSource: runtimeDataObject.playing ? "media-playback-pause" : "media-playback-start"
+
+                onClicked: {
+                    if (runtimeDataObject.playing) {
+                        runtimeDataObject.playing = false; runtimeDataObject.paused = true;
+                    } else if (runtimeDataObject.paused || runtimeDataObject.stopped) {
+                        runtimeDataObject.playing = true; runtimeDataObject.paused = false;
+                    }
+                }
+            }
+
+            PlasmaComponents.ToolButton {
+                id: stopButton
+                height: parent.height
+                width: height
+
+                iconSource: "media-playback-stop"
+
+                onClicked: {
+                    runtimeDataObject.userTrigerredStop = true;
+                    runtimeDataObject.stopped = true;
+                    runtimeDataObject.userTrigerredStop = false;
+                }
+            }
+
+            PlasmaComponents.ToolButton {
+                id: forwardButton
+                height: parent.height
+                width: height
+                visible: true
+
+                iconSource: "media-skip-forward"
+
+                onClicked: {
+                    runtimeDataObject.userTrigerredStop = true;
+                    playNext();
+                    runtimeDataObject.userTrigerredStop = false;
+                }
+            }
+
+            PlasmaComponents.Slider {
+                id: progressSlider
+                width: (parent.width - backButton.width - backwardButton.width - playPauseButton.width
+                    - stopButton.width - forwardButton.width - volumeButton.width - volumeSlider.width
+                    - playlistButton.width - curMediaTime.width) * 0.8
+                height: parent.height
+
+                Binding {
+                    when: !progressSlider.pressed
+                    target: progressSlider
+                    property: "value"
+                    value: controlBarFrame.currentMediaTime
+                }
+
+                onValueChanged: {
+                    if (pressed) {
+                        runtimeDataObject.currentTimeDirty = true;
+                        runtimeDataObject.currentTime = value;
+                    }
+                }
+
+                maximumValue: controlBarFrame.totalMediaTime
+            }
+
+            PlasmaComponents.Label {
+                id: curMediaTime
+                property bool checked: false
+
+                text: checked ? '- ' + getTimeString(controlBarFrame.remainingMediaTime) : getTimeString(controlBarFrame.currentMediaTime)
+                height: parent.height
+                font.pixelSize: height*0.5
+
+                verticalAlignment: Text.AlignVCenter
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: parent.checked = !parent.checked
+                }
+
+                function getTimeString(time) {
+                    return Qt.formatTime(new Date(0, 0, 0, 0, 0, 0, time), "hh:mm:ss");
+                }
+            }
+
+            PlasmaComponents.Slider {
+                id: volumeSlider
+                height: parent.height
+                width: volumeButton.checked ? parent.width * 0.1 : 1
+                visible: volumeButton.checked
+                minimumValue: 0
+                maximumValue: 100
+
+                Binding {
+                    when: volumeSlider.pressed
+                    target: runtimeDataObject
+                    property: "volume"
+                    value: volumeSlider.value * 0.01
+                }
+
+                Binding {
+                    when: !volumeSlider.pressed
+                    target: volumeSlider
+                    property: "value"
+                    value: Math.round(100 * runtimeDataObject.volume)
+                }
+            }
+
+            PlasmaComponents.ToolButton {
+                id: volumeButton
+                width: parent.height
+                height: width
+                iconSource: {
+                    var value = volumeSlider.value
+                    var max = volumeSlider.maximumValue
+                    if (value > 0 && value < max/3) "audio-volume-low"
+                    else if (value > max/3 && value < max*2/3) "audio-volume-medium"
+                    else if (value <= 0) "audio-volume-muted"
+                    else "audio-volume-high"
+                }
+                checkable: true
+            }
+
+            PlasmaComponents.ToolButton {
+                id: playlistButton
+                width: parent.height
+                height: width
+                font.pointSize: 12
+                iconSource: "format-list-ordered"
+                onClicked: playlistButtonClicked();
             }
         }
 
-        PlasmaComponents.ToolButton {
-            id: showBrowserButton
-            height: parent.height
-            width: height
-            iconSource: "view-catalog"
-            onClicked: controlBarFrame.requestToggleBrowser()
-        }
-
-        PlasmaComponents.ToolButton {
-            id: backwardButton
-            height: parent.height
-            width: height
-            visible: true
-
-            iconSource: "media-skip-backward"
-
-            onClicked: {
-                runtimeDataObject.userTrigerredStop = true;
-                playPrevious();
-                runtimeDataObject.userTrigerredStop = false;
-            }
-        }
-
-        PlasmaComponents.ToolButton {
-            id: playPauseButton
-            height: parent.height
-            width: height
-
-            iconSource: runtimeDataObject.playing ? "media-playback-pause" : "media-playback-start"
-
-            onClicked: {
+        function handleKey(key)
+        {
+            switch (key) {
+            case 16777344: //Media Play/pause key
                 if (runtimeDataObject.playing) {
                     runtimeDataObject.playing = false; runtimeDataObject.paused = true;
                 } else if (runtimeDataObject.paused || runtimeDataObject.stopped) {
                     runtimeDataObject.playing = true; runtimeDataObject.paused = false;
                 }
-            }
-        }
-
-        PlasmaComponents.ToolButton {
-            id: stopButton
-            height: parent.height
-            width: height
-
-            iconSource: "media-playback-stop"
-
-            onClicked: {
+                return true;
+            case 16777345:    // stop media key
                 runtimeDataObject.userTrigerredStop = true;
                 runtimeDataObject.stopped = true;
                 runtimeDataObject.userTrigerredStop = false;
-            }
-        }
-
-        PlasmaComponents.ToolButton {
-            id: forwardButton
-            height: parent.height
-            width: height
-            visible: true
-
-            iconSource: "media-skip-forward"
-
-            onClicked: {
+                return true;
+            case 16777346:     // previous media key
                 runtimeDataObject.userTrigerredStop = true;
-                playNext();
-                runtimeDataObject.userTrigerredStop = false;
-            }
-        }
-
-        PlasmaComponents.Slider {
-            id: progressSlider
-            width: (parent.width - backButton.width - backwardButton.width - playPauseButton.width
-                - stopButton.width - forwardButton.width - volumeButton.width - volumeSlider.width
-                - playlistButton.width - curMediaTime.width) * 0.8
-            height: parent.height
-
-            Binding {
-                when: !progressSlider.pressed
-                target: progressSlider
-                property: "value"
-                value: runtimeDataObject.currentTime
-            }
-
-            onValueChanged: {
-                if (pressed) {
-                    runtimeDataObject.currentTimeDirty = true;
-                    runtimeDataObject.currentTime = value;
+                if (playlistModel.currentIndex != -1) {
+                    playlist.playRequested(playlistModel.getPreviousUrl());
                 }
+                runtimeDataObject.userTrigerredStop = false;
+                return true;
+            case 16777347:   // next media key
+                runtimeDataObject.userTrigerredStop = true;
+                if (playlistModel.currentIndex != -1) {
+                    playlist.playRequested(playlistModel.getNextUrl());
+                }
+                runtimeDataObject.userTrigerredStop = false;
+                return true;
             }
-
-            value: runtimeDataObject.currentTime
-            maximumValue: runtimeDataObject.totalTime
-        }
-
-        PlasmaComponents.Label {
-            id: curMediaTime
-            property bool checked: false
-
-            text: checked ? '- ' + controlBarFrame.remainingMediaTime : controlBarFrame.curMediaTime
-            height: parent.height
-            font.pointSize: 14
-
-            verticalAlignment: Text.AlignVCenter
-
-            MouseArea {
-                anchors.fill: parent
-                onClicked: parent.checked = !parent.checked
-            }
-        }
-
-        PlasmaComponents.Slider {
-            id: volumeSlider
-            height: parent.height
-            width: volumeButton.checked ? parent.width * 0.1 : 1
-            visible: volumeButton.checked
-            minimumValue: 0
-            maximumValue: 100
-
-            Binding {
-                when: volumeSlider.pressed
-                target: runtimeDataObject
-                property: "volume"
-                value: volumeSlider.value * 0.01
-            }
-
-            Binding {
-                when: !volumeSlider.pressed
-                target: volumeSlider
-                property: "value"
-                value: Math.round(100 * runtimeDataObject.volume)
-            }
-        }
-
-        PlasmaComponents.ToolButton {
-            id: volumeButton
-            width: parent.height
-            height: width
-            iconSource: {
-                var value = volumeSlider.value
-                var max = volumeSlider.maximumValue
-                if (value > 0 && value < max/3) "audio-volume-low"
-                else if (value > max/3 && value < max*2/3) "audio-volume-medium"
-                else if (value <= 0) "audio-volume-muted"
-                else "audio-volume-high"
-            }
-            checkable: true
-        }
-
-        PlasmaComponents.ToolButton {
-            id: playlistButton
-            width: parent.height
-            height: width
-            font.pointSize: 12
-            iconSource: "format-list-ordered"
-            onClicked: playlistButtonClicked();
-        }
-    }
-
-    function handleKey(key)
-    {
-        switch (key) {
-        case 16777344: //Media Play/pause key
-            if (runtimeDataObject.playing) {
-                runtimeDataObject.playing = false; runtimeDataObject.paused = true;
-            } else if (runtimeDataObject.paused || runtimeDataObject.stopped) {
-                runtimeDataObject.playing = true; runtimeDataObject.paused = false;
-            }
-            return true;
-        case 16777345:    // stop media key
-            runtimeDataObject.userTrigerredStop = true;
-            runtimeDataObject.stopped = true;
-            runtimeDataObject.userTrigerredStop = false;
-            return true;
-        case 16777346:     // previous media key
-            runtimeDataObject.userTrigerredStop = true;
-            if (playlistModel.currentIndex != -1) {
-                playlist.playRequested(playlistModel.getPreviousUrl());
-            }
-            runtimeDataObject.userTrigerredStop = false;
-            return true;
-        case 16777347:   // next media key
-            runtimeDataObject.userTrigerredStop = true;
-            if (playlistModel.currentIndex != -1) {
-                playlist.playRequested(playlistModel.getNextUrl());
-            }
-            runtimeDataObject.userTrigerredStop = false;
-            return true;
         }
     }
 }

@@ -47,11 +47,14 @@ Item {
         id: pictureStripMouseArea
         anchors.fill: parent
         hoverEnabled: true
-        onClicked: { pictureStripDelegate.ListView.view.currentIndex = index; emitClicked() }
+        onClicked: emitClicked()
     }
+
+    Keys.onReturnPressed: emitClicked()
 
     function emitClicked()
     {
+        pictureStripDelegate.ListView.view.currentIndex = index;
         pictureStripDelegate.imageClicked(mediaUrl);
     }
 }

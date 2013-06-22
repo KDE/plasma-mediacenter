@@ -355,19 +355,39 @@ Image {
         MediaCenterElements.RuntimeData {
             id: runtimeData
             objectName: "runtimeData"
+
+            onCurrentTimeChanged: {
+                if (currentTimeDirty) {
+                    currentTimeDirty = false;
+                    if (mediaPlayerInstance) mediaPlayerInstance.currentTime = currentTime;
+                }
+            }
         }
 
         MediaCenterElements.MediaController {
             id: mediaController
             anchors {
-                top: parent.top; right: parent.right; left: parent.left; margins: 10
+                top: parent.top; right: parent.right; left: parent.left
             }
             height: visible ? parent.height * 0.08 : 0
             runtimeDataObject: runtimeData
             opacity: 0.9
             visible: pmcPageStack.currentPage.hideMediaController ? false : true
+
+            currentMediaTime: runtimeData.currentTime
+            totalMediaTime: runtimeData.totalTime
+
             onPlaylistButtonClicked: pmcPageStack.pushAndFocus(getPlaylist())
             onBackButtonClicked: pmcPageStack.popAndFocus()
+
+            states: [
+                State {
+                    name: "hidden"
+                    AnchorChanges { target: mediaController; anchors.top: undefined; anchors.bottom: parent.top }
+                }
+            ]
+
+            transitions: [ Transition { AnchorAnimation { duration: 200 } } ]
         }
 
         PlasmaComponents.PageStack {
@@ -432,7 +452,14 @@ Image {
             MediaCenterElements.MediaPlayer {
                 runtimeDataObject: runtimeData
                 url: runtimeData.url
-                onEscapePressed: pmcPageStack.pushAndFocus(getPlaylist())
+                volume: runtimeData.volume
+                onEscapePressed: pmcPageStack.popAndFocus()
+                onClicked: toggleController()
+
+                Component.onCompleted: {
+                    runtimeData.currentTime = function() { return currentTime }
+                    runtimeData.totalTime = function() { return totalTime }
+                }
             }
         }
 
@@ -440,7 +467,10 @@ Image {
             id: pmcPlaylistComponent
             MediaCenterElements.Playlist {
                 backend: runtimeData.currentBrowsingBackend
-                onPlayRequested: runtimeData.playUrl(url)
+                onPlayRequested: {
+                    pmcPageStack.pushAndFocus(getMediaPlayer());
+                    runtimeData.playUrl(url);
+                }
                 Keys.onEscapePressed: pmcPageStack.popAndFocus()
             }
         }
@@ -491,6 +521,16 @@ Image {
 
     function init() {
         pmcPageStack.pushAndFocus(getMediaWelcome());
+    }
+
+    //FIXME: Hack to play params passed from the command line
+    function play() {
+        playlist.playRequested(playlistModel.getNextUrl());
+    }
+
+    function toggleController()
+    {
+        mediaController.state = mediaController.state ? "" : "hidden"
     }
 
     Component.onCompleted: init()

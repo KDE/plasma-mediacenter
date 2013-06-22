@@ -76,9 +76,7 @@ FocusScope {
         }
         height: 64
         slideshowPaused: mainImage.status == Image.Loading
-        onImageClicked: {
-            mainImage.source = url
-        }
+        onImageClicked: mainImage.source = url
         onSlideShowStarted: imageRect.slideshowStarted()
         states: [
             State {

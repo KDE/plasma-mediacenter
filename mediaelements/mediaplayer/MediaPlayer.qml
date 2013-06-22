@@ -49,6 +49,7 @@ FocusScope {
         filename: video.source
         subtitleTime: video.position
     }
+
     QtMultimediaKit.Video {
         id: video
         anchors.fill: parent
@@ -98,11 +99,6 @@ FocusScope {
     onPlayingChanged: if (playing) video.play();
     onPausedChanged: if (paused) video.pause();
     onStoppedChanged: if (stopped) video.stop();
-
-    function play()
-    {
-        video.play();
-    }
 
     function seekBy(value)
     {

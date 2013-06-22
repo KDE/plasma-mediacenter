@@ -129,10 +129,7 @@ Item {
                     delegateHeld = false
                 }
 
-                onClicked: {
-                    listViewItem.ListView.view.model.currentIndex = index
-                    listViewItem.playRequested(mediaUrl)
-                }
+                onClicked: requestPlayback()
             }
          }
 
@@ -147,7 +144,9 @@ Item {
         }
     }
 
-    Keys.onReturnPressed: {
+    Keys.onReturnPressed: requestPlayback()
+
+    function requestPlayback() {
         listViewItem.ListView.view.model.currentIndex = index;
         listViewItem.playRequested(mediaUrl);
     }
