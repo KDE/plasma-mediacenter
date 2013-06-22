@@ -372,7 +372,7 @@ Image {
             }
             height: visible ? parent.height * 0.08 : 0
             runtimeDataObject: runtimeData
-            opacity: 0.9
+            z: 1; opacity: 0.8
             visible: pmcPageStack.currentPage.hideMediaController ? false : true
             state: hideFlag && mediaPlayerInstance && mediaPlayerInstance.visible ? "hidden"  : ""
 
@@ -398,8 +398,8 @@ Image {
         Item {
             id: pmcPageStackParentItem
             anchors {
-                top: mediaController.bottom; margins: 10
-                right: parent.right; left: parent.left; bottom: parent.bottom
+                top: pmcPageStack.currentPage == mediaPlayerInstance ? parent.top : mediaController.bottom
+                margins: 10; right: parent.right; left: parent.left; bottom: parent.bottom
             }
             PlasmaComponents.PageStack {
                 id: pmcPageStack
@@ -473,8 +473,8 @@ Image {
                         mediaImageViewer.source = url;
                         pmcPageStack.pushAndFocus(mediaImageViewer);
                     } else {
-                        var mediaPlayer = getMediaPlayer();
-                        pmcPageStack.pushAndFocus(mediaPlayer);
+                        pmcPageStack.pushAndFocus(getMediaPlayer());
+                        if (playlistInstance) playlistInstance.active = false;
                         runtimeData.playUrl(url);
                     }
                 }
@@ -492,12 +492,13 @@ Image {
                 onClicked: toggleController()
                 onMediaStarted: _pmc_mainwindow.mousePointerAutoHide = hasVideo
                 onMediaFinished: {
-                    if (playlistModel.currentIndex != -1 && totalTime != -1 && !runtimeData.userTrigerredStop) {
+                    if (playlistInstance && playlistInstance.active && totalTime != -1 && !runtimeData.userTrigerredStop) {
                         playlistInstance.playRequested(playlistModel.getNextUrl());
                     } else {
                         runtimeData.stopped = true;
                         if (!runtimeData.userTrigerredStop) {
-                            pmcPageStack.pushAndFocus(getMediaBrowser())
+                            //FIXME:This breaks playback from runtimeData.playUrl
+                            //pmcPageStack.pushAndFocus(getMediaBrowser())
                         }
                     }
                 }

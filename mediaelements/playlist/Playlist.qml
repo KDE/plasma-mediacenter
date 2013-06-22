@@ -25,6 +25,7 @@ import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
 FocusScope {
     id: playlistItem
     property QtObject backend
+    property bool active: false
     signal playRequested(string url)
 
     PlasmaCore.FrameSvgItem {
@@ -107,7 +108,7 @@ FocusScope {
                 }
                 delegate: PlaylistDelegate {
                     width: playlistList.width - playlistScrollbar.width ; height: 32
-                    onPlayRequested: playlistItem.playRequested(url)
+                    onPlayRequested: { playlistItem.active = true; playlistItem.playRequested(url) }
                 }
             }
         }
