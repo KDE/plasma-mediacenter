@@ -455,7 +455,7 @@ Image {
                 }
 
                 Timer {
-                    id: videoBackdropTimer; interval: 300
+                    id: videoBackdropTimer; interval: 250
                     onTriggered: {
                         mediaPlayerInstance.parent = pmcPageStackParentItem;
                         mediaPlayerInstance.visible = true;
