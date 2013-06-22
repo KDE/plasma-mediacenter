@@ -366,6 +366,7 @@ Image {
 
         MediaCenterElements.MediaController {
             id: mediaController
+            property bool hideFlag: false
             anchors {
                 top: parent.top; right: parent.right; left: parent.left
             }
@@ -373,6 +374,7 @@ Image {
             runtimeDataObject: runtimeData
             opacity: 0.9
             visible: pmcPageStack.currentPage.hideMediaController ? false : true
+            state: hideFlag && mediaPlayerInstance && mediaPlayerInstance.visible ? "hidden"  : ""
 
             currentMediaTime: runtimeData.currentTime
             totalMediaTime: runtimeData.totalTime
@@ -437,12 +439,12 @@ Image {
                     runtimeData.currentBrowsingBackend = selectedBackend;
                     pmcPageStack.pushAndFocus(getMediaBrowser());
                 }
-                onEmptyAreaClicked: pmcPageStack.pushAndFocus(getMediaPlayer());
+                onEmptyAreaClicked: if (mediaPlayerInstance) pmcPageStack.pushAndFocus(getMediaPlayer());
 
                 onStatusChanged: {
                     switch (status) {
                     case PlasmaComponents.PageStatus.Active:
-                        if (mediaPlayerInstance) {
+                        if (mediaPlayerInstance && mediaPlayerInstance.hasVideo) {
                             videoBackdropTimer.start();
                         }
                     case PlasmaComponents.PageStatus.Deactivating:
@@ -495,6 +497,7 @@ Image {
                 volume: runtimeData.volume
                 onEscapePressed: pmcPageStack.popAndFocus()
                 onClicked: toggleController()
+                onMediaStarted: _pmc_mainwindow.mousePointerAutoHide = hasVideo
 
                 Component.onCompleted: {
                     runtimeData.currentTime = function() { return currentTime }
@@ -570,7 +573,7 @@ Image {
 
     function toggleController()
     {
-        mediaController.state = mediaController.state ? "" : "hidden"
+        mediaController.hideFlag = !mediaController.hideFlag;
     }
 
     Component.onCompleted: init()
