@@ -28,10 +28,7 @@ MEDIACENTER_EXPORT_BROWSINGBACKEND(YoutubeBackend)
 YoutubeBackend::YoutubeBackend(QObject* parent, const QVariantList& args): 
                                MediaCenter::AbstractBrowsingBackend(parent, args)
 {
-    m_youtubeModel = new YoutubeModel(this);
-    m_videoDetailsModel = new VideoDetailsModel(this);
-    m_expanded = true;
-    connect(m_videoDetailsModel, SIGNAL(gotRealUrl()), this, SLOT(realUrlFound()));
+
 }
 
 QString YoutubeBackend::backendCategory() const
@@ -52,6 +49,13 @@ bool YoutubeBackend::expand(int row)
 
 bool YoutubeBackend::initImpl()
 {
+    m_youtubeModel = new YoutubeModel(this);
+    m_videoDetailsModel = new VideoDetailsModel(this);
+    if (!(m_youtubeModel && m_videoDetailsModel)) {
+        return false;
+    }
+    m_expanded = true;
+    connect(m_videoDetailsModel, SIGNAL(gotRealUrl()), this, SLOT(realUrlFound()));
     setModel(m_youtubeModel);
     return true;
 }
