@@ -140,6 +140,8 @@ FocusScope {
                 flickableItem: parent
                 orientation: _pmc_is_desktop ? Qt.Vertical : Qt.Horizontal
             }
+
+            onCurrentIndexChanged: positionViewAtIndex(currentIndex, GridView.Contain)
         }
     }
 

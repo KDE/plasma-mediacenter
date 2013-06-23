@@ -91,6 +91,8 @@ FocusScope {
                 running: currentBrowsingBackend.busy
                 visible: running
             }
+
+            onCurrentIndexChanged: positionViewAtIndex(currentIndex, GridView.Contain)
         }
     }
 
