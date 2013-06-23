@@ -100,7 +100,7 @@ FocusScope {
                 }
             }
             Keys.onPressed: {
-                if (event.key == Qt.Key_Down && currentIndex%2) {
+                if (event.key == Qt.Key_Down && searchMedia.visible && currentIndex%2) {
                     searchMedia.focus = true;
                     event.accepted = true;
                 }
