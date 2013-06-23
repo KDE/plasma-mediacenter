@@ -33,6 +33,7 @@ FocusScope {
     property alias stripCurrentIndex: mediaPictureStrip.currentIndex
 
     signal slideshowStarted
+    signal clicked
 
     width: parent.width
     height: parent.height
@@ -52,8 +53,15 @@ FocusScope {
     Image {
         id: mainImage
         anchors.centerIn: parent
-
         cache: false
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                mediaPictureStrip.state = mediaPictureStrip.state == "hidden" ? "" : "hidden"
+                imageRect.clicked();
+            }
+        }
 
         onStatusChanged: {
             if (status == Image.Ready) {

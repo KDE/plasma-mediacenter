@@ -59,7 +59,7 @@ Image {
             runtimeDataObject: runtimeData
             z: 1; opacity: 0.8
             visible: pmcPageStack.currentPage.hideMediaController ? false : true
-            state: hideFlag && mediaPlayerInstance && mediaPlayerInstance.visible ? "hidden"  : ""
+            state: hideFlag && ((mediaPlayerInstance && mediaPlayerInstance.visible) || (imageViewerInstance && imageViewerInstance.visible)) ? "hidden"  : ""
 
             currentMediaTime: runtimeData.currentTime
             totalMediaTime: runtimeData.totalTime
@@ -83,7 +83,7 @@ Image {
         Item {
             id: pmcPageStackParentItem
             anchors {
-                top: pmcPageStack.currentPage == mediaPlayerInstance ? parent.top : mediaController.bottom
+                top: pmcPageStack.currentPage == mediaPlayerInstance || pmcPageStack.currentPage == imageViewerInstance ? parent.top : mediaController.bottom
                 right: parent.right; left: parent.left; bottom: parent.bottom
             }
             PlasmaComponents.PageStack {
@@ -174,7 +174,7 @@ Image {
                 url: runtimeData.url
                 volume: runtimeData.volume
                 onEscapePressed: pmcPageStack.popAndFocus()
-                onClicked: toggleController()
+                onClicked: toggleController(mediaPlayerInstance)
                 onMediaStarted: _pmc_mainwindow.mousePointerAutoHide = hasVideo
                 onMediaFinished: {
                     if (playlistInstance && playlistInstance.active && totalTime != -1 && !runtimeData.userTrigerredStop) {
@@ -214,8 +214,8 @@ Image {
         Component {
             id: pmcImageViewerComponent
             MediaCenterElements.ImageViewer {
-                property bool hideMediaController: true
                 Keys.onEscapePressed: pmcPageStack.popAndFocus()
+                onClicked: toggleController(imageViewerInstance)
             }
         }
     }
@@ -264,10 +264,10 @@ Image {
         playlist.playRequested(playlistModel.getNextUrl());
     }
 
-    function toggleController()
+    function toggleController(itemToFocus)
     {
         mediaController.hideFlag = !mediaController.hideFlag;
-        mediaPlayerInstance.focus = true;
+        itemToFocus.focus = true;
     }
 
     Component.onCompleted: init()
