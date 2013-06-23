@@ -575,11 +575,7 @@ Image {
     function toggleController()
     {
         mediaController.hideFlag = !mediaController.hideFlag;
-        if (mediaController.hideFlag) {
-            mediaPlayerInstance.focus = true;
-        } else {
-            mediaController.focus = true;
-        }
+        mediaPlayerInstance.focus = true;
     }
 
     Component.onCompleted: init()
