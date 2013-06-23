@@ -86,29 +86,43 @@ FocusScope {
 
             ListView {
                 id: playlistList
-                currentIndex: playlistModel.currentIndex
-                onCurrentIndexChanged: {
-                    positionViewAtIndex(currentIndex, ListView.Contain);
-                }
                 anchors { top: filterText.bottom; left: parent.left; right: parent.right }
                 anchors.bottom: parent.bottom
                 anchors.margins: 5
+
                 model: MediaCenterElements.FilterPlaylistModel {
-                sourcePlaylistModel : playlistModel
-                filterString: filterText.text
+                    sourcePlaylistModel : playlistModel
+                    filterString: filterText.text
                 }
                 spacing: 3
                 clip: true
                 focus: true
+                delegate: PlaylistDelegate {
+                    width: playlistList.width - playlistScrollbar.width ; height: 32
+                    onPlayRequested: {
+                        playlistItem.active = true;
+                        playlistList.currentIndex = index;
+                        playlistModel.currentIndex = originalIndex;
+                        playlistItem.playRequested(url);
+                    }
+                }
 
                 PlasmaComponents.ScrollBar {
                     id: playlistScrollbar
                     orientation: Qt.Vertical
                     flickableItem: playlistList
                 }
-                delegate: PlaylistDelegate {
-                    width: playlistList.width - playlistScrollbar.width ; height: 32
-                    onPlayRequested: { playlistItem.active = true; playlistItem.playRequested(url) }
+
+                Timer {
+                    id: positionViewAtIndexTimer
+                    interval: 10
+                    onTriggered: playlistList.positionViewAtIndex(playlistList.currentIndex, ListView.Center);
+                }
+
+                onCurrentIndexChanged: {
+                    if (currentIndex < count) {
+                        positionViewAtIndexTimer.restart();
+                    }
                 }
             }
         }

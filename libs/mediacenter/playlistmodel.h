@@ -35,7 +35,8 @@ class MEDIACENTER_EXPORT PlaylistModel : public QAbstractListModel
 public:
     enum Roles {
         MediaArtistRole = MediaCenter::AdditionalRoles + 1,
-        MediaLengthRole
+        MediaLengthRole,
+        OriginalIndexRole
     };
 
     explicit PlaylistModel(QObject* parent = 0);

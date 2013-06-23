@@ -66,6 +66,7 @@ PlaylistModel::PlaylistModel(QObject* parent):
     QHash<int, QByteArray> newRoles(roleNames());
     newRoles[MediaLengthRole] = "mediaLength";
     newRoles[MediaArtistRole] = "mediaArtist";
+    newRoles[OriginalIndexRole] = "originalIndex";
     setRoleNames(newRoles);
 
     qsrand(QDateTime::currentMSecsSinceEpoch());
@@ -96,6 +97,8 @@ QVariant PlaylistModel::data(const QModelIndex& index, int role) const
         return d->musicList.at(index.row())->mediaArtist();
     case PlaylistModel::MediaLengthRole:
         return d->musicList.at(index.row())->mediaLength();
+    case PlaylistModel::OriginalIndexRole:
+        return index.row();
     }
     return QVariant();
 }
@@ -200,6 +203,6 @@ void PlaylistModel::playlistItemUpdated()
     PlaylistItem *item = qobject_cast<PlaylistItem*>(sender());
 
     int i = d->musicList.indexOf(item);
-    emit dataChanged(createIndex(i, 0), createIndex(i, 0)); 
+    emit dataChanged(createIndex(i, 0), createIndex(i, 0));
 }
 

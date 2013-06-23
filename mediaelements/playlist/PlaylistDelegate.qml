@@ -37,7 +37,7 @@ Item {
                     right: artistText.left; margins: 5
                 }
                 text: display
-                color: (index == playlistModel.currentIndex) ? "red" : theme.textColor
+                color: index == playlistModel.currentIndex && listViewItem.ListView.view.model.filterString == "" ? "red" : theme.textColor
                 elide: Text.ElideRight
                 font.pixelSize: 18
                 style: Text.Sunken
@@ -50,7 +50,7 @@ Item {
                 }
                 width: parent.width*0.4
                 text: mediaArtist
-                color: (index == playlistModel.currentIndex) ? "red" : theme.textColor
+                color: index == playlistModel.currentIndex && listViewItem.ListView.view.model.filterString == "" ? "red" : theme.textColor
                 elide: Text.ElideRight
                 font.pixelSize: 18
                 style: Text.Sunken
@@ -64,7 +64,7 @@ Item {
                     margins: 5
                 }
                 text: mediaLength ? Math.floor(mediaLength/60) + ":" + (seconds.toString().length < 2 ? "0" + seconds : seconds) : ""
-                color: index == playlistModel.currentIndex ? "red" : theme.textColor
+                color: index == playlistModel.currentIndex && listViewItem.ListView.view.model.filterString == "" ? "red" : theme.textColor
                 font.pixelSize: 18
                 style: Text.Sunken
             }
