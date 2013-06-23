@@ -355,13 +355,6 @@ Image {
         MediaCenterElements.RuntimeData {
             id: runtimeData
             objectName: "runtimeData"
-
-            onCurrentTimeDirtyChanged: {
-                if (currentTimeDirty) {
-                    currentTimeDirty = false;
-                    if (mediaPlayerInstance) mediaPlayerInstance.currentTime = currentTime;
-                }
-            }
         }
 
         MediaCenterElements.MediaController {
@@ -383,7 +376,7 @@ Image {
             onBackButtonClicked: pmcPageStack.popAndFocus()
             onPlayNext: playlistInstance.playNext()
             onPlayPrevious: playlistInstance.playPrevious()
-
+            onSeekRequested: if (mediaPlayerInstance) mediaPlayerInstance.currentTime = newPosition
 
             states: [
                 State {
@@ -503,7 +496,9 @@ Image {
                     }
                 }
 
-                Component.onCompleted: {
+                Component.onCompleted: bindRuntimeData()
+
+                function bindRuntimeData() {
                     runtimeData.currentTime = function() { return currentTime }
                     runtimeData.totalTime = function() { return totalTime }
                 }

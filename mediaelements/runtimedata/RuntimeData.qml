@@ -28,7 +28,6 @@ Item {
     property int position: 0
     property int totalTime: 0
     property int currentTime: 0
-    property bool currentTimeDirty: false
     property real volume: 1.0
     property bool userTrigerredStop: false
     property string url

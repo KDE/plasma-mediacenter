@@ -104,7 +104,6 @@ FocusScope {
     function seekBy(value)
     {
         video.position += value*1000;
-	runtimeDataObject.currentTime = video.position;
     }
 
     MouseArea {

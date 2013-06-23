@@ -37,6 +37,7 @@ FocusScope {
     signal playNext()
     signal playPrevious()
     signal backButtonClicked()
+    signal seekRequested(int newPosition)
 
     PlasmaCore.FrameSvgItem {
         id: controlBarFrameSvg
@@ -136,13 +137,7 @@ FocusScope {
                     value: controlBarFrame.currentMediaTime
                 }
 
-                onValueChanged: {
-                    if (pressed) {
-                        runtimeDataObject.currentTimeDirty = true;
-                        runtimeDataObject.currentTime = value;
-                    }
-                }
-
+                onValueChanged: if (pressed) controlBarFrame.seekRequested(value);
                 maximumValue: controlBarFrame.totalMediaTime
             }
 
