@@ -146,6 +146,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(&m_mousePointerAutoHideTimer, SIGNAL(timeout()), SLOT(hideMousePointer()));
 
     if (view->errors().isEmpty()) {
+        cfgGroup = KGlobal::config()->group("General");
         qreal volumeRead = cfgGroup.readEntry("volumelevel",1.0);
         view->rootObject()->findChild<QObject*>("runtimeData")->setProperty("volume",volumeRead);
     }
