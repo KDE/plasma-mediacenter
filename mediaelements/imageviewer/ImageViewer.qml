@@ -50,26 +50,29 @@ FocusScope {
         }
     }
 
-    Image {
-        id: mainImage
-        anchors.centerIn: parent
-        cache: false
+    Item {
+        anchors.fill: parent
+        Image {
+            id: mainImage
+            anchors.centerIn: parent
+            cache: false
+
+            onStatusChanged: {
+                if (status == Image.Ready) {
+                    if (sourceSize.width > sourceSize.height) {
+                        mainImage.scale = Math.min(1, parent.height/sourceSize.height)
+                    } else {
+                        mainImage.scale = Math.min(1, parent.width/sourceSize.width)
+                    }
+                }
+            }
+        }
 
         MouseArea {
             anchors.fill: parent
             onClicked: {
                 mediaPictureStrip.state = mediaPictureStrip.state == "hidden" ? "" : "hidden"
                 imageRect.clicked();
-            }
-        }
-
-        onStatusChanged: {
-            if (status == Image.Ready) {
-                if (sourceSize.width > sourceSize.height) {
-                    mainImage.scale = Math.min(1, parent.height/sourceSize.height)
-                } else {
-                    mainImage.scale = Math.min(1, parent.width/sourceSize.width)
-                }
             }
         }
     }
