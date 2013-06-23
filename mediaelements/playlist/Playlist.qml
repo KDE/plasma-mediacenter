@@ -82,6 +82,7 @@ FocusScope {
                 height: 30
                 clearButtonShown: true
                 placeholderText: i18n("Search Playlist")
+                Keys.onDownPressed: playlistList.focus = true;
             }
 
             ListView {
@@ -123,6 +124,11 @@ FocusScope {
                     if (currentIndex < count) {
                         positionViewAtIndexTimer.restart();
                     }
+                }
+
+                Keys.onPressed: if (event.key == Qt.Key_Up && currentIndex == 0) {
+                    filterText.focus = true;
+                    event.accepted = true;
                 }
             }
         }
