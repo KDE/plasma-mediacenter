@@ -103,7 +103,7 @@ PlasmaCore.FrameSvgItem {
     function previousImage()
     {
         var i = imageList.currentIndex;
-        if (i<imageList.count-1) {
+        if (i>0) {
             imageList.currentIndex = i - 1;
             imageList.currentItem.emitClicked()
         }
