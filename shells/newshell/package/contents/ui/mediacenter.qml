@@ -46,7 +46,9 @@ Image {
 
         PlasmaExtraComponents.ResourceInstance {
             id: resourceInstance
-            uri: imageViewerInstance && imageViewerInstance.visible && imageViewerInstance.source !== "" && !(mediaBrowserInstance && mediaBrowserInstance.visible) ? imageViewerInstance.source : mediaPlayerInstance.url
+            uri: imageViewerInstance && imageViewerInstance.visible && imageViewerInstance.source !== "" && !(mediaBrowserInstance && mediaBrowserInstance.visible)
+                ? imageViewerInstance.source
+                : mediaPlayerInstance ? mediaPlayerInstance.url : ""
         }
 
         MediaCenterElements.MediaController {
@@ -261,7 +263,8 @@ Image {
 
     //FIXME: Hack to play params passed from the command line
     function play() {
-        playlist.playRequested(playlistModel.getNextUrl());
+        pmcPageStack.pushAndFocus(getPlaylist());
+        getPlaylist().playRequested(playlistModel.getNextUrl());
     }
 
     function toggleController(itemToFocus)

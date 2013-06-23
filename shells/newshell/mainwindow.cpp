@@ -134,7 +134,7 @@ MainWindow::MainWindow(QWidget *parent)
     view->setSource(QUrl(package->filePath("mainscript")));
 
     if (view->rootObject() && urls.count() > 0) {
-        view->rootObject()->metaObject()->invokeMethod(view->rootObject(), "play");
+        QTimer::singleShot(500, this, SLOT(playPlaylist()));
     }
     resize(1366, 768);
 
@@ -221,4 +221,9 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
         }
     }
     return false;
+}
+
+void MainWindow::playPlaylist()
+{
+    view->rootObject()->metaObject()->invokeMethod(view->rootObject(), "play");
 }
