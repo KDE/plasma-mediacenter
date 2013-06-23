@@ -44,6 +44,11 @@ Image {
             objectName: "runtimeData"
         }
 
+        PlasmaExtraComponents.ResourceInstance {
+            id: resourceInstance
+            uri: imageViewerInstance && imageViewerInstance.visible && imageViewerInstance.source !== "" && !(mediaBrowserInstance && mediaBrowserInstance.visible) ? imageViewerInstance.source : mediaPlayerInstance.url
+        }
+
         MediaCenterElements.MediaController {
             id: mediaController
             property bool hideFlag: false
