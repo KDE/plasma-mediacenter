@@ -399,7 +399,7 @@ Image {
             id: pmcPageStackParentItem
             anchors {
                 top: pmcPageStack.currentPage == mediaPlayerInstance ? parent.top : mediaController.bottom
-                margins: 10; right: parent.right; left: parent.left; bottom: parent.bottom
+                right: parent.right; left: parent.left; bottom: parent.bottom
             }
             PlasmaComponents.PageStack {
                 id: pmcPageStack
@@ -580,6 +580,11 @@ Image {
     function toggleController()
     {
         mediaController.hideFlag = !mediaController.hideFlag;
+        if (mediaController.hideFlag) {
+            mediaPlayerInstance.focus = true;
+        } else {
+            mediaController.focus = true;
+        }
     }
 
     Component.onCompleted: init()

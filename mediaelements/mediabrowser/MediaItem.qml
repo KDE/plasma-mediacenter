@@ -152,7 +152,7 @@ Item {
                     id: delegateItemIconComponent
                     QtExtraComponents.QIconItem {
                         id: delegateItemIcon
-                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.horizontalCenter: parent ? parent.horizontalCenter : undefined
                         icon: {
                             if (typeof rootColumn.source == "string")
                                 QIcon(rootColumn.source);
