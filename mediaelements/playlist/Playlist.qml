@@ -116,13 +116,13 @@ FocusScope {
 
     function playNext()
     {
-        playlistList.currentIndex++;
+        playlistList.currentIndex = playlistList.currentIndex == playlistList.count-1 ? 0 : playlistList.currentIndex+1;
         playlistList.currentItem.requestPlayback();
     }
 
     function playPrevious()
     {
-        playlistList.currentIndex--;
+        playlistList.currentIndex = playlistList.currentIndex == 0 ? playlistList.count-1 : playlistList.currentIndex-1;
         playlistList.currentItem.requestPlayback();
     }
 }

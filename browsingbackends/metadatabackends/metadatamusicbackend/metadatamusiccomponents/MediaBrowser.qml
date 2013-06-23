@@ -274,7 +274,7 @@ FocusScope {
                      playlistModel.currentIndex = 0;
                      firstUrl = playlistModel.getUrlofFirstIndex();
                      if(firstUrl != "") {
-                        playlistInstance.playRequested(firstUrl);
+                        getPlaylist().playRequested(firstUrl);
                      }
                   }
                 }
