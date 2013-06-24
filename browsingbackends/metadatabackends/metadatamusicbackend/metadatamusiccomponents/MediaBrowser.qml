@@ -324,7 +324,9 @@ FocusScope {
 
             ListView {
                 id: listViewAllSongs
-                anchors.fill: parent
+                anchors { fill: parent; margins: 20 }
+                clip: true
+
                 model: backend ? backend.musicModel : undefined
                 delegate: MusicDelegate {
                     width: parent ? parent.width - musicScrollBar.width : 0; height: 64
@@ -335,10 +337,12 @@ FocusScope {
                         event.accepted = true;
                     }
                 }
-                spacing: 5
-                highlight: PlasmaComponents.Highlight { }
+                keyNavigationWraps: true
+                highlight: MediaItemHighlight { }
                 highlightFollowsCurrentItem: true
-                clip: true
+                preferredHighlightBegin: height*0.1; preferredHighlightEnd: height*0.9
+                highlightRangeMode: ListView.ApplyRange
+                highlightMoveDuration: 100
 
                 PlasmaComponents.BusyIndicator {
                     anchors.centerIn: parent

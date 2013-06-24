@@ -22,14 +22,14 @@ import org.kde.plasma.components 0.1 as PlasmaComponents
 
 Item {
     id: musicDelegateRootItem
-    visible: false
+    property bool hidden: true
     signal popupMenuRequested(int index, string mediaUrl, string mediaType, string display)
 
     Timer {
         id: showTimer
         interval: 100
         repeat: false
-        onTriggered: musicDelegateRootItem.visible = true
+        onTriggered: musicDelegateRootItem.hidden = false
     }
 
     Text {
@@ -64,10 +64,10 @@ Item {
     }
 
     states: [
-    State {
-        name: "appear"
-        when: visible
-    }
+        State {
+            name: "appear"
+            when: !hidden
+        }
     ]
     transitions: [
     Transition {
