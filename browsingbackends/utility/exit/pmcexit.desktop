@@ -2,6 +2,7 @@
 Type=Service
 Icon=system-shutdown
 Name=Exit
+Name[ca]=Surt
 Name[cs]=Ukončit
 Name[de]=Beenden
 Name[es]=Salir
@@ -14,6 +15,7 @@ Name[sv]=Avsluta
 Name[uk]=Вихід
 Name[x-test]=xxExitxx
 Comment=Exit Plasma Media Center
+Comment[ca]=Surt del centre multimèdia de Plasma
 Comment[cs]=Ukončit Multimediální centrum Plasma
 Comment[de]=Plasma-Mediencenter beenden
 Comment[es]=Salir del centro de medios de Plasma
