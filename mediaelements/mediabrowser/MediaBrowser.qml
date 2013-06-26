@@ -105,8 +105,6 @@ FocusScope {
                     event.accepted = true;
                 }
             }
-
-            onCurrentIndexChanged: positionViewAtIndex(currentIndex, GridView.Contain)
         }
     }
 
