@@ -60,6 +60,7 @@ FocusScope {
                 iconSource: "go-previous";
                 onClicked: {
                     backButtonClicked();
+                    playlistButton.visible = true;
                 }
             }
 
@@ -205,7 +206,10 @@ FocusScope {
                 height: width
                 font.pointSize: 12
                 iconSource: "format-list-ordered"
-                onClicked: playlistButtonClicked();
+                onClicked: {
+                    playlistButtonClicked();
+                    playlistButton.visible = false;
+                }
             }
         }
 
