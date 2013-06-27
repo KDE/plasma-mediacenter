@@ -35,6 +35,7 @@ FocusScope {
     property alias playlistButtonVisible: playlistButton.visible
 
     signal playlistButtonClicked()
+    signal playButtonClicked()
     signal playNext()
     signal playPrevious()
     signal backButtonClicked()
@@ -207,6 +208,15 @@ FocusScope {
                 font.pointSize: 12
                 iconSource: "format-list-ordered"
                 onClicked: playlistButtonClicked();
+            }
+
+            PlasmaComponents.ToolButton {
+                id: playButton
+                width: parent.height
+                height: width
+                font.pointSize: 12
+                iconSource: "applications-multimedia"
+                onClicked: playButtonClicked();
             }
         }
 

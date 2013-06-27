@@ -70,6 +70,7 @@ Image {
 
             onPlaylistButtonClicked: pmcPageStack.pushAndFocus(getPlaylist())
             onBackButtonClicked: pmcPageStack.popAndFocus()
+            onPlayButtonClicked: if(mediaPlayerInstance.url) pmcPageStack.pushAndFocus(getMediaPlayer())
             onPlayNext: playlistInstance.playNext()
             onPlayPrevious: playlistInstance.playPrevious()
             onSeekRequested: if (mediaPlayerInstance) mediaPlayerInstance.currentTime = newPosition
