@@ -182,7 +182,7 @@ Image {
                 onMediaStarted: _pmc_mainwindow.mousePointerAutoHide = hasVideo
                 onMediaFinished: {
                     if (playlistInstance && playlistInstance.active && totalTime != -1 && !runtimeData.userTrigerredStop) {
-                        playlistInstance.playRequested(playlistModel.getNextUrl());
+                        playlistInstance.playNext();
                     } else {
                         runtimeData.stopped = true;
                         if (!runtimeData.userTrigerredStop) {

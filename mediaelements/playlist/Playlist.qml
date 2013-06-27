@@ -105,6 +105,7 @@ FocusScope {
                         playlistList.currentIndex = index;
                         playlistModel.currentIndex = originalIndex;
                         playlistItem.playRequested(url);
+                        filterText.text = "";
                     }
                 }
 
