@@ -31,12 +31,12 @@ class MEDIACENTER_EXPORT PlaylistModel : public QAbstractListModel
 {
     Q_OBJECT
     Q_PROPERTY(int currentIndex READ currentIndex WRITE setCurrentIndex NOTIFY currentIndexChanged)
-    Q_PROPERTY(bool random READ random WRITE setRandom NOTIFY randomChanged)
 
 public:
     enum Roles {
         MediaArtistRole = MediaCenter::AdditionalRoles + 1,
-        MediaLengthRole
+        MediaLengthRole,
+        OriginalIndexRole
     };
 
     explicit PlaylistModel(QObject* parent = 0);
@@ -54,8 +54,8 @@ public:
     int currentIndex() const;
     void setCurrentIndex(int index);
     bool random() const;
-    void setRandom(bool random);
-  
+    Q_INVOKABLE void shuffle();
+
 Q_SIGNALS:
     void currentIndexChanged();
     void randomChanged();

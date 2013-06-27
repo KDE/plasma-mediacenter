@@ -24,6 +24,8 @@
 #include <KDE/KDirModel>
 #include <KDE/KDirLister>
 
+#include <KDebug>
+
 class LocalFilesAbstractModel::Private
 {
 public:
@@ -76,6 +78,7 @@ QVariant LocalFilesAbstractModel::data (const QModelIndex& index, int role) cons
 bool LocalFilesAbstractModel::goOneLevelUp()
 {
     KUrl url = d->dirModel.dirLister()->url();
+    if (QDir(url.toLocalFile()).isRoot()) return false;
 
     url.addPath("..");
     bool success = d->dirModel.dirLister()->openUrl(url);

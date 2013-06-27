@@ -19,16 +19,17 @@
 
 import QtQuick 1.1
 import QtMultimediaKit 1.1 as QtMultimediaKit
-import org.kde.plasma.mediacentercomponents 0.1 as MediaCenterComponents
+import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
+import org.kde.plasma.components 0.1 as PlasmaComponents
 
 FocusScope {
     id: mediaPlayerRootRect
 
     property QtObject runtimeDataObject
 
-    property bool playing: false
-    property bool paused: false
-    property bool stopped: true
+    property bool playing: runtimeDataObject.playing
+    property bool paused: runtimeDataObject.paused
+    property bool stopped: runtimeDataObject.stopped
     property bool showMusicStats: true
     property bool dimVideo: false
 
@@ -44,11 +45,12 @@ FocusScope {
     signal mediaStarted
     signal escapePressed
 
-    MediaCenterComponents.SubtitleProvider {
+    MediaCenterElements.SubtitleProvider {
         id: subs
         filename: video.source
         subtitleTime: video.position
     }
+
     QtMultimediaKit.Video {
         id: video
         anchors.fill: parent
@@ -99,15 +101,9 @@ FocusScope {
     onPausedChanged: if (paused) video.pause();
     onStoppedChanged: if (stopped) video.stop();
 
-    function play()
-    {
-        video.play();
-    }
-
     function seekBy(value)
     {
         video.position += value*1000;
-	runtimeDataObject.currentTime = video.position;
     }
 
     MouseArea {
@@ -115,26 +111,18 @@ FocusScope {
         onClicked: mediaPlayerRootRect.clicked()
     }
 
-    Keys.onEscapePressed: mediaPlayerRootRect.escapePressed()
-
-    function handleKey(key)
-    {
-        if (mediaPlayerRootRect.state == "minimize" || mediaPlayerRootRect.dimVideo)
-            return false;
-        switch (key) {
-        case Qt.Key_Space:
-            if (runtimeDataObject.playing) {
-                runtimeDataObject.playing = false; runtimeDataObject.paused = true;
-            } else if (runtimeDataObject.paused || runtimeDataObject.stopped) {
-                runtimeDataObject.playing = true; runtimeDataObject.paused = false;
-            }
-            return true;
-        case Qt.Key_Left:
-            seekBy(-5);
-            return true;
-        case Qt.Key_Right:
-            seekBy(5);
-            return true;
-        }
+    PlasmaComponents.BusyIndicator {
+        anchors { horizontalCenter: parent.horizontalCenter; bottom: parent.bottom; margins: 10 }
+        visible: running
+        running: !video.bufferProgress
     }
+
+    Keys.onEscapePressed: mediaPlayerRootRect.escapePressed()
+    Keys.onSpacePressed: if (runtimeDataObject.playing) {
+        runtimeDataObject.paused = true;
+    } else if (runtimeDataObject.paused || runtimeDataObject.stopped) {
+        runtimeDataObject.playing = true;
+    }
+    Keys.onLeftPressed: seekBy(-5)
+    Keys.onRightPressed: seekBy(5)
 }

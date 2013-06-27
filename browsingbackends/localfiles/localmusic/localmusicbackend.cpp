@@ -24,6 +24,7 @@ MEDIACENTER_EXPORT_BROWSINGBACKEND(LocalMusicBackend)
 
 LocalMusicBackend::LocalMusicBackend (QObject* parent, const QVariantList& args)
     : LocalFilesAbstractBackend (parent, args)
+    , m_model(0)
 {
 
 }
@@ -33,6 +34,9 @@ LocalMusicBackend::~LocalMusicBackend()
 
 void LocalMusicBackend::initModel()
 {
-    setModel(new LocalMusicModel(this));
+    if (!m_model) {
+        m_model = new LocalMusicModel(this);
+    }
+    setModel(m_model);
 }
 

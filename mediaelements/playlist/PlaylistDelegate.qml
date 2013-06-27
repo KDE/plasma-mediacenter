@@ -22,22 +22,22 @@
 import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
 
-Item{
+Item {
     id: listViewItem
+    signal playRequested(string url)
 
     Row {
         anchors.fill: parent
         Rectangle {
             width: parent.width - removeFromPlaylistButton.width; height: parent.height
             color: listViewItem.ListView.isCurrentItem ? "#002378" : theme.backgroundColor
-            opacity: 0.8;
             Text {
                 anchors {
                     left: parent.left; verticalCenter: parent.verticalCenter
                     right: artistText.left; margins: 5
                 }
                 text: display
-                color: (index == playlistModel.currentIndex) ? "red" : theme.textColor
+                color: index == playlistModel.currentIndex && listViewItem.ListView.view.model.filterString == "" ? "red" : theme.textColor
                 elide: Text.ElideRight
                 font.pixelSize: 18
                 style: Text.Sunken
@@ -50,7 +50,7 @@ Item{
                 }
                 width: parent.width*0.4
                 text: mediaArtist
-                color: (index == playlistModel.currentIndex) ? "red" : theme.textColor
+                color: index == playlistModel.currentIndex && listViewItem.ListView.view.model.filterString == "" ? "red" : theme.textColor
                 elide: Text.ElideRight
                 font.pixelSize: 18
                 style: Text.Sunken
@@ -58,27 +58,20 @@ Item{
 
             Text {
                 id: lengthText
+                property int seconds: mediaLength%60
                 anchors {
                     right: parent.right; verticalCenter: parent.verticalCenter
                     margins: 5
                 }
-                text: mediaLength ? Math.floor(mediaLength/60) + ":" + fixMediaLength(mediaLength) : ""
-                color: (index == playlistModel.currentIndex) ? "red" : theme.textColor
+                text: mediaLength ? Math.floor(mediaLength/60) + ":" + (seconds.toString().length < 2 ? "0" + seconds : seconds) : ""
+                color: index == playlistModel.currentIndex && listViewItem.ListView.view.model.filterString == "" ? "red" : theme.textColor
                 font.pixelSize: 18
                 style: Text.Sunken
-                function fixMediaLength(mediaLength) {
-                    digitCount = (mediaLength % 60)
-                    convertToString = digitCount + ""
-                    if (convertToString.length < 2) {
-                        return "0" + digitCount
-                    }
-                    return digitCount
-                }
             }
 
             MouseArea {
-                hoverEnabled: true
                 id: dragItemArea
+                hoverEnabled: true
                 anchors.fill: parent
                 property int posStartX: 0
                 property int posStartY: 0
@@ -90,7 +83,7 @@ Item{
                 property int newPositionY: index + movedY
                 drag.axis: Drag.XandYAxis
                 onPressAndHold: {
-                    listViewItem.z = 2
+                    listViewItem.z = 1
                     posStartX = listViewItem.x
                     posStartY = listViewItem.y
                     delegateHeld = true
@@ -120,7 +113,7 @@ Item{
                     }
                     else
                     {
-                        listViewItem.z = 1
+                        listViewItem.z = 0
                         listViewItem.opacity = 1
                         if(newPositionY < 1)
                             newPositionY = 0
@@ -136,13 +129,8 @@ Item{
                     delegateHeld = false
                 }
 
-                onClicked: {
-                    listViewItem.ListView.view.model.currentIndex = index
-                    playlistItem.playRequested(mediaUrl)
-                }
-
+                onClicked: requestPlayback()
             }
-
          }
 
         PlasmaComponents.ToolButton {
@@ -155,7 +143,11 @@ Item{
             }
         }
     }
+
+    Keys.onReturnPressed: requestPlayback()
+
+    function requestPlayback() {
+        listViewItem.ListView.view.model.currentIndex = index;
+        listViewItem.playRequested(mediaUrl);
+    }
 }
-
-
-

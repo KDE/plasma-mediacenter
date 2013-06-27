@@ -35,21 +35,17 @@ public:
     AbstractBrowsingBackendPrivate(AbstractBrowsingBackend *q) :
     q(q),
     cfInterface(false),
-    model(0),
-    metadataModel(0),
     declarativeEngine(0),
     hasInitialized(false)
     {}
 
     AbstractBrowsingBackend *q;
     bool cfInterface;
-    BrowsingType browsingType;
-    QAbstractItemModel * model;
-    QAbstractItemModel * metadataModel;
     QDeclarativeEngine *declarativeEngine;
     bool hasInitialized;
     QString name;
     QString mediaBrowserSidePanelText;
+    QList<QAbstractItemModel*> models;
 };
 
 AbstractBrowsingBackend::AbstractBrowsingBackend(QObject *parent, const QVariantList &args)
@@ -82,59 +78,15 @@ QString AbstractBrowsingBackend::name() const
 
 void AbstractBrowsingBackend::setModel(QAbstractItemModel * model)
 {
-    d->model = model;
+    d->models.clear();
+    d->models.append(model);
+    emit modelsChanged();
     emit modelChanged();
 }
 
 QObject * AbstractBrowsingBackend::model()
 {
-    return (QObject*)(d->model);
-}
-
-QObject* AbstractBrowsingBackend::metadataModel()
-{
-    return (QObject*)(d->metadataModel);
-}
-
-void AbstractBrowsingBackend::setMetadataModel (QObject* model)
-{
-    d->metadataModel = qobject_cast<QAbstractItemModel*>(model);
-    emit metadataModelChanged();
-}
-
-bool AbstractBrowsingBackend::hasConfigurationInterface() const
-{
-    return d->cfInterface;
-}
-
-void AbstractBrowsingBackend::setHasConfigurationInterface(bool hasInterface)
-{
-    d->cfInterface = hasInterface;
-}
-
-void AbstractBrowsingBackend::createConfigurationInterface(KConfigDialog *parent)
-{
-    Q_UNUSED(parent);
-}
-
-KConfigGroup AbstractBrowsingBackend::config()
-{
-    return KConfigGroup(KGlobal::config(), name());
-}
-
-AbstractBrowsingBackend::BrowsingType AbstractBrowsingBackend::browsingType() const
-{
-    return d->browsingType;
-}
-
-void AbstractBrowsingBackend::setBrowsingType(BrowsingType type)
-{
-    d->browsingType = type;
-}
-
-void AbstractBrowsingBackend::openUrl(const KUrl &url)
-{
-    Q_UNUSED(url);
+    return d->models.length() ? (QObject*)(d->models.first()) : 0;
 }
 
 KService::List AbstractBrowsingBackend::availableBackends()
@@ -170,7 +122,7 @@ void AbstractBrowsingBackend::setDeclarativeEngine(QDeclarativeEngine *declarati
 QString AbstractBrowsingBackend::constructQmlSource(const QString& componentDirName, const QString &versionString,
                                                     const QString& itemName) const
 {
-    return QString("import QtQuick 1.1\nimport org.kde.plasma.mediacentercomponents.%1 %2 as %3\n\%3.%4 {\n}\n")
+    return QString("import QtQuick 1.1\nimport org.kde.plasma.mediacenter.elements.%1 %2 as %3\n\%3.%4 {\n}\n")
         .arg(componentDirName).arg(versionString).arg(componentDirName.toUpper()).arg(itemName);
 }
 
@@ -218,4 +170,13 @@ bool AbstractBrowsingBackend::init()
 bool AbstractBrowsingBackend::busy() const
 {
     return false;
+}
+
+QVariantList AbstractBrowsingBackend::models()
+{
+    QVariantList modelList;
+    Q_FOREACH(QAbstractItemModel *model, d->models) {
+        modelList.append(QVariant::fromValue(qobject_cast<QObject*>(model)));
+    }
+    return modelList;
 }

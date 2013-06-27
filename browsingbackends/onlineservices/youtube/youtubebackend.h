@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright 2013 Shantanu Tushar <shantanu@kde.org>                     *
+ *   Copyright 2013 by Sinny Kumari <ksinny@gmail.com>                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,19 +17,38 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-import QtQuick 1.1
-import "Logic.js" as Logic
+#ifndef YOUTUBEBACKEND_H
+#define YOUTUBEBACKEND_H
 
-Item {
-    id: keyHandlerRootItem
-    property QtObject mainwindow
-    property variant registeredHandlers
+#include "youtubemodel.h"
+#include "videodetailsmodel.h"
 
-    Component.onCompleted: {
-        keyHandlerRootItem.mainwindow.keyPressed.connect(Logic.handleKey);
-    }
+#include <libs/mediacenter/abstractbrowsingbackend.h>
 
-    function registerHandler(obj) {
-        Logic.registerHandler(obj);
-    }
-}
+/**
+ * @class YoutubeBackend
+ * @brief A backend that manages queries to Youtube.
+*/
+class YoutubeBackend : public MediaCenter::AbstractBrowsingBackend
+{
+    Q_OBJECT
+public:
+    YoutubeBackend(QObject *parent, const QVariantList &args);
+
+    virtual QString backendCategory() const;
+    bool expand (int row);
+    virtual bool initImpl();
+    virtual void search(const QString& searchTerm);
+    virtual bool supportsSearch() const;
+
+public Q_SLOTS:
+    virtual bool goOneLevelUp();
+    void realUrlFound();
+
+private:
+    YoutubeModel *m_youtubeModel;
+    VideoDetailsModel *m_videoDetailsModel;
+    bool m_expanded;  // to detrmine which model is currently set into backend
+};
+
+#endif

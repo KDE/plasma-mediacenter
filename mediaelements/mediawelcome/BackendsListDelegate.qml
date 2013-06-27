@@ -83,25 +83,30 @@ Item {
     transitions: [
     Transition {
         to: "appear"
-        ParallelAnimation {
-            PropertyAnimation {
-                target: rootItem;
-                property: "x";
-                //TODO: make the text appear from the opposite side of the movement of the list?
-                //      this looks nice for the from-the-left direction: -width / 2
-                from: x + categoriesList.height * 2 / 3;
-                to: x;
-                easing.type: Easing.OutQuad;
-                duration: 300
+        SequentialAnimation {
+            PauseAnimation {
+                duration: 10
             }
+            ParallelAnimation {
+                PropertyAnimation {
+                    target: rootItem;
+                    property: "x";
+                    //TODO: make the text appear from the opposite side of the movement of the list?
+                    //      this looks nice for the from-the-left direction: -width / 2
+                    from: x + categoriesList.height * 2 / 3;
+                    to: x;
+                    easing.type: Easing.OutQuad;
+                    duration: 300
+                }
 
-            NumberAnimation {
-                target: rootItem;
-                property: "opacity";
-                to: 1.0;
-                easing.type:
-                Easing.InQuad;
-                duration: 150
+                NumberAnimation {
+                    target: rootItem;
+                    property: "opacity";
+                    to: 1.0;
+                    easing.type:
+                    Easing.InQuad;
+                    duration: 150
+                }
             }
         }
     }

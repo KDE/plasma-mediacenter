@@ -31,7 +31,6 @@ PlasmaCore.FrameSvgItem {
     imagePath: "widgets/background"
     enabledBorders: "LeftBorder|RightBorder|TopBorder"
     opacity: 0.9
-    visible: false
 
     Item {
         anchors.fill: parent
@@ -77,7 +76,6 @@ PlasmaCore.FrameSvgItem {
                 width: isExpandable ? 0 : height
                 onImageClicked: rootItem.imageClicked(url)
             }
-            focus: true
             snapMode: ListView.SnapToItem
             clip: true
 
@@ -89,7 +87,7 @@ PlasmaCore.FrameSvgItem {
             height: parent.height; width: height
             anchors { right: parent.right; top: parent.top; bottom: parent.bottom }
             iconSource: "go-next"
-            onClicked: rootItem.nextImage();
+            onClicked: rootItem.nextImage()
         }
     }
 
@@ -105,7 +103,7 @@ PlasmaCore.FrameSvgItem {
     function previousImage()
     {
         var i = imageList.currentIndex;
-        if (i<imageList.count-1) {
+        if (i>0) {
             imageList.currentIndex = i - 1;
             imageList.currentItem.emitClicked()
         }

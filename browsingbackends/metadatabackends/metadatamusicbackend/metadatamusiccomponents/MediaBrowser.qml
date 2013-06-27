@@ -20,9 +20,9 @@
 import QtQuick 1.1
 import org.kde.qtextracomponents 0.1 as QtExtraComponents
 import org.kde.plasma.components 0.1 as PlasmaComponents
-import org.kde.plasma.mediacentercomponents 0.1 as MediaCenterComponents
+import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
 
-Item {
+FocusScope {
     id: rootRow
     anchors.fill: parent
     property QtObject backend
@@ -32,74 +32,19 @@ Item {
     //spacing: 10
     //clip: true
 
-     // Navigationbar
-    Row {
+    NavigationBar {
         id: header
         height: 60
         width: 700
-        spacing: 10
         anchors.top: parent.top
 
-        Item {
-            height: 50
-            width: 200
-            Text {
-                anchors.centerIn: parent
-                text: i18n("Artist")
-                color: artistListView.visible ? theme.viewHoverColor : theme.textColor
-            }
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    rootRow.backend.artistFilter = ""
-                    artistListView.visible = true
-                    albumListView.visible = false
-                    musicListView.visible = false
-                }
-            }
-        }
-        Item {
-            height: 50
-            width: 200
-            Text {
-                anchors.centerIn: parent
-                text: i18n("Albums")
-                color: albumListView.visible ? theme.viewHoverColor : theme.textColor
-            }
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    rootRow.backend.artistFilter = ""
-                    artistListView.visible = false
-                    albumListView.visible = true
-                    musicListView.visible = false
-                }
-            }
-        }
-        Item {
-            height: 50
-            width: 200
-            Text {
-                anchors.centerIn: parent
-                text: i18n("Songs")
-                color: musicListView.visible ? theme.viewHoverColor : theme.textColor
-            }
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    rootRow.backend.artistFilter = ""
-                    rootRow.backend.albumFilter = ""
-                    artistListView.visible = false
-                    albumListView.visible = false
-                    musicListView.visible = true
-                    // Hide cover
-                    cover.source = null
-                    cover.visible = false;
-                }
-            }
-        }
+        artistsContent: searchArtistsTextField
+        albumsContent: searchAlbumsTextField
+        songsContent: searchSongsTextField
+
+        onNeedFocus: focus = true
     }
-    
+
     /*Rectangle {
         anchors.top: header.bottom
         anchors.horizontalCenter: parent.horizontalCenter
@@ -107,12 +52,13 @@ Item {
         height: 1
         color: "white"
     }*/
-    
+
     Item {
         id: artistListView
-        width: parent.width; 
+        width: parent.width;
         anchors { top: header.bottom; bottom: parent.bottom }
         PlasmaComponents.TextField {
+            id: searchArtistsTextField
             width: parent.width
             height: 30
             clearButtonShown: true
@@ -123,8 +69,12 @@ Item {
                 interval: 2000
                 onTriggered: backend.searchArtist(parent.text)
             }
+
+            Keys.onUpPressed: header.focus = true
+            Keys.onDownPressed: musicGridView.focus = true
         }
         GridView {
+            id: musicGridView
             anchors.bottom: parent.bottom
             width: parent.width;
             height: parent.height - 30
@@ -133,6 +83,7 @@ Item {
             cellHeight: height/2.1
             flow: _pmc_is_desktop ? GridView.LeftToRight : GridView.TopToBottom
             clip: true
+            focus: true
 
             delegate: Item {
                 id: mediaItemDelegateItem
@@ -161,10 +112,20 @@ Item {
                     }
                 }
 
-                Keys.onReturnPressed: {
-                    rootRow.backend.artistFilter = resourceId
-                    artistListView.visible = false
-                    albumListView.visible = true
+                Keys.onPressed: {
+                    switch (event.key) {
+                        case Qt.Key_Up:
+                            if (index % 2 == 0) {
+                                searchArtistsTextField.focus = true;
+                                event.accepted = true;
+                            }
+                            break;
+                        case Qt.Key_Return:
+                            rootRow.backend.artistFilter = resourceId;
+                            artistListView.visible = false;
+                            albumListView.visible = true;
+                            break;
+                    }
                 }
             }
             /*delegate: CategoriesDelegate { width: parent ? parent.width - artistScrollBar.width : 0; height: 48; categoryName: "artist" }
@@ -179,16 +140,19 @@ Item {
                 flickableItem: parent
                 orientation: _pmc_is_desktop ? Qt.Vertical : Qt.Horizontal
             }
+
+            onCurrentIndexChanged: positionViewAtIndex(currentIndex, GridView.Contain)
         }
     }
 
     Item {
         id: albumListView
         visible: false
-        width: parent.width; 
+        width: parent.width;
         height: parent.height - header.height - 2
         anchors.top: header.bottom
         PlasmaComponents.TextField {
+            id: searchAlbumsTextField
             width: parent.width
             height: 30
             clearButtonShown: true
@@ -199,8 +163,12 @@ Item {
                 interval: 2000
                 onTriggered: backend.searchAlbum(parent.text)
             }
+
+            Keys.onUpPressed: header.focus = true
+            Keys.onDownPressed: albumGridView.focus = true
         }
         GridView {
+            id: albumGridView
             anchors.bottom: parent.bottom
             width: parent.width;
             height: parent.height - 30
@@ -208,7 +176,7 @@ Item {
             cellWidth: cellHeight
             cellHeight: height/2.1
             flow: _pmc_is_desktop ? GridView.LeftToRight : GridView.TopToBottom
-            
+
             delegate: Item {
                 id: mediaItemDelegateItem
                 width: GridView.view.cellWidth
@@ -216,7 +184,7 @@ Item {
                 scale: (GridView.isCurrentItem ? 1.1 : 1)
                 clip: !GridView.isCurrentItem
                 z: GridView.isCurrentItem ? 1 : 0
-        
+
                 MediaItem {
                     anchors.fill: parent
                     onClicked: {
@@ -236,10 +204,20 @@ Item {
                     }
                 }
 
-                Keys.onReturnPressed: {
-                    rootRow.backend.albumFilter = resourceId
-                    albumListView.visible = false
-                    musicListView.visible = true
+                Keys.onPressed: {
+                    switch (event.key) {
+                        case Qt.Key_Up:
+                            if (index % 2 == 0) {
+                                searchAlbumsTextField.focus = true;
+                                event.accepted = true;
+                            }
+                            break;
+                        case Qt.Key_Return:
+                            rootRow.backend.albumFilter = resourceId
+                            albumListView.visible = false
+                            musicListView.visible = true
+                            break;
+                    }
                 }
             }
             /*delegate: CategoriesDelegate { width: parent ? parent.width - albumScrollBar.width : 0; height: 48; categoryName: "album" }
@@ -254,13 +232,15 @@ Item {
                 flickableItem: parent
                 orientation: _pmc_is_desktop ? Qt.Vertical : Qt.Horizontal
             }
+
+            onCurrentIndexChanged: positionViewAtIndex(currentIndex, GridView.Contain)
         }
     }
 
     Item {
         id: musicListView
         visible: false
-        width: parent.width; 
+        width: parent.width;
         anchors { top: header.bottom; bottom: parent.bottom }
 
         Row {
@@ -268,6 +248,7 @@ Item {
             width: parent.width
             height: 30
             PlasmaComponents.TextField {
+                id: searchSongsTextField
                 visible: backend ? backend.albumFilter == "" && backend.artistFilter == "" : false
                 width: parent.width - playAllButton.width; height: parent.height
                 clearButtonShown: true
@@ -278,6 +259,9 @@ Item {
                     interval: 2000
                     onTriggered: backend.searchMusic(parent.text)
                 }
+
+                Keys.onUpPressed: header.focus = true
+                Keys.onDownPressed: listViewAllSongs.focus = true
             }
             PlasmaComponents.Button {
                 id: playAllButton
@@ -290,7 +274,7 @@ Item {
                      playlistModel.currentIndex = 0;
                      firstUrl = playlistModel.getUrlofFirstIndex();
                      if(firstUrl != "") {
-                        playlist.playRequested(firstUrl);
+                        getPlaylist().playRequested(firstUrl);
                      }
                   }
                 }
@@ -340,16 +324,25 @@ Item {
 
             ListView {
                 id: listViewAllSongs
-                anchors.fill: parent
+                anchors { fill: parent; margins: 20 }
+                clip: true
+
                 model: backend ? backend.musicModel : undefined
                 delegate: MusicDelegate {
                     width: parent ? parent.width - musicScrollBar.width : 0; height: 64
                     onPopupMenuRequested: mediaBrowser.popupMenuRequested(index,mediaUrl,mediaType, display)
+
+                    Keys.onPressed: if (event.key == Qt.Key_Up && index == 0) {
+                        searchSongsTextField.focus = true;
+                        event.accepted = true;
+                    }
                 }
-                spacing: 5
-                highlight: PlasmaComponents.Highlight { }
+                keyNavigationWraps: true
+                highlight: MediaItemHighlight { }
                 highlightFollowsCurrentItem: true
-                clip: true
+                preferredHighlightBegin: height*0.1; preferredHighlightEnd: height*0.9
+                highlightRangeMode: ListView.ApplyRange
+                highlightMoveDuration: 100
 
                 PlasmaComponents.BusyIndicator {
                     anchors.centerIn: parent
@@ -362,6 +355,12 @@ Item {
                     flickableItem: listViewAllSongs
                 }
             }
+        }
+    }
+
+    Keys.onEscapePressed: {
+        if(!mediaBrowser.currentBrowsingBackend.goOneLevelUp()) {
+            mediaBrowser.backRequested();
         }
     }
 }

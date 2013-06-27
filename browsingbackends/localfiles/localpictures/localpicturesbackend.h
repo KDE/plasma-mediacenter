@@ -21,6 +21,7 @@
 
 #include "../localfilesabstractbackend.h"
 
+class LocalPicturesModel;
 class LocalPicturesBackend : public LocalFilesAbstractBackend
 {
     Q_OBJECT
@@ -30,6 +31,9 @@ public:
 
 protected:
     virtual void initModel();
+
+private:
+    LocalPicturesModel* m_model;
 };
 
 #endif // LOCALPICTURESBACKEND_H

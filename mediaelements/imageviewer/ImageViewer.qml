@@ -24,7 +24,7 @@ import org.kde.plasma.graphicswidgets 0.1 as PlasmaWidgets
 import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.components 0.1 as PlasmaComponents
 
-Rectangle {
+FocusScope {
     id: imageRect
     property alias source: mainImage.source
     property alias stripModel: mediaPictureStrip.model
@@ -33,10 +33,10 @@ Rectangle {
     property alias stripCurrentIndex: mediaPictureStrip.currentIndex
 
     signal slideshowStarted
+    signal clicked
 
     width: parent.width
     height: parent.height
-    color: "black"
 
     Rectangle {
         border.color: theme.textColor; radius: 5; width: parent.width/2; height: 24
@@ -50,20 +50,29 @@ Rectangle {
         }
     }
 
-    Image {
-        id: mainImage
-        anchors.centerIn: parent
+    Item {
+        anchors.fill: parent
+        Image {
+            id: mainImage
+            anchors.centerIn: parent
+            cache: false
 
-        cache: false
-        asynchronous: true
-
-        onStatusChanged: {
-            if (status == Image.Ready) {
-                if (sourceSize.width > sourceSize.height) {
-                    mainImage.scale = Math.min(1, parent.height/sourceSize.height)
-                } else {
-                    mainImage.scale = Math.min(1, parent.width/sourceSize.width)
+            onStatusChanged: {
+                if (status == Image.Ready) {
+                    if (sourceSize.width > sourceSize.height) {
+                        mainImage.scale = Math.min(1, parent.height/sourceSize.height)
+                    } else {
+                        mainImage.scale = Math.min(1, parent.width/sourceSize.width)
+                    }
                 }
+            }
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                mediaPictureStrip.state = mediaPictureStrip.state == "hidden" ? "" : "hidden"
+                imageRect.clicked();
             }
         }
     }
@@ -78,9 +87,7 @@ Rectangle {
         }
         height: 64
         slideshowPaused: mainImage.status == Image.Loading
-        onImageClicked: {
-            mediaImageViewer.source = url
-        }
+        onImageClicked: mainImage.source = url
         onSlideShowStarted: imageRect.slideshowStarted()
         states: [
             State {
@@ -95,17 +102,6 @@ Rectangle {
     function nextImage() { mediaPictureStrip.nextImage(); }
     function previousImage() { mediaPictureStrip.previousImage(); }
 
-    function handleKey(key)
-    {
-        if (!imageRect.visible)
-            return false;
-        switch (key) {
-        case Qt.Key_Left:
-            previousImage();
-            return true;
-        case Qt.Key_Right:
-            nextImage();
-            return true;
-        }
-    }
+    Keys.onLeftPressed: previousImage()
+    Keys.onRightPressed: nextImage()
 }

@@ -1,0 +1,41 @@
+[Desktop Entry]
+Type=Service
+Icon=system-shutdown
+Name=Exit
+Name[ca]=Surt
+Name[cs]=Ukončit
+Name[da]=Afslut
+Name[de]=Beenden
+Name[es]=Salir
+Name[fi]=Lopeta
+Name[it]=Esci
+Name[nl]=Afsluiten
+Name[pt]=Sair
+Name[pt_BR]=Sair
+Name[sv]=Avsluta
+Name[uk]=Вихід
+Name[x-test]=xxExitxx
+Comment=Exit Plasma Media Center
+Comment[ca]=Surt del centre multimèdia de Plasma
+Comment[cs]=Ukončit Multimediální centrum Plasma
+Comment[da]=Afslut Plasma Mediecenter
+Comment[de]=Plasma-Mediencenter beenden
+Comment[es]=Salir del centro de medios de Plasma
+Comment[fi]=Lopeta Plasma-mediakeskus
+Comment[it]=Chiudi Plasma Media Center
+Comment[nl]=Plasma mediacentrum afsluiten
+Comment[pt]=Sair do Centro Multimédia do Plasma
+Comment[pt_BR]=Sai do Plasma Media Center
+Comment[sv]=Avsluta Plasma Media Center
+Comment[uk]=Вийти з медіацентру Плазми
+Comment[x-test]=xxExit Plasma Media Centerxx
+
+X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
+
+X-KDE-PluginInfo-Author=Sinny Kumari
+X-KDE-PluginInfo-Email=ksinny@gmail.com
+X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-Category=settings
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
+X-KDE-Library=pmc_exit

@@ -2,7 +2,7 @@ set(fullscreenbackend_SRCS
   fullscreenbackend.cpp
 )
 
-qt4_automoc(${picasabackend_SRCS})
+qt4_automoc(${fullscreenbackend_SRCS})
 
 kde4_add_plugin(pmc_fullscreen ${fullscreenbackend_SRCS})
 

@@ -23,6 +23,8 @@
 
 LocalFilesAbstractBackend::LocalFilesAbstractBackend (QObject* parent, const QVariantList& args)
     : AbstractBrowsingBackend (parent, args)
+    , m_placeModel(0)
+    , m_placesRow(0)
 {
 
 }
@@ -40,7 +42,7 @@ void LocalFilesAbstractBackend::browseOneLevelUp()
 
 bool LocalFilesAbstractBackend::goOneLevelUp()
 {
-    return false;
+    return qobject_cast<LocalFilesAbstractModel*>(model())->goOneLevelUp();
 }
 
 bool LocalFilesAbstractBackend::expand (int row)
@@ -58,8 +60,10 @@ QString LocalFilesAbstractBackend::mediaBrowserSidePanel() const
 
 QObject* LocalFilesAbstractBackend::placesModel()
 {
-     m_placeModel = new KFilePlacesModel(this);
-     return m_placeModel;
+    if (!m_placeModel) {
+        m_placeModel = new KFilePlacesModel(this);
+    }
+    return m_placeModel;
 }
 
 void LocalFilesAbstractBackend::browseToPlace(int row)

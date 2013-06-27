@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright 2012 Sinny Kumari <ksinny@gmail.com>                        *
+ *   Copyright 2013 by Sinny Kumari <ksinny@gmail.com>                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,20 +17,34 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-var registeredHandlers = [];
+#ifndef VIDEODETAILSMODEL_H
+#define VIDEODETAILSMODEL_H
 
-function registerHandler(obj) {
-    console.log(registeredHandlers);
-    registeredHandlers.push(obj);
-}
+#include <QObject>
+#include <QAbstractListModel>
+#include <QString>
+#include <QUrl>
 
-function handleKey(key) {
-    for (i=0; i<registeredHandlers.length; i++) {
-        var obj = registeredHandlers[i];
-        if (obj.handleKey) {
-            if (obj.handleKey(key)) {
-                break;
-            }
-        }
-    }
-}
+class VideoDetailsModel : public QAbstractListModel
+{
+    Q_OBJECT
+public:
+    VideoDetailsModel(QObject *parent = 0);
+    ~VideoDetailsModel();
+    virtual QVariant data (const QModelIndex& index, int role = Qt::DisplayRole) const;
+    virtual int rowCount (const QModelIndex& parent = QModelIndex()) const;
+    void retriveRealUrl();
+    void setVideoUrl(const QString &url);
+    void setVideoThumbnail(const QString &thumbnail);
+
+signals:
+    void gotRealUrl();
+public slots:
+    void streamUrl(QUrl url);
+private:
+    QString m_videoThumbnail;
+    QString m_videoUrl;
+    QString m_videoTitle;
+};
+
+#endif  // VIDEODETAILSMODEL_H

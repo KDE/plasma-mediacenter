@@ -22,7 +22,7 @@ import org.kde.qtextracomponents 0.1 as QtExtraComponents
 import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.kde.plasma.core 0.1 as PlasmaCore
 import "MediaItemDelegateLogic.js" as Logic
-import org.kde.plasma.mediacentercomponents 0.1 as MediaCenterComponents
+import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
 
 Item {
     id: mediaItem
@@ -152,12 +152,12 @@ Item {
                     id: delegateItemIconComponent
                     QtExtraComponents.QIconItem {
                         id: delegateItemIcon
-                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.horizontalCenter: parent ? parent.horizontalCenter : undefined
                         icon: {
                             if (typeof rootColumn.source == "string")
                                 QIcon(rootColumn.source);
                             else
-                                if (decorationType == "qimage")
+                                if (typeof decorationType !== 'undefined' && decorationType == "qimage")
                                     QIcon(rootColumn.source);
                                 else
                                     rootColumn.source

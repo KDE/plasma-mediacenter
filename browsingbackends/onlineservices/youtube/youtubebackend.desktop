@@ -1,0 +1,43 @@
+[Desktop Entry]
+Type=Service
+Icon=youtube-pmc
+Name=YouTube Videos
+Name[ca]=Vídeos de YouTube
+Name[cs]=Videa YouTube
+Name[da]=YouTube-videoer
+Name[de]=YouTube-Videos
+Name[es]=Videos de YouTube
+Name[fi]=YouTube-videot
+Name[it]=Video di YouTube
+Name[nl]=Video's van YouTube
+Name[pt]=Vídeos do YouTube
+Name[pt_BR]=Vídeos do YouTube
+Name[sv]=YouTube-videor
+Name[uk]=Відео з YouTube
+Name[x-test]=xxYouTube Videosxx
+Comment=Watch videos from Youtube
+Comment[ca]=Mostra els vídeos des de YouTube
+Comment[cs]=Sledujte videa z Youtube
+Comment[da]=Se videoer fra Youtube
+Comment[de]=Betrachten Sie Videos von Youtube
+Comment[es]=Ver videos desde YouTube
+Comment[fi]=Katso videoita YouTubesta
+Comment[it]=Guarda i video di YouTube
+Comment[nl]=Bekijk video's van Youtube
+Comment[pt]=Ver os vídeos do YouTube
+Comment[pt_BR]=Assista aos vídeos do YouTube
+Comment[sv]=Titta på videor från YouTube
+Comment[uk]=Перегляд відео з Youtube
+Comment[x-test]=xxWatch videos from Youtubexx
+
+X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
+
+X-KDE-PluginInfo-Author=Alessandro Diaferia
+X-KDE-PluginInfo-Email=alediaferia@gmail.com
+X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-Category=Service
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
+X-KDE-PluginInfo-Category=video
+X-KDE-VideoProvider-Name=youtube
+X-KDE-Library=pmc_youtubebackend

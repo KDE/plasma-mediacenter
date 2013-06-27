@@ -52,7 +52,7 @@ MainWindow::MainWindow(QWidget *parent)
     , m_mousePointerAutoHide(false)
 {
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-    
+
     const int argsCount = args->count();
 
     QList<KUrl> urls;
@@ -98,9 +98,9 @@ MainWindow::MainWindow(QWidget *parent)
     m_kdeclarative.initialize();
     m_kdeclarative.setupBindings();
 
-    qmlRegisterType<FilteredBackendsModel>("org.kde.plasma.mediacentercomponents", 0, 1, "FilteredBackendsModel");
-    qmlRegisterType<SubtitleProvider>("org.kde.plasma.mediacentercomponents", 0, 1, "SubtitleProvider");
-    qmlRegisterType<FilterPlaylistModel>("org.kde.plasma.mediacentercomponents", 0, 1, "FilterPlaylistModel");
+    qmlRegisterType<FilteredBackendsModel>("org.kde.plasma.mediacenter.elements", 0, 1, "FilteredBackendsModel");
+    qmlRegisterType<SubtitleProvider>("org.kde.plasma.mediacenter.elements", 0, 1, "SubtitleProvider");
+    qmlRegisterType<FilterPlaylistModel>("org.kde.plasma.mediacenter.elements", 0, 1, "FilterPlaylistModel");
     BackendsModel *backendsModel = new BackendsModel(view->engine(), this);
     view->rootContext()->setContextProperty("backendsModel", backendsModel);
     PlaylistModel *playlistModel = new PlaylistModel(this);
@@ -134,7 +134,7 @@ MainWindow::MainWindow(QWidget *parent)
     view->setSource(QUrl(package->filePath("mainscript")));
 
     if (view->rootObject() && urls.count() > 0) {
-        view->rootObject()->metaObject()->invokeMethod(view->rootObject(), "play");
+        QTimer::singleShot(500, this, SLOT(playPlaylist()));
     }
     resize(1366, 768);
 
@@ -146,6 +146,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(&m_mousePointerAutoHideTimer, SIGNAL(timeout()), SLOT(hideMousePointer()));
 
     if (view->errors().isEmpty()) {
+        cfgGroup = KGlobal::config()->group("General");
         qreal volumeRead = cfgGroup.readEntry("volumelevel",1.0);
         view->rootObject()->findChild<QObject*>("runtimeData")->setProperty("volume",volumeRead);
     }
@@ -218,8 +219,11 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
             showMousePointer();
             enableMousePointerAutoHideIfNeeded();
         }
-    } else if (event->type() == QEvent::KeyPress && obj == centralWidget()) {
-        emit keyPressed(static_cast<QKeyEvent*>(event)->key());
     }
     return false;
+}
+
+void MainWindow::playPlaylist()
+{
+    view->rootObject()->metaObject()->invokeMethod(view->rootObject(), "play");
 }

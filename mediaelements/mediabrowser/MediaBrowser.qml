@@ -20,12 +20,14 @@
 
 import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
-import org.kde.plasma.mediacentercomponents 0.1 as MediaCenterComponents
+import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
 
 FocusScope {
     id: mediaBrowser
     property QtObject currentBrowsingBackend
+    property QtObject previousBrowsingBackend
 
+    signal backRequested
     signal playRequested(int index, string url, string currentMediaType)
     signal popupMenuRequested(int index, string mediaUrl, string mediaType, string display)
 
@@ -34,7 +36,7 @@ FocusScope {
         property QtObject child
         property bool enabled
 
-        enabled: (currentBrowsingBackend.mediaBrowserSidePanel == "" ) ? false : true
+        enabled: currentBrowsingBackend ? (currentBrowsingBackend.mediaBrowserSidePanel == "" ? false : true ) : false
         anchors { top: parent.top; bottom: parent.bottom; left: parent.left }
         width: enabled ? parent.width*0.2 : 0
         clip: true
@@ -70,7 +72,7 @@ FocusScope {
                 onPopupMenuRequested: mediaBrowser.popupMenuRequested(index,mediaUrl,mediaType, display)
             }
             flow: _pmc_is_desktop ? GridView.LeftToRight : GridView.TopToBottom
-            model: mediaBrowser.currentBrowsingBackend.backendModel
+            model: mediaBrowser.currentBrowsingBackend.models[0]
             cacheBuffer: width*2
 
             Text {
@@ -90,19 +92,34 @@ FocusScope {
                 running: currentBrowsingBackend.busy
                 visible: running
             }
+
+            onCurrentIndexChanged: positionViewAtIndex(currentIndex, GridView.Contain)
+            Keys.onEscapePressed: {
+                if(!mediaBrowser.currentBrowsingBackend.goOneLevelUp()) {
+                    mediaBrowser.backRequested();
+                }
+            }
+            Keys.onPressed: {
+                if (event.key == Qt.Key_Down && searchMedia.visible && currentIndex%2) {
+                    searchMedia.focus = true;
+                    event.accepted = true;
+                }
+            }
         }
     }
 
     onCurrentBrowsingBackendChanged: {
-        print("BB changed")
+        if (!currentBrowsingBackend)
+            return;
+        if (mediaBrowserViewItem.mediaBrowserGridView) {
+            mediaBrowserViewItem.mediaBrowserGridView.destroy();
+        }
         //Check if there is a custom browser, if yes, load that
         var object;
         if (currentBrowsingBackend.mediaBrowserOverride()) {
             var qmlSource = currentBrowsingBackend.mediaBrowserOverride();
-            print ("override BB: " + qmlSource)
             object = Qt.createQmlObject(qmlSource, mediaBrowserViewItem);
             mediaBrowserViewItem.mediaBrowserGridView = object;
-            print("set backend " + currentBrowsingBackend)
             object.backend = (function() { return currentBrowsingBackend; });
         } else {
             object = mediaBrowserViewComponent.createObject(mediaBrowserViewItem);
@@ -133,8 +150,8 @@ FocusScope {
     function loadModel()
     {
         //JS snippet to do mediaBrowserGridView.model: currentBrowsingBackend.backendModel
-        print ("loadModel")
-        mediaBrowserViewItem.mediaBrowserGridView.model = (function() { return currentBrowsingBackend.backendModel; });
+        if (mediaBrowserViewItem && mediaBrowserViewItem.mediaBrowserGridView)
+            mediaBrowserViewItem.mediaBrowserGridView.model = (function() { return currentBrowsingBackend.models[0]; });
     }
 
     function hideMediaBrowserSidePanel()
@@ -165,6 +182,7 @@ FocusScope {
 
             placeholderText: "Search..."
             onTextChanged: searchMediaTimer.restart()
+            Keys.onUpPressed: mediaBrowserViewItem.mediaBrowserGridView.focus = true
 
             Timer {
                 id: searchMediaTimer
@@ -175,8 +193,8 @@ FocusScope {
 
         PlasmaComponents.Label {
             id: mediaCountLabel
-            text: mediaBrowserViewItem.mediaBrowserGridView.count + ' Items'
-            visible: mediaBrowserViewItem.mediaBrowserGridView.count != undefined
+            text: mediaBrowserViewItem.mediaBrowserGridView ? i18np("%1 item", "%1 items", mediaBrowserViewItem.mediaBrowserGridView.count) : ""
+            visible: mediaBrowserViewItem.mediaBrowserGridView ? (mediaBrowserViewItem.mediaBrowserGridView.count != undefined) : false
 
             anchors {
                 bottom: parent.bottom
@@ -195,7 +213,7 @@ FocusScope {
         popupMenu.currentMediaDelegateIndex = index
      }
 
-     MediaCenterComponents.PopupMenu {
+     MediaCenterElements.PopupMenu {
          id: popupMenu
 
          property string mediaUrl
@@ -208,7 +226,7 @@ FocusScope {
          onPopupMenuItemClicked: {
              switch(index) {
                  case 0:
-                     playlistModel.addToPlaylist(mediaUrl, display);
+                     playlistModel.addToPlaylist(mediaUrl);
                      break;
                  case 1:
                       mediaBrowser.playRequested(currentMediaDelegateIndex, mediaUrl, mediaType)

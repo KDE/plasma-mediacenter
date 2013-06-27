@@ -1,4 +1,4 @@
-project(MediaCenterComponents)
+project(MediaCenterElements)
 
 find_package(KDE4 REQUIRED)
 include(KDE4Defaults)
