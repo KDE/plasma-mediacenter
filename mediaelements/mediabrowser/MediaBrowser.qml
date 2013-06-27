@@ -94,11 +94,6 @@ FocusScope {
             }
 
             onCurrentIndexChanged: positionViewAtIndex(currentIndex, GridView.Contain)
-            Keys.onEscapePressed: {
-                if(!mediaBrowser.currentBrowsingBackend.goOneLevelUp()) {
-                    mediaBrowser.backRequested();
-                }
-            }
             Keys.onPressed: {
                 if (event.key == Qt.Key_Down && searchMedia.visible && currentIndex%2) {
                     searchMedia.focus = true;
@@ -236,5 +231,11 @@ FocusScope {
              }
              popupMenu.visible = false
          }
+    }
+
+    Keys.onEscapePressed: {
+        if(!mediaBrowser.currentBrowsingBackend.goOneLevelUp()) {
+            mediaBrowser.backRequested();
+        }
     }
 }
