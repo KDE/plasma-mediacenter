@@ -26,6 +26,9 @@
 #include <Solid/Device>
 #include <Solid/StorageAccess>
 
+class LocalPlacesModel;   //forward declaration to tell the compiler that an instance will be declared
+class LocalFilesAbstractModel;
+
 class LocalFilesAbstractBackend : public MediaCenter::AbstractBrowsingBackend
 {
     Q_OBJECT
@@ -34,7 +37,6 @@ public:
 
     virtual bool goOneLevelUp();
     virtual bool expand (int row);
-    virtual QString mediaBrowserSidePanel() const;
     Q_INVOKABLE QObject *placesModel();
     Q_INVOKABLE void browseToPlace(int row);
     Q_INVOKABLE void browseOneLevelUp();
@@ -44,13 +46,14 @@ public:
 protected:
     virtual bool initImpl();
     virtual void initModel() = 0;
-    KFilePlacesModel *m_placeModel;
+    LocalPlacesModel *m_placesModel;
 
 private slots:
     void slotStorageSetupDone(Solid::ErrorType error, const QVariant& errordata, const QString& udi);
 
 private:
     int m_placesRow;
+    bool m_isShowingPlacesModel;
 };
 
 #endif // LOCALFILESABSTRACTBACKEND_H

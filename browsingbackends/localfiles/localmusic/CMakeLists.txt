@@ -5,6 +5,7 @@ set(localmusicbackend_SRCS
   localmusicmodel.cpp
   ../localfilesabstractbackend.cpp
   ../localfilesabstractmodel.cpp
+  ../localplacesmodel.cpp
   localmusicbackend.cpp
 )
 

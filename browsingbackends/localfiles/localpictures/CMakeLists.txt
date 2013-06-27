@@ -2,6 +2,7 @@ set(localpicturesbackend_SRCS
     localpicturesmodel.cpp
     ../localfilesabstractbackend.cpp
     ../localfilesabstractmodel.cpp
+    ../localplacesmodel.cpp
     localpicturesbackend.cpp
 )
 

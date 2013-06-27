@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2011  Shantanu Tushar <shantanu@kde.org>
+    Copyright (C) 2013 Akshay Ratan <akshayratan@gmail.com>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,26 +18,21 @@
 */
 
 
-#ifndef LOCALFILESABSTRACTMODEL_H
-#define LOCALFILESABSTRACTMODEL_H
+#ifndef LOCALPLACESMODEL_H
+#define LOCALPLACESMODEL_H
 
-#include <KDE/KDirSortFilterProxyModel>
-#include <KDE/KUrl>
+#include <KDE/KFilePlacesModel>
 
-class LocalFilesAbstractModel : public KDirSortFilterProxyModel
+class LocalPlacesModel : public KFilePlacesModel
 {
     Q_OBJECT
 public:
-    explicit LocalFilesAbstractModel(QObject *parent, const QString &acceptedMimetypes);
+    explicit LocalPlacesModel(QObject *parent);
 
     virtual QVariant data (const QModelIndex& index, int role = Qt::DisplayRole) const;
-    virtual bool goOneLevelUp();
-    virtual bool browseTo(int row);
-    virtual bool browseToUrl(const KUrl& url);
 
 private:
     class Private;
-    Private * const d;
 };
 
-#endif // LOCALFILESABSTRACTMODEL_H
+#endif // LOCALPLACESMODEL_H

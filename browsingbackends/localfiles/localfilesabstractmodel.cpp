@@ -81,23 +81,20 @@ bool LocalFilesAbstractModel::goOneLevelUp()
     if (QDir(url.toLocalFile()).isRoot()) return false;
 
     url.addPath("..");
-    bool success = d->dirModel.dirLister()->openUrl(url);
+    return d->dirModel.dirLister()->openUrl(url);
 
-    return success;
 }
 
 bool LocalFilesAbstractModel::browseTo (int row)
 {
     KUrl url = d->dirModel.dirLister()->url();
     url.addPath(data(index(row, 0)).toString());
-    bool success = d->dirModel.dirLister()->openUrl(url);
-
-    return success;
+    return d->dirModel.dirLister()->openUrl(url);
 }
 
-void LocalFilesAbstractModel::browseToUrl(const KUrl& url)
+bool LocalFilesAbstractModel::browseToUrl(const KUrl& url)
 {
-    d->dirModel.dirLister()->openUrl(url);
+    return d->dirModel.dirLister()->openUrl(url);
 }
 
 #include "localfilesabstractmodel.moc"
