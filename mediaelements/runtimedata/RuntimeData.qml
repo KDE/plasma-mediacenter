@@ -41,5 +41,6 @@ Item {
         stopped = true;
         url = theUrl;
         playing = true;
+        userTrigerredStop = false;
     }
 }
