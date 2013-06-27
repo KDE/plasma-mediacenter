@@ -136,6 +136,8 @@ FocusScope {
             mediaBrowserSidePanel.child = object
             object.backend = (function() { return currentBrowsingBackend; });
         }
+
+        searchMedia.text = currentBrowsingBackend.searchTerm;
     }
 
     function destroyGridView()
@@ -182,7 +184,7 @@ FocusScope {
             Timer {
                 id: searchMediaTimer
                 interval: 1000
-                onTriggered: currentBrowsingBackend.search(searchMedia.text);
+                onTriggered: if (currentBrowsingBackend) currentBrowsingBackend.searchTerm = searchMedia.text
             }
         }
 

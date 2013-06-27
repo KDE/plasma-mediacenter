@@ -46,6 +46,7 @@ public:
     QString name;
     QString mediaBrowserSidePanelText;
     QList<QAbstractItemModel*> models;
+    QString searchTerm;
 };
 
 AbstractBrowsingBackend::AbstractBrowsingBackend(QObject *parent, const QVariantList &args)
@@ -179,4 +180,18 @@ QVariantList AbstractBrowsingBackend::models()
         modelList.append(QVariant::fromValue(qobject_cast<QObject*>(model)));
     }
     return modelList;
+}
+
+QString AbstractBrowsingBackend::searchTerm() const
+{
+    return d->searchTerm;
+}
+
+void AbstractBrowsingBackend::setSearchTerm(const QString& term)
+{
+    if (d->searchTerm == term)
+        return;
+    d->searchTerm = term;
+    emit searchTermChanged();
+    search(term);
 }

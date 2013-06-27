@@ -53,6 +53,7 @@ class MEDIACENTER_EXPORT AbstractBrowsingBackend : public QObject
     Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
     Q_PROPERTY(QString mediaBrowserSidePanel READ mediaBrowserSidePanel WRITE setMediaBrowserSidePanel NOTIFY mediaBrowserSidePanelChanged)
     Q_PROPERTY(QVariantList models READ models NOTIFY modelsChanged)
+    Q_PROPERTY(QString searchTerm READ searchTerm WRITE setSearchTerm NOTIFY searchTermChanged)
 
 public:
     /**
@@ -155,13 +156,6 @@ public:
     Q_INVOKABLE virtual bool supportsSearch() const;
 
     /**
-     * This method is called by the UI when the user requests to search for a media
-     *
-     * @param searchTerm string entered by the user
-     */
-    Q_INVOKABLE virtual void search(const QString &searchTerm);
-
-    /**
      * Override this method if you want your backend to show custom items on a
      * panel/popup. For example this can be used to set filtering options
      *
@@ -179,11 +173,15 @@ public:
      */
     virtual bool busy() const;
 
+    QString searchTerm() const;
+    void setSearchTerm(const QString &term);
+
 Q_SIGNALS:
     void modelChanged();
     void busyChanged();
     void mediaBrowserSidePanelChanged();
     void modelsChanged();
+    void searchTermChanged();
 
 protected:
     /**
@@ -215,6 +213,13 @@ protected:
      * Use this method for general initialization purposes.
      */
     virtual bool initImpl() = 0;
+
+    /**
+     * This method is called by the UI when the user requests to search for a media
+     *
+     * @param searchTerm string entered by the user
+     */
+    virtual void search(const QString &searchTerm);
 
 
 private:
