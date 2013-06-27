@@ -32,6 +32,7 @@ FocusScope {
     property int remainingMediaTime: totalMediaTime - currentMediaTime
 
     property alias playlistButtonChecked: playlistButton.checked
+    property alias playlistButtonVisible: playlistButton.visible
 
     signal playlistButtonClicked()
     signal playNext()
@@ -60,7 +61,6 @@ FocusScope {
                 iconSource: "go-previous";
                 onClicked: {
                     backButtonClicked();
-                    playlistButton.visible = true;
                 }
             }
 
@@ -206,10 +206,7 @@ FocusScope {
                 height: width
                 font.pointSize: 12
                 iconSource: "format-list-ordered"
-                onClicked: {
-                    playlistButtonClicked();
-                    playlistButton.visible = false;
-                }
+                onClicked: playlistButtonClicked();
             }
         }
 

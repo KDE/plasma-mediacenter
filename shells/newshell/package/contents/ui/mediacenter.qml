@@ -54,6 +54,7 @@ Image {
         MediaCenterElements.MediaController {
             id: mediaController
             property bool hideFlag: false
+            playlistButtonVisible : pmcPageStack.currentPage != playlistInstance
             anchors {
                 top: parent.top; right: parent.right; left: parent.left
             }
