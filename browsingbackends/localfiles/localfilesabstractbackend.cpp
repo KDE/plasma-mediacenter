@@ -65,13 +65,15 @@ bool LocalFilesAbstractBackend::expand (int row)
     const QModelIndex m_index = m_placesModel->index(row,0);
     const KUrl url =  m_placesModel->url(m_index);
 
-    if (m_isShowingPlacesModel && browseToPlace(row))
+    if (m_isShowingPlacesModel)
     {
-        m_isShowingPlacesModel = false;
-        initModel();
-        return (qobject_cast<LocalFilesAbstractModel*>(model()))->browseToUrl(url);
-    } else {
-        return true;
+        if (browseToPlace(row)) {
+            m_isShowingPlacesModel = false;
+            initModel();
+            return (qobject_cast<LocalFilesAbstractModel*>(model()))->browseToUrl(url);
+        } else {
+            return true;
+        }
     }
 
     LocalFilesAbstractModel *filesModel = qobject_cast<LocalFilesAbstractModel*>(model());
