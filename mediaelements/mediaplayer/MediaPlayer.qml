@@ -117,7 +117,6 @@ FocusScope {
         running: !video.bufferProgress
     }
 
-    Keys.onEscapePressed: mediaPlayerRootRect.escapePressed()
     Keys.onSpacePressed: if (runtimeDataObject.playing) {
         runtimeDataObject.paused = true;
     } else if (runtimeDataObject.paused || runtimeDataObject.stopped) {

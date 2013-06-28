@@ -68,7 +68,7 @@ Image {
             totalMediaTime: runtimeData.totalTime
 
             onPlaylistButtonClicked: pmcPageStack.pushAndFocus(getPlaylist())
-            onBackButtonClicked: pmcPageStack.popAndFocus()
+            onBackButtonClicked: root.goBack()
             onPlayerButtonClicked: pmcPageStack.pushAndFocus(getMediaPlayer())
             onPlayNext: playlistInstance.playNext()
             onPlayPrevious: playlistInstance.playPrevious()
@@ -180,7 +180,6 @@ Image {
                 runtimeDataObject: runtimeData
                 url: runtimeData.url
                 volume: runtimeData.volume
-                onEscapePressed: pmcPageStack.popAndFocus()
                 onClicked: toggleController(mediaPlayerInstance)
                 onMediaStarted: _pmc_mainwindow.mousePointerAutoHide = hasVideo
                 onMediaFinished: {
@@ -214,14 +213,12 @@ Image {
                     }
                     runtimeData.playUrl(url);
                 }
-                Keys.onEscapePressed: pmcPageStack.popAndFocus()
             }
         }
 
         Component {
             id: pmcImageViewerComponent
             MediaCenterElements.ImageViewer {
-                Keys.onEscapePressed: pmcPageStack.popAndFocus()
                 onClicked: toggleController(imageViewerInstance)
             }
         }
@@ -278,5 +275,14 @@ Image {
         itemToFocus.focus = true;
     }
 
+    function goBack()
+    {
+        if (pmcPageStack.currentPage.goBack && pmcPageStack.currentPage.goBack()) {
+            return;
+        }
+        pmcPageStack.popAndFocus();
+    }
+
+    Keys.onEscapePressed: goBack()
     Component.onCompleted: init()
 }
