@@ -86,4 +86,6 @@ Item {
     Component.onCompleted: {
         showTimer.start()
     }
+
+    Keys.onReturnPressed: mediaBrowser.playRequested(0, mediaUrl, mediaType)
 }
