@@ -38,10 +38,9 @@ public:
     virtual bool goOneLevelUp();
     virtual bool expand (int row);
     Q_INVOKABLE QObject *placesModel();
-    Q_INVOKABLE void browseToPlace(int row);
+    bool browseToPlace(int row);
     Q_INVOKABLE void browseOneLevelUp();
     virtual bool okToLoad() const;
-    void loadUrl(int placeRow);
 
 protected:
     virtual bool initImpl();
