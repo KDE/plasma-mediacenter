@@ -31,11 +31,11 @@ FocusScope {
     property int totalMediaTime
     property int remainingMediaTime: totalMediaTime - currentMediaTime
 
-    property alias playlistButtonChecked: playlistButton.checked
     property alias playlistButtonVisible: playlistButton.visible
+    property alias playerButtonVisible: playerButton.visible
 
     signal playlistButtonClicked()
-    signal playButtonClicked()
+    signal playerButtonClicked()
     signal playNext()
     signal playPrevious()
     signal backButtonClicked()
@@ -211,12 +211,12 @@ FocusScope {
             }
 
             PlasmaComponents.ToolButton {
-                id: playButton
+                id: playerButton
                 width: parent.height
                 height: width
                 font.pointSize: 12
                 iconSource: "applications-multimedia"
-                onClicked: playButtonClicked();
+                onClicked: playerButtonClicked();
             }
         }
 

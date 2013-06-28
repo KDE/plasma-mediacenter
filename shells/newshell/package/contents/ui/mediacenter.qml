@@ -55,7 +55,6 @@ Image {
         MediaCenterElements.MediaController {
             id: mediaController
             property bool hideFlag: false
-            playlistButtonVisible : pmcPageStack.currentPage != playlistInstance
             anchors {
                 top: parent.top; right: parent.right; left: parent.left
             }
@@ -70,10 +69,13 @@ Image {
 
             onPlaylistButtonClicked: pmcPageStack.pushAndFocus(getPlaylist())
             onBackButtonClicked: pmcPageStack.popAndFocus()
-            onPlayButtonClicked: if(mediaPlayerInstance.url) pmcPageStack.pushAndFocus(getMediaPlayer())
+            onPlayerButtonClicked: pmcPageStack.pushAndFocus(getMediaPlayer())
             onPlayNext: playlistInstance.playNext()
             onPlayPrevious: playlistInstance.playPrevious()
             onSeekRequested: if (mediaPlayerInstance) mediaPlayerInstance.currentTime = newPosition
+
+            playlistButtonVisible : pmcPageStack.currentPage != playlistInstance
+            playerButtonVisible: mediaPlayerInstance != null && mediaPlayerInstance.url && (pmcPageStack.currentPage != mediaPlayerInstance)
 
             states: [
                 State {
