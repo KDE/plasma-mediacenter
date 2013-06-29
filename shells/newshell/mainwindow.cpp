@@ -18,6 +18,7 @@
  ***************************************************************************/
 
 #include "mainwindow.h"
+#include "settings.h"
 
 #include <libs/mediacenter/backendsmodel.h>
 #include <libs/mediacenter/playlistmodel.h>
@@ -101,6 +102,8 @@ MainWindow::MainWindow(QWidget *parent)
     qmlRegisterType<FilteredBackendsModel>("org.kde.plasma.mediacenter.elements", 0, 1, "FilteredBackendsModel");
     qmlRegisterType<SubtitleProvider>("org.kde.plasma.mediacenter.elements", 0, 1, "SubtitleProvider");
     qmlRegisterType<FilterPlaylistModel>("org.kde.plasma.mediacenter.elements", 0, 1, "FilterPlaylistModel");
+    qmlRegisterType<Settings>("org.kde.plasma.mediacenter.elements", 0, 1, "Settings");
+
     BackendsModel *backendsModel = new BackendsModel(view->engine(), this);
     view->rootContext()->setContextProperty("backendsModel", backendsModel);
     PlaylistModel *playlistModel = new PlaylistModel(this);
@@ -144,12 +147,6 @@ MainWindow::MainWindow(QWidget *parent)
     m_mousePointerAutoHideTimer.setInterval(2000);
     connect(this, SIGNAL(mousePointerAutoHideChanged()), SLOT(enableMousePointerAutoHideIfNeeded()));
     connect(&m_mousePointerAutoHideTimer, SIGNAL(timeout()), SLOT(hideMousePointer()));
-
-    if (view->errors().isEmpty()) {
-        cfgGroup = KGlobal::config()->group("General");
-        qreal volumeRead = cfgGroup.readEntry("volumelevel",1.0);
-        view->rootObject()->findChild<QObject*>("runtimeData")->setProperty("volume",volumeRead);
-    }
 }
 
 bool MainWindow::toggleFullScreen()
@@ -167,10 +164,6 @@ MainWindow::~MainWindow()
    KConfigGroup cfgGroup = KGlobal::config()->group("General");
    windowState() & Qt::WindowFullScreen ? cfgGroup.writeEntry("fullscreen",true) : cfgGroup.writeEntry("fullscreen",false);
 
-   QObject *volumeLevel = view->rootObject()->findChild<QObject*>("runtimeData");
-   if (volumeLevel) {
-       cfgGroup.writeEntry("volumelevel",QDeclarativeProperty::read(volumeLevel,"volume").toReal());
-   }
    cfgGroup.sync();
 }
 

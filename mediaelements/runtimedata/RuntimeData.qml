@@ -18,6 +18,7 @@
  ***************************************************************************/
 
 import QtQuick 1.1
+import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
 
 Item {
     property QtObject currentBrowsingBackend
@@ -31,6 +32,10 @@ Item {
     property real volume: 1.0
     property bool userTrigerredStop: false
     property string url
+
+    MediaCenterElements.Settings {
+        id: settings
+    }
 
     onStoppedChanged: if (stopped) { paused = false; playing = false }
     onPausedChanged: if (paused) playing = false
@@ -57,5 +62,18 @@ Item {
         userTrigerredStop = true;
         stopped = true;
         userTrigerredStop = false;
+    }
+
+    onVolumeChanged: {
+        if (volume < 0.0) volume = 0.0;
+        if (volume > 1.0) volume = 1.0;
+        settings.setValue("volumelevel", volume);
+    }
+
+    Component.onCompleted: {
+        volume = settings.value("volumelevel", 0.9);
+    }
+    Component.onDestruction: {
+        settings.sync();
     }
 }

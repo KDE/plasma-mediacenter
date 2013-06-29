@@ -44,6 +44,8 @@ FocusScope {
     signal mediaFinished
     signal mediaStarted
     signal escapePressed
+    signal volumeUp
+    signal volumeDown
 
     MediaCenterElements.SubtitleProvider {
         id: subs
@@ -120,4 +122,6 @@ FocusScope {
     Keys.onSpacePressed: runtimeDataObject.playPause()
     Keys.onLeftPressed: seekBy(-5)
     Keys.onRightPressed: seekBy(5)
+    Keys.onUpPressed: mediaPlayerRootRect.volumeUp()
+    Keys.onDownPressed: mediaPlayerRootRect.volumeDown()
 }

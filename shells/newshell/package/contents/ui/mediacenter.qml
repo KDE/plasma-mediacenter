@@ -184,6 +184,8 @@ Image {
                 volume: runtimeData.volume
                 onClicked: toggleController(mediaPlayerInstance)
                 onMediaStarted: _pmc_mainwindow.mousePointerAutoHide = hasVideo
+                onVolumeUp: runtimeData.volume += 0.1
+                onVolumeDown: runtimeData.volume -= 0.1
                 onMediaFinished: {
                     if (playlistInstance && playlistInstance.active && totalTime != -1 && !runtimeData.userTrigerredStop) {
                         playlistInstance.playNext();
