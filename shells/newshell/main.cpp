@@ -62,5 +62,7 @@ int main(int argc, char *argv[])
 
     MainWindow *mw = new MainWindow;
     mw->show();
-    return app.exec();
+    int retval = app.exec();
+    delete mw;
+    return retval;
 }

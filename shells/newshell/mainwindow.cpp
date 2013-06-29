@@ -31,8 +31,6 @@
 
 #include <Plasma/Package>
 #include <Plasma/Theme>
-#include <KConfigGroup>
-#include <kconfig.h>
 #include <KDE/KCmdLineArgs>
 #include <KDE/KApplication>
 
@@ -63,13 +61,8 @@ MainWindow::MainWindow(QWidget *parent)
             urls.append(url);
         }
     }
-    if (args->isSet("fullscreen")) {
+    if (args->isSet("fullscreen") || Settings().value("fullscreen", false).toBool()) {
         toggleFullScreen();
-    }
-    KConfigGroup cfgGroup = KGlobal::config()->group("General");
-    bool toggleCheck = cfgGroup.readEntry("fullscreen",false);
-    if (toggleCheck) {
-       toggleFullScreen();
     }
 
     view = new QDeclarativeView(this);
@@ -131,8 +124,7 @@ MainWindow::MainWindow(QWidget *parent)
     view->rootContext()->setContextProperty("_pmc_gradient_image_path", QUrl(package->filePath("images", "gradient.png")));
     view->rootContext()->setContextProperty("_pmc_shadow_image_path", QUrl(package->filePath("images", "shadow.png")));
 
-    cfgGroup = KGlobal::config()->group("MediaBrowsing");
-    view->rootContext()->setContextProperty("_pmc_is_desktop", cfgGroup.readEntry("isDesktop",false));
+    view->rootContext()->setContextProperty("_pmc_is_desktop", Settings().value("isDesktop",false));
 
     view->setSource(QUrl(package->filePath("mainscript")));
 
@@ -161,10 +153,9 @@ bool MainWindow::toggleFullScreen()
 
 MainWindow::~MainWindow()
 {
-   KConfigGroup cfgGroup = KGlobal::config()->group("General");
-   windowState() & Qt::WindowFullScreen ? cfgGroup.writeEntry("fullscreen",true) : cfgGroup.writeEntry("fullscreen",false);
-
-   cfgGroup.sync();
+    Settings s;
+    windowState() & Qt::WindowFullScreen ? s.setValue("fullscreen", true) : s.setValue("fullscreen", false);
+    s.sync();
 }
 
 void MainWindow::closeMediaCenter()
@@ -207,6 +198,7 @@ void MainWindow::enableMousePointerAutoHideIfNeeded()
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
+    Q_UNUSED(obj)
     if (event->type() == QEvent::HoverMove) {
         if (m_mousePointerHidden) {
             showMousePointer();

@@ -17,10 +17,8 @@
 */
 
 #include "exitbackend.h"
-#include <QtGui/QApplication>
-#include <QtGui/QMainWindow>
-#include <QtCore/QMetaObject>
-#include <QApplication>
+
+#include <QtCore/QCoreApplication>
 
 MEDIACENTER_EXPORT_BROWSINGBACKEND(ExitBackend)
 
@@ -32,6 +30,6 @@ ExitBackend::ExitBackend(QObject* parent, const QVariantList& args):
 
 bool ExitBackend::initImpl()
 {
-    QApplication::quit();
+    QCoreApplication::quit();
     return false;
 }
