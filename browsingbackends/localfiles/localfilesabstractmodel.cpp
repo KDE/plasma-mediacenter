@@ -89,7 +89,7 @@ bool LocalFilesAbstractModel::browseTo (int row)
 {
     KUrl url = d->dirModel.dirLister()->url();
     url.addPath(data(index(row, 0)).toString());
-    return d->dirModel.dirLister()->openUrl(url);
+    return browseToUrl(url);
 }
 
 bool LocalFilesAbstractModel::browseToUrl(const KUrl& url)

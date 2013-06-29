@@ -117,11 +117,7 @@ FocusScope {
         running: !video.bufferProgress
     }
 
-    Keys.onSpacePressed: if (runtimeDataObject.playing) {
-        runtimeDataObject.paused = true;
-    } else if (runtimeDataObject.paused || runtimeDataObject.stopped) {
-        runtimeDataObject.playing = true;
-    }
+    Keys.onSpacePressed: runtimeDataObject.playPause()
     Keys.onLeftPressed: seekBy(-5)
     Keys.onRightPressed: seekBy(5)
 }

@@ -73,6 +73,8 @@ Image {
             onPlayNext: playlistInstance.playNext()
             onPlayPrevious: playlistInstance.playPrevious()
             onSeekRequested: if (mediaPlayerInstance) mediaPlayerInstance.currentTime = newPosition
+            onPlayPause: runtimeData.playPause()
+            onStop: runtimeData.stop()
 
             playlistButtonVisible : pmcPageStack.currentPage != playlistInstance
             playerButtonVisible: mediaPlayerInstance != null && mediaPlayerInstance.url && (pmcPageStack.currentPage != mediaPlayerInstance)
@@ -283,6 +285,16 @@ Image {
         pmcPageStack.popAndFocus();
     }
 
-    Keys.onEscapePressed: goBack()
     Component.onCompleted: init()
+    Keys.onPressed: {
+        switch (event.key) {
+            case Qt.Key_Escape: goBack(); break
+            case Qt.Key_MediaPlay: runtimeData.playPause(); break
+            case Qt.Key_MediaNext: playlistInstance.playNext(); break
+            case Qt.Key_MediaPrevious: playlistInstance.playPrevious(); break
+            case Qt.Key_MediaStop: playlistInstance.playNext(); break
+            default: return
+        }
+        event.accepted = true;
+    }
 }

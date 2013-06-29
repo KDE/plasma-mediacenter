@@ -32,7 +32,7 @@ Item {
     property bool userTrigerredStop: false
     property string url
 
-    onStoppedChanged: if (stopped) playing = false
+    onStoppedChanged: if (stopped) { paused = false; playing = false }
     onPausedChanged: if (paused) playing = false
     onPlayingChanged: if (playing) { paused = false; stopped = false }
 
@@ -41,6 +41,21 @@ Item {
         stopped = true;
         url = theUrl;
         playing = true;
+        userTrigerredStop = false;
+    }
+
+    function playPause() {
+        userTrigerredStop = true;
+        if (playing)
+            paused = true
+        else
+            playing = true
+        userTrigerredStop = false;
+    }
+
+    function stop() {
+        userTrigerredStop = true;
+        stopped = true;
         userTrigerredStop = false;
     }
 }
