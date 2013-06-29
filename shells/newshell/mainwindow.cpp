@@ -151,11 +151,12 @@ bool MainWindow::toggleFullScreen()
     return (windowState() & Qt::WindowFullScreen);
 }
 
-MainWindow::~MainWindow()
+bool MainWindow::queryExit()
 {
     Settings s;
     windowState() & Qt::WindowFullScreen ? s.setValue("fullscreen", true) : s.setValue("fullscreen", false);
     s.sync();
+    return KMainWindow::queryExit();
 }
 
 void MainWindow::closeMediaCenter()

@@ -37,7 +37,6 @@ class MainWindow : public KMainWindow
                 WRITE setMousePointerAutoHide NOTIFY mousePointerAutoHideChanged)
 public:
     explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
 
     bool mousePointerAutoHide() const;
     void setMousePointerAutoHide(bool value);
@@ -57,6 +56,7 @@ private Q_SLOTS:
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event);
+    virtual bool queryExit();
 
 private:
     Plasma::PackageStructure::Ptr m_structure;
