@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
 
     KApplication app;
 
-    MainWindow *mw = new MainWindow;
+    QScopedPointer<MainWindow> mw(new MainWindow);
     mw->show();
     return app.exec();
 }

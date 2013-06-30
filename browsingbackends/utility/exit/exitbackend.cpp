@@ -30,6 +30,6 @@ ExitBackend::ExitBackend(QObject* parent, const QVariantList& args):
 
 bool ExitBackend::initImpl()
 {
-    QCoreApplication::quit();
+    QCoreApplication::exit();
     return false;
 }
