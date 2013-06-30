@@ -27,7 +27,9 @@ class PlaylistItem : public QObject
 {
     Q_OBJECT
 public:
+    static const char *defaultString;
     explicit PlaylistItem(const QString &url, QObject *parent);
+    explicit PlaylistItem(const QString &url, const QString &name, const QString &artist, QObject* parent);
 
     QString mediaUrl() const;
     QString mediaName() const;

@@ -27,6 +27,8 @@
 
 #include <QDebug>
 
+const char *PlaylistItem::defaultString = "--";
+
 PlaylistItem::PlaylistItem(const QString& url, QObject* parent)
     : QObject(parent)
     , m_mediaUrl(url)
@@ -37,6 +39,13 @@ PlaylistItem::PlaylistItem(const QString& url, QObject* parent)
     connect(&m_updateTimer, SIGNAL(timeout()), SLOT(update()));
 
     qRegisterMetaType<MediaInfoResult>("MediaInfoResult");
+}
+
+PlaylistItem::PlaylistItem(const QString& url, const QString& name, const QString& artist, QObject* parent)
+    : PlaylistItem(url, parent)
+{
+    m_mediaName = name;
+    m_mediaArtist = artist;
 }
 
 QString PlaylistItem::mediaUrl() const
@@ -57,7 +66,7 @@ QString PlaylistItem::mediaArtist() const
 {
     if (m_mediaArtist.isEmpty()) {
         m_updateTimer.start();
-        return "--";
+        return defaultString;
     }
     return m_mediaArtist;
 }

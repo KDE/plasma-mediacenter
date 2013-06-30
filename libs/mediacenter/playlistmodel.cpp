@@ -1,6 +1,5 @@
 /***********************************************************************************
- *  Copyright 2012 by Sinny Kumari <ksinny@gmail.com>                               *
- *                                                                                 *
+ *   Copyright 2012 by Sinny Kumari <ksinny@gmail.com>                             *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
  *   modify it under the terms of the GNU Lesser General Public                    *
@@ -52,8 +51,10 @@ PlaylistModel::PlaylistModel(QObject* parent):
         if (file.open(QIODevice::ReadOnly)) {
             QTextStream in(&file);
             while (!in.atEnd()) {
-                QString line = in.readLine();
-                PlaylistItem *item = new PlaylistItem(line, this);
+                const QString url = in.readLine();
+                const QString name = in.readLine();
+                const QString artist = in.readLine();
+                PlaylistItem *item = new PlaylistItem(url, name, artist, this);
                 connect(item, SIGNAL(updated()), SLOT(playlistItemUpdated()));
                 d->musicList.append(item);
             }
@@ -74,13 +75,14 @@ PlaylistModel::PlaylistModel(QObject* parent):
 
 PlaylistModel::~PlaylistModel()
 {
-    KConfigGroup cfgGroup = KGlobal::config()->group("General");
-    cfgGroup.sync();
+    qDebug() << "Saving playlist to " + d->filePath;
     QFile file(d->filePath);
     if (file.open(QIODevice::WriteOnly)) {
          QTextStream out(&file);
          Q_FOREACH (const PlaylistItem *item, d->musicList) {
              out << item->mediaUrl() << "\n";
+             out << item->mediaName() << "\n";
+             out << item->mediaArtist() << "\n";
          }
     }
     file.close();
