@@ -59,13 +59,19 @@ Q_SIGNALS:
     void currentIndexChanged();
     void randomChanged();
 
+public Q_SLOTS:
+    void savePlaylist();
+
 private Q_SLOTS:
     void playlistItemUpdated();
 
 private:
     class Private;
     Private * const d;
+
+    void loadFromFile(const QString &path);
+    void saveToFile(const QString &path);
+    QString playlistFilePath() const;
 };
 
 #endif // PLAYLISTMODEL_H
-

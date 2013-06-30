@@ -21,11 +21,12 @@
 #include <KDebug>
 #include <KDE/KStandardDirs>
 #include <KDE/KCmdLineArgs>
+
 #include <QtCore/QDir>
 #include <QtCore/QStringList>
 #include <QtCore/QDateTime>
-#include <KConfigGroup>
-#include <kconfig.h>
+#include <QtCore/QCoreApplication>
+#include <QtXml/QDomDocument>
 
 class PlaylistModel::Private
 {
@@ -33,7 +34,6 @@ public:
     QList<PlaylistItem*> musicList;
     int currentIndex;
     QFile file;
-    QString filePath;
     bool random;
 };
 
@@ -41,26 +41,8 @@ PlaylistModel::PlaylistModel(QObject* parent):
     QAbstractListModel(parent),
     d(new Private)
 {
-    KConfigGroup cfgGroup = KGlobal::config()->group("General");
-    QString dirPath = KGlobal::dirs()->saveLocation("data") + KCmdLineArgs::appName();
-    QDir().mkdir(dirPath);
-    d->filePath = dirPath + "/playlist";
+    loadFromFile(playlistFilePath());
 
-    if (QFile::exists(d->filePath)) {
-        QFile file(d->filePath);
-        if (file.open(QIODevice::ReadOnly)) {
-            QTextStream in(&file);
-            while (!in.atEnd()) {
-                const QString url = in.readLine();
-                const QString name = in.readLine();
-                const QString artist = in.readLine();
-                PlaylistItem *item = new PlaylistItem(url, name, artist, this);
-                connect(item, SIGNAL(updated()), SLOT(playlistItemUpdated()));
-                d->musicList.append(item);
-            }
-        }
-        file.close();
-    }
     d->currentIndex = -1;
     setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
 
@@ -71,21 +53,13 @@ PlaylistModel::PlaylistModel(QObject* parent):
     setRoleNames(newRoles);
 
     qsrand(QDateTime::currentMSecsSinceEpoch());
+
+    connect(QCoreApplication::instance(), SIGNAL(aboutToQuit()), SLOT(savePlaylist()));
 }
 
 PlaylistModel::~PlaylistModel()
 {
-    qDebug() << "Saving playlist to " + d->filePath;
-    QFile file(d->filePath);
-    if (file.open(QIODevice::WriteOnly)) {
-         QTextStream out(&file);
-         Q_FOREACH (const PlaylistItem *item, d->musicList) {
-             out << item->mediaUrl() << "\n";
-             out << item->mediaName() << "\n";
-             out << item->mediaArtist() << "\n";
-         }
-    }
-    file.close();
+    savePlaylist();
 }
 
 QVariant PlaylistModel::data(const QModelIndex& index, int role) const
@@ -208,3 +182,63 @@ void PlaylistModel::playlistItemUpdated()
     emit dataChanged(createIndex(i, 0), createIndex(i, 0));
 }
 
+QString PlaylistModel::playlistFilePath() const
+{
+    QString dirPath = KGlobal::dirs()->saveLocation("data") + KCmdLineArgs::appName();
+    QDir().mkdir(dirPath);
+    return dirPath + "/playlist";
+}
+
+void PlaylistModel::loadFromFile(const QString& path)
+{
+    if (QFile::exists(path)) {
+        QFile file(path);
+        if (file.open(QIODevice::ReadOnly)) {
+            QDomDocument doc;
+            doc.setContent(file.readAll());
+            file.close();
+
+            QDomNodeList itemList = doc.elementsByTagName("item");
+            for (int i=0; i<itemList.count(); i++) {
+                QDomNode node = itemList.at(i);
+                if (node.isNull()) continue;
+                const QString url = node.toElement().attribute("url");
+                if (url.isEmpty()) continue;
+
+                const QString name = node.toElement().attribute("name", url);
+                const QString artist = node.toElement().attribute("artist", PlaylistItem::defaultString);
+
+                PlaylistItem *item = new PlaylistItem(url, name, artist, this);
+                connect(item, SIGNAL(updated()), SLOT(playlistItemUpdated()));
+                d->musicList.append(item);
+            }
+        }
+    }
+}
+
+void PlaylistModel::saveToFile(const QString& path)
+{
+    QFile file(path);
+    if (file.open(QIODevice::WriteOnly)) {
+        QDomDocument doc;
+        QDomElement playlist = doc.createElement("playlist");
+
+        Q_FOREACH (const PlaylistItem *item, d->musicList) {
+            QDomElement element = doc.createElement("item");
+            element.setAttribute("url", item->mediaUrl());
+            element.setAttribute("name", item->mediaName());
+            element.setAttribute("artist", item->mediaArtist());
+            playlist.appendChild(element);
+        }
+
+        doc.appendChild(playlist);
+        QTextStream s(&file);
+        doc.save(s, 0);
+        file.close();
+    }
+}
+
+void PlaylistModel::savePlaylist()
+{
+    saveToFile(playlistFilePath());
+}
