@@ -27,12 +27,13 @@
 
 #include <QDebug>
 
-const char *PlaylistItem::defaultString = "--";
+const char *PlaylistItem::defaultArtist = "--";
+const int PlaylistItem::defaultLength = -1;
 
 PlaylistItem::PlaylistItem(const QString& url, QObject* parent)
     : QObject(parent)
     , m_mediaUrl(url)
-    , m_mediaLength(-1)
+    , m_mediaLength(defaultLength)
 {
     m_updateTimer.setInterval(1000);
     m_updateTimer.setSingleShot(true);
@@ -41,11 +42,12 @@ PlaylistItem::PlaylistItem(const QString& url, QObject* parent)
     qRegisterMetaType<MediaInfoResult>("MediaInfoResult");
 }
 
-PlaylistItem::PlaylistItem(const QString& url, const QString& name, const QString& artist, QObject* parent)
+PlaylistItem::PlaylistItem(const QString& url, const QString& name, const QString& artist, int length, QObject* parent)
     : PlaylistItem(url, parent)
 {
     m_mediaName = name;
     m_mediaArtist = artist;
+    m_mediaLength = length;
 }
 
 QString PlaylistItem::mediaUrl() const
@@ -64,16 +66,16 @@ QString PlaylistItem::mediaName() const
 
 QString PlaylistItem::mediaArtist() const
 {
-    if (m_mediaArtist.isEmpty()) {
+    if (m_mediaArtist.isEmpty() || m_mediaArtist == defaultArtist) {
         m_updateTimer.start();
-        return defaultString;
+        return defaultArtist;
     }
     return m_mediaArtist;
 }
 
 int PlaylistItem::mediaLength() const
 {
-    if (m_mediaLength == -1) {
+    if (m_mediaLength == defaultLength) {
         m_updateTimer.start();
         return 0;
     }
