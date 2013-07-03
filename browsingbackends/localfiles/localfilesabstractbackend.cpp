@@ -1,4 +1,4 @@
-/*
+    /*
     Copyright (C) 2010  Alessandro Diaferia <alediaferia@gmail.com>
     Copyright (C) 2011  Shantanu Tushar <shantanu@kde.org>
     Copyright (C) 2013  Akshay Ratan  <akshayratan@gmail.com>
@@ -49,15 +49,20 @@ void LocalFilesAbstractBackend::browseOneLevelUp()
 bool LocalFilesAbstractBackend::goOneLevelUp()
 {
     LocalFilesAbstractModel *filesModel = qobject_cast<LocalFilesAbstractModel*>(model());
+    if(!m_isShowingPlacesModel) {
+        if(!filesModel-> goOneLevelUp()) {
+            m_isShowingPlacesModel = true;
+            setModel(qobject_cast<QAbstractItemModel*>(placesModel()));
+            return true;
+        }
 
-    if(m_isShowingPlacesModel)
-    {
-        m_isShowingPlacesModel=false;
         initModel();
-        return qobject_cast<LocalFilesAbstractModel*>(model())->goOneLevelUp();
+        return true;
     }
-
-    return filesModel->goOneLevelUp();
+        else {
+            setModel(qobject_cast<QAbstractItemModel*>(placesModel()));
+            return false;
+        }
 }
 
 bool LocalFilesAbstractBackend::expand (int row)
