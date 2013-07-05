@@ -16,6 +16,7 @@ Name[sl]=Končaj
 Name[sv]=Avsluta
 Name[uk]=Вихід
 Name[x-test]=xxExitxx
+Name[zh_TW]=離開
 Comment=Exit Plasma Media Center
 Comment[ca]=Surt del centre multimèdia de Plasma
 Comment[cs]=Ukončit Multimediální centrum Plasma
@@ -31,6 +32,7 @@ Comment[sl]=Končaj predstavnostno središče Plasma
 Comment[sv]=Avsluta Plasma Media Center
 Comment[uk]=Вийти з медіацентру Плазми
 Comment[x-test]=xxExit Plasma Media Centerxx
+Comment[zh_TW]=離開 Plasma 媒體中心
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 

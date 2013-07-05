@@ -17,6 +17,7 @@ Name[sl]=Videi YouTube
 Name[sv]=YouTube-videor
 Name[uk]=Відео з YouTube
 Name[x-test]=xxYouTube Videosxx
+Name[zh_TW]=YouTube 影片
 Comment=Watch videos from Youtube
 Comment[ca]=Mostra els vídeos des de YouTube
 Comment[cs]=Sledujte videa z Youtube
@@ -32,6 +33,7 @@ Comment[sl]=Oglejte si videe z Youtube
 Comment[sv]=Titta på videor från YouTube
 Comment[uk]=Перегляд відео з Youtube
 Comment[x-test]=xxWatch videos from Youtubexx
+Comment[zh_TW]=觀看 Youtube 的影片
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 
