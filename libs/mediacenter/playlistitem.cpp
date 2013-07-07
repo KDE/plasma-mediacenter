@@ -30,11 +30,17 @@
 const char *PlaylistItem::defaultArtist = "--";
 const int PlaylistItem::defaultLength = -1;
 
+void PlaylistItem::init(const QString& url)
+{
+    m_mediaUrl = url;
+}
+
 PlaylistItem::PlaylistItem(const QString& url, QObject* parent)
     : QObject(parent)
-    , m_mediaUrl(url)
     , m_mediaLength(defaultLength)
 {
+    init(url);
+
     m_updateTimer.setInterval(1000);
     m_updateTimer.setSingleShot(true);
     connect(&m_updateTimer, SIGNAL(timeout()), SLOT(update()));
@@ -42,9 +48,12 @@ PlaylistItem::PlaylistItem(const QString& url, QObject* parent)
     qRegisterMetaType<MediaInfoResult>("MediaInfoResult");
 }
 
-PlaylistItem::PlaylistItem(const QString& url, const QString& name, const QString& artist, int length, QObject* parent)
+PlaylistItem::PlaylistItem(const QString& url, const QString& name,
+                           const QString& artist, int length, QObject* parent)
+    : QObject(parent)
 {
-    PlaylistItem(url, parent);
+    init(url);
+
     m_mediaName = name;
     m_mediaArtist = artist;
     m_mediaLength = length;
@@ -98,7 +107,7 @@ void PlaylistItem::update()
 //     qDebug() << "REGISTERED " << m_serviceRequestNumber << " FOR " << m_mediaUrl << " WITH " << values.second;
 }
 
-void PlaylistItem::processMediaInfo(quint64 requestNumber, MediaInfoResult info)
+void PlaylistItem::processMediaInfo(quint64 requestNumber, const MediaInfoResult& info)
 {
     if (requestNumber != m_serviceRequestNumber)
         return;
