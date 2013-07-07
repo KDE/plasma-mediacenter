@@ -43,8 +43,8 @@ PlaylistItem::PlaylistItem(const QString& url, QObject* parent)
 }
 
 PlaylistItem::PlaylistItem(const QString& url, const QString& name, const QString& artist, int length, QObject* parent)
-    : PlaylistItem(url, parent)
 {
+    PlaylistItem(url, parent);
     m_mediaName = name;
     m_mediaArtist = artist;
     m_mediaLength = length;
