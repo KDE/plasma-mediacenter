@@ -93,8 +93,8 @@ Item {
 
                             Image {
                                 id: delegateItemImage
-                                width: parent.width - 6
-                                height: parent.height - 6
+                                width: parent.width + 5
+                                height: parent.height + 5
                                 anchors.centerIn: parent
                                 fillMode: Image.PreserveAspectCrop
                                 sourceSize.width: width
