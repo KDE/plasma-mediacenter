@@ -62,6 +62,7 @@ FocusScope {
             width: parent.width
             height: 30
             clearButtonShown: true
+            opacity: activeFocus ? 1 : 0.4
             placeholderText: i18n("Search Artists")
             onTextChanged: searchArtistTimer.restart()
             Timer {
@@ -156,6 +157,7 @@ FocusScope {
             width: parent.width
             height: 30
             clearButtonShown: true
+            opacity: activeFocus ? 1 : 0.4
             placeholderText: i18n("Search Albums")
             onTextChanged: searchAlbumTimer.restart()
             Timer {
@@ -252,6 +254,7 @@ FocusScope {
                 visible: backend ? backend.albumFilter == "" && backend.artistFilter == "" : false
                 width: parent.width - playAllButton.width; height: parent.height
                 clearButtonShown: true
+                opacity: activeFocus ? 1 : 0.4
                 placeholderText: i18n("Search Music")
                 onTextChanged: searchMusicTimer.restart()
                 Timer {
