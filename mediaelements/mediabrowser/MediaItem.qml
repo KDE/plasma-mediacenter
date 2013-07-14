@@ -31,7 +31,7 @@ Item {
     signal pressAndHold(int index)
 
     Item {
-        anchors { fill: parent; margins: 10 }
+        anchors { fill: parent; margins: 20 }
 
         Item {
             anchors {

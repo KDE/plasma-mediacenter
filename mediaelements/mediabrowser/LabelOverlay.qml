@@ -33,7 +33,6 @@ Rectangle {
         clip: true
         font.pointSize: 11
         color: theme.textColor
-        elide: Text.ElideRight
         wrapMode: Text.Wrap
 
         horizontalAlignment: Text.AlignHCenter
