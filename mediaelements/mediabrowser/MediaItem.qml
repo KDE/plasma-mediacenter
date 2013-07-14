@@ -69,7 +69,7 @@ Item {
 
                         text: display ? display : ""
                         visible: !hideLabel
-                        z:1; opacity: 0.9
+                        z:1; opacity: 0.8
                         width: parent.width; height: parent.height*0.2
                     }
 
