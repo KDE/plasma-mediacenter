@@ -23,20 +23,17 @@ import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
 
 
 Rectangle {
-    height: mediaTitleLabel.height + 4
+    property alias text: mediaTitleLabel.text
     color: "black"
 
     PlasmaComponents.Label {
         id: mediaTitleLabel
+        anchors { fill: parent; margins: 5 }
 
         clip: true
-        text: display ? display : ""
-        visible: !hideLabel
         font.pointSize: 11
-        maximumLineCount: 3
-        color: mediaItemDelegateItem.GridView.isCurrentItem ? theme.viewHoverColor : theme.textColor
-        //elide: mediaItemDelegateItem.GridView.isCurrentItem ? Text.ElideNone : Text.ElideMiddle
-        width: parent.width
+        color: theme.textColor
+        elide: Text.ElideRight
         wrapMode: Text.Wrap
 
         horizontalAlignment: Text.AlignHCenter

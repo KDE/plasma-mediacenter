@@ -62,13 +62,15 @@ Item {
 
                     LabelOverlay {
                         anchors {
-                            bottom: iconImageLoader.bottom
-                            horizontalCenter: iconImageLoader.horizontalCenter
+                            bottom: parent.bottom
+                            horizontalCenter: parent.horizontalCenter
                             margins: 2
                         }
 
-                        z:1; opacity: 0.8
-                        width: iconImageLoader.width
+                        text: display ? display : ""
+                        visible: !hideLabel
+                        z:1; opacity: 0.9
+                        width: parent.width; height: parent.height*0.2
                     }
 
                 }
