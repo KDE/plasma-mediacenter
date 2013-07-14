@@ -51,7 +51,7 @@ Item {
                 Loader {
                     id: iconImageLoader
                     width: parent.width
-                    height: parent.height - (itemText.visible ? itemText.height : 0 );
+                    height: parent.height
 
                     function checkAndLoad()
                     {
@@ -59,6 +59,18 @@ Item {
                     }
 
                     Component.onCompleted: checkAndLoad()
+
+                    LabelOverlay {
+                        anchors {
+                            bottom: iconImageLoader.bottom
+                            horizontalCenter: iconImageLoader.horizontalCenter
+                            margins: 2
+                        }
+
+                        z:1; opacity: 0.8
+                        width: iconImageLoader.width
+                    }
+
                 }
 
                 Component {
@@ -103,7 +115,6 @@ Item {
                                 cache: false
                                 source: rootColumn.source
                                 smooth: !imageAnimation.running
-                                z: 1
 
                                 states: [
                                     State {
@@ -135,16 +146,6 @@ Item {
                                 ]
                             }
                         }
-                        Rectangle {
-                            anchors.centerIn: parent
-                            radius: 2
-                            z: 2
-                            color: "transparent"
-                            width: parent.width - 2
-                            property int finalHeight: parent.height - 2
-                            height:  finalHeight*delegateItemImage.progress
-                            visible: delegateItemImage.status == Image.Ready && delegateItemImage.scale == 1
-                        }
                     }
                 }
 
@@ -163,19 +164,6 @@ Item {
                                     rootColumn.source
                         }
                     }
-                }
-
-                PlasmaComponents.Label {
-                    id: itemText
-                    text: display ? display : ""
-                    visible: !hideLabel
-                    font.pointSize: 14
-                    color: mediaItemDelegateItem.GridView.isCurrentItem ? theme.viewHoverColor : theme.textColor
-                    elide: mediaItemDelegateItem.GridView.isCurrentItem ? Text.ElideNone : Text.ElideMiddle
-                    width: parent.width
-                    wrapMode: mediaItemDelegateItem.GridView.isCurrentItem ? Text.Wrap : Text.NoWrap
-
-                    horizontalAlignment: Text.AlignHCenter
                 }
             }
 
