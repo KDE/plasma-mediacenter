@@ -165,6 +165,8 @@ void PlaylistModel::setCurrentIndex(int index)
 void PlaylistModel::shuffle()
 {
     QList<PlaylistItem*> musicListShuffle;
+    if( d->currentIndex == -1 )
+        d->currentIndex = 0;
     musicListShuffle.append(d->musicList.takeAt(d->currentIndex));
     while( !d->musicList.isEmpty() ) {
         musicListShuffle.append(d->musicList.takeAt(qrand() % d->musicList.size()));
