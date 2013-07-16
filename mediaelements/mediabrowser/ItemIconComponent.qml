@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright 2012 Sinny Kumari <ksinny@gmail.com>                        *
+ *   Copyright 2013 Shantanu Tushar <shantanu@kde.org>                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,27 +17,20 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-function checkAndLoad(loader)
-{
-    if (typeof(decoration) == "string") {
-        if (decoration.search(/.*\/.*/) == 0) {
-            loadImage(loader);
-        } else {
-            loadIcon(loader);
-        }
-    } else if (typeof(decoration) == "object") {
-        loadIcon(loader);
+import QtQuick 1.1
+
+import org.kde.qtextracomponents 0.1 as QtExtraComponents
+
+QtExtraComponents.QIconItem {
+    id: delegateItemIcon
+    anchors.horizontalCenter: parent ? parent.horizontalCenter : undefined
+    icon: {
+        if (typeof iconImageLoader.source == "string")
+            QIcon(iconImageLoader.source);
+        else
+            if (typeof decorationType !== 'undefined' && decorationType == "qimage")
+                QIcon(iconImageLoader.source);
+            else
+                iconImageLoader.source
     }
-}
-
-function loadImage(loader)
-{
-    iconImageLoader.source = decoration;
-    loader.sourceComponent = delegateItemImageComponent;
-}
-
-function loadIcon(loader)
-{
-    iconImageLoader.source = decoration;
-    loader.sourceComponent = delegateItemIconComponent;
 }

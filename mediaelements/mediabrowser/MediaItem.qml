@@ -18,7 +18,6 @@
 ***************************************************************************/
 
 import QtQuick 1.1
-import org.kde.qtextracomponents 0.1 as QtExtraComponents
 import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.kde.plasma.core 0.1 as PlasmaCore
 import "MediaItemDelegateLogic.js" as Logic
@@ -43,15 +42,19 @@ Item {
                 id:theme
             }
 
-            Column {
-                id: rootColumn
+            Item {
                 anchors.fill: parent
-                property variant source
 
                 Loader {
                     id: iconImageLoader
-                    width: parent.width
-                    height: parent.height
+                    property variant source
+
+                    anchors {
+                        left: parent.left; right: parent.right
+                        top: parent.top; margins: 2
+
+                        bottom: isExpandable ? labelOverlay.top : parent.bottom
+                    }
 
                     function checkAndLoad()
                     {
@@ -59,114 +62,31 @@ Item {
                     }
 
                     Component.onCompleted: checkAndLoad()
-
-                    LabelOverlay {
-                        anchors {
-                            bottom: parent.bottom
-                            horizontalCenter: parent.horizontalCenter
-                            margins: 2
-                        }
-
-                        text: display ? display : ""
-                        visible: !hideLabel
-                        z:1; opacity: 0.8
-                        width: parent.width; height: parent.height*0.2
-                    }
-
                 }
 
-                Component {
-                    id: delegateItemImageComponent
-                    Item {
-                        BorderImage {
-                            source: _pmc_shadow_image_path
-                            width: mediaItemDelegateItem.GridView.isCurrentItem ?
-                                    delegateItemImageComponentRect.width+48
-                                    : delegateItemImageComponentRect.width+32
-                            height: mediaItemDelegateItem.GridView.isCurrentItem ?
-                                    delegateItemImageComponentRect.height+48
-                                    : delegateItemImageComponentRect.height+32
-                            border.left: 50; border.top: 50
-                            border.right: 54; border.bottom: 54
-                            anchors.horizontalCenter: delegateItemImageComponentRect.horizontalCenter
-                            anchors.verticalCenter: delegateItemImageComponentRect.verticalCenter
-                            opacity: delegateItemImage.status == Image.Ready ?
-                                       (mediaItemDelegateItem.GridView.isCurrentItem ? 0.4 : 1) : 0.0
-
-                            Behavior on opacity { NumberAnimation { duration: 200 } }
-                            Behavior on height { NumberAnimation { duration: 200 } }
-                            Behavior on width { NumberAnimation { duration: 200 } }
-                        }
-                        Rectangle {
-                            id: delegateItemImageComponentRect
-                            width: parent.width - 6
-                            height: parent.height - 6
-                            clip: true
-                            anchors.centerIn: parent
-                            color: "transparent"
-
-                            Image {
-                                id: delegateItemImage
-                                width: parent.width + 5
-                                height: parent.height + 5
-                                anchors.centerIn: parent
-                                fillMode: Image.PreserveAspectCrop
-                                sourceSize.width: width
-                                sourceSize.height: 0
-                                asynchronous: true
-                                cache: false
-                                source: rootColumn.source
-                                smooth: !imageAnimation.running
-
-                                states: [
-                                    State {
-                                        name: "appear"
-                                        when: delegateItemImage.status == Image.Ready
-                                    }
-                                ]
-                                transitions: [
-                                Transition {
-                                    to: "appear"
-                                    ParallelAnimation {
-                                        id: imageAnimation
-                                        PropertyAnimation {
-                                            target: delegateItemImage;
-                                            property: "scale";
-                                            from: 0.4
-                                            to: 1
-                                            duration: 50
-                                        }
-                                        PropertyAnimation {
-                                            target: delegateItemImage;
-                                            property: "opacity";
-                                            from: 0.1
-                                            to: 1
-                                            duration: 50
-                                        }
-                                    }
-                                }
-                                ]
-                            }
-                        }
+                LabelOverlay {
+                    id: labelOverlay
+                    anchors {
+                        bottom: parent.bottom; margins: 2
+                        left: parent.left; right: parent.right
                     }
-                }
 
-                Component {
-                    id: delegateItemIconComponent
-                    QtExtraComponents.QIconItem {
-                        id: delegateItemIcon
-                        anchors.horizontalCenter: parent ? parent.horizontalCenter : undefined
-                        icon: {
-                            if (typeof rootColumn.source == "string")
-                                QIcon(rootColumn.source);
-                            else
-                                if (typeof decorationType !== 'undefined' && decorationType == "qimage")
-                                    QIcon(rootColumn.source);
-                                else
-                                    rootColumn.source
-                        }
-                    }
+                    text: display ? display : ""
+                    visible: !hideLabel && text
+                    opacity: 0.8
+                    showOverlay: !isExpandable
+                    width: parent.width; height:  32
                 }
+            }
+
+            Component {
+                id: delegateItemImageComponent
+                ItemImageComponent {}
+            }
+
+            Component {
+                id: delegateItemIconComponent
+                ItemIconComponent {}
             }
 
             MouseArea {

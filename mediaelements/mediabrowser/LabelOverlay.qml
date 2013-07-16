@@ -24,7 +24,9 @@ import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
 
 Rectangle {
     property alias text: mediaTitleLabel.text
-    color: "black"
+    property bool showOverlay: false
+
+    color: showOverlay ? "black" : "transparent"
 
     PlasmaComponents.Label {
         id: mediaTitleLabel
