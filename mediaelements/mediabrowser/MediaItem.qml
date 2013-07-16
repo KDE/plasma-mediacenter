@@ -67,7 +67,7 @@ Item {
                 LabelOverlay {
                     id: labelOverlay
                     anchors {
-                        bottom: parent.bottom; margins: 2
+                        bottom: parent.bottom; margins: 5
                         left: parent.left; right: parent.right
                     }
 
