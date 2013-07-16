@@ -32,14 +32,14 @@ FocusScope {
     property bool stopped: runtimeDataObject.stopped
     property bool showMusicStats: true
     property bool dimVideo: false
-
+    
     property alias totalTime: video.duration
     property alias url: video.source
     property alias currentTime: video.position
     property alias volume: video.volume
     property alias metaData: video.metaData
     property alias hasVideo: video.hasVideo
-
+   
     signal clicked
     signal mediaFinished
     signal mediaStarted
@@ -51,6 +51,8 @@ FocusScope {
         id: subs
         filename: video.source
         subtitleTime: video.position
+        frameRate: video.metaData.videoFrameRate   //To determine frame rate
+        
     }
 
     QtMultimediaKit.Video {
