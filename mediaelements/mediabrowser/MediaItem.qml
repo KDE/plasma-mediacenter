@@ -75,7 +75,9 @@ Item {
                     visible: !hideLabel && text
                     opacity: 0.8
                     showOverlay: !isExpandable
-                    width: parent.width; height:  32
+                    width: parent.width
+                    targetHeight: 32
+                    expanded: mediaItemDelegateItem.GridView.isCurrentItem
                 }
             }
 

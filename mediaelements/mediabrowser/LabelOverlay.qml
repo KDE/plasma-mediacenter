@@ -25,17 +25,22 @@ import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
 Rectangle {
     property alias text: mediaTitleLabel.text
     property bool showOverlay: false
+    property bool expanded: false
+    property int targetHeight: 0
 
+    clip: true
+    height: expanded ? mediaTitleLabel.height : targetHeight
     color: showOverlay ? "black" : "transparent"
 
     PlasmaComponents.Label {
         id: mediaTitleLabel
-        anchors { fill: parent; margins: 5 }
+        width: parent.width
 
         clip: true
         font.pointSize: 11
         color: theme.textColor
         wrapMode: Text.Wrap
+        maximumLineCount: parent.expanded ? 10 : 1
 
         horizontalAlignment: Text.AlignHCenter
     }
