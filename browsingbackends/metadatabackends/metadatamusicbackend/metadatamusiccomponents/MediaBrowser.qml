@@ -69,15 +69,7 @@ FocusScope {
                 z: GridView.isCurrentItem ? 1 : 0
                 MediaItem {
                     anchors.fill: parent
-                    onClicked: {
-                        rootRow.backend.artistFilter = resourceId
-                        artistListView.visible = false
-                        albumListView.visible = false
-                        musicListView.visible = true
-                        // Hide cover
-                        cover.source = null
-                        cover.visible = false;
-                    }
+                    onClicked: selectArtist()
                 }
 
                 Behavior on scale {
@@ -96,11 +88,20 @@ FocusScope {
                             }
                             break;
                         case Qt.Key_Return:
-                            rootRow.backend.artistFilter = resourceId;
-                            artistListView.visible = false;
-                            albumListView.visible = true;
+                            selectArtist();
                             break;
                     }
+                }
+
+                function selectArtist()
+                {
+                    rootRow.backend.artistFilter = resourceId
+                    artistListView.visible = false
+                    albumListView.visible = false
+                    musicListView.visible = true
+                    // Hide cover
+                    cover.source = null
+                    cover.visible = false;
                 }
             }
             /*delegate: CategoriesDelegate { width: parent ? parent.width - artistScrollBar.width : 0; height: 48; categoryName: "artist" }
@@ -146,14 +147,7 @@ FocusScope {
 
                 MediaItem {
                     anchors.fill: parent
-                    onClicked: {
-                        console.log("album clicked " + resourceId)
-                        rootRow.backend.albumFilter = resourceId
-                        albumListView.visible = false
-                        musicListView.visible = true
-                        cover.source = decoration
-                        cover.visible = true;
-                    }
+                    onClicked: selectAlbum()
                 }
 
                 Behavior on scale {
@@ -172,11 +166,18 @@ FocusScope {
                             }
                             break;
                         case Qt.Key_Return:
-                            rootRow.backend.albumFilter = resourceId
-                            albumListView.visible = false
-                            musicListView.visible = true
+                            selectAlbum()
                             break;
                     }
+                }
+
+                function selectAlbum()
+                {
+                    rootRow.backend.albumFilter = resourceId
+                    albumListView.visible = false
+                    musicListView.visible = true
+                    cover.source = decoration
+                    cover.visible = true;
                 }
             }
             /*delegate: CategoriesDelegate { width: parent ? parent.width - albumScrollBar.width : 0; height: 48; categoryName: "album" }
