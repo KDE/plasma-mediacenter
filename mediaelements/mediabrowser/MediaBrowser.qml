@@ -184,7 +184,7 @@ FocusScope {
 
             Timer {
                 id: searchMediaTimer
-                interval: 1000
+                interval: 500
                 onTriggered: if (currentBrowsingBackend) currentBrowsingBackend.searchTerm = searchMedia.text
             }
         }
