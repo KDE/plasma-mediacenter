@@ -32,8 +32,10 @@ FocusScope {
     NavigationBar {
         id: header
         height: 32
-        width: parent.width
-        anchors.top: parent.top
+        anchors {
+            top: parent.top; left: parent.left; right: parent.right
+            margins: 10
+        }
 
         artistsContent: musicGridView
         albumsContent: albumGridView
