@@ -240,4 +240,12 @@ FocusScope {
     {
         return mediaBrowser.currentBrowsingBackend.goOneLevelUp();
     }
+
+    Keys.onPressed: {
+        if (event.text) {
+            searchMedia.focus = true
+            searchMedia.text = event.text
+        }
+    }
+
 }
