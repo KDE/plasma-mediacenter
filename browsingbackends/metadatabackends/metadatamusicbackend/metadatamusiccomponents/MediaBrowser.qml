@@ -95,10 +95,8 @@ FocusScope {
 
                 function selectArtist()
                 {
+                    header.switchToSongsTab()
                     rootRow.backend.artistFilter = resourceId
-                    artistListView.visible = false
-                    albumListView.visible = false
-                    musicListView.visible = true
                     // Hide cover
                     cover.source = null
                     cover.visible = false;
@@ -173,9 +171,8 @@ FocusScope {
 
                 function selectAlbum()
                 {
+                    header.switchToSongsTab()
                     rootRow.backend.albumFilter = resourceId
-                    albumListView.visible = false
-                    musicListView.visible = true
                     cover.source = decoration
                     cover.visible = true;
                 }

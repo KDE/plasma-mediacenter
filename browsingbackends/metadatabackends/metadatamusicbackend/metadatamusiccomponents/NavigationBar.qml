@@ -100,7 +100,7 @@ FocusScope {
             }
             MouseArea {
                 anchors.fill: parent
-                onClicked: { navBarFocusScope.needFocus(); songsTab.focus = true }
+                onClicked: switchToSongsTab()
             }
 
             onActiveFocusChanged: if(activeFocus) {
@@ -157,5 +157,11 @@ FocusScope {
                 }
             }
         }
+    }
+
+    function switchToSongsTab()
+    {
+        navBarFocusScope.needFocus();
+        songsTab.focus = true;
     }
 }
