@@ -29,50 +29,23 @@ FocusScope {
 
     signal popupMenuRequested(int index, string mediaUrl, string mediaType, string display)
 
-    //spacing: 10
-    //clip: true
-
     NavigationBar {
         id: header
-        height: 60
-        width: 700
+        height: 32
+        width: parent.width
         anchors.top: parent.top
 
-        artistsContent: searchArtistsTextField
-        albumsContent: searchAlbumsTextField
-        songsContent: searchSongsTextField
+        artistsContent: musicGridView
+        albumsContent: albumGridView
+        songsContent: listViewAllSongs
 
         onNeedFocus: focus = true
     }
-
-    /*Rectangle {
-        anchors.top: header.bottom
-        anchors.horizontalCenter: parent.horizontalCenter
-        width: parent.width - 100
-        height: 1
-        color: "white"
-    }*/
 
     Item {
         id: artistListView
         width: parent.width;
         anchors { top: header.bottom; bottom: parent.bottom }
-        PlasmaComponents.TextField {
-            id: searchArtistsTextField
-            width: parent.width
-            height: 30
-            clearButtonShown: true
-            placeholderText: i18n("Search Artists")
-            onTextChanged: searchArtistTimer.restart()
-            Timer {
-                id: searchArtistTimer
-                interval: 2000
-                onTriggered: backend.searchArtist(parent.text)
-            }
-
-            Keys.onUpPressed: header.focus = true
-            Keys.onDownPressed: musicGridView.focus = true
-        }
         GridView {
             id: musicGridView
             anchors.bottom: parent.bottom
@@ -116,7 +89,7 @@ FocusScope {
                     switch (event.key) {
                         case Qt.Key_Up:
                             if (index % 2 == 0) {
-                                searchArtistsTextField.focus = true;
+                                header.focus = true;
                                 event.accepted = true;
                             }
                             break;
@@ -151,22 +124,6 @@ FocusScope {
         width: parent.width;
         height: parent.height - header.height - 2
         anchors.top: header.bottom
-        PlasmaComponents.TextField {
-            id: searchAlbumsTextField
-            width: parent.width
-            height: 30
-            clearButtonShown: true
-            placeholderText: i18n("Search Albums")
-            onTextChanged: searchAlbumTimer.restart()
-            Timer {
-                id: searchAlbumTimer
-                interval: 2000
-                onTriggered: backend.searchAlbum(parent.text)
-            }
-
-            Keys.onUpPressed: header.focus = true
-            Keys.onDownPressed: albumGridView.focus = true
-        }
         GridView {
             id: albumGridView
             anchors.bottom: parent.bottom
@@ -208,7 +165,7 @@ FocusScope {
                     switch (event.key) {
                         case Qt.Key_Up:
                             if (index % 2 == 0) {
-                                searchAlbumsTextField.focus = true;
+                                header.focus = true;
                                 event.accepted = true;
                             }
                             break;
@@ -247,22 +204,6 @@ FocusScope {
             id: searchField
             width: parent.width
             height: 30
-            PlasmaComponents.TextField {
-                id: searchSongsTextField
-                visible: backend ? backend.albumFilter == "" && backend.artistFilter == "" : false
-                width: parent.width - playAllButton.width; height: parent.height
-                clearButtonShown: true
-                placeholderText: i18n("Search Music")
-                onTextChanged: searchMusicTimer.restart()
-                Timer {
-                    id: searchMusicTimer
-                    interval: 2000
-                    onTriggered: backend.searchMusic(parent.text)
-                }
-
-                Keys.onUpPressed: header.focus = true
-                Keys.onDownPressed: listViewAllSongs.focus = true
-            }
             PlasmaComponents.Button {
                 id: playAllButton
                 text: i18n("Play All")
@@ -333,7 +274,7 @@ FocusScope {
                     onPopupMenuRequested: mediaBrowser.popupMenuRequested(index,mediaUrl,mediaType, display)
 
                     Keys.onPressed: if (event.key == Qt.Key_Up && index == 0) {
-                        searchSongsTextField.focus = true;
+                        header.focus = true;
                         event.accepted = true;
                     }
                 }

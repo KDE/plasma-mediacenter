@@ -18,6 +18,7 @@
  ***************************************************************************/
 
 import QtQuick 1.1
+import org.kde.plasma.components 0.1 as PlasmaComponents
 
 FocusScope {
     id: navBarFocusScope
@@ -34,10 +35,11 @@ FocusScope {
         Item {
             id: artistsTab
             focus: true
-            height: 50
-            width: 200
+            height: parent.height
+            width: artistTabText.width * 2
             Text {
-                anchors.centerIn: parent
+                id: artistTabText
+                anchors.verticalCenter: parent.verticalCenter
                 text: i18n("Artist")
                 color: artistListView.visible ? theme.viewHoverColor : theme.textColor
                 font.bold: parent.activeFocus
@@ -55,15 +57,16 @@ FocusScope {
             }
 
             Keys.onRightPressed: albumsTab.focus = true;
-            Keys.onLeftPressed: songsTab.focus = true;
+            Keys.onLeftPressed: searchField.focus = true;
             Keys.onDownPressed: navBarFocusScope.artistsContent.focus = true;
         }
         Item {
             id: albumsTab
-            height: 50
-            width: 200
+            height: parent.height
+            width: albumsTabText.width * 2
             Text {
-                anchors.centerIn: parent
+                id: albumsTabText
+                anchors.verticalCenter: parent.verticalCenter
                 text: i18n("Albums")
                 color: albumListView.visible ? theme.viewHoverColor : theme.textColor
                 font.bold: parent.activeFocus
@@ -86,10 +89,11 @@ FocusScope {
         }
         Item {
             id: songsTab
-            height: 50
-            width: 200
+            height: parent.height
+            width: songsTabText.width * 2
             Text {
-                anchors.centerIn: parent
+                id: songsTabText
+                anchors.verticalCenter: parent.verticalCenter
                 text: i18n("Songs")
                 color: musicListView.visible ? theme.viewHoverColor : theme.textColor
                 font.bold: parent.activeFocus
@@ -110,9 +114,48 @@ FocusScope {
                 cover.visible = false;
             }
 
-            Keys.onRightPressed: artistsTab.focus = true;
+            Keys.onRightPressed: searchField.focus = true;
             Keys.onLeftPressed: albumsTab.focus = true;
             Keys.onDownPressed: navBarFocusScope.songsContent.focus = true;
+        }
+
+        Item {
+            width: parent.width - artistsTab.width - albumsTab.width - songsTab.width - 40
+            height: parent.height
+            anchors.verticalCenter: parent.verticalCenter
+
+            PlasmaComponents.TextField {
+                id: searchField
+                anchors { fill: parent; margins: 5 }
+                clearButtonShown: true
+                placeholderText: i18n("Search")
+                onTextChanged: searchTimer.restart()
+                Timer {
+                    id: searchTimer
+                    interval: 100
+                    onTriggered: {
+                        if (artistListView.visible) {
+                            backend.searchArtist(searchField.text)
+                        } else if (albumListView.visible) {
+                            backend.searchAlbum(searchField.text)
+                        } else if (musicListView.visible) {
+                            backend.searchMusic(searchField.text)
+                        }
+                    }
+                }
+
+                Keys.onRightPressed: artistsTab.focus = true;
+                Keys.onLeftPressed: songsTab.focus = true;
+                Keys.onDownPressed: {
+                    if (artistListView.visible) {
+                        artistsContent.focus = true;
+                    } else if (albumListView.visible) {
+                        albumsContent.focus = true;
+                    } else if (musicListView.visible) {
+                        songsContent.focus = true;
+                    }
+                }
+            }
         }
     }
 }
