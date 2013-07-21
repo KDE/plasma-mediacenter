@@ -242,7 +242,7 @@ FocusScope {
     }
 
     Keys.onPressed: {
-        if (event.text) {
+        if (event.text && searchMedia.visible) {
             searchMedia.focus = true
             searchMedia.text = event.text
         }
