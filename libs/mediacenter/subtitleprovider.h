@@ -27,7 +27,7 @@
 #include <QtCore/QList>
 #include <QtCore/QStringList>
 #include <QtCore/QUrl>
-#include <QFileInfo>
+
 #include "mediacenter_export.h"
 
 struct Subtitle {
@@ -43,9 +43,6 @@ struct Subtitle {
     int endMillisec;
     qint64 totalEndMillisec;
     QString text;
-    
-    int first;
-    int second;
 };
 
 class MEDIACENTER_EXPORT SubtitleProvider : public QObject
@@ -54,7 +51,6 @@ class MEDIACENTER_EXPORT SubtitleProvider : public QObject
     Q_PROPERTY(QString subtitle READ subtitle NOTIFY subtitleChanged);
     Q_PROPERTY(QUrl filename READ filename WRITE setFilename);
     Q_PROPERTY(qint64 subtitleTime READ subtitleTime WRITE setSubtitleTime NOTIFY subtitleTimeChanged);
-    Q_PROPERTY(qreal frameRate READ frameRate WRITE setFrameRate); 
 
 public:
     QString subtitle();
@@ -62,25 +58,20 @@ public:
     void setSubtitleTime(const qint64& currtime);
     QUrl filename();
     void setFilename(const QUrl& name);
-    qreal frameRate();  //This is to determine the video framerate
-    void setFrameRate(qreal frame);
-
 
 signals:
     void subtitleChanged();
     void subtitleTimeChanged();
-    
+
 private:
     QList<Subtitle> subs;
     QString m_currentSubtitle;
     qint64 currentSubtitleStartTime;
     qint64 currentSubtitleEndTime;
     qint64 m_currentVideoTime;
-    qreal m_frameRate;
     QUrl m_subtitleFilename;
-    
-    void processFile_Srt();
-    void processFile_Sub();  
+
+    void processFile();
     void computeAndStoreSubtitle(qint64 input);
 };
 

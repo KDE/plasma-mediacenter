@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2012 by Deepak Mittal <dpac.mittal2@gmail.com>                        
+ *   Copyright 2012 by Deepak Mittal <dpac.mittal2@gmail.com>                      *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -19,7 +19,7 @@
 
 #include "subtitleprovider.h"
 
-void SubtitleProvider::processFile_Srt()
+void SubtitleProvider::processFile()
 {
     currentSubtitleStartTime = currentSubtitleEndTime = 0;
     struct Subtitle t;
@@ -27,7 +27,6 @@ void SubtitleProvider::processFile_Srt()
     QUrl f(m_subtitleFilename.toString().replace(QRegExp("(.*)\\.(.*)$"), "\\1.srt"));
     QFile file(f.toLocalFile());
 
-    
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
 //         qDebug() << "Unable to open subtitle file " << file.fileName();
         subs.clear();
@@ -63,76 +62,6 @@ void SubtitleProvider::processFile_Srt()
 
     }
     file.close();
-}
-
-/* This function is to process a MicroDVD .sub subtitle file format */
-
-void SubtitleProvider:: processFile_Sub()
-{
-    currentSubtitleStartTime = currentSubtitleEndTime = 0;
-    struct Subtitle t;
-
-    QUrl f(m_subtitleFilename.toString().replace(QRegExp("(.*)\\.(.*)$"), "\\1.sub"));
-    QFile file(f.toLocalFile());
-    
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-//         qDebug() << "Unable to open subtitle file " << file.fileName();
-        subs.clear();
-        return;
-    }
-
-    QTextStream in(&file);
-    
-    QRegExp re("^\\{(\\d+)\}\\{(\\d+)\}(.*)$");   //Regular expression to match the contents of .sub format
-    QString temp;
-
-    while (!in.atEnd()) {
-        QString line = in.readLine();
-
-        if (line.isEmpty()) {
-            re.indexIn(temp);
-	    
-	    t.first=re.cap(1).toInt();
-	    t.second=re.cap(2).toInt();
-	    t.text = re.cap(3);          
-	    
-	    t.startSec = ( t.first/ (m_frameRate) ) ; 
-	    t.startMillisec = (( t.first/ (m_frameRate) ) - (long) ( t.first/ (m_frameRate) ) ) * 1000 ;
-	    t.startMin = ( t.first/ (m_frameRate) ) / 60 ;
-	    t.startHr = 0;
-	    
-	    while(t.startMin >= 60 )
-	    {
-	      t.startHr = t.startHr + 1 ;
-	      t.startMin = t.startMin - 60 ; 
-	      
-	    }
-	    
-	    t.totalStartMillisec = ( t.first/ (m_frameRate) ) * 1000 ;
-	    
-	    t.endMillisec = (( t.second/ (m_frameRate) ) - (long) ( t.second/ (m_frameRate) ) ) * 1000 ;
-	    t.endSec = ( t.second/ (m_frameRate) ) ; 
-	    t.endMin = ( t.second/ (m_frameRate) )/ 60 ;
-	    t.endHr = 0;
-	    
-	    while(t.endMin >= 60 )
-	    {
-	      t.endHr = t.endHr + 1 ;
-	      t.endMin = t.endMin - 60 ; 
-	      
-	    }
-	    
-	    t.totalEndMillisec = ( t.second/ (m_frameRate) ) ;
-	 
-            subs.append(t);
-            temp.clear();
-        } else {
-            temp = temp + ' ' + line;
-        }
-
-    }
-    file.close();
-  
 }
 void SubtitleProvider::computeAndStoreSubtitle(qint64 input)
 {
@@ -192,34 +121,9 @@ QUrl SubtitleProvider::filename()
     return m_subtitleFilename;
 }
 
-qreal SubtitleProvider::frameRate()
-{
-    return m_frameRate;
-}
-
-void SubtitleProvider::setFrameRate(qreal frame)
-{
-    m_frameRate=frame;
-}
-
-
 void SubtitleProvider::setFilename(const QUrl& name)
 {
     m_subtitleFilename = name;
-    
-    QString url_string = m_subtitleFilename.toString();
-    QFileInfo fi(url_string);
-    QString extension= fi.suffix();
-    
-    if(extension == "srt") 
-    {
-      processFile_Srt();
-    }
-    
-    else
-    {
-      processFile_Sub();
-    }
-    
+    processFile();
 }
 

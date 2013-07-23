@@ -61,7 +61,7 @@ FocusScope {
                 id: backButton
                 height: parent.height
                 width: height
-                iconSource: "arrow-left";
+                iconSource: "go-previous";
                 onClicked: controlBarFrame.backButtonClicked();
             }
 
