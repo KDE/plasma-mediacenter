@@ -26,28 +26,7 @@ Name[uk]=Навігація музикою
 Name[x-test]=xxBrowse musicxx
 Name[zh_TW]=瀏覽音樂
 
-Comment=Browse your device for music
-Comment[ca]=Cerca al dispositiu per a la música
-Comment[ca@valencia]=Cerca al dispositiu per a la música
-Comment[cs]=Vyhledat hudbu na zařízení
-Comment[da]=Gennemse din enhed for musik
-Comment[de]=Durchsuchen Sie Ihr Gerät nach Musik
-Comment[es]=Examinar su dispositivo por música
-Comment[et]=Seadme sirvimine muusika leidmiseks
-Comment[fi]=Selaa laitteellasi olevaa musiikkia
-Comment[fr]=Navigue dans des dossiers de la musique sur votre périphérique
-Comment[hu]=Eszköz tallózása zenékért
-Comment[it]=Sfoglia il dispositivo alla ricerca di musica
-Comment[nl]=Door uw apparaat bladeren naar muziek
-Comment[pt]=Navegar pela música do seu dispositivo
-Comment[pt_BR]=Navega pelas músicas do seu dispositivo
-Comment[sk]=Prehľadávať hudbu vo vašom zariadení
-Comment[sl]=Prebrskajte vašo napravo za glasbo
-Comment[sv]=Bläddra på en enhet efter musik
-Comment[tr]=Cihazınızdaki müziğe göz atın
-Comment[uk]=Переглянути записи музики на вашому пристрої
-Comment[x-test]=xxBrowse your device for musicxx
-Comment[zh_TW]=瀏覽您的裝置的音樂
+Comment=Browse folders on your device for music
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 

@@ -26,28 +26,7 @@ Name[uk]=Навігація відео
 Name[x-test]=xxBrowse videosxx
 Name[zh_TW]=瀏覽影片
 
-Comment=Browse your device for videos
-Comment[ca]=Cerca al dispositiu per als vídeos
-Comment[ca@valencia]=Cerca al dispositiu per als vídeos
-Comment[cs]=Vyhledat videa na zařízení
-Comment[da]=Gennemse din enhed for videoer
-Comment[de]=Durchsuchen Sie Ihr Gerät nach Videos
-Comment[es]=Examinar su dispositivo por videos
-Comment[et]=Seadme sirvimine videode leidmiseks
-Comment[fi]=Selaa laitteellasi olevia videoita
-Comment[fr]=Naviguer dans des dossiers de vidéos sur votre périphérique
-Comment[hu]=Eszköz tallózása videókért
-Comment[it]=Sfoglia il dispositivo alla ricerca di video
-Comment[nl]=Door uw apparaat bladeren naar video's
-Comment[pt]=Navegar pelos vídeos do seu dispositivo
-Comment[pt_BR]=Navega pelos vídeos do seu dispositivo
-Comment[sk]=Prehľadávať videá vo vašom zariadení
-Comment[sl]=Prebrskajte vašo napravo za videi
-Comment[sv]=Bläddra på en enhet efter videor
-Comment[tr]=Cihazınızdaki videolara göz atın
-Comment[uk]=Переглянути записи відео на вашому пристрої
-Comment[x-test]=xxBrowse your device for videosxx
-Comment[zh_TW]=瀏覽您的裝置的影片
+Comment=Browse folders on your device for videos
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 

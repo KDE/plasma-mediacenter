@@ -26,28 +26,7 @@ Name[uk]=Навігація зображеннями
 Name[x-test]=xxBrowse Picturesxx
 Name[zh_TW]=瀏覽圖片
 
-Comment=Browse your device for pictures
-Comment[ca]=Cerca al dispositiu per a les imatges
-Comment[ca@valencia]=Cerca al dispositiu per a les imatges
-Comment[cs]=Vyhledat obrázky na zařízení
-Comment[da]=Gennemse din enhed for billeder
-Comment[de]=Durchsuchen Sie Ihr Gerät nach Bildern
-Comment[es]=Examinar su dispositivo por imágenes
-Comment[et]=Seadme sirvimine piltide leidmiseks
-Comment[fi]=Selaa laitteellasi olevia kuvia
-Comment[fr]=Naviguer dans des dossiers d'images sur votre périphérique
-Comment[hu]=Eszköz tallózása képekért
-Comment[it]=Sfoglia il dispositivo alla ricerca di immagini
-Comment[nl]=Door uw apparaat bladeren naar afbeeldingen
-Comment[pt]=Navegar pelas imagens do seu dispositivo
-Comment[pt_BR]=Navega pelas imagens do seu dispositivo
-Comment[sk]=Prehľadávať obrázky vo vašom zariadení
-Comment[sl]=Prebrskajte vašo napravo za slikami
-Comment[sv]=Bläddra på en enhet efter bilder
-Comment[tr]=Cihazınızdaki resimlere göz atın
-Comment[uk]=Переглянути записи зображень на вашому пристрої
-Comment[x-test]=xxBrowse your device for picturesxx
-Comment[zh_TW]=瀏覽您的裝置的圖片
+Comment=Browse folders on your device for pictures
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 
