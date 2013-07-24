@@ -177,7 +177,7 @@ FocusScope {
                 right: mediaCountLabel.left
             }
 
-            opacity: activeFocus ? 1 : 0.4
+            opacity: activeFocus ? 1 : 0.8
             placeholderText: "Search..."
             onTextChanged: searchMediaTimer.restart()
             Keys.onUpPressed: mediaBrowserViewItem.mediaBrowserGridView.focus = true
