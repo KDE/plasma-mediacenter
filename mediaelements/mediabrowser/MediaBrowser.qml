@@ -154,6 +154,7 @@ FocusScope {
     function hideMediaBrowserSidePanel()
     {
         currentBrowsingBackend.mediaBrowserSidePanel = ""
+        mediaBrowserViewItem.mediaBrowserGridView.focus = true;
     }
 
     Item {
