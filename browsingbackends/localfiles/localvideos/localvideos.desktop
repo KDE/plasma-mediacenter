@@ -27,6 +27,13 @@ Name[x-test]=xxBrowse videosxx
 Name[zh_TW]=瀏覽影片
 
 Comment=Browse folders on your device for videos
+Comment[da]=Gennemse mapper på din enhed for videoer
+Comment[nl]=Door uw mappen op uw apparaat bladeren naar video's
+Comment[pt]=Navegar pelas pastas de vídeos do seu dispositivo
+Comment[pt_BR]=Navega pelas pastas do seu dispositivo a procura de vídeos
+Comment[sv]=Bläddra i kataloger på en enhet efter videor
+Comment[uk]=Переглянути теки з відео на вашому пристрої
+Comment[x-test]=xxBrowse folders on your device for videosxx
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 
