@@ -164,6 +164,8 @@ void PlaylistModel::setCurrentIndex(int index)
 
 void PlaylistModel::shuffle()
 {
+    if( d->musicList.isEmpty())
+        return;
     QList<PlaylistItem*> musicListShuffle;
     if( d->currentIndex == -1 )
         d->currentIndex = 0;
