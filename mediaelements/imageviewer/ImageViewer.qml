@@ -78,7 +78,7 @@ FocusScope {
         height: 64
         slideshowPaused: mainImage.status == Image.Loading
         onImageClicked: mainImage.source = url
-        onSlideShowStarted: imageRect.slideshowStarted()
+        onSlideShowStarted: {imageRect.slideshowStarted(); mediaPictureStrip.state = "hidden"}
         states: [
             State {
                 name: "hidden"

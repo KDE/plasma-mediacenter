@@ -223,9 +223,12 @@ Image {
         Component {
             id: pmcImageViewerComponent
             MediaCenterElements.ImageViewer {
+                id: imageViewer
                 onClicked: toggleController(imageViewerInstance)
+                onSlideshowStarted: hideController(imageViewerInstance)
             }
         }
+
     }
 
     function getMediaWelcome() {
@@ -273,10 +276,24 @@ Image {
         getPlaylist().playRequested(playlistModel.getNextUrl());
     }
 
+    function showController(itemToFocus)
+    {
+        mediaController.hideFlag = false;
+        itemToFocus.focus = true;
+    }
+
+    function hideController(itemToFocus)
+    {
+        mediaController.hideFlag = true;
+        itemToFocus.focus = true;
+    }
+
     function toggleController(itemToFocus)
     {
-        mediaController.hideFlag = !mediaController.hideFlag;
-        itemToFocus.focus = true;
+        if (mediaController.hideFlag)
+            showController(itemToFocus);
+        else
+            hideController(itemToFocus);
     }
 
     function goBack()

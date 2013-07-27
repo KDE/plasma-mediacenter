@@ -49,14 +49,14 @@ PlasmaCore.FrameSvgItem {
             checkable: true
             width: height
             iconSource: checked ? "media-playback-pause" : "media-playback-start"
-
-            onCheckedChanged: if (checked) rootItem.slideShowStarted()
+            onCheckedChanged: if (checked) rootItem.slideShowStarted();
             Timer {
                 id: slideshowTimer
                 interval: 2000; repeat: true
                 running: slideshow.checked && !rootItem.slideshowPaused
                 onTriggered: rootItem.nextImage();
             }
+
         }
 
         ListView {
