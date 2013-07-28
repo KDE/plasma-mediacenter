@@ -183,7 +183,10 @@ Image {
                 url: runtimeData.url
                 volume: runtimeData.volume
                 onClicked: toggleController(mediaPlayerInstance)
-                onMediaStarted: _pmc_mainwindow.mousePointerAutoHide = hasVideo
+                onMediaStarted: {
+                    _pmc_mainwindow.mousePointerAutoHide = hasVideo
+                    hideController(imageViewerInstance)
+                }
                 onVolumeUp: runtimeData.volume += 0.1
                 onVolumeDown: runtimeData.volume -= 0.1
                 onMediaFinished: {
