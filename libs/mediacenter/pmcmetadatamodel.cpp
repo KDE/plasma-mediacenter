@@ -321,6 +321,8 @@ void PmcMetadataModel::addFilter(const Nepomuk2::Types::Property& property, cons
 
 void PmcMetadataModel::clearAllFilters()
 {
+    if (d->term == d->resourceTypeTerm)
+        return;
     d->term = d->resourceTypeTerm;
     d->updateTimer.start(100);
 }
