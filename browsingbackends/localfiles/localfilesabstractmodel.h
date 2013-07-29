@@ -34,10 +34,11 @@ public:
     virtual bool goOneLevelUp();
     virtual bool browseTo(int row);
     virtual bool browseToUrl(const KUrl& url);
-
+    
 private:
     class Private;
     Private * const d;
+    QString m_searchString;
 };
 
 #endif // LOCALFILESABSTRACTMODEL_H
