@@ -41,6 +41,8 @@ public:
     bool browseToPlace(int row);
     Q_INVOKABLE void browseOneLevelUp();
     virtual bool okToLoad() const;
+    void search(const QString& searchTerm);
+    bool supportsSearch() const ;
 
 protected:
     virtual bool initImpl();

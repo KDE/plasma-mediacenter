@@ -123,4 +123,18 @@ void LocalFilesAbstractBackend::slotStorageSetupDone(Solid::ErrorType error,cons
     expand(m_placesRow);
 }
 
+void LocalFilesAbstractBackend::search(const QString& searchTerm)
+{
+    if(!m_isShowingPlacesModel) {
+      const QString regEx = QString(searchTerm).prepend(".*").append(".*");   //Regular Expression is used to search
+      qobject_cast<LocalFilesAbstractModel*>(model())->setFilterRegExp(QRegExp(regEx, Qt::CaseInsensitive));
+    }
+}
+
+bool LocalFilesAbstractBackend::supportsSearch() const
+{
+    return true;  
+}
+
+
 #include "localfilesabstractbackend.h"

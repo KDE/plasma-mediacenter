@@ -1,6 +1,7 @@
 /*
     Copyright (C) 2011  Shantanu Tushar <shantanu@kde.org>
-
+    Copyright (C) 2013  Akshay Ratan <akshayratan@gmail.com>
+    
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -81,6 +82,7 @@ QVariant LocalFilesAbstractModel::data (const QModelIndex& index, int role) cons
 bool LocalFilesAbstractModel::goOneLevelUp()
 {
     d->stack.pop();
+    m_searchString = "";
     if(d->stack.isEmpty()) {
         return false;
     }
@@ -100,6 +102,7 @@ bool LocalFilesAbstractModel::browseTo (int row)
 
 bool LocalFilesAbstractModel::browseToUrl(const KUrl& url)
 {
+    m_searchString = "";
     d->stack.push(url);
     return d->dirModel.dirLister()->openUrl(url);
 }
