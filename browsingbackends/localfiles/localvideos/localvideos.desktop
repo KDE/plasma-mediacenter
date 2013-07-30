@@ -27,6 +27,7 @@ Name[x-test]=xxBrowse videosxx
 Name[zh_TW]=瀏覽影片
 
 Comment=Browse folders on your device for videos
+Comment[cs]=Vyhledat videa ve složkách na zařízení
 Comment[da]=Gennemse mapper på din enhed for videoer
 Comment[es]=Examinar carpetas en su dispositivo por videos
 Comment[fr]=Naviguer dans des dossiers de vidéos sur votre périphérique

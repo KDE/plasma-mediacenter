@@ -27,6 +27,7 @@ Name[x-test]=xxBrowse Picturesxx
 Name[zh_TW]=瀏覽圖片
 
 Comment=Browse folders on your device for pictures
+Comment[cs]=Vyhledat obrázky ve složkách na zařízení
 Comment[da]=Gennemse mapper på din enhed for billeder
 Comment[es]=Examinar carpetas en su dispositivo por imágenes
 Comment[fr]=Naviguer dans des dossiers d'images sur votre périphérique
