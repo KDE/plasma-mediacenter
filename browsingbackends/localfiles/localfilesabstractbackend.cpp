@@ -133,7 +133,7 @@ void LocalFilesAbstractBackend::search(const QString& searchTerm)
 
 bool LocalFilesAbstractBackend::supportsSearch() const
 {
-    return true;  
+    return true;
 }
 
 
