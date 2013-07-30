@@ -82,7 +82,6 @@ QVariant LocalFilesAbstractModel::data (const QModelIndex& index, int role) cons
 bool LocalFilesAbstractModel::goOneLevelUp()
 {
     d->stack.pop();
-    m_searchString = "";
     if(d->stack.isEmpty()) {
         return false;
     }
@@ -102,7 +101,6 @@ bool LocalFilesAbstractModel::browseTo (int row)
 
 bool LocalFilesAbstractModel::browseToUrl(const KUrl& url)
 {
-    m_searchString = "";
     d->stack.push(url);
     return d->dirModel.dirLister()->openUrl(url);
 }
