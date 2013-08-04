@@ -23,12 +23,20 @@
 
 #include "mediacenter_export.h"
 
+namespace TagLib {
+    namespace MPEG {
+        class File;
+    }
+}
+
 class MEDIACENTER_EXPORT PmcCoverArtProvider : public QDeclarativeImageProvider
 {
 public:
     static const char *identificationString;
     PmcCoverArtProvider ();
     virtual QImage requestImage ( const QString& id, QSize* size, const QSize& requestedSize );
+private:
+    void addAlbumCoverToCache(TagLib::MPEG::File& f, const QImage& image);
 };
 
 #endif // PMCCOVERARTPROVIDER_H

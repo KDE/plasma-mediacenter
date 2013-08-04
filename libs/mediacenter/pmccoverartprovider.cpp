@@ -22,6 +22,7 @@
 */
 
 #include "pmccoverartprovider.h"
+#include "pmcimagecache.h"
 
 #include <id3v2tag.h>
 #include <mpegfile.h>
@@ -57,5 +58,13 @@ QImage PmcCoverArtProvider::requestImage(const QString& id, QSize* size, const Q
     if (size) {
         *size = image.size();
     }
+
+    addAlbumCoverToCache(f, image);
     return image;
+}
+
+void PmcCoverArtProvider::addAlbumCoverToCache(TagLib::MPEG::File& f, const QImage& image)
+{
+    QString albumName(f.ID3v2Tag()->album().toCString());
+    PmcImageCache::instance()->addImage(albumName.prepend("album:"), image);
 }

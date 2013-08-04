@@ -88,6 +88,9 @@ private Q_SLOTS:
 private:
     class Private;
     Private * const d;
+
+    QVariant decorationForMetadata(const QVariant& metadataValue, const QModelIndex& index) const;
+    QVariant metadataValueForRole(const QModelIndex& index, int role) const;
 };
 
 #endif // PMCMETADATAMODEL_H

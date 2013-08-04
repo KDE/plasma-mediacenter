@@ -25,6 +25,8 @@
 #include <Nepomuk2/Variant>
 #include <Nepomuk2/Vocabulary/NIE>
 #include <Nepomuk2/Vocabulary/NFO>
+#include <Nepomuk2/Vocabulary/NCO>
+#include <Nepomuk2/Vocabulary/NMM>
 #include <Nepomuk2/Query/ResourceTypeTerm>
 
 #include <KDebug>
@@ -188,6 +190,13 @@ bool MetadataUpdater::areThereResultsToProcess()
 QString MetadataUpdater::mimetypeForResource(const Nepomuk2::Resource& resource) const
 {
     const QString mime = resource.property(Nepomuk2::Vocabulary::NIE::mimeType()).toString();
+    if (mime.isEmpty()) {
+        if (resource.type() == Nepomuk2::Vocabulary::NCO::Contact()) {
+            return "contact";
+        } else if (resource.type() == Nepomuk2::Vocabulary::NMM::MusicAlbum()) {
+            return "album";
+        }
+    }
     return mime;
 }
 

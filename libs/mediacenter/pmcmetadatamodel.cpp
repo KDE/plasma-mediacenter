@@ -157,6 +157,11 @@ void PmcMetadataModel::addTerm(const Nepomuk2::Query::Term& term)
     d->updateTimer.start(100);
 }
 
+QVariant PmcMetadataModel::metadataValueForRole(const QModelIndex& index, int role) const
+{
+    return d->metadataValues.value(index.row()).value(role);
+}
+
 QVariant PmcMetadataModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid() || index.row() >= rowCount())
@@ -167,7 +172,7 @@ QVariant PmcMetadataModel::data(const QModelIndex& index, int role) const
         return QVariant();
     }
 
-    QVariant metadataValue = d->metadataValues.value(index.row()).value(role);
+    QVariant metadataValue = metadataValueForRole(index, role);
     switch(role) {
     case MediaCenter::ResourceIdRole:
     case MediaCenter::MediaUrlRole:
@@ -175,14 +180,9 @@ QVariant PmcMetadataModel::data(const QModelIndex& index, int role) const
     case Qt::DisplayRole:
         return metadataValue;
     case Qt::DecorationRole:
-        if (metadataValue.type() == QVariant::String
-            && metadataValue.toString().isEmpty()
-            && d->defaultDecoration.isValid()) {
-            return d->defaultDecoration;
-        }
-        return metadataValue;
+        return decorationForMetadata(metadataValue, index);
     case MediaCenter::MediaThumbnailRole:
-        if (d->metadataValues.value(index.row()).value(MediaCenter::MediaTypeRole) == "video") {
+        if (metadataValueForRole(index, MediaCenter::MediaTypeRole) == "video") {
             KUrl url = d->metadataValues.value(index.row()).value(MediaCenter::MediaUrlRole).toUrl();
             if (d->mediaUrlWhichFailedThumbnailGeneration.contains(url.prettyUrl()))
                 return "image-missing";
@@ -191,6 +191,23 @@ QVariant PmcMetadataModel::data(const QModelIndex& index, int role) const
     }
 
     return QVariant();
+}
+
+QVariant PmcMetadataModel::decorationForMetadata(const QVariant &metadataValue, const QModelIndex &index) const
+{
+    if (metadataValue.type() == QVariant::String && metadataValue.toString().isEmpty()) {
+        if (metadataValueForRole(index, MediaCenter::MediaTypeRole) == "album") {
+            const QString albumName = metadataValueForRole(index, Qt::DisplayRole).toString();
+            const QString albumUri = QString("album:%1").arg(albumName);
+            if (PmcImageCache::instance()->containsId(albumUri)) {
+                return QString("image://%1/%2").arg(PmcImageProvider::identificationString, albumUri);
+            }
+        }
+        if (d->defaultDecoration.isValid()) {
+            return d->defaultDecoration;
+        }
+    }
+    return metadataValue;
 }
 
 void PmcMetadataModel::fetchMetadata()
