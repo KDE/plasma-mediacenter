@@ -22,7 +22,7 @@
 
 #include "../localfilesabstractmodel.h"
 
-#include "localvideothumbnailprovider.h"
+#include "localthumbnailprovider.h"
 
 class LocalVideosModel : public LocalFilesAbstractModel
 {
@@ -35,7 +35,7 @@ private slots:
     void processThumbnail (const QString& url);
 
 private:
-    VideoThumbnailProvider *m_thumbProvider;
+    ThumbnailProvider *m_thumbProvider;
     mutable QHash<QString, QPersistentModelIndex> m_pendingThumbs;        //aw mutable, any other way to let data() change this?
 };
 

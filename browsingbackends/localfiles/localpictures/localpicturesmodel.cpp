@@ -1,5 +1,6 @@
 /*
     Copyright (C) 2011  Shantanu Tushar shantanu@kde.org
+    Copyright (C) 2013 Akshay Ratan <akshayratan@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -19,20 +20,42 @@
 
 #include "localpicturesmodel.h"
 
-#include <mediacenter/mediacenter.h>
+#include <libs/mediacenter/mediacenter.h>
+#include <libs/mediacenter/abstractbrowsingbackend.h>
+#include "../localvideos/localthumbnailprovider.h"
+#include <KDirModel>
 
-LocalPicturesModel::LocalPicturesModel (QObject* parent) : LocalFilesAbstractModel (parent, QString("image/"))
+#include <QtDeclarative/QDeclarativeEngine>
+
+LocalPicturesModel::LocalPicturesModel (QObject* parent) : LocalFilesAbstractModel (parent, QString("image/")),  m_thumbProvider(new ThumbnailProvider(this))
 {
+    MediaCenter::AbstractBrowsingBackend *backend = qobject_cast<MediaCenter::AbstractBrowsingBackend*>(parent);
+    backend->declarativeEngine()->addImageProvider("localpicturesthumbnail", m_thumbProvider);
 
+    connect(m_thumbProvider, SIGNAL(gotThumbnail(QString)), SLOT(processThumbnail(QString)));
 }
 
 QVariant LocalPicturesModel::data (const QModelIndex& index, int role) const
 {
     if (role == Qt::DecorationRole) {
-        if (!LocalPicturesModel::data(index, MediaCenter::IsExpandableRole).toBool())
-            return LocalFilesAbstractModel::data (index, MediaCenter::MediaUrlRole);
+       const QString url = data(index, MediaCenter::MediaUrlRole).toString();
+
+	if (m_thumbProvider->hasThumbnail(url)) {
+            return "image://localpicturesthumbnail/" + url;
+        } else {
+            m_thumbProvider->loadThumbnail(KUrl(url), QSize(600, 600));
+            m_pendingThumbs.insert(url, index);
+        }
     } else if(role == MediaCenter::HideLabelRole) {
         return !LocalPicturesModel::data(index, MediaCenter::IsExpandableRole).toBool();
     }
     return LocalFilesAbstractModel::data (index, role);
 }
+
+void LocalPicturesModel::processThumbnail (const QString &url)
+{
+    QModelIndex index = m_pendingThumbs.take(url);
+
+    emit dataChanged(index, index);
+}
+

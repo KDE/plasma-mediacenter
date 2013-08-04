@@ -1,5 +1,6 @@
 /*
     Copyright (C) 2011  Shantanu Tushar shantanu@kde.org
+    Copyright (C) 2013  Akshay Ratan <akshayratan@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -22,12 +23,21 @@
 
 #include "../localfilesabstractmodel.h"
 
+#include "../localvideos/localthumbnailprovider.h"
+
 class LocalPicturesModel : public LocalFilesAbstractModel
 {
-
+  Q_OBJECT
 public:
     explicit LocalPicturesModel (QObject* parent);
     virtual QVariant data (const QModelIndex& index, int role = Qt::DisplayRole) const;
+
+private slots:
+    void processThumbnail (const QString& url);
+
+private:
+    ThumbnailProvider *m_thumbProvider;
+    mutable QHash<QString, QPersistentModelIndex> m_pendingThumbs;
 };
 
 #endif // LOCALPICTURESMODEL_H
