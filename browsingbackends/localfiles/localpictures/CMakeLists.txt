@@ -4,6 +4,7 @@ set(localpicturesbackend_SRCS
     ../localfilesabstractmodel.cpp
     ../localplacesmodel.cpp
     localpicturesbackend.cpp
+     ../localvideos/localthumbnailprovider.cpp
 )
 
 kde4_add_plugin(pmc_localpictures ${localpicturesbackend_SRCS})
@@ -12,6 +13,7 @@ plasmamediacenter
 ${KDE4_KDECORE_LIBS}
 ${KDE4_KIO_LIBS}
 ${KDE4_KFILE_LIBS}
+${QT_QTDECLARATIVE_LIBRARIES}
 ${KDE4_SOLID_LIBS}
 )
 
