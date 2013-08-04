@@ -34,7 +34,6 @@ FocusScope {
 
         Item {
             id: artistsTab
-            focus: true
             height: parent.height
             width: artistTabText.width * 2
             Text {
@@ -91,6 +90,7 @@ FocusScope {
             id: songsTab
             height: parent.height
             width: songsTabText.width * 2
+            focus: true
             Text {
                 id: songsTabText
                 anchors.verticalCenter: parent.verticalCenter

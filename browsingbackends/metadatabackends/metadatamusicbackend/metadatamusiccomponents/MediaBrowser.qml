@@ -47,6 +47,7 @@ FocusScope {
     Item {
         id: artistListView
         width: parent.width;
+        visible: false
         anchors { top: header.bottom; bottom: parent.bottom }
         GridView {
             id: musicGridView
@@ -58,7 +59,6 @@ FocusScope {
             cellHeight: height/2.1
             flow: _pmc_is_desktop ? GridView.LeftToRight : GridView.TopToBottom
             clip: true
-            focus: true
 
             delegate: Item {
                 id: mediaItemDelegateItem
@@ -196,7 +196,7 @@ FocusScope {
 
     Item {
         id: musicListView
-        visible: false
+        visible: true
         width: parent.width;
         anchors { top: header.bottom; bottom: parent.bottom }
 
@@ -267,6 +267,7 @@ FocusScope {
                 id: listViewAllSongs
                 anchors { fill: parent; margins: 20 }
                 clip: true
+                focus: true
 
                 model: backend ? backend.musicModel : undefined
                 delegate: MusicDelegate {
