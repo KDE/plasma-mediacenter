@@ -4,7 +4,7 @@ set(localvideosbackend_SRCS
   ../localfilesabstractmodel.cpp
   ../localplacesmodel.cpp
   localvideosbackend.cpp
-  localvideothumbnailprovider.cpp
+  localthumbnailprovider.cpp
 )
 
 
