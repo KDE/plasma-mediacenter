@@ -3,8 +3,8 @@ set(localvideosbackend_SRCS
   ../localfilesabstractbackend.cpp
   ../localfilesabstractmodel.cpp
   ../localplacesmodel.cpp
+  ../localthumbnailprovider.cpp
   localvideosbackend.cpp
-  localthumbnailprovider.cpp
 )
 
 
