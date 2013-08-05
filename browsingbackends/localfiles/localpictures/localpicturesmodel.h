@@ -23,7 +23,7 @@
 
 #include "../localfilesabstractmodel.h"
 
-#include "../localvideos/localthumbnailprovider.h"
+#include "../localthumbnailprovider.h"
 
 class LocalPicturesModel : public LocalFilesAbstractModel
 {

@@ -22,7 +22,7 @@
 
 #include <libs/mediacenter/mediacenter.h>
 #include <libs/mediacenter/abstractbrowsingbackend.h>
-#include "../localvideos/localthumbnailprovider.h"
+
 #include <KDirModel>
 
 #include <QtDeclarative/QDeclarativeEngine>

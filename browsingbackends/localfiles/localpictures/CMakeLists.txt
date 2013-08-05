@@ -3,8 +3,8 @@ set(localpicturesbackend_SRCS
     ../localfilesabstractbackend.cpp
     ../localfilesabstractmodel.cpp
     ../localplacesmodel.cpp
+    ../localthumbnailprovider.cpp
     localpicturesbackend.cpp
-     ../localvideos/localthumbnailprovider.cpp
 )
 
 kde4_add_plugin(pmc_localpictures ${localpicturesbackend_SRCS})
