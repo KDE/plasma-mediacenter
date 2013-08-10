@@ -44,7 +44,7 @@ FocusScope {
         onNeedFocus: focus = true
     }
 
-    Item {
+    QtExtraComponents.MouseEventListener {
         id: artistListView
         width: parent.width;
         visible: false
@@ -117,9 +117,17 @@ FocusScope {
 
             onCurrentIndexChanged: positionViewAtIndex(currentIndex, GridView.Contain)
         }
+
+        onWheelMoved: {
+            if (wheel.delta < 0) {
+                musicGridView.moveCurrentIndexRight();
+            } else {
+                musicGridView.moveCurrentIndexLeft();
+            }
+        }
     }
 
-    Item {
+    QtExtraComponents.MouseEventListener {
         id: albumListView
         visible: false
         width: parent.width;
@@ -191,6 +199,14 @@ FocusScope {
             }
 
             onCurrentIndexChanged: positionViewAtIndex(currentIndex, GridView.Contain)
+        }
+
+        onWheelMoved: {
+            if (wheel.delta < 0) {
+                albumGridView.moveCurrentIndexRight();
+            } else {
+                albumGridView.moveCurrentIndexLeft();
+            }
         }
     }
 
