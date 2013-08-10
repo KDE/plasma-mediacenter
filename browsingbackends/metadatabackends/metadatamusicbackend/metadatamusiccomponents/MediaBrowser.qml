@@ -216,24 +216,20 @@ FocusScope {
         width: parent.width;
         anchors { top: header.bottom; bottom: parent.bottom }
 
-        Row {
-            id: searchField
-            width: parent.width
-            height: 30
-            PlasmaComponents.Button {
-                id: playAllButton
-                text: i18n("Play All")
-                height: parent.height
-                onClicked: {
-                  playlistModel.clearPlaylist();
-                  backend.addAllSongsToPlaylist(playlistModel);
-                  if(playlistModel.currentIndex != 0) {
-                     playlistModel.currentIndex = 0;
-                     firstUrl = playlistModel.getUrlofFirstIndex();
-                     if(firstUrl != "") {
-                        getPlaylist().playRequested(firstUrl);
-                     }
-                  }
+        PlasmaComponents.Button {
+            id: playAllButton
+            anchors.horizontalCenter: parent.horizontalCenter
+
+            text: i18n("Play All")
+            onClicked: {
+                playlistModel.clearPlaylist();
+                backend.addAllSongsToPlaylist(playlistModel);
+                if(playlistModel.currentIndex != 0) {
+                    playlistModel.currentIndex = 0;
+                    firstUrl = playlistModel.getUrlofFirstIndex();
+                    if(firstUrl != "") {
+                    getPlaylist().playRequested(firstUrl);
+                    }
                 }
             }
         }
@@ -276,7 +272,7 @@ FocusScope {
 
         Item {
             width: cover.visible ? parent.width - cover.width : parent.width
-            anchors { top: searchField.bottom; right: parent.right; bottom: parent.bottom }
+            anchors { top: playAllButton.bottom; right: parent.right; bottom: parent.bottom }
             clip: true
 
             ListView {
@@ -300,7 +296,7 @@ FocusScope {
                 highlightFollowsCurrentItem: true
                 preferredHighlightBegin: height*0.1; preferredHighlightEnd: height*0.9
                 highlightRangeMode: ListView.ApplyRange
-                highlightMoveDuration: 100
+                highlightMoveDuration: 10
 
                 PlasmaComponents.BusyIndicator {
                     anchors.centerIn: parent
