@@ -57,9 +57,9 @@ PlasmaComponents.Page {
 
         FilteredBackendsList {
             id: backendsList
-            // the x aligns with the selection in categoriesList
-            x: categoriesList.width / 2 - categoriesList.height / 2 + categoriesList.spacing * 2
-            width: 400
+            anchors.horizontalCenter: parent.horizontalCenter
+
+            width: 300
             height: 0.5 * parent.height
             backendsModel: homeScreenRootItem.model
             categoryFilter: categoriesList.currentCategory
