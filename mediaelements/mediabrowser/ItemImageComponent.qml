@@ -49,11 +49,13 @@ Item {
 
         Image {
             id: delegateItemImage
+            property string sourceString: source
+
             width: parent.width + 5
             height: parent.height + 5
             anchors.centerIn: parent
             fillMode: Image.PreserveAspectCrop
-            sourceSize.width: width
+            sourceSize.width: sourceString.indexOf('image') == 0 ? undefined : width
             sourceSize.height: 0
             asynchronous: true
             cache: false
