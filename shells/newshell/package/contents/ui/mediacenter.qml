@@ -105,7 +105,10 @@ Image {
                 }
 
                 function popAndFocus() {
-                    pop();
+                    var page = pop();
+                    //If this is not done, QML's garbage collector will remove the page object
+                    page.visible = false;
+                    page.parent = root;
                     focusCurrentPage();
                 }
 
