@@ -139,7 +139,9 @@ Image {
                         }
                     case PlasmaComponents.PageStatus.Deactivating:
                         if (mediaPlayerInstance) {
-                            mediaPlayerInstance.visible = false;
+                            if (pmcPageStack.currentPage != mediaPlayerInstance) {
+                                mediaPlayerInstance.visible = false;
+                            }
                             mediaPlayerInstance.z = 0;
                             mediaPlayerInstance.dimVideo = false;
                         }
