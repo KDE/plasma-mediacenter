@@ -49,8 +49,8 @@ Row {
             QtExtraComponents.QIconItem {
                 icon: metaData ? "media-optical-audio" : ""
                 anchors.centerIn: parent
-                width: musicStatsLeftPane.width * 0.9
-                height: musicStatsLeftPane.height * 0.9
+                width: 256
+                height: width
                 visible: parent.status != Image.Ready
             }
         }
