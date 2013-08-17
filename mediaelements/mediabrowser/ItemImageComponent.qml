@@ -58,7 +58,6 @@ Item {
             sourceSize.width: sourceString.indexOf('image') == 0 ? undefined : width
             sourceSize.height: 0
             asynchronous: true
-            cache: false
             source: iconImageLoader.source
             smooth: !imageAnimation.running
 
