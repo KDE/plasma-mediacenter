@@ -144,8 +144,24 @@ FocusScope {
                     }
                 }
 
-                Keys.onRightPressed: artistsTab.focus = true;
-                Keys.onLeftPressed: songsTab.focus = true;
+                Keys.onPressed: {
+                    event.accepted = false;
+                    switch (event.key) {
+                    case Qt.Key_Left:
+                        if (selectionStart == 0) {
+                            songsTab.focus = true;
+                            event.accepted = true;
+                        }
+                        break;
+                    case Qt.Key_Right:
+                        if (selectionEnd == text.length) {
+                            artistsTab.focus = true;
+                            event.accepted = true;
+                        }
+                        break;
+                    }
+                }
+
                 Keys.onDownPressed: {
                     if (artistListView.visible) {
                         artistsContent.focus = true;
