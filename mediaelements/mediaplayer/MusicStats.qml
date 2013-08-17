@@ -63,6 +63,7 @@ Row {
         Column {
             anchors.centerIn: parent
             width: 0.9*parent.width; height: 0.7*parent.height
+            clip: true
             StatsLabel { text: metaData.title ? metaData.title : String(path).split("/").reverse()[0] }
             StatsLabel { text: metaData.albumArtist ? metaData.albumArtist : "" }
             StatsLabel { text: metaData.albumTitle ? metaData.albumTitle : "" }
