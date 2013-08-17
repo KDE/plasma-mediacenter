@@ -84,6 +84,7 @@ FocusScope {
                         case Qt.Key_Up:
                             if (index % 2 == 0) {
                                 header.focus = true;
+                                header.focusSearchField();
                                 event.accepted = true;
                             }
                             break;
@@ -168,6 +169,7 @@ FocusScope {
                         case Qt.Key_Up:
                             if (index % 2 == 0) {
                                 header.focus = true;
+                                header.focusSearchField()
                                 event.accepted = true;
                             }
                             break;
@@ -288,6 +290,7 @@ FocusScope {
 
                     Keys.onPressed: if (event.key == Qt.Key_Up && index == 0) {
                         header.focus = true;
+                        header.focusSearchField()
                         event.accepted = true;
                     }
                 }

@@ -180,4 +180,9 @@ FocusScope {
         navBarFocusScope.needFocus();
         songsTab.focus = true;
     }
+
+    function focusSearchField()
+    {
+        searchField.focus = true;
+    }
 }
