@@ -1,3 +1,10 @@
+2013 -08-19 Sinny Kumari <ksinny@gmail.com> - v1.1.0
+
+    * Plasma-mediacenter version-1.1.0 stable release
+    * Bug fix
+    323557: When starting PMC directly with a video the second time,
+            the video is not shown
+
 2013 -08-10 Akshay Ratan <akshayratan@gmail.com> - v1.1.0-rc
     * Show list of all music as default in All Music mode
     * GridView scroll using mouse wheel
