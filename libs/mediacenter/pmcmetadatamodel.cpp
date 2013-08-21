@@ -91,6 +91,7 @@ PmcMetadataModel::PmcMetadataModel(QObject* parent):
     connect(d->metadataUpdater, SIGNAL(reset()), SLOT(handleUpdaterReset()));
     connect(d->metadataUpdater, SIGNAL(queryStarted()), SIGNAL(queryStarted()));
     connect(d->metadataUpdater, SIGNAL(queryFinished()), SIGNAL(queryFinished()));
+    connect(d->metadataUpdater, SIGNAL(queryError(QString)), SIGNAL(queryError(QString)));
     d->metadataUpdater->start(QThread::IdlePriority);
 }
 
@@ -237,11 +238,6 @@ void PmcMetadataModel::newEntries(int count)
 void PmcMetadataModel::finishedListing()
 {
     qobject_cast<Nepomuk2::Query::QueryServiceClient*>(sender())->close();
-}
-
-void PmcMetadataModel::error(const QString &message)
-{
-    kDebug() << message;
 }
 
 QString PmcMetadataModel::urlForResource(const Nepomuk2::Resource &resource) const

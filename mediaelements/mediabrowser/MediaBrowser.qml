@@ -115,6 +115,9 @@ FocusScope {
     onCurrentBrowsingBackendChanged: {
         if (!currentBrowsingBackend)
             return;
+
+        errorLabel.text = "";
+
         if (mediaBrowserViewItem.mediaBrowserGridView) {
             mediaBrowserViewItem.mediaBrowserGridView.destroy();
         }
@@ -144,6 +147,10 @@ FocusScope {
             object = Qt.createQmlObject(qmlSource, mediaBrowserSidePanel);
             mediaBrowserSidePanel.child = object
             object.backend = (function() { return currentBrowsingBackend; });
+        }
+
+        if (currentBrowsingBackend) {
+            currentBrowsingBackend.error.connect(errorLabel.setError);
         }
 
         searchMedia.text = currentBrowsingBackend.searchTerm;
@@ -244,6 +251,18 @@ FocusScope {
              }
              popupMenu.visible = false
          }
+    }
+
+    PlasmaComponents.Label {
+        id: errorLabel
+        anchors.centerIn: parent
+        font.pointSize: 18
+        z: 2
+
+        function setError(message)
+        {
+            errorLabel.text = message;
+        }
     }
 
     function goBack()

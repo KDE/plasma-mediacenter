@@ -182,6 +182,7 @@ Q_SIGNALS:
     void mediaBrowserSidePanelChanged();
     void modelsChanged();
     void searchTermChanged();
+    void error(const QString &message);
 
 protected:
     /**
@@ -193,7 +194,7 @@ protected:
      * QModelIndex. It must make use of MediaRole role to accomplish this.
      * @see MediaRole
      */
-    void setModel(QAbstractItemModel * model);
+    virtual void setModel(QAbstractItemModel * model);
 
     /**
      * This is a convenience function which constructs a string representing QML source for

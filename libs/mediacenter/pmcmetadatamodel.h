@@ -64,11 +64,11 @@ public Q_SLOTS:
 signals:
     void queryStarted();
     void queryFinished();
+    void queryError(const QString &message);
 
 protected Q_SLOTS:
     void finishedListing();
     void updateModel();
-    void error(const QString &message);
     void delayedPreview();
 
 protected:
