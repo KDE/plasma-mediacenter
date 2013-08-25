@@ -64,6 +64,15 @@ Item {
         userTrigerredStop = false;
     }
 
+    function muteToggle() {
+        if (volume == 0) {
+            volume = _private.lastVolume;
+        } else {
+            _private.lastVolume = volume;
+            volume = 0;
+        }
+    }
+
     onVolumeChanged: {
         if (volume < 0.0) volume = 0.0;
         if (volume > 1.0) volume = 1.0;
@@ -75,5 +84,9 @@ Item {
     }
     Component.onDestruction: {
         settings.sync();
+    }
+    Item {
+        id: _private; visible: false;
+        property double lastVolume: 1.0;
     }
 }

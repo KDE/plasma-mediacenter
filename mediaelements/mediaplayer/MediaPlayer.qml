@@ -46,6 +46,9 @@ FocusScope {
     signal escapePressed
     signal volumeUp
     signal volumeDown
+    signal muteToggle
+    signal previousMedia
+    signal nextMedia
 
     MediaCenterElements.SubtitleProvider {
         id: subs
@@ -124,4 +127,9 @@ FocusScope {
     Keys.onRightPressed: seekBy(5)
     Keys.onUpPressed: mediaPlayerRootRect.volumeUp()
     Keys.onDownPressed: mediaPlayerRootRect.volumeDown()
+    Keys.onPressed: { switch (event.key) {
+        case Qt.Key_M: mediaPlayerRootRect.muteToggle(); return;
+        case Qt.Key_Z: mediaPlayerRootRect.previousMedia(); return;
+        case Qt.Key_N: mediaPlayerRootRect.nextMedia(); return;
+    }}
 }

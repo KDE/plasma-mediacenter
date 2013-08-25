@@ -191,6 +191,9 @@ Image {
                 onMediaStarted: _pmc_mainwindow.mousePointerAutoHide = hasVideo
                 onVolumeUp: runtimeData.volume += 0.1
                 onVolumeDown: runtimeData.volume -= 0.1
+                onMuteToggle: runtimeData.muteToggle()
+                onPreviousMedia: playlistInstance.playPrevious()
+                onNextMedia: playlistInstance.playNext()
                 onMediaFinished: {
                     if (playlistInstance && playlistInstance.active && totalTime != -1 && !runtimeData.userTrigerredStop) {
                         playlistInstance.playNext();
