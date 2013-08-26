@@ -24,13 +24,15 @@
 #include "pmccoverartprovider.h"
 #include "pmcimagecache.h"
 
-#include <id3v2tag.h>
-#include <mpegfile.h>
-#include <attachedpictureframe.h>
+#include <taglib/id3v2tag.h>
+#include <taglib/mpegfile.h>
+#include <taglib/attachedpictureframe.h>
 
 #include <QtCore/QUrl>
 
-const char *PmcCoverArtProvider::identificationString = "pmccoverart";
+const char *PmcCoverArtProvider::identificationString = "coverart";
+const char *PmcCoverArtProvider::albumIdentification = "album:";
+
 
 PmcCoverArtProvider::PmcCoverArtProvider()
     : QDeclarativeImageProvider(QDeclarativeImageProvider::Image)
@@ -63,8 +65,20 @@ QImage PmcCoverArtProvider::requestImage(const QString& id, QSize* size, const Q
     return image;
 }
 
-void PmcCoverArtProvider::addAlbumCoverToCache(TagLib::MPEG::File& f, const QImage& image)
+bool PmcCoverArtProvider::containsAlbum(const QString& albumName)
+{
+    return PmcImageCache::instance()->containsId(QString(albumName).prepend("album:"));
+}
+
+void PmcCoverArtProvider::addCoverArtImage(const QString& albumName, const QImage& image)
+{
+    if (!image.isNull()) {
+        PmcImageCache::instance()->addImage(QString(albumName).prepend(albumIdentification), image);
+    }
+}
+
+void PmcCoverArtProvider::addAlbumCoverToCache(TagLib::MPEG::File& f, const QImage& image) const
 {
     QString albumName(f.ID3v2Tag()->album().toCString());
-    PmcImageCache::instance()->addImage(albumName.prepend("album:"), image);
+    PmcImageCache::instance()->addImage(albumName.prepend(albumIdentification), image);
 }

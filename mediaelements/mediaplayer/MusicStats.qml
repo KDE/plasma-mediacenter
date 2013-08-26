@@ -42,7 +42,7 @@ Row {
         Image {
             id: musicStatsAlbumCoverImage
             anchors.centerIn: parent
-            source: "image://pmccoverart/" + path
+            source: "image://coverart/" + path
             smooth: true
             width: Math.min(sourceSize.width, parent.width*0.9)
             height: sourceSize.height*width/sourceSize.width

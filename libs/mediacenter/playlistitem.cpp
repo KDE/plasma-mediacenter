@@ -96,7 +96,8 @@ void PlaylistItem::update()
     MediaInfoRequest *request = new MediaInfoRequest(m_mediaUrl);
     request->addRequest(MediaInfoRequest::Title)
            ->addRequest(MediaInfoRequest::Artist)
-           ->addRequest(MediaInfoRequest::Length);
+           ->addRequest(MediaInfoRequest::Length)
+           ->addRequest(MediaInfoRequest::Album);
 
     MediaInfoServiceProxy *serviceProxy = MediaInfoServiceProxy::instance();
 

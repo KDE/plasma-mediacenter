@@ -20,8 +20,11 @@
 #define MEDIAINFOSERVICE_H
 
 #include <QtCore/QThread>
+#include <QtGui/QImage>
 
 #include "mediainforesult.h"
+
+#include <taglib/fileref.h>
 
 class MediaInfoRequest;
 
@@ -47,6 +50,7 @@ private:
     bool areThereResultsToProcess() const;
     void fetchDataForRequest(quint64 requestNumber);
     quint64 nextRequestToProcess() const;
+    void updateAlbumCoverWithCoverArtProvider(const MediaInfoResult& result, TagLib::FileRef f) const;
 
     class Private;
     Private * const d;

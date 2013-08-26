@@ -33,10 +33,16 @@ class MEDIACENTER_EXPORT PmcCoverArtProvider : public QDeclarativeImageProvider
 {
 public:
     static const char *identificationString;
+    static const char *albumIdentification;
     PmcCoverArtProvider ();
+
     virtual QImage requestImage ( const QString& id, QSize* size, const QSize& requestedSize );
+
+    static bool containsAlbum(const QString& albumName);
+    static void addCoverArtImage(const QString &albumName, const QImage &image);
+
 private:
-    void addAlbumCoverToCache(TagLib::MPEG::File& f, const QImage& image);
+    void addAlbumCoverToCache(TagLib::MPEG::File& f, const QImage& image) const;
 };
 
 #endif // PMCCOVERARTPROVIDER_H
