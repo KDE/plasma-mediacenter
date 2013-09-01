@@ -29,8 +29,12 @@ FocusScope {
     anchors.margins: __theme.margin
     property QtObject backend
 
+    signal mediaSelected(int index, string url, string mediaType)
+    signal popupRequested(int index, string url, string mediaType, string title)
+
     onBackendChanged: {
-        var models = backend.models
+        var models = backend.models;
+        mediaTabBar.populateButtons();
         for (i=0; i < models.length ;i++) {
             var browser = mediaBrowserComponent.createObject(mediaTabGroup);
             var tabButton = mediaTabBar.buttons.get(i).button;
@@ -52,6 +56,8 @@ FocusScope {
         id: mediaBrowserComponent
         MediaCenterComponents.GridBrowser {
             topSibling: searchField
+            onMediaSelected: tabBrowser.mediaSelected(index, url, mediaType)
+            onPopupRequested: tabBrowser.popupRequested(index, url, mediaType, title)
         }
     }
 
@@ -102,12 +108,19 @@ FocusScope {
             focusAnimation.start();
         }
 
+        function populateButtons()
+        {
+            if (buttons.count == 0) {
+                buttons.append({"button": button0});
+                buttons.append({"button": button1});
+                buttons.append({"button": button2});
+                buttons.append({"button": button3});
+                buttons.append({"button": button4});
+            }
+        }
+
         Component.onCompleted: {
-            buttons.append({"button": button0});
-            buttons.append({"button": button1});
-            buttons.append({"button": button2});
-            buttons.append({"button": button3});
-            buttons.append({"button": button4});
+            populateButtons();
         }
 
         Keys.onDownPressed: mediaTabGroup.currentTab.focus = true
