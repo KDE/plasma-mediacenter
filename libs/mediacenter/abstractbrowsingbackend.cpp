@@ -80,9 +80,14 @@ QString AbstractBrowsingBackend::name() const
 void AbstractBrowsingBackend::setModel(QAbstractItemModel * model)
 {
     d->models.clear();
+    addModel(model);
+    emit modelChanged();
+}
+
+void AbstractBrowsingBackend::addModel(QAbstractItemModel* model)
+{
     d->models.append(model);
     emit modelsChanged();
-    emit modelChanged();
 }
 
 QObject * AbstractBrowsingBackend::model()

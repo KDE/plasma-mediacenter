@@ -20,8 +20,20 @@
 import QtQuick 1.1
 import org.kde.qtextracomponents 0.1 as QtExtraComponents
 import org.kde.plasma.components 0.1 as PlasmaComponents
-import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
+import org.kde.plasma.mediacenter.components 0.1 as MediaCenterComponents
 
+FocusScope {
+    id: rootRow
+    anchors.fill: parent
+    property QtObject backend
+
+    MediaCenterComponents.TabBrowser {
+        backend: rootRow.backend
+        focus: true
+    }
+}
+
+/*
 FocusScope {
     id: rootRow
     anchors.fill: parent
@@ -103,12 +115,6 @@ FocusScope {
                     cover.visible = false;
                 }
             }
-            /*delegate: CategoriesDelegate { width: parent ? parent.width - artistScrollBar.width : 0; height: 48; categoryName: "artist" }
-            spacing: 5
-            highlight: PlasmaComponents.Highlight { }
-            highlightFollowsCurrentItem: true
-            snapMode: ListView.SnapToItem
-            clip: true*/
 
             PlasmaComponents.ScrollBar {
                 id: artistScrollBar
@@ -187,12 +193,6 @@ FocusScope {
                     cover.visible = true;
                 }
             }
-            /*delegate: CategoriesDelegate { width: parent ? parent.width - albumScrollBar.width : 0; height: 48; categoryName: "album" }
-            spacing: 5
-            highlight: PlasmaComponents.Highlight { }
-            highlightFollowsCurrentItem: true
-            snapMode: ListView.SnapToItem
-            clip: true*/
 
             PlasmaComponents.ScrollBar {
                 id: albumScrollBar
@@ -259,17 +259,6 @@ FocusScope {
                 }
                 icon: QIcon("tools-media-optical-copy")
             }
-            // TODO Replace icon with image
-            // Add reflectiong cover?
-            /*Image {
-                id: coverImage
-                width: 280
-                anchors.centerIn: parent
-                fillMode: Image.PreserveAspectCrop
-                sourceSize.width: width
-                sourceSize.height: 0
-                asynchronous: true
-            }*/
         }
 
         Item {
@@ -321,3 +310,4 @@ FocusScope {
         }
     }
 }
+*/

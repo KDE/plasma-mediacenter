@@ -188,13 +188,15 @@ protected:
     /**
      * This method must be set in order to provide the model to be
      * used by the view.
-     * @note When LocalBrowsing is set it is highly recommended to use a KDirModel.     ////TODO: May no longer be needed
-     * If the package is set to RemoteBrowsing the model
-     * must provide an url that points to the media content for each
-     * QModelIndex. It must make use of MediaRole role to accomplish this.
      * @see MediaRole
      */
-    virtual void setModel(QAbstractItemModel * model);
+    void setModel(QAbstractItemModel * model);
+
+    /**
+     * This method is used to add more models to this backend
+     * @see MediaRole
+     */
+    void addModel(QAbstractItemModel * model);
 
     /**
      * This is a convenience function which constructs a string representing QML source for

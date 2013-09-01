@@ -1,0 +1,3 @@
+add_subdirectory(gridbrowser)
+add_subdirectory(listbrowser)
+add_subdirectory(tabbrowser)
