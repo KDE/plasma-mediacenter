@@ -69,12 +69,23 @@ FocusScope {
     }
 
     Component {
-        id: mediaBrowserViewComponent
+        id: mediaBrowserGridBrowserComponent
         MediaCenterComponents.GridBrowser {
             anchors { fill: parent; topMargin: 10; bottomMargin: 10 + bottomPanel.height }
             model: mediaBrowser.currentBrowsingBackend.models[0]
             currentBrowsingBackend: mediaBrowser.currentBrowsingBackend
             bottomSibling: searchMedia
+
+            onMediaSelected: mediaBrowser.playRequested(index, url, mediaType)
+            onPopupRequested: mediaBrowser.popupMenuRequested(index, url, mediaType, title)
+        }
+    }
+
+    Component {
+        id: mediaBrowserTabBrowserComponent
+        MediaCenterComponents.TabBrowser {
+            anchors { fill: parent; topMargin: 10; bottomMargin: 10 + bottomPanel.height }
+            backend: mediaBrowser.currentBrowsingBackend
 
             onMediaSelected: mediaBrowser.playRequested(index, url, mediaType)
             onPopupRequested: mediaBrowser.popupMenuRequested(index, url, mediaType, title)
@@ -98,7 +109,11 @@ FocusScope {
             mediaBrowserViewItem.mediaBrowserGridView = object;
             object.backend = (function() { return currentBrowsingBackend; });
         } else {
-            object = mediaBrowserViewComponent.createObject(mediaBrowserViewItem);
+            if (mediaBrowser.currentBrowsingBackend.models.length > 1 ) {
+                object = mediaBrowserTabBrowserComponent.createObject(mediaBrowserViewItem);
+            } else {
+                object = mediaBrowserGridBrowserComponent.createObject(mediaBrowserViewItem);
+            }
         }
         mediaBrowserViewItem.mediaBrowserGridView = object;
         object.focus = true
