@@ -72,11 +72,6 @@ bool MetadataMusicBackend::initImpl()
     return true;
 }
 
-QString MetadataMusicBackend::mediaBrowserOverride() const
-{
-    return constructQmlSource("metadatamusiccomponents", "0.1", "MediaBrowser");
-}
-
 bool MetadataMusicBackend::supportsSearch() const
 {
     return false;
