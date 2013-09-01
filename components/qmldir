@@ -1,0 +1,4 @@
+GridBrowser 0.1 gridbrowser/GridBrowser.qml
+ListBrowser 0.1 listbrowser/ListBrowser.qml
+TabBrowser 0.1 tabbrowser/TabBrowser.qml
+Search 0.1 Search.qml

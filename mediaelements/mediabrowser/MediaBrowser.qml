@@ -22,6 +22,7 @@ import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
 import org.kde.qtextracomponents 0.1 as QtExtra
+import org.kde.plasma.mediacenter.components 0.1 as MediaCenterComponents
 
 FocusScope {
     id: mediaBrowser
@@ -69,46 +70,14 @@ FocusScope {
 
     Component {
         id: mediaBrowserViewComponent
-        GridView {
-            id: mediaBrowserGridViewId
+        MediaCenterComponents.GridBrowser {
             anchors { fill: parent; topMargin: 10; bottomMargin: 10 + bottomPanel.height }
-            clip: true
-            cellWidth: cellHeight
-            cellHeight: height/2.1
-            delegate: MediaItemDelegate {
-                backend: mediaBrowser.currentBrowsingBackend
-                onPlayRequested: mediaBrowser.playRequested(index, url, currentMediaType)
-                onPopupMenuRequested: mediaBrowser.popupMenuRequested(index,mediaUrl,mediaType, display)
-            }
-            flow: _pmc_is_desktop ? GridView.LeftToRight : GridView.TopToBottom
             model: mediaBrowser.currentBrowsingBackend.models[0]
-            cacheBuffer: width*2
+            currentBrowsingBackend: mediaBrowser.currentBrowsingBackend
+            bottomSibling: searchMedia
 
-            Text {
-                visible: false
-                font.pointSize: 20
-                color: theme.textColor
-                text: mediaBrowserGridViewId.count
-            }
-
-            PlasmaComponents.ScrollBar {
-                orientation: _pmc_is_desktop ? Qt.Vertical : Qt.Horizontal
-                flickableItem: mediaBrowserGridViewId
-            }
-
-            PlasmaComponents.BusyIndicator {
-                anchors { bottom: parent.bottom; horizontalCenter: parent.horizontalCenter }
-                running: currentBrowsingBackend.busy
-                visible: running
-            }
-
-            onCurrentIndexChanged: positionViewAtIndex(currentIndex, GridView.Contain)
-            Keys.onPressed: {
-                if (event.key == Qt.Key_Down && searchMedia.visible && currentIndex%2) {
-                    searchMedia.focus = true;
-                    event.accepted = true;
-                }
-            }
+            onMediaSelected: mediaBrowser.playRequested(index, url, mediaType)
+            onPopupRequested: mediaBrowser.popupMenuRequested(index, url, mediaType, title)
         }
     }
 
