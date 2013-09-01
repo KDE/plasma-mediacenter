@@ -65,6 +65,8 @@ bool MetadataMusicBackend::initImpl()
     m_artistsModel->setObjectName("Artists");
     m_albumsModel->setObjectName("Albums");
     m_musicModel->setObjectName("Songs");
+
+    m_musicModel->setProperty("viewType", "list");
     addModel(m_artistsModel);
     addModel(m_albumsModel);
     addModel(m_musicModel);
