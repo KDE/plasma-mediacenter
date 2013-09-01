@@ -21,150 +21,49 @@ import QtQuick 1.1
 import org.kde.qtextracomponents 0.1 as QtExtraComponents
 import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.kde.plasma.core 0.1 as PlasmaCore
+import "../common" as Common
 
 FocusScope {
-    id: page
-    property string title
-    property variant backend
-    property alias model: mediaView.model
-    property alias showSearch: search.visible
-    property alias showCover: cover.visible
-    property alias placeholderText: search.placeholderText
+    id: gridBrowserRoot
 
-    signal giveUpFocus
-    signal search(string term)
-    signal itemSelected(variant eventParams)
-    signal itemContextMenu(variant eventParams)
-    signal itemAdded(variant eventParams)
-    signal playAll()
+    property QtObject currentBrowsingBackend
+    property alias model: gridBrowserGridView.model
+    property alias currentIndex: gridBrowserGridView.currentIndex
+    property alias count: gridBrowserGridView.count
 
-    Row {
-        id: searchField
-        width: parent.width
-        height: 30
-        // Searchfield
-        Search {
-            id: search
-            onSearch: {
-                page.search(term)
-            }
-        }
-        PlasmaComponents.Button {
-            id: playAllButton
-            text: "Play All"
-            height: parent.height
-            onClicked: page.playAll();
-        }
-    }
+    property QtObject bottomSibling
+    property QtObject topSibling
 
-    Item {
-        anchors { top: searchField.bottom; right: parent.right; bottom: parent.bottom; left: parent.left}
+    signal mediaSelected(int index, string url, string mediaType)
+    signal popupRequested(int index, string url, string mediaType, string title)
 
-        // Cover
-        Item {
-            id: cover
-            width: parent.width / 3
-            height: delegateItemIcon.height * 1.5
-            clip: true
-            anchors {
-                top: parent.top
-                topMargin: (parent.height - delegateItemIcon.height) / 3
-            }
+    ListView {
+        id: gridBrowserGridView
+        anchors.fill: parent
+        clip: true
+        delegate: Common.LabelOverlay { width: 600; height: 100; text: display ? display : "" }
+        focus: true
 
-            QtExtraComponents.QIconItem {
-                id: delegateItemIcon
-                width: 280
-                height: 280
-                anchors {
-                    horizontalCenter: parent.horizontalCenter
-                    top: parent.top
-                }
-                icon: QIcon("tools-media-optical-copy")
-            }
-            // TODO Replace icon with image
-            // Add reflectiong cover?
-            /*Image {
-                id: coverImage
-                width: 280
-                anchors.centerIn: parent
-                fillMode: Image.PreserveAspectCrop
-                sourceSize.width: width
-                sourceSize.height: 0
-                asynchronous: true
-            }*/
+        PlasmaComponents.ScrollBar {
+            orientation: _pmc_is_desktop ? Qt.Vertical : Qt.Horizontal
+            flickableItem: gridBrowserGridView
         }
 
-        Item {
-            width: cover.visible ? parent.width - cover.width : parent.width
-            anchors { top: parent.top; right: parent.right; bottom: parent.bottom;}
-            clip: true
+        PlasmaComponents.BusyIndicator {
+            anchors { bottom: parent.bottom; horizontalCenter: parent.horizontalCenter }
+            running: currentBrowsingBackend.busy
+            visible: running
+        }
 
-            PlasmaCore.FrameSvgItem {
-                id: hover
-                anchors {
-                    fill: parent
-                    leftMargin: -margins.left
-                    topMargin: -margins.top
-                    rightMargin: -margins.right
-                    bottomMargin: -margins.bottom
-                }
+        onCurrentIndexChanged: positionViewAtIndex(currentIndex, GridView.Contain)
 
-                imagePath: "widgets/button"
-                prefix: "hover"
-                visible: false
-            }
-
-            ListView {
-                id: mediaView
-                anchors.fill: parent
-                clip: true
-                spacing: 5
-                focus: true
-
-                delegate: MediaLineItemDelegate {
-                    width: parent ? parent.width - scrollBar.width : 0
-                    height: 64
-
-                    onItemSelected: {
-                        page.itemSelected(eventParams)
-                    }
-                    onItemContextMenu: {
-                        page.itemContextMenu(eventParams)
-                    }
-                    onItemAdded: {
-                        page.itemAdded(eventParams)
-                    }
-                }
-
-                highlight: PlasmaComponents.Highlight {
-                    width: parent ? parent.width - scrollBar.width : 0
-                }
-                highlightFollowsCurrentItem: true
-                preferredHighlightBegin: height / 2 - 32
-                preferredHighlightEnd: height / 2 + 32
-                highlightRangeMode: ListView.ApplyRange
-
-                PlasmaComponents.BusyIndicator {
-                    anchors.centerIn: parent
-                    running: parent.count == 0
-                    visible: running
-                }
-
-                PlasmaComponents.ScrollBar {
-                    id: scrollBar
-                    flickableItem: parent
-                }
-
-                Keys.onPressed: {
-                    // Leaving the ListView
-                    if (event.key == Qt.Key_Up && currentIndex == 0) {
-                        page.giveUpFocus();
-                        event.accepted = true;
-                    } else if (event.key == Qt.Key_F && (event.modifiers & Qt.ControlModifier)) {
-                        search.state = "active";
-                        searchField.focus = true;
-                    }
-                }
+        Keys.onPressed: {
+            if (event.key == Qt.Key_Down && currentIndex%2 && gridBrowserRoot.bottomSibling) {
+                gridBrowserRoot.bottomSibling.focus = true;
+                event.accepted = true;
+            } else if (event.key == Qt.Key_Up && currentIndex%2 == 0 && gridBrowserRoot.topSibling) {
+                gridBrowserRoot.topSibling.focus = true;
+                event.accepted = true;
             }
         }
     }
