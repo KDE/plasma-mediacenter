@@ -43,8 +43,6 @@ public:
     MetadataMusicBackend (QObject* parent, const QVariantList& args);
     virtual ~MetadataMusicBackend();
 
-    virtual QString mediaBrowserOverride() const;
-
     Q_INVOKABLE QObject *artistsModel() const;
     Q_INVOKABLE QObject *albumsModel() const;
     QObject *musicModel() const;
