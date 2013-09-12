@@ -48,7 +48,7 @@ protected:
     virtual bool initImpl();
     virtual void initModel() = 0;
     LocalPlacesModel *m_placesModel;
-
+      
 private slots:
     void slotStorageSetupDone(Solid::ErrorType error, const QVariant& errordata, const QString& udi);
 
