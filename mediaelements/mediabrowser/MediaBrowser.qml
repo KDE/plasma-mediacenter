@@ -275,7 +275,6 @@ FocusScope {
 
     Keys.onPressed: {
         if (event.text && searchMedia.visible) {
-	  
 	    if(event.key == Qt.Key_Enter) {
 	      currentBrowsingBackend.searchTerm = ""
 	    }
