@@ -287,7 +287,7 @@ FocusScope {
 
             searchMedia.focus = true
             searchMedia.text = event.text
-	    }
+            }
         }
      }
 }
