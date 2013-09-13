@@ -5,6 +5,7 @@ include_directories(
 )
 
 set (plasmamediacenter_SRCS
+    objectpair.cpp
     mediainfoserviceproxy.cpp
     mediainforesult.cpp
     mediainforequest.cpp

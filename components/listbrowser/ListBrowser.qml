@@ -25,6 +25,7 @@ import "../common" as Common
 
 FocusScope {
     id: gridBrowserRoot
+    anchors.fill: parent
 
     property QtObject currentBrowsingBackend
     property alias model: gridBrowserGridView.model
