@@ -25,6 +25,7 @@ import "../common" as Common
 
 FocusScope {
     id: gridBrowserRoot
+    anchors.fill: parent
 
     property QtObject currentBrowsingBackend
     property alias model: gridBrowserGridView.model
@@ -59,7 +60,7 @@ FocusScope {
 
         PlasmaComponents.BusyIndicator {
             anchors { bottom: parent.bottom; horizontalCenter: parent.horizontalCenter }
-            running: currentBrowsingBackend.busy
+            running: gridBrowserRoot.currentBrowsingBackend.busy
             visible: running
         }
 

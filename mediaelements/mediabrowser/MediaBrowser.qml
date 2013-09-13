@@ -69,26 +69,15 @@ FocusScope {
     }
 
     Component {
-        id: mediaBrowserGridBrowserComponent
-        MediaCenterComponents.GridBrowser {
-            anchors { fill: parent; topMargin: 10; bottomMargin: 10 + bottomPanel.height }
-            model: mediaBrowser.currentBrowsingBackend.models[0]
-            currentBrowsingBackend: mediaBrowser.currentBrowsingBackend
-            bottomSibling: searchMedia
-
-            onMediaSelected: mediaBrowser.playRequested(index, url, mediaType)
-            onPopupRequested: mediaBrowser.popupMenuRequested(index, url, mediaType, title)
-        }
-    }
-
-    Component {
-        id: mediaBrowserTabBrowserComponent
-        MediaCenterComponents.TabBrowser {
+        id: mediaBrowserSmartBrowserComponent
+        MediaCenterComponents.SmartBrowser {
             anchors { fill: parent; topMargin: 10; bottomMargin: 10 + bottomPanel.height }
             backend: mediaBrowser.currentBrowsingBackend
+            models: mediaBrowser.currentBrowsingBackend.models
+            bottomSibling: searchMedia
 
-            onMediaSelected: mediaBrowser.playRequested(index, url, mediaType)
-            onPopupRequested: mediaBrowser.popupMenuRequested(index, url, mediaType, title)
+//             onMediaSelected: mediaBrowser.playRequested(index, url, mediaType)
+//             onPopupRequested: mediaBrowser.popupMenuRequested(index, url, mediaType, title)
         }
     }
 
@@ -109,11 +98,7 @@ FocusScope {
             mediaBrowserViewItem.mediaBrowserGridView = object;
             object.backend = (function() { return currentBrowsingBackend; });
         } else {
-            if (mediaBrowser.currentBrowsingBackend.models.length > 1 ) {
-                object = mediaBrowserTabBrowserComponent.createObject(mediaBrowserViewItem);
-            } else {
-                object = mediaBrowserGridBrowserComponent.createObject(mediaBrowserViewItem);
-            }
+            object = mediaBrowserSmartBrowserComponent.createObject(mediaBrowserViewItem);
         }
         mediaBrowserViewItem.mediaBrowserGridView = object;
         object.focus = true
