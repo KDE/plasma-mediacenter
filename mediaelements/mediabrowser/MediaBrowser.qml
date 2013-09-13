@@ -65,6 +65,7 @@ FocusScope {
                 if(mediaBrowserGridView.moveCurrentIndexLeft) mediaBrowserGridView.moveCurrentIndexLeft();
             }
         }
+
         onClicked: {
 	  currentBrowsingBackend.searchTerm = ""
 	  searchMedia.text = ""
@@ -276,7 +277,6 @@ FocusScope {
 
     Keys.onPressed: {
         if (event.text && searchMedia.visible) {
-	  
 	    if(event.key == Qt.Key_Enter) {
 	      currentBrowsingBackend.searchTerm = ""
 	      searchMedia.text = ""
@@ -288,7 +288,6 @@ FocusScope {
 	      searchMedia.text = ""
 	      
 	    } else {
-
             searchMedia.focus = true
             searchMedia.text = event.text
             }
