@@ -67,6 +67,7 @@ FocusScope {
         }
         onClicked: {
 	  currentBrowsingBackend.searchTerm = ""
+	  searchMedia.text = ""
 	}
     }
 
@@ -278,11 +279,14 @@ FocusScope {
 	  
 	    if(event.key == Qt.Key_Enter) {
 	      currentBrowsingBackend.searchTerm = ""
+	      searchMedia.text = ""
 	    }
 	    
 	    if(event.key == Qt.Key_Escape) {
 	      searchMedia.focus = false
 	      currentBrowsingBackend.searchTerm = ""
+	      searchMedia.text = ""
+	      
 	    } else {
 
             searchMedia.focus = true
