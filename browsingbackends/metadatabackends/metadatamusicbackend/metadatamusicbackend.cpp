@@ -62,14 +62,15 @@ bool MetadataMusicBackend::initImpl()
     emit musicModelChanged();
     connect(m_musicModel, SIGNAL(modelReset()), SLOT(musicModelReset()));
 
-    m_artistsModel->setObjectName("Artists");
     m_albumsModel->setObjectName("Albums");
     m_musicModel->setObjectName("Songs");
 
     m_musicModel->setProperty("viewType", "list");
-    addModel(m_artistsModel);
-    addModel(m_albumsModel);
+
     addModel(m_musicModel);
+    addModel(m_albumsModel);
+    addModelPair("Artists", m_artistsModel, m_musicModel);
+
     updateModelAccordingToFilters();
     return true;
 }

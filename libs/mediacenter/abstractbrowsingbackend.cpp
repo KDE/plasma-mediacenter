@@ -45,7 +45,7 @@ public:
     bool hasInitialized;
     QString name;
     QString mediaBrowserSidePanelText;
-    QList<QAbstractItemModel*> models;
+    QList<QObject*> models;
     QString searchTerm;
 };
 
@@ -88,6 +88,16 @@ void AbstractBrowsingBackend::addModel(QAbstractItemModel* model)
 {
     d->models.append(model);
     emit modelsChanged();
+}
+
+void AbstractBrowsingBackend::addModelPair(const QString &pairLabel, QAbstractItemModel* firstModel, QAbstractItemModel* secondModel)
+{
+    QObject *modelPair = new QObject(this);
+    modelPair->setProperty("first", QVariant::fromValue(firstModel));
+    modelPair->setProperty("second", QVariant::fromValue(secondModel));
+
+    modelPair->setObjectName(pairLabel);
+    d->models.append(modelPair);
 }
 
 QObject * AbstractBrowsingBackend::model()
@@ -181,7 +191,7 @@ bool AbstractBrowsingBackend::busy() const
 QVariantList AbstractBrowsingBackend::models()
 {
     QVariantList modelList;
-    Q_FOREACH(QAbstractItemModel *model, d->models) {
+    Q_FOREACH(QObject *model, d->models) {
         modelList.append(QVariant::fromValue(qobject_cast<QObject*>(model)));
     }
     return modelList;

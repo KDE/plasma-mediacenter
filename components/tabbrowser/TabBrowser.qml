@@ -33,22 +33,19 @@ FocusScope {
     signal popupRequested(int index, string url, string mediaType, string title)
 
     onBackendChanged: {
-        var models = backend.models;
+        var models = tabBrowser.backend.models;
         mediaTabBar.populateButtons();
         for (i=0; i < models.length ;i++) {
             var model = models[i];
-            var browser;
-            if (model.viewType && model.viewType == 'list') {
-                browser = mediaBrowserListComponent.createObject(mediaTabGroup);
-            } else {
-                browser = mediaBrowserGridComponent.createObject(mediaTabGroup);
-            }
+            console.log("CREATING SMART FOR " + model);
+            var browser = mediaBrowserSmartComponent.createObject(mediaTabGroup);
+
             var tabButton = mediaTabBar.buttons.get(i).button;
             tabButton.tab = browser;
             tabButton.visible = true;
 
             tabButton.text = model.objectName;
-            browser.model = model;
+            browser.models = model;
         }
     }
 
@@ -58,20 +55,11 @@ FocusScope {
     }
 
     Component {
-        id: mediaBrowserGridComponent
-        MediaCenterComponents.GridBrowser {
+        id: mediaBrowserSmartComponent
+        MediaCenterComponents.SmartBrowser {
+            anchors.fill: parent
             topSibling: searchField
-            onMediaSelected: tabBrowser.mediaSelected(index, url, mediaType)
-            onPopupRequested: tabBrowser.popupRequested(index, url, mediaType, title)
-        }
-    }
-
-    Component {
-        id: mediaBrowserListComponent
-        MediaCenterComponents.ListBrowser {
-            topSibling: searchField
-            onMediaSelected: tabBrowser.mediaSelected(index, url, mediaType)
-            onPopupRequested: tabBrowser.popupRequested(index, url, mediaType, title)
+            backend: tabBrowser.backend
         }
     }
 

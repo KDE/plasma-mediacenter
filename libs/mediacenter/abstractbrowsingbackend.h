@@ -199,6 +199,12 @@ protected:
     void addModel(QAbstractItemModel * model);
 
     /**
+     * This method adds multiple models as a single model collection.
+     * This indicates the UI to show views for these models simultaneously
+     */
+    void addModelPair(const QString& pairLabel, QAbstractItemModel* firstModel, QAbstractItemModel* secondModel);
+
+    /**
      * This is a convenience function which constructs a string representing QML source for
      * loading an item of name itemName which exists in componentDirName
      *
@@ -232,6 +238,8 @@ private:
 };
 
 } // MediaCenter namespace
+
+Q_DECLARE_METATYPE(QAbstractItemModel*)
 
 #define MEDIACENTER_EXPORT_BROWSINGBACKEND( c ) \
         K_PLUGIN_FACTORY( MediaBrowserFactory, registerPlugin< c >(); ) \
