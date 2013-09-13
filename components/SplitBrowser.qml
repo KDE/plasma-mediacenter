@@ -25,37 +25,24 @@ import org.kde.plasma.mediacenter.components 0.1 as MediaCenterComponents
 
 FocusScope {
     id: root
+    anchors.fill: parent
 
     property QtObject backend
-    property variant models: undefined
+    property variant firstModel: undefined
+    property variant secondModel: undefined
+
     property QtObject bottomSibling
     property QtObject topSibling
 
-    onModelsChanged: {
-        if (models && (models.length == undefined || models.length == 1)) {
-            var model = models.length ? models[0] : models;
-            var modelLabel = model.objectName;
-            if (model.first || model.second) {
-                splitBrowserComponent = Qt.createComponent("SplitBrowser.qml");
-                var browser = splitBrowserComponent.createObject(root);
-                browser.backend = function() { return root.backend };
-                browser.firstModel = function() { return model.first };
-                browser.secondModel = function() { return model.second };
-            } else if (modelLabel.split("#").length == 2 && modelLabel.split("#")[1] == "list") {
-                listBrowserComponent = Qt.createComponent("listbrowser/ListBrowser.qml");
-                var browser = listBrowserComponent.createObject(root);
-                browser.currentBrowsingBackend = function() { return root.backend };
-                browser.model = function() { return model };
-            } else {
-                gridBrowserComponent = Qt.createComponent("gridbrowser/GridBrowser.qml");
-                var browser = gridBrowserComponent.createObject(root);
-                browser.currentBrowsingBackend = function() { return root.backend };
-                browser.model = function() { return model };
-            }
-        } else if (models) {
-            tabBrowserComponent = Qt.createComponent("tabbrowser/TabBrowser.qml");
-            var browser = tabBrowserComponent.createObject(root);
-            browser.backend = function() { return root.backend };
-        }
+    MediaCenterComponents.SmartBrowser {
+        backend: root.backend; models: firstModel
+        anchors { left: parent.left; top: parent.top; bottom: parent.bottom }
+        width: parent.width/2 - 5
+    }
+
+    MediaCenterComponents.SmartBrowser {
+        backend: root.backend; models: secondModel
+        anchors { right: parent.right; top: parent.top; bottom: parent.bottom }
+        width: parent.width/2 - 5
     }
 }

@@ -17,6 +17,7 @@
  ***********************************************************************************/
 
 #include "abstractbrowsingbackend.h"
+#include "objectpair.h"
 
 #include <KGlobal>
 #include <KService>
@@ -92,9 +93,9 @@ void AbstractBrowsingBackend::addModel(QAbstractItemModel* model)
 
 void AbstractBrowsingBackend::addModelPair(const QString &pairLabel, QAbstractItemModel* firstModel, QAbstractItemModel* secondModel)
 {
-    QObject *modelPair = new QObject(this);
-    modelPair->setProperty("first", QVariant::fromValue(firstModel));
-    modelPair->setProperty("second", QVariant::fromValue(secondModel));
+    ObjectPair *modelPair = new ObjectPair(this);
+    modelPair->setFirst(firstModel);
+    modelPair->setSecond(secondModel);
 
     modelPair->setObjectName(pairLabel);
     d->models.append(modelPair);

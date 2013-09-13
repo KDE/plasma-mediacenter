@@ -44,7 +44,7 @@ FocusScope {
             tabButton.tab = browser;
             tabButton.visible = true;
 
-            tabButton.text = model.objectName;
+            tabButton.text = model.objectName.split("#")[0];
             browser.models = model;
         }
     }

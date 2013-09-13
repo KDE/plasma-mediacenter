@@ -2,4 +2,5 @@ GridBrowser 0.1 gridbrowser/GridBrowser.qml
 ListBrowser 0.1 listbrowser/ListBrowser.qml
 TabBrowser 0.1 tabbrowser/TabBrowser.qml
 SmartBrowser 0.1 SmartBrowser.qml
+SplitBrowser 0.1 SplitBrowser.qml
 Search 0.1 Search.qml
