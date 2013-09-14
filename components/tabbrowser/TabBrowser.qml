@@ -40,12 +40,15 @@ FocusScope {
             console.log("CREATING SMART FOR " + model);
             var browser = mediaBrowserSmartComponent.createObject(mediaTabGroup);
 
+            browser.topSibling = mediaTabBar;
+
             var tabButton = mediaTabBar.buttons.get(i).button;
             tabButton.tab = browser;
             tabButton.visible = true;
 
             tabButton.text = model.objectName.split("#")[0];
             browser.models = model;
+            browser.focus = true;
         }
     }
 

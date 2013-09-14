@@ -28,8 +28,8 @@ FocusScope {
 
     property QtObject backend
     property variant models: undefined
-    property QtObject bottomSibling
     property QtObject topSibling
+    property QtObject bottomSibling
 
     onModelsChanged: {
         if (models && (models.length == undefined || models.length == 1)) {
@@ -41,21 +41,32 @@ FocusScope {
                 browser.backend = function() { return root.backend };
                 browser.firstModel = function() { return model.first };
                 browser.secondModel = function() { return model.second };
+                browser.focus = true;
             } else if (modelLabel.split("#").length == 2 && modelLabel.split("#")[1] == "list") {
                 listBrowserComponent = Qt.createComponent("listbrowser/ListBrowser.qml");
                 var browser = listBrowserComponent.createObject(root);
+                setSiblings(browser);
                 browser.currentBrowsingBackend = function() { return root.backend };
                 browser.model = function() { return model };
+                browser.focus = true;
             } else {
                 gridBrowserComponent = Qt.createComponent("gridbrowser/GridBrowser.qml");
                 var browser = gridBrowserComponent.createObject(root);
+                setSiblings(browser);
                 browser.currentBrowsingBackend = function() { return root.backend };
                 browser.model = function() { return model };
+                browser.focus = true;
             }
         } else if (models) {
             tabBrowserComponent = Qt.createComponent("tabbrowser/TabBrowser.qml");
             var browser = tabBrowserComponent.createObject(root);
             browser.backend = function() { return root.backend };
+            browser.focus = true;
         }
+    }
+
+    function setSiblings(browser) {
+        browser.topSibling = root.topSibling;
+        browser.bottomSibling = root.bottomSibling;
     }
 }
