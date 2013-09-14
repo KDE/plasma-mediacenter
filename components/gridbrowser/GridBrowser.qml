@@ -45,6 +45,12 @@ FocusScope {
         cellWidth: cellHeight
         cellHeight: height/2.1
         delegate: Common.MediaItemDelegate {
+            width: GridView.view.cellWidth
+            height: GridView.view.cellHeight
+            scale: (GridView.isCurrentItem ? 1.1 : 1)
+            clip: !GridView.isCurrentItem
+            z: GridView.isCurrentItem ? 1 : 0
+
             backend: gridBrowserRoot.currentBrowsingBackend
             onPlayRequested: gridBrowserRoot.mediaSelected(index, url, currentMediaType)
             onPopupMenuRequested: gridBrowserRoot.popupRequested(index,mediaUrl,mediaType, display)
