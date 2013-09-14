@@ -24,7 +24,7 @@ import org.kde.plasma.core 0.1 as PlasmaCore
 import "../common" as Common
 
 FocusScope {
-    id: gridBrowserRoot
+    id: listBrowserRoot
     anchors.fill: parent
 
     property QtObject currentBrowsingBackend
@@ -59,11 +59,11 @@ FocusScope {
         onCurrentIndexChanged: positionViewAtIndex(currentIndex, GridView.Contain)
 
         Keys.onPressed: {
-            if (event.key == Qt.Key_Down && currentIndex%2 && gridBrowserRoot.bottomSibling) {
-                gridBrowserRoot.bottomSibling.focus = true;
+            if (event.key == Qt.Key_Down && currentIndex == (count-1) && listBrowserRoot.bottomSibling) {
+                listBrowserRoot.bottomSibling.focus = true;
                 event.accepted = true;
-            } else if (event.key == Qt.Key_Up && currentIndex%2 == 0 && gridBrowserRoot.topSibling) {
-                gridBrowserRoot.topSibling.focus = true;
+            } else if (event.key == Qt.Key_Up && currentIndex == 0 && listBrowserRoot.topSibling) {
+                listBrowserRoot.topSibling.focus = true;
                 event.accepted = true;
             }
         }
