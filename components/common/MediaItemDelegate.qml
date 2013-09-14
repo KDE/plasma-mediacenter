@@ -25,11 +25,6 @@ import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
 
 Item {
     id: mediaItemDelegateItem
-    width: GridView.view.cellWidth
-    height: GridView.view.cellHeight
-    scale: (GridView.isCurrentItem ? 1.1 : 1)
-    clip: !GridView.isCurrentItem
-    z: GridView.isCurrentItem ? 1 : 0
 
     property QtObject backend
     signal popupMenuRequested(int index, string mediaUrl, string mediaType, string display)
