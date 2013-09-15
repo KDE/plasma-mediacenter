@@ -47,6 +47,7 @@ Comment[sv]=Bläddra i kataloger på en enhet efter videor
 Comment[tr]=Cihazınızdaki klasörlerde videolara göz atın
 Comment[uk]=Переглянути теки з відео на вашому пристрої
 Comment[x-test]=xxBrowse folders on your device for videosxx
+Comment[zh_TW]=瀏覽您的影片裝置的資料夾
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 
