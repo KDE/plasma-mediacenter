@@ -26,12 +26,15 @@ import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
 Item {
     id: mediaItemDelegateItem
 
+    property alias horizontal: mediaItem.horizontal
     property QtObject backend
     signal popupMenuRequested(int index, string mediaUrl, string mediaType, string display)
     signal playRequested(int index, string url, string currentMediaType)
 
     MediaItem {
-        anchors.fill: parent;
+        id: mediaItem
+        anchors.fill: parent
+
         onClicked: {
             if (isExpandable) {
                 backend.expand(index, mediaUrl, mediaType);

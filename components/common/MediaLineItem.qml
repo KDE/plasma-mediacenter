@@ -75,7 +75,7 @@ Item {
                     showOverlay: !isExpandable
                     width: parent.width
                     targetHeight: 32
-                    expanded: mediaItemDelegateItem.GridView.isCurrentItem
+                    //expanded: mediaItemDelegateItem.GridView.isCurrentItem
                 }
             }
 
@@ -93,9 +93,9 @@ Item {
                 id: mediaItemDelegateItemMouseArea
                 hoverEnabled: true
                 anchors.fill: parent
-                onEntered: if(!mediaItemDelegateItem.GridView.view.moving &&
-                                !mediaItemDelegateItem.GridView.view.flicking)
-                                    mediaItemDelegateItem.GridView.view.currentIndex = index
+//                 onEntered: if(!mediaItemDelegateItem.GridView.view.moving &&
+//                                 !mediaItemDelegateItem.GridView.view.flicking)
+//                                     mediaItemDelegateItem.GridView.view.currentIndex = index
                 onClicked: mediaItem.clicked(index)
                 onPressAndHold: mediaItem.pressAndHold(index);
             }
@@ -113,7 +113,7 @@ Item {
             id: addToPlaylistButton
             iconSource: "list-add"
             anchors { right: parent.right; top: parent.top }
-            visible: !isExpandable && mediaType != "image" &&  mediaItemDelegateItem.GridView.isCurrentItem
+            //visible: !isExpandable && mediaType != "image" &&  mediaItemDelegateItem.GridView.isCurrentItem
             onClicked: {
                 playlistModel.addToPlaylist (mediaUrl);
             }

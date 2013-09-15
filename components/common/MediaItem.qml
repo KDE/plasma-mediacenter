@@ -26,17 +26,16 @@ import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
 Item {
     id: mediaItem
 
+    property bool horizontal: false
+
     signal clicked(int index)
     signal pressAndHold(int index)
 
     Item {
-        anchors { fill: parent; margins: 20 }
+        anchors { fill: parent; margins: mediaItem.horizontal ? 1 : 20 }
 
         Item {
-            anchors {
-                fill: parent
-                margins: 2
-            }
+            anchors { fill: parent; margins: 2 }
 
             PlasmaCore.Theme {
                 id:theme
@@ -50,11 +49,14 @@ Item {
                     property variant source
 
                     anchors {
-                        left: parent.left; right: parent.right
-                        top: parent.top; margins: 2
-
-                        bottom: isExpandable ? labelOverlay.top : parent.bottom
+                        left: parent.left; top: parent.top; margins: 2
+                        right: mediaItem.horizontal ? undefined : parent.right
+                        bottom: mediaItem.horizontal
+                            ? parent.bottom
+                            : (isExpandable ? labelOverlay.top : parent.bottom)
                     }
+
+                    width: mediaItem.horizontal ? height : undefined
 
                     function checkAndLoad()
                     {
@@ -67,8 +69,10 @@ Item {
                 LabelOverlay {
                     id: labelOverlay
                     anchors {
-                        bottom: parent.bottom; margins: 5
-                        left: parent.left; right: parent.right
+                        bottom: parent.bottom; margins: mediaItem.horizontal ? 1 : 5
+                        left: mediaItem.horizontal ? iconImageLoader.right : parent.left
+                        right: parent.right
+                        verticalCenter: mediaItem.horizontal ? parent.verticalCenter : undefined
                     }
 
                     text: display ? display : ""
@@ -76,8 +80,9 @@ Item {
                     opacity: 0.8
                     showOverlay: !isExpandable
                     width: parent.width
-                    targetHeight: 32
+                    targetHeight: mediaItem.horizontal ? parent.height : 32
                     expanded: mediaItemDelegateItem.GridView.isCurrentItem
+                    horizontalAlignment: mediaItem.horizontal ? undefined : Text.AlignHCenter
                 }
             }
 
