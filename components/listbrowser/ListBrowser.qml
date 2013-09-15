@@ -42,7 +42,19 @@ FocusScope {
         id: gridBrowserGridView
         anchors.fill: parent
         clip: true
-        delegate: Common.LabelOverlay { width: 600; height: 100; text: display ? display : "" }
+        delegate: Common.MediaItemDelegate {
+            horizontal: true
+
+            width: ListView.view.width
+            height: 64
+            scale: (ListView.isCurrentItem ? 1.1 : 1)
+            clip: !ListView.isCurrentItem
+            z: ListView.isCurrentItem ? 1 : 0
+
+            backend: listBrowserRoot.currentBrowsingBackend
+            onPlayRequested: listBrowserRoot.mediaSelected(index, url, currentMediaType)
+            onPopupMenuRequested: listBrowserRoot.popupRequested(index,mediaUrl,mediaType, display)
+        }
         focus: true
 
         PlasmaComponents.ScrollBar {
@@ -52,7 +64,7 @@ FocusScope {
 
         PlasmaComponents.BusyIndicator {
             anchors { bottom: parent.bottom; horizontalCenter: parent.horizontalCenter }
-            running: currentBrowsingBackend.busy
+            running: listBrowserRoot.currentBrowsingBackend.busy
             visible: running
         }
 

@@ -32,6 +32,9 @@ FocusScope {
     property QtObject bottomSibling
 
     onModelsChanged: {
+        if (models && !backend) {
+            console.log("******* WARNING WARNING: BACKEND IS UNDEFINED *******");
+        }
         if (models && (models.length == undefined || models.length == 1)) {
             var model = models.length ? models[0] : models;
             var modelLabel = model.objectName;
@@ -66,6 +69,10 @@ FocusScope {
     }
 
     function setSiblings(browser) {
+        if (!browser) {
+            console.log("WARNING: BROWSER IS NULL!");
+            return;
+        }
         browser.topSibling = root.topSibling;
         browser.bottomSibling = root.bottomSibling;
     }

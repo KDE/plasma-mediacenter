@@ -24,6 +24,8 @@ import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
 
 Rectangle {
     property alias text: mediaTitleLabel.text
+    property alias horizontalAlignment: mediaTitleLabel.horizontalAlignment
+
     property bool showOverlay: false
     property bool expanded: false
     property int targetHeight: 0
@@ -34,6 +36,10 @@ Rectangle {
 
     PlasmaComponents.Label {
         id: mediaTitleLabel
+        anchors {
+            verticalCenter: parent.verticalCenter;
+            left: parent.left; margins: 5
+        }
         width: parent.width
 
         clip: true
@@ -43,5 +49,6 @@ Rectangle {
         maximumLineCount: parent.expanded ? 10 : 1
 
         horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
     }
 }
