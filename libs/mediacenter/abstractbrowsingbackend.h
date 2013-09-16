@@ -42,7 +42,7 @@ namespace MediaCenter {
  * Custom models are useful to implement custom navigations such as navigation
  * through services available through the web, see YouTube.
  *
- * This class does not direclty inherit from QAbstractItemModel due to future
+ * This class does not directly inherit from QAbstractItemModel due to future
  * extension purposes. It just represents an interface between the applet and the
  * provided model.
  */

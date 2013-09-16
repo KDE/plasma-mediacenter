@@ -23,12 +23,32 @@
 
 #include <KDE/KFilePlacesModel>
 
+/**
+  * @class LocalPlacesModel @author Akshay Ratan
+  * @brief Model for LocalPlacesModel
+  *
+  * @description  This class contains all the properties of the Local Places Browsing.
+  * 
+  * This class inherits from KFilePlacesModel which is a list view model.
+  */
+
 class LocalPlacesModel : public KFilePlacesModel
 {
     Q_OBJECT
 public:
+    
+     /**
+     * Constructor
+     * @brief Used for initialization purposes.
+     * @param parent is a QObject pointer
+     */
     explicit LocalPlacesModel(QObject *parent);
 
+     /**
+     * Returns the data stored under the given role for the item referred to by the index of the model.
+     * @param index is of QModelIndex Type
+     * @param role is set to Qt:: DisplayRole which means the key data is to be rendered in the form of text
+     */
     virtual QVariant data (const QModelIndex& index, int role = Qt::DisplayRole) const;
 
 private:

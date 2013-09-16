@@ -1,5 +1,6 @@
 /*
-    Copyright (C) 2011  Shantanu Tushar <shantanu@kde.org>
+    Copyright (C) 2011 Shantanu Tushar <shantanu@kde.org>
+    Copyright (C) 2013 Akshay Ratan <akshayratan@gmail.com> 
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -24,15 +25,54 @@
 #include <KDE/KDirSortFilterProxyModel>
 #include <KDE/KUrl>
 
+  /**
+  * @class LocalFilesAbstractModel @author Shantanu Tushar @author Akshay Ratan
+  * @brief Model for Local File Browsing
+  *
+  * @description  This class contains all the properties and logic of the Local File Browsing.
+  * Functions to go back one level up and browsing to a particular file URL are implemented in this.
+  * 
+  * This class inherits from KDirSortFilterProxyModel which acts as a proxy model
+  * for KDirModel to sort and filter KFileItems
+  */
 class LocalFilesAbstractModel : public KDirSortFilterProxyModel
 {
     Q_OBJECT
 public:
+    
+   /**
+     * Constructor
+     * @brief Used for initialization purposes.
+     * @param parent is a QObject pointer
+     * @param acceptedMimetypes which is of QString type
+     */
     explicit LocalFilesAbstractModel(QObject *parent, const QString &acceptedMimetypes);
 
+    /**
+     * Returns the data stored under the given role for the item referred to by the index.
+     * @param index is of QModelIndex Type
+     * @param role is set to Qt:: DisplayRole which means the key data is to be rendered in the form of text
+     */
     virtual QVariant data (const QModelIndex& index, int role = Qt::DisplayRole) const;
+    
+    /**
+     * Used to go one level back/up the current mediabrowser page. Stack is implemented
+     * to store the file url history
+     */
     virtual bool goOneLevelUp();
+    
+    /**
+     * Calls browseToUrl function
+     * Also uses addPath function which adds the url to the currentPath
+     * @param row is the row number of the model 
+     */
     virtual bool browseTo(int row);
+    
+    /**
+     * Browses to the url passed
+     * @param url is of KUrl type which is an address of the current file user wants to browse
+     */
+    
     virtual bool browseToUrl(const KUrl& url);
 
 private:
