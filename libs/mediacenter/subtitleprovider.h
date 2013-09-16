@@ -1,6 +1,6 @@
 /***********************************************************************************
  *   Copyright 2012 by Deepak Mittal <dpac.mittal2@gmail.com>                      *
- *                                                                                 *
+ *   Copyright 2013 by Akshay Ratan <akshayratan@gmail.com>                                                                              *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
  *   modify it under the terms of the GNU Lesser General Public                    *

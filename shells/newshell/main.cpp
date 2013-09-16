@@ -49,6 +49,10 @@ int main(int argc, char *argv[])
                         ki18n("developer"),
                         "shantanu@kde.org",
                         "http://www.shantanutushar.com");
+    aboutData.addAuthor(ki18n("Akshay Ratan"),
+                        ki18n("developer"),
+                        "akshayratan@gmail.com",
+                        "http://www.akshayratan.blogspot.com");
     aboutData.addCredit(ki18n("Marco Martin"), ki18n("GSoC project mentor"), "notmart@gmail.com", "");
 
     KCmdLineArgs::init(argc, argv, &aboutData);
