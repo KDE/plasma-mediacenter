@@ -21,15 +21,39 @@
 
 #include "../localfilesabstractbackend.h"
 
-class LocalPicturesModel;
+class LocalPicturesModel; 
+
+/**
+ * @class LocalPicturesBackend @author Alessandro Diaferia
+ * @brief A useful backend class for the showing the pictures in Local Indexed files
+ *
+ * @description This class supports and handles LocalPicturesModel.
+ * 
+ * This class direclty inherit from LocalFilesAbstractBackend
+ */
 class LocalPicturesBackend : public LocalFilesAbstractBackend
 {
     Q_OBJECT
 public:
+  
+   /**
+     * Constructor
+     * Used to load backend instance
+     * @param parent is a QObject pointer
+     * @param args is of QVariantList type
+     */
     LocalPicturesBackend(QObject *parent, const QVariantList &args);
+    
+     /**
+     * Destructor
+     */
     ~LocalPicturesBackend();
 
 protected:
+  
+    /**
+     * Initialized the LocalPicturesModel
+     */  
     virtual void initModel();
 
 private:
