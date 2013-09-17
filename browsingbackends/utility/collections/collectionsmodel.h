@@ -41,6 +41,7 @@ public:
     QVariant data(const QModelIndex &index, int role) const;
     void includePath( const QString& path );
     virtual void load();
+    virtual void save();
     void setFolders( const QStringList& includeDirs);
 
 protected: 

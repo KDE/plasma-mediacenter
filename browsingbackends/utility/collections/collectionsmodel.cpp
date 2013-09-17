@@ -110,6 +110,12 @@ void CollectionsModel:: load()
     setFolders(includes);
 }
 
+void CollectionsModel:: save()
+{
+  KConfig fileIndexerConfig( "nepomukstrigirc" );
+  fileIndexerConfig.group( "General" ).writePathEntry( "folders", pathList );
+}
+
 void CollectionsModel::setFolders( const QStringList& includeDirs)
 {
      
