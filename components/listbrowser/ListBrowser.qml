@@ -52,7 +52,6 @@ FocusScope {
 
             width: ListView.view.width
             height: 64
-            scale: (ListView.isCurrentItem ? 1.1 : 1)
             clip: !ListView.isCurrentItem
             z: ListView.isCurrentItem ? 1 : 0
 
