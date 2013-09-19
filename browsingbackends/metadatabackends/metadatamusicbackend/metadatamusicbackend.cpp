@@ -63,6 +63,7 @@ bool MetadataMusicBackend::initImpl()
     connect(m_musicModel, SIGNAL(modelReset()), SLOT(musicModelReset()));
 
     m_albumsModel->setObjectName("Albums");
+    m_artistsModel->setObjectName("Artists#list");
     m_musicModel->setObjectName("Songs#list");
 
     addModel(m_musicModel);
