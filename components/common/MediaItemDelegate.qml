@@ -27,7 +27,7 @@ Item {
     id: mediaItemDelegateItem
 
     property alias horizontal: mediaItem.horizontal
-    property QtObject view: mediaItem.view
+    property alias view: mediaItem.view
     property QtObject backend
     signal popupMenuRequested(int index, string mediaUrl, string mediaType, string display)
     signal playRequested(int index, string url, string currentMediaType)
