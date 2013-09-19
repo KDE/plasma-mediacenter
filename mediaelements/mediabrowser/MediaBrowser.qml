@@ -76,8 +76,8 @@ FocusScope {
             models: mediaBrowser.currentBrowsingBackend.models
             bottomSibling: searchMedia
 
-//             onMediaSelected: mediaBrowser.playRequested(index, url, mediaType)
-//             onPopupRequested: mediaBrowser.popupMenuRequested(index, url, mediaType, title)
+            onMediaSelected: mediaBrowser.playRequested(index, url, mediaType)
+            onPopupRequested: mediaBrowser.popupMenuRequested(index, url, mediaType, title)
         }
     }
 

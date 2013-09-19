@@ -40,6 +40,7 @@ FocusScope {
             console.log("CREATING SMART FOR " + model);
             var browser = mediaBrowserSmartComponent.createObject(mediaTabGroup);
 
+            tabBrowser.connectSignals(browser);
             browser.topSibling = mediaTabBar;
 
             var tabButton = mediaTabBar.buttons.get(i).button;
@@ -150,5 +151,14 @@ FocusScope {
             right: parent.right; bottom: parent.bottom;
             topMargin: __theme.margin
         }
+    }
+
+    function connectSignals(browser) {
+        if (!browser) {
+            console.log("CONNECT: WARNING: BROWSER IS NULL!");
+            return;
+        }
+        browser.mediaSelected.connect(tabBrowser.mediaSelected);
+        browser.popupRequested.connect(tabBrowser.popupRequested);
     }
 }

@@ -45,7 +45,7 @@ Item {
         }
         onPressAndHold: {
             if( mediaType == "audio" || mediaType == "video") {
-                popupMenuRequested(index, mediaUrl, mediaType, display);
+                mediaItemDelegateItem.popupMenuRequested(index, mediaUrl, mediaType, display);
             }
         }
     }
