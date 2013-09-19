@@ -31,6 +31,9 @@ FocusScope {
     property QtObject topSibling
     property QtObject bottomSibling
 
+    signal mediaSelected(int index, string url, string mediaType)
+    signal popupRequested(int index, string url, string mediaType, string title)
+
     onModelsChanged: {
         if (models && !backend) {
             console.log("******* WARNING: BACKEND IS UNDEFINED *******");
@@ -41,6 +44,7 @@ FocusScope {
             if (model.first || model.second) {
                 splitBrowserComponent = Qt.createComponent("SplitBrowser.qml");
                 var browser = splitBrowserComponent.createObject(root);
+                connectSignals(browser);
                 browser.backend = function() { return root.backend };
                 browser.firstModel = function() { return model.first };
                 browser.secondModel = function() { return model.second };
@@ -49,6 +53,7 @@ FocusScope {
                 listBrowserComponent = Qt.createComponent("listbrowser/ListBrowser.qml");
                 if (listBrowserComponent.status == Component.Ready) {
                     var browser = listBrowserComponent.createObject(root);
+                    connectSignals(browser);
                     setSiblings(browser);
                     browser.currentBrowsingBackend = function() { return root.backend };
                     browser.model = function() { return model };
@@ -59,6 +64,7 @@ FocusScope {
             } else {
                 gridBrowserComponent = Qt.createComponent("gridbrowser/GridBrowser.qml");
                 var browser = gridBrowserComponent.createObject(root);
+                connectSignals(browser);
                 setSiblings(browser);
                 browser.currentBrowsingBackend = function() { return root.backend };
                 browser.model = function() { return model };
@@ -68,16 +74,26 @@ FocusScope {
             tabBrowserComponent = Qt.createComponent("tabbrowser/TabBrowser.qml");
             var browser = tabBrowserComponent.createObject(root);
             browser.backend = function() { return root.backend };
+            connectSignals(browser);
             browser.focus = true;
         }
     }
 
     function setSiblings(browser) {
         if (!browser) {
-            console.log("WARNING: BROWSER IS NULL!");
+            console.log("SIBLINGS: WARNING: BROWSER IS NULL!");
             return;
         }
         browser.topSibling = root.topSibling;
         browser.bottomSibling = root.bottomSibling;
+    }
+
+    function connectSignals(browser) {
+        if (!browser) {
+            console.log("CONNECT: WARNING: BROWSER IS NULL!");
+            return;
+        }
+        browser.mediaSelected.connect(root.mediaSelected);
+        browser.popupRequested.connect(root.popupRequested);
     }
 }
