@@ -33,7 +33,7 @@ FocusScope {
 
     onModelsChanged: {
         if (models && !backend) {
-            console.log("******* WARNING WARNING: BACKEND IS UNDEFINED *******");
+            console.log("******* WARNING: BACKEND IS UNDEFINED *******");
         }
         if (models && (models.length == undefined || models.length == 1)) {
             var model = models.length ? models[0] : models;
@@ -47,11 +47,15 @@ FocusScope {
                 browser.focus = true;
             } else if (modelLabel.split("#").length == 2 && modelLabel.split("#")[1] == "list") {
                 listBrowserComponent = Qt.createComponent("listbrowser/ListBrowser.qml");
-                var browser = listBrowserComponent.createObject(root);
-                setSiblings(browser);
-                browser.currentBrowsingBackend = function() { return root.backend };
-                browser.model = function() { return model };
-                browser.focus = true;
+                if (listBrowserComponent.status == Component.Ready) {
+                    var browser = listBrowserComponent.createObject(root);
+                    setSiblings(browser);
+                    browser.currentBrowsingBackend = function() { return root.backend };
+                    browser.model = function() { return model };
+                    browser.focus = true;
+                } else {
+                    console.log("******* Error loading ListBrowser " + listBrowserComponent.errorString())
+                }
             } else {
                 gridBrowserComponent = Qt.createComponent("gridbrowser/GridBrowser.qml");
                 var browser = gridBrowserComponent.createObject(root);

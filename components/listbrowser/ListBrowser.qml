@@ -28,9 +28,9 @@ FocusScope {
     anchors.fill: parent
 
     property QtObject currentBrowsingBackend
-    property alias model: gridBrowserGridView.model
-    property alias currentIndex: gridBrowserGridView.currentIndex
-    property alias count: gridBrowserGridView.count
+    property alias model: listView.model
+    property alias currentIndex: listView.currentIndex
+    property alias count: listView.count
 
     property QtObject bottomSibling
     property QtObject topSibling
@@ -39,11 +39,16 @@ FocusScope {
     signal popupRequested(int index, string url, string mediaType, string title)
 
     ListView {
-        id: gridBrowserGridView
+        id: listView
         anchors.fill: parent
         clip: true
+        focus: true
+        highlight: PlasmaComponents.Highlight { }
+        highlightFollowsCurrentItem: true
+
         delegate: Common.MediaItemDelegate {
             horizontal: true
+            view: listView
 
             width: ListView.view.width
             height: 64
@@ -55,11 +60,10 @@ FocusScope {
             onPlayRequested: listBrowserRoot.mediaSelected(index, url, currentMediaType)
             onPopupMenuRequested: listBrowserRoot.popupRequested(index,mediaUrl,mediaType, display)
         }
-        focus: true
 
         PlasmaComponents.ScrollBar {
             orientation: _pmc_is_desktop ? Qt.Vertical : Qt.Horizontal
-            flickableItem: gridBrowserGridView
+            flickableItem: listView
         }
 
         PlasmaComponents.BusyIndicator {

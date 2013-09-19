@@ -50,6 +50,7 @@ FocusScope {
             scale: (GridView.isCurrentItem ? 1.1 : 1)
             clip: !GridView.isCurrentItem
             z: GridView.isCurrentItem ? 1 : 0
+            view: gridBrowserGridView
 
             backend: gridBrowserRoot.currentBrowsingBackend
             onPlayRequested: gridBrowserRoot.mediaSelected(index, url, currentMediaType)

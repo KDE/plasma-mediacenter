@@ -27,6 +27,7 @@ Item {
     id: mediaItem
 
     property bool horizontal: false
+    property QtObject view
 
     signal clicked(int index)
     signal pressAndHold(int index)
@@ -81,8 +82,8 @@ Item {
                     showOverlay: !isExpandable
                     width: parent.width
                     targetHeight: mediaItem.horizontal ? parent.height : 32
-                    expanded: mediaItemDelegateItem.GridView.isCurrentItem
-                    horizontalAlignment: mediaItem.horizontal ? undefined : Text.AlignHCenter
+                    expanded: mediaItem.view ? mediaItem.view.currentIndex == index : false
+                    horizontalAlignment: mediaItem.horizontal ? Text.AlignLeft : Text.AlignHCenter
                 }
             }
 
@@ -100,9 +101,10 @@ Item {
                 id: mediaItemDelegateItemMouseArea
                 hoverEnabled: true
                 anchors.fill: parent
-                onEntered: if(!mediaItemDelegateItem.GridView.view.moving &&
-                                !mediaItemDelegateItem.GridView.view.flicking)
-                                    mediaItemDelegateItem.GridView.view.currentIndex = index
+                onEntered: if(mediaItem.view &&
+                                !mediaItem.view.moving &&
+                                    !mediaItem.view.flicking)
+                                        mediaItem.view.currentIndex = index
                 onClicked: mediaItem.clicked(index)
                 onPressAndHold: mediaItem.pressAndHold(index);
             }
