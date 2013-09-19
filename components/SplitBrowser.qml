@@ -34,15 +34,30 @@ FocusScope {
     property QtObject bottomSibling
     property QtObject topSibling
 
+    signal mediaSelected(int index, string url, string mediaType)
+    signal popupRequested(int index, string url, string mediaType, string title)
+
     MediaCenterComponents.SmartBrowser {
         backend: root.backend; models: firstModel
         anchors { left: parent.left; top: parent.top; bottom: parent.bottom }
         width: parent.width/2 - 5
+        bottomSibling: root.bottomSibling
+        topSibling: root.topSibling
+
+        onMediaSelected: root.mediaSelected(index, url, mediaType)
+        onPopupRequested: root.popupRequested(index, url, mediaType, title)
+
+        focus: true
     }
 
     MediaCenterComponents.SmartBrowser {
         backend: root.backend; models: secondModel
         anchors { right: parent.right; top: parent.top; bottom: parent.bottom }
         width: parent.width/2 - 5
+        bottomSibling: root.bottomSibling
+        topSibling: root.topSibling
+
+        onMediaSelected: root.mediaSelected(index, url, mediaType)
+        onPopupRequested: root.popupRequested(index, url, mediaType, title)
     }
 }
