@@ -26,6 +26,7 @@
 #include "../abstractmetadatabackend.h"
 #include "categoriesmodel.h"
 
+class AlwaysExpandedMetadataModel;
 class PlaylistModel;
 class CategoriesModel;
 class NepomukMusicModel;
@@ -37,15 +38,10 @@ class MetadataMusicBackend : public AbstractMetadataBackend
     Q_OBJECT
     Q_PROPERTY(QString artistFilter READ artistFilter WRITE setArtistFilter NOTIFY artistFilterChanged)
     Q_PROPERTY(QString albumFilter READ albumFilter WRITE setAlbumFilter NOTIFY albumFilterChanged)
-    Q_PROPERTY(QObject* musicModel READ musicModel NOTIFY musicModelChanged)
 
 public:
     MetadataMusicBackend (QObject* parent, const QVariantList& args);
     virtual ~MetadataMusicBackend();
-
-    Q_INVOKABLE QObject *artistsModel() const;
-    Q_INVOKABLE QObject *albumsModel() const;
-    QObject *musicModel() const;
 
     bool supportsSearch() const;
 
@@ -62,10 +58,11 @@ public:
     Q_INVOKABLE void addAllSongsToPlaylist( QObject* playlistModel );
     Q_INVOKABLE void stopAddingSongsToPlaylist();
 
+    virtual bool expand(int row, QAbstractItemModel* model);
+
 Q_SIGNALS:
     void artistFilterChanged();
     void albumFilterChanged();
-    void musicModelChanged();
 
 protected:
     void updateModelAccordingToFilters();
@@ -76,8 +73,8 @@ private slots:
     void musicModelReset();
 
 private:
-    PmcMetadataModel* m_artistsModel;
-    PmcMetadataModel* m_albumsModel;
+    AlwaysExpandedMetadataModel* m_artistsModel;
+    AlwaysExpandedMetadataModel* m_albumsModel;
     PmcMetadataModel* m_musicModel;
     PlaylistModel* m_playlistModel;
 

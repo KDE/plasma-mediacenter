@@ -110,6 +110,18 @@ public:
      * to a particular one
      *
      * @param row the row index of the directory
+     * @param model the current model that the backend should operate on
+     *
+     * @return true if operation was successful
+     * @return false if operation was unsuccessful
+     */
+    Q_INVOKABLE virtual bool expand(int row, QAbstractItemModel *model);
+
+    /**
+     * This is a convenience method for when the media browser thinks the model
+     * doesn't matter. In this case, the default model is assumed by the backend.
+     *
+     * @param row the row index of the directory
      *
      * @return true if operation was successful
      * @return false if operation was unsuccessful

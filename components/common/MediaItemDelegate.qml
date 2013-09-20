@@ -38,7 +38,7 @@ Item {
 
         onClicked: {
             if (isExpandable) {
-                backend.expand(index, mediaUrl, mediaType);
+                backend.expand(index, view.model);
             } else {
                 mediaItemDelegateItem.playRequested(index, mediaUrl, mediaType)
             }
@@ -57,7 +57,7 @@ Item {
 
     Keys.onReturnPressed: {
         if (isExpandable) {
-            backend.expand(index);
+            backend.expand(index, view.model);
         } else {
             mediaItemDelegateItem.playRequested(index, mediaUrl, mediaType)
         }
