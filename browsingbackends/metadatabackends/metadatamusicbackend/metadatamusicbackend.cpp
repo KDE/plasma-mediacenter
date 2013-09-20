@@ -21,8 +21,10 @@
 
 
 #include "metadatamusicbackend.h"
+#include "alwaysexpandedmetadatamodel.h"
 
 #include <libs/mediacenter/pmcmetadatamodel.h>
+#include <libs/mediacenter/playlistmodel.h>
 
 #include <Nepomuk2/Vocabulary/NMM>
 #include <Nepomuk2/Vocabulary/NFO>
@@ -30,7 +32,6 @@
 #include <Nepomuk2/Query/ComparisonTerm>
 #include <Nepomuk2/Query/ResourceTypeTerm>
 #include <Nepomuk2/Query/ResourceTerm>
-#include <mediacenter/playlistmodel.h>
 
 MEDIACENTER_EXPORT_BROWSINGBACKEND(MetadataMusicBackend)
 
@@ -51,15 +52,14 @@ MetadataMusicBackend::~MetadataMusicBackend()
 bool MetadataMusicBackend::initImpl()
 {
     AbstractMetadataBackend::initImpl();
-    m_albumsModel = new PmcMetadataModel(this);
-    m_artistsModel = new PmcMetadataModel(this);
+    m_albumsModel = new AlwaysExpandedMetadataModel(this);
+    m_artistsModel = new AlwaysExpandedMetadataModel(this);
     m_musicModel = new PmcMetadataModel(this);
     m_artistsModel->setDefaultDecoration("user-identity");
     m_albumsModel->setDefaultDecoration("media-optical-audio");
     m_albumsModel->showMediaForProperty(Nepomuk2::Vocabulary::NMM::musicAlbum());
     m_artistsModel->showMediaForProperty(Nepomuk2::Vocabulary::NMM::performer());
     m_musicModel->showMediaType(MediaCenter::Music);
-    emit musicModelChanged();
     connect(m_musicModel, SIGNAL(modelReset()), SLOT(musicModelReset()));
 
     m_albumsModel->setObjectName("Albums");
@@ -77,16 +77,6 @@ bool MetadataMusicBackend::initImpl()
 bool MetadataMusicBackend::supportsSearch() const
 {
     return false;
-}
-
-QObject* MetadataMusicBackend::albumsModel() const
-{
-    return m_albumsModel;
-}
-
-QObject* MetadataMusicBackend::artistsModel() const
-{
-    return m_artistsModel;
 }
 
 QString MetadataMusicBackend::albumFilter() const
@@ -127,11 +117,6 @@ void MetadataMusicBackend::updateModelAccordingToFilters()
     if (!m_artistFilter.isEmpty()) {
         m_musicModel->addFilter(Nepomuk2::Vocabulary::NMM::performer(), Nepomuk2::Query::ResourceTerm(m_artistFilter));
     }
-}
-
-QObject* MetadataMusicBackend::musicModel() const
-{
-    return m_musicModel;
 }
 
 void MetadataMusicBackend::searchAlbum(const QString& album)
@@ -190,6 +175,19 @@ void MetadataMusicBackend::stopAddingSongsToPlaylist()
     m_shallAddMediaToPlaylist = false;
 }
 
+bool MetadataMusicBackend::expand(int row, QAbstractItemModel* model)
+{
+    if (!model) return false;
 
+    const QString filter = model->data(model->index(row, 0), MediaCenter::ResourceIdRole).toString();
+
+    if (model == m_albumsModel) {
+        setAlbumFilter(filter);
+    } else if (model == m_artistsModel) {
+        setArtistFilter(filter);
+    }
+
+    return true;
+}
 
 #include "metadatamusicbackend.moc"
