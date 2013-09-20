@@ -195,6 +195,7 @@ Q_SIGNALS:
     void modelsChanged();
     void searchTermChanged();
     void error(const QString &message);
+    void modelNeedsAttention(QObject* model);
 
 protected:
     /**

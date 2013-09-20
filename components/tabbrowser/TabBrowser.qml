@@ -151,6 +151,8 @@ FocusScope {
             right: parent.right; bottom: parent.bottom;
             topMargin: __theme.margin
         }
+
+        onCurrentTabChanged: currentTab.focus = true
     }
 
     function connectSignals(browser) {
@@ -160,5 +162,17 @@ FocusScope {
         }
         browser.mediaSelected.connect(tabBrowser.mediaSelected);
         browser.popupRequested.connect(tabBrowser.popupRequested);
+    }
+
+    function switchToModel(model) {
+        for (i=0; i < models.length ;i++) {
+            var tabButton = mediaTabBar.buttons.get(i).button;
+            var smartBrowser = tabButton.tab;
+            if (smartBrowser.browser.model.objectName == model.objectName) {
+                mediaTabGroup.currentTab = smartBrowser;
+                mediaTabBar.currentTab = tabButton;
+                return;
+            }
+        }
     }
 }
