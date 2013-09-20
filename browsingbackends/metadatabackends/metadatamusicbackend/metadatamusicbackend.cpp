@@ -183,6 +183,7 @@ bool MetadataMusicBackend::expand(int row, QAbstractItemModel* model)
 
     if (model == m_albumsModel) {
         setAlbumFilter(filter);
+        emit modelNeedsAttention(m_musicModel);
     } else if (model == m_artistsModel) {
         setArtistFilter(filter);
     }

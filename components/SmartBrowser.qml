@@ -31,6 +31,8 @@ FocusScope {
     property QtObject topSibling
     property QtObject bottomSibling
 
+    property QtObject browser
+
     signal mediaSelected(int index, string url, string mediaType)
     signal popupRequested(int index, string url, string mediaType, string title)
 
@@ -43,39 +45,39 @@ FocusScope {
             var modelLabel = model.objectName;
             if (model.first || model.second) {
                 splitBrowserComponent = Qt.createComponent("SplitBrowser.qml");
-                var browser = splitBrowserComponent.createObject(root);
-                connectSignals(browser);
-                browser.backend = function() { return root.backend };
-                browser.firstModel = function() { return model.first };
-                browser.secondModel = function() { return model.second };
-                browser.focus = true;
+                root.browser = splitBrowserComponent.createObject(root);
+                connectSignals(root.browser);
+                root.browser.backend = function() { return root.backend };
+                root.browser.firstModel = function() { return model.first };
+                root.browser.secondModel = function() { return model.second };
+                root.browser.focus = true;
             } else if (modelLabel.split("#").length == 2 && modelLabel.split("#")[1] == "list") {
                 listBrowserComponent = Qt.createComponent("listbrowser/ListBrowser.qml");
                 if (listBrowserComponent.status == Component.Ready) {
-                    var browser = listBrowserComponent.createObject(root);
-                    connectSignals(browser);
-                    setSiblings(browser);
-                    browser.currentBrowsingBackend = function() { return root.backend };
-                    browser.model = function() { return model };
-                    browser.focus = true;
+                    root.browser = listBrowserComponent.createObject(root);
+                    connectSignals(root.browser);
+                    setSiblings(root.browser);
+                    root.browser.currentBrowsingBackend = function() { return root.backend };
+                    root.browser.model = function() { return model };
+                    root.browser.focus = true;
                 } else {
                     console.log("******* Error loading ListBrowser " + listBrowserComponent.errorString())
                 }
             } else {
                 gridBrowserComponent = Qt.createComponent("gridbrowser/GridBrowser.qml");
-                var browser = gridBrowserComponent.createObject(root);
-                connectSignals(browser);
-                setSiblings(browser);
-                browser.currentBrowsingBackend = function() { return root.backend };
-                browser.model = function() { return model };
-                browser.focus = true;
+                root.browser = gridBrowserComponent.createObject(root);
+                connectSignals(root.browser);
+                setSiblings(root.browser);
+                root.browser.currentBrowsingBackend = function() { return root.backend };
+                root.browser.model = function() { return model };
+                root.browser.focus = true;
             }
         } else if (models) {
             tabBrowserComponent = Qt.createComponent("tabbrowser/TabBrowser.qml");
-            var browser = tabBrowserComponent.createObject(root);
-            browser.backend = function() { return root.backend };
-            connectSignals(browser);
-            browser.focus = true;
+            root.browser = tabBrowserComponent.createObject(root);
+            root.browser.backend = function() { return root.backend };
+            connectSignals(root.browser);
+            root.browser.focus = true;
         }
     }
 
@@ -95,5 +97,11 @@ FocusScope {
         }
         browser.mediaSelected.connect(root.mediaSelected);
         browser.popupRequested.connect(root.popupRequested);
+    }
+
+    function switchToModel(model) {
+        if (root.browser.switchToModel) {
+            root.browser.switchToModel(model);
+        }
     }
 }

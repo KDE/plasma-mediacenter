@@ -120,9 +120,17 @@ FocusScope {
 
         if (currentBrowsingBackend) {
             currentBrowsingBackend.error.connect(errorLabel.setError);
+            currentBrowsingBackend.modelNeedsAttention.connect(switchToModel);
         }
 
         searchMedia.text = currentBrowsingBackend.searchTerm;
+    }
+
+    function switchToModel(model)
+    {
+        if (mediaBrowserViewItem.mediaBrowserGridView.switchToModel) {
+            mediaBrowserViewItem.mediaBrowserGridView.switchToModel(model);
+        }
     }
 
     function destroyGridView()
