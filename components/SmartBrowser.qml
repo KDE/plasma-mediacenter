@@ -37,6 +37,8 @@ FocusScope {
     signal popupRequested(int index, string url, string mediaType, string title)
 
     onModelsChanged: {
+        if (!models)
+            return;
         if (models && !backend) {
             console.log("******* WARNING: BACKEND IS UNDEFINED *******");
         }

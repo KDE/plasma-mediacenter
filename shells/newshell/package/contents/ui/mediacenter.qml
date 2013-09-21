@@ -173,7 +173,7 @@ Image {
                 onPlayRequested: {
                     if (currentMediaType == "image") {
                         var mediaImageViewer = getMediaImageViewer();
-                        mediaImageViewer.stripModel = runtimeData.currentBrowsingBackend.backendModel;
+                        mediaImageViewer.stripModel = runtimeData.currentBrowsingBackend.models[0];
                         mediaImageViewer.stripCurrentIndex = index;
                         mediaImageViewer.source = url;
                         pmcPageStack.pushAndFocus(mediaImageViewer);

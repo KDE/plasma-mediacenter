@@ -155,7 +155,6 @@ FocusScope {
     }
     function loadModel()
     {
-        //JS snippet to do mediaBrowserGridView.model: currentBrowsingBackend.backendModel
         if (mediaBrowserViewItem && mediaBrowserViewItem.mediaBrowserGridView)
             mediaBrowserViewItem.mediaBrowserGridView.model = (function() { return currentBrowsingBackend.models[0]; });
     }
