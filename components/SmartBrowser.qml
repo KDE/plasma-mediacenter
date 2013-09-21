@@ -78,6 +78,7 @@ FocusScope {
             root.browser = tabBrowserComponent.createObject(root);
             root.browser.backend = function() { return root.backend };
             connectSignals(root.browser);
+            setSiblings(root.browser);
             root.browser.focus = true;
         }
     }

@@ -60,6 +60,9 @@ public:
 
     virtual bool expand(int row, QAbstractItemModel* model);
 
+    virtual QVariantList buttons();
+    virtual void handleButtonClick(const QString& buttonName);
+
 Q_SIGNALS:
     void artistFilterChanged();
     void albumFilterChanged();

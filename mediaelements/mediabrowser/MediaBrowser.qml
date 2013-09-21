@@ -59,6 +59,17 @@ FocusScope {
             left: mediaBrowserSidePanel.right
         }
 
+        BrowserToolbar {
+            id: browserToolbar
+            anchors {
+                top: parent.top; right: parent.right; left: parent.left;
+            }
+            height: 40
+            buttons: currentBrowsingBackend.buttons
+            onButtonClicked: currentBrowsingBackend.handleButtonClick(buttonName)
+            Keys.onDownPressed: mediaBrowserViewItem.mediaBrowserGridView.focus = true
+        }
+
         onWheelMoved: {
             if (wheel.delta < 0) {
                 if(mediaBrowserGridView.moveCurrentIndexRight) mediaBrowserGridView.moveCurrentIndexRight();
@@ -71,10 +82,15 @@ FocusScope {
     Component {
         id: mediaBrowserSmartBrowserComponent
         MediaCenterComponents.SmartBrowser {
-            anchors { fill: parent; topMargin: 10; bottomMargin: 10 + bottomPanel.height }
+            anchors {
+                bottom: parent.bottom; right: parent.right; left: parent.left;
+                top: browserToolbar.visible ? browserToolbar.bottom : parent.top
+                bottomMargin: 10 + bottomPanel.height
+            }
+            bottomSibling: searchMedia
+            topSibling: browserToolbar
             backend: mediaBrowser.currentBrowsingBackend
             models: mediaBrowser.currentBrowsingBackend.models
-            bottomSibling: searchMedia
 
             onMediaSelected: mediaBrowser.playRequested(index, url, mediaType)
             onPopupRequested: mediaBrowser.popupMenuRequested(index, url, mediaType, title)

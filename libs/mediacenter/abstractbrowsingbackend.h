@@ -54,6 +54,7 @@ class MEDIACENTER_EXPORT AbstractBrowsingBackend : public QObject
     Q_PROPERTY(QString mediaBrowserSidePanel READ mediaBrowserSidePanel WRITE setMediaBrowserSidePanel NOTIFY mediaBrowserSidePanelChanged)
     Q_PROPERTY(QVariantList models READ models NOTIFY modelsChanged)
     Q_PROPERTY(QString searchTerm READ searchTerm WRITE setSearchTerm NOTIFY searchTermChanged)
+    Q_PROPERTY(QVariantList buttons READ buttons NOTIFY buttonsChanged)
 
 public:
     /**
@@ -75,7 +76,8 @@ public:
     QString name() const;
 
     /**
-     * @returns the model of the browsing backend
+     * @returns the model of the browsing backend.
+     * The default implementation returns the first (or the only) model.
      */
     QObject *model();
 
@@ -83,6 +85,11 @@ public:
      * @returns the models available in the browsing backend
      */
     QVariantList models();
+
+    /**
+     * @returns a list of buttons the model wants to show on the UI
+     */
+    virtual QVariantList buttons();
 
     /**
      * Request the backend to initialize
@@ -185,6 +192,14 @@ public:
      */
     virtual bool busy() const;
 
+    /**
+     * This method will be called by mediacenter when one of the buttons is clicked.
+     * The default implementation does nothing
+     *
+     * @param buttonName the name of the button that was clicked
+     */
+    Q_INVOKABLE virtual void handleButtonClick(const QString &buttonName);
+
     QString searchTerm() const;
     void setSearchTerm(const QString &term);
 
@@ -193,6 +208,7 @@ Q_SIGNALS:
     void busyChanged();
     void mediaBrowserSidePanelChanged();
     void modelsChanged();
+    void buttonsChanged();
     void searchTermChanged();
     void error(const QString &message);
     void modelNeedsAttention(QObject* model);
