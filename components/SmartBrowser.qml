@@ -39,6 +39,7 @@ FocusScope {
     onModelsChanged: {
         if (models && !backend) {
             console.log("******* WARNING: BACKEND IS UNDEFINED *******");
+            return;
         }
         var previousBrowser = root.browser;
         if (models && (models.length == undefined || models.length == 1)) {
@@ -82,7 +83,7 @@ FocusScope {
             setSiblings(root.browser);
             root.browser.focus = true;
         }
-        if (root.browser != previousBrowser) {
+        if (previousBrowser && root.browser != previousBrowser) {
             previousBrowser.destroy();
         }
     }
@@ -110,4 +111,6 @@ FocusScope {
             root.browser.switchToModel(model);
         }
     }
+
+    onActiveFocusChanged: if (activeFocus) root.browser.focus = true
 }
