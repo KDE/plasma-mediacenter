@@ -113,6 +113,7 @@ void MetadataMusicBackend::setArtistFilter(const QString& filter)
 void MetadataMusicBackend::updateModelAccordingToFilters()
 {
     m_musicModel->clearAllFilters();
+    m_artistFilteredMusicModel->clearAllFilters();
 
     if (!m_albumFilter.isEmpty()) {
         m_musicModel->addFilter(Nepomuk2::Vocabulary::NMM::musicAlbum(), Nepomuk2::Query::ResourceTerm(m_albumFilter));
