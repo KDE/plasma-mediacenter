@@ -37,6 +37,8 @@ FocusScope {
     signal popupRequested(int index, string url, string mediaType, string title)
 
     onModelsChanged: {
+        if (!models)
+            return;
         if (models && !backend) {
             console.log("******* WARNING: BACKEND IS UNDEFINED *******");
         }
@@ -78,6 +80,7 @@ FocusScope {
             root.browser = tabBrowserComponent.createObject(root);
             root.browser.backend = function() { return root.backend };
             connectSignals(root.browser);
+            setSiblings(root.browser);
             root.browser.focus = true;
         }
     }

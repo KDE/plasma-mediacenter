@@ -216,3 +216,12 @@ void AbstractBrowsingBackend::setSearchTerm(const QString& term)
     emit searchTermChanged();
     search(term);
 }
+
+QVariantList AbstractBrowsingBackend::buttons()
+{
+    return QVariantList();
+}
+
+void AbstractBrowsingBackend::handleButtonClick(const QString& buttonName)
+{
+}

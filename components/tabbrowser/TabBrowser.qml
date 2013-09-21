@@ -32,6 +32,9 @@ FocusScope {
     signal mediaSelected(int index, string url, string mediaType)
     signal popupRequested(int index, string url, string mediaType, string title)
 
+    property QtObject bottomSibling
+    property QtObject topSibling
+
     onBackendChanged: {
         var models = tabBrowser.backend.models;
         mediaTabBar.populateButtons();
@@ -129,6 +132,12 @@ FocusScope {
         }
 
         Keys.onDownPressed: mediaTabGroup.currentTab.focus = true
+        Keys.onPressed: {
+            if (event.key == Qt.Key_Up && tabBrowser.topSibling) {
+                tabBrowser.topSibling.focus = true;
+                event.accepted = true;
+            }
+        }
     }
 
     PlasmaComponents.TextField {
@@ -172,6 +181,7 @@ FocusScope {
                 || (smartBrowser.browser.model && smartBrowser.browser.model.objectName == model.objectName)) {
                 mediaTabGroup.currentTab = smartBrowser;
                 mediaTabBar.currentTab = tabButton;
+                smartBrowser.focus = true;
                 return true;
             }
         }

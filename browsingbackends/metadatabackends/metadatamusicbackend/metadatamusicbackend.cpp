@@ -33,7 +33,17 @@
 #include <Nepomuk2/Query/ResourceTypeTerm>
 #include <Nepomuk2/Query/ResourceTerm>
 
+#include <KDebug>
+
+#include <QDeclarativeEngine>
+#include <QDeclarativeContext>
+
 MEDIACENTER_EXPORT_BROWSINGBACKEND(MetadataMusicBackend)
+
+namespace {
+    static const char *s_showAllButton = "Show All";
+    static const char *s_playAllButton = "Play All";
+}
 
 MetadataMusicBackend::MetadataMusicBackend(QObject* parent, const QVariantList& args)
     : AbstractMetadataBackend(parent, args)
@@ -138,7 +148,7 @@ void MetadataMusicBackend::searchMusic(const QString& music)
     m_musicModel->setSearchTerm(music);
 }
 
-void MetadataMusicBackend::addAllSongsToPlaylist ( QObject* playlistModel )
+void MetadataMusicBackend::addAllSongsToPlaylist (QObject* playlistModel)
 {
     m_shallAddMediaToPlaylist = true;
     m_playlistModel = qobject_cast<PlaylistModel*>(playlistModel);
@@ -194,6 +204,29 @@ bool MetadataMusicBackend::expand(int row, QAbstractItemModel* model)
     }
 
     return true;
+}
+
+QVariantList MetadataMusicBackend::buttons()
+{
+    QVariantList buttonList;
+    buttonList << s_showAllButton << s_playAllButton;
+    return buttonList;
+}
+
+void MetadataMusicBackend::handleButtonClick(const QString& buttonName)
+{
+    if (buttonName == s_showAllButton) {
+        m_albumFilter = m_artistFilter = "";
+        updateModelAccordingToFilters();
+    } else if (buttonName == s_playAllButton) {
+        //FIXME: This is a horrible hack to get a ref to the playlist model
+        PlaylistModel *model = qobject_cast<PlaylistModel*>(declarativeEngine()->rootContext()->contextProperty("playlistModel").value<QObject*>());
+        if (model) {
+            addAllSongsToPlaylist(model);
+        } else {
+            kWarning() << "Failed to get a reference to playlist model";
+        }
+    }
 }
 
 #include "metadatamusicbackend.moc"
