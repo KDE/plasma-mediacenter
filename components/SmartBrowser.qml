@@ -40,6 +40,7 @@ FocusScope {
         if (models && !backend) {
             console.log("******* WARNING: BACKEND IS UNDEFINED *******");
         }
+        var previousBrowser = root.browser;
         if (models && (models.length == undefined || models.length == 1)) {
             var model = models.length ? models[0] : models;
             var modelLabel = model.objectName;
@@ -80,6 +81,9 @@ FocusScope {
             connectSignals(root.browser);
             setSiblings(root.browser);
             root.browser.focus = true;
+        }
+        if (root.browser != previousBrowser) {
+            previousBrowser.destroy();
         }
     }
 
