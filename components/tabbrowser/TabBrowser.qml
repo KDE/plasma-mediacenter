@@ -166,11 +166,16 @@ FocusScope {
         for (i=0; i < models.length ;i++) {
             var tabButton = mediaTabBar.buttons.get(i).button;
             var smartBrowser = tabButton.tab;
-            if (smartBrowser.browser.model.objectName == model.objectName) {
+
+            //FIXME: Comparison should not rely on unique model name
+            if ((smartBrowser.browser.switchToModel && smartBrowser.browser.switchToModel(model))
+                || (smartBrowser.browser.model && smartBrowser.browser.model.objectName == model.objectName)) {
                 mediaTabGroup.currentTab = smartBrowser;
                 mediaTabBar.currentTab = tabButton;
-                return;
+                return true;
             }
         }
+
+        return false;
     }
 }

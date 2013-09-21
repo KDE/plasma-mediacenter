@@ -66,4 +66,16 @@ FocusScope {
 
         Keys.onLeftPressed: firstBrowser.focus = true
     }
+
+    function switchToModel(model) {
+        if (firstBrowser.models.objectName == model.objectName) {
+            firstBrowser.focus = true;
+            return true;
+        }
+        if (secondBrowser.models.objectName == model.objectName) {
+            secondBrowser.focus = true;
+            return true;
+        }
+        return false;
+    }
 }
