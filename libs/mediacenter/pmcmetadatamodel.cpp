@@ -168,7 +168,7 @@ QVariant PmcMetadataModel::data(const QModelIndex& index, int role) const
         return QVariant();
     if (!d->metadataValues.keys().contains(index.row())) {
         d->rowsToFetchMetadataFor.append(index.row());
-        d->metadataFetchTimer.start(100);
+        d->metadataFetchTimer.start(0);
         return QVariant();
     }
 
