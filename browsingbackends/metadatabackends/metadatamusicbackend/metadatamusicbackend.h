@@ -77,6 +77,7 @@ private:
     AlwaysExpandedMetadataModel* m_albumsModel;
     PmcMetadataModel* m_musicModel;
     PlaylistModel* m_playlistModel;
+    PmcMetadataModel* m_artistFilteredMusicModel;
 
     QString m_artistFilter;
     QString m_albumFilter;

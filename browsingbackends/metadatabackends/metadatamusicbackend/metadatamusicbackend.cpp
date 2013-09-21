@@ -55,20 +55,23 @@ bool MetadataMusicBackend::initImpl()
     m_albumsModel = new AlwaysExpandedMetadataModel(this);
     m_artistsModel = new AlwaysExpandedMetadataModel(this);
     m_musicModel = new PmcMetadataModel(this);
+    m_artistFilteredMusicModel = new PmcMetadataModel(this);
     m_artistsModel->setDefaultDecoration("user-identity");
     m_albumsModel->setDefaultDecoration("media-optical-audio");
     m_albumsModel->showMediaForProperty(Nepomuk2::Vocabulary::NMM::musicAlbum());
     m_artistsModel->showMediaForProperty(Nepomuk2::Vocabulary::NMM::performer());
     m_musicModel->showMediaType(MediaCenter::Music);
+    m_artistFilteredMusicModel->showMediaType(MediaCenter::Music);
     connect(m_musicModel, SIGNAL(modelReset()), SLOT(musicModelReset()));
 
     m_albumsModel->setObjectName("Albums");
     m_artistsModel->setObjectName("Artists#list");
     m_musicModel->setObjectName("Songs#list");
+    m_artistFilteredMusicModel->setObjectName("Artist's Songs#list");
 
     addModel(m_musicModel);
     addModel(m_albumsModel);
-    addModelPair("Artists", m_artistsModel, m_musicModel);
+    addModelPair("Artists", m_artistsModel, m_artistFilteredMusicModel);
 
     updateModelAccordingToFilters();
     return true;
@@ -115,7 +118,7 @@ void MetadataMusicBackend::updateModelAccordingToFilters()
         m_musicModel->addFilter(Nepomuk2::Vocabulary::NMM::musicAlbum(), Nepomuk2::Query::ResourceTerm(m_albumFilter));
     }
     if (!m_artistFilter.isEmpty()) {
-        m_musicModel->addFilter(Nepomuk2::Vocabulary::NMM::performer(), Nepomuk2::Query::ResourceTerm(m_artistFilter));
+        m_artistFilteredMusicModel->addFilter(Nepomuk2::Vocabulary::NMM::performer(), Nepomuk2::Query::ResourceTerm(m_artistFilter));
     }
 }
 
@@ -186,6 +189,7 @@ bool MetadataMusicBackend::expand(int row, QAbstractItemModel* model)
         emit modelNeedsAttention(m_musicModel);
     } else if (model == m_artistsModel) {
         setArtistFilter(filter);
+        emit modelNeedsAttention(m_artistFilteredMusicModel);
     }
 
     return true;
