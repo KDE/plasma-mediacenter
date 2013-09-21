@@ -38,6 +38,7 @@ FocusScope {
     signal popupRequested(int index, string url, string mediaType, string title)
 
     MediaCenterComponents.SmartBrowser {
+        id: firstBrowser
         backend: root.backend; models: firstModel
         anchors { left: parent.left; top: parent.top; bottom: parent.bottom }
         width: parent.width/2 - 5
@@ -48,9 +49,12 @@ FocusScope {
         onPopupRequested: root.popupRequested(index, url, mediaType, title)
 
         focus: true
+
+        Keys.onRightPressed: secondBrowser.focus = true
     }
 
     MediaCenterComponents.SmartBrowser {
+        id: secondBrowser
         backend: root.backend; models: secondModel
         anchors { right: parent.right; top: parent.top; bottom: parent.bottom }
         width: parent.width/2 - 5
@@ -59,5 +63,7 @@ FocusScope {
 
         onMediaSelected: root.mediaSelected(index, url, mediaType)
         onPopupRequested: root.popupRequested(index, url, mediaType, title)
+
+        Keys.onLeftPressed: firstBrowser.focus = true
     }
 }
