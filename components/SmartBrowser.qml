@@ -47,6 +47,7 @@ FocusScope {
                 splitBrowserComponent = Qt.createComponent("SplitBrowser.qml");
                 root.browser = splitBrowserComponent.createObject(root);
                 connectSignals(root.browser);
+                setSiblings(root.browser);
                 root.browser.backend = function() { return root.backend };
                 root.browser.firstModel = function() { return model.first };
                 root.browser.secondModel = function() { return model.second };

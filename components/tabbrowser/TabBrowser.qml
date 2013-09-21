@@ -151,8 +151,6 @@ FocusScope {
             right: parent.right; bottom: parent.bottom;
             topMargin: __theme.margin
         }
-
-        onCurrentTabChanged: currentTab.focus = true
     }
 
     function connectSignals(browser) {
