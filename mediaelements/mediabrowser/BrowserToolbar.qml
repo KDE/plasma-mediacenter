@@ -53,6 +53,6 @@ FocusScope {
             }
         }
 
-        Component.onCompleted: repeater.itemAt(0).focus = true;
+        Component.onCompleted: if (repeater.count) repeater.itemAt(0).focus = true;
     }
 }
