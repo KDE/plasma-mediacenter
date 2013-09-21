@@ -122,13 +122,12 @@ bool AbstractBrowsingBackend::goOneLevelUp()
 
 bool AbstractBrowsingBackend::expand(int row, QAbstractItemModel* model)
 {
-    Q_UNUSED(row)
-    return false;
+    return expand(row);
 }
 
 bool AbstractBrowsingBackend::expand(int row)
 {
-    return expand(row, static_cast<QAbstractItemModel*>(model()));
+    return false;
 }
 
 QDeclarativeEngine *AbstractBrowsingBackend::declarativeEngine() const
