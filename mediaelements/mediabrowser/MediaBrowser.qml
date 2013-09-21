@@ -111,13 +111,12 @@ FocusScope {
         if (currentBrowsingBackend.mediaBrowserOverride()) {
             var qmlSource = currentBrowsingBackend.mediaBrowserOverride();
             object = Qt.createQmlObject(qmlSource, mediaBrowserViewItem);
-            mediaBrowserViewItem.mediaBrowserGridView = object;
             object.backend = (function() { return currentBrowsingBackend; });
         } else {
             object = mediaBrowserSmartBrowserComponent.createObject(mediaBrowserViewItem);
         }
         mediaBrowserViewItem.mediaBrowserGridView = object;
-        object.focus = true
+        object.focus = true;
 
         if (currentBrowsingBackend.supportsSearch()) {
             searchMedia.visible = true
@@ -263,9 +262,9 @@ FocusScope {
     }
 
     Keys.onPressed: {
-        if (event.text && searchMedia.visible) {
-            searchMedia.focus = true
-            searchMedia.text = event.text
+        if (event.key != Qt.Key_Escape && event.text && searchMedia.visible) {
+            searchMedia.focus = true;
+            searchMedia.text = event.text;
         }
     }
 
