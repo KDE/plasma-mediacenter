@@ -37,3 +37,8 @@ QVariant AlwaysExpandedMetadataModel::data(const QModelIndex& index, int role) c
 
     return PmcMetadataModel::data(index, role);
 }
+
+ModelMetadata* AlwaysExpandedMetadataModel::metadata()
+{
+    return &m_metadata;
+}

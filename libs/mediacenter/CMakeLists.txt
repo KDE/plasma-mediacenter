@@ -5,6 +5,7 @@ include_directories(
 )
 
 set (plasmamediacenter_SRCS
+    modelmetadata.cpp
     objectpair.cpp
     mediainfoserviceproxy.cpp
     mediainforesult.cpp
@@ -41,6 +42,7 @@ set_target_properties(plasmamediacenter PROPERTIES VERSION 1.1 SOVERSION 1.1)
 install(TARGETS plasmamediacenter ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 set (plasmamediacenter_HDRS
+    modelmetadata.h
     mediacenter.h
     abstractbrowsingbackend.h
     backendsmodel.h

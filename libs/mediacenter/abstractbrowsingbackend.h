@@ -24,9 +24,10 @@
 #include <QFlags>
 
 #include <KDE/KConfigGroup>
+#include <KDE/KService>
+
 #include "mediacenter_export.h"
 #include "mediacenter/mediacenter.h"
-#include <KDE/KService>
 
 class QDeclarativeEngine;
 class QAbstractItemModel;

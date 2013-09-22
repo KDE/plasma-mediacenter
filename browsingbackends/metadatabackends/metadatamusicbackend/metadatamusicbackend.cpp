@@ -22,6 +22,7 @@
 
 #include "metadatamusicbackend.h"
 #include "alwaysexpandedmetadatamodel.h"
+#include "metadatamusicmodel.h"
 
 #include <libs/mediacenter/pmcmetadatamodel.h>
 #include <libs/mediacenter/playlistmodel.h>
@@ -64,8 +65,8 @@ bool MetadataMusicBackend::initImpl()
     AbstractMetadataBackend::initImpl();
     m_albumsModel = new AlwaysExpandedMetadataModel(this);
     m_artistsModel = new AlwaysExpandedMetadataModel(this);
-    m_musicModel = new PmcMetadataModel(this);
-    m_artistFilteredMusicModel = new PmcMetadataModel(this);
+    m_musicModel = new MetadataMusicModel(this);
+    m_artistFilteredMusicModel = new MetadataMusicModel(this);
     m_artistsModel->setDefaultDecoration("user-identity");
     m_albumsModel->setDefaultDecoration("media-optical-audio");
     m_albumsModel->showMediaForProperty(Nepomuk2::Vocabulary::NMM::musicAlbum());
@@ -74,10 +75,10 @@ bool MetadataMusicBackend::initImpl()
     m_artistFilteredMusicModel->showMediaType(MediaCenter::Music);
     connect(m_musicModel, SIGNAL(modelReset()), SLOT(musicModelReset()));
 
-    m_albumsModel->setObjectName("Albums");
-    m_artistsModel->setObjectName("Artists#list");
-    m_musicModel->setObjectName("Songs#list");
-    m_artistFilteredMusicModel->setObjectName("Artist's Songs#list");
+    m_albumsModel->metadata()->setName("Albums");
+    m_artistsModel->metadata()->setName("Artists#list");
+    m_musicModel->metadata()->setName("Songs#list");
+    m_artistFilteredMusicModel->metadata()->setName("Artist's Songs#list");
 
     addModel(m_musicModel);
     addModel(m_albumsModel);
