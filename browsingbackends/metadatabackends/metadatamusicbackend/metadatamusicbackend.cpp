@@ -22,7 +22,7 @@
 
 #include "metadatamusicbackend.h"
 #include "alwaysexpandedmetadatamodel.h"
-#include "metadatamusicmodel.h"
+#include "../metadatabackendcommonmodel.h"
 
 #include <libs/mediacenter/pmcmetadatamodel.h>
 #include <libs/mediacenter/playlistmodel.h>
@@ -65,8 +65,8 @@ bool MetadataMusicBackend::initImpl()
     AbstractMetadataBackend::initImpl();
     m_albumsModel = new AlwaysExpandedMetadataModel(this);
     m_artistsModel = new AlwaysExpandedMetadataModel(this);
-    m_musicModel = new MetadataMusicModel(this);
-    m_artistFilteredMusicModel = new MetadataMusicModel(this);
+    m_musicModel = new MetadataBackendCommonModel(this);
+    m_artistFilteredMusicModel = new MetadataBackendCommonModel(this);
     m_artistsModel->setDefaultDecoration("user-identity");
     m_albumsModel->setDefaultDecoration("media-optical-audio");
     m_albumsModel->showMediaForProperty(Nepomuk2::Vocabulary::NMM::musicAlbum());

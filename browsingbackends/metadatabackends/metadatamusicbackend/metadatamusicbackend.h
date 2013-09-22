@@ -26,12 +26,12 @@
 #include "../abstractmetadatabackend.h"
 #include "categoriesmodel.h"
 
-class MetadataMusicModel;
+class MetadataBackendCommonModel;
 class AlwaysExpandedMetadataModel;
 class PlaylistModel;
 class CategoriesModel;
 class NepomukMusicModel;
-class MetadataMusicModel;
+class MetadataBackendCommonModel;
 
 class MetadataMusicBackend : public AbstractMetadataBackend
 {
@@ -81,9 +81,9 @@ private slots:
 private:
     AlwaysExpandedMetadataModel* m_artistsModel;
     AlwaysExpandedMetadataModel* m_albumsModel;
-    MetadataMusicModel* m_musicModel;
+    MetadataBackendCommonModel* m_musicModel;
     PlaylistModel* m_playlistModel;
-    MetadataMusicModel* m_artistFilteredMusicModel;
+    MetadataBackendCommonModel* m_artistFilteredMusicModel;
 
     QString m_artistFilter;
     QString m_albumFilter;
