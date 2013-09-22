@@ -41,12 +41,21 @@ FocusScope {
                 anchors { top: parent.top; left: parent.left; right: parent.right }
                 height: 64
 
+                PlasmaComponents.TextField {
+                    id: filterText
+                    width: parent.width * 4/5
+                    height: 30
+                    anchors.verticalCenter: parent.verticalCenter
+                    clearButtonShown: true
+                    placeholderText: i18n("Search Playlist")
+                    Keys.onDownPressed: playlistList.focus = true;
+                }
                 Item {
                     height: parent.height
-                    width: parent.width - clearPlaylist.width - randomButton.width
+                    width: parent.width - filterText.width - clearPlaylist.width - randomButton.width
                     Text {
                         id: mediaCount
-                        anchors.centerIn: parent
+                        anchors.verticalCenter: parent.verticalCenter
                         text: i18np("%1 item", "%1 items", playlistList.count)
                         font.pixelSize: 18
                         color: theme.textColor
@@ -76,19 +85,10 @@ FocusScope {
                     }
                 }
             }
-            PlasmaComponents.TextField {
-                anchors { top: topRow.bottom; left: parent.left; right: parent.right }
-                id: filterText
-                width: parent.width
-                height: 30
-                clearButtonShown: true
-                placeholderText: i18n("Search Playlist")
-                Keys.onDownPressed: playlistList.focus = true;
-            }
 
             ListView {
                 id: playlistList
-                anchors { top: filterText.bottom; left: parent.left; right: parent.right }
+                anchors { top: topRow.bottom; left: parent.left; right: parent.right }
                 anchors.bottom: parent.bottom
                 anchors.margins: 5
 
