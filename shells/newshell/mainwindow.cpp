@@ -29,6 +29,7 @@
 #include <libs/mediacenter/pmccoverartprovider.h>
 #include <mediacenter/objectpair.h>
 #include <mediacenter/filterplaylistmodel.h>
+#include <mediacenter/multipleplaylistmodel.h>
 
 #include <Plasma/Package>
 #include <Plasma/Theme>
@@ -96,11 +97,15 @@ MainWindow::MainWindow(QWidget *parent)
     qmlRegisterType<FilteredBackendsModel>("org.kde.plasma.mediacenter.elements", 0, 1, "FilteredBackendsModel");
     qmlRegisterType<SubtitleProvider>("org.kde.plasma.mediacenter.elements", 0, 1, "SubtitleProvider");
     qmlRegisterType<FilterPlaylistModel>("org.kde.plasma.mediacenter.elements", 0, 1, "FilterPlaylistModel");
+    qmlRegisterType<MultiplePlaylistModel>("org.kde.plasma.mediacenter.elements", 0, 1, "MultiplePlaylistModel");
     qmlRegisterType<Settings>("org.kde.plasma.mediacenter.elements", 0, 1, "Settings");
     qmlRegisterInterface<ObjectPair>("ObjectPair");
 
     BackendsModel *backendsModel = new BackendsModel(view->engine(), this);
     view->rootContext()->setContextProperty("backendsModel", backendsModel);
+    MultiplePlaylistModel *multipleplaylistmodel = new MultiplePlaylistModel(this);
+    view->rootContext()->setContextProperty("multipleplaylistmodel", multipleplaylistmodel);
+
     PlaylistModel *playlistModel = new PlaylistModel(this);
     if (urls.length() > 0) {
         playlistModel->clearPlaylist();
