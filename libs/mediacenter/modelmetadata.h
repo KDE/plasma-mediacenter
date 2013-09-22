@@ -27,14 +27,19 @@ class MEDIACENTER_EXPORT ModelMetadata : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString name READ name NOTIFY nameChanged)
+    Q_PROPERTY(bool supportsSearch READ supportsSearch NOTIFY supportsSearchChanged)
 public:
     explicit ModelMetadata(QObject* parent = 0);
 
     QString name() const;
     void setName(const QString &name);
 
+    bool supportsSearch() const;
+    void setSupportsSearch(bool supports);
+
 signals:
     void nameChanged();
+    void supportsSearchChanged();
 
 private:
     class Private;

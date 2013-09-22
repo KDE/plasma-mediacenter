@@ -21,6 +21,7 @@ class ModelMetadata::Private
 {
 public:
     QString name;
+    bool supports;
 };
 
 ModelMetadata::ModelMetadata(QObject* parent)
@@ -39,4 +40,14 @@ void ModelMetadata::setName(const QString& name)
 {
     d->name = name;
     emit nameChanged();
+}
+
+void ModelMetadata::setSupportsSearch(bool supports)
+{
+    d->supports = supports;
+}
+
+bool ModelMetadata::supportsSearch() const
+{
+    return d->supports;
 }

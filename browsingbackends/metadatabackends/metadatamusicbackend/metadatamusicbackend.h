@@ -54,6 +54,7 @@ public:
     Q_INVOKABLE void searchArtist(const QString &artist);
     Q_INVOKABLE void searchAlbum(const QString &album);
     Q_INVOKABLE void searchMusic(const QString &music);
+    Q_INVOKABLE void searchArtistsMusic(const QString &music);
 
     Q_INVOKABLE void addAllSongsToPlaylist( QObject* playlistModel );
     Q_INVOKABLE void stopAddingSongsToPlaylist();
@@ -62,6 +63,8 @@ public:
 
     virtual QVariantList buttons();
     virtual void handleButtonClick(const QString& buttonName);
+
+    virtual void searchModel(const QString& searchTerm, QAbstractItemModel* model);
 
 Q_SIGNALS:
     void artistFilterChanged();

@@ -80,6 +80,10 @@ bool MetadataMusicBackend::initImpl()
     m_musicModel->metadata()->setName("Songs#list");
     m_artistFilteredMusicModel->metadata()->setName("Artist's Songs#list");
 
+    m_musicModel->metadata()->setSupportsSearch(true);
+    m_artistFilteredMusicModel->metadata()->setSupportsSearch(true);
+    m_artistsModel->metadata()->setSupportsSearch(true);
+
     addModel(m_musicModel);
     addModel(m_albumsModel);
     addModelPair("Artists", m_artistsModel, m_artistFilteredMusicModel);
@@ -147,6 +151,11 @@ void MetadataMusicBackend::searchArtist(const QString& artist)
 void MetadataMusicBackend::searchMusic(const QString& music)
 {
     m_musicModel->setSearchTerm(music);
+}
+
+void MetadataMusicBackend::searchArtistsMusic(const QString& music)
+{
+    m_artistFilteredMusicModel->setSearchTerm(music);
 }
 
 void MetadataMusicBackend::addAllSongsToPlaylist (QObject* playlistModel)
@@ -227,6 +236,17 @@ void MetadataMusicBackend::handleButtonClick(const QString& buttonName)
         } else {
             kWarning() << "Failed to get a reference to playlist model";
         }
+    }
+}
+
+void MetadataMusicBackend::searchModel(const QString& searchTerm, QAbstractItemModel* model)
+{
+    if (model == m_musicModel) {
+        searchMusic(searchTerm);
+    } else if (model == m_artistFilteredMusicModel) {
+        searchArtistsMusic(searchTerm);
+    } else if (model == m_artistsModel) {
+        searchArtist(searchTerm);
     }
 }
 

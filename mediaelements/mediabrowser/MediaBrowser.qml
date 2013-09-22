@@ -87,8 +87,7 @@ FocusScope {
                 top: browserToolbar.visible ? browserToolbar.bottom : parent.top
                 bottomMargin: 10 + bottomPanel.height
             }
-            bottomSibling: searchMedia
-            topSibling: browserToolbar
+            topSibling: browserToolbar.visible ? browserToolbar : undefined
             backend: mediaBrowser.currentBrowsingBackend
             models: mediaBrowser.currentBrowsingBackend.models
 
@@ -118,12 +117,6 @@ FocusScope {
         mediaBrowserViewItem.mediaBrowserGridView = object;
         object.focus = true;
 
-        if (currentBrowsingBackend.supportsSearch()) {
-            searchMedia.visible = true
-        } else {
-            searchMedia.visible = false
-        }
-
         if (mediaBrowserSidePanel.child) mediaBrowserSidePanel.child.destroy()
         //Load the panel if the backend supports one
         if (currentBrowsingBackend.mediaBrowserSidePanel) {
@@ -137,8 +130,6 @@ FocusScope {
             currentBrowsingBackend.error.connect(errorLabel.setError);
             currentBrowsingBackend.modelNeedsAttention.connect(switchToModel);
         }
-
-        searchMedia.text = currentBrowsingBackend.searchTerm;
     }
 
     function switchToModel(model)
@@ -173,28 +164,6 @@ FocusScope {
             bottom: parent.bottom
             right: parent.right
             margins: 10
-        }
-
-        PlasmaComponents.TextField {
-            id: searchMedia
-            clearButtonShown: true
-            anchors {
-                left: parent.left
-                bottom: parent.bottom
-                top: parent.top
-                right: mediaCountLabel.left
-            }
-
-            opacity: activeFocus ? 1 : 0.8
-            placeholderText: "Search..."
-            onTextChanged: searchMediaTimer.restart()
-            Keys.onUpPressed: mediaBrowserViewItem.mediaBrowserGridView.focus = true
-
-            Timer {
-                id: searchMediaTimer
-                interval: 500
-                onTriggered: if (currentBrowsingBackend) currentBrowsingBackend.searchTerm = searchMedia.text
-            }
         }
 
         PlasmaComponents.Label {
@@ -260,12 +229,4 @@ FocusScope {
     {
         return mediaBrowser.currentBrowsingBackend.goOneLevelUp();
     }
-
-    Keys.onPressed: {
-        if (event.key != Qt.Key_Escape && event.text && searchMedia.visible) {
-            searchMedia.focus = true;
-            searchMedia.text = event.text;
-        }
-    }
-
 }
