@@ -64,7 +64,7 @@ FocusScope {
         id: mediaBrowserSmartComponent
         MediaCenterComponents.SmartBrowser {
             anchors.fill: parent
-            topSibling: searchField
+            topSibling: tabBrowser
             backend: tabBrowser.backend
         }
     }
@@ -81,7 +81,7 @@ FocusScope {
 
         anchors{
             top: parent.top; left: parent.left
-            right: searchField.left
+            right: parent.right
         }
         height: 32
         focus: true
@@ -138,18 +138,6 @@ FocusScope {
                 event.accepted = true;
             }
         }
-    }
-
-    PlasmaComponents.TextField {
-        id: searchField
-        anchors { top: parent.top; right: parent.right }
-        width: 800; height: 32
-        clearButtonShown: true
-        placeholderText: i18n("Search")
-        //onTextChanged: searchTimer.restart()
-
-        Keys.onDownPressed: mediaTabGroup.currentTab.focus = true
-        Keys.onLeftPressed: mediaTabBar.focus = true
     }
 
     PlasmaComponents.TabGroup {

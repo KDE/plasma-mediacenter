@@ -258,8 +258,16 @@ protected:
      *
      * @param searchTerm string entered by the user
      */
-    virtual void search(const QString &searchTerm);
+    Q_INVOKABLE virtual void search(const QString &searchTerm);
 
+    /**
+     * This method is called by the UI when the user requests to search for a media
+     * for a particular model
+     *
+     * @param searchTerm string entered by the user
+     * @param model the model that this search should affect
+     */
+    Q_INVOKABLE virtual void searchModel(const QString &searchTerm, QAbstractItemModel *model);
 
 private:
     class AbstractBrowsingBackendPrivate;

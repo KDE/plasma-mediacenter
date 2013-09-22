@@ -38,9 +38,38 @@ FocusScope {
     signal mediaSelected(int index, string url, string mediaType)
     signal popupRequested(int index, string url, string mediaType, string title)
 
+    PlasmaComponents.TextField {
+        id: searchField
+        anchors { top: parent.top; left: parent.left; right: parent.right }
+        height: visible ? 32 : 0
+        opacity: activeFocus ? 1 : 0.8
+        visible: model && model.metadata && model.metadata.supportsSearch
+        clearButtonShown: true
+        placeholderText: i18n("Search")
+        onTextChanged: searchTimer.restart()
+
+        Keys.onUpPressed: gridBrowserRoot.topSibling.focus = true
+        Keys.onDownPressed: gridBrowserGridView.focus = true
+
+        Timer {
+            id: searchTimer
+            interval: 500
+            onTriggered: {
+                if (currentBrowsingBackend.searchModel) {
+                    currentBrowsingBackend.searchModel(searchField.text, model);
+                } else if (currentBrowsingBackend.search) {
+                    currentBrowsingBackend.search(searchField.text);
+                }
+            }
+        }
+    }
+
     GridView {
         id: gridBrowserGridView
-        anchors.fill: parent
+        anchors {
+            top: searchField.bottom; bottom: parent.bottom
+            left: parent.left; right: parent.right
+        }
         clip: true
         cellWidth: cellHeight
         cellHeight: height/2.1
@@ -77,9 +106,16 @@ FocusScope {
             if (event.key == Qt.Key_Down && currentIndex%2 && gridBrowserRoot.bottomSibling) {
                 gridBrowserRoot.bottomSibling.focus = true;
                 event.accepted = true;
-            } else if (event.key == Qt.Key_Up && currentIndex%2 == 0 && gridBrowserRoot.topSibling) {
-                gridBrowserRoot.topSibling.focus = true;
+            } else if (event.key == Qt.Key_Up && currentIndex%2 == 0) {
+                if (searchField.visible) {
+                    searchField.focus = true;
+                } else if (gridBrowserRoot.topSibling) {
+                    gridBrowserRoot.topSibling.focus = true;
+                }
                 event.accepted = true;
+            } else if (event.key != Qt.Key_Escape && event.text && searchMedia.visible) {
+                searchField.focus = true;
+                searchField.text = event.text;
             }
         }
     }
