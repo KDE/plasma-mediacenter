@@ -27,7 +27,7 @@ public:
 };
 
 MetadataVideoModel::MetadataVideoModel(QObject* parent)
-    : PmcMetadataModel(parent)
+    : MetadataBackendCommonModel(parent)
     , d(new Private())
 {
     showMediaType(MediaCenter::Video);
