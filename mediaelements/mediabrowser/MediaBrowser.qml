@@ -110,13 +110,12 @@ FocusScope {
         if (currentBrowsingBackend.mediaBrowserOverride()) {
             var qmlSource = currentBrowsingBackend.mediaBrowserOverride();
             object = Qt.createQmlObject(qmlSource, mediaBrowserViewItem);
-            mediaBrowserViewItem.mediaBrowserGridView = object;
             object.backend = (function() { return currentBrowsingBackend; });
         } else {
             object = mediaBrowserSmartBrowserComponent.createObject(mediaBrowserViewItem);
         }
         mediaBrowserViewItem.mediaBrowserGridView = object;
-        object.focus = true
+        object.focus = true;
 
         if (mediaBrowserSidePanel.child) mediaBrowserSidePanel.child.destroy()
         //Load the panel if the backend supports one
