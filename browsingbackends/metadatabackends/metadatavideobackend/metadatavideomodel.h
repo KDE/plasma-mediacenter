@@ -22,9 +22,9 @@
 
 #include <QAbstractItemModel>
 
-#include <libs/mediacenter/pmcmetadatamodel.h>
+#include "../metadatabackendcommonmodel.h"
 
-class MetadataVideoModel : public PmcMetadataModel
+class MetadataVideoModel : public MetadataBackendCommonModel
 {
     Q_OBJECT
 public:

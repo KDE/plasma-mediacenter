@@ -1,4 +1,4 @@
-/***************************************************************************
+/*****
  *   Copyright 2009 by Onur-Hayri Bakici <thehayro@gmail.com               *
  *   Copyright 2012 Sinny Kumari <ksinny@gmail.com>                        *
  *                                                                         *
@@ -150,4 +150,9 @@ QVariant FlickrModel::data (const QModelIndex& index, int role) const
 int FlickrModel::rowCount (const QModelIndex& parent) const
 {
     return m_photos.count();
+}
+
+ModelMetadata* FlickrModel::metadata()
+{
+    return &m_metadata;
 }

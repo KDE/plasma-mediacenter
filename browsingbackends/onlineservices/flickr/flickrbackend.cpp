@@ -19,7 +19,6 @@
  ***************************************************************************/
 
 #include "flickrbackend.h"
-
 #include "flickrmodel.h"
 
 MEDIACENTER_EXPORT_BROWSINGBACKEND(FlickrBackend)
@@ -38,7 +37,9 @@ FlickrBackend::~FlickrBackend()
 
 bool FlickrBackend::initImpl()
 {
-    setModel(new FlickrModel(this));
+    FlickrModel *model = new FlickrModel(this);
+    model->metadata()->setSupportsSearch(true);
+    setModel(model);
     return true;
 }
 
