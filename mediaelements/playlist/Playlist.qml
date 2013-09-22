@@ -36,9 +36,53 @@ FocusScope {
         Item {
             anchors { fill: parent; leftMargin: 10; topMargin: 10; bottomMargin: 10 }
             clip: true
+            
             Row {
-                id: topRow
-                anchors { top: parent.top; left: parent.left; right: parent.right }
+                id: multiplePlaylistRow
+                anchors {top: parent.top; left: parent.left; right: parent.right }
+                height:40
+                ListView {
+                    id: multiplePlaylistList
+                    width: parent.width * 2/3
+                    height: parent.height
+                    orientation: ListView.Horizontal
+                    spacing: 10
+                    model: MediaCenterElements.MultiplePlaylistModel {}
+
+                    delegate: Text{
+
+
+                        text: display
+                        color: theme.textColor
+                    }
+                    PlasmaComponents.ScrollBar {
+                        id: multiplePlaylistScrollbar
+                        orientation: Qt.Horizontal
+                        flickableItem: multiplePlaylistList
+                    }
+                }
+                
+                PlasmaComponents.TextField {
+                    id: createPlaylistTextField
+
+                    height: parent.height
+                    width: parent.width - multiplePlaylistList.width - createPlaylistButton.width
+                    clearButtonShown: true
+                    placeholderText: i18n("Create New Playlist")
+                    Keys.onDownPressed: filterText.focus = true
+                }
+                PlasmaComponents.Button {
+                    id: createPlaylistButton
+                    height: parent.height
+                    anchors.verticalCenter: parent.verticalCenter
+                    
+                    text: i18n("Create")
+                }
+            }
+                    
+            Row {
+                id: playlistActions
+                anchors { top: multiplePlaylistRow.bottom; left: parent.left; right: parent.right }
                 height: 64
 
                 PlasmaComponents.TextField {
@@ -49,6 +93,7 @@ FocusScope {
                     clearButtonShown: true
                     placeholderText: i18n("Search Playlist")
                     Keys.onDownPressed: playlistList.focus = true;
+                    Keys.onUpPressed: createPlaylistTextField.focus = true
                 }
                 Item {
                     height: parent.height
@@ -88,7 +133,7 @@ FocusScope {
 
             ListView {
                 id: playlistList
-                anchors { top: topRow.bottom; left: parent.left; right: parent.right }
+                anchors { top: playlistActions.bottom; left: parent.left; right: parent.right }
                 anchors.bottom: parent.bottom
                 anchors.margins: 5
 

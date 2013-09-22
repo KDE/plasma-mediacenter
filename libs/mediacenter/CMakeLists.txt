@@ -25,6 +25,7 @@ set (plasmamediacenter_SRCS
     pmcimageprovider.cpp
     subtitleprovider.cpp
     filterplaylistmodel.cpp
+    multipleplaylistmodel.cpp
 )
 
 kde4_add_library(plasmamediacenter SHARED ${plasmamediacenter_SRCS})
