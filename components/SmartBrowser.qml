@@ -44,7 +44,7 @@ FocusScope {
         var previousBrowser = root.browser;
         if (models && (models.length == undefined || models.length == 1)) {
             var model = models.length ? models[0] : models;
-            var modelLabel = model.objectName;
+            var modelLabel = model.metadata ? model.metadata.name : model.objectName;
             if (model.first || model.second) {
                 splitBrowserComponent = Qt.createComponent("SplitBrowser.qml");
                 root.browser = splitBrowserComponent.createObject(root);

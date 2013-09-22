@@ -17,23 +17,14 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#ifndef ALWAYSEXPANDEDMETADATAMODEL_H
-#define ALWAYSEXPANDEDMETADATAMODEL_H
+#include "metadatamusicmodel.h"
 
-#include <libs/mediacenter/pmcmetadatamodel.h>
-#include <libs/mediacenter/modelmetadata.h>
-
-class AlwaysExpandedMetadataModel : public PmcMetadataModel
+MetadataMusicModel::MetadataMusicModel(QObject* parent): PmcMetadataModel(parent)
 {
-    Q_OBJECT
-    Q_PROPERTY(QObject* metadata READ metadata)
-public:
-    explicit AlwaysExpandedMetadataModel(QObject* parent = 0);
-    virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
-    ModelMetadata *metadata();
-private:
-    ModelMetadata m_metadata;
-};
+}
 
-#endif // ALWAYSEXPANDEDMETADATAMODEL_H
+ModelMetadata* MetadataMusicModel::metadata()
+{
+    return &m_metadata;
+}

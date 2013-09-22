@@ -50,7 +50,7 @@ FocusScope {
             tabButton.tab = browser;
             tabButton.visible = true;
 
-            tabButton.text = model.objectName.split("#")[0];
+            tabButton.text = model.metadata ? model.metadata.name.split("#")[0] : model.objectName.split("#")[0]
             browser.models = model;
         }
     }
@@ -178,7 +178,7 @@ FocusScope {
 
             //FIXME: Comparison should not rely on unique model name
             if ((smartBrowser.browser.switchToModel && smartBrowser.browser.switchToModel(model))
-                || (smartBrowser.browser.model && smartBrowser.browser.model.objectName == model.objectName)) {
+                || (smartBrowser.browser.model && smartBrowser.browser.model.metadata.name == model.metadata.name)) {
                 mediaTabGroup.currentTab = smartBrowser;
                 mediaTabBar.currentTab = tabButton;
                 smartBrowser.focus = true;
