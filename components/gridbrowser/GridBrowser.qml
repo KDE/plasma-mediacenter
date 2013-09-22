@@ -43,7 +43,7 @@ FocusScope {
         anchors { top: parent.top; left: parent.left; right: parent.right }
         height: visible ? 32 : 0
         opacity: activeFocus ? 1 : 0.8
-        visible: model && model.metadata && model.metadata.supportsSearch
+        visible: (model && model.metadata && model.metadata.supportsSearch) ? true : false
         clearButtonShown: true
         placeholderText: i18n("Search")
         onTextChanged: searchTimer.restart()
@@ -96,7 +96,7 @@ FocusScope {
 
         PlasmaComponents.BusyIndicator {
             anchors { bottom: parent.bottom; horizontalCenter: parent.horizontalCenter }
-            running: gridBrowserRoot.currentBrowsingBackend.busy
+            running: (gridBrowserRoot.currentBrowsingBackend && gridBrowserRoot.currentBrowsingBackend.busy) ? true : false
             visible: running
         }
 

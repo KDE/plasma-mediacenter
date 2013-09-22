@@ -87,7 +87,7 @@ FocusScope {
                 top: browserToolbar.visible ? browserToolbar.bottom : parent.top
                 bottomMargin: 10 + bottomPanel.height
             }
-            topSibling: browserToolbar.visible ? browserToolbar : undefined
+            topSibling: browserToolbar.visible ? browserToolbar : null
             backend: mediaBrowser.currentBrowsingBackend
             models: mediaBrowser.currentBrowsingBackend.models
 
