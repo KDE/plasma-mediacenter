@@ -23,12 +23,12 @@
 #include <libs/mediacenter/pmcmetadatamodel.h>
 #include <libs/mediacenter/modelmetadata.h>
 
-class MetadataMusicModel : public PmcMetadataModel
+class MetadataBackendCommonModel : public PmcMetadataModel
 {
     Q_OBJECT
     Q_PROPERTY(QObject* metadata READ metadata)
 public:
-    explicit MetadataMusicModel(QObject* parent = 0);
+    explicit MetadataBackendCommonModel(QObject* parent = 0);
     ModelMetadata *metadata();
 private:
     ModelMetadata m_metadata;
