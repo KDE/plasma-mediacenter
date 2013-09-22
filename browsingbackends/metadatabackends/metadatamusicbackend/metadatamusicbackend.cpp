@@ -83,6 +83,7 @@ bool MetadataMusicBackend::initImpl()
     m_musicModel->metadata()->setSupportsSearch(true);
     m_artistFilteredMusicModel->metadata()->setSupportsSearch(true);
     m_artistsModel->metadata()->setSupportsSearch(true);
+    m_albumsModel->metadata()->setSupportsSearch(true);
 
     addModel(m_musicModel);
     addModel(m_albumsModel);
@@ -247,6 +248,8 @@ void MetadataMusicBackend::searchModel(const QString& searchTerm, QAbstractItemM
         searchArtistsMusic(searchTerm);
     } else if (model == m_artistsModel) {
         searchArtist(searchTerm);
+    } else if (model == m_albumsModel) {
+        searchAlbum(searchTerm);
     }
 }
 
