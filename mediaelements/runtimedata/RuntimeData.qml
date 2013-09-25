@@ -21,6 +21,7 @@ import QtQuick 1.1
 import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
 
 Item {
+    visible: false
     property QtObject currentBrowsingBackend
 
     property bool playing: false

@@ -56,6 +56,7 @@ class MEDIACENTER_EXPORT AbstractBrowsingBackend : public QObject
     Q_PROPERTY(QVariantList models READ models NOTIFY modelsChanged)
     Q_PROPERTY(QString searchTerm READ searchTerm WRITE setSearchTerm NOTIFY searchTermChanged)
     Q_PROPERTY(QVariantList buttons READ buttons NOTIFY buttonsChanged)
+    Q_PROPERTY(QObject* pmcRuntime READ pmcRuntime WRITE setPmcRuntime NOTIFY pmcRuntimeChanged)
 
 public:
     /**
@@ -204,6 +205,9 @@ public:
     QString searchTerm() const;
     void setSearchTerm(const QString &term);
 
+    QObject* pmcRuntime();
+    void setPmcRuntime(QObject* pmcRuntime);
+
 Q_SIGNALS:
     void modelChanged();
     void busyChanged();
@@ -213,6 +217,7 @@ Q_SIGNALS:
     void searchTermChanged();
     void error(const QString &message);
     void modelNeedsAttention(QObject* model);
+    void pmcRuntimeChanged();
 
 protected:
     /**

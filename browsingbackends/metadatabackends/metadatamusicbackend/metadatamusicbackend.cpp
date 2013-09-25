@@ -234,6 +234,10 @@ void MetadataMusicBackend::handleButtonClick(const QString& buttonName)
         PlaylistModel *model = qobject_cast<PlaylistModel*>(declarativeEngine()->rootContext()->contextProperty("playlistModel").value<QObject*>());
         if (model) {
             addAllSongsToPlaylist(model);
+            if (pmcRuntime()) {
+                QObject *playlist = pmcRuntime()->property("playlist").value<QObject*>();
+                QMetaObject::invokeMethod(playlist, "playNext");
+            }
         } else {
             kWarning() << "Failed to get a reference to playlist model";
         }

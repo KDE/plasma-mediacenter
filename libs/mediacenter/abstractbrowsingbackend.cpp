@@ -48,6 +48,7 @@ public:
     QString mediaBrowserSidePanelText;
     QList<QObject*> models;
     QString searchTerm;
+    QObject* pmcRuntime;
 };
 
 AbstractBrowsingBackend::AbstractBrowsingBackend(QObject *parent, const QVariantList &args)
@@ -229,4 +230,17 @@ QVariantList AbstractBrowsingBackend::buttons()
 
 void AbstractBrowsingBackend::handleButtonClick(const QString& buttonName)
 {
+}
+
+QObject* AbstractBrowsingBackend::pmcRuntime()
+{
+    return d->pmcRuntime;
+}
+
+void AbstractBrowsingBackend::setPmcRuntime(QObject* pmcRuntime)
+{
+    if (d->pmcRuntime != pmcRuntime) {
+        d->pmcRuntime = pmcRuntime;
+        emit pmcRuntimeChanged();
+    }
 }
