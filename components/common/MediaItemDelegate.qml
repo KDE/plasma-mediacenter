@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright 2012 Shantanu Tushar <shantanu@kde.org>                     *
+ *   Copyright 2012 Sinny Kumari <ksinny@gmail.com>                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,61 +18,48 @@
  ***************************************************************************/
 
 import QtQuick 1.1
+import org.kde.qtextracomponents 0.1 as QtExtraComponents
 import org.kde.plasma.components 0.1 as PlasmaComponents
+import org.kde.plasma.core 0.1 as PlasmaCore
+import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
 
 Item {
-    id: musicDelegateRootItem
-    property string categoryName: ""
-    visible: false
+    id: mediaItemDelegateItem
 
-    Timer {
-        id: showTimer
-        interval: 100
-        repeat: false
-        onTriggered: musicDelegateRootItem.visible = true
-    }
+    property alias horizontal: mediaItem.horizontal
+    property alias view: mediaItem.view
+    property QtObject backend
+    signal popupMenuRequested(int index, string mediaUrl, string mediaType, string display)
+    signal playRequested(int index, string url, string currentMediaType)
 
-    Text {
-        text: display ? display : ""
+    MediaItem {
+        id: mediaItem
         anchors.fill: parent
-        anchors.margins: 5
-        font.pointSize: 16
-        color: theme.textColor
-        elide: Text.ElideRight
-        verticalAlignment: Text.AlignVCenter
-        style: Text.Outline
-        styleColor: theme.backgroundColor
 
-        MouseArea {
-            id: mouseArea
-            hoverEnabled: true
-            onEntered: musicDelegateRootItem.ListView.view.currentIndex = index
-            anchors.fill: parent
-            onClicked: categoryName == "album" ? backend.albumFilter = resourceId : backend.artistFilter = resourceId
+        onClicked: {
+            if (isExpandable) {
+                backend.expand(index, view.model);
+            } else {
+                mediaItemDelegateItem.playRequested(index, mediaUrl, mediaType)
+            }
+        }
+        onPressAndHold: {
+            if( mediaType == "audio" || mediaType == "video") {
+                mediaItemDelegateItem.popupMenuRequested(index, mediaUrl, mediaType, display);
+            }
         }
     }
-
-    states: [
-    State {
-        name: "appear"
-        when: visible
-    }
-    ]
-    transitions: [
-    Transition {
-        to: "appear"
+    Behavior on scale {
         NumberAnimation {
-            target: musicDelegateRootItem;
-            property: "opacity";
-            from: 0.0
-            to: 1.0;
-            easing.type: Easing.InQuad;
-            duration: 500
+            duration: 100
         }
     }
-    ]
 
-    Component.onCompleted: {
-        showTimer.start()
+    Keys.onReturnPressed: {
+        if (isExpandable) {
+            backend.expand(index, view.model);
+        } else {
+            mediaItemDelegateItem.playRequested(index, mediaUrl, mediaType)
+        }
     }
 }

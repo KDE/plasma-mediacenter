@@ -21,7 +21,6 @@
 
 
 #include "metadatavideobackend.h"
-
 #include "metadatavideomodel.h"
 
 #include <Nepomuk2/Query/QueryParser>
@@ -42,9 +41,10 @@ MetadataVideoBackend::~MetadataVideoBackend()
 bool MetadataVideoBackend::initImpl()
 {
     AbstractMetadataBackend::initImpl();
-    PmcMetadataModel *pmcMetadataModel = new MetadataVideoModel(this);
-    handleBusySignals(pmcMetadataModel);
-    setModel(pmcMetadataModel);
+    MetadataVideoModel *model = new MetadataVideoModel(this);
+    model->metadata()->setSupportsSearch(true);
+    handleBusySignals(model);
+    setModel(model);
     return true;
 }
 

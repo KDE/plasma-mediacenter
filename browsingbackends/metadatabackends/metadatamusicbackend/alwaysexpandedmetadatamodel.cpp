@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright 2012 Sinny Kumari <ksinny@gmail.com>                        *
+ *   Copyright 2013 by Shantanu Tushar <shantanu@kde.org>                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,47 +17,28 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-import QtQuick 1.1
-import org.kde.plasma.components 0.1 as PlasmaComponents
-import org.kde.qtextracomponents 0.1 as QtExtraComponents
+#include "alwaysexpandedmetadatamodel.h"
 
-Item {
-    id: rootItem
-    anchors.fill: parent
-    property QtObject backend
+AlwaysExpandedMetadataModel::AlwaysExpandedMetadataModel(QObject* parent)
+    : PmcMetadataModel(parent)
+{
 
-    PlasmaComponents.Button {
-        id: backButton
-        anchors {
-            left: parent.left; right: parent.right; top: parent.top
-        }
-        height: 64
-        iconSource: "go-up";
-        text: i18n("One level up")
-        onClicked: backend.browseOneLevelUp()
+}
+
+QVariant AlwaysExpandedMetadataModel::data(const QModelIndex& index, int role) const
+{
+    if (!index.isValid() || index.row() >= rowCount()) {
+        return QVariant();
     }
 
-    ListView {
-        id: placesListView
-        anchors {
-            left: parent.left; right: parent.right; top: backButton.bottom
-            bottom: parent.bottom; margins: 10
-        }
-        clip: true
-        model: backend.placesModel()
-        spacing: 10
-        header: PlasmaComponents.Label {
-            id: placesLabel
-            anchors.right: parent.right
-            font.pointSize: 16
-            text: i18n("Places")
-            color: "white"
-        }
-        delegate: PlacesDelegate { height: 64; width: placesListView.width }
+    if (role == MediaCenter::IsExpandableRole) {
+        return true;
     }
 
-    Rectangle {
-        anchors.fill: parent
-        radius: 5; opacity: 0.1
-    }
+    return PmcMetadataModel::data(index, role);
+}
+
+ModelMetadata* AlwaysExpandedMetadataModel::metadata()
+{
+    return &m_metadata;
 }

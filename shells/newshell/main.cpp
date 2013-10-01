@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
     KAboutData aboutData("plasma-mediacenter",
                          0,
                          ki18n("Plasma Mediacenter Shell"),
-                         "1.0.0",
+                         "1.1.0",
                          ki18n("A convenient shell for the Plasma Media Center Components"),
                          KAboutData::License_GPL_V2,
                          ki18n("Copyright (c) 2009-2013"));
@@ -49,6 +49,10 @@ int main(int argc, char *argv[])
                         ki18n("developer"),
                         "shantanu@kde.org",
                         "http://www.shantanutushar.com");
+    aboutData.addAuthor(ki18n("Akshay Ratan"),
+                        ki18n("developer"),
+                        "akshayratan@gmail.com",
+                        "http://www.akshayratan.blogspot.com");
     aboutData.addCredit(ki18n("Marco Martin"), ki18n("GSoC project mentor"), "notmart@gmail.com", "");
 
     KCmdLineArgs::init(argc, argv, &aboutData);
@@ -60,7 +64,7 @@ int main(int argc, char *argv[])
 
     KApplication app;
 
-    MainWindow *mw = new MainWindow;
+    MainWindow *mw  = new MainWindow;
     mw->show();
     return app.exec();
 }

@@ -1,6 +1,6 @@
 /***********************************************************************************
  *   Copyright 2012 by Deepak Mittal <dpac.mittal2@gmail.com>                      *
- *                                                                                 *
+ *   Copyright 2013 by Akshay Ratan <akshayratan@gmail.com>                                                                              *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
  *   modify it under the terms of the GNU Lesser General Public                    *
@@ -45,6 +45,13 @@ struct Subtitle {
     QString text;
 };
 
+/**
+  * @class SubtitleProvider @author Deepak Mittal
+  * @brief Subtitle Provider for video files
+  *
+  * @description  This class is a basis to provide the srt subtitles to a video file. 
+  * 
+  */
 class MEDIACENTER_EXPORT SubtitleProvider : public QObject
 {
     Q_OBJECT

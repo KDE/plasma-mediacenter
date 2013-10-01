@@ -28,7 +28,7 @@
 
 LocalVideosModel::LocalVideosModel (QObject* parent)
     : LocalFilesAbstractModel (parent, QString("video/")),
-    m_thumbProvider(new VideoThumbnailProvider(this))
+    m_thumbProvider(new ThumbnailProvider(this))
 {
     MediaCenter::AbstractBrowsingBackend *backend = qobject_cast<MediaCenter::AbstractBrowsingBackend*>(parent);
     backend->declarativeEngine()->addImageProvider("localvideothumbnail", m_thumbProvider);

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright 2012 Sinny Kumari <ksinny@gmail.com>                        *
+ *   Copyright 2013 by Shantanu Tushar <shantanu@kde.org>                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,43 +17,21 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-import QtQuick 1.1
-import org.kde.plasma.components 0.1 as PlasmaComponents
-import org.kde.qtextracomponents 0.1 as QtExtraComponents
+#ifndef METADATAMUSICMODEL_H
+#define METADATAMUSICMODEL_H
 
-Item {
-    Rectangle {
-        anchors { fill: parent; margins: 2 }
-        color: "black"
-        opacity: 0.8
-        border.color: "white"
-        clip: true
-        Row {
-            anchors { fill: parent; margins: 12 }
-            spacing: 10
-            QtExtraComponents.QIconItem {
-                id: delegateItemIcon
-                anchors.verticalCenter: parent.verticalCenter
-                height: parent.height; width: height
-                icon: decoration
-            }
+#include <libs/mediacenter/pmcmetadatamodel.h>
+#include <libs/mediacenter/modelmetadata.h>
 
-            PlasmaComponents.Label {
-                id: displayLabel
-                anchors.verticalCenter: parent.verticalCenter
-                text: display
-                font.pointSize: 14
-                color: "white"
-                elide: Text.ElideRight
-                width: parent.width - delegateItemIcon.width
-            }
+class MetadataBackendCommonModel : public PmcMetadataModel
+{
+    Q_OBJECT
+    Q_PROPERTY(QObject* metadata READ metadata)
+public:
+    explicit MetadataBackendCommonModel(QObject* parent = 0);
+    ModelMetadata *metadata();
+private:
+    ModelMetadata m_metadata;
+};
 
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    backend.browseToPlace(index)
-                }
-            }
-        }
-    }
-}
+#endif // METADATAMUSICMODEL_H

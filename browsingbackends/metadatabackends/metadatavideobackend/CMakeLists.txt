@@ -1,4 +1,5 @@
 set(metadatavideobackend_SRCS
+    ../metadatabackendcommonmodel.cpp
     metadatavideomodel.cpp
     ../abstractmetadatabackend.cpp
     metadatavideobackend.cpp

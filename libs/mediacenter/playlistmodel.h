@@ -1,6 +1,5 @@
 /***********************************************************************************
- *  Copyright 2012 by Sinny Kumari <ksinny@gmail.com>                               *
- *                                                                                 *
+ *   Copyright 2012 by Sinny Kumari <ksinny@gmail.com>                             *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
  *   modify it under the terms of the GNU Lesser General Public                    *
@@ -60,13 +59,19 @@ Q_SIGNALS:
     void currentIndexChanged();
     void randomChanged();
 
+public Q_SLOTS:
+    void savePlaylist();
+
 private Q_SLOTS:
     void playlistItemUpdated();
 
 private:
     class Private;
     Private * const d;
+
+    void loadFromFile(const QString &path);
+    void saveToFile(const QString &path);
+    QString playlistFilePath() const;
 };
 
 #endif // PLAYLISTMODEL_H
-

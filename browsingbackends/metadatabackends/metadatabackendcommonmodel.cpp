@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright 2012 Sinny Kumari <ksinny@gmail.com>                        *
+ *   Copyright 2013 by Shantanu Tushar <shantanu@kde.org>                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,27 +17,14 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-function checkAndLoad(loader)
+#include "metadatabackendcommonmodel.h"
+
+MetadataBackendCommonModel::MetadataBackendCommonModel(QObject* parent): PmcMetadataModel(parent)
 {
-    if (typeof(decoration) == "string") {
-        if (decoration.search(/.*\/.*/) == 0) {
-            loadImage(loader);
-        } else {
-            loadIcon(loader);
-        }
-    } else if (typeof(decoration) == "object") {
-        loadIcon(loader);
-    }
+
 }
 
-function loadImage(loader)
+ModelMetadata* MetadataBackendCommonModel::metadata()
 {
-    rootColumn.source = decoration;
-    loader.sourceComponent = delegateItemImageComponent;
-}
-
-function loadIcon(loader)
-{
-    rootColumn.source = decoration;
-    loader.sourceComponent = delegateItemIconComponent;
+    return &m_metadata;
 }

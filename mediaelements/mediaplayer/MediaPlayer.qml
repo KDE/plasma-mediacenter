@@ -44,6 +44,11 @@ FocusScope {
     signal mediaFinished
     signal mediaStarted
     signal escapePressed
+    signal volumeUp
+    signal volumeDown
+    signal muteToggle
+    signal previousMedia
+    signal nextMedia
 
     MediaCenterElements.SubtitleProvider {
         id: subs
@@ -117,12 +122,14 @@ FocusScope {
         running: !video.bufferProgress
     }
 
-    Keys.onEscapePressed: mediaPlayerRootRect.escapePressed()
-    Keys.onSpacePressed: if (runtimeDataObject.playing) {
-        runtimeDataObject.paused = true;
-    } else if (runtimeDataObject.paused || runtimeDataObject.stopped) {
-        runtimeDataObject.playing = true;
-    }
+    Keys.onSpacePressed: runtimeDataObject.playPause()
     Keys.onLeftPressed: seekBy(-5)
     Keys.onRightPressed: seekBy(5)
+    Keys.onUpPressed: mediaPlayerRootRect.volumeUp()
+    Keys.onDownPressed: mediaPlayerRootRect.volumeDown()
+    Keys.onPressed: { switch (event.key) {
+        case Qt.Key_M: mediaPlayerRootRect.muteToggle(); return;
+        case Qt.Key_Z: mediaPlayerRootRect.previousMedia(); return;
+        case Qt.Key_N: mediaPlayerRootRect.nextMedia(); return;
+    }}
 }

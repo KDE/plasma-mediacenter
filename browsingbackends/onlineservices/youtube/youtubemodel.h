@@ -25,7 +25,7 @@
 #include <QAbstractListModel>
 #include <QStringList>
 
-
+#include <libs/mediacenter/modelmetadata.h>
 
 namespace KIO {
     class Job;
@@ -59,6 +59,7 @@ typedef struct {
 class YoutubeModel : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(QObject* metadata READ metadata)
 public:
     YoutubeModel(QObject *parent = 0);
     ~YoutubeModel();
@@ -68,6 +69,7 @@ public:
     virtual int rowCount (const QModelIndex& parent = QModelIndex()) const;
     QString videoUrl(int index);
     QString videoThumbnail(int index);
+    ModelMetadata *metadata();
 
 
 signals:
@@ -92,6 +94,7 @@ private:
     QHash<KIO::Job*, QString> m_queries;
     QHash<KIO::Job*, QString> m_datas;
     QList<VideoPackage> m_videos;
+    ModelMetadata m_metadata;
 };
 
 #endif

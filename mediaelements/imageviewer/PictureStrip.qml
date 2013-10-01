@@ -38,7 +38,7 @@ PlasmaCore.FrameSvgItem {
             id: button1
             height: parent.height; width: height
             anchors { left: parent.left; top: parent.top; bottom: parent.bottom }
-            iconSource: "go-previous"
+            iconSource: "arrow-left"
             onClicked: rootItem.previousImage();
         }
 
@@ -49,14 +49,14 @@ PlasmaCore.FrameSvgItem {
             checkable: true
             width: height
             iconSource: checked ? "media-playback-pause" : "media-playback-start"
-
-            onCheckedChanged: if (checked) rootItem.slideShowStarted()
+            onCheckedChanged: if (checked) rootItem.slideShowStarted();
             Timer {
                 id: slideshowTimer
                 interval: 2000; repeat: true
                 running: slideshow.checked && !rootItem.slideshowPaused
                 onTriggered: rootItem.nextImage();
             }
+
         }
 
         ListView {
@@ -86,7 +86,7 @@ PlasmaCore.FrameSvgItem {
             id: button2
             height: parent.height; width: height
             anchors { right: parent.right; top: parent.top; bottom: parent.bottom }
-            iconSource: "go-next"
+            iconSource: "arrow-right"
             onClicked: rootItem.nextImage()
         }
     }

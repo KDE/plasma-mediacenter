@@ -17,11 +17,11 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#include "localvideothumbnailprovider.h"
+#include "localthumbnailprovider.h"
 
 #include <KIO/PreviewJob>
 
-class VideoThumbnailProvider::Private
+class ThumbnailProvider::Private
 {
 public:
     Private() {
@@ -29,7 +29,7 @@ public:
     QHash<QString, QPixmap> pixmapCache;
 };
 
-VideoThumbnailProvider::VideoThumbnailProvider(QObject* parent)
+ThumbnailProvider::ThumbnailProvider(QObject* parent)
     : QObject(parent)
     , QDeclarativeImageProvider(QDeclarativeImageProvider::Pixmap)
     , d(new Private())
@@ -37,12 +37,12 @@ VideoThumbnailProvider::VideoThumbnailProvider(QObject* parent)
 
 }
 
-VideoThumbnailProvider::~VideoThumbnailProvider()
+ThumbnailProvider::~ThumbnailProvider()
 {
     delete d;
 }
 
-void VideoThumbnailProvider::loadThumbnails(const KUrl::List& fileList, const QSize& size)
+void ThumbnailProvider::loadThumbnails(const KUrl::List& fileList, const QSize& size)
 {
     KFileItemList fileItems;
     for(KUrl::List::ConstIterator it = fileList.begin(); it != fileList.end(); ++it) {
@@ -58,18 +58,18 @@ void VideoThumbnailProvider::loadThumbnails(const KUrl::List& fileList, const QS
     connect(job, SIGNAL(gotPreview(KFileItem,QPixmap)), SLOT(processPreview(KFileItem,QPixmap)));
 }
 
-void VideoThumbnailProvider::loadThumbnail(const KUrl& file, const QSize& size)
+void ThumbnailProvider::loadThumbnail(const KUrl& file, const QSize& size)
 {
     loadThumbnails(KUrl::List() << file, size);
 }
 
-void VideoThumbnailProvider::processPreview(const KFileItem& file, const QPixmap& thumbnail)
+void ThumbnailProvider::processPreview(const KFileItem& file, const QPixmap& thumbnail)
 {
     d->pixmapCache.insert(file.url().prettyUrl(), thumbnail);
     emit gotThumbnail(file.url().prettyUrl());
 }
 
-QPixmap VideoThumbnailProvider::requestPixmap(const QString& id, QSize* size, const QSize& requestedSize)
+QPixmap ThumbnailProvider::requestPixmap(const QString& id, QSize* size, const QSize& requestedSize)
 {
     if(d->pixmapCache.keys().contains(id)) {
         QPixmap pixmap = d->pixmapCache.value(id);
@@ -88,7 +88,7 @@ QPixmap VideoThumbnailProvider::requestPixmap(const QString& id, QSize* size, co
     return QPixmap();
 }
 
-bool VideoThumbnailProvider::hasThumbnail(const QString& url)
+bool ThumbnailProvider::hasThumbnail(const QString& url)
 {
     return d->pixmapCache.keys().contains(url);
 }

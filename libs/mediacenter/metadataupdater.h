@@ -53,6 +53,7 @@ signals:
     void reset();
     void queryStarted();
     void queryFinished();
+    void queryError(const QString &message);
 
 protected:
     virtual void run();
@@ -64,7 +65,6 @@ protected slots:
 private slots:
     void newEntries(const QList<Nepomuk2::Query::Result> &results);
     void finishedListing();
-    void error(const QString &message);
 
 private:
     QList<int> m_rolesRequested;

@@ -22,7 +22,6 @@
 #include <KDE/KImageCache>
 
 #include <QtCore/QCoreApplication>
-#include <QDebug>
 
 class PmcImageCache::Singleton
 {

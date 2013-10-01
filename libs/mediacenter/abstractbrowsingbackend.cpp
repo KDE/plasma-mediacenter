@@ -17,6 +17,7 @@
  ***********************************************************************************/
 
 #include "abstractbrowsingbackend.h"
+#include "objectpair.h"
 
 #include <KGlobal>
 #include <KService>
@@ -45,7 +46,9 @@ public:
     bool hasInitialized;
     QString name;
     QString mediaBrowserSidePanelText;
-    QList<QAbstractItemModel*> models;
+    QList<QObject*> models;
+    QString searchTerm;
+    QObject* pmcRuntime;
 };
 
 AbstractBrowsingBackend::AbstractBrowsingBackend(QObject *parent, const QVariantList &args)
@@ -79,9 +82,24 @@ QString AbstractBrowsingBackend::name() const
 void AbstractBrowsingBackend::setModel(QAbstractItemModel * model)
 {
     d->models.clear();
+    addModel(model);
+    emit modelChanged();
+}
+
+void AbstractBrowsingBackend::addModel(QAbstractItemModel* model)
+{
     d->models.append(model);
     emit modelsChanged();
-    emit modelChanged();
+}
+
+void AbstractBrowsingBackend::addModelPair(const QString &pairLabel, QAbstractItemModel* firstModel, QAbstractItemModel* secondModel)
+{
+    ObjectPair *modelPair = new ObjectPair(this);
+    modelPair->setFirst(firstModel);
+    modelPair->setSecond(secondModel);
+
+    modelPair->setObjectName(pairLabel);
+    d->models.append(modelPair);
 }
 
 QObject * AbstractBrowsingBackend::model()
@@ -103,9 +121,13 @@ bool AbstractBrowsingBackend::goOneLevelUp()
     return false;
 }
 
+bool AbstractBrowsingBackend::expand(int row, QAbstractItemModel* model)
+{
+    return expand(row);
+}
+
 bool AbstractBrowsingBackend::expand(int row)
 {
-    Q_UNUSED(row)
     return false;
 }
 
@@ -159,6 +181,12 @@ void AbstractBrowsingBackend::search(const QString& searchTerm)
     // Does nothing
 }
 
+void AbstractBrowsingBackend::searchModel(const QString& searchTerm, QAbstractItemModel* model)
+{
+    Q_UNUSED(model)
+    search(searchTerm);
+}
+
 bool AbstractBrowsingBackend::init()
 {
     if (!d->hasInitialized) {
@@ -175,8 +203,44 @@ bool AbstractBrowsingBackend::busy() const
 QVariantList AbstractBrowsingBackend::models()
 {
     QVariantList modelList;
-    Q_FOREACH(QAbstractItemModel *model, d->models) {
+    Q_FOREACH(QObject *model, d->models) {
         modelList.append(QVariant::fromValue(qobject_cast<QObject*>(model)));
     }
     return modelList;
+}
+
+QString AbstractBrowsingBackend::searchTerm() const
+{
+    return d->searchTerm;
+}
+
+void AbstractBrowsingBackend::setSearchTerm(const QString& term)
+{
+    if (d->searchTerm == term)
+        return;
+    d->searchTerm = term;
+    emit searchTermChanged();
+    search(term);
+}
+
+QVariantList AbstractBrowsingBackend::buttons()
+{
+    return QVariantList();
+}
+
+void AbstractBrowsingBackend::handleButtonClick(const QString& buttonName)
+{
+}
+
+QObject* AbstractBrowsingBackend::pmcRuntime()
+{
+    return d->pmcRuntime;
+}
+
+void AbstractBrowsingBackend::setPmcRuntime(QObject* pmcRuntime)
+{
+    if (d->pmcRuntime != pmcRuntime) {
+        d->pmcRuntime = pmcRuntime;
+        emit pmcRuntimeChanged();
+    }
 }

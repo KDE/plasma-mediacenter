@@ -42,15 +42,15 @@ Row {
         Image {
             id: musicStatsAlbumCoverImage
             anchors.centerIn: parent
-            source: "image://pmccoverart/" + path
+            source: "image://coverart/" + path
             smooth: true
             width: Math.min(sourceSize.width, parent.width*0.9)
             height: sourceSize.height*width/sourceSize.width
             QtExtraComponents.QIconItem {
                 icon: metaData ? "media-optical-audio" : ""
                 anchors.centerIn: parent
-                width: musicStatsLeftPane.width * 0.9
-                height: musicStatsLeftPane.height * 0.9
+                width: 256
+                height: width
                 visible: parent.status != Image.Ready
             }
         }
@@ -63,6 +63,7 @@ Row {
         Column {
             anchors.centerIn: parent
             width: 0.9*parent.width; height: 0.7*parent.height
+            clip: true
             StatsLabel { text: metaData.title ? metaData.title : String(path).split("/").reverse()[0] }
             StatsLabel { text: metaData.albumArtist ? metaData.albumArtist : "" }
             StatsLabel { text: metaData.albumTitle ? metaData.albumTitle : "" }

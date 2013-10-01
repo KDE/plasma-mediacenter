@@ -2,6 +2,8 @@ set(localpicturesbackend_SRCS
     localpicturesmodel.cpp
     ../localfilesabstractbackend.cpp
     ../localfilesabstractmodel.cpp
+    ../localplacesmodel.cpp
+    ../localthumbnailprovider.cpp
     localpicturesbackend.cpp
 )
 
@@ -11,6 +13,7 @@ plasmamediacenter
 ${KDE4_KDECORE_LIBS}
 ${KDE4_KIO_LIBS}
 ${KDE4_KFILE_LIBS}
+${QT_QTDECLARATIVE_LIBRARIES}
 ${KDE4_SOLID_LIBS}
 )
 

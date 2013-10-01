@@ -23,6 +23,8 @@
 
 #include <QAbstractListModel>
 
+#include <libs/mediacenter/modelmetadata.h>
+
 namespace KIO {
     class Job;
 }
@@ -32,6 +34,7 @@ class KJob;
 class FlickrModel : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(QObject* metadata READ metadata)
 public:
     explicit FlickrModel (QObject* parent = 0);
     ~FlickrModel();
@@ -39,6 +42,8 @@ public:
 
     virtual QVariant data (const QModelIndex& index, int role = Qt::DisplayRole) const;
     virtual int rowCount (const QModelIndex& parent = QModelIndex()) const;
+
+    ModelMetadata *metadata();
 
 protected slots:
     void flickrDataReady(KIO::Job *job, const QByteArray &data);
@@ -49,6 +54,7 @@ private:
     QHash<KIO::Job*, QString> m_queries;
     QHash<KIO::Job*, QString> m_datas;
     QList<Photo> m_photos;
+    ModelMetadata m_metadata;
 
     void listPhotos(KJob *job);
 };

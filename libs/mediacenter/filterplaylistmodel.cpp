@@ -1,5 +1,5 @@
 /***********************************************************************************
- *  Copyright 2012 by Sujith Haridasan <sharidasan@kdemail.net>                    *
+ *  Copyright 2012 by Sujith Haridasan <sujith.haridasan@kdemail.net>              *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *

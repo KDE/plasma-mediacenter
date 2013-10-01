@@ -26,28 +26,22 @@
 #include "../abstractmetadatabackend.h"
 #include "categoriesmodel.h"
 
+class MetadataBackendCommonModel;
+class AlwaysExpandedMetadataModel;
 class PlaylistModel;
 class CategoriesModel;
 class NepomukMusicModel;
-class PmcMetadataModel;
-class MetadataMusicModel;
+class MetadataBackendCommonModel;
 
 class MetadataMusicBackend : public AbstractMetadataBackend
 {
     Q_OBJECT
     Q_PROPERTY(QString artistFilter READ artistFilter WRITE setArtistFilter NOTIFY artistFilterChanged)
     Q_PROPERTY(QString albumFilter READ albumFilter WRITE setAlbumFilter NOTIFY albumFilterChanged)
-    Q_PROPERTY(QObject* musicModel READ musicModel NOTIFY musicModelChanged)
 
 public:
     MetadataMusicBackend (QObject* parent, const QVariantList& args);
     virtual ~MetadataMusicBackend();
-
-    virtual QString mediaBrowserOverride() const;
-
-    Q_INVOKABLE QObject *artistsModel() const;
-    Q_INVOKABLE QObject *albumsModel() const;
-    QObject *musicModel() const;
 
     bool supportsSearch() const;
 
@@ -60,14 +54,21 @@ public:
     Q_INVOKABLE void searchArtist(const QString &artist);
     Q_INVOKABLE void searchAlbum(const QString &album);
     Q_INVOKABLE void searchMusic(const QString &music);
+    Q_INVOKABLE void searchArtistsMusic(const QString &music);
 
     Q_INVOKABLE void addAllSongsToPlaylist( QObject* playlistModel );
     Q_INVOKABLE void stopAddingSongsToPlaylist();
 
+    virtual bool expand(int row, QAbstractItemModel* model);
+
+    virtual QVariantList buttons();
+    virtual void handleButtonClick(const QString& buttonName);
+
+    virtual void searchModel(const QString& searchTerm, QAbstractItemModel* model);
+
 Q_SIGNALS:
     void artistFilterChanged();
     void albumFilterChanged();
-    void musicModelChanged();
 
 protected:
     void updateModelAccordingToFilters();
@@ -78,10 +79,11 @@ private slots:
     void musicModelReset();
 
 private:
-    PmcMetadataModel* m_artistsModel;
-    PmcMetadataModel* m_albumsModel;
-    PmcMetadataModel* m_musicModel;
+    AlwaysExpandedMetadataModel* m_artistsModel;
+    AlwaysExpandedMetadataModel* m_albumsModel;
+    MetadataBackendCommonModel* m_musicModel;
     PlaylistModel* m_playlistModel;
+    MetadataBackendCommonModel* m_artistFilteredMusicModel;
 
     QString m_artistFilter;
     QString m_albumFilter;

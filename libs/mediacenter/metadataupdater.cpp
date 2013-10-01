@@ -25,6 +25,8 @@
 #include <Nepomuk2/Variant>
 #include <Nepomuk2/Vocabulary/NIE>
 #include <Nepomuk2/Vocabulary/NFO>
+#include <Nepomuk2/Vocabulary/NCO>
+#include <Nepomuk2/Vocabulary/NMM>
 #include <Nepomuk2/Query/ResourceTypeTerm>
 
 #include <KDebug>
@@ -83,7 +85,7 @@ void MetadataUpdater::runQuery()
     connect(m_queryServiceClient, SIGNAL(newEntries(QList<Nepomuk2::Query::Result>)),
             this, SLOT(newEntries(QList<Nepomuk2::Query::Result>)));
 //     connect(queryServiceClient, SIGNAL(entriesRemoved(QList<QUrl>)),SLOT(entriesRemoved(QList<QUrl>)));
-    connect(m_queryServiceClient, SIGNAL(error(QString)), SLOT(error(QString)));
+    connect(m_queryServiceClient, SIGNAL(error(QString)), SIGNAL(queryError(QString)));
     connect(m_queryServiceClient, SIGNAL(finishedListing()), SLOT(finishedListing()));
 
     emit reset();
@@ -91,7 +93,10 @@ void MetadataUpdater::runQuery()
     myQuery.setTerm(m_term);
 
     kDebug() << "SPARQL Query " << myQuery.toSparqlQuery();
-    m_queryServiceClient->query(myQuery);
+    if (!m_queryServiceClient->query(myQuery)) {
+        emit queryError(i18n("Could not fetch your media. Please make sure Desktop Search is enabled in System Settings."));
+        return;
+    }
 
     emit queryStarted();
 }
@@ -185,6 +190,13 @@ bool MetadataUpdater::areThereResultsToProcess()
 QString MetadataUpdater::mimetypeForResource(const Nepomuk2::Resource& resource) const
 {
     const QString mime = resource.property(Nepomuk2::Vocabulary::NIE::mimeType()).toString();
+    if (mime.isEmpty()) {
+        if (resource.type() == Nepomuk2::Vocabulary::NCO::Contact()) {
+            return "contact";
+        } else if (resource.type() == Nepomuk2::Vocabulary::NMM::MusicAlbum()) {
+            return "album";
+        }
+    }
     return mime;
 }
 
@@ -197,11 +209,6 @@ void MetadataUpdater::finishedListing()
 {
     emit queryFinished();
     qobject_cast<Nepomuk2::Query::QueryServiceClient*>(sender())->close();
-}
-
-void MetadataUpdater::error ( const QString& message )
-{
-    emit queryFinished();
 }
 
 #include "metadataupdater.moc"

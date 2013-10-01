@@ -1,6 +1,7 @@
-/*
+    /*
     Copyright (C) 2010  Alessandro Diaferia <alediaferia@gmail.com>
     Copyright (C) 2011  Shantanu Tushar <shantanu@kde.org>
+    Copyright (C) 2013  Akshay Ratan  <akshayratan@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -20,18 +21,23 @@
 
 #include "localfilesabstractbackend.h"
 #include "localfilesabstractmodel.h"
+#include "localplacesmodel.h"
+
+#include <KDE/KFilePlacesModel>
+#include <KDE/KUrl>
 
 LocalFilesAbstractBackend::LocalFilesAbstractBackend (QObject* parent, const QVariantList& args)
     : AbstractBrowsingBackend (parent, args)
-    , m_placeModel(0)
+    , m_placesModel(0)
     , m_placesRow(0)
 {
-
+    m_isShowingPlacesModel = false;
 }
 
 bool LocalFilesAbstractBackend::initImpl()
 {
-    initModel();
+    setModel(qobject_cast<QAbstractItemModel*>(placesModel()));
+    m_isShowingPlacesModel = true;
     return true;
 }
 
@@ -42,48 +48,68 @@ void LocalFilesAbstractBackend::browseOneLevelUp()
 
 bool LocalFilesAbstractBackend::goOneLevelUp()
 {
-    return qobject_cast<LocalFilesAbstractModel*>(model())->goOneLevelUp();
+    LocalFilesAbstractModel *filesModel = qobject_cast<LocalFilesAbstractModel*>(model());
+    if(!m_isShowingPlacesModel) {
+        if(!filesModel-> goOneLevelUp()) {
+            m_isShowingPlacesModel = true;
+            setModel(qobject_cast<QAbstractItemModel*>(placesModel()));
+            return true;
+        }
+
+        initModel();
+        return true;
+    }
+        else {
+            setModel(qobject_cast<QAbstractItemModel*>(placesModel()));
+            return false;
+        }
 }
 
 bool LocalFilesAbstractBackend::expand (int row)
 {
-    LocalFilesAbstractModel *filesModel = qobject_cast<LocalFilesAbstractModel*>(model());
+    const QModelIndex m_index = m_placesModel->index(row,0);
+    const KUrl url =  m_placesModel->url(m_index);
 
+    if (m_isShowingPlacesModel)
+    {
+        if (browseToPlace(row)) {
+            m_isShowingPlacesModel = false;
+            initModel();
+            return (qobject_cast<LocalFilesAbstractModel*>(model()))->browseToUrl(url);
+        } else {
+            return true;
+        }
+    }
+
+    LocalFilesAbstractModel *filesModel = qobject_cast<LocalFilesAbstractModel*>(model());
     return filesModel->browseTo(row);
 }
 
-QString LocalFilesAbstractBackend::mediaBrowserSidePanel() const
-{
-    return constructQmlSource("localfilescomponents", "0.1", "LocalFilesSidePanel");
-}
-
-
 QObject* LocalFilesAbstractBackend::placesModel()
 {
-    if (!m_placeModel) {
-        m_placeModel = new KFilePlacesModel(this);
+    if (!m_placesModel) {
+        m_placesModel = new LocalPlacesModel(this);
     }
-    return m_placeModel;
+    return m_placesModel;
 }
 
-void LocalFilesAbstractBackend::browseToPlace(int row)
+bool LocalFilesAbstractBackend::browseToPlace(int row)
 {
     Solid::Device device;
-    if (m_placeModel->isDevice(m_placeModel->index(row,0)))
+    if (m_placesModel->isDevice(m_placesModel->index(row,0)))
     {
-        device = m_placeModel->deviceForIndex(m_placeModel->index(row,0));
+        device = m_placesModel->deviceForIndex(m_placesModel->index(row,0));
         const bool setup = !device.as<Solid::StorageAccess>()->isAccessible();
         if (setup) {
             m_placesRow = row;
             Solid::StorageAccess *access = device.as<Solid::StorageAccess>();
             connect(access, SIGNAL(setupDone(Solid::ErrorType,QVariant,QString)), this, SLOT(slotStorageSetupDone(Solid::ErrorType,QVariant,QString)));
             access->setup();
-        } else {
-            loadUrl(row);
+            return false;
         }
-    } else {
-        loadUrl(row);
     }
+
+    return true;
 }
 
 bool LocalFilesAbstractBackend::okToLoad() const
@@ -94,13 +120,7 @@ bool LocalFilesAbstractBackend::okToLoad() const
 
 void LocalFilesAbstractBackend::slotStorageSetupDone(Solid::ErrorType error,const QVariant& errorData,const QString& udi)
 {
-    loadUrl(m_placesRow);
+    expand(m_placesRow);
 }
 
-void LocalFilesAbstractBackend::loadUrl(int placeRow)
-{
-    KUrl url =  m_placeModel->url(m_placeModel->index(placeRow, 0));
-    LocalFilesAbstractModel *filesModel = qobject_cast<LocalFilesAbstractModel*>(model());
-    filesModel->browseToUrl(url);
-}
 #include "localfilesabstractbackend.h"

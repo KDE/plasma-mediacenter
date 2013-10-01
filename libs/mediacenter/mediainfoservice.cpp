@@ -20,9 +20,13 @@
 
 #include "mediainforequest.h"
 #include "mediainforesult.h"
+#include "pmccoverartprovider.h"
 
-#include <fileref.h>
-#include <tag.h>
+#include <taglib/tag.h>
+#include <taglib/tpropertymap.h>
+#include <taglib/id3v2tag.h>
+#include <taglib/attachedpictureframe.h>
+#include <taglib/mpegfile.h>
 
 #include <klocalizedstring.h>
 
@@ -131,14 +135,46 @@ void MediaInfoService::fetchDataForRequest(quint64 requestNumber)
             case MediaInfoRequest::Length:
                 result.addData(field, f.audioProperties() ? f.audioProperties()->length() : 0);
                 break;
+            case MediaInfoRequest::Album:
+                result.addData(field, f.tag() && !f.tag()->album().isEmpty() ?
+                    f.tag()->album().toCString() : i18n("Unknown album"));
+                break;
             default:
-                qWarning() << "MediaInfoService does not know about " << field; 
+                qWarning() << "MediaInfoService does not know about " << field;
             }
         }
     }
 
+    updateAlbumCoverWithCoverArtProvider(result, f);
     emit info(requestNumber, result);
     delete request;
+}
+
+void MediaInfoService::updateAlbumCoverWithCoverArtProvider(const MediaInfoResult &result, TagLib::FileRef f) const
+{
+    if (!f.isNull() && result.availableFields().contains(MediaInfoRequest::Album)) {
+
+        const QString albumName = result.data(MediaInfoRequest::Album).toString();
+        if (!PmcCoverArtProvider::containsAlbum(albumName)) {
+            TagLib::MPEG::File *mpegFile = dynamic_cast<TagLib::MPEG::File*>(f.file());
+            if (!mpegFile)
+                return;
+
+            TagLib::ID3v2::Tag *tag = mpegFile->ID3v2Tag();
+            if (!tag)
+                return;
+
+            TagLib::ID3v2::FrameList l = tag->frameList("APIC");
+            if(l.isEmpty())
+                return;
+
+            QImage image;
+            TagLib::ID3v2::AttachedPictureFrame *frame = static_cast<TagLib::ID3v2::AttachedPictureFrame *>(l.front());
+            image.loadFromData((const uchar *) frame->picture().data(), frame->picture().size());
+
+            PmcCoverArtProvider::addCoverArtImage(albumName, image);
+        }
+    }
 }
 
 quint64 MediaInfoService::nextRequestToProcess() const

@@ -64,11 +64,11 @@ public Q_SLOTS:
 signals:
     void queryStarted();
     void queryFinished();
+    void queryError(const QString &message);
 
 protected Q_SLOTS:
     void finishedListing();
     void updateModel();
-    void error(const QString &message);
     void delayedPreview();
 
 protected:
@@ -88,6 +88,9 @@ private Q_SLOTS:
 private:
     class Private;
     Private * const d;
+
+    QVariant decorationForMetadata(const QVariant& metadataValue, const QModelIndex& index) const;
+    QVariant metadataValueForRole(const QModelIndex& index, int role) const;
 };
 
 #endif // PMCMETADATAMODEL_H

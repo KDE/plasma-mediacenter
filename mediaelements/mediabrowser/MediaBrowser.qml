@@ -21,6 +21,8 @@
 import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
+import org.kde.qtextracomponents 0.1 as QtExtra
+import org.kde.plasma.mediacenter.components 0.1 as MediaCenterComponents
 
 FocusScope {
     id: mediaBrowser
@@ -48,7 +50,7 @@ FocusScope {
         }
     }
 
-    Item {
+    QtExtra.MouseEventListener {
         id: mediaBrowserViewItem
         property QtObject mediaBrowserGridView
 
@@ -56,61 +58,50 @@ FocusScope {
             top: parent.top; right: parent.right; bottom: parent.bottom;
             left: mediaBrowserSidePanel.right
         }
+
+        BrowserToolbar {
+            id: browserToolbar
+            anchors {
+                top: parent.top; right: parent.right; left: parent.left;
+            }
+            height: 40
+            buttons: currentBrowsingBackend.buttons
+            onButtonClicked: currentBrowsingBackend.handleButtonClick(buttonName)
+            Keys.onDownPressed: mediaBrowserViewItem.mediaBrowserGridView.focus = true
+        }
+
+        onWheelMoved: {
+            if (wheel.delta < 0) {
+                if(mediaBrowserGridView.moveCurrentIndexRight) mediaBrowserGridView.moveCurrentIndexRight();
+            } else {
+                if(mediaBrowserGridView.moveCurrentIndexLeft) mediaBrowserGridView.moveCurrentIndexLeft();
+            }
+        }
     }
 
     Component {
-        id: mediaBrowserViewComponent
-        GridView {
-            id: mediaBrowserGridViewId
-            anchors { fill: parent; topMargin: 10; bottomMargin: 10 + bottomPanel.height }
-            clip: true
-            cellWidth: cellHeight
-            cellHeight: height/2.1
-            delegate: MediaItemDelegate {
-                backend: mediaBrowser.currentBrowsingBackend
-                onPlayRequested: mediaBrowser.playRequested(index, url, currentMediaType)
-                onPopupMenuRequested: mediaBrowser.popupMenuRequested(index,mediaUrl,mediaType, display)
+        id: mediaBrowserSmartBrowserComponent
+        MediaCenterComponents.SmartBrowser {
+            anchors {
+                bottom: parent.bottom; right: parent.right; left: parent.left;
+                top: browserToolbar.visible ? browserToolbar.bottom : parent.top
+                bottomMargin: 10 + bottomPanel.height
             }
-            flow: _pmc_is_desktop ? GridView.LeftToRight : GridView.TopToBottom
-            model: mediaBrowser.currentBrowsingBackend.models[0]
-            cacheBuffer: width*2
+            topSibling: browserToolbar.visible ? browserToolbar : null
+            backend: mediaBrowser.currentBrowsingBackend
+            models: mediaBrowser.currentBrowsingBackend.models
 
-            Text {
-                visible: false
-                font.pointSize: 20
-                color: theme.textColor
-                text: mediaBrowserGridViewId.count
-            }
-
-            PlasmaComponents.ScrollBar {
-                orientation: _pmc_is_desktop ? Qt.Vertical : Qt.Horizontal
-                flickableItem: mediaBrowserGridViewId
-            }
-
-            PlasmaComponents.BusyIndicator {
-                anchors { bottom: parent.bottom; horizontalCenter: parent.horizontalCenter }
-                running: currentBrowsingBackend.busy
-                visible: running
-            }
-
-            onCurrentIndexChanged: positionViewAtIndex(currentIndex, GridView.Contain)
-            Keys.onEscapePressed: {
-                if(!mediaBrowser.currentBrowsingBackend.goOneLevelUp()) {
-                    mediaBrowser.backRequested();
-                }
-            }
-            Keys.onPressed: {
-                if (event.key == Qt.Key_Down && searchMedia.visible && currentIndex%2) {
-                    searchMedia.focus = true;
-                    event.accepted = true;
-                }
-            }
+            onMediaSelected: mediaBrowser.playRequested(index, url, mediaType)
+            onPopupRequested: mediaBrowser.popupMenuRequested(index, url, mediaType, title)
         }
     }
 
     onCurrentBrowsingBackendChanged: {
         if (!currentBrowsingBackend)
             return;
+
+        errorLabel.text = "";
+
         if (mediaBrowserViewItem.mediaBrowserGridView) {
             mediaBrowserViewItem.mediaBrowserGridView.destroy();
         }
@@ -119,19 +110,12 @@ FocusScope {
         if (currentBrowsingBackend.mediaBrowserOverride()) {
             var qmlSource = currentBrowsingBackend.mediaBrowserOverride();
             object = Qt.createQmlObject(qmlSource, mediaBrowserViewItem);
-            mediaBrowserViewItem.mediaBrowserGridView = object;
             object.backend = (function() { return currentBrowsingBackend; });
         } else {
-            object = mediaBrowserViewComponent.createObject(mediaBrowserViewItem);
+            object = mediaBrowserSmartBrowserComponent.createObject(mediaBrowserViewItem);
         }
         mediaBrowserViewItem.mediaBrowserGridView = object;
-        object.focus = true
-
-        if (currentBrowsingBackend.supportsSearch()) {
-            searchMedia.visible = true
-        } else {
-            searchMedia.visible = false
-        }
+        object.focus = true;
 
         if (mediaBrowserSidePanel.child) mediaBrowserSidePanel.child.destroy()
         //Load the panel if the backend supports one
@@ -141,6 +125,18 @@ FocusScope {
             mediaBrowserSidePanel.child = object
             object.backend = (function() { return currentBrowsingBackend; });
         }
+
+        if (currentBrowsingBackend) {
+            currentBrowsingBackend.error.connect(errorLabel.setError);
+            currentBrowsingBackend.modelNeedsAttention.connect(switchToModel);
+        }
+    }
+
+    function switchToModel(model)
+    {
+        if (mediaBrowserViewItem.mediaBrowserGridView.switchToModel) {
+            mediaBrowserViewItem.mediaBrowserGridView.switchToModel(model);
+        }
     }
 
     function destroyGridView()
@@ -149,7 +145,6 @@ FocusScope {
     }
     function loadModel()
     {
-        //JS snippet to do mediaBrowserGridView.model: currentBrowsingBackend.backendModel
         if (mediaBrowserViewItem && mediaBrowserViewItem.mediaBrowserGridView)
             mediaBrowserViewItem.mediaBrowserGridView.model = (function() { return currentBrowsingBackend.models[0]; });
     }
@@ -157,6 +152,7 @@ FocusScope {
     function hideMediaBrowserSidePanel()
     {
         currentBrowsingBackend.mediaBrowserSidePanel = ""
+        mediaBrowserViewItem.mediaBrowserGridView.focus = true;
     }
 
     Item {
@@ -168,27 +164,6 @@ FocusScope {
             bottom: parent.bottom
             right: parent.right
             margins: 10
-        }
-
-        PlasmaComponents.TextField {
-            id: searchMedia
-            clearButtonShown: true
-            anchors {
-                left: parent.left
-                bottom: parent.bottom
-                top: parent.top
-                right: mediaCountLabel.left
-            }
-
-            placeholderText: "Search..."
-            onTextChanged: searchMediaTimer.restart()
-            Keys.onUpPressed: mediaBrowserViewItem.mediaBrowserGridView.focus = true
-
-            Timer {
-                id: searchMediaTimer
-                interval: 1000
-                onTriggered: currentBrowsingBackend.search(searchMedia.text);
-            }
         }
 
         PlasmaComponents.Label {
@@ -236,5 +211,22 @@ FocusScope {
              }
              popupMenu.visible = false
          }
+    }
+
+    PlasmaComponents.Label {
+        id: errorLabel
+        anchors.centerIn: parent
+        font.pointSize: 18
+        z: 2
+
+        function setError(message)
+        {
+            errorLabel.text = message;
+        }
+    }
+
+    function goBack()
+    {
+        return mediaBrowser.currentBrowsingBackend.goOneLevelUp();
     }
 }

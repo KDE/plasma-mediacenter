@@ -27,16 +27,36 @@
 
 #include <QDebug>
 
+const char *PlaylistItem::defaultArtist = "--";
+const int PlaylistItem::defaultLength = -1;
+
+void PlaylistItem::init(const QString& url)
+{
+    m_mediaUrl = url;
+}
+
 PlaylistItem::PlaylistItem(const QString& url, QObject* parent)
     : QObject(parent)
-    , m_mediaUrl(url)
-    , m_mediaLength(-1)
+    , m_mediaLength(defaultLength)
 {
+    init(url);
+
     m_updateTimer.setInterval(1000);
     m_updateTimer.setSingleShot(true);
     connect(&m_updateTimer, SIGNAL(timeout()), SLOT(update()));
 
     qRegisterMetaType<MediaInfoResult>("MediaInfoResult");
+}
+
+PlaylistItem::PlaylistItem(const QString& url, const QString& name,
+                           const QString& artist, int length, QObject* parent)
+    : QObject(parent)
+{
+    init(url);
+
+    m_mediaName = name;
+    m_mediaArtist = artist;
+    m_mediaLength = length;
 }
 
 QString PlaylistItem::mediaUrl() const
@@ -55,16 +75,16 @@ QString PlaylistItem::mediaName() const
 
 QString PlaylistItem::mediaArtist() const
 {
-    if (m_mediaArtist.isEmpty()) {
+    if (m_mediaArtist.isEmpty() || m_mediaArtist == defaultArtist) {
         m_updateTimer.start();
-        return "--";
+        return defaultArtist;
     }
     return m_mediaArtist;
 }
 
 int PlaylistItem::mediaLength() const
 {
-    if (m_mediaLength == -1) {
+    if (m_mediaLength == defaultLength) {
         m_updateTimer.start();
         return 0;
     }
@@ -76,7 +96,8 @@ void PlaylistItem::update()
     MediaInfoRequest *request = new MediaInfoRequest(m_mediaUrl);
     request->addRequest(MediaInfoRequest::Title)
            ->addRequest(MediaInfoRequest::Artist)
-           ->addRequest(MediaInfoRequest::Length);
+           ->addRequest(MediaInfoRequest::Length)
+           ->addRequest(MediaInfoRequest::Album);
 
     MediaInfoServiceProxy *serviceProxy = MediaInfoServiceProxy::instance();
 
@@ -87,7 +108,7 @@ void PlaylistItem::update()
 //     qDebug() << "REGISTERED " << m_serviceRequestNumber << " FOR " << m_mediaUrl << " WITH " << values.second;
 }
 
-void PlaylistItem::processMediaInfo(quint64 requestNumber, MediaInfoResult info)
+void PlaylistItem::processMediaInfo(quint64 requestNumber, const MediaInfoResult& info)
 {
     if (requestNumber != m_serviceRequestNumber)
         return;

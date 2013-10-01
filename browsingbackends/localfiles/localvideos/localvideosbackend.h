@@ -23,14 +23,38 @@
 #include "../localfilesabstractbackend.h"
 
 class LocalVideosModel;
+
+/**
+ * @class LocalVideosBackend @author Alessandro Diaferia
+ * @brief A useful backend class for the showing the pictures in Local Indexed files
+ *
+ * @description This class supports and handles LocalVideosModel.
+ * 
+ * This class direclty inherit from LocalFilesAbstractBackend
+ */
 class LocalVideosBackend : public LocalFilesAbstractBackend
 {
     Q_OBJECT
 public:
+  
+   /**
+     * Constructor
+     * Used to load backend instance
+     * @param parent is a QObject pointer
+     * @param args is of QVariantList type
+     */
     LocalVideosBackend(QObject *parent, const QVariantList &args);
+    
+     /**
+     * Destructor
+     */
     ~LocalVideosBackend();
 
 protected:
+  
+   /**
+     * Initialized the LocalVideosModel
+     */ 
     virtual void initModel();
 
 private:

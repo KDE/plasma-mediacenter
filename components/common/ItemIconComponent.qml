@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright 2012 Sinny Kumari <ksinny@gmail.com>                        *
+ *   Copyright 2013 Shantanu Tushar <shantanu@kde.org>                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,14 +18,19 @@
  ***************************************************************************/
 
 import QtQuick 1.1
-import org.kde.plasma.core 0.1 as PlasmaCore
 
-Item {
-    PlasmaCore.FrameSvgItem {
-        anchors.centerIn: parent
-        width: parent.width
-        height: parent.height
-        imagePath: "widgets/viewitem"
-        prefix: "selected+hover"
+import org.kde.qtextracomponents 0.1 as QtExtraComponents
+
+QtExtraComponents.QIconItem {
+    id: delegateItemIcon
+    anchors.horizontalCenter: parent ? parent.horizontalCenter : undefined
+    icon: {
+        if (typeof iconImageLoader.source == "string")
+            QIcon(iconImageLoader.source);
+        else
+            if (typeof decorationType !== 'undefined' && decorationType == "qimage")
+                QIcon(iconImageLoader.source);
+            else
+                iconImageLoader.source
     }
 }

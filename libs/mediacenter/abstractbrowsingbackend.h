@@ -24,9 +24,10 @@
 #include <QFlags>
 
 #include <KDE/KConfigGroup>
+#include <KDE/KService>
+
 #include "mediacenter_export.h"
 #include "mediacenter/mediacenter.h"
-#include <KDE/KService>
 
 class QDeclarativeEngine;
 class QAbstractItemModel;
@@ -42,7 +43,7 @@ namespace MediaCenter {
  * Custom models are useful to implement custom navigations such as navigation
  * through services available through the web, see YouTube.
  *
- * This class does not direclty inherit from QAbstractItemModel due to future
+ * This class does not directly inherit from QAbstractItemModel due to future
  * extension purposes. It just represents an interface between the applet and the
  * provided model.
  */
@@ -53,6 +54,9 @@ class MEDIACENTER_EXPORT AbstractBrowsingBackend : public QObject
     Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
     Q_PROPERTY(QString mediaBrowserSidePanel READ mediaBrowserSidePanel WRITE setMediaBrowserSidePanel NOTIFY mediaBrowserSidePanelChanged)
     Q_PROPERTY(QVariantList models READ models NOTIFY modelsChanged)
+    Q_PROPERTY(QString searchTerm READ searchTerm WRITE setSearchTerm NOTIFY searchTermChanged)
+    Q_PROPERTY(QVariantList buttons READ buttons NOTIFY buttonsChanged)
+    Q_PROPERTY(QObject* pmcRuntime READ pmcRuntime WRITE setPmcRuntime NOTIFY pmcRuntimeChanged)
 
 public:
     /**
@@ -74,7 +78,8 @@ public:
     QString name() const;
 
     /**
-     * @returns the model of the browsing backend
+     * @returns the model of the browsing backend.
+     * The default implementation returns the first (or the only) model.
      */
     QObject *model();
 
@@ -82,6 +87,11 @@ public:
      * @returns the models available in the browsing backend
      */
     QVariantList models();
+
+    /**
+     * @returns a list of buttons the model wants to show on the UI
+     */
+    virtual QVariantList buttons();
 
     /**
      * Request the backend to initialize
@@ -107,6 +117,18 @@ public:
      * This slot is called by the media browser when the model contains
      * directories (or equivalents of them) and the user requests to browse
      * to a particular one
+     *
+     * @param row the row index of the directory
+     * @param model the current model that the backend should operate on
+     *
+     * @return true if operation was successful
+     * @return false if operation was unsuccessful
+     */
+    Q_INVOKABLE virtual bool expand(int row, QAbstractItemModel *model);
+
+    /**
+     * This is a convenience method for when the media browser thinks the model
+     * doesn't matter. In this case, the default model is assumed by the backend.
      *
      * @param row the row index of the directory
      *
@@ -155,13 +177,6 @@ public:
     Q_INVOKABLE virtual bool supportsSearch() const;
 
     /**
-     * This method is called by the UI when the user requests to search for a media
-     *
-     * @param searchTerm string entered by the user
-     */
-    Q_INVOKABLE virtual void search(const QString &searchTerm);
-
-    /**
      * Override this method if you want your backend to show custom items on a
      * panel/popup. For example this can be used to set filtering options
      *
@@ -179,23 +194,50 @@ public:
      */
     virtual bool busy() const;
 
+    /**
+     * This method will be called by mediacenter when one of the buttons is clicked.
+     * The default implementation does nothing
+     *
+     * @param buttonName the name of the button that was clicked
+     */
+    Q_INVOKABLE virtual void handleButtonClick(const QString &buttonName);
+
+    QString searchTerm() const;
+    void setSearchTerm(const QString &term);
+
+    QObject* pmcRuntime();
+    void setPmcRuntime(QObject* pmcRuntime);
+
 Q_SIGNALS:
     void modelChanged();
     void busyChanged();
     void mediaBrowserSidePanelChanged();
     void modelsChanged();
+    void buttonsChanged();
+    void searchTermChanged();
+    void error(const QString &message);
+    void modelNeedsAttention(QObject* model);
+    void pmcRuntimeChanged();
 
 protected:
     /**
      * This method must be set in order to provide the model to be
      * used by the view.
-     * @note When LocalBrowsing is set it is highly recommended to use a KDirModel.     ////TODO: May no longer be needed
-     * If the package is set to RemoteBrowsing the model
-     * must provide an url that points to the media content for each
-     * QModelIndex. It must make use of MediaRole role to accomplish this.
      * @see MediaRole
      */
     void setModel(QAbstractItemModel * model);
+
+    /**
+     * This method is used to add more models to this backend
+     * @see MediaRole
+     */
+    void addModel(QAbstractItemModel * model);
+
+    /**
+     * This method adds multiple models as a single model collection.
+     * This indicates the UI to show views for these models simultaneously
+     */
+    void addModelPair(const QString& pairLabel, QAbstractItemModel* firstModel, QAbstractItemModel* secondModel);
 
     /**
      * This is a convenience function which constructs a string representing QML source for
@@ -216,6 +258,21 @@ protected:
      */
     virtual bool initImpl() = 0;
 
+    /**
+     * This method is called by the UI when the user requests to search for a media
+     *
+     * @param searchTerm string entered by the user
+     */
+    Q_INVOKABLE virtual void search(const QString &searchTerm);
+
+    /**
+     * This method is called by the UI when the user requests to search for a media
+     * for a particular model
+     *
+     * @param searchTerm string entered by the user
+     * @param model the model that this search should affect
+     */
+    Q_INVOKABLE virtual void searchModel(const QString &searchTerm, QAbstractItemModel *model);
 
 private:
     class AbstractBrowsingBackendPrivate;
@@ -224,6 +281,8 @@ private:
 };
 
 } // MediaCenter namespace
+
+Q_DECLARE_METATYPE(QAbstractItemModel*)
 
 #define MEDIACENTER_EXPORT_BROWSINGBACKEND( c ) \
         K_PLUGIN_FACTORY( MediaBrowserFactory, registerPlugin< c >(); ) \

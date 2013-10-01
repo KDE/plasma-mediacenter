@@ -1,27 +1,3 @@
-/* Copyright (C) 2004 Scott Wheeler <wheeler@kde.org>
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
- * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 /***********************************************************************************
  *   Copyright 2012 Shantanu Tushar <shantanu@kde.org>                             *
  *                                                                                 *
@@ -40,15 +16,23 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#include "pmccoverartprovider.h"
+/* Part of this code was taken from project Taglib, originally licensed under
+ * the BSD-2-clause license. You can find the original version at
+ * https://github.com/taglib/taglib/tree/master/examples
+*/
 
-#include <id3v2tag.h>
-#include <mpegfile.h>
-#include <attachedpictureframe.h>
+#include "pmccoverartprovider.h"
+#include "pmcimagecache.h"
+
+#include <taglib/id3v2tag.h>
+#include <taglib/mpegfile.h>
+#include <taglib/attachedpictureframe.h>
 
 #include <QtCore/QUrl>
 
-const char *PmcCoverArtProvider::identificationString = "pmccoverart";
+const char *PmcCoverArtProvider::identificationString = "coverart";
+const char *PmcCoverArtProvider::albumIdentification = "album:";
+
 
 PmcCoverArtProvider::PmcCoverArtProvider()
     : QDeclarativeImageProvider(QDeclarativeImageProvider::Image)
@@ -76,5 +60,25 @@ QImage PmcCoverArtProvider::requestImage(const QString& id, QSize* size, const Q
     if (size) {
         *size = image.size();
     }
+
+    addAlbumCoverToCache(f, image);
     return image;
+}
+
+bool PmcCoverArtProvider::containsAlbum(const QString& albumName)
+{
+    return PmcImageCache::instance()->containsId(QString(albumName).prepend("album:"));
+}
+
+void PmcCoverArtProvider::addCoverArtImage(const QString& albumName, const QImage& image)
+{
+    if (!image.isNull()) {
+        PmcImageCache::instance()->addImage(QString(albumName).prepend(albumIdentification), image);
+    }
+}
+
+void PmcCoverArtProvider::addAlbumCoverToCache(TagLib::MPEG::File& f, const QImage& image) const
+{
+    QString albumName(f.ID3v2Tag()->album().toCString());
+    PmcImageCache::instance()->addImage(albumName.prepend(albumIdentification), image);
 }

@@ -1,5 +1,6 @@
 /***************************************************************************
  *   Copyright 2012 Sinny Kumari <ksinny@gmail.com>                        *
+ *   Copyright 2013 Shantanu Tushar <shantanu@kde.org>                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -35,13 +36,28 @@ Image {
     source: _pmc_background_image_path
     fillMode: Image.Tile
 
+    QtObject {
+        id: pmcRuntime
+        property QtObject mediaPlayer: root.mediaPlayerInstance
+        property QtObject playlist: root.playlistInstance
+    }
+
     Image {
         anchors.fill: parent
         source: _pmc_gradient_image_path
 
+        QtObject {
+            id: __theme
+            property int margin : 20
+            property int radius : 5
+        }
+
         MediaCenterElements.RuntimeData {
             id: runtimeData
             objectName: "runtimeData"
+            onCurrentBrowsingBackendChanged: if (currentBrowsingBackend) {
+                currentBrowsingBackend.pmcRuntime = pmcRuntime;
+            }
         }
 
         PlasmaExtraComponents.ResourceInstance {
@@ -67,10 +83,16 @@ Image {
             totalMediaTime: runtimeData.totalTime
 
             onPlaylistButtonClicked: pmcPageStack.pushAndFocus(getPlaylist())
-            onBackButtonClicked: pmcPageStack.popAndFocus()
+            onBackButtonClicked: root.goBack()
+            onPlayerButtonClicked: pmcPageStack.pushAndFocus(getMediaPlayer())
             onPlayNext: playlistInstance.playNext()
             onPlayPrevious: playlistInstance.playPrevious()
             onSeekRequested: if (mediaPlayerInstance) mediaPlayerInstance.currentTime = newPosition
+            onPlayPause: runtimeData.playPause()
+            onStop: runtimeData.stop()
+
+            playlistButtonVisible : pmcPageStack.currentPage != playlistInstance
+            playerButtonVisible: mediaPlayerInstance != null && mediaPlayerInstance.url && (pmcPageStack.currentPage != mediaPlayerInstance)
 
             states: [
                 State {
@@ -98,7 +120,10 @@ Image {
                 }
 
                 function popAndFocus() {
-                    pop();
+                    var page = pop();
+                    //If this is not done, QML's garbage collector will remove the page object
+                    page.visible = false;
+                    page.parent = root;
                     focusCurrentPage();
                 }
 
@@ -129,7 +154,9 @@ Image {
                         }
                     case PlasmaComponents.PageStatus.Deactivating:
                         if (mediaPlayerInstance) {
-                            mediaPlayerInstance.visible = false;
+                            if (pmcPageStack.currentPage != mediaPlayerInstance) {
+                                mediaPlayerInstance.visible = false;
+                            }
                             mediaPlayerInstance.z = 0;
                             mediaPlayerInstance.dimVideo = false;
                         }
@@ -155,7 +182,7 @@ Image {
                 onPlayRequested: {
                     if (currentMediaType == "image") {
                         var mediaImageViewer = getMediaImageViewer();
-                        mediaImageViewer.stripModel = runtimeData.currentBrowsingBackend.backendModel;
+                        mediaImageViewer.stripModel = runtimeData.currentBrowsingBackend.models[0];
                         mediaImageViewer.stripCurrentIndex = index;
                         mediaImageViewer.source = url;
                         pmcPageStack.pushAndFocus(mediaImageViewer);
@@ -175,12 +202,16 @@ Image {
                 runtimeDataObject: runtimeData
                 url: runtimeData.url
                 volume: runtimeData.volume
-                onEscapePressed: pmcPageStack.popAndFocus()
                 onClicked: toggleController(mediaPlayerInstance)
                 onMediaStarted: _pmc_mainwindow.mousePointerAutoHide = hasVideo
+                onVolumeUp: runtimeData.volume += 0.1
+                onVolumeDown: runtimeData.volume -= 0.1
+                onMuteToggle: runtimeData.muteToggle()
+                onPreviousMedia: playlistInstance.playPrevious()
+                onNextMedia: playlistInstance.playNext()
                 onMediaFinished: {
                     if (playlistInstance && playlistInstance.active && totalTime != -1 && !runtimeData.userTrigerredStop) {
-                        playlistInstance.playRequested(playlistModel.getNextUrl());
+                        playlistInstance.playNext();
                     } else {
                         runtimeData.stopped = true;
                         if (!runtimeData.userTrigerredStop) {
@@ -209,17 +240,18 @@ Image {
                     }
                     runtimeData.playUrl(url);
                 }
-                Keys.onEscapePressed: pmcPageStack.popAndFocus()
             }
         }
 
         Component {
             id: pmcImageViewerComponent
             MediaCenterElements.ImageViewer {
-                Keys.onEscapePressed: pmcPageStack.popAndFocus()
+                id: imageViewer
                 onClicked: toggleController(imageViewerInstance)
+                onSlideshowStarted: hideController(imageViewerInstance)
             }
         }
+
     }
 
     function getMediaWelcome() {
@@ -267,11 +299,44 @@ Image {
         getPlaylist().playRequested(playlistModel.getNextUrl());
     }
 
-    function toggleController(itemToFocus)
+    function showController(itemToFocus)
     {
-        mediaController.hideFlag = !mediaController.hideFlag;
+        mediaController.hideFlag = false;
         itemToFocus.focus = true;
     }
 
+    function hideController(itemToFocus)
+    {
+        mediaController.hideFlag = true;
+        itemToFocus.focus = true;
+    }
+
+    function toggleController(itemToFocus)
+    {
+        if (mediaController.hideFlag)
+            showController(itemToFocus);
+        else
+            hideController(itemToFocus);
+    }
+
+    function goBack()
+    {
+        if (pmcPageStack.currentPage.goBack && pmcPageStack.currentPage.goBack()) {
+            return;
+        }
+        pmcPageStack.popAndFocus();
+    }
+
     Component.onCompleted: init()
+    Keys.onPressed: {
+        switch (event.key) {
+            case Qt.Key_Escape: goBack(); break
+            case Qt.Key_MediaPlay: runtimeData.playPause(); break
+            case Qt.Key_MediaNext: playlistInstance.playNext(); break
+            case Qt.Key_MediaPrevious: playlistInstance.playPrevious(); break
+            case Qt.Key_MediaStop: playlistInstance.playNext(); break
+            default: return
+        }
+        event.accepted = true;
+    }
 }

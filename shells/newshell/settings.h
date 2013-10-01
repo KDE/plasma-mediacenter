@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright 2012 Sinny Kumari <ksinny@gmail.com>                        *
+ *   Copyright 2013 by Shantanu Tushar <shantanu@kde.org>                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,27 +17,31 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-function checkAndLoad(loader)
-{
-    if (typeof(decoration) == "string") {
-        if (decoration.search(/.*\/.*/) == 0) {
-            loadImage(loader);
-        } else {
-            loadIcon(loader);
-        }
-    } else if (typeof(decoration) == "object") {
-        loadIcon(loader);
-    }
-}
+#ifndef SETTINGS_H
+#define SETTINGS_H
 
-function loadImage(loader)
-{
-    rootColumn.source = decoration;
-    loader.sourceComponent = delegateItemImageComponent;
-}
+#include <KDE/KConfigGroup>
 
-function loadIcon(loader)
+#include <QtCore/QObject>
+#include <QtCore/QVariant>
+
+class Settings : public QObject
 {
-    rootColumn.source = decoration;
-    loader.sourceComponent = delegateItemIconComponent;
-}
+    Q_OBJECT
+public:
+    explicit Settings(QObject *parent = 0);
+
+    Q_INVOKABLE QVariant value(const QString &key, const QVariant &defaultValue = QVariant()) const;
+    Q_INVOKABLE void setValue(const QString &key, const QVariant &value);
+
+    Q_INVOKABLE void sync();
+    Q_INVOKABLE bool contains(const QString &key) const;
+    Q_INVOKABLE void remove (const QString &key);
+
+private:
+    KConfigGroup configGroup;
+};
+
+Q_DECLARE_METATYPE(Settings*)
+
+#endif // SETTINGS_H

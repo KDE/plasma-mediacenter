@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright 2012 Shantanu Tushar <shantanu@kde.org>                     *
+ *   Copyright 2013 by Shantanu Tushar <shantanu@kde.org>                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,25 +17,23 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-import QtQuick 1.1
-import org.kde.plasma.components 0.1 as PlasmaComponents
+#ifndef ALWAYSEXPANDEDMETADATAMODEL_H
+#define ALWAYSEXPANDEDMETADATAMODEL_H
 
-Rectangle {
-    radius: 10
-    opacity: mouseArea.pressed ? 1 : 0.8
+#include <libs/mediacenter/pmcmetadatamodel.h>
+#include <libs/mediacenter/modelmetadata.h>
 
-    Text {
-        text: display
-        anchors.fill: parent
-        anchors.margins: 5
-        font.pointSize: 16
-        verticalAlignment: Text.AlignVCenter
-        elide: Text.ElideRight
+class AlwaysExpandedMetadataModel : public PmcMetadataModel
+{
+    Q_OBJECT
+    Q_PROPERTY(QObject* metadata READ metadata)
+public:
+    explicit AlwaysExpandedMetadataModel(QObject* parent = 0);
+    virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
-        MouseArea {
-            id: mouseArea
-            anchors.fill: parent
-            onClicked: backend.setSubCategory(index)
-        }
-    }
-}
+    ModelMetadata *metadata();
+private:
+    ModelMetadata m_metadata;
+};
+
+#endif // ALWAYSEXPANDEDMETADATAMODEL_H

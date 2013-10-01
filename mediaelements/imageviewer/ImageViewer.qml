@@ -54,18 +54,8 @@ FocusScope {
         anchors.fill: parent
         Image {
             id: mainImage
-            anchors.centerIn: parent
-            cache: false
-
-            onStatusChanged: {
-                if (status == Image.Ready) {
-                    if (sourceSize.width > sourceSize.height) {
-                        mainImage.scale = Math.min(1, parent.height/sourceSize.height)
-                    } else {
-                        mainImage.scale = Math.min(1, parent.width/sourceSize.width)
-                    }
-                }
-            }
+            anchors.fill: parent
+            fillMode: Image.PreserveAspectFit
         }
 
         MouseArea {
@@ -88,7 +78,7 @@ FocusScope {
         height: 64
         slideshowPaused: mainImage.status == Image.Loading
         onImageClicked: mainImage.source = url
-        onSlideShowStarted: imageRect.slideshowStarted()
+        onSlideShowStarted: {imageRect.slideshowStarted(); mediaPictureStrip.state = "hidden"}
         states: [
             State {
                 name: "hidden"

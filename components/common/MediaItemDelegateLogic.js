@@ -17,50 +17,27 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-import QtQuick 1.1
-import org.kde.qtextracomponents 0.1 as QtExtraComponents
-import org.kde.plasma.components 0.1 as PlasmaComponents
-import org.kde.plasma.core 0.1 as PlasmaCore
-import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
-
-Item {
-    id: mediaItemDelegateItem
-    width: GridView.view.cellWidth
-    height: GridView.view.cellHeight
-    scale: (GridView.isCurrentItem ? 1.1 : 1)
-    clip: !GridView.isCurrentItem
-    z: GridView.isCurrentItem ? 1 : 0
-
-    property QtObject backend
-    signal popupMenuRequested(int index, string mediaUrl, string mediaType, string display)
-    signal playRequested(int index, string url, string currentMediaType)
-
-    MediaItem {
-        anchors.fill: parent;
-        onClicked: {
-            if (isExpandable) {
-                backend.expand(index, mediaUrl, mediaType);
-            } else {
-                mediaItemDelegateItem.playRequested(index, mediaUrl, mediaType)
-            }
-        }
-        onPressAndHold: {
-            if( mediaType == "audio" || mediaType == "video") {
-                popupMenuRequested(index, mediaUrl, mediaType, display);
-            }
-        }
-    }
-    Behavior on scale {
-        NumberAnimation {
-            duration: 100
-        }
-    }
-
-    Keys.onReturnPressed: {
-        if (isExpandable) {
-            backend.expand(index);
+function checkAndLoad(loader)
+{
+    if (typeof(decoration) == "string") {
+        if (decoration.search(/.*\/.*/) == 0) {
+            loadImage(loader);
         } else {
-            mediaItemDelegateItem.playRequested(index, mediaUrl, mediaType)
+            loadIcon(loader);
         }
+    } else if (typeof(decoration) == "object") {
+        loadIcon(loader);
     }
+}
+
+function loadImage(loader)
+{
+    iconImageLoader.source = decoration;
+    loader.sourceComponent = delegateItemImageComponent;
+}
+
+function loadIcon(loader)
+{
+    iconImageLoader.source = decoration;
+    loader.sourceComponent = delegateItemIconComponent;
 }

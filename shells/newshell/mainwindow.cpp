@@ -18,6 +18,7 @@
  ***************************************************************************/
 
 #include "mainwindow.h"
+#include "settings.h"
 
 #include <libs/mediacenter/backendsmodel.h>
 #include <libs/mediacenter/playlistmodel.h>
@@ -26,12 +27,11 @@
 #include <libs/mediacenter/subtitleprovider.h>
 #include <libs/mediacenter/pmcimageprovider.h>
 #include <libs/mediacenter/pmccoverartprovider.h>
+#include <mediacenter/objectpair.h>
 #include <mediacenter/filterplaylistmodel.h>
 
 #include <Plasma/Package>
 #include <Plasma/Theme>
-#include <KConfigGroup>
-#include <kconfig.h>
 #include <KDE/KCmdLineArgs>
 #include <KDE/KApplication>
 
@@ -62,13 +62,8 @@ MainWindow::MainWindow(QWidget *parent)
             urls.append(url);
         }
     }
-    if (args->isSet("fullscreen")) {
+    if (args->isSet("fullscreen") || Settings().value("fullscreen", false).toBool()) {
         toggleFullScreen();
-    }
-    KConfigGroup cfgGroup = KGlobal::config()->group("General");
-    bool toggleCheck = cfgGroup.readEntry("fullscreen",false);
-    if (toggleCheck) {
-       toggleFullScreen();
     }
 
     view = new QDeclarativeView(this);
@@ -101,6 +96,9 @@ MainWindow::MainWindow(QWidget *parent)
     qmlRegisterType<FilteredBackendsModel>("org.kde.plasma.mediacenter.elements", 0, 1, "FilteredBackendsModel");
     qmlRegisterType<SubtitleProvider>("org.kde.plasma.mediacenter.elements", 0, 1, "SubtitleProvider");
     qmlRegisterType<FilterPlaylistModel>("org.kde.plasma.mediacenter.elements", 0, 1, "FilterPlaylistModel");
+    qmlRegisterType<Settings>("org.kde.plasma.mediacenter.elements", 0, 1, "Settings");
+    qmlRegisterInterface<ObjectPair>("ObjectPair");
+
     BackendsModel *backendsModel = new BackendsModel(view->engine(), this);
     view->rootContext()->setContextProperty("backendsModel", backendsModel);
     PlaylistModel *playlistModel = new PlaylistModel(this);
@@ -128,8 +126,7 @@ MainWindow::MainWindow(QWidget *parent)
     view->rootContext()->setContextProperty("_pmc_gradient_image_path", QUrl(package->filePath("images", "gradient.png")));
     view->rootContext()->setContextProperty("_pmc_shadow_image_path", QUrl(package->filePath("images", "shadow.png")));
 
-    cfgGroup = KGlobal::config()->group("MediaBrowsing");
-    view->rootContext()->setContextProperty("_pmc_is_desktop", cfgGroup.readEntry("isDesktop",false));
+    view->rootContext()->setContextProperty("_pmc_is_desktop", Settings().value("isDesktop",false));
 
     view->setSource(QUrl(package->filePath("mainscript")));
 
@@ -144,12 +141,6 @@ MainWindow::MainWindow(QWidget *parent)
     m_mousePointerAutoHideTimer.setInterval(2000);
     connect(this, SIGNAL(mousePointerAutoHideChanged()), SLOT(enableMousePointerAutoHideIfNeeded()));
     connect(&m_mousePointerAutoHideTimer, SIGNAL(timeout()), SLOT(hideMousePointer()));
-
-    if (view->errors().isEmpty()) {
-        cfgGroup = KGlobal::config()->group("General");
-        qreal volumeRead = cfgGroup.readEntry("volumelevel",1.0);
-        view->rootObject()->findChild<QObject*>("runtimeData")->setProperty("volume",volumeRead);
-    }
 }
 
 bool MainWindow::toggleFullScreen()
@@ -162,16 +153,12 @@ bool MainWindow::toggleFullScreen()
     return (windowState() & Qt::WindowFullScreen);
 }
 
-MainWindow::~MainWindow()
+bool MainWindow::queryExit()
 {
-   KConfigGroup cfgGroup = KGlobal::config()->group("General");
-   windowState() & Qt::WindowFullScreen ? cfgGroup.writeEntry("fullscreen",true) : cfgGroup.writeEntry("fullscreen",false);
-
-   QObject *volumeLevel = view->rootObject()->findChild<QObject*>("runtimeData");
-   if (volumeLevel) {
-       cfgGroup.writeEntry("volumelevel",QDeclarativeProperty::read(volumeLevel,"volume").toReal());
-   }
-   cfgGroup.sync();
+    Settings s;
+    windowState() & Qt::WindowFullScreen ? s.setValue("fullscreen", true) : s.setValue("fullscreen", false);
+    s.sync();
+    return KMainWindow::queryExit();
 }
 
 void MainWindow::closeMediaCenter()
@@ -214,6 +201,7 @@ void MainWindow::enableMousePointerAutoHideIfNeeded()
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
+    Q_UNUSED(obj)
     if (event->type() == QEvent::HoverMove) {
         if (m_mousePointerHidden) {
             showMousePointer();

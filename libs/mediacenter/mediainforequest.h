@@ -28,7 +28,8 @@ public:
     enum InformationField {
         Title,
         Artist,
-        Length
+        Length,
+        Album
     };
 
     MediaInfoRequest(const QString &mediaPath);

@@ -59,7 +59,8 @@ FocusScope {
                     height: parent.height
                     iconSource: "media-playlist-shuffle"
                     onClicked: {
-                    playlistModel.shuffle();
+                       playlistModel.shuffle();
+                       playlistList.currentIndex = 0;
                     }
                 }
 
@@ -105,6 +106,7 @@ FocusScope {
                         playlistList.currentIndex = index;
                         playlistModel.currentIndex = originalIndex;
                         playlistItem.playRequested(url);
+                        filterText.text = "";
                     }
                 }
 

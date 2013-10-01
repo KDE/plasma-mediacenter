@@ -2,8 +2,9 @@ set(localvideosbackend_SRCS
   localvideosmodel.cpp
   ../localfilesabstractbackend.cpp
   ../localfilesabstractmodel.cpp
+  ../localplacesmodel.cpp
+  ../localthumbnailprovider.cpp
   localvideosbackend.cpp
-  localvideothumbnailprovider.cpp
 )
 
 

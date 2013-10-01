@@ -31,11 +31,15 @@ FocusScope {
     property int totalMediaTime
     property int remainingMediaTime: totalMediaTime - currentMediaTime
 
-    property alias playlistButtonChecked: playlistButton.checked
+    property alias playlistButtonVisible: playlistButton.visible
+    property alias playerButtonVisible: playerButton.visible
 
     signal playlistButtonClicked()
+    signal playerButtonClicked()
     signal playNext()
     signal playPrevious()
+    signal playPause()
+    signal stop()
     signal backButtonClicked()
     signal seekRequested(int newPosition)
 
@@ -57,11 +61,8 @@ FocusScope {
                 id: backButton
                 height: parent.height
                 width: height
-                iconSource: "go-previous";
-                onClicked: {
-                    backButtonClicked();
-                    playlistButton.visible = true;
-                }
+                iconSource: "arrow-left";
+                onClicked: controlBarFrame.backButtonClicked();
             }
 
             PlasmaComponents.ToolButton {
@@ -74,7 +75,7 @@ FocusScope {
 
                 onClicked: {
                     runtimeDataObject.userTrigerredStop = true;
-                    playPrevious();
+                    controlBarFrame.playPrevious();
                     runtimeDataObject.userTrigerredStop = false;
                 }
             }
@@ -85,14 +86,7 @@ FocusScope {
                 width: height
 
                 iconSource: runtimeDataObject.playing ? "media-playback-pause" : "media-playback-start"
-
-                onClicked: {
-                    if (runtimeDataObject.playing) {
-                        runtimeDataObject.playing = false; runtimeDataObject.paused = true;
-                    } else if (runtimeDataObject.paused || runtimeDataObject.stopped) {
-                        runtimeDataObject.playing = true; runtimeDataObject.paused = false;
-                    }
-                }
+                onClicked: controlBarFrame.playPause()
             }
 
             PlasmaComponents.ToolButton {
@@ -101,12 +95,7 @@ FocusScope {
                 width: height
 
                 iconSource: "media-playback-stop"
-
-                onClicked: {
-                    runtimeDataObject.userTrigerredStop = true;
-                    runtimeDataObject.stopped = true;
-                    runtimeDataObject.userTrigerredStop = false;
-                }
+                onClicked: controlBarFrame.stop()
             }
 
             PlasmaComponents.ToolButton {
@@ -119,7 +108,7 @@ FocusScope {
 
                 onClicked: {
                     runtimeDataObject.userTrigerredStop = true;
-                    playNext();
+                    controlBarFrame.playNext();
                     runtimeDataObject.userTrigerredStop = false;
                 }
             }
@@ -206,42 +195,16 @@ FocusScope {
                 height: width
                 font.pointSize: 12
                 iconSource: "format-list-ordered"
-                onClicked: {
-                    playlistButtonClicked();
-                    playlistButton.visible = false;
-                }
+                onClicked: playlistButtonClicked();
             }
-        }
 
-        function handleKey(key)
-        {
-            switch (key) {
-            case 16777344: //Media Play/pause key
-                if (runtimeDataObject.playing) {
-                    runtimeDataObject.playing = false; runtimeDataObject.paused = true;
-                } else if (runtimeDataObject.paused || runtimeDataObject.stopped) {
-                    runtimeDataObject.playing = true; runtimeDataObject.paused = false;
-                }
-                return true;
-            case 16777345:    // stop media key
-                runtimeDataObject.userTrigerredStop = true;
-                runtimeDataObject.stopped = true;
-                runtimeDataObject.userTrigerredStop = false;
-                return true;
-            case 16777346:     // previous media key
-                runtimeDataObject.userTrigerredStop = true;
-                if (playlistModel.currentIndex != -1) {
-                    playlist.playRequested(playlistModel.getPreviousUrl());
-                }
-                runtimeDataObject.userTrigerredStop = false;
-                return true;
-            case 16777347:   // next media key
-                runtimeDataObject.userTrigerredStop = true;
-                if (playlistModel.currentIndex != -1) {
-                    playlist.playRequested(playlistModel.getNextUrl());
-                }
-                runtimeDataObject.userTrigerredStop = false;
-                return true;
+            PlasmaComponents.ToolButton {
+                id: playerButton
+                width: parent.height
+                height: width
+                font.pointSize: 12
+                iconSource: "applications-multimedia"
+                onClicked: playerButtonClicked();
             }
         }
     }
