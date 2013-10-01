@@ -38,6 +38,7 @@
 
 #include <QDeclarativeEngine>
 #include <QDeclarativeContext>
+#include <QTimer>
 
 MEDIACENTER_EXPORT_BROWSINGBACKEND(MetadataMusicBackend)
 
@@ -69,10 +70,6 @@ bool MetadataMusicBackend::initImpl()
     m_artistFilteredMusicModel = new MetadataBackendCommonModel(this);
     m_artistsModel->setDefaultDecoration("user-identity");
     m_albumsModel->setDefaultDecoration("media-optical-audio");
-    m_albumsModel->showMediaForProperty(Nepomuk2::Vocabulary::NMM::musicAlbum());
-    m_artistsModel->showMediaForProperty(Nepomuk2::Vocabulary::NMM::performer());
-    m_musicModel->showMediaType(MediaCenter::Music);
-    m_artistFilteredMusicModel->showMediaType(MediaCenter::Music);
     connect(m_musicModel, SIGNAL(modelReset()), SLOT(musicModelReset()));
 
     m_albumsModel->metadata()->setName("Albums");
@@ -89,8 +86,17 @@ bool MetadataMusicBackend::initImpl()
     addModel(m_albumsModel);
     addModelPair("Artists", m_artistsModel, m_artistFilteredMusicModel);
 
-    updateModelAccordingToFilters();
+    QTimer::singleShot(1000, this, SLOT(initializeModels()));
     return true;
+}
+
+void MetadataMusicBackend::initializeModels()
+{
+    m_albumsModel->showMediaForProperty(Nepomuk2::Vocabulary::NMM::musicAlbum());
+    m_artistsModel->showMediaForProperty(Nepomuk2::Vocabulary::NMM::performer());
+    m_musicModel->showMediaType(MediaCenter::Music);
+    m_artistFilteredMusicModel->showMediaType(MediaCenter::Music);
+    updateModelAccordingToFilters();
 }
 
 bool MetadataMusicBackend::supportsSearch() const

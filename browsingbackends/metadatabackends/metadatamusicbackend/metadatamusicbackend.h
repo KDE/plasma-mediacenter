@@ -77,6 +77,7 @@ protected:
 private slots:
     void musicModelDataChanged ( const QModelIndex& startIndex, const QModelIndex& endIndex );
     void musicModelReset();
+    void initializeModels();
 
 private:
     AlwaysExpandedMetadataModel* m_artistsModel;
