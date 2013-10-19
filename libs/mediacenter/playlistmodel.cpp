@@ -189,11 +189,11 @@ void PlaylistModel::playlistItemUpdated()
     emit dataChanged(createIndex(i, 0), createIndex(i, 0));
 }
 
-QString PlaylistModel::playlistFilePath() const
+QString PlaylistModel::playlistFilePath(QString playlistName) const
 {
-    QString dirPath = KGlobal::dirs()->saveLocation("data") + KCmdLineArgs::appName();
-    QDir().mkdir(dirPath);
-    return dirPath + "/playlist";
+    QString dirPath = KGlobal::dirs()->saveLocation("data") + KCmdLineArgs::appName() + "/playlist";
+    QDir().mkpath(dirPath);
+    return dirPath + playlistName;
 }
 
 void PlaylistModel::loadFromFile(const QString& path)

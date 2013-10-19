@@ -50,8 +50,6 @@ FocusScope {
                     model: MediaCenterElements.MultiplePlaylistModel {}
 
                     delegate: Text{
-
-
                         text: display
                         color: theme.textColor
                     }
@@ -61,7 +59,7 @@ FocusScope {
                         flickableItem: multiplePlaylistList
                     }
                 }
-                
+
                 PlasmaComponents.TextField {
                     id: createPlaylistTextField
 
@@ -77,6 +75,13 @@ FocusScope {
                     anchors.verticalCenter: parent.verticalCenter
                     
                     text: i18n("Create")
+
+                    onClicked: {
+                        if (createPlaylistTextField.text != "") {
+                            multiplePlaylistList.model.createNewPlaylist (createPlaylistTextField.text)
+                            createPlaylistTextField.text = ""
+                        }
+                    }
                 }
             }
                     

@@ -35,6 +35,7 @@ public:
 
     virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
     virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
+    Q_INVOKABLE  void createNewPlaylist(const QString &name);
     
 private:
     QStringList m_multiplePlaylistList;
