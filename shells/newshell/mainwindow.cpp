@@ -103,8 +103,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     BackendsModel *backendsModel = new BackendsModel(view->engine(), this);
     view->rootContext()->setContextProperty("backendsModel", backendsModel);
-    MultiplePlaylistModel *multipleplaylistmodel = new MultiplePlaylistModel(this);
-    view->rootContext()->setContextProperty("multipleplaylistmodel", multipleplaylistmodel);
 
     PlaylistModel *playlistModel = new PlaylistModel(this);
     if (urls.length() > 0) {

@@ -22,8 +22,6 @@ MultiplePlaylistModel::MultiplePlaylistModel(QObject* parent): QAbstractListMode
 {
 
     m_multiplePlaylistList.append("Default");
-    m_multiplePlaylistList.append("Romantic");
-    m_multiplePlaylistList.append("Hip-Hop");
 }
 
 MultiplePlaylistModel::~MultiplePlaylistModel()
@@ -48,3 +46,12 @@ QVariant MultiplePlaylistModel::data(const QModelIndex& index, int role) const
     return QVariant();
     
 }
+
+void MultiplePlaylistModel::createNewPlaylist(const QString& name)
+{
+    const int n = rowCount();
+    beginInsertRows(QModelIndex(), n, n);
+    m_multiplePlaylistList.append(name);
+    endInsertRows();
+}
+

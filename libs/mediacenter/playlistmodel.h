@@ -71,7 +71,7 @@ private:
 
     void loadFromFile(const QString &path);
     void saveToFile(const QString &path);
-    QString playlistFilePath() const;
+    QString playlistFilePath(QString playlistName = "Default") const;
 };
 
 #endif // PLAYLISTMODEL_H
