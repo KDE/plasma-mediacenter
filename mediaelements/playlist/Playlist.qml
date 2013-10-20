@@ -47,11 +47,19 @@ FocusScope {
                     height: parent.height
                     orientation: ListView.Horizontal
                     spacing: 10
-                    model: MediaCenterElements.MultiplePlaylistModel {}
+                    model: MediaCenterElements.MultiplePlaylistModel {
+                        Component.onCompleted:  setPlaylistModelAddress (playlistModel);
+                    }
 
                     delegate: Text{
                         text: display
                         color: theme.textColor
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                multiplePlaylistList.model.switchToPlaylist(text)
+                            }
+                        }
                     }
                     PlasmaComponents.ScrollBar {
                         id: multiplePlaylistScrollbar

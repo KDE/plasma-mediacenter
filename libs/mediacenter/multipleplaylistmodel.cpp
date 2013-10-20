@@ -16,12 +16,23 @@
  ***********************************************************************************/
 
 #include "multipleplaylistmodel.h"
+
+#include <KDE/KStandardDirs>
+#include <KDE/KCmdLineArgs>
 #include <QDebug>
+#include <QDir>
 
 MultiplePlaylistModel::MultiplePlaylistModel(QObject* parent): QAbstractListModel(parent)
 {
-
-    m_multiplePlaylistList.append("Default");
+    QString dirPath = KGlobal::dirs()->saveLocation("data") + KCmdLineArgs::appName() + "/playlist/";
+    QDir dir(dirPath);
+    QStringList playlistList = dir.entryList (QDir::NoDotAndDotDot | QDir::Files);
+    foreach (QString str, playlistList) {
+        m_multiplePlaylistList.append(str);
+    }
+    if (playlistList.length() == 0) {
+        m_multiplePlaylistList.append("Default");
+    }
 }
 
 MultiplePlaylistModel::~MultiplePlaylistModel()
@@ -53,5 +64,17 @@ void MultiplePlaylistModel::createNewPlaylist(const QString& name)
     beginInsertRows(QModelIndex(), n, n);
     m_multiplePlaylistList.append(name);
     endInsertRows();
+    m_playlistModel->setNewPlaylist(name);
 }
 
+void MultiplePlaylistModel::setPlaylistModelAddress(QObject* model)
+{
+    if (model != NULL) {
+        m_playlistModel = qobject_cast<PlaylistModel *> (model);
+    }
+}
+
+void MultiplePlaylistModel::switchToPlaylist(QString name)
+{
+    m_playlistModel->switchToPlaylist(name);
+}
