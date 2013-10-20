@@ -41,6 +41,7 @@ PlaylistModel::PlaylistModel(QObject* parent):
     QAbstractListModel(parent),
     d(new Private)
 {
+    m_playlistName = "Default";
     loadFromFile(playlistFilePath());
 
     d->currentIndex = -1;
@@ -189,11 +190,11 @@ void PlaylistModel::playlistItemUpdated()
     emit dataChanged(createIndex(i, 0), createIndex(i, 0));
 }
 
-QString PlaylistModel::playlistFilePath(QString playlistName) const
+QString PlaylistModel::playlistFilePath() const
 {
-    QString dirPath = KGlobal::dirs()->saveLocation("data") + KCmdLineArgs::appName() + "/playlist";
+    QString dirPath = KGlobal::dirs()->saveLocation("data") + KCmdLineArgs::appName() + "/playlist/";
     QDir().mkpath(dirPath);
-    return dirPath + playlistName;
+    return dirPath + m_playlistName;
 }
 
 void PlaylistModel::loadFromFile(const QString& path)
@@ -206,6 +207,8 @@ void PlaylistModel::loadFromFile(const QString& path)
             file.close();
 
             QDomNodeList itemList = doc.elementsByTagName("item");
+            d->musicList.clear();
+            d->currentIndex = -1;
             for (int i=0; i<itemList.count(); i++) {
                 QDomNode node = itemList.at(i);
                 if (node.isNull()) continue;
@@ -250,4 +253,24 @@ void PlaylistModel::saveToFile(const QString& path)
 void PlaylistModel::savePlaylist()
 {
     saveToFile(playlistFilePath());
+}
+
+void PlaylistModel::setNewPlaylist(QString name)
+{
+    beginResetModel();
+    saveToFile (playlistFilePath());
+    m_playlistName = name;
+    d->musicList.clear();
+    d->currentIndex = -1;
+    endResetModel();
+}
+
+void PlaylistModel::switchToPlaylist(QString name)
+{
+    beginResetModel();
+    saveToFile(playlistFilePath());
+    m_playlistName = name;
+    loadFromFile (playlistFilePath());
+    endResetModel();
+
 }

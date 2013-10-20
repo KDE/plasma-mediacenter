@@ -24,6 +24,7 @@
 
 #include "mediacenter_export.h"
 #include "mediacenter.h"
+#include "playlistmodel.h"
 
 class MEDIACENTER_EXPORT MultiplePlaylistModel : public QAbstractListModel
 {
@@ -36,9 +37,12 @@ public:
     virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
     virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
     Q_INVOKABLE  void createNewPlaylist(const QString &name);
+    Q_INVOKABLE void setPlaylistModelAddress (QObject *model);
+    Q_INVOKABLE void switchToPlaylist (QString name);
     
 private:
     QStringList m_multiplePlaylistList;
+    PlaylistModel *m_playlistModel;
     
 };
 
