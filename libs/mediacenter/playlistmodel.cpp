@@ -192,7 +192,7 @@ void PlaylistModel::playlistItemUpdated()
 
 QString PlaylistModel::playlistFilePath() const
 {
-    QString dirPath = KGlobal::dirs()->saveLocation("data") + KCmdLineArgs::appName() + "/playlist/";
+    QString dirPath = KGlobal::dirs()->saveLocation("data") + KCmdLineArgs::appName() + "/playlists/";
     QDir().mkpath(dirPath);
     return dirPath + m_playlistName;
 }
