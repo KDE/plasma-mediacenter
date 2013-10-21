@@ -39,39 +39,50 @@ FocusScope {
             
             Row {
                 id: multiplePlaylistRow
+                spacing: 10
                 anchors {top: parent.top; left: parent.left; right: parent.right }
-                height:40
+                height: 64
                 ListView {
                     id: multiplePlaylistList
                     width: parent.width * 2/3
                     height: parent.height
                     orientation: ListView.Horizontal
-                    spacing: 10
+                    spacing: 3
+                    clip: true
                     model: MediaCenterElements.MultiplePlaylistModel {
                         Component.onCompleted:  setPlaylistModelAddress (playlistModel);
                     }
 
-                    delegate: Text{
-                        text: display
-                        color: theme.textColor
+                    delegate:
+                    Item {
+                        id: playlistText
+                        height: 30
+                        width: 130
+                        anchors.verticalCenter: parent.verticalCenter
+                        Text {
+                            id: itemText
+                            anchors.fill: parent
+                            maximumLineCount : 1
+                            color: theme.textColor
+                            wrapMode: Text.Wrap
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                            text: display
+                        }
                         MouseArea {
                             anchors.fill: parent
                             onClicked: {
-                                multiplePlaylistList.model.switchToPlaylist(text)
+                                multiplePlaylistList.model.switchToPlaylist(itemText.text)
                             }
                         }
-                    }
-                    PlasmaComponents.ScrollBar {
-                        id: multiplePlaylistScrollbar
-                        orientation: Qt.Horizontal
-                        flickableItem: multiplePlaylistList
                     }
                 }
 
                 PlasmaComponents.TextField {
                     id: createPlaylistTextField
 
-                    height: parent.height
+                    anchors.verticalCenter: parent.verticalCenter
+                    height: 30
                     width: parent.width - multiplePlaylistList.width - createPlaylistButton.width
                     clearButtonShown: true
                     placeholderText: i18n("Create New Playlist")
@@ -79,7 +90,7 @@ FocusScope {
                 }
                 PlasmaComponents.Button {
                     id: createPlaylistButton
-                    height: parent.height
+                    height: 30
                     anchors.verticalCenter: parent.verticalCenter
                     
                     text: i18n("Create")
