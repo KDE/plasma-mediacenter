@@ -5,6 +5,7 @@ include_directories(
 )
 
 set (plasmamediacenter_SRCS
+    artistimagefetcher.cpp
     modelmetadata.cpp
     objectpair.cpp
     mediainfoserviceproxy.cpp

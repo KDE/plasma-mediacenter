@@ -73,7 +73,7 @@ bool MetadataMusicBackend::initImpl()
     connect(m_musicModel, SIGNAL(modelReset()), SLOT(musicModelReset()));
 
     m_albumsModel->metadata()->setName("Albums");
-    m_artistsModel->metadata()->setName("Artists#list");
+    m_artistsModel->metadata()->setName("Artists");
     m_musicModel->metadata()->setName("Songs#list");
     m_artistFilteredMusicModel->metadata()->setName("Artist's Songs#list");
 
@@ -84,7 +84,7 @@ bool MetadataMusicBackend::initImpl()
 
     addModel(m_musicModel);
     addModel(m_albumsModel);
-    addModelPair("Artists", m_artistsModel, m_artistFilteredMusicModel);
+    addModel(m_artistsModel);
 
     QTimer::singleShot(1000, this, SLOT(initializeModels()));
     return true;

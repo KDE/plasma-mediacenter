@@ -192,7 +192,7 @@ QString MetadataUpdater::mimetypeForResource(const Nepomuk2::Resource& resource)
     const QString mime = resource.property(Nepomuk2::Vocabulary::NIE::mimeType()).toString();
     if (mime.isEmpty()) {
         if (resource.type() == Nepomuk2::Vocabulary::NCO::Contact()) {
-            return "contact";
+            return "artist";
         } else if (resource.type() == Nepomuk2::Vocabulary::NMM::MusicAlbum()) {
             return "album";
         }

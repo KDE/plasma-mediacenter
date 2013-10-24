@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2012 Shantanu Tushar <shantanu@kde.org>                             *
+ *   Copyright 2013 Shantanu Tushar <shantanu@kde.org>                             *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,48 +16,42 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#include "pmcimagecache.h"
+#ifndef ARTISTIMAGEFETCHER_H
+#define ARTISTIMAGEFETCHER_H
 
-#include <KDE/KGlobal>
-#include <KDE/KImageCache>
+#include <QObject>
+#include <QQueue>
+#include <QHash>
+#include <QNetworkAccessManager>
 
-#include <QtCore/QCoreApplication>
-
-class PmcImageCache::Singleton
+class ArtistImageFetcher : public QObject
 {
+    Q_OBJECT
 public:
-    PmcImageCache q;
+    class Singleton;
+
+    static ArtistImageFetcher *instance();
+
+    static const char *artistIdentification;
+    explicit ArtistImageFetcher(QObject* parent = 0);
+    ~ArtistImageFetcher();
+
+    void fetchArtistImage(const QString &artistImage);
+
+private Q_SLOTS:
+    void processQueue();
+    void gotResponse(QNetworkReply* reply);
+    void gotImage(QNetworkReply* reply);
+
+private:
+    void downloadImage(const QString &artistName, const QString &url);
+
+    bool m_busy;
+    QString m_artistInfoUrl;
+    QQueue<QString> m_artistQueue;
+    QNetworkAccessManager m_netAccessManager;
+    QNetworkAccessManager m_imageDownloadManager;
+    QHash<QNetworkReply*, QString> m_currentArtistImageDownloads;
 };
 
-K_GLOBAL_STATIC( PmcImageCache::Singleton, singleton )
-
-PmcImageCache *PmcImageCache::instance()
-{
-    return &( singleton->q );
-}
-
-PmcImageCache::~PmcImageCache()
-{
-}
-
-PmcImageCache::PmcImageCache()
-{
-    m_imageCache = new KImageCache("plasma_engine_preview", 52428800);
-}
-
-void PmcImageCache::addImage(const QString& id, const QImage& image)
-{
-    m_imageCache->insertImage(id, image);
-}
-
-bool PmcImageCache::containsId(const QString& id) const
-{
-    return m_imageCache->contains(id);
-}
-
-QImage PmcImageCache::getImage(const QString& id) const
-{
-    QImage image;
-    m_imageCache->findImage(id, &image);
-    return image;
-}
+#endif // ARTISTIMAGEFETCHER_H

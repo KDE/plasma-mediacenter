@@ -39,7 +39,9 @@ public:
     virtual QImage requestImage ( const QString& id, QSize* size, const QSize& requestedSize );
 
     static bool containsAlbum(const QString& albumName);
-    static void addCoverArtImage(const QString &albumName, const QImage &image);
+    static void addCoverArtImage(const QString &albumOrArtistName, const QImage &image);
+
+    static bool containsArtist(const QString& artistName);
 
 private:
     void addAlbumCoverToCache(TagLib::MPEG::File& f, const QImage& image) const;

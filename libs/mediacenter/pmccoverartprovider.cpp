@@ -70,10 +70,10 @@ bool PmcCoverArtProvider::containsAlbum(const QString& albumName)
     return PmcImageCache::instance()->containsId(QString(albumName).prepend("album:"));
 }
 
-void PmcCoverArtProvider::addCoverArtImage(const QString& albumName, const QImage& image)
+void PmcCoverArtProvider::addCoverArtImage(const QString& albumOrArtistName, const QImage& image)
 {
     if (!image.isNull()) {
-        PmcImageCache::instance()->addImage(QString(albumName).prepend(albumIdentification), image);
+        PmcImageCache::instance()->addImage(QString(albumOrArtistName).prepend(albumIdentification), image);
     }
 }
 
@@ -81,4 +81,9 @@ void PmcCoverArtProvider::addAlbumCoverToCache(TagLib::MPEG::File& f, const QIma
 {
     QString albumName(f.ID3v2Tag()->album().toCString());
     PmcImageCache::instance()->addImage(albumName.prepend(albumIdentification), image);
+}
+
+bool PmcCoverArtProvider::containsArtist(const QString& artistName)
+{
+    return PmcImageCache::instance()->containsId(QString(artistName).prepend("artist:"));
 }

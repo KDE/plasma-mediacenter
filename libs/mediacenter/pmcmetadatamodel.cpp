@@ -21,6 +21,7 @@
 #include "pmcimagecache.h"
 #include "pmcimageprovider.h"
 #include "metadataupdater.h"
+#include "artistimagefetcher.h"
 
 #include <Nepomuk2/Query/Query>
 #include <Nepomuk2/Vocabulary/NIE>
@@ -196,11 +197,20 @@ QVariant PmcMetadataModel::data(const QModelIndex& index, int role) const
 QVariant PmcMetadataModel::decorationForMetadata(const QVariant &metadataValue, const QModelIndex &index) const
 {
     if (metadataValue.type() == QVariant::String && metadataValue.toString().isEmpty()) {
-        if (metadataValueForRole(index, MediaCenter::MediaTypeRole) == "album") {
+        const QString mediaType = metadataValueForRole(index, MediaCenter::MediaTypeRole).toString();
+        if (mediaType == "album") {
             const QString albumName = metadataValueForRole(index, Qt::DisplayRole).toString();
             const QString albumUri = QString("album:%1").arg(albumName);
             if (PmcImageCache::instance()->containsId(albumUri)) {
                 return QString("image://%1/%2").arg(PmcImageProvider::identificationString, albumUri);
+            }
+        } else if (mediaType == "artist") {
+            const QString artistName = metadataValueForRole(index, Qt::DisplayRole).toString();
+            const QString artistUri = QString("artist:%1").arg(artistName);
+            if (PmcImageCache::instance()->containsId(artistUri)) {
+                return QString("image://%1/%2").arg(PmcImageProvider::identificationString, artistUri);
+            } else {
+                ArtistImageFetcher::instance()->fetchArtistImage(artistName);
             }
         }
         if (d->defaultDecoration.isValid()) {
