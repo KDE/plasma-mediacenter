@@ -54,7 +54,6 @@ public:
     Q_INVOKABLE void searchArtist(const QString &artist);
     Q_INVOKABLE void searchAlbum(const QString &album);
     Q_INVOKABLE void searchMusic(const QString &music);
-    Q_INVOKABLE void searchArtistsMusic(const QString &music);
 
     Q_INVOKABLE void addAllSongsToPlaylist( QObject* playlistModel );
     Q_INVOKABLE void stopAddingSongsToPlaylist();
@@ -84,7 +83,6 @@ private:
     AlwaysExpandedMetadataModel* m_albumsModel;
     MetadataBackendCommonModel* m_musicModel;
     PlaylistModel* m_playlistModel;
-    MetadataBackendCommonModel* m_artistFilteredMusicModel;
 
     QString m_artistFilter;
     QString m_albumFilter;

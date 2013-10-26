@@ -67,7 +67,6 @@ bool MetadataMusicBackend::initImpl()
     m_albumsModel = new AlwaysExpandedMetadataModel(this);
     m_artistsModel = new AlwaysExpandedMetadataModel(this);
     m_musicModel = new MetadataBackendCommonModel(this);
-    m_artistFilteredMusicModel = new MetadataBackendCommonModel(this);
     m_artistsModel->setDefaultDecoration("user-identity");
     m_albumsModel->setDefaultDecoration("media-optical-audio");
     connect(m_musicModel, SIGNAL(modelReset()), SLOT(musicModelReset()));
@@ -75,10 +74,8 @@ bool MetadataMusicBackend::initImpl()
     m_albumsModel->metadata()->setName("Albums");
     m_artistsModel->metadata()->setName("Artists");
     m_musicModel->metadata()->setName("Songs#list");
-    m_artistFilteredMusicModel->metadata()->setName("Artist's Songs#list");
 
     m_musicModel->metadata()->setSupportsSearch(true);
-    m_artistFilteredMusicModel->metadata()->setSupportsSearch(true);
     m_artistsModel->metadata()->setSupportsSearch(true);
     m_albumsModel->metadata()->setSupportsSearch(true);
 
@@ -95,7 +92,6 @@ void MetadataMusicBackend::initializeModels()
     m_albumsModel->showMediaForProperty(Nepomuk2::Vocabulary::NMM::musicAlbum());
     m_artistsModel->showMediaForProperty(Nepomuk2::Vocabulary::NMM::performer());
     m_musicModel->showMediaType(MediaCenter::Music);
-    m_artistFilteredMusicModel->showMediaType(MediaCenter::Music);
     updateModelAccordingToFilters();
 }
 
@@ -135,13 +131,12 @@ void MetadataMusicBackend::setArtistFilter(const QString& filter)
 void MetadataMusicBackend::updateModelAccordingToFilters()
 {
     m_musicModel->clearAllFilters();
-    m_artistFilteredMusicModel->clearAllFilters();
 
     if (!m_albumFilter.isEmpty()) {
         m_musicModel->addFilter(Nepomuk2::Vocabulary::NMM::musicAlbum(), Nepomuk2::Query::ResourceTerm(m_albumFilter));
     }
     if (!m_artistFilter.isEmpty()) {
-        m_artistFilteredMusicModel->addFilter(Nepomuk2::Vocabulary::NMM::performer(), Nepomuk2::Query::ResourceTerm(m_artistFilter));
+        m_musicModel->addFilter(Nepomuk2::Vocabulary::NMM::performer(), Nepomuk2::Query::ResourceTerm(m_artistFilter));
     }
 }
 
@@ -158,11 +153,6 @@ void MetadataMusicBackend::searchArtist(const QString& artist)
 void MetadataMusicBackend::searchMusic(const QString& music)
 {
     m_musicModel->setSearchTerm(music);
-}
-
-void MetadataMusicBackend::searchArtistsMusic(const QString& music)
-{
-    m_artistFilteredMusicModel->setSearchTerm(music);
 }
 
 void MetadataMusicBackend::addAllSongsToPlaylist (QObject* playlistModel)
@@ -217,7 +207,7 @@ bool MetadataMusicBackend::expand(int row, QAbstractItemModel* model)
         emit modelNeedsAttention(m_musicModel);
     } else if (model == m_artistsModel) {
         setArtistFilter(filter);
-        emit modelNeedsAttention(m_artistFilteredMusicModel);
+        emit modelNeedsAttention(m_musicModel);
     }
 
     return true;
@@ -254,8 +244,6 @@ void MetadataMusicBackend::searchModel(const QString& searchTerm, QAbstractItemM
 {
     if (model == m_musicModel) {
         searchMusic(searchTerm);
-    } else if (model == m_artistFilteredMusicModel) {
-        searchArtistsMusic(searchTerm);
     } else if (model == m_artistsModel) {
         searchArtist(searchTerm);
     } else if (model == m_albumsModel) {
