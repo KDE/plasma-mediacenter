@@ -64,6 +64,18 @@ FocusScope {
         }
     }
 
+    QtExtraComponents.MouseEventListener {
+        anchors.fill: gridBrowserGridView
+
+        onWheelMoved: {
+            if (wheel.delta < 0) {
+                gridBrowserGridView.moveCurrentIndexRight();
+            } else {
+                gridBrowserGridView.moveCurrentIndexLeft();
+            }
+        }
+    }
+
     GridView {
         id: gridBrowserGridView
         anchors {
@@ -99,18 +111,6 @@ FocusScope {
             anchors { bottom: parent.bottom; horizontalCenter: parent.horizontalCenter }
             running: (gridBrowserRoot.currentBrowsingBackend && gridBrowserRoot.currentBrowsingBackend.busy) ? true : false
             visible: running
-        }
-
-        QtExtraComponents.MouseEventListener {
-            anchors.fill: parent
-
-            onWheelMoved: {
-                if (wheel.delta < 0) {
-                    gridBrowserGridView.moveCurrentIndexRight();
-                } else {
-                    gridBrowserGridView.moveCurrentIndexLeft();
-                }
-            }
         }
 
         onCurrentIndexChanged: positionViewAtIndex(currentIndex, GridView.Contain)
