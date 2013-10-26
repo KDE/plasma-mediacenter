@@ -50,14 +50,15 @@ bool YoutubeBackend::expand(int row)
 bool YoutubeBackend::initImpl()
 {
     m_youtubeModel = new YoutubeModel(this);
-    m_youtubeModel->metadata()->setSupportsSearch(true);
+    ModelMetadata *metadata = new ModelMetadata(m_youtubeModel, this);
+    metadata->setSupportsSearch(true);
     m_videoDetailsModel = new VideoDetailsModel(this);
     if (!(m_youtubeModel && m_videoDetailsModel)) {
         return false;
     }
     m_expanded = true;
     connect(m_videoDetailsModel, SIGNAL(gotRealUrl()), this, SLOT(realUrlFound()));
-    setModel(m_youtubeModel);
+    setModel(metadata);
     return true;
 }
 
@@ -69,11 +70,6 @@ bool YoutubeBackend::goOneLevelUp()
         return true;
     }
     return false;
-}
-
-bool YoutubeBackend::supportsSearch() const
-{
-    return true;
 }
 
 void YoutubeBackend::search(const QString& searchTerm)

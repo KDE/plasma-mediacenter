@@ -18,6 +18,7 @@
 
 #include "abstractbrowsingbackend.h"
 #include "objectpair.h"
+#include "modelmetadata.h"
 
 #include <KGlobal>
 #include <KService>
@@ -79,20 +80,25 @@ QString AbstractBrowsingBackend::name() const
     return d->name;
 }
 
-void AbstractBrowsingBackend::setModel(QAbstractItemModel * model)
+void AbstractBrowsingBackend::setModel(ModelMetadata* model)
 {
     d->models.clear();
     addModel(model);
-    emit modelChanged();
 }
 
-void AbstractBrowsingBackend::addModel(QAbstractItemModel* model)
+void AbstractBrowsingBackend::setModel(QAbstractItemModel* model)
+{
+    ModelMetadata *metadata = new ModelMetadata(model, this);
+    setModel(metadata);
+}
+
+void AbstractBrowsingBackend::addModel(ModelMetadata* model)
 {
     d->models.append(model);
     emit modelsChanged();
 }
 
-void AbstractBrowsingBackend::addModelPair(const QString &pairLabel, QAbstractItemModel* firstModel, QAbstractItemModel* secondModel)
+void AbstractBrowsingBackend::addModelPair(const QString& pairLabel, QObject* firstModel, QObject* secondModel)
 {
     ObjectPair *modelPair = new ObjectPair(this);
     modelPair->setFirst(firstModel);
@@ -102,9 +108,13 @@ void AbstractBrowsingBackend::addModelPair(const QString &pairLabel, QAbstractIt
     d->models.append(modelPair);
 }
 
-QObject * AbstractBrowsingBackend::model()
+QAbstractItemModel* AbstractBrowsingBackend::model()
 {
-    return d->models.length() ? (QObject*)(d->models.first()) : 0;
+    QObject *model = d->models.length() ? (QObject*)(d->models.first()) : 0;
+    if (model) {
+        return qobject_cast<QAbstractItemModel*>(qobject_cast<ModelMetadata*>(model)->model());
+    }
+    return 0;
 }
 
 KService::List AbstractBrowsingBackend::availableBackends()

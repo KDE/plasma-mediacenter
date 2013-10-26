@@ -32,6 +32,7 @@ class PlaylistModel;
 class CategoriesModel;
 class NepomukMusicModel;
 class MetadataBackendCommonModel;
+class ModelMetadata;
 
 class MetadataMusicBackend : public AbstractMetadataBackend
 {
@@ -71,6 +72,7 @@ Q_SIGNALS:
 
 protected:
     void updateModelAccordingToFilters();
+    void clearFilters();
     virtual bool initImpl();
 
 private slots:
@@ -87,6 +89,9 @@ private:
     QString m_artistFilter;
     QString m_albumFilter;
     bool m_shallAddMediaToPlaylist : 1;
+    ModelMetadata* m_musicModelMetadata;
+    ModelMetadata* m_albumsModelMetadata;
+    ModelMetadata* m_artistsModelMetadata;
 };
 
 #endif // METADATAMUSICBACKEND_H

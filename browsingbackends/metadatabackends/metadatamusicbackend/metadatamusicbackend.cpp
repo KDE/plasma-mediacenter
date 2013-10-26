@@ -71,17 +71,21 @@ bool MetadataMusicBackend::initImpl()
     m_albumsModel->setDefaultDecoration("media-optical-audio");
     connect(m_musicModel, SIGNAL(modelReset()), SLOT(musicModelReset()));
 
-    m_albumsModel->metadata()->setName("Albums");
-    m_artistsModel->metadata()->setName("Artists");
-    m_musicModel->metadata()->setName("Songs#list");
+    m_musicModelMetadata = new ModelMetadata(m_musicModel, this);
+    m_albumsModelMetadata = new ModelMetadata(m_albumsModel, this);
+    m_artistsModelMetadata = new ModelMetadata(m_artistsModel, this);
 
-    m_musicModel->metadata()->setSupportsSearch(true);
-    m_artistsModel->metadata()->setSupportsSearch(true);
-    m_albumsModel->metadata()->setSupportsSearch(true);
+    m_albumsModelMetadata->setName("Albums");
+    m_artistsModelMetadata->setName("Artists");
+    m_musicModelMetadata->setName("Songs#list");
 
-    addModel(m_musicModel);
-    addModel(m_albumsModel);
-    addModel(m_artistsModel);
+    m_musicModelMetadata->setSupportsSearch(true);
+    m_artistsModelMetadata->setSupportsSearch(true);
+    m_albumsModelMetadata->setSupportsSearch(true);
+
+    addModel(m_musicModelMetadata);
+    addModel(m_albumsModelMetadata);
+    addModel(m_artistsModelMetadata);
 
     QTimer::singleShot(1000, this, SLOT(initializeModels()));
     return true;
@@ -128,9 +132,14 @@ void MetadataMusicBackend::setArtistFilter(const QString& filter)
     updateModelAccordingToFilters();
 }
 
-void MetadataMusicBackend::updateModelAccordingToFilters()
+void MetadataMusicBackend::clearFilters()
 {
     m_musicModel->clearAllFilters();
+}
+
+void MetadataMusicBackend::updateModelAccordingToFilters()
+{
+    clearFilters();
 
     if (!m_albumFilter.isEmpty()) {
         m_musicModel->addFilter(Nepomuk2::Vocabulary::NMM::musicAlbum(), Nepomuk2::Query::ResourceTerm(m_albumFilter));

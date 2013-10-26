@@ -35,7 +35,7 @@ public Q_SLOTS:
 
 protected:
     virtual bool initImpl();
-    virtual void setModel(QAbstractItemModel* model);
+    virtual void setModel(ModelMetadata* model);
     void handleBusySignals(PmcMetadataModel *emitter);
 
 private Q_SLOTS:

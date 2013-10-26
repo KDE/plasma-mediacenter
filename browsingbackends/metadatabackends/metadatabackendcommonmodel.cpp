@@ -23,8 +23,3 @@ MetadataBackendCommonModel::MetadataBackendCommonModel(QObject* parent): PmcMeta
 {
 
 }
-
-ModelMetadata* MetadataBackendCommonModel::metadata()
-{
-    return &m_metadata;
-}

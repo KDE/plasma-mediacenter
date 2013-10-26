@@ -68,11 +68,11 @@ FocusScope {
     }
 
     function switchToModel(model) {
-        if (firstBrowser.models.metadata.name == model.metadata.name) {
+        if (firstBrowser.models.name == model.name) {
             firstBrowser.focus = true;
             return true;
         }
-        if (secondBrowser.models.metadata.name == model.metadata.name) {
+        if (secondBrowser.models.name == model.name) {
             secondBrowser.focus = true;
             return true;
         }

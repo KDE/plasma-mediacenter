@@ -26,14 +26,9 @@
 class AlwaysExpandedMetadataModel : public PmcMetadataModel
 {
     Q_OBJECT
-    Q_PROPERTY(QObject* metadata READ metadata)
 public:
     explicit AlwaysExpandedMetadataModel(QObject* parent = 0);
     virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-
-    ModelMetadata *metadata();
-private:
-    ModelMetadata m_metadata;
 };
 
 #endif // ALWAYSEXPANDEDMETADATAMODEL_H

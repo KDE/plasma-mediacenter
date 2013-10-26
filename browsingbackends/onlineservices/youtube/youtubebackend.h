@@ -39,7 +39,6 @@ public:
     bool expand (int row);
     virtual bool initImpl();
     virtual void search(const QString& searchTerm);
-    virtual bool supportsSearch() const;
 
 public Q_SLOTS:
     virtual bool goOneLevelUp();

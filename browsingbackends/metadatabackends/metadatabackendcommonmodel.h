@@ -26,12 +26,8 @@
 class MetadataBackendCommonModel : public PmcMetadataModel
 {
     Q_OBJECT
-    Q_PROPERTY(QObject* metadata READ metadata)
 public:
     explicit MetadataBackendCommonModel(QObject* parent = 0);
-    ModelMetadata *metadata();
-private:
-    ModelMetadata m_metadata;
 };
 
 #endif // METADATAMUSICMODEL_H

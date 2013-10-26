@@ -20,6 +20,7 @@
 
 #include "abstractmetadatabackend.h"
 
+#include <libs/mediacenter/modelmetadata.h>
 #include <libs/mediacenter/pmcmetadatamodel.h>
 
 AbstractMetadataBackend::AbstractMetadataBackend(QObject* parent, const QVariantList& args)
@@ -62,14 +63,14 @@ void AbstractMetadataBackend::makeFree()
     emit busyChanged();
 }
 
-void AbstractMetadataBackend::setModel(QAbstractItemModel* model)
+void AbstractMetadataBackend::setModel(ModelMetadata* modelMetadata)
 {
-    PmcMetadataModel *metadataModel = qobject_cast<PmcMetadataModel*>(model);
+    PmcMetadataModel *metadataModel = qobject_cast<PmcMetadataModel*>(modelMetadata->model());
     if (metadataModel) {
         connect(metadataModel, SIGNAL(queryError(QString)), SIGNAL(error(QString)));
     }
 
-    MediaCenter::AbstractBrowsingBackend::setModel(model);
+    MediaCenter::AbstractBrowsingBackend::setModel(modelMetadata);
 }
 
 #include "abstractmetadatabackend.moc"

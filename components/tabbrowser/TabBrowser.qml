@@ -39,10 +39,9 @@ FocusScope {
         var models = tabBrowser.backend.models;
         mediaTabBar.populateButtons();
         for (i=0; i < models.length ;i++) {
-            var model = models[i];
-            console.log("CREATING SMART FOR " + model);
+            var modelMetadata = models[i];
+            console.log("CREATING SMART FOR " + modelMetadata);
             var browser = mediaBrowserSmartComponent.createObject(mediaTabGroup);
-
             tabBrowser.connectSignals(browser);
             browser.topSibling = mediaTabBar;
 
@@ -50,8 +49,8 @@ FocusScope {
             tabButton.tab = browser;
             tabButton.visible = true;
 
-            tabButton.text = model.metadata ? model.metadata.name.split("#")[0] : model.objectName.split("#")[0]
-            browser.models = model;
+            tabButton.text = modelMetadata.name ? modelMetadata.name.split("#")[0] : modelMetadata.objectName.split("#")[0]
+            browser.models = modelMetadata;
         }
     }
 

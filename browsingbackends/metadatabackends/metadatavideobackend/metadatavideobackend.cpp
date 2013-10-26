@@ -42,9 +42,10 @@ bool MetadataVideoBackend::initImpl()
 {
     AbstractMetadataBackend::initImpl();
     MetadataVideoModel *model = new MetadataVideoModel(this);
-    model->metadata()->setSupportsSearch(true);
+    ModelMetadata *metadata = new ModelMetadata(model, this);
+    metadata->setSupportsSearch(true);
     handleBusySignals(model);
-    setModel(model);
+    setModel(metadata);
     return true;
 }
 

@@ -20,15 +20,21 @@
 class ModelMetadata::Private
 {
 public:
+    Private()
+    {
+        model = 0;
+        supportsSearch = false;
+    }
     QString name;
-    bool supports;
+    bool supportsSearch;
+    QObject *model;
 };
 
-ModelMetadata::ModelMetadata(QObject* parent)
+ModelMetadata::ModelMetadata(QObject* model, QObject* parent)
     : QObject(parent)
     , d(new Private())
 {
-
+    d->model = model;
 }
 
 QString ModelMetadata::name() const
@@ -44,10 +50,23 @@ void ModelMetadata::setName(const QString& name)
 
 void ModelMetadata::setSupportsSearch(bool supports)
 {
-    d->supports = supports;
+    d->supportsSearch = supports;
 }
 
 bool ModelMetadata::supportsSearch() const
 {
-    return d->supports;
+    return d->supportsSearch;
+}
+
+QObject* ModelMetadata::model()
+{
+    return d->model;
+}
+
+void ModelMetadata::setModel(QObject* model)
+{
+    if (d->model != model) {
+        d->model = model;
+        emit modelChanged();
+    }
 }

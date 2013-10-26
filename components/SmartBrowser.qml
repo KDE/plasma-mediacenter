@@ -28,6 +28,7 @@ FocusScope {
 
     property QtObject backend
     property variant models: undefined
+    property variant model: models ? models.model : models
     property QtObject topSibling
     property QtObject bottomSibling
 
@@ -36,24 +37,32 @@ FocusScope {
     signal mediaSelected(int index, string url, string mediaType)
     signal popupRequested(int index, string url, string mediaType, string title)
 
-    onModelsChanged: {
+    onModelsChanged: updateBrowser()
+    onModelChanged: updateBrowser()
+
+    function updateBrowser()
+    {
         if (models && !backend) {
             console.log("******* WARNING: BACKEND IS UNDEFINED *******");
             return;
         }
         var previousBrowser = root.browser;
         if (models && (models.length == undefined || models.length == 1)) {
-            var model = models.length ? models[0] : models;
-            var modelLabel = model.metadata ? model.metadata.name : model.objectName;
-            if (model.first || model.second) {
+            var modelMetadata = models.length ? models[0] : models;
+            var modelLabel = modelMetadata.name ? modelMetadata.name : modelMetadata.objectName
+            if (modelMetadata.first || modelMetadata.second) {
                 splitBrowserComponent = Qt.createComponent("SplitBrowser.qml");
                 root.browser = splitBrowserComponent.createObject(root);
-                connectSignals(root.browser);
-                setSiblings(root.browser);
-                root.browser.backend = function() { return root.backend };
-                root.browser.firstModel = function() { return model.first };
-                root.browser.secondModel = function() { return model.second };
-                root.browser.focus = true;
+                if (splitBrowserComponent.status == Component.Ready) {
+                    connectSignals(root.browser);
+                    setSiblings(root.browser);
+                    root.browser.backend = function() { return root.backend };
+                    root.browser.firstModel = function() { return modelMetadata.first };
+                    root.browser.secondModel = function() { return modelMetadata.second };
+                    root.browser.focus = true;
+                } else {
+                    console.log("******* Error loading SplitBrowser " + splitBrowserComponent.errorString())
+                }
             } else if (modelLabel.split("#").length == 2 && modelLabel.split("#")[1] == "list") {
                 listBrowserComponent = Qt.createComponent("listbrowser/ListBrowser.qml");
                 if (listBrowserComponent.status == Component.Ready) {
@@ -61,7 +70,7 @@ FocusScope {
                     connectSignals(root.browser);
                     setSiblings(root.browser);
                     root.browser.currentBrowsingBackend = function() { return root.backend };
-                    root.browser.model = function() { return model };
+                    root.browser.modelMetadata = function() { return modelMetadata };
                     root.browser.focus = true;
                 } else {
                     console.log("******* Error loading ListBrowser " + listBrowserComponent.errorString())
@@ -72,7 +81,7 @@ FocusScope {
                 connectSignals(root.browser);
                 setSiblings(root.browser);
                 root.browser.currentBrowsingBackend = function() { return root.backend };
-                root.browser.model = function() { return model };
+                root.browser.modelMetadata = function() { return modelMetadata };
                 root.browser.focus = true;
             }
         } else if (models && models.length) {
@@ -112,5 +121,5 @@ FocusScope {
         }
     }
 
-    onActiveFocusChanged: if (activeFocus) root.browser.focus = true
+    onActiveFocusChanged: if (activeFocus && root.browser) root.browser.focus = true
 }

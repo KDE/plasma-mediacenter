@@ -24,7 +24,7 @@
 
 #include "metadatapicturemodel.h"
 
-#include <QDebug>
+#include <libs/mediacenter/modelmetadata.h>
 
 MEDIACENTER_EXPORT_BROWSINGBACKEND(MetadataPictureBackend)
 
@@ -40,8 +40,9 @@ MetadataPictureBackend::~MetadataPictureBackend()
 bool MetadataPictureBackend::initImpl()
 {
     PmcMetadataModel *pmcMetadataModel = new MetadataPictureModel(this);
+    ModelMetadata *metadata = new ModelMetadata(pmcMetadataModel, this);
     handleBusySignals(pmcMetadataModel);
-    setModel(pmcMetadataModel);
+    setModel(metadata);
     return true;
 }
 

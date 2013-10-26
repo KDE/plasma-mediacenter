@@ -32,6 +32,7 @@
 class QDeclarativeEngine;
 class QAbstractItemModel;
 class KConfigDialog;
+class ModelMetadata;
 
 namespace MediaCenter {
 
@@ -50,7 +51,6 @@ namespace MediaCenter {
 class MEDIACENTER_EXPORT AbstractBrowsingBackend : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QObject* backendModel READ model NOTIFY modelChanged)
     Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
     Q_PROPERTY(QString mediaBrowserSidePanel READ mediaBrowserSidePanel WRITE setMediaBrowserSidePanel NOTIFY mediaBrowserSidePanelChanged)
     Q_PROPERTY(QVariantList models READ models NOTIFY modelsChanged)
@@ -81,7 +81,7 @@ public:
      * @returns the model of the browsing backend.
      * The default implementation returns the first (or the only) model.
      */
-    QObject *model();
+    QAbstractItemModel *model();
 
     /**
      * @returns the models available in the browsing backend
@@ -209,7 +209,6 @@ public:
     void setPmcRuntime(QObject* pmcRuntime);
 
 Q_SIGNALS:
-    void modelChanged();
     void busyChanged();
     void mediaBrowserSidePanelChanged();
     void modelsChanged();
@@ -225,19 +224,26 @@ protected:
      * used by the view.
      * @see MediaRole
      */
-    void setModel(QAbstractItemModel * model);
+    void setModel(ModelMetadata* model);
+
+    /**
+     * This method must be set in order to provide the model to be
+     * used by the view.
+     * @see MediaRole
+     */
+    void setModel(QAbstractItemModel* model);
 
     /**
      * This method is used to add more models to this backend
      * @see MediaRole
      */
-    void addModel(QAbstractItemModel * model);
+    void addModel(ModelMetadata * model);
 
     /**
      * This method adds multiple models as a single model collection.
      * This indicates the UI to show views for these models simultaneously
      */
-    void addModelPair(const QString& pairLabel, QAbstractItemModel* firstModel, QAbstractItemModel* secondModel);
+    void addModelPair(const QString& pairLabel, QObject* firstModel, QObject* secondModel);
 
     /**
      * This is a convenience function which constructs a string representing QML source for

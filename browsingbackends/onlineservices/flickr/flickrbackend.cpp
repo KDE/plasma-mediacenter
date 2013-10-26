@@ -38,8 +38,9 @@ FlickrBackend::~FlickrBackend()
 bool FlickrBackend::initImpl()
 {
     FlickrModel *model = new FlickrModel(this);
-    model->metadata()->setSupportsSearch(true);
-    setModel(model);
+    ModelMetadata *metadata = new ModelMetadata(model, this);
+    metadata->setSupportsSearch(true);
+    setModel(metadata);
     return true;
 }
 

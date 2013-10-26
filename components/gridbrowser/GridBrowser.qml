@@ -28,7 +28,7 @@ FocusScope {
     anchors.fill: parent
 
     property QtObject currentBrowsingBackend
-    property alias model: gridBrowserGridView.model
+    property QtObject modelMetadata
     property alias currentIndex: gridBrowserGridView.currentIndex
     property alias count: gridBrowserGridView.count
 
@@ -43,7 +43,7 @@ FocusScope {
         anchors { top: parent.top; left: parent.left; right: parent.right }
         height: visible ? 32 : 0
         opacity: activeFocus ? 1 : 0.8
-        visible: (model && model.metadata && model.metadata.supportsSearch) ? true : false
+        visible: (modelMetadata && modelMetadata.model && modelMetadata.supportsSearch) ? true : false
         clearButtonShown: true
         placeholderText: i18n("Search")
         onTextChanged: searchTimer.restart()
@@ -56,7 +56,7 @@ FocusScope {
             interval: 500
             onTriggered: {
                 if (currentBrowsingBackend.searchModel) {
-                    currentBrowsingBackend.searchModel(searchField.text, model);
+                    currentBrowsingBackend.searchModel(searchField.text, modelMetadata.model);
                 } else if (currentBrowsingBackend.search) {
                     currentBrowsingBackend.search(searchField.text);
                 }
@@ -70,6 +70,7 @@ FocusScope {
             top: searchField.bottom; bottom: parent.bottom
             left: parent.left; right: parent.right
         }
+        model: modelMetadata ? modelMetadata.model : undefined
         clip: true
         cellWidth: cellHeight
         cellHeight: height/2.1
