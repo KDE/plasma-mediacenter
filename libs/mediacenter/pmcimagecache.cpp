@@ -42,7 +42,7 @@ PmcImageCache::~PmcImageCache()
 
 PmcImageCache::PmcImageCache()
 {
-    m_imageCache = new KImageCache("plasma_engine_preview", 52428800);
+    m_imageCache = new KImageCache("plasma_engine_preview", 209715200);
 }
 
 void PmcImageCache::addImage(const QString& id, const QImage& image)

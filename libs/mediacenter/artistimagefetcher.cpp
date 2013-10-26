@@ -19,14 +19,14 @@
 #include "artistimagefetcher.h"
 #include "pmcimagecache.h"
 
-#include <KDE/KGlobal>
+#include <KGlobal>
+#include <KDebug>
 
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QUrl>
 #include <QDomDocument>
 
-#include <QDebug>
 #include <QTimer>
 #include <QImage>
 
@@ -74,7 +74,9 @@ void ArtistImageFetcher::processQueue()
     }
 
     const QString nextArtist = m_artistQueue.dequeue();
-    m_netAccessManager.get(QNetworkRequest(QUrl(m_artistInfoUrl.arg(nextArtist))));
+    QNetworkReply *reply = m_netAccessManager.get(QNetworkRequest(QUrl(m_artistInfoUrl.arg(nextArtist))));
+    m_currentArtistInfoDownloads.insert(reply, nextArtist);
+
     m_busy = true;
 }
 
@@ -85,7 +87,7 @@ void ArtistImageFetcher::gotResponse(QNetworkReply* reply)
 
     const QDomElement artistElement = doc.firstChildElement().firstChildElement();
 
-    const QString artistName = artistElement.elementsByTagName("name").at(0).toElement().text();
+    const QString artistName = m_currentArtistInfoDownloads.take(reply);
     const QDomNodeList imageList = artistElement.childNodes();
 
     for (int i=imageList.length(); i>0; i--) {
@@ -97,13 +99,18 @@ void ArtistImageFetcher::gotResponse(QNetworkReply* reply)
             return;
         }
     }
+
+    kDebug() << "Webservice has no image for " << artistName;
+    QTimer::singleShot(0, this, SLOT(processQueue()));
 }
 
 void ArtistImageFetcher::downloadImage(const QString& artistName, const QString& url)
 {
-    if (url.isEmpty())
+    if (url.isEmpty()) {
+        kDebug() << "Webservice has no image for " << artistName;
         return;
-    qDebug() << "Downloading image for " << artistName << " from " << url;
+    }
+    kDebug() << "Downloading image for " << artistName << " from " << url;
     QNetworkReply *reply = m_imageDownloadManager.get(QNetworkRequest(url));
     m_currentArtistImageDownloads.insert(reply, artistName);
 }
@@ -114,7 +121,7 @@ void ArtistImageFetcher::gotImage(QNetworkReply* reply)
     const QByteArray data = reply->readAll();
 
     QImage image = QImage::fromData(data);
-    qDebug() << "Adding image " << image.size() << " for " << artistName;
+    kDebug() << "Adding image " << image.size() << " for " << artistName;
     PmcImageCache::instance()->addImage(artistName.prepend(artistIdentification), image);
 
     m_busy = false;

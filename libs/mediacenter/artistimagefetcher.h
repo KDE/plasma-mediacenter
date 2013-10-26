@@ -51,6 +51,7 @@ private:
     QQueue<QString> m_artistQueue;
     QNetworkAccessManager m_netAccessManager;
     QNetworkAccessManager m_imageDownloadManager;
+    QHash<QNetworkReply*, QString> m_currentArtistInfoDownloads;
     QHash<QNetworkReply*, QString> m_currentArtistImageDownloads;
 };
 
