@@ -101,11 +101,11 @@ void LastFmImageFetcher::gotResponse(QNetworkReply* reply)
     QDomDocument doc;
     doc.setContent(reply->readAll());
 
-    const QDomElement artistElement = doc.firstChildElement().firstChildElement();
-    const QString type = artistElement.tagName();
+    const QDomElement firstElement = doc.firstChildElement().firstChildElement();
+    const QString type = firstElement.tagName();
 
     const QString name = m_currentInfoDownloads.take(reply);
-    const QDomNodeList imageList = artistElement.childNodes();
+    const QDomNodeList imageList = firstElement.childNodes();
 
     for (int i=imageList.length(); i>0; i--) {
         const QDomElement element = imageList.at(i).toElement();

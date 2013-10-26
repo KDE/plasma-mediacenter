@@ -16,8 +16,8 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef ARTISTIMAGEFETCHER_H
-#define ARTISTIMAGEFETCHER_H
+#ifndef LASTFMIMAGEFETCHER_H
+#define LASTFMIMAGEFETCHER_H
 
 #include <QObject>
 #include <QQueue>
@@ -61,4 +61,4 @@ private:
     QHash<QString, QPersistentModelIndex> m_modelIndexes;
 };
 
-#endif // ARTISTIMAGEFETCHER_H
+#endif // LASTFMIMAGEFETCHER_H_H
