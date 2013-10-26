@@ -16,7 +16,7 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#include "artistimagefetcher.h"
+#include "lastfmimagefetcher.h"
 #include "pmcimagecache.h"
 
 #include <KGlobal>
@@ -30,65 +30,81 @@
 #include <QTimer>
 #include <QImage>
 
-class ArtistImageFetcher::Singleton
+class LastFmImageFetcher::Singleton
 {
 public:
-    ArtistImageFetcher q;
+    LastFmImageFetcher q;
 };
 
-K_GLOBAL_STATIC( ArtistImageFetcher::Singleton, singleton )
+K_GLOBAL_STATIC( LastFmImageFetcher::Singleton, singleton )
 
-ArtistImageFetcher *ArtistImageFetcher::instance()
+LastFmImageFetcher *LastFmImageFetcher::instance()
 {
     return &( singleton->q );
 }
 
-const char *ArtistImageFetcher::artistIdentification = "artist:";
-
-ArtistImageFetcher::ArtistImageFetcher(QObject* parent)
+LastFmImageFetcher::LastFmImageFetcher(QObject* parent)
     : QObject(parent)
     , m_busy(false)
     , m_artistInfoUrl("http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=%1&api_key=22a6906e49bffd8cc11be1385aea73de")
+    , m_albumInfoUrl("http://ws.audioscrobbler.com/2.0/?method=album.getinfo&artist=%1&album=%2&api_key=22a6906e49bffd8cc11be1385aea73de")
 
 {
     connect(&m_netAccessManager, SIGNAL(finished(QNetworkReply*)), SLOT(gotResponse(QNetworkReply*)));
     connect(&m_imageDownloadManager, SIGNAL(finished(QNetworkReply*)), SLOT(gotImage(QNetworkReply*)));
 }
 
-ArtistImageFetcher::~ArtistImageFetcher()
+LastFmImageFetcher::~LastFmImageFetcher()
 {
 
 }
 
-void ArtistImageFetcher::fetchArtistImage(const QString& artistImage, const QPersistentModelIndex& index)
+void LastFmImageFetcher::fetchImage(const QString& type, const QPersistentModelIndex& index,
+                                    const QString& artistName, const QString &albumName)
 {
-    m_artistQueue.enqueue(artistImage);
-    m_modelIndexes.insert(artistImage, index);
+    QStringList nameList;
+    nameList << type << artistName;
+    if (!albumName.isEmpty()) {
+        nameList << albumName;
+    }
+    m_pendingQueue.enqueue(nameList);
+    m_modelIndexes.insert(albumName.isEmpty() ? artistName : albumName, index);
     QTimer::singleShot(0, this, SLOT(processQueue()));
 }
 
-void ArtistImageFetcher::processQueue()
+void LastFmImageFetcher::processQueue()
 {
-    if (m_artistQueue.empty()) {
+    if (m_pendingQueue.empty()) {
         QTimer::singleShot(1000, this, SLOT(processQueue()));
         return;
     }
 
-    const QString nextArtist = m_artistQueue.dequeue();
-    QNetworkReply *reply = m_netAccessManager.get(QNetworkRequest(QUrl(m_artistInfoUrl.arg(nextArtist))));
-    m_currentArtistInfoDownloads.insert(reply, nextArtist);
+    const QStringList nameList = m_pendingQueue.dequeue();
+
+    QUrl apiUrl;
+    if (nameList.count() > 2) {
+        apiUrl = QUrl(m_albumInfoUrl.arg(nameList.at(1), nameList.at(2)));
+    } else {
+        apiUrl = QUrl(m_artistInfoUrl.arg(nameList.at(1)));
+    }
+
+    kDebug() << "Fetching " << apiUrl;
+    QNetworkReply *reply = m_netAccessManager.get(QNetworkRequest(apiUrl));
+    m_currentInfoDownloads.insert(reply,
+                                  nameList.count() > 2 ? nameList.at(2) : nameList.at(1));
 
     m_busy = true;
 }
 
-void ArtistImageFetcher::gotResponse(QNetworkReply* reply)
+void LastFmImageFetcher::gotResponse(QNetworkReply* reply)
 {
     QDomDocument doc;
     doc.setContent(reply->readAll());
 
     const QDomElement artistElement = doc.firstChildElement().firstChildElement();
+    const QString type = artistElement.tagName();
 
-    const QString artistName = m_currentArtistInfoDownloads.take(reply);
+    const QString name = m_currentInfoDownloads.take(reply);
     const QDomNodeList imageList = artistElement.childNodes();
 
     for (int i=imageList.length(); i>0; i--) {
@@ -96,37 +112,39 @@ void ArtistImageFetcher::gotResponse(QNetworkReply* reply)
         if (element.tagName() == "image" &&
             (element.attribute("size") == "extralarge"
                 || element.attribute("size") == "large")) {
-            downloadImage(artistName, element.text());
+            downloadImage(type, name, element.text());
             return;
         }
     }
 
-    kDebug() << "Webservice has no image for " << artistName;
+    kDebug() << "Webservice has no image for " << name;
     QTimer::singleShot(0, this, SLOT(processQueue()));
 }
 
-void ArtistImageFetcher::downloadImage(const QString& artistName, const QString& url)
+void LastFmImageFetcher::downloadImage(const QString& type, const QString& name, const QString& url)
 {
-    if (url.isEmpty()) {
-        kDebug() << "Webservice has no image for " << artistName;
+    if (url.isEmpty() || type == "error") {
+        kDebug() << "Webservice has no image for " << name;
         return;
     }
-    kDebug() << "Downloading image for " << artistName << " from " << url;
+    kDebug() << "Downloading image for " << name << " from " << url;
     QNetworkReply *reply = m_imageDownloadManager.get(QNetworkRequest(url));
-    m_currentArtistImageDownloads.insert(reply, artistName);
+    m_currentImageDownloads.insert(reply, QPair<QString,QString>(type, name));
 }
 
-void ArtistImageFetcher::gotImage(QNetworkReply* reply)
+void LastFmImageFetcher::gotImage(QNetworkReply* reply)
 {
-    QString artistName = m_currentArtistImageDownloads.take(reply);
+    const QPair<QString,QString> thisDownload = m_currentImageDownloads.take(reply);
+    const QString typePrefix = thisDownload.first + ':';
+    const QString name = thisDownload.second;
     const QByteArray data = reply->readAll();
 
     QImage image = QImage::fromData(data);
-    kDebug() << "Adding image " << image.size() << " for " << artistName;
-    PmcImageCache::instance()->addImage(QString(artistName).prepend(artistIdentification), image);
+    kDebug() << "Adding image " << image.size() << " for " << name;
+    PmcImageCache::instance()->addImage(QString(name).prepend(typePrefix), image);
 
     m_busy = false;
     QTimer::singleShot(0, this, SLOT(processQueue()));
 
-    emit imageFetched(m_modelIndexes.take(artistName), artistName);
+    emit imageFetched(m_modelIndexes.take(name), name);
 }

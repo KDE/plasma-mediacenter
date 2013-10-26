@@ -25,19 +25,19 @@
 #include <QNetworkAccessManager>
 #include <QPersistentModelIndex>
 
-class ArtistImageFetcher : public QObject
+class LastFmImageFetcher : public QObject
 {
     Q_OBJECT
 public:
     class Singleton;
 
-    static ArtistImageFetcher *instance();
+    static LastFmImageFetcher *instance();
 
-    static const char *artistIdentification;
-    explicit ArtistImageFetcher(QObject* parent = 0);
-    ~ArtistImageFetcher();
+    explicit LastFmImageFetcher(QObject* parent = 0);
+    ~LastFmImageFetcher();
 
-    void fetchArtistImage(const QString &artistName, const QPersistentModelIndex &index);
+    void fetchImage(const QString& type, const QPersistentModelIndex& index,
+                    const QString& name, const QString& albumName = QString());
 
 Q_SIGNALS:
     void imageFetched(const QPersistentModelIndex &index, const QString &artistName);
@@ -48,15 +48,16 @@ private Q_SLOTS:
     void gotImage(QNetworkReply* reply);
 
 private:
-    void downloadImage(const QString &artistName, const QString &url);
+    void downloadImage(const QString& type, const QString& name, const QString& url);
 
     bool m_busy;
     QString m_artistInfoUrl;
-    QQueue<QString> m_artistQueue;
+    QString m_albumInfoUrl;
+    QQueue< QList<QString> > m_pendingQueue;
     QNetworkAccessManager m_netAccessManager;
     QNetworkAccessManager m_imageDownloadManager;
-    QHash<QNetworkReply*, QString> m_currentArtistInfoDownloads;
-    QHash<QNetworkReply*, QString> m_currentArtistImageDownloads;
+    QHash<QNetworkReply*, QString> m_currentInfoDownloads;
+    QHash<QNetworkReply*, QPair<QString,QString> > m_currentImageDownloads;
     QHash<QString, QPersistentModelIndex> m_modelIndexes;
 };
 

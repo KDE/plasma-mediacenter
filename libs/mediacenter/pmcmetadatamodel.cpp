@@ -21,7 +21,7 @@
 #include "pmcimagecache.h"
 #include "pmcimageprovider.h"
 #include "metadataupdater.h"
-#include "artistimagefetcher.h"
+#include "lastfmimagefetcher.h"
 
 #include <Nepomuk2/Query/Query>
 #include <Nepomuk2/Vocabulary/NIE>
@@ -95,7 +95,7 @@ PmcMetadataModel::PmcMetadataModel(QObject* parent):
     connect(d->metadataUpdater, SIGNAL(queryError(QString)), SIGNAL(queryError(QString)));
     d->metadataUpdater->start(QThread::IdlePriority);
 
-    connect(ArtistImageFetcher::instance(), SIGNAL(imageFetched(QPersistentModelIndex,QString)), SLOT(signalUpdate(QPersistentModelIndex,QString)));
+    connect(LastFmImageFetcher::instance(), SIGNAL(imageFetched(QPersistentModelIndex,QString)), SLOT(signalUpdate(QPersistentModelIndex,QString)));
 }
 
 PmcMetadataModel::~PmcMetadataModel()
@@ -205,6 +205,10 @@ QVariant PmcMetadataModel::decorationForMetadata(const QVariant &metadataValue, 
             const QString albumUri = QString("album:%1").arg(albumName);
             if (PmcImageCache::instance()->containsId(albumUri)) {
                 return QString("image://%1/%2").arg(PmcImageProvider::identificationString, albumUri);
+            } else {
+                //MediaUrlRole is abused for albums to pass on the artist name
+                const QString artistNameForAlbum = metadataValueForRole(index, MediaCenter::MediaUrlRole).toString();
+                LastFmImageFetcher::instance()->fetchImage("album", QPersistentModelIndex(index), artistNameForAlbum, albumName);
             }
         } else if (mediaType == "artist") {
             const QString artistName = metadataValueForRole(index, Qt::DisplayRole).toString();
@@ -212,7 +216,7 @@ QVariant PmcMetadataModel::decorationForMetadata(const QVariant &metadataValue, 
             if (PmcImageCache::instance()->containsId(artistUri)) {
                 return QString("image://%1/%2").arg(PmcImageProvider::identificationString, artistUri);
             } else {
-                ArtistImageFetcher::instance()->fetchArtistImage(artistName, QPersistentModelIndex(index));
+                LastFmImageFetcher::instance()->fetchImage("artist", QPersistentModelIndex(index), artistName);
             }
         }
         if (d->defaultDecoration.isValid()) {

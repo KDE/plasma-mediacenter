@@ -202,7 +202,12 @@ QString MetadataUpdater::mimetypeForResource(const Nepomuk2::Resource& resource)
 
 QString MetadataUpdater::urlForResource(const Nepomuk2::Resource &resource) const
 {
-    return resource.property(Nepomuk2::Vocabulary::NIE::url()).toUrl().toString();
+    //Misusing URL role for returning Artist for Albums, not too bad I guess
+    if (resource.type() == Nepomuk2::Vocabulary::NMM::MusicAlbum()) {
+        return resource.property(Nepomuk2::Vocabulary::NMM::albumArtist()).toResource().genericLabel();
+    } else {
+        return resource.property(Nepomuk2::Vocabulary::NIE::url()).toUrl().toString();
+    }
 }
 
 void MetadataUpdater::finishedListing()
