@@ -80,7 +80,7 @@ FocusScope {
             horizontal: true
             view: listView
 
-            width: ListView.view.width
+            width: ListView.view.width - listScrollbar.width
             height: 64
             clip: !ListView.isCurrentItem
             z: ListView.isCurrentItem ? 1 : 0
@@ -91,7 +91,8 @@ FocusScope {
         }
 
         PlasmaComponents.ScrollBar {
-            orientation: _pmc_is_desktop ? Qt.Vertical : Qt.Horizontal
+            id: listScrollbar
+            orientation: Qt.Vertical
             flickableItem: listView
         }
 
