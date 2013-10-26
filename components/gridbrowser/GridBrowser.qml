@@ -101,6 +101,18 @@ FocusScope {
             visible: running
         }
 
+        QtExtraComponents.MouseEventListener {
+            anchors.fill: parent
+
+            onWheelMoved: {
+                if (wheel.delta < 0) {
+                    gridBrowserGridView.moveCurrentIndexRight();
+                } else {
+                    gridBrowserGridView.moveCurrentIndexLeft();
+                }
+            }
+        }
+
         onCurrentIndexChanged: positionViewAtIndex(currentIndex, GridView.Contain)
 
         Keys.onPressed: {

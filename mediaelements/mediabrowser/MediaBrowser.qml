@@ -21,7 +21,6 @@
 import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
-import org.kde.qtextracomponents 0.1 as QtExtra
 import org.kde.plasma.mediacenter.components 0.1 as MediaCenterComponents
 
 FocusScope {
@@ -50,7 +49,7 @@ FocusScope {
         }
     }
 
-    QtExtra.MouseEventListener {
+    Item {
         id: mediaBrowserViewItem
         property QtObject mediaBrowserGridView
 
@@ -68,14 +67,6 @@ FocusScope {
             buttons: currentBrowsingBackend.buttons
             onButtonClicked: currentBrowsingBackend.handleButtonClick(buttonName)
             Keys.onDownPressed: mediaBrowserViewItem.mediaBrowserGridView.focus = true
-        }
-
-        onWheelMoved: {
-            if (wheel.delta < 0) {
-                if(mediaBrowserGridView.moveCurrentIndexRight) mediaBrowserGridView.moveCurrentIndexRight();
-            } else {
-                if(mediaBrowserGridView.moveCurrentIndexLeft) mediaBrowserGridView.moveCurrentIndexLeft();
-            }
         }
     }
 
