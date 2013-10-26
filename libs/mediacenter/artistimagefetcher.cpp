@@ -60,9 +60,10 @@ ArtistImageFetcher::~ArtistImageFetcher()
 
 }
 
-void ArtistImageFetcher::fetchArtistImage(const QString& artistImage)
+void ArtistImageFetcher::fetchArtistImage(const QString& artistImage, const QPersistentModelIndex& index)
 {
     m_artistQueue.enqueue(artistImage);
+    m_modelIndexes.insert(artistImage, index);
     QTimer::singleShot(0, this, SLOT(processQueue()));
 }
 
@@ -122,8 +123,10 @@ void ArtistImageFetcher::gotImage(QNetworkReply* reply)
 
     QImage image = QImage::fromData(data);
     kDebug() << "Adding image " << image.size() << " for " << artistName;
-    PmcImageCache::instance()->addImage(artistName.prepend(artistIdentification), image);
+    PmcImageCache::instance()->addImage(QString(artistName).prepend(artistIdentification), image);
 
     m_busy = false;
     QTimer::singleShot(0, this, SLOT(processQueue()));
+
+    emit imageFetched(m_modelIndexes.take(artistName), artistName);
 }

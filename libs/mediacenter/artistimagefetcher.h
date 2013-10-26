@@ -23,6 +23,7 @@
 #include <QQueue>
 #include <QHash>
 #include <QNetworkAccessManager>
+#include <QPersistentModelIndex>
 
 class ArtistImageFetcher : public QObject
 {
@@ -36,7 +37,10 @@ public:
     explicit ArtistImageFetcher(QObject* parent = 0);
     ~ArtistImageFetcher();
 
-    void fetchArtistImage(const QString &artistImage);
+    void fetchArtistImage(const QString &artistName, const QPersistentModelIndex &index);
+
+Q_SIGNALS:
+    void imageFetched(const QPersistentModelIndex &index, const QString &artistName);
 
 private Q_SLOTS:
     void processQueue();
@@ -53,6 +57,7 @@ private:
     QNetworkAccessManager m_imageDownloadManager;
     QHash<QNetworkReply*, QString> m_currentArtistInfoDownloads;
     QHash<QNetworkReply*, QString> m_currentArtistImageDownloads;
+    QHash<QString, QPersistentModelIndex> m_modelIndexes;
 };
 
 #endif // ARTISTIMAGEFETCHER_H

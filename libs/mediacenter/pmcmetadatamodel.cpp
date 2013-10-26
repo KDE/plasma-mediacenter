@@ -94,6 +94,8 @@ PmcMetadataModel::PmcMetadataModel(QObject* parent):
     connect(d->metadataUpdater, SIGNAL(queryFinished()), SIGNAL(queryFinished()));
     connect(d->metadataUpdater, SIGNAL(queryError(QString)), SIGNAL(queryError(QString)));
     d->metadataUpdater->start(QThread::IdlePriority);
+
+    connect(ArtistImageFetcher::instance(), SIGNAL(imageFetched(QPersistentModelIndex,QString)), SLOT(signalUpdate(QPersistentModelIndex,QString)));
 }
 
 PmcMetadataModel::~PmcMetadataModel()
@@ -210,7 +212,7 @@ QVariant PmcMetadataModel::decorationForMetadata(const QVariant &metadataValue, 
             if (PmcImageCache::instance()->containsId(artistUri)) {
                 return QString("image://%1/%2").arg(PmcImageProvider::identificationString, artistUri);
             } else {
-                ArtistImageFetcher::instance()->fetchArtistImage(artistName);
+                ArtistImageFetcher::instance()->fetchArtistImage(artistName, QPersistentModelIndex(index));
             }
         }
         if (d->defaultDecoration.isValid()) {
@@ -377,6 +379,16 @@ void PmcMetadataModel::setSearchTerm(const QString& searchTerm)
 void PmcMetadataModel::setDefaultDecoration ( const QVariant& decoration )
 {
     d->defaultDecoration = decoration;
+}
+
+void PmcMetadataModel::signalUpdate(const QPersistentModelIndex& index, const QString& displayString)
+{
+    if (!displayString.isEmpty() &&
+        metadataValueForRole(index, Qt::DisplayRole).toString() != displayString) {
+        return;
+    }
+
+    emit dataChanged(index, index);
 }
 
 #include "pmcmetadatamodel.moc"

@@ -84,6 +84,7 @@ private Q_SLOTS:
     void previewFailed(const KFileItem &item);
     void fetchMetadata();
     void handleUpdaterReset();
+    void signalUpdate(const QPersistentModelIndex &index, const QString &displayString = QString());
 
 private:
     class Private;
