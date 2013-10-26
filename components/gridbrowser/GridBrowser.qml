@@ -114,7 +114,7 @@ FocusScope {
                     gridBrowserRoot.topSibling.focus = true;
                 }
                 event.accepted = true;
-            } else if (event.key != Qt.Key_Escape && event.text && searchMedia.visible) {
+            } else if (event.key != Qt.Key_Escape && event.text && searchField.visible) {
                 searchField.focus = true;
                 searchField.text = event.text;
             }
