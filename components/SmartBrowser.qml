@@ -102,8 +102,8 @@ FocusScope {
             console.log("SIBLINGS: WARNING: BROWSER IS NULL!");
             return;
         }
-        browser.topSibling = root.topSibling;
-        browser.bottomSibling = root.bottomSibling;
+        browser.topSibling = function() { return root.topSibling; }
+        browser.bottomSibling = function() { return root.bottomSibling; }
     }
 
     function connectSignals(browser) {

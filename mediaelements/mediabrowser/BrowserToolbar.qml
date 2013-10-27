@@ -43,8 +43,8 @@ FocusScope {
 
                 PlasmaComponents.Button {
                     anchors { fill: parent; margins: 5 }
-                    text: modelData
                     focus: true
+                    text: modelData
                     font.bold: activeFocus
                     onClicked: root.buttonClicked(modelData)
                     Keys.onRightPressed: repeater.itemAt(index+1).focus = true;
@@ -52,7 +52,7 @@ FocusScope {
                 }
             }
         }
-
-        Component.onCompleted: if (repeater.count) repeater.itemAt(0).focus = true;
     }
+
+    onActiveFocusChanged: repeater.itemAt(0).focus = true;
 }
