@@ -131,6 +131,9 @@ FocusScope {
                 Keys.onPressed: if (event.key == Qt.Key_Up && currentIndex == 0) {
                     filterText.focus = true;
                     event.accepted = true;
+                } else if (event.key != Qt.Key_Escape && event.text && filterText.visible) {
+                    filterText.focus = true;
+                    filterText.text = event.text;
                 }
             }
         }
