@@ -134,6 +134,7 @@ void MetadataMusicBackend::setArtistFilter(const QString& filter)
 
 void MetadataMusicBackend::clearFilters()
 {
+    m_musicModelMetadata->setHeaderText(QString());
     m_musicModel->clearAllFilters();
 }
 
@@ -142,9 +143,13 @@ void MetadataMusicBackend::updateModelAccordingToFilters()
     clearFilters();
 
     if (!m_albumFilter.isEmpty()) {
+        Nepomuk2::Resource r(m_albumFilter);
+        m_musicModelMetadata->setHeaderText(QString("Showing music from %1, click %2 to reset").arg(r.genericLabel()).arg(s_showAllButton));
         m_musicModel->addFilter(Nepomuk2::Vocabulary::NMM::musicAlbum(), Nepomuk2::Query::ResourceTerm(m_albumFilter));
     }
     if (!m_artistFilter.isEmpty()) {
+        Nepomuk2::Resource r(m_artistFilter);
+        m_musicModelMetadata->setHeaderText(QString("Showing music from %1, click %2 to reset").arg(r.genericLabel()).arg(s_showAllButton));
         m_musicModel->addFilter(Nepomuk2::Vocabulary::NMM::performer(), Nepomuk2::Query::ResourceTerm(m_artistFilter));
     }
 }
