@@ -165,7 +165,7 @@ FocusScope {
 
             //FIXME: Comparison should not rely on unique model name
             if ((smartBrowser.browser.switchToModel && smartBrowser.browser.switchToModel(model))
-                || (smartBrowser.browser.model && smartBrowser.browser.model.metadata.name == model.metadata.name)) {
+                || (smartBrowser.browser.modelMetadata && smartBrowser.browser.modelMetadata.name == model.name)) {
                 mediaTabGroup.currentTab = smartBrowser;
                 mediaTabBar.currentTab = tabButton;
                 smartBrowser.focus = true;
