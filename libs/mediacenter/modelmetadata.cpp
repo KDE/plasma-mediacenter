@@ -28,6 +28,7 @@ public:
     QString name;
     bool supportsSearch;
     QObject *model;
+    QString headerText;
 };
 
 ModelMetadata::ModelMetadata(QObject* model, QObject* parent)
@@ -68,5 +69,18 @@ void ModelMetadata::setModel(QObject* model)
     if (d->model != model) {
         d->model = model;
         emit modelChanged();
+    }
+}
+
+QString ModelMetadata::headerText() const
+{
+    return d->headerText;
+}
+
+void ModelMetadata::setHeaderText(const QString& text)
+{
+    if (d->headerText != text) {
+        d->headerText = text;
+        emit headerTextChanged();
     }
 }

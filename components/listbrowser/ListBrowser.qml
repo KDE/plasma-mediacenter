@@ -75,6 +75,14 @@ FocusScope {
         focus: true
         highlight: PlasmaComponents.Highlight { }
         highlightFollowsCurrentItem: true
+        header: Common.LabelOverlay {
+            height: text == "" ? 0 : 64; width: height ? parent.width : 0
+
+            text: modelMetadata.headerText && modelMetadata.headerText != "" ?
+                    modelMetadata.headerText : ""
+            visible: text != ""
+            horizontalAlignment: Text.AlignLeft
+        }
 
         delegate: Common.MediaItemDelegate {
             horizontal: true
