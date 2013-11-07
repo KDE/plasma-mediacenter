@@ -38,7 +38,7 @@ target_link_libraries(plasmamediacenter
     ${TAGLIB_LIBRARIES}
     ${NEPOMUK_CORE_LIBRARY}
     )
-set_target_properties(plasmamediacenter PROPERTIES VERSION 1.1 SOVERSION 1.1)
+set_target_properties(plasmamediacenter PROPERTIES VERSION 1.2 SOVERSION 1.2)
 
 install(TARGETS plasmamediacenter ${INSTALL_TARGETS_DEFAULT_ARGS})
 

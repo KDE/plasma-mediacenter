@@ -1,3 +1,8 @@
+2013 -11-07 Sinny Kumari <ksinny@gmail.com> - v1.2.0-alpha
+    * Folder Preview in File Browser
+    * Album covers and Artist images for All Music mode
+    * Re-factored common components for media browsers
+
 2013 -08-19 Sinny Kumari <ksinny@gmail.com> - v1.1.0
 
     * Plasma-mediacenter version-1.1.0 stable release
