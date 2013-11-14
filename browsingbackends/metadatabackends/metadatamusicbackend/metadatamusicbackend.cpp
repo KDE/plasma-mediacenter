@@ -68,7 +68,7 @@ bool MetadataMusicBackend::initImpl()
     m_artistsModel = new AlwaysExpandedMetadataModel(this);
     m_musicModel = new MetadataBackendCommonModel(this);
     m_artistsModel->setDefaultDecoration("user-identity");
-    m_albumsModel->setDefaultDecoration("media-optical-audio");
+    m_albumsModel->setDefaultDecoration("nocover");
     connect(m_musicModel, SIGNAL(modelReset()), SLOT(musicModelReset()));
 
     m_musicModelMetadata = new ModelMetadata(m_musicModel, this);
