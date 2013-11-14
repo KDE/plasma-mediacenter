@@ -101,11 +101,16 @@ Item {
                 id: mediaItemDelegateItemMouseArea
                 hoverEnabled: true
                 anchors.fill: parent
+                acceptedButtons: Qt.LeftButton | Qt.RightButton
                 onEntered: if(mediaItem.view &&
                                 !mediaItem.view.moving &&
                                     !mediaItem.view.flicking)
                                         mediaItem.view.currentIndex = index
-                onClicked: mediaItem.clicked(index)
+                onClicked: if (mouse.button == Qt.RightButton) {
+                    mediaItem.pressAndHold(index);
+                } else {
+                    mediaItem.clicked(index);
+                }
                 onPressAndHold: mediaItem.pressAndHold(index);
             }
         }
