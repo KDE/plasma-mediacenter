@@ -39,6 +39,7 @@ public:
     Q_INVOKABLE  void createNewPlaylist(const QString &name);
     Q_INVOKABLE void setPlaylistModelAddress (QObject *model);
     Q_INVOKABLE void switchToPlaylist (QString name);
+    Q_INVOKABLE void removeCurrentPlaylist ();
     
 private:
     QStringList m_multiplePlaylistList;

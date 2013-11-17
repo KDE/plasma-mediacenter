@@ -56,6 +56,9 @@ public:
     Q_INVOKABLE void shuffle();
     void setNewPlaylist (QString name);
     void switchToPlaylist (QString name);
+    bool removeCurrentPlaylist ();
+    QString playlistName();
+    void setDefaultPlaylist();
 
 Q_SIGNALS:
     void currentIndexChanged();
