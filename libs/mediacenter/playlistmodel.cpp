@@ -275,7 +275,7 @@ void PlaylistModel::switchToPlaylist(QString name)
 
 }
 
-bool PlaylistModel::removeCurrentPlaylist()
+bool PlaylistModel::removeCurrentPlaylist(QString PlaylistName)
 {
     if (m_playlistName == "Default") {
         clearPlaylist();
@@ -284,16 +284,11 @@ bool PlaylistModel::removeCurrentPlaylist()
     else {
         beginResetModel();
         QFile::remove(playlistFilePath());
-        setDefaultPlaylist();
+        m_playlistName = PlaylistName;
         loadFromFile (playlistFilePath());
         endResetModel();
         return true;
     }
-}
-
-void PlaylistModel::setDefaultPlaylist()
-{
-    m_playlistName = "Default";
 }
 
 
