@@ -78,3 +78,15 @@ void MultiplePlaylistModel::switchToPlaylist(QString name)
 {
     m_playlistModel->switchToPlaylist(name);
 }
+
+void MultiplePlaylistModel::removeCurrentPlaylist()
+{
+    beginResetModel();
+    QString currPlaylist = m_playlistModel->playlistName();
+    bool status = m_playlistModel->removeCurrentPlaylist();
+    if (status) {
+        m_multiplePlaylistList.removeOne (currPlaylist);
+    }
+    endResetModel();
+}
+

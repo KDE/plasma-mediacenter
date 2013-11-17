@@ -39,12 +39,11 @@ FocusScope {
             
             Row {
                 id: multiplePlaylistRow
-                spacing: 10
                 anchors {top: parent.top; left: parent.left; right: parent.right }
                 height: 64
                 ListView {
                     id: multiplePlaylistList
-                    width: parent.width * 2/3
+                    width: parent.width - createPlaylistTextField.width - createPlaylistButton.width - removePlaylistButton.width
                     height: parent.height
                     orientation: ListView.Horizontal
                     spacing: 3
@@ -81,25 +80,41 @@ FocusScope {
                 PlasmaComponents.TextField {
                     id: createPlaylistTextField
 
+                    visible: false
                     anchors.verticalCenter: parent.verticalCenter
                     height: 30
-                    width: parent.width - multiplePlaylistList.width - createPlaylistButton.width
+                    width: visible ? 300 : 1
                     clearButtonShown: true
                     placeholderText: i18n("Create New Playlist")
                     Keys.onDownPressed: filterText.focus = true
                 }
-                PlasmaComponents.Button {
+                PlasmaComponents.ToolButton {
                     id: createPlaylistButton
-                    height: 30
+                    iconSource: "list-add"
+                    height: parent.height
+                    width: height
                     anchors.verticalCenter: parent.verticalCenter
-                    
-                    text: i18n("Create")
 
                     onClicked: {
-                        if (createPlaylistTextField.text != "") {
-                            multiplePlaylistList.model.createNewPlaylist (createPlaylistTextField.text)
-                            createPlaylistTextField.text = ""
+                        if (!createPlaylistTextField.visible) {
+                            createPlaylistTextField.visible = true
+                        } else {
+                            if (createPlaylistTextField.text != "") {
+                                multiplePlaylistList.model.createNewPlaylist (createPlaylistTextField.text)
+                                createPlaylistTextField.text = ""
+                            }
+                            createPlaylistTextField.visible = false
                         }
+                    }
+                }
+                PlasmaComponents.ToolButton {
+                    id: removePlaylistButton
+                    iconSource: "list-remove"
+                    height: parent.height
+                    width: height
+                    anchors.verticalCenter: parent.verticalCenter
+                    onClicked: {
+                        multiplePlaylistList.model.removeCurrentPlaylist ()
                     }
                 }
             }
