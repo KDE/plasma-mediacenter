@@ -81,13 +81,25 @@ void MultiplePlaylistModel::switchToPlaylist(QString name)
 
 void MultiplePlaylistModel::removeCurrentPlaylist()
 {
+    /* removes current selected playlist and set new current playlist as left one of
+     * current playlist in case there is any playlist available left to it.
+     * If current playlist is leftmost one then just right to it is set as new current
+     * playlist. If only one playlist is available in playlist list then it must be
+     * "Default" playlist and the instead of getting deleted default playlist item will be cleared
+     */
+
     beginResetModel();
     QString currPlaylist = m_playlistModel->playlistName();
     int previousIndex = m_multiplePlaylistList.indexOf(currPlaylist) - 1;
-    if (previousIndex < 0) {
+    if (m_multiplePlaylistList.length() == 1 ) {
         m_playlistModel->removeCurrentPlaylist(m_multiplePlaylistList.at(0));
     } else {
-        bool status = m_playlistModel->removeCurrentPlaylist(m_multiplePlaylistList.at(previousIndex));
+        int status;
+        if (previousIndex >= 0) {
+            status = m_playlistModel->removeCurrentPlaylist(m_multiplePlaylistList.at(previousIndex));
+        } else {
+            status = m_playlistModel->removeCurrentPlaylist(m_multiplePlaylistList.at(1));
+        }
         if (status) {
             m_multiplePlaylistList.removeOne (currPlaylist);
         }
