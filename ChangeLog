@@ -1,3 +1,8 @@
+2013 -11-20 Sinny Kumari <ksinny@gmail.com> -v1.2.0-beta
+    * Multiple playlist support
+    * Borrow missing album cover icon from Amarok
+    * Allow right click to show menus on the media items
+
 2013 -11-07 Sinny Kumari <ksinny@gmail.com> - v1.2.0-alpha
     * Folder Preview in File Browser
     * Album covers and Artist images for All Music mode
