@@ -29,6 +29,7 @@
 class MEDIACENTER_EXPORT MultiplePlaylistModel : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(QObject* playlistModelAddress READ playlistModelAddress WRITE setPlaylistModelAddress NOTIFY playlistModelAddressChanged)
 
 public:
     explicit MultiplePlaylistModel(QObject* parent = 0);
@@ -36,15 +37,19 @@ public:
 
     virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
     virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
-    Q_INVOKABLE  void createNewPlaylist(const QString &name);
-    Q_INVOKABLE void setPlaylistModelAddress (QObject *model);
-    Q_INVOKABLE void switchToPlaylist (QString name);
+
+    QObject *playlistModelAddress();
+    Q_INVOKABLE void createNewPlaylist(const QString &name);
+    void setPlaylistModelAddress (QObject *model);
+    Q_INVOKABLE void switchToPlaylist (const QString& name);
     Q_INVOKABLE void removeCurrentPlaylist ();
-    
+
+signals:
+    void playlistModelAddressChanged();
+
 private:
     QStringList m_multiplePlaylistList;
     PlaylistModel *m_playlistModel;
-    
 };
 
 #endif  // MULTIPLEPLAYLISTMODEL_H

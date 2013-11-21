@@ -41,6 +41,8 @@ FocusScope {
                 id: multiplePlaylists
                 anchors { top: parent.top; left: parent.left; right: parent.right }
                 height: 64
+
+                Keys.onDownPressed: filterText.focus = true;
             }
 
             Row {
@@ -56,8 +58,9 @@ FocusScope {
                     clearButtonShown: true
                     placeholderText: i18n("Search Playlist")
                     Keys.onDownPressed: playlistList.focus = true;
-                    Keys.onUpPressed: createPlaylistTextField.focus = true
+                    Keys.onUpPressed: multiplePlaylists.focus = true
                 }
+
                 Item {
                     height: parent.height
                     width: parent.width - filterText.width - clearPlaylist.width - randomButton.width

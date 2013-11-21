@@ -53,9 +53,9 @@ QVariant MultiplePlaylistModel::data(const QModelIndex& index, int role) const
         case Qt::DisplayRole:
             return m_multiplePlaylistList.at(index.row());
     }
-    
+
     return QVariant();
-    
+
 }
 
 void MultiplePlaylistModel::createNewPlaylist(const QString& name)
@@ -69,14 +69,22 @@ void MultiplePlaylistModel::createNewPlaylist(const QString& name)
 
 void MultiplePlaylistModel::setPlaylistModelAddress(QObject* model)
 {
-    if (model != NULL) {
+    if (model) {
         m_playlistModel = qobject_cast<PlaylistModel *> (model);
+        emit playlistModelAddressChanged();
     }
 }
 
-void MultiplePlaylistModel::switchToPlaylist(QString name)
+QObject* MultiplePlaylistModel::playlistModelAddress()
 {
-    m_playlistModel->switchToPlaylist(name);
+    return m_playlistModel;
+}
+
+void MultiplePlaylistModel::switchToPlaylist(const QString &name)
+{
+    if (!name.isEmpty()) {
+        m_playlistModel->switchToPlaylist(name);
+    }
 }
 
 void MultiplePlaylistModel::removeCurrentPlaylist()
