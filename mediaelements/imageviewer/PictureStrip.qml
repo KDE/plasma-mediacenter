@@ -48,7 +48,7 @@ PlasmaCore.FrameSvgItem {
             height: parent.height
             checkable: true
             width: height
-            iconSource: checked ? "media-playback-pause" : "media-playback-start"
+            iconSource: checked ? "pmc-pause" : "pmc-play"
             onCheckedChanged: if (checked) rootItem.slideShowStarted();
             Timer {
                 id: slideshowTimer

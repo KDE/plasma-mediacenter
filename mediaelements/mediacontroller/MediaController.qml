@@ -61,7 +61,7 @@ FocusScope {
                 id: backButton
                 height: parent.height
                 width: height
-                iconSource: "arrow-left";
+                iconSource: "pmc-back";
                 onClicked: controlBarFrame.backButtonClicked();
             }
 
@@ -71,7 +71,7 @@ FocusScope {
                 width: height
                 visible: true
 
-                iconSource: "media-skip-backward"
+                iconSource: "pmc-previous"
 
                 onClicked: {
                     runtimeDataObject.userTrigerredStop = true;
@@ -85,7 +85,7 @@ FocusScope {
                 height: parent.height
                 width: height
 
-                iconSource: runtimeDataObject.playing ? "media-playback-pause" : "media-playback-start"
+                iconSource: runtimeDataObject.playing ? "pmc-pause" : "pmc-play"
                 onClicked: controlBarFrame.playPause()
             }
 
@@ -94,7 +94,7 @@ FocusScope {
                 height: parent.height
                 width: height
 
-                iconSource: "media-playback-stop"
+                iconSource: "pmc-stop"
                 onClicked: controlBarFrame.stop()
             }
 
@@ -104,7 +104,7 @@ FocusScope {
                 width: height
                 visible: true
 
-                iconSource: "media-skip-forward"
+                iconSource: "pmc-next"
 
                 onClicked: {
                     runtimeDataObject.userTrigerredStop = true;
