@@ -36,7 +36,7 @@ FocusScope {
         Item {
             anchors { fill: parent; leftMargin: 10; topMargin: 10; bottomMargin: 10 }
             clip: true
-            
+
             Row {
                 id: multiplePlaylistRow
                 anchors {top: parent.top; left: parent.left; right: parent.right }
@@ -48,6 +48,10 @@ FocusScope {
                     orientation: ListView.Horizontal
                     spacing: 3
                     clip: true
+                    highlightFollowsCurrentItem: true
+                    highlightMoveDuration: 500
+                    highlightResizeDuration: 500
+
                     model: MediaCenterElements.MultiplePlaylistModel {
                         Component.onCompleted:  setPlaylistModelAddress (playlistModel);
                     }
@@ -55,7 +59,7 @@ FocusScope {
                     delegate:
                     Item {
                         id: playlistText
-                        height: 30
+                        height: parent.height
                         width: 130
                         anchors.verticalCenter: parent.verticalCenter
                         Text {
@@ -71,10 +75,13 @@ FocusScope {
                         MouseArea {
                             anchors.fill: parent
                             onClicked: {
-                                multiplePlaylistList.model.switchToPlaylist(itemText.text)
+                                playlistText.ListView.view.currentIndex = index;
+                                multiplePlaylistList.model.switchToPlaylist(itemText.text);
                             }
                         }
                     }
+
+                    highlight: PlasmaComponents.Highlight { }
                 }
 
                 PlasmaComponents.TextField {
@@ -118,7 +125,7 @@ FocusScope {
                     }
                 }
             }
-                    
+
             Row {
                 id: playlistActions
                 anchors { top: multiplePlaylistRow.bottom; left: parent.left; right: parent.right }
