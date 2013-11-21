@@ -37,98 +37,15 @@ FocusScope {
             anchors { fill: parent; leftMargin: 10; topMargin: 10; bottomMargin: 10 }
             clip: true
 
-            Row {
-                id: multiplePlaylistRow
-                anchors {top: parent.top; left: parent.left; right: parent.right }
+            MultiplePlaylists {
+                id: multiplePlaylists
+                anchors { top: parent.top; left: parent.left; right: parent.right }
                 height: 64
-                ListView {
-                    id: multiplePlaylistList
-                    width: parent.width - createPlaylistTextField.width - createPlaylistButton.width - removePlaylistButton.width
-                    height: parent.height
-                    orientation: ListView.Horizontal
-                    spacing: 3
-                    clip: true
-                    highlightFollowsCurrentItem: true
-                    highlightMoveDuration: 500
-                    highlightResizeDuration: 500
-
-                    model: MediaCenterElements.MultiplePlaylistModel {
-                        Component.onCompleted:  setPlaylistModelAddress (playlistModel);
-                    }
-
-                    delegate:
-                    Item {
-                        id: playlistText
-                        height: parent.height
-                        width: 130
-                        anchors.verticalCenter: parent.verticalCenter
-                        Text {
-                            id: itemText
-                            anchors.fill: parent
-                            maximumLineCount : 1
-                            color: theme.textColor
-                            wrapMode: Text.Wrap
-                            horizontalAlignment: Text.AlignHCenter
-                            verticalAlignment: Text.AlignVCenter
-                            text: display
-                        }
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                playlistText.ListView.view.currentIndex = index;
-                                multiplePlaylistList.model.switchToPlaylist(itemText.text);
-                            }
-                        }
-                    }
-
-                    highlight: PlasmaComponents.Highlight { }
-                }
-
-                PlasmaComponents.TextField {
-                    id: createPlaylistTextField
-
-                    visible: false
-                    anchors.verticalCenter: parent.verticalCenter
-                    height: 30
-                    width: visible ? 300 : 1
-                    clearButtonShown: true
-                    placeholderText: i18n("Create New Playlist")
-                    Keys.onDownPressed: filterText.focus = true
-                }
-                PlasmaComponents.ToolButton {
-                    id: createPlaylistButton
-                    iconSource: "list-add"
-                    height: parent.height
-                    width: height
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    onClicked: {
-                        if (!createPlaylistTextField.visible) {
-                            createPlaylistTextField.visible = true
-                        } else {
-                            if (createPlaylistTextField.text != "") {
-                                multiplePlaylistList.model.createNewPlaylist (createPlaylistTextField.text)
-                                createPlaylistTextField.text = ""
-                            }
-                            createPlaylistTextField.visible = false
-                        }
-                    }
-                }
-                PlasmaComponents.ToolButton {
-                    id: removePlaylistButton
-                    iconSource: "list-remove"
-                    height: parent.height
-                    width: height
-                    anchors.verticalCenter: parent.verticalCenter
-                    onClicked: {
-                        multiplePlaylistList.model.removeCurrentPlaylist ()
-                    }
-                }
             }
 
             Row {
                 id: playlistActions
-                anchors { top: multiplePlaylistRow.bottom; left: parent.left; right: parent.right }
+                anchors { top: multiplePlaylists.bottom; left: parent.left; right: parent.right }
                 height: 64
 
                 PlasmaComponents.TextField {
