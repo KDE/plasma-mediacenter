@@ -20,27 +20,5 @@
 import QtQuick 1.1
 
 Item {
-    //This is useful, but looks ugly. If someone can fix the visuals, please enable this
-//     Timer {
-//         interval: 1000; running: true; repeat: true
-//         onTriggered: {
-//             var d = new Date();
-//             headerDateText.text = d.toDateString();
-//             headerTimeText.text = d.getHours() + ':' + d.getMinutes()
-//         }
-//     }
-// 
-//     HomeScreenText {
-//         id: headerDateText
-//         anchors.verticalCenter: parent.verticalCenter
-//         anchors { left: parent.left; margins: 20 }
-//         font.pointSize: 20
-//     }
-// 
-//     HomeScreenText {
-//         id: headerTimeText
-//         anchors.verticalCenter: parent.verticalCenter
-//         anchors { right: parent.right; margins: 20 }
-//         font.pointSize: 20
-//     }
+    
 }
