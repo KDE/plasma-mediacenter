@@ -127,7 +127,7 @@ Item {
             id: addToPlaylistButton
             iconSource: "list-add"
             anchors { right: parent.right; top: parent.top }
-            visible: !isExpandable && mediaType != "image" &&  mediaItemDelegateItem.GridView.isCurrentItem
+            visible: !isExpandable && mediaType != "image" &&  index == mediaItem.view.currentIndex
             onClicked: {
                 playlistModel.addToPlaylist (mediaUrl);
             }
