@@ -23,6 +23,7 @@ Item {
     id: pictureStripDelegate
     z: ListView.isCurrentItem ? 1 : 0
     signal imageClicked(string url)
+    property bool isDirectory: isExpandable
 
     Image {
         anchors { fill: parent; rightMargin: 1; topMargin: 10 }

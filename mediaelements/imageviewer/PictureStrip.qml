@@ -96,6 +96,12 @@ PlasmaCore.FrameSvgItem {
         var i = imageList.currentIndex
         if (i<imageList.count-1) {
             imageList.currentIndex = i + 1;
+        } else {
+            imageList.currentIndex = 0;
+        }
+        if (imageList.currentItem.isDirectory) {
+            nextImage();
+        } else {
             imageList.currentItem.emitClicked();
         }
     }
@@ -105,7 +111,13 @@ PlasmaCore.FrameSvgItem {
         var i = imageList.currentIndex;
         if (i>0) {
             imageList.currentIndex = i - 1;
-            imageList.currentItem.emitClicked()
+        } else {
+            imageList.currentIndex = imageList.count-1;
+        }
+        if (imageList.currentItem.isDirectory) {
+            previousImage();
+        } else {
+            imageList.currentItem.emitClicked();
         }
     }
 }
