@@ -20,7 +20,7 @@
 import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
 
-Rectangle {
+Item {
     id: popupMenu
 
     property string mediaUrl
@@ -31,54 +31,79 @@ Rectangle {
     property alias model: rootListView.model
     signal popupMenuItemClicked(int index)
 
-    opacity: 0.8
-    z: 2
-    color: theme.backgroundColor
-    visible: false
+    Row {
+        anchors.centerIn: parent
+        width: musicStatsLeftPane.width + musicStatsRightPane.width
 
-    MouseArea {
-        anchors.fill: parent
-        ListView {
-            id: rootListView
-            property int delegateHeight: 60
-            spacing: 5
-            anchors.centerIn: parent
-            width: parent.width/2
-            height: (delegateHeight+spacing)*count - spacing
-            delegate: Item {
-                id: delegateItem
-                width: rootListView.width
-                height: rootListView.delegateHeight
-                Rectangle {
-                    anchors.fill: parent
-                    id: popupDelegateItem
-                    radius: 10
-                    color: theme.backgroundColor
-                    Text {
-                        text: name
-                        color: theme.textColor
-                        font.pointSize: 24
-                        anchors { centerIn: parent; margins: 10 }
-                    }
+        Item {
+            id: musicStatsLeftPane
+            anchors.verticalCenter: parent.verticalCenter
+            height: musicStatsAlbumCoverImage.height * 1.2
+            width: musicStatsAlbumCoverImage.width * 1.2
 
-                    PlasmaComponents.ToolButton {
-                        height: parent.height
-                        width: height
-                        iconSource: icon
-                        anchors.right: parent.right
+            BorderImage {
+                source: _pmc_shadow_image_path
+                width: musicStatsAlbumCoverImage.width+40
+                height: musicStatsAlbumCoverImage.height+40
+                border.left: 50; border.top: 50
+                border.right: 54; border.bottom: 54
+                anchors.horizontalCenter: musicStatsAlbumCoverImage.horizontalCenter
+                anchors.verticalCenter: musicStatsAlbumCoverImage.verticalCenter
+            }
+            Image {
+                id: musicStatsAlbumCoverImage
+                anchors.centerIn: parent
+                source: "image://coverart/" + popupMenu.mediaUrl
+                smooth: true
+                width: Math.min(sourceSize.width, popupMenu.width*0.9)
+                height: sourceSize.height*width/sourceSize.width
+            }
+        }
+
+        Item {
+            id: musicStatsRightPane
+            height: popupMenu.height; width: popupMenu.width*0.4
+
+            ListView {
+                id: rootListView
+                property int delegateHeight: 60
+                spacing: 5
+                anchors.centerIn: parent
+                width: parent.width*0.75
+                height: (delegateHeight+spacing)*count - spacing
+                delegate: Item {
+                    id: delegateItem
+                    width: rootListView.width
+                    height: rootListView.delegateHeight
+                    Rectangle {
+                        anchors.fill: parent
+                        id: popupDelegateItem
+                        radius: 10
+                        color: theme.backgroundColor
+                        Text {
+                            text: name
+                            color: theme.textColor
+                            font.pointSize: 24
+                            anchors { centerIn: parent; margins: 10 }
+                        }
+
+                        PlasmaComponents.ToolButton {
+                            height: parent.height
+                            width: height
+                            iconSource: icon
+                            anchors.right: parent.right
+                        }
                     }
-                }
-                MouseArea {
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    onEntered: delegateItem.ListView.view.currentIndex = index
-                    onClicked: {
-                        popupMenuItemClicked(delegateItem.ListView.view.currentIndex);
+                    MouseArea {
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onEntered: delegateItem.ListView.view.currentIndex = index
+                        onClicked: {
+                            popupMenuItemClicked(delegateItem.ListView.view.currentIndex);
+                        }
                     }
                 }
             }
         }
-
-        onClicked: popupMenu.visible = false
     }
 }

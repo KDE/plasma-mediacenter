@@ -271,7 +271,7 @@ Image {
             }
             ListElement {
                 name: "Play"
-                icon: "media-playback-start"
+                icon: "pmc-play"
             }
             ListElement {
                 name: "Cancel"
