@@ -293,6 +293,7 @@ Image {
                              root.goBack();
                              break;
                          case 1:
+                             pmcPageStack.popAndFocus();
                              mediaBrowserInstance.playRequested(currentMediaDelegateIndex, mediaUrl, mediaType)
                              break;
                          case 2:
