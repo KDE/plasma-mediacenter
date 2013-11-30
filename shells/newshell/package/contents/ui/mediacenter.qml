@@ -32,6 +32,8 @@ Image {
     property QtObject mediaPlayerInstance
     property QtObject playlistInstance
     property QtObject imageViewerInstance
+    property QtObject popupMenuInstance
+
 
     source: _pmc_background_image_path
     fillMode: Image.Tile
@@ -193,6 +195,15 @@ Image {
                     }
                 }
                 onBackRequested: pmcPageStack.popAndFocus()
+                onPopupMenuRequested: {
+                    popupMenuInstance = getPopupMenu();
+                    popupMenuInstance.visible = true;
+                    popupMenuInstance.mediaUrl = mediaUrl;
+                    popupMenuInstance.display = display;
+                    popupMenuInstance.mediaType = mediaType;
+                    popupMenuInstance.currentMediaDelegateIndex = index;
+                    pmcPageStack.pushAndFocus(popupMenuInstance);
+                }
             }
         }
 
@@ -252,6 +263,46 @@ Image {
             }
         }
 
+        ListModel {
+            id: popupModel
+            ListElement {
+                name: "Add to Playlist"
+                icon: "list-add"
+            }
+            ListElement {
+                name: "Play"
+                icon: "media-playback-start"
+            }
+            ListElement {
+                name: "Cancel"
+                icon: "dialog-cancel"
+            }
+        }
+
+        Component {
+             id: pmcPopupMenuComponent
+             MediaCenterElements.PopupMenu {
+                 id: popupMenu
+
+                 anchors.fill: parent
+                 model: popupModel
+                 onPopupMenuItemClicked: {
+                     switch(index) {
+                         case 0:
+                             playlistModel.addToPlaylist(mediaUrl);
+                             root.goBack();
+                             break;
+                         case 1:
+                             mediaBrowserInstance.playRequested(currentMediaDelegateIndex, mediaUrl, mediaType)
+                             break;
+                         case 2:
+                             root.goBack();
+                             break;
+                     }
+                     popupMenu.visible = false
+                 }
+             }
+        }
     }
 
     function getMediaWelcome() {
@@ -287,6 +338,13 @@ Image {
             imageViewerInstance = pmcImageViewerComponent.createObject(pmcPageStack);
         }
         return imageViewerInstance;
+    }
+
+    function getPopupMenu() {
+       if (!popupMenuInstance) {
+           popupMenuInstance = pmcPopupMenuComponent.createObject(pmcPageStack);
+       }
+       return popupMenuInstance;
     }
 
     function init() {

@@ -171,39 +171,6 @@ FocusScope {
         }
     }
 
-     onPopupMenuRequested: {
-        popupMenu.visible = true
-        popupMenu.mediaUrl = mediaUrl
-        popupMenu.display = display
-        popupMenu.mediaType = mediaType
-        popupMenu.currentMediaDelegateIndex = index
-     }
-
-     MediaCenterElements.PopupMenu {
-         id: popupMenu
-
-         property string mediaUrl
-         property string display
-         property string mediaType
-         property int currentMediaDelegateIndex
-
-         anchors.fill: parent
-         model: PopupModel {}
-         onPopupMenuItemClicked: {
-             switch(index) {
-                 case 0:
-                     playlistModel.addToPlaylist(mediaUrl);
-                     break;
-                 case 1:
-                      mediaBrowser.playRequested(currentMediaDelegateIndex, mediaUrl, mediaType)
-                     break;
-                 case 2:
-                     break;
-             }
-             popupMenu.visible = false
-         }
-    }
-
     PlasmaComponents.Label {
         id: errorLabel
         anchors.centerIn: parent

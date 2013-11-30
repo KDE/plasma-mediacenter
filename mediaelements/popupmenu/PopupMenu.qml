@@ -22,6 +22,12 @@ import org.kde.plasma.components 0.1 as PlasmaComponents
 
 Rectangle {
     id: popupMenu
+
+    property string mediaUrl
+    property string display
+    property string mediaType
+    property int currentMediaDelegateIndex
+
     property alias model: rootListView.model
     signal popupMenuItemClicked(int index)
 
