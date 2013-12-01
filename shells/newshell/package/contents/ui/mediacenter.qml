@@ -121,8 +121,8 @@ Image {
                     focusCurrentPage();
                 }
 
-                function popAndFocus() {
-                    var page = pop();
+                function popAndFocus(immediate) {
+                    var page = pop(undefined, immediate);
                     //If this is not done, QML's garbage collector will remove the page object
                     page.visible = false;
                     page.parent = root;
@@ -293,7 +293,7 @@ Image {
                              root.goBack();
                              break;
                          case 1:
-                             pmcPageStack.popAndFocus();
+                             pmcPageStack.popAndFocus(true);
                              mediaBrowserInstance.playRequested(currentMediaDelegateIndex, mediaUrl, mediaType)
                              break;
                          case 2:
