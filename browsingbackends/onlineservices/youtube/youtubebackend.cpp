@@ -50,15 +50,15 @@ bool YoutubeBackend::expand(int row)
 bool YoutubeBackend::initImpl()
 {
     m_youtubeModel = new YoutubeModel(this);
-    ModelMetadata *metadata = new ModelMetadata(m_youtubeModel, this);
-    metadata->setSupportsSearch(true);
+    m_metadata = new ModelMetadata(m_youtubeModel, this);
+    m_metadata->setSupportsSearch(true);
     m_videoDetailsModel = new VideoDetailsModel(this);
     if (!(m_youtubeModel && m_videoDetailsModel)) {
         return false;
     }
     m_expanded = true;
     connect(m_videoDetailsModel, SIGNAL(gotRealUrl()), this, SLOT(realUrlFound()));
-    setModel(metadata);
+    setModel(m_metadata);
     return true;
 }
 
@@ -66,7 +66,7 @@ bool YoutubeBackend::goOneLevelUp()
 {
     if (!m_expanded) {
         m_expanded = true;
-        setModel(m_youtubeModel);
+        setModel(m_metadata);
         return true;
     }
     return false;

@@ -47,6 +47,7 @@ public Q_SLOTS:
 private:
     YoutubeModel *m_youtubeModel;
     VideoDetailsModel *m_videoDetailsModel;
+    ModelMetadata *m_metadata;
     bool m_expanded;  // to detrmine which model is currently set into backend
 };
 
