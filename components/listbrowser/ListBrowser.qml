@@ -50,6 +50,10 @@ FocusScope {
 
         Keys.onUpPressed: listBrowserRoot.topSibling.focus = true
         Keys.onDownPressed: listView.focus = true
+        Keys.onPressed: if (event.key == Qt.Key_Escape && text != "") {
+            text = "";
+            event.accepted = true;
+        }
 
         Timer {
             id: searchTimer
@@ -126,6 +130,9 @@ FocusScope {
             } else if (event.key != Qt.Key_Escape && event.text && searchField.visible) {
                 searchField.focus = true;
                 searchField.text = event.text;
+            } else if (event.key == Qt.Key_Escape && currentIndex) {
+                currentIndex = 0;
+                event.accepted = true;
             }
         }
     }

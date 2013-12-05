@@ -50,6 +50,10 @@ FocusScope {
 
         Keys.onUpPressed: gridBrowserRoot.topSibling.focus = true
         Keys.onDownPressed: gridBrowserGridView.focus = true
+        Keys.onPressed: if (event.key == Qt.Key_Escape && text != "") {
+            text = "";
+            event.accepted = true;
+        }
 
         Timer {
             id: searchTimer
