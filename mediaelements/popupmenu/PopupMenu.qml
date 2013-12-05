@@ -20,7 +20,7 @@
 import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
 
-Item {
+FocusScope {
     id: popupMenu
 
     property string mediaUrl
@@ -71,6 +71,8 @@ Item {
                 anchors.centerIn: parent
                 width: parent.width*0.75
                 height: (delegateHeight+spacing)*count - spacing
+                focus: true
+                highlight: PlasmaComponents.Highlight {}
                 delegate: Item {
                     id: delegateItem
                     width: rootListView.width
@@ -94,13 +96,17 @@ Item {
                             anchors.right: parent.right
                         }
                     }
+                    Keys.onReturnPressed: popupMenuAction()
                     MouseArea {
                         anchors.fill: parent
                         hoverEnabled: true
                         onEntered: delegateItem.ListView.view.currentIndex = index
                         onClicked: {
-                            popupMenuItemClicked(delegateItem.ListView.view.currentIndex);
+			     popupMenuAction();
                         }
+                    }
+                    function popupMenuAction() {
+                       popupMenuItemClicked(delegateItem.ListView.view.currentIndex)
                     }
                 }
             }
