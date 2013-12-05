@@ -1,3 +1,12 @@
+2013 -12-05 Sinny Kumari <ksinny@gmail.com> -v1.2.0-rc
+    * Key navigation for multiple playlists
+    * New icons for controller
+    * Displaying system time on home screen
+    * Picturestrip navigates in loop
+    * Updating CMakeLists.txt for adding po directory
+    * Bug fix
+    328394: Don't hide youtube search
+
 2013 -11-20 Sinny Kumari <ksinny@gmail.com> -v1.2.0-beta
     * Multiple playlist support
     * Borrow missing album cover icon from Amarok
