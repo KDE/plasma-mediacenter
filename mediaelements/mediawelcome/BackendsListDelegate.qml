@@ -58,7 +58,11 @@ Item {
 
         HomeScreenText {
             height: parent.height
+            width: parent.width - backendIcon.width - parent.spacing
 
+            wrapMode: Text.Wrap
+            maximumLineCount: 2
+            elide: Text.ElideRight
             text: display
             font.pointSize: 20
         }
