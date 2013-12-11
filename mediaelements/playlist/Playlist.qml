@@ -42,7 +42,9 @@ FocusScope {
                 anchors { top: parent.top; left: parent.left; right: parent.right }
                 height: 64
 
-                Keys.onDownPressed: filterText.focus = true;
+                onNeedsFocus: multiplePlaylists.focus = true
+                onGiveUpFocus: filterText.focus = true
+                Keys.onDownPressed: filterText.focus = true
             }
 
             Row {
@@ -57,6 +59,7 @@ FocusScope {
                     anchors.verticalCenter: parent.verticalCenter
                     clearButtonShown: true
                     placeholderText: i18n("Search Playlist")
+                    focus: true
                     Keys.onDownPressed: playlistList.focus = true;
                     Keys.onUpPressed: multiplePlaylists.focus = true
                 }
@@ -109,7 +112,6 @@ FocusScope {
                 }
                 spacing: 3
                 clip: true
-                focus: true
                 delegate: PlaylistDelegate {
                     width: playlistList.width - playlistScrollbar.width ; height: 32
                     onPlayRequested: {

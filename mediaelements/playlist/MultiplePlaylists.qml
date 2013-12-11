@@ -22,6 +22,10 @@ import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
 
 FocusScope {
+    id: multiplePlaylistsRoot
+    signal needsFocus
+    signal giveUpFocus
+
     Row {
         id: multiplePlaylistRow
         anchors.fill: parent
@@ -36,9 +40,7 @@ FocusScope {
             highlightFollowsCurrentItem: true
             highlightMoveDuration: 500
             highlightResizeDuration: 500
-            focus: true
             highlight: PlasmaComponents.Highlight { }
-            opacity: activeFocus ? 0.5 : 1
 
             model: MediaCenterElements.MultiplePlaylistModel {
                 playlistModelAddress: playlistModel
@@ -84,6 +86,15 @@ FocusScope {
             clearButtonShown: true
             placeholderText: i18n("Create New Playlist")
 
+            onVisibleChanged: if (visible) {
+                multiplePlaylistsRoot.needsFocus();
+                createPlaylistTextField.focus = true;
+            }
+
+            Keys.onReturnPressed: {
+                createPlaylistButton.click();
+            }
+
             Keys.onEscapePressed: {
                 text = "";
                 createPlaylistButton.click();
@@ -92,38 +103,36 @@ FocusScope {
 
         PlasmaComponents.ToolButton {
             id: createPlaylistButton
-            iconSource: "list-add"
+            iconSource: createPlaylistTextField.visible ? "dialog-ok-apply" : "list-add"
             height: parent.height
             width: height
             anchors.verticalCenter: parent.verticalCenter
 
             onClicked: click()
-            function click() {
-                if (!createPlaylistTextField.visible) {
-                    createPlaylistTextField.visible = true
-                } else {
-                    if (createPlaylistTextField.text != "") {
-                        multiplePlaylistList.model.createNewPlaylist (createPlaylistTextField.text)
-                        createPlaylistTextField.text = ""
-                    }
-                    createPlaylistTextField.visible = false
-                }
-            }
 
-            Keys.onRightPressed: removePlaylistButton.focus = true
+            function click() {
+                if (createPlaylistTextField.text != "") {
+                    multiplePlaylistList.model.createNewPlaylist (createPlaylistTextField.text)
+                    createPlaylistTextField.text = ""
+                }
+                if (createPlaylistTextField.visible) {
+                    multiplePlaylistsRoot.giveUpFocus();
+                }
+                createPlaylistTextField.visible = !createPlaylistTextField.visible;
+            }
         }
 
         PlasmaComponents.ToolButton {
             id: removePlaylistButton
-            iconSource: "list-remove"
+            anchors.verticalCenter: parent.verticalCenter
             height: parent.height
             width: height
-            anchors.verticalCenter: parent.verticalCenter
+            visible: !createPlaylistTextField.visible
+
+            iconSource: "list-remove"
             onClicked: {
                 multiplePlaylistList.model.removeCurrentPlaylist ()
             }
-
-            Keys.onLeftPressed: createPlaylistButton.focus = true
         }
     }
 }
