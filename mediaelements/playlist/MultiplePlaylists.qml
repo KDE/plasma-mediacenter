@@ -29,6 +29,9 @@ FocusScope {
     Row {
         id: multiplePlaylistRow
         anchors.fill: parent
+        MediaCenterElements.Settings {
+           id: settings
+        }
 
         ListView {
             id: multiplePlaylistList
@@ -66,13 +69,32 @@ FocusScope {
 
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: playlistText.ListView.view.currentIndex = index
+                    onClicked: {
+                         playlistText.ListView.view.currentIndex = index;
+                         multiplePlaylistRow.createCurrentPlaylistNameConfig(display);
+                    }
+                }
+
+                Component.onCompleted: {
+                     if (display == settings.value("currentPlaylistName","Default")) {
+                         autoSelectPlaylistTimer.start();
+                     }
+                }
+
+                Timer {
+                   id: autoSelectPlaylistTimer
+                   interval: 10
+                   onTriggered: multiplePlaylistList.currentIndex = index
                 }
             }
 
             onCurrentIndexChanged: {
                 multiplePlaylistList.model.switchToPlaylist(
                     currentItem.currentPlaylist);
+            }
+
+            Component.onCompleted: {
+                multiplePlaylistList.model.switchToPlaylist(settings.value("currentPlaylistName","Default"));
             }
         }
 
@@ -114,6 +136,7 @@ FocusScope {
                 if (createPlaylistTextField.text != "") {
                     multiplePlaylistList.model.createNewPlaylist (createPlaylistTextField.text)
                     multiplePlaylistList.currentIndex = multiplePlaylistList.count - 1
+                    multiplePlaylistRow.createCurrentPlaylistNameConfig(createPlaylistTextField.text);
                     createPlaylistTextField.text = ""
                 }
                 if (createPlaylistTextField.visible) {
@@ -132,11 +155,23 @@ FocusScope {
 
             iconSource: "list-remove"
             onClicked: {
+                var playlistToDelete = "";
+                if (multiplePlaylistList.currentItem.currentPlaylist == settings.value("currentPlaylistName","Default")) {
+                   playlistToDelete = multiplePlaylistList.currentItem.currentPlaylist;
+                }
                 multiplePlaylistList.model.removeCurrentPlaylist ()
                 if (multiplePlaylistList.currentIndex > 0) {
                     multiplePlaylistList.currentIndex = multiplePlaylistList.currentIndex-1;
                 }
+                if (playlistToDelete != "") {
+                    multiplePlaylistRow.createCurrentPlaylistNameConfig(multiplePlaylistList.currentItem.currentPlaylist);
+                }
             }
+        }
+
+        function createCurrentPlaylistNameConfig(name)  {
+           settings.setValue("currentPlaylistName",name);
+           settings.sync();
         }
     }
 }
