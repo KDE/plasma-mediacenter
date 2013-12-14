@@ -42,6 +42,7 @@ FocusScope {
     signal stop()
     signal backButtonClicked()
     signal seekRequested(int newPosition)
+    signal wantToLoseFocus()
 
     PlasmaCore.FrameSvgItem {
         id: controlBarFrameSvg
@@ -128,6 +129,7 @@ FocusScope {
                 }
 
                 onValueChanged: if (pressed) controlBarFrame.seekRequested(value);
+                onPressedChanged: if (!pressed) controlBarFrame.wantToLoseFocus()
                 maximumValue: controlBarFrame.totalMediaTime
             }
 
@@ -158,6 +160,7 @@ FocusScope {
                 visible: volumeButton.checked
                 minimumValue: 0
                 maximumValue: 100
+                onPressedChanged: if (!pressed) controlBarFrame.wantToLoseFocus()
 
                 Binding {
                     when: volumeSlider.pressed

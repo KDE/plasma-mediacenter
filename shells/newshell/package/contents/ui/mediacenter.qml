@@ -92,6 +92,7 @@ Image {
             onSeekRequested: if (mediaPlayerInstance) mediaPlayerInstance.currentTime = newPosition
             onPlayPause: runtimeData.playPause()
             onStop: runtimeData.stop()
+            onWantToLoseFocus: pmcPageStack.currentPage.focus = true
 
             playlistButtonVisible : pmcPageStack.currentPage != playlistInstance
             playerButtonVisible: mediaPlayerInstance != null && mediaPlayerInstance.url && (pmcPageStack.currentPage != mediaPlayerInstance)
