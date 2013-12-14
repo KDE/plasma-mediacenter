@@ -132,6 +132,9 @@ FocusScope {
             iconSource: "list-remove"
             onClicked: {
                 multiplePlaylistList.model.removeCurrentPlaylist ()
+                if (multiplePlaylistList.currentIndex > 0) {
+                    multiplePlaylistList.currentIndex = multiplePlaylistList.currentIndex-1;
+                }
             }
         }
     }
