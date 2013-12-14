@@ -74,4 +74,5 @@ PlasmaComponents.Page {
     }
 
     Keys.forwardTo: [ categoriesList, backendsList ]
+    Keys.onEscapePressed: homeScreenRootItem.emptyAreaClicked()
 }
