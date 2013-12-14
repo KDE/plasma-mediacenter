@@ -135,6 +135,7 @@ Item {
 
         PlasmaComponents.ToolButton {
             id: removeFromPlaylistButton
+            visible: listViewItem.ListView.isCurrentItem
             width: height
             height: parent.height
             iconSource: "list-remove"
