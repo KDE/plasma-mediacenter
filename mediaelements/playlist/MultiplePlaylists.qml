@@ -113,6 +113,7 @@ FocusScope {
             function click() {
                 if (createPlaylistTextField.text != "") {
                     multiplePlaylistList.model.createNewPlaylist (createPlaylistTextField.text)
+                    multiplePlaylistList.currentIndex = multiplePlaylistList.count - 1
                     createPlaylistTextField.text = ""
                 }
                 if (createPlaylistTextField.visible) {
