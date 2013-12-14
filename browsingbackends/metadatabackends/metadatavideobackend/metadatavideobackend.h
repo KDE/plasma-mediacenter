@@ -30,7 +30,6 @@ public:
     MetadataVideoBackend (QObject* parent, const QVariantList& args);
     virtual ~MetadataVideoBackend();
 
-    virtual bool supportsSearch() const;
     virtual void search(const QString& searchTerm);
 
 protected:

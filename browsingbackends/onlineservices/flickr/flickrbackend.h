@@ -31,7 +31,6 @@ public:
     virtual ~FlickrBackend();
     virtual QString backendCategory() const;
     virtual void search(const QString& searchTerm);
-    virtual bool supportsSearch() const;
 
 public Q_SLOTS:
     virtual bool initImpl();

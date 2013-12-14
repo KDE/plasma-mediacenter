@@ -58,8 +58,3 @@ void FlickrBackend::search(const QString& searchTerm)
 {
     qobject_cast<FlickrModel*>(model())->query(searchTerm);
 }
-
-bool FlickrBackend::supportsSearch() const
-{
-    return true;
-}

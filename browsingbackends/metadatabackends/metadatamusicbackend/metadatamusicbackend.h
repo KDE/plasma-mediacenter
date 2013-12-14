@@ -44,8 +44,6 @@ public:
     MetadataMusicBackend (QObject* parent, const QVariantList& args);
     virtual ~MetadataMusicBackend();
 
-    bool supportsSearch() const;
-
     QString artistFilter() const;
     QString albumFilter() const;
 

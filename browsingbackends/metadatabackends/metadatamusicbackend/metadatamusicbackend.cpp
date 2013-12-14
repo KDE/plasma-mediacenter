@@ -99,11 +99,6 @@ void MetadataMusicBackend::initializeModels()
     updateModelAccordingToFilters();
 }
 
-bool MetadataMusicBackend::supportsSearch() const
-{
-    return false;
-}
-
 QString MetadataMusicBackend::albumFilter() const
 {
     return m_albumFilter;

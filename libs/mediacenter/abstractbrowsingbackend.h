@@ -54,7 +54,6 @@ class MEDIACENTER_EXPORT AbstractBrowsingBackend : public QObject
     Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
     Q_PROPERTY(QString mediaBrowserSidePanel READ mediaBrowserSidePanel WRITE setMediaBrowserSidePanel NOTIFY mediaBrowserSidePanelChanged)
     Q_PROPERTY(QVariantList models READ models NOTIFY modelsChanged)
-    Q_PROPERTY(QString searchTerm READ searchTerm WRITE setSearchTerm NOTIFY searchTermChanged)
     Q_PROPERTY(QVariantList buttons READ buttons NOTIFY buttonsChanged)
     Q_PROPERTY(QObject* pmcRuntime READ pmcRuntime WRITE setPmcRuntime NOTIFY pmcRuntimeChanged)
 
@@ -78,8 +77,8 @@ public:
     QString name() const;
 
     /**
-     * @returns the model of the browsing backend.
      * The default implementation returns the first (or the only) model.
+     * @returns the model of the browsing backend.
      */
     QAbstractItemModel *model();
 
@@ -89,12 +88,20 @@ public:
     QVariantList models();
 
     /**
+     * When writing a backend, override this method to return a list of strings
+     * that will be used to create buttons when this backend is chosen.
+     *
+     * When a button is pressed, the handleButtonClick method will be called.
+     *
+     * @see handleButtonClick()
      * @returns a list of buttons the model wants to show on the UI
      */
     virtual QVariantList buttons();
 
     /**
-     * Request the backend to initialize
+     * This method will be called when the media center wants to load this backend.
+     * Please use initImpl method to do initialization instead of the constructor.
+     * @see initImpl
      */
     Q_INVOKABLE bool init();
 
@@ -104,7 +111,7 @@ public:
      */
     static KService::List availableBackends();
 
-    /*
+    /**
      * This function is used by Media Browser to go to one level
      * up in the browsing structure. Must be reimplemented
      *
@@ -119,7 +126,7 @@ public:
      * to a particular one
      *
      * @param row the row index of the directory
-     * @param model the current model that the backend should operate on
+     * @param model the model that the backend should operate on
      *
      * @return true if operation was successful
      * @return false if operation was unsuccessful
@@ -132,6 +139,7 @@ public:
      *
      * @param row the row index of the directory
      *
+     * @see model()
      * @return true if operation was successful
      * @return false if operation was unsuccessful
      */
@@ -139,16 +147,17 @@ public:
 
     /**
      * This slot must be called by the MediaCenter UI to set a declarive engine
-     * which will then be used by the backend to set up needed values at runtime
+     * which can then be used by the backend to set up needed values at runtime
      *
      * @param declarativeEngine pointer to the declarative engine
      */
     void setDeclarativeEngine(QDeclarativeEngine *declarativeEngine);
 
     /**
-     * Can use this method to get access to the declarative engine
+     * Use this method to get access to the declarative engine.
+     * This is useful for backends to provide their own image providers and so on
      *
-     * @return pointer to declarative engine
+     * @return the declarative engine
      */
     QDeclarativeEngine *declarativeEngine() const;
 
@@ -169,13 +178,7 @@ public:
      */
     virtual bool okToLoad() const;
 
-    /**
-     * This method is called by mediabrowser during runtime to ask whether backend
-     * supports search or not
-     * default implementaion return false
-     */
-    Q_INVOKABLE virtual bool supportsSearch() const;
-
+    //TODO: Side panel concept is hacky, replace with a popup of some sort
     /**
      * Override this method if you want your backend to show custom items on a
      * panel/popup. For example this can be used to set filtering options
@@ -202,9 +205,7 @@ public:
      */
     Q_INVOKABLE virtual void handleButtonClick(const QString &buttonName);
 
-    QString searchTerm() const;
-    void setSearchTerm(const QString &term);
-
+    //FIXME: Bad, bad, bad.
     QObject* pmcRuntime();
     void setPmcRuntime(QObject* pmcRuntime);
 
@@ -214,28 +215,27 @@ Q_SIGNALS:
     void modelsChanged();
     void buttonsChanged();
     void searchTermChanged();
+
     void error(const QString &message);
     void modelNeedsAttention(QObject* model);
     void pmcRuntimeChanged();
 
 protected:
     /**
-     * This method must be set in order to provide the model to be
-     * used by the view.
-     * @see MediaRole
+     * Set the only model (and its metadata) that this backend contains.
+     * This used by the media browser to show media.
      */
     void setModel(ModelMetadata* model);
 
     /**
-     * This method must be set in order to provide the model to be
-     * used by the view.
-     * @see MediaRole
+     * Set the only model that this backend contains. Default metadata will be
+     * defined every time.
+     * This used by the media browser to show media.
      */
     void setModel(QAbstractItemModel* model);
 
     /**
      * This method is used to add more models to this backend
-     * @see MediaRole
      */
     void addModel(ModelMetadata * model);
 
@@ -257,7 +257,7 @@ protected:
                                const QString& itemName) const;
 
     /**
-     * This method is called whenever the package has been chosen by the user
+     * This method is called whenever the backend has been chosen by the user
      * to be the current navigation helper and just before the model is set
      * to the view.
      * Use this method for general initialization purposes.
@@ -265,7 +265,9 @@ protected:
     virtual bool initImpl() = 0;
 
     /**
-     * This method is called by the UI when the user requests to search for a media
+     * This method is called by the UI when the user requests to search for a media.
+     * You should override this method if your backend support search and has
+     * only one model
      *
      * @param searchTerm string entered by the user
      */
@@ -273,7 +275,9 @@ protected:
 
     /**
      * This method is called by the UI when the user requests to search for a media
-     * for a particular model
+     * for a particular model.
+     * You should override this method if your backend support search and has
+     * multiple models
      *
      * @param searchTerm string entered by the user
      * @param model the model that this search should affect

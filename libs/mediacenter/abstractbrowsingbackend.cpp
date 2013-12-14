@@ -180,11 +180,6 @@ bool AbstractBrowsingBackend::okToLoad() const
     return true;
 }
 
-bool AbstractBrowsingBackend::supportsSearch() const
-{
-    return false;
-}
-
 void AbstractBrowsingBackend::search(const QString& searchTerm)
 {
     Q_UNUSED(searchTerm)
@@ -217,20 +212,6 @@ QVariantList AbstractBrowsingBackend::models()
         modelList.append(QVariant::fromValue(qobject_cast<QObject*>(model)));
     }
     return modelList;
-}
-
-QString AbstractBrowsingBackend::searchTerm() const
-{
-    return d->searchTerm;
-}
-
-void AbstractBrowsingBackend::setSearchTerm(const QString& term)
-{
-    if (d->searchTerm == term)
-        return;
-    d->searchTerm = term;
-    emit searchTermChanged();
-    search(term);
 }
 
 QVariantList AbstractBrowsingBackend::buttons()
