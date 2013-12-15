@@ -126,7 +126,7 @@ Image {
                     var page = pop(undefined, immediate);
                     //If this is not done, QML's garbage collector will remove the page object
                     page.visible = false;
-                    page.parent = root;
+                    page.parent = pmcPageStack;
                     focusCurrentPage();
                 }
 
