@@ -126,7 +126,12 @@ Item {
         PlasmaComponents.ToolButton {
             id: addToPlaylistButton
             iconSource: "list-add"
-            anchors { right: parent.right; top: parent.top }
+            height: mediaItem.horizontal ? parent.height : (parent.height * 0.2)
+            width: height
+            anchors {
+                right: parent.right; top: parent.top;
+                margins: mediaItem.horizontal ? 0 : 5
+            }
             visible: !isExpandable && mediaType != "image" &&  index == mediaItem.view.currentIndex
             onClicked: {
                 playlistModel.addToPlaylist (mediaUrl);
