@@ -172,6 +172,7 @@ Image {
                         mediaPlayerInstance.parent = pmcPageStackParentItem;
                         mediaPlayerInstance.visible = true;
                         mediaPlayerInstance.z = -1;
+                        mediaPlayerInstance.height = pmcPageStackParentItem.height;
                         mediaPlayerInstance.dimVideo = true;
                     }
                 }
