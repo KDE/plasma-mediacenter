@@ -76,7 +76,6 @@ private:
     void loadFromFile(const QString &path);
     void saveToFile(const QString &path);
     QString playlistFilePath() const;
-    QString m_playlistName;
 };
 
 #endif // PLAYLISTMODEL_H
