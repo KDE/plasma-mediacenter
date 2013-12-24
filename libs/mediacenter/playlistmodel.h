@@ -54,10 +54,10 @@ public:
     void setCurrentIndex(int index);
     bool random() const;
     Q_INVOKABLE void shuffle();
-    void setNewPlaylist (QString name);
-    void switchToPlaylist (QString name);
-    bool removeCurrentPlaylist (QString playlistName);
-    QString playlistName();
+    bool removeCurrentPlaylist (const QString& playlistToSwitchToAfterDeletion);
+
+    QString playlistName() const;
+    void setPlaylistName(const QString &name);
 
 Q_SIGNALS:
     void currentIndexChanged();
@@ -74,8 +74,9 @@ private:
     Private * const d;
 
     void loadFromFile(const QString &path);
-    void saveToFile(const QString &path);
+    void saveToFile(const QString &path) const;
     QString playlistFilePath() const;
+    void clearPlaylistWithoutModelReset();
 };
 
 #endif // PLAYLISTMODEL_H

@@ -61,10 +61,12 @@ QVariant MultiplePlaylistModel::data(const QModelIndex& index, int role) const
 void MultiplePlaylistModel::createNewPlaylist(const QString& name)
 {
     const int n = rowCount();
+
     beginInsertRows(QModelIndex(), n, n);
     m_multiplePlaylistList.append(name);
     endInsertRows();
-    m_playlistModel->setNewPlaylist(name);
+
+    m_playlistModel->setPlaylistName(name);
 }
 
 void MultiplePlaylistModel::setPlaylistModelAddress(QObject* model)
@@ -83,7 +85,7 @@ QObject* MultiplePlaylistModel::playlistModelAddress()
 void MultiplePlaylistModel::switchToPlaylist(const QString &name)
 {
     if (!name.isEmpty()) {
-        m_playlistModel->switchToPlaylist(name);
+        m_playlistModel->setPlaylistName(name);
     }
 }
 
@@ -97,8 +99,8 @@ void MultiplePlaylistModel::removeCurrentPlaylist()
      */
 
     beginResetModel();
-    QString currPlaylist = m_playlistModel->playlistName();
-    int previousIndex = m_multiplePlaylistList.indexOf(currPlaylist) - 1;
+    const QString currentPlaylist = m_playlistModel->playlistName();
+    int previousIndex = m_multiplePlaylistList.indexOf(currentPlaylist) - 1;
     if (m_multiplePlaylistList.length() == 1 ) {
         m_playlistModel->removeCurrentPlaylist(m_multiplePlaylistList.at(0));
     } else {
@@ -109,7 +111,7 @@ void MultiplePlaylistModel::removeCurrentPlaylist()
             status = m_playlistModel->removeCurrentPlaylist(m_multiplePlaylistList.at(1));
         }
         if (status) {
-            m_multiplePlaylistList.removeOne (currPlaylist);
+            m_multiplePlaylistList.removeOne (currentPlaylist);
         }
     }
     endResetModel();

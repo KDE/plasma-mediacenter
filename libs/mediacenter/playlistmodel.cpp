@@ -36,6 +36,7 @@ public:
     QFile file;
     bool random;
     QString playlistName;
+    QString playlistsDirectoryPath;
 };
 
 PlaylistModel::PlaylistModel(QObject* parent):
@@ -142,15 +143,18 @@ QString PlaylistModel::getUrlofFirstIndex()
 void PlaylistModel::clearPlaylist()
 {
     beginResetModel();
+    clearPlaylistWithoutModelReset();
+    endResetModel();
+}
 
+void PlaylistModel::clearPlaylistWithoutModelReset()
+{
     Q_FOREACH(PlaylistItem *item, d->musicList) {
         item->deleteLater();
     }
 
     d->musicList.clear();
     d->currentIndex = -1;
-
-    endResetModel();
 }
 
 int PlaylistModel::currentIndex() const
@@ -168,10 +172,12 @@ void PlaylistModel::shuffle()
 {
     if( d->musicList.isEmpty())
         return;
+
     QList<PlaylistItem*> musicListShuffle;
     if( d->currentIndex == -1 )
         d->currentIndex = 0;
     musicListShuffle.append(d->musicList.takeAt(d->currentIndex));
+
     while( !d->musicList.isEmpty() ) {
         musicListShuffle.append(d->musicList.takeAt(qrand() % d->musicList.size()));
     }
@@ -193,9 +199,13 @@ void PlaylistModel::playlistItemUpdated()
 
 QString PlaylistModel::playlistFilePath() const
 {
-    QString dirPath = KGlobal::dirs()->saveLocation("data") + KCmdLineArgs::appName() + "/playlists/";
-    QDir().mkpath(dirPath);
-    return dirPath + d->playlistName;
+    if (d->playlistsDirectoryPath.isEmpty()) {
+        d->playlistsDirectoryPath = KGlobal::dirs()->saveLocation("data")
+                                    + KCmdLineArgs::appName() + "/playlists/";
+        QDir().mkpath(d->playlistsDirectoryPath);
+    }
+
+    return d->playlistsDirectoryPath + d->playlistName;
 }
 
 void PlaylistModel::loadFromFile(const QString& path)
@@ -228,7 +238,7 @@ void PlaylistModel::loadFromFile(const QString& path)
     }
 }
 
-void PlaylistModel::saveToFile(const QString& path)
+void PlaylistModel::saveToFile(const QString& path) const
 {
     QFile file(path);
     if (file.open(QIODevice::WriteOnly)) {
@@ -256,44 +266,37 @@ void PlaylistModel::savePlaylist()
     saveToFile(playlistFilePath());
 }
 
-void PlaylistModel::setNewPlaylist(QString name)
-{
-    beginResetModel();
-    saveToFile (playlistFilePath());
-    d->playlistName = name;
-    d->musicList.clear();
-    d->currentIndex = -1;
-    endResetModel();
-}
-
-void PlaylistModel::switchToPlaylist(QString name)
-{
-    beginResetModel();
-    saveToFile(playlistFilePath());
-    d->playlistName = name;
-    loadFromFile (playlistFilePath());
-    endResetModel();
-
-}
-
-bool PlaylistModel::removeCurrentPlaylist(QString PlaylistName)
+bool PlaylistModel::removeCurrentPlaylist(const QString &playlistToSwitchToAfterDeletion)
 {
     if (d->playlistName == "Default") {
         clearPlaylist();
         return false;
-    }
-    else {
+    } else {
         beginResetModel();
+
         QFile::remove(playlistFilePath());
-        d->playlistName = PlaylistName;
+        d->playlistName = playlistToSwitchToAfterDeletion;
         loadFromFile (playlistFilePath());
+
         endResetModel();
         return true;
     }
 }
 
 
-QString PlaylistModel::playlistName()
+QString PlaylistModel::playlistName() const
 {
     return d->playlistName;
+}
+
+void PlaylistModel::setPlaylistName(const QString& name)
+{
+    beginResetModel();
+    saveToFile(playlistFilePath());
+
+    clearPlaylistWithoutModelReset();
+    d->playlistName = name;
+
+    loadFromFile (playlistFilePath());
+    endResetModel();
 }
