@@ -175,7 +175,7 @@ QVariant PmcMetadataModel::data(const QModelIndex& index, int role) const
         return QVariant();
     }
 
-    QVariant metadataValue = metadataValueForRole(index, role);
+    const QVariant metadataValue = metadataValueForRole(index, role);
     switch(role) {
     case MediaCenter::ResourceIdRole:
     case MediaCenter::MediaUrlRole:
