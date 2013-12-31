@@ -131,5 +131,8 @@ FocusScope {
         case Qt.Key_M: mediaPlayerRootRect.muteToggle(); return;
         case Qt.Key_Z: mediaPlayerRootRect.previousMedia(); return;
         case Qt.Key_N: mediaPlayerRootRect.nextMedia(); return;
+        case Qt.Key_Plus: video.playbackRate += 0.1; return;
+        case Qt.Key_Minus: video.playbackRate -= 0.1; return;
+        case Qt.Key_0: video.playbackRate = 1.0; return;
     }}
 }
