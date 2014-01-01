@@ -85,7 +85,22 @@ Item {
                     expanded: mediaItem.view ? mediaItem.view.currentIndex == index : false
                     horizontalAlignment: mediaItem.horizontal ? Text.AlignLeft : Text.AlignHCenter
                 }
-            }
+                LabelOverlay {
+                    id: labelduration
+                    anchors {
+                        top: parent.top
+                        horizontalCenter: parent.horizontalCenter
+                    }
+
+                    horizontalAlignment: Text.AlignRight
+                    text: mediaDuration ? Qt.formatTime(new Date(0, 0, 0, 0, 0, mediaDuration), "hh:mm:ss") : ""
+                    visible: !hideLabel && text
+                    opacity: 0.8
+                    showOverlay: !isExpandable
+                    expanded: true
+                    width: parent.width * 0.9
+                }
+	    }
 
             Component {
                 id: delegateItemImageComponent

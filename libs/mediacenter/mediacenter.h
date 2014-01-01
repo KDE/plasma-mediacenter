@@ -38,6 +38,7 @@ enum AdditionalMediaRoles {
     HideLabelRole,
     ResourceIdRole,
     MediaThumbnailRole,
+    DurationRole,
     AdditionalRoles     //If additional roles are needed to be defined
 };
 

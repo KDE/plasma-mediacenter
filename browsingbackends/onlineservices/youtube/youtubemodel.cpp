@@ -25,6 +25,7 @@
 #include <kio/job.h>
 #include <KUrl>
 #include <QDebug>
+#include <QDate>
 
 
 YoutubeModel::YoutubeModel(QObject* parent): QAbstractListModel(parent)
@@ -53,6 +54,8 @@ QVariant YoutubeModel::data(const QModelIndex& index, int role) const
             return "video";
         case MediaCenter::IsExpandableRole:
             return true;
+	case MediaCenter::DurationRole:
+	    return m_videos.at(index.row()).duration;
     }
     return QVariant();
 }
@@ -110,6 +113,7 @@ void YoutubeModel::parseResults(KJob *job)
         QString description = mediaNode.namedItem("media:description").toElement().text();
         QString keywords = mediaNode.namedItem("media:keywords").toElement().text();
         QString mediaUrl = mediaNode.namedItem("media:player").toElement().attribute("url");
+	uint mediaDuration = mediaNode.namedItem("yt:duration").toElement().attribute("seconds").toInt();
         // FIXME: more than one media:thumbnail exists
         QString thumbnail = mediaNode.namedItem("media:thumbnail").toElement().attribute("url");
 
@@ -138,7 +142,7 @@ void YoutubeModel::parseResults(KJob *job)
         video.description = description;
         video.keywords = keywords.split(", ");
         video.id = id;
-        video.duration = 0;
+        video.duration = mediaDuration;
         video.embeddedHTML = embeddedHTML;
         video.thumbnail = thumbnail;
         video.url = mediaUrl;

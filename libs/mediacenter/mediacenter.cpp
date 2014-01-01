@@ -40,6 +40,7 @@ QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> 
     newRoles[HideLabelRole] = "hideLabel";
     newRoles[ResourceIdRole] = "resourceId";
     newRoles[MediaThumbnailRole] = "mediaThumbnail";
+    newRoles[DurationRole] = "mediaDuration";
     return newRoles;
 }
 

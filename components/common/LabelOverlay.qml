@@ -38,7 +38,7 @@ Rectangle {
         id: mediaTitleLabel
         anchors {
             verticalCenter: parent.verticalCenter;
-            left: parent.left; margins: 5
+            left: parent.left; margins: 1
         }
         width: parent.width
 
