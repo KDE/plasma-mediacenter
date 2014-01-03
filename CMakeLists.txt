@@ -1,5 +1,7 @@
 project(MediaCenterElements)
 
+set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake )
+
 find_package(KDE4 REQUIRED)
 include(KDE4Defaults)
 
@@ -7,7 +9,7 @@ find_package(KDE4Workspace REQUIRED)
 find_package(NepomukCore REQUIRED)
 find_package(Soprano)
 
-add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
+add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS} ${KDE4_ENABLE_EXCEPTIONS})
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_BINARY_DIR}
@@ -17,8 +19,6 @@ include_directories(
     ${SOPRANO_INCLUDE_DIR}
     libs/
 )
-
-set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake )
 
 add_subdirectory(browsingbackends)
 add_subdirectory(mediaelements)
