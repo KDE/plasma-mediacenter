@@ -22,14 +22,6 @@
 #include "pmcimageprovider.h"
 #include "metadataupdater.h"
 #include "lastfmimagefetcher.h"
-#include "media.h"
-
-#include "media_odb.h"
-
-#include <odb/database.hxx>
-#include <odb/transaction.hxx>
-#include <odb/schema-catalog.hxx>
-#include <odb/sqlite/database.hxx>
 
 #include <Nepomuk2/Query/Query>
 #include <Nepomuk2/Vocabulary/NIE>
@@ -45,8 +37,6 @@
 #include <KDebug>
 
 #include <QtCore/QTimer>
-
-#include <memory>
 
 class PmcMetadataModel::Private
 {
@@ -77,7 +67,6 @@ public:
     QList<int> rowsToFetchMetadataFor;
     QStringList mediaUrlWhichFailedThumbnailGeneration;
     QVariant defaultDecoration;
-    odb::core::database *db;
 };
 
 PmcMetadataModel::PmcMetadataModel(QObject* parent):
@@ -107,27 +96,6 @@ PmcMetadataModel::PmcMetadataModel(QObject* parent):
     d->metadataUpdater->start(QThread::IdlePriority);
 
     connect(LastFmImageFetcher::instance(), SIGNAL(imageFetched(QPersistentModelIndex,QString)), SLOT(signalUpdate(QPersistentModelIndex,QString)));
-
-    d->db = initDb();
-    createDbSchema(d->db);
-}
-
-void PmcMetadataModel::createDbSchema(odb::database* db)
-{
-    odb::connection_ptr c (db->connection ());
-    c->execute ("PRAGMA foreign_keys=OFF");
-
-    odb::transaction t (c->begin ());
-    odb::schema_catalog::create_schema (*(db));
-    t.commit ();
-
-    c->execute ("PRAGMA foreign_keys=ON");
-}
-
-odb::database* PmcMetadataModel::initDb()
-{
-    return new odb::sqlite::database("plasma-mediacenter.db",
-                                  SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE);
 }
 
 PmcMetadataModel::~PmcMetadataModel()
@@ -135,7 +103,6 @@ PmcMetadataModel::~PmcMetadataModel()
     d->metadataUpdater->quit();
     kDebug() << "Waiting for metadata thread to quit...";
     d->metadataUpdater->wait(5000);
-    delete d->db;
     delete d;
 }
 
@@ -292,18 +259,6 @@ void PmcMetadataModel::saveMetadata(int row, const QHash< int, QVariant >& value
 
     d->metadataValues.insert(row, values);
     emit dataChanged(createIndex(row, 0), createIndex(row, 0));
-
-    saveMetadataToDb(values);
-}
-
-void PmcMetadataModel::saveMetadataToDb(QHash< int, QVariant > values)
-{
-    odb::core::transaction t(d->db->begin());
-    Media media(values.value(Qt::DisplayRole).toString(),
-                values.value(MediaCenter::MediaUrlRole).toString(),
-                values.value(Qt::DecorationRole).toString());
-    QString sha = d->db->persist(media);
-    t.commit();
 }
 
 void PmcMetadataModel::newEntries(int count)

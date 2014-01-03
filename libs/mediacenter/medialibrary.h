@@ -1,6 +1,5 @@
 /***********************************************************************************
  *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
- *   Copyright 2014 Sinny Kumari <ksinny@gmail.com>                                *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -17,43 +16,41 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef MEDIA_H
-#define MEDIA_H
+#ifndef MEDIALIBRARY_H
+#define MEDIALIBRARY_H
 
-#include <QtCore/QString>
+#include "mediacenter_export.h"
 
-#include <odb/core.hxx>
+#include <QHash>
+#include <QThread>
 
-#pragma db object
-
-class Media
+class MEDIACENTER_EXPORT MediaLibrary : public QThread
 {
+    Q_OBJECT
 public:
-    Media (const QString& title, const QString& url,
-           const QString& thumbnail);
+    class Singleton;
 
-    const QString& sha() const;
+    static MediaLibrary *instance();
 
-    const QString& title () const;
-    void setTitle(const QString &title);
+    explicit MediaLibrary(QObject* parent = 0);
+    ~MediaLibrary();
 
-    const QString& url() const;
-    void setUrl(const QString &url);
+    virtual void run();
 
-    const QString& thumbnail () const;
-    void setThumbnail(const QString &thumbnail);
+    void updateMedia(const QHash<int, QVariant> &data);
+    void updateMedia(const QString &url, const QHash<int, QVariant> &data);
 
-    static QString calculateSha(const QString& url);
+private Q_SLOTS:
+    void processRemainingRequests();
 
 private:
-    Media();
-    friend class odb::access;
+    class Private;
+    Private * const d;
 
-    #pragma db id
-    QString m_sha;
-    QString m_title;
-    QString m_url;
-    QString m_thumbnail;
+    void initDb();
+    bool areThereUpdateRequests();
+    void processNextRequest();
+    QPair<QString, QHash<int, QVariant> > takeRequest();
 };
 
-#endif // MEDIA_H
+#endif // MEDIALIBRARY_H
