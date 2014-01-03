@@ -43,7 +43,7 @@ MultiplePlaylistModel::MultiplePlaylistModel(QObject* parent): QAbstractListMode
     if (playlistList.length() == 0) {
         m_multiplePlaylistList.append("Default");
     }
-
+/*
     char *argv[10];
     std::auto_ptr<odb::core::database> db(
         new odb::sqlite::database("pmc.db", SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE));
@@ -63,7 +63,7 @@ MultiplePlaylistModel::MultiplePlaylistModel(QObject* parent): QAbstractListMode
     odb::core::transaction t(db->begin());
     Media p("Hello", "World", 10);
     unsigned long id = db->persist(p);
-    t.commit();
+    t.commit();*/
 }
 
 MultiplePlaylistModel::~MultiplePlaylistModel()
