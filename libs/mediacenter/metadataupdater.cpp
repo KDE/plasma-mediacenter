@@ -20,6 +20,7 @@
 #include "metadataupdater.h"
 
 #include "mediacenter.h"
+#include "medialibrary.h"
 
 #include <Nepomuk2/Resource>
 #include <Nepomuk2/Variant>
@@ -150,6 +151,7 @@ void MetadataUpdater::fetchValuesForResult(int i, const Nepomuk2::Query::Result&
         }
     }
 
+    MediaLibrary::instance()->updateMedia(values);
     emit gotMetadata(i, values);
 }
 

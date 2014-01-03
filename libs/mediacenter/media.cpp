@@ -25,13 +25,18 @@ Media::Media (const QString& title, const QString& url,
               const QString& thumbnail) : m_title(title),
               m_url(url), m_thumbnail(thumbnail)
 {
-    QCryptographicHash hash(QCryptographicHash::Sha1);
-    hash.addData(url.toUtf8());
-    m_sha = hash.result().toHex();
+    m_sha = calculateSha(url);
 }
 
 Media::Media ()
 {
+}
+
+QString Media::calculateSha(const QString& url)
+{
+    QCryptographicHash hash(QCryptographicHash::Sha1);
+    hash.addData(url.toUtf8());
+    return hash.result().toHex();
 }
 
 const QString& Media::title() const
@@ -39,14 +44,29 @@ const QString& Media::title() const
     return m_title;
 }
 
+void Media::setTitle(const QString& title)
+{
+    m_title = title;
+}
+
 const QString& Media::url() const
 {
     return m_url;
 }
 
+void Media::setUrl(const QString& url)
+{
+    m_url = url;
+}
+
 const QString& Media::thumbnail() const
 {
     return m_thumbnail;
+}
+
+void Media::setThumbnail(const QString& thumbnail)
+{
+    m_thumbnail = thumbnail;
 }
 
 const QString& Media::sha() const

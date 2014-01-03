@@ -29,13 +29,14 @@ set (plasmamediacenter_SRCS
     subtitleprovider.cpp
     filterplaylistmodel.cpp
     multipleplaylistmodel.cpp
+    medialibrary.cpp
 )
 
 set (plasmamediacenter_ODB_SRCS
     media_odb.cpp
 )
 
-kde4_add_library(plasmamediacenter SHARED 
+kde4_add_library(plasmamediacenter SHARED
     ${plasmamediacenter_SRCS}
     ${plasmamediacenter_ODB_SRCS}
 )
@@ -44,6 +45,7 @@ set(ODB_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/media.h)
 
 odb_compile(HEADER ${ODB_HEADERS} DB sqlite PROFILE qt
+    INCLUDE ${QT_INCLUDES}
     OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     GENERATE_QUERY GENERATE_SESSION GENERATE_SCHEMA)
 
