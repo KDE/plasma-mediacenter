@@ -43,7 +43,7 @@ kde4_add_library(plasmamediacenter SHARED
 set(ODB_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/media.h)
 
-odb_compile(HEADER ${ODB_HEADERS} DB sqlite
+odb_compile(HEADER ${ODB_HEADERS} DB sqlite PROFILE qt
     OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     GENERATE_QUERY GENERATE_SESSION GENERATE_SCHEMA)
 
@@ -55,7 +55,7 @@ target_link_libraries(plasmamediacenter
     ${KDE4_SOLID_LIBS}
     ${TAGLIB_LIBRARIES}
     ${NEPOMUK_CORE_LIBRARY}
-    -lodb -lodb-sqlite
+    -lodb -lodb-sqlite -lodb-qt
     )
 set_target_properties(plasmamediacenter PROPERTIES VERSION 1.2 SOVERSION 1.2)
 
