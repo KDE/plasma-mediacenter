@@ -32,18 +32,17 @@ public:
     Media (const QString& title, const QString& url,
            const QString& thumbnail);
 
+    const QString& sha() const;
     const QString& title () const;
-    const QString& url () const;
-
+    const QString& url() const;
     const QString& thumbnail () const;
 
 private:
     Media();
     friend class odb::access;
 
-    #pragma db id auto
-    unsigned long m_id;
-
+    #pragma db id
+    QString m_sha;
     QString m_title;
     QString m_url;
     QString m_thumbnail;

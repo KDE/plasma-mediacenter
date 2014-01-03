@@ -16,21 +16,12 @@
  ***********************************************************************************/
 
 #include "multipleplaylistmodel.h"
-#include "media.h"
-#include "media_odb.h"
 
 #include <KDE/KStandardDirs>
 #include <KDE/KCmdLineArgs>
 #include <QDebug>
 #include <QDir>
 #include <QCoreApplication>
-
-#include <odb/database.hxx>
-#include <odb/transaction.hxx>
-#include <odb/schema-catalog.hxx>
-#include <odb/sqlite/database.hxx>
-
-#include <memory>
 
 MultiplePlaylistModel::MultiplePlaylistModel(QObject* parent): QAbstractListModel(parent)
 {
@@ -43,27 +34,6 @@ MultiplePlaylistModel::MultiplePlaylistModel(QObject* parent): QAbstractListMode
     if (playlistList.length() == 0) {
         m_multiplePlaylistList.append("Default");
     }
-/*
-    char *argv[10];
-    std::auto_ptr<odb::core::database> db(
-        new odb::sqlite::database("pmc.db", SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE));
-
-    {
-        odb::connection_ptr c (db->connection ());
-
-        c->execute ("PRAGMA foreign_keys=OFF");
-
-        odb::transaction t (c->begin ());
-        odb::schema_catalog::create_schema (*db);
-        t.commit ();
-
-        c->execute ("PRAGMA foreign_keys=ON");
-    }
-
-    odb::core::transaction t(db->begin());
-    Media p("Hello", "World", 10);
-    unsigned long id = db->persist(p);
-    t.commit();*/
 }
 
 MultiplePlaylistModel::~MultiplePlaylistModel()

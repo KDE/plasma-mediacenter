@@ -19,11 +19,15 @@
 
 #include "media.h"
 
+#include <QCryptographicHash>
+
 Media::Media (const QString& title, const QString& url,
               const QString& thumbnail) : m_title(title),
               m_url(url), m_thumbnail(thumbnail)
 {
-
+    QCryptographicHash hash(QCryptographicHash::Sha1);
+    hash.addData(url.toUtf8());
+    m_sha = hash.result().toHex();
 }
 
 Media::Media ()
@@ -43,4 +47,9 @@ const QString& Media::url() const
 const QString& Media::thumbnail() const
 {
     return m_thumbnail;
+}
+
+const QString& Media::sha() const
+{
+    return m_sha;
 }
