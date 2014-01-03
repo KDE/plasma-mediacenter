@@ -1,10 +1,13 @@
 find_package(Taglib REQUIRED)
 
+include(ODB)
+
 include_directories(
     ${TAGLIB_INCLUDES}
 )
 
 set (plasmamediacenter_SRCS
+    media.cpp
     lastfmimagefetcher.cpp
     modelmetadata.cpp
     objectpair.cpp
@@ -28,7 +31,21 @@ set (plasmamediacenter_SRCS
     multipleplaylistmodel.cpp
 )
 
-kde4_add_library(plasmamediacenter SHARED ${plasmamediacenter_SRCS})
+set (plasmamediacenter_ODB_SRCS
+    media_odb.cpp
+)
+
+kde4_add_library(plasmamediacenter SHARED 
+    ${plasmamediacenter_SRCS}
+    ${plasmamediacenter_ODB_SRCS}
+)
+
+set(ODB_HEADERS
+    ${CMAKE_CURRENT_SOURCE_DIR}/media.h)
+
+odb_compile(HEADER ${ODB_HEADERS} DB sqlite
+    OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    GENERATE_QUERY GENERATE_SESSION GENERATE_SCHEMA)
 
 target_link_libraries(plasmamediacenter
     ${QT_QTDECLARATIVE_LIBRARIES}
@@ -38,6 +55,7 @@ target_link_libraries(plasmamediacenter
     ${KDE4_SOLID_LIBS}
     ${TAGLIB_LIBRARIES}
     ${NEPOMUK_CORE_LIBRARY}
+    -lodb -lodb-sqlite
     )
 set_target_properties(plasmamediacenter PROPERTIES VERSION 1.2 SOVERSION 1.2)
 
