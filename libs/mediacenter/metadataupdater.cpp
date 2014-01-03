@@ -114,7 +114,7 @@ void MetadataUpdater::processPendingIndices()
     if (hasTermChanged())
         runQuery();
 
-    if (areThereResultsToProcess()) {
+    if (areThereIndicesToProcess()) {
         const int i = nextIndexToProcess();
         fetchValuesForResult(i, resultForRow(i));
         QTimer::singleShot(10, this, SLOT(processPendingIndices()));
@@ -144,8 +144,12 @@ void MetadataUpdater::fetchValuesForResult(int i, const Nepomuk2::Query::Result&
             values.insert(role, urlForResource(result.resource()));
             break;
         case MediaCenter::MediaTypeRole:
-            //TODO: Put null checks here
-            values.insert(role, mimetypeForResource(result.resource()).split('/').at(0));
+            const QString mimetype = mimetypeForResource(result.resource());
+            if (mimetype.isEmpty() || !mimetype.contains('/')) {
+                values.insert(role, mimetype);
+            } else {
+                values.insert(role, mimetype.split('/').at(0));
+            }
             break;
         }
     }
@@ -181,7 +185,7 @@ Nepomuk2::Query::Result MetadataUpdater::resultForRow(int row)
     return m_resultList.at(row);
 }
 
-bool MetadataUpdater::areThereResultsToProcess()
+bool MetadataUpdater::areThereIndicesToProcess()
 {
     QMutexLocker lock(&m_indicesMutex);
     return !m_indices.isEmpty();

@@ -80,7 +80,7 @@ private:
     QString mimetypeForResource(const Nepomuk2::Resource& resource) const;
     QString urlForResource(const Nepomuk2::Resource &resource) const;
     void fetchValuesForResult(int i, const Nepomuk2::Query::Result& result);
-    bool areThereResultsToProcess();
+    bool areThereIndicesToProcess();
     int nextIndexToProcess();
     Nepomuk2::Query::Result resultForRow(int row);
     bool hasTermChanged();
