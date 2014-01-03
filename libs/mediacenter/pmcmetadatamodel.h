@@ -37,6 +37,10 @@ class ResourceTypeTerm;
 }
 }
 
+namespace odb {
+    class database;
+}
+
 class QPixmap;
 class KFileItem;
 
@@ -92,6 +96,9 @@ private:
 
     QVariant decorationForMetadata(const QVariant& metadataValue, const QModelIndex& index) const;
     QVariant metadataValueForRole(const QModelIndex& index, int role) const;
+    void saveMetadataToDb(QHash< int, QVariant > values);
+    odb::database* initDb();
+    void createDbSchema(odb::database* db);
 };
 
 #endif // PMCMETADATAMODEL_H
