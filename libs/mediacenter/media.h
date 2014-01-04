@@ -24,13 +24,11 @@
 
 #include <odb/core.hxx>
 
-#pragma db model version(1, 1)
-
 #pragma db object
 class Media
 {
 public:
-    Media (const QString& title, const QString& url,
+    Media (const QString &type, const QString& title, const QString& url,
            const QString& thumbnail);
 
     const QString& sha() const;
@@ -44,6 +42,9 @@ public:
     const QString& thumbnail () const;
     void setThumbnail(const QString &thumbnail);
 
+    const QString& type() const;
+    void setType(const QString &type);
+
     static QString calculateSha(const QString& url);
 
 private:
@@ -55,6 +56,7 @@ private:
     QString m_title;
     QString m_url;
     QString m_thumbnail;
+    QString m_type;
 };
 
 #endif // MEDIA_H
