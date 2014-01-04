@@ -33,6 +33,7 @@
 #include <odb/query.hxx>
 #include <odb/schema-catalog.hxx>
 #include <odb/sqlite/database.hxx>
+#include <odb/sqlite/exceptions.hxx>
 
 typedef odb::query<Media> MediaQuery;
 typedef odb::result<Media> MediaResult;
@@ -57,6 +58,9 @@ public:
 
     QList< QPair <QString, QHash<int, QVariant> > > updateRequests;
     QMutex updateRequestsMutex;
+
+    QList<Media> mediaToPersist;
+    QMutex mediaToPersistMutex;
 };
 
 MediaLibrary::MediaLibrary(QObject* parent)
@@ -70,7 +74,8 @@ MediaLibrary::MediaLibrary(QObject* parent)
 
 MediaLibrary::~MediaLibrary()
 {
-
+    quit();
+    wait(5000);
 }
 
 void MediaLibrary::run()
@@ -83,9 +88,16 @@ void MediaLibrary::processRemainingRequests()
 {
     Q_ASSERT(thread() == this);
 
-    if (areThereUpdateRequests()) {
+    bool hasProcessedAnyRequest = false;
+    odb::core::transaction t(d->db->begin());
+
+    while (areThereUpdateRequests()) {
+        hasProcessedAnyRequest = true;
         processNextRequest();
-        QTimer::singleShot(10, this, SLOT(processRemainingRequests()));
+    }
+
+    if (hasProcessedAnyRequest) {
+        t.commit();
     }
 }
 
@@ -93,8 +105,7 @@ void MediaLibrary::processNextRequest()
 {
     QPair<QString, QHash<int, QVariant> > request = takeRequest();
 
-    odb::core::transaction t(d->db->begin());
-
+    qDebug() << "Processing " << request.first;
     MediaResult results (d->db->query<Media>(
         MediaQuery::sha == Media::calculateSha(request.first)));
 
@@ -110,8 +121,6 @@ void MediaLibrary::processNextRequest()
         d->db->update(media);
         qDebug() << "Updated " << media->url();
     }
-
-    t.commit();
 }
 
 QPair< QString, QHash< int, QVariant > > MediaLibrary::takeRequest()
@@ -150,9 +159,13 @@ void MediaLibrary::initDb()
     odb::connection_ptr c (d->db->connection ());
     c->execute ("PRAGMA foreign_keys=OFF");
 
-    odb::transaction t (c->begin ());
-    odb::schema_catalog::create_schema (*(d->db));
-    t.commit ();
+    try {
+        odb::transaction t (c->begin ());
+        odb::schema_catalog::create_schema (*(d->db), "", false);
+        t.commit ();
+    } catch (odb::sqlite::database_exception e) {
+        qDebug() << "Not recreating Schema";
+    }
 
     c->execute ("PRAGMA foreign_keys=ON");
 }

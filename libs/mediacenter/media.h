@@ -24,8 +24,9 @@
 
 #include <odb/core.hxx>
 
-#pragma db object
+#pragma db model version(1, 1)
 
+#pragma db object
 class Media
 {
 public:
