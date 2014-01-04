@@ -29,6 +29,7 @@
 #include <Nepomuk2/Vocabulary/NCO>
 #include <Nepomuk2/Vocabulary/NMM>
 #include <Nepomuk2/Query/ResourceTypeTerm>
+#include <Nepomuk2/Query/OrTerm>
 
 #include <KDebug>
 
@@ -36,9 +37,15 @@
 
 static const int s_queryLimit = 2000;
 
-MetadataUpdater::MetadataUpdater(const QList< int >& rolesRequested, QObject* parent)
-    : QThread(parent), m_rolesRequested(rolesRequested), m_termChanged(false), m_queryServiceClient(0)
+MetadataUpdater::MetadataUpdater(QObject* parent)
+    : QThread(parent), m_termChanged(false), m_queryServiceClient(0)
 {
+    m_rolesRequested << Qt::DisplayRole
+        << MediaCenter::ResourceIdRole
+        << MediaCenter::MediaUrlRole
+        << MediaCenter::MediaTypeRole
+        << Qt::DecorationRole;
+
     moveToThread(this);
 }
 
@@ -49,7 +56,15 @@ MetadataUpdater::~MetadataUpdater()
 
 void MetadataUpdater::run()
 {
-    QTimer::singleShot(0, this, SLOT(processPendingIndices()));
+    Nepomuk2::Query::ResourceTypeTerm audioTerm(
+        Nepomuk2::Query::ResourceTypeTerm(Nepomuk2::Vocabulary::NFO::Audio()));
+    Nepomuk2::Query::ResourceTypeTerm videoTerm(
+        Nepomuk2::Query::ResourceTypeTerm(Nepomuk2::Vocabulary::NFO::Video()));
+    Nepomuk2::Query::ResourceTypeTerm imageTerm(
+        Nepomuk2::Query::ResourceTypeTerm(Nepomuk2::Vocabulary::NFO::Image()));
+
+    setTerm(Nepomuk2::Query::OrTerm(audioTerm, videoTerm, imageTerm));
+
     exec();
 }
 
@@ -105,6 +120,10 @@ void MetadataUpdater::runQuery()
 void MetadataUpdater::newEntries(const QList< Nepomuk2::Query::Result >& results)
 {
     m_resultList.append(results);
+    int i = 0;
+    foreach (const Nepomuk2::Query::Result& r, results) {
+        fetchValuesForResult(i++, r);
+    }
     emit newResults(results.size());
 }
 
@@ -155,6 +174,7 @@ void MetadataUpdater::fetchValuesForResult(int i, const Nepomuk2::Query::Result&
         }
     }
 
+    MediaLibrary::instance()->updateMedia(values);
     emit gotMetadata(i, values);
 }
 
