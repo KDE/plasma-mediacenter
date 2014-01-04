@@ -151,7 +151,6 @@ void MetadataUpdater::fetchValuesForResult(int i, const Nepomuk2::Query::Result&
         }
     }
 
-    MediaLibrary::instance()->updateMedia(values);
     emit gotMetadata(i, values);
 }
 
