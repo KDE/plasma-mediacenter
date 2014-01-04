@@ -23,6 +23,9 @@
 
 #include <QHash>
 #include <QThread>
+#include <QSharedPointer>
+
+#include "media.h"
 
 class MEDIACENTER_EXPORT MediaLibrary : public QThread
 {
@@ -52,6 +55,7 @@ private:
     void processNextRequest();
     QPair<QString, QHash<int, QVariant> > takeRequest();
     void updateLibrary();
+    QList<QSharedPointer <Media> > getMedia(const QString &type);
 };
 
 #endif // MEDIALIBRARY_H

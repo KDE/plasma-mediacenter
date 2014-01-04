@@ -25,7 +25,6 @@
 #include <QDebug>
 
 #include "mediacenter.h"
-#include "media.h"
 #include "media_odb.h"
 
 #include <odb/database.hxx>
@@ -62,7 +61,8 @@ public:
     QList<Media> mediaToPersist;
     QMutex mediaToPersistMutex;
 
-    QList<Media> mediaItems;
+    QHash <QString, QList<QSharedPointer<Media> > > mediaItems;
+
 };
 
 MediaLibrary::MediaLibrary(QObject* parent)
@@ -78,6 +78,7 @@ MediaLibrary::~MediaLibrary()
 {
     quit();
     wait(5000);
+    delete d;
 }
 
 void MediaLibrary::run()
@@ -184,6 +185,12 @@ void MediaLibrary::updateLibrary()
     MediaResult results (d->db->query<Media>());
 
     for (MediaResult::iterator i=results.begin(); i!=results.end(); ++i) {
-        d->mediaItems.append(*(i.load()));
+        QSharedPointer<Media> m = i.load();
+        d->mediaItems[m->type()].append(m);
     }
+}
+
+QList< QSharedPointer< Media > > MediaLibrary::getMedia(const QString& type)
+{
+    return d->mediaItems.value(type);
 }
