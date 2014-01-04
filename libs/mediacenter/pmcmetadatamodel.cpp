@@ -22,6 +22,8 @@
 #include "pmcimageprovider.h"
 #include "metadataupdater.h"
 #include "lastfmimagefetcher.h"
+#include "media.h"
+#include "medialibrary.h"
 
 #include <Nepomuk2/Query/Query>
 #include <Nepomuk2/Vocabulary/NIE>
@@ -93,7 +95,7 @@ PmcMetadataModel::PmcMetadataModel(QObject* parent):
     connect(d->metadataUpdater, SIGNAL(queryStarted()), SIGNAL(queryStarted()));
     connect(d->metadataUpdater, SIGNAL(queryFinished()), SIGNAL(queryFinished()));
     connect(d->metadataUpdater, SIGNAL(queryError(QString)), SIGNAL(queryError(QString)));
-    d->metadataUpdater->start(QThread::IdlePriority);
+    //d->metadataUpdater->start(QThread::IdlePriority);
 
     connect(LastFmImageFetcher::instance(), SIGNAL(imageFetched(QPersistentModelIndex,QString)), SLOT(signalUpdate(QPersistentModelIndex,QString)));
 }
@@ -127,18 +129,35 @@ void PmcMetadataModel::updateModel()
 
 void PmcMetadataModel::showMediaType(MediaCenter::MediaType mediaType)
 {
+    QString type;
+
     switch (mediaType) {
         case MediaCenter::Music:
-            d->resourceTypeTerm = Nepomuk2::Query::ResourceTypeTerm(Nepomuk2::Vocabulary::NFO::Audio());
+            type ="audio";
 	    break;
         case MediaCenter::Picture:
-            d->resourceTypeTerm = Nepomuk2::Query::ResourceTypeTerm(Nepomuk2::Vocabulary::NFO::Image());
+            type = "image";
 	    break;
         case MediaCenter::Video:
-            d->resourceTypeTerm = Nepomuk2::Query::ResourceTypeTerm(Nepomuk2::Vocabulary::NFO::Video());
+            type = "video";
     }
-    clearAllFilters();
-    d->updateTimer.start(100);
+    QList <QSharedPointer<Media> > mediaData = MediaLibrary::instance()->getMedia(type);
+
+    beginResetModel();
+    int i = 0;
+    foreach (QSharedPointer<Media> m, mediaData) {
+        QHash<int, QVariant> mediainfo;
+        mediainfo.insert(Qt::DisplayRole, m->title());
+        mediainfo.insert(Qt::DecorationRole, m->thumbnail());
+        mediainfo.insert(MediaCenter::MediaUrlRole, m->url());
+        mediainfo.insert(MediaCenter::MediaTypeRole, m->type());
+        d->metadataValues.insert(i++, mediainfo);
+    }
+
+    d->numberOfEntries = d->metadataValues.keys().count();
+    endResetModel();
+   // clearAllFilters();
+    //d->updateTimer.start(100);
 }
 
 void PmcMetadataModel::showMediaForProperty(Nepomuk2::Types::Property property)
