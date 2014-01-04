@@ -64,7 +64,6 @@ public:
     QTimer metadataFetchTimer;
     Nepomuk2::Query::ResourceTypeTerm resourceTypeTerm;
     QHash<int, QHash<int, QVariant> > metadataValues;
-    MetadataUpdater *metadataUpdater;
     int numberOfEntries;
     QList<int> rowsToFetchMetadataFor;
     QStringList mediaUrlWhichFailedThumbnailGeneration;
@@ -86,25 +85,11 @@ PmcMetadataModel::PmcMetadataModel(QObject* parent):
 
     d->thumbnailSize = QSize(512, 512);
 
-    qRegisterMetaType< QHash<int,QVariant> >("QHash<int,QVariant>");
-    d->metadataUpdater = new MetadataUpdater(rolesNeeded());
-    connect(d->metadataUpdater, SIGNAL(gotMetadata(int,QHash<int,QVariant>)),
-            SLOT(saveMetadata(int,QHash<int,QVariant>)));
-    connect(d->metadataUpdater, SIGNAL(newResults(int)), SLOT(newEntries(int)));
-    connect(d->metadataUpdater, SIGNAL(reset()), SLOT(handleUpdaterReset()));
-    connect(d->metadataUpdater, SIGNAL(queryStarted()), SIGNAL(queryStarted()));
-    connect(d->metadataUpdater, SIGNAL(queryFinished()), SIGNAL(queryFinished()));
-    connect(d->metadataUpdater, SIGNAL(queryError(QString)), SIGNAL(queryError(QString)));
-    //d->metadataUpdater->start(QThread::IdlePriority);
-
     connect(LastFmImageFetcher::instance(), SIGNAL(imageFetched(QPersistentModelIndex,QString)), SLOT(signalUpdate(QPersistentModelIndex,QString)));
 }
 
 PmcMetadataModel::~PmcMetadataModel()
 {
-    d->metadataUpdater->quit();
-    kDebug() << "Waiting for metadata thread to quit...";
-    d->metadataUpdater->wait(5000);
     delete d;
 }
 
@@ -123,7 +108,6 @@ void PmcMetadataModel::updateModel()
         listOfTerms.append(d->searchTerm);
     }
 
-    d->metadataUpdater->setTerm(Nepomuk2::Query::AndTerm(listOfTerms));
     emit queryStarted();
 }
 
@@ -181,6 +165,7 @@ void PmcMetadataModel::addTerm(const Nepomuk2::Query::Term& term)
 
 QVariant PmcMetadataModel::metadataValueForRole(const QModelIndex& index, int role) const
 {
+    kDebug() << "VALUES " << d->metadataValues.value(index.row());
     return d->metadataValues.value(index.row()).value(role);
 }
 
@@ -247,18 +232,9 @@ QVariant PmcMetadataModel::decorationForMetadata(const QVariant &metadataValue, 
 
 void PmcMetadataModel::fetchMetadata()
 {
-    d->metadataUpdater->fetchMetadata(d->rowsToFetchMetadataFor);
     d->rowsToFetchMetadataFor.clear();
 }
 
-QList< int > PmcMetadataModel::rolesNeeded() const
-{
-    return QList<int>() << Qt::DisplayRole
-                        << MediaCenter::ResourceIdRole
-                        << MediaCenter::MediaUrlRole
-                        << MediaCenter::MediaTypeRole
-                        << Qt::DecorationRole;
-}
 
 QString PmcMetadataModel::mimetypeForResource(const Nepomuk2::Resource& resource) const
 {
