@@ -61,6 +61,8 @@ public:
 
     QList<Media> mediaToPersist;
     QMutex mediaToPersistMutex;
+
+    QList<Media> mediaItems;
 };
 
 MediaLibrary::MediaLibrary(QObject* parent)
@@ -110,7 +112,8 @@ void MediaLibrary::processNextRequest()
         MediaQuery::sha == Media::calculateSha(request.first)));
 
     if (results.empty()) {
-        Media media(request.second.value(Qt::DisplayRole).toString(),
+        Media media(request.second.value(MediaCenter::MediaTypeRole).toString(),
+                    request.second.value(Qt::DisplayRole).toString(),
                     request.first,
                     request.second.value(Qt::DecorationRole).toString());
         qDebug() << "Saved " << d->db->persist(media);
@@ -118,6 +121,7 @@ void MediaLibrary::processNextRequest()
         QSharedPointer<Media> media(results.begin().load());
         media->setTitle(request.second.value(Qt::DisplayRole).toString());
         media->setThumbnail(request.second.value(Qt::DecorationRole).toString());
+        media->setType(request.second.value(MediaCenter::MediaTypeRole).toString());
         d->db->update(media);
         qDebug() << "Updated " << media->url();
     }
@@ -168,4 +172,18 @@ void MediaLibrary::initDb()
     }
 
     c->execute ("PRAGMA foreign_keys=ON");
+
+    updateLibrary();
+}
+
+void MediaLibrary::updateLibrary()
+{
+    odb::connection_ptr c (d->db->connection ());
+    odb::transaction t (c->begin ());
+
+    MediaResult results (d->db->query<Media>());
+
+    for (MediaResult::iterator i=results.begin(); i!=results.end(); ++i) {
+        d->mediaItems.append(*(i.load()));
+    }
 }

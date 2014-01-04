@@ -51,6 +51,7 @@ private:
     bool areThereUpdateRequests();
     void processNextRequest();
     QPair<QString, QHash<int, QVariant> > takeRequest();
+    void updateLibrary();
 };
 
 #endif // MEDIALIBRARY_H

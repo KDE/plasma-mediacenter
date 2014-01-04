@@ -21,9 +21,9 @@
 
 #include <QCryptographicHash>
 
-Media::Media (const QString& title, const QString& url,
-              const QString& thumbnail) : m_title(title),
-              m_url(url), m_thumbnail(thumbnail)
+Media::Media (const QString& type, const QString& title, const QString& url,
+              const QString& thumbnail)
+    : m_type(type), m_url(url), m_thumbnail(thumbnail)
 {
     m_sha = calculateSha(url);
 }
@@ -72,4 +72,14 @@ void Media::setThumbnail(const QString& thumbnail)
 const QString& Media::sha() const
 {
     return m_sha;
+}
+
+void Media::setType(const QString& type)
+{
+    m_type = type;
+}
+
+const QString& Media::type() const
+{
+    return m_type;
 }
