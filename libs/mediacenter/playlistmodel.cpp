@@ -37,6 +37,7 @@ public:
     bool random;
     QString playlistName;
     QString playlistsDirectoryPath;
+    bool cmdLineURL;
 };
 
 PlaylistModel::PlaylistModel(QObject* parent):
@@ -199,13 +200,7 @@ void PlaylistModel::playlistItemUpdated()
 
 QString PlaylistModel::playlistFilePath() const
 {
-    if (d->playlistsDirectoryPath.isEmpty()) {
-        d->playlistsDirectoryPath = KGlobal::dirs()->saveLocation("data")
-                                    + KCmdLineArgs::appName() + "/playlists/";
-        QDir().mkpath(d->playlistsDirectoryPath);
-    }
-
-    return d->playlistsDirectoryPath + d->playlistName;
+    return  getPlaylistPath() + d->playlistName;
 }
 
 void PlaylistModel::loadFromFile(const QString& path)
@@ -299,4 +294,31 @@ void PlaylistModel::setPlaylistName(const QString& name)
 
     loadFromFile (playlistFilePath());
     endResetModel();
+}
+
+bool PlaylistModel::checkPlaylistPathExists(const QString& name)
+{
+    QString playlistAbsolutePath = getPlaylistPath() + name;
+    return QFile::exists(playlistAbsolutePath);
+}
+
+bool PlaylistModel::setCmdLineURL(bool value)
+{
+    d->cmdLineURL = value;
+    return d->cmdLineURL;
+}
+
+bool PlaylistModel::getCmdLineURL()
+{
+    return d->cmdLineURL;
+}
+
+QString PlaylistModel::getPlaylistPath() const
+{
+    if (d->playlistsDirectoryPath.isEmpty()) {
+        d->playlistsDirectoryPath = KGlobal::dirs()->saveLocation("data")
+                                    + KCmdLineArgs::appName() + "/playlists/";
+        QDir().mkpath(d->playlistsDirectoryPath);
+    }
+    return d->playlistsDirectoryPath;
 }

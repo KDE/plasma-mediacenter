@@ -117,3 +117,14 @@ void MultiplePlaylistModel::removeCurrentPlaylist()
     endResetModel();
 }
 
+bool MultiplePlaylistModel::checkCmdLineStat()
+{
+    PlaylistModel *p = dynamic_cast<PlaylistModel*> (playlistModelAddress());
+    return p->getCmdLineURL();
+}
+
+void MultiplePlaylistModel::setCmdLineStat(bool val)
+{
+    PlaylistModel *p = dynamic_cast<PlaylistModel*> (playlistModelAddress());
+    p->setCmdLineURL(val);
+}

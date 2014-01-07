@@ -43,6 +43,8 @@ public:
     void setPlaylistModelAddress (QObject *model);
     Q_INVOKABLE void switchToPlaylist (const QString& name);
     Q_INVOKABLE void removeCurrentPlaylist ();
+    Q_INVOKABLE bool checkCmdLineStat();
+    Q_INVOKABLE void setCmdLineStat(bool val);
 
 signals:
     void playlistModelAddressChanged();

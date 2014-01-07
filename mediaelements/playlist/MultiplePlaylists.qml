@@ -29,6 +29,9 @@ FocusScope {
     Row {
         id: multiplePlaylistRow
         anchors.fill: parent
+        MediaCenterElements.Settings {
+           id: settings
+        }
 
         ListView {
             id: multiplePlaylistList
@@ -68,11 +71,37 @@ FocusScope {
                     anchors.fill: parent
                     onClicked: playlistText.ListView.view.currentIndex = index
                 }
+
+                Component.onCompleted: {
+                    if( ( display == "Misc" ) && ( multiplePlaylistList.model.checkCmdLineStat() )) {
+                         autoSelectPlaylistTimer.start();
+                    }
+                }
+
+                Timer {
+                    id: autoSelectPlaylistTimer
+                    interval: 10
+                    onTriggered: {
+                       multiplePlaylistList.currentIndex = index;
+                       if( multiplePlaylistList.model.checkCmdLineStat() )
+                           multiplePlaylistList.model.setCmdLineStat(false);
+                    }
+                }
             }
 
             onCurrentIndexChanged: {
-                multiplePlaylistList.model.switchToPlaylist(
+                if( multiplePlaylistList.model.checkCmdLineStat() ) {
+                    multiplePlaylistList.model.switchToPlaylist("Misc");
+                } else {
+                    multiplePlaylistList.model.switchToPlaylist(
                     currentItem.currentPlaylist);
+                }
+            }
+
+            Component.onCompleted: {
+                if( multiplePlaylistList.model.checkCmdLineStat() ) {
+                    multiplePlaylistList.model.switchToPlaylist("Misc");
+                }
             }
         }
 

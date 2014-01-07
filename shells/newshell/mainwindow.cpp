@@ -106,10 +106,17 @@ MainWindow::MainWindow(QWidget *parent)
 
     PlaylistModel *playlistModel = new PlaylistModel(this);
     if (urls.length() > 0) {
-        playlistModel->clearPlaylist();
+        playlistModel->setCmdLineURL(true);
+        playlistModel->setPlaylistName("Misc");
+        if( playlistModel->checkPlaylistPathExists("Misc") ) {
+            playlistModel->clearPlaylist();
+        }
         foreach (const KUrl &url, urls) {
             playlistModel->addToPlaylist(url.prettyUrl());
         }
+        playlistModel->savePlaylist();
+    } else {
+        playlistModel->setCmdLineURL(false);
     }
     view->rootContext()->setContextProperty("playlistModel", playlistModel);
 

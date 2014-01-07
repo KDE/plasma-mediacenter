@@ -58,6 +58,10 @@ public:
 
     QString playlistName() const;
     void setPlaylistName(const QString &name);
+    bool checkPlaylistPathExists(const QString &name);
+    bool setCmdLineURL(bool value);
+    bool getCmdLineURL();
+    QString getPlaylistPath() const;
 
 Q_SIGNALS:
     void currentIndexChanged();
