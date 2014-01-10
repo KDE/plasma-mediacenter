@@ -316,8 +316,7 @@ bool PlaylistModel::getCmdLineURL()
 QString PlaylistModel::getPlaylistPath() const
 {
     if (d->playlistsDirectoryPath.isEmpty()) {
-        d->playlistsDirectoryPath = KGlobal::dirs()->saveLocation("data")
-                                    + KCmdLineArgs::appName() + "/playlists/";
+        d->playlistsDirectoryPath = MediaCenter::dataDirForComponent("playlists");
         QDir().mkpath(d->playlistsDirectoryPath);
     }
     return d->playlistsDirectoryPath;

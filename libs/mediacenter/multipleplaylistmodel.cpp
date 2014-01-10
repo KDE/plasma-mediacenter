@@ -24,7 +24,7 @@
 
 MultiplePlaylistModel::MultiplePlaylistModel(QObject* parent): QAbstractListModel(parent)
 {
-    QString dirPath = KGlobal::dirs()->saveLocation("data") + KCmdLineArgs::appName() + "/playlists/";
+    QString dirPath = MediaCenter::dataDirForComponent("playlists");
     QDir dir(dirPath);
     QStringList playlistList = dir.entryList (QDir::NoDotAndDotDot | QDir::Files);
     foreach (QString str, playlistList) {

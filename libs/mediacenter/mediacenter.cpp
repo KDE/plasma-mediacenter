@@ -22,6 +22,8 @@
 
 #include <KMimeType>
 #include <KUrl>
+#include <KCmdLineArgs>
+#include <KStandardDirs>
 
 #include <Solid/Device>
 #include <Solid/OpticalDisc>
@@ -42,6 +44,13 @@ QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> 
     newRoles[MediaThumbnailRole] = "mediaThumbnail";
     newRoles[DurationRole] = "mediaDuration";
     return newRoles;
+}
+
+QString dataDirForComponent(const QString& component)
+{
+    return KGlobal::dirs()->saveLocation("data")
+                                    + KCmdLineArgs::appName()
+                                    + QString("/%1/").arg(component);
 }
 
 } // MediaCenter namespace
