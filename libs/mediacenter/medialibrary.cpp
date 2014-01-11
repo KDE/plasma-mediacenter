@@ -61,8 +61,8 @@ public:
     QList<Media> mediaToPersist;
     QMutex mediaToPersistMutex;
 
-    QHash <QString, QList<QSharedPointer<Media> > > mediaItems;
-
+    QHash <QString, QList<QSharedPointer<Media> > > mediaByType;
+    QHash <QString, QSharedPointer<Media> > mediaBySha;
 };
 
 MediaLibrary::MediaLibrary(QObject* parent)
@@ -70,8 +70,8 @@ MediaLibrary::MediaLibrary(QObject* parent)
     , d(new Private())
 {
     moveToThread(this);
+    QTimer::singleShot(0, this , SLOT(initDb()));
     start();
-    initDb();
 }
 
 MediaLibrary::~MediaLibrary()
@@ -112,20 +112,35 @@ void MediaLibrary::processNextRequest()
     MediaResult results (d->db->query<Media>(
         MediaQuery::sha == Media::calculateSha(request.first)));
 
-    if (results.empty()) {
-        Media media(request.second.value(MediaCenter::MediaTypeRole).toString(),
-                    request.second.value(Qt::DisplayRole).toString(),
-                    request.first,
-                    request.second.value(Qt::DecorationRole).toString());
-        qDebug() << "Saved " << d->db->persist(media);
-    } else {
-        QSharedPointer<Media> media(results.begin().load());
+    const QString mediaSha = Media::calculateSha(request.first);
+    if (mediaExists(mediaSha)) {
+        QSharedPointer<Media> media = mediaForSha(mediaSha);
         media->setTitle(request.second.value(Qt::DisplayRole).toString());
         media->setThumbnail(request.second.value(Qt::DecorationRole).toString());
         media->setType(request.second.value(MediaCenter::MediaTypeRole).toString());
+
         d->db->update(media);
         qDebug() << "Updated " << media->url();
+    } else {
+        QSharedPointer<Media> media(
+            new Media(request.second.value(MediaCenter::MediaTypeRole).toString(),
+                      request.second.value(Qt::DisplayRole).toString(),
+                      request.first,
+                      request.second.value(Qt::DecorationRole).toString()));
+        addMedia(media);
+        const QString sha = d->db->persist(media);
+        qDebug() << "Saved " << sha;
     }
+}
+
+bool MediaLibrary::mediaExists(const QString& sha) const
+{
+    return d->mediaBySha.contains(sha);
+}
+
+QSharedPointer< Media > MediaLibrary::mediaForSha(const QString& sha)
+{
+    return d->mediaBySha.value(sha);
 }
 
 QPair< QString, QHash< int, QVariant > > MediaLibrary::takeRequest()
@@ -186,11 +201,17 @@ void MediaLibrary::updateLibrary()
 
     for (MediaResult::iterator i=results.begin(); i!=results.end(); ++i) {
         QSharedPointer<Media> m = i.load();
-        d->mediaItems[m->type()].append(m);
+        addMedia(m);
     }
+}
+
+void MediaLibrary::addMedia(const QSharedPointer< Media >& m)
+{
+    d->mediaBySha.insert(m->sha(), m);
+    d->mediaByType[m->type()].append(m);
 }
 
 QList< QSharedPointer< Media > > MediaLibrary::getMedia(const QString& type)
 {
-    return d->mediaItems.value(type);
+    return d->mediaByType.value(type);
 }
