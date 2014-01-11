@@ -46,16 +46,19 @@ public:
 
 private Q_SLOTS:
     void processRemainingRequests();
+    void initDb();
 
 private:
     class Private;
     Private * const d;
 
-    void initDb();
     bool areThereUpdateRequests();
     void processNextRequest();
     QPair<QString, QHash<int, QVariant> > takeRequest();
     void updateLibrary();
+    bool mediaExists(const QString &first) const;
+    void addMedia(const QSharedPointer< Media > &m);
+    QSharedPointer<Media> mediaForSha(const QString &sha);
 };
 
 #endif // MEDIALIBRARY_H
