@@ -51,7 +51,8 @@ MetadataUpdater::MetadataUpdater(QObject* parent)
 
 MetadataUpdater::~MetadataUpdater()
 {
-    deleteLater();
+    quit();
+    wait(5000);
 }
 
 void MetadataUpdater::run()
