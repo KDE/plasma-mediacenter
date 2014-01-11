@@ -23,7 +23,7 @@
 
 Media::Media (const QString& type, const QString& title, const QString& url,
               const QString& thumbnail)
-    : m_type(type), m_url(url), m_thumbnail(thumbnail)
+    : m_type(type), m_title(title), m_url(url), m_thumbnail(thumbnail)
 {
     m_sha = calculateSha(url);
 }
