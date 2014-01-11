@@ -109,8 +109,6 @@ void MediaLibrary::processNextRequest()
     QPair<QString, QHash<int, QVariant> > request = takeRequest();
 
     qDebug() << "Processing " << request.first;
-    MediaResult results (d->db->query<Media>(
-        MediaQuery::sha == Media::calculateSha(request.first)));
 
     const QString mediaSha = Media::calculateSha(request.first);
     if (mediaExists(mediaSha)) {
