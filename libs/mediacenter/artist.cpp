@@ -1,6 +1,5 @@
 /***********************************************************************************
  *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
- *   Copyright 2014 Sinny Kumari <ksinny@gmail.com>                                *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -17,62 +16,17 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef MEDIA_H
-#define MEDIA_H
+#include "artist.h"
 
-#include "album.h"
-
-#include <QString>
-#include <QObject>
-#include <QSharedPointer>
-
-#include <odb/core.hxx>
-
-#pragma db object
-class Media : public QObject
+Artist::Arist(const QString& name)
+    : m_name(name)
 {
-    Q_OBJECT
-public:
-    Media(const QString &type, const QString& title, const QString& url,
-           const QString& thumbnail, QObject* parent = 0);
+}
 
-    const QString& sha() const;
+Artist::Artist()
+{
+}
 
-    const QString& title () const;
-    bool setTitle(const QString &title);
-
-    const QString& url() const;
-    bool setUrl(const QString &url);
-
-    const QString& thumbnail () const;
-    bool setThumbnail(const QString &thumbnail);
-
-    const QString& type() const;
-    bool setType(const QString &type);
-
-    static QString calculateSha(const QString& url);
-
-signals:
-    void updated();
-
-private:
-    Media();
-    friend class odb::access;
-
-    #pragma db id
-    QString m_sha;
-    QString m_title;
-    QString m_url;
-    QString m_thumbnail;
-    QString m_type;
-
-    QSharedPointer<Album> m_album;
-
-    class Private;
-    #pragma db transient
-    Private * const d;
-
-    inline void emitUpdate();
-};
-
-#endif // MEDIA_H
+Artist::~Artist()
+{
+}

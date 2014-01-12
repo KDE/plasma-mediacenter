@@ -9,6 +9,8 @@ include_directories(
 set (CMAKE_CXX_FLAGS "-Wno-pragmas")
 
 set (plasmamediacenter_SRCS
+    artist.cpp
+    album.cpp
     media.cpp
     lastfmimagefetcher.cpp
     modelmetadata.cpp
@@ -36,6 +38,8 @@ set (plasmamediacenter_SRCS
 )
 
 set (plasmamediacenter_ODB_SRCS
+    artist_odb.cpp
+    album_odb.cpp
     media_odb.cpp
 )
 
@@ -45,7 +49,9 @@ kde4_add_library(plasmamediacenter SHARED
 )
 
 set(ODB_HEADERS
-    ${CMAKE_CURRENT_SOURCE_DIR}/media.h)
+    ${CMAKE_CURRENT_SOURCE_DIR}/artist.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/media.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/album.h)
 
 odb_compile(HEADER ${ODB_HEADERS} DB sqlite PROFILE qt
     INCLUDE ${QT_INCLUDES}
