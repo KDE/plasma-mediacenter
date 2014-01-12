@@ -20,13 +20,15 @@
 #define PMCMEDIA_H
 
 #include "media.h"
-#include <QString>
-#include <QtCore/QSharedPointer>
 
-class PmcMedia
+#include <QString>
+#include <QSharedPointer>
+
+class PmcMedia : public QObject
 {
+    Q_OBJECT
 public:
-    PmcMedia(QSharedPointer<Media> media);
+    explicit PmcMedia(QSharedPointer<Media> media, QObject* parent = 0);
     ~PmcMedia();
 
     const QString& sha() const;
@@ -36,8 +38,8 @@ public:
     const QString& type() const;
 
 private:
-    QSharedPointer<Media> m_media;
-
+    class Private;
+    Private * const d;
 };
 
 #endif // PMCMEDIA_H

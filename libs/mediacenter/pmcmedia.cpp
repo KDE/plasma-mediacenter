@@ -18,10 +18,17 @@
 
 #include "pmcmedia.h"
 
-PmcMedia::PmcMedia(QSharedPointer<Media> media) :
-                   m_media(media)
+class PmcMedia::Private
 {
+public:
+    QSharedPointer<Media> media;
+};
 
+PmcMedia::PmcMedia(QSharedPointer< Media > media, QObject* parent)
+    : QObject(parent)
+    , d(new Private())
+{
+    d->media = media;
 }
 
 PmcMedia::~PmcMedia()
@@ -31,26 +38,26 @@ PmcMedia::~PmcMedia()
 
 const QString& PmcMedia::sha() const
 {
-    return m_media->sha();
+    return d->media->sha();
 }
 
 const QString& PmcMedia::thumbnail() const
 {
-    return m_media->thumbnail();
+    return d->media->thumbnail();
 }
 
 const QString& PmcMedia::title() const
 {
-    return m_media->title();
+    return d->media->title();
 }
 
 const QString& PmcMedia::type() const
 {
-    return m_media->type();
+    return d->media->type();
 }
 
 const QString& PmcMedia::url() const
 {
-    return m_media->url();
+    return d->media->url();
 }
 
