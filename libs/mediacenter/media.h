@@ -20,13 +20,15 @@
 #ifndef MEDIA_H
 #define MEDIA_H
 
-#include "album.h"
-
 #include <QString>
 #include <QObject>
 #include <QSharedPointer>
 
 #include <odb/core.hxx>
+#include <odb/traits.hxx>
+
+#include "album.h"
+#include "artist.h"
 
 #pragma db object
 class Media : public QObject
@@ -67,6 +69,7 @@ private:
     QString m_type;
 
     QSharedPointer<Album> m_album;
+    QSharedPointer<Artist> m_artist;
 
     class Private;
     #pragma db transient

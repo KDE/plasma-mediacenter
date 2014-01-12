@@ -18,7 +18,7 @@
 
 #include "artist.h"
 
-Artist::Arist(const QString& name)
+Artist::Artist(const QString& name)
     : m_name(name)
 {
 }

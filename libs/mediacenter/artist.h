@@ -20,14 +20,18 @@
 #define ARTIST_H
 
 #include <QString>
+#include <QList>
+#include <QWeakPointer>
 
 #include <odb/core.hxx>
+
+class Media;
 
 #pragma db object
 class Artist
 {
 public:
-    Arist(const QString &name);
+    Artist(const QString &name);
     ~Artist();
 
 private:
@@ -36,6 +40,12 @@ private:
 
     #pragma db id
     QString m_name;
+
+    //See http://codesynthesis.com/products/odb/doc/manual.xhtml#6.2
+    #pragma db inverse(m_artist)
+    QList< QWeakPointer<Media> > m_media;
 };
+
+#include "media.h"
 
 #endif // ARTIST_H
