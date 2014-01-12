@@ -121,17 +121,17 @@ void MediaLibrary::processNextRequest()
 {
     QPair<QString, QHash<int, QVariant> > request = takeRequest();
 
-    qDebug() << "Processing " << request.first;
-
     const QString mediaSha = Media::calculateSha(request.first);
     if (mediaExists(mediaSha)) {
         QSharedPointer<Media> media = mediaForSha(mediaSha);
-        media->setTitle(request.second.value(Qt::DisplayRole).toString());
-        media->setThumbnail(request.second.value(Qt::DecorationRole).toString());
-        media->setType(request.second.value(MediaCenter::MediaTypeRole).toString());
 
-        d->db->update(media);
-        qDebug() << "Updated " << media->url();
+        if (media->setTitle(request.second.value(Qt::DisplayRole).toString())
+            || media->setThumbnail(request.second.value(Qt::DecorationRole).toString())
+            || media->setType(request.second.value(MediaCenter::MediaTypeRole).toString())) {
+
+            d->db->update(media);
+            qDebug() << "Updated " << media->url();
+        }
     } else {
         QSharedPointer<Media> media(
             new Media(request.second.value(MediaCenter::MediaTypeRole).toString(),

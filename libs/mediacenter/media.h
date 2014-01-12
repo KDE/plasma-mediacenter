@@ -36,16 +36,16 @@ public:
     const QString& sha() const;
 
     const QString& title () const;
-    void setTitle(const QString &title);
+    bool setTitle(const QString &title);
 
     const QString& url() const;
-    void setUrl(const QString &url);
+    bool setUrl(const QString &url);
 
     const QString& thumbnail () const;
-    void setThumbnail(const QString &thumbnail);
+    bool setThumbnail(const QString &thumbnail);
 
     const QString& type() const;
-    void setType(const QString &type);
+    bool setType(const QString &type);
 
     static QString calculateSha(const QString& url);
 

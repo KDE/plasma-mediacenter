@@ -22,6 +22,14 @@
 #include <QCryptographicHash>
 #include <QTimer>
 
+#define UPDATE(property, value) \
+    if (property != value) { \
+        property = value; \
+        emitUpdate(); \
+        return true; \
+    } \
+    return false;
+
 class Media::Private
 {
 public:
@@ -63,10 +71,9 @@ const QString& Media::title() const
     return m_title;
 }
 
-void Media::setTitle(const QString& title)
+bool Media::setTitle(const QString& title)
 {
-    m_title = title;
-    emitUpdate();
+    UPDATE(m_title, title);
 }
 
 const QString& Media::url() const
@@ -74,10 +81,9 @@ const QString& Media::url() const
     return m_url;
 }
 
-void Media::setUrl(const QString& url)
+bool Media::setUrl(const QString& url)
 {
-    m_url = url;
-    emitUpdate();
+    UPDATE(m_url, url);
 }
 
 const QString& Media::thumbnail() const
@@ -85,10 +91,9 @@ const QString& Media::thumbnail() const
     return m_thumbnail;
 }
 
-void Media::setThumbnail(const QString& thumbnail)
+bool Media::setThumbnail(const QString& thumbnail)
 {
-    m_thumbnail = thumbnail;
-    emitUpdate();
+    UPDATE(m_thumbnail, thumbnail);
 }
 
 const QString& Media::sha() const
@@ -96,10 +101,9 @@ const QString& Media::sha() const
     return m_sha;
 }
 
-void Media::setType(const QString& type)
+bool Media::setType(const QString& type)
 {
-    m_type = type;
-    emitUpdate();
+    UPDATE(m_type, type);
 }
 
 const QString& Media::type() const
