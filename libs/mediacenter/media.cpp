@@ -20,16 +20,35 @@
 #include "media.h"
 
 #include <QCryptographicHash>
+#include <QTimer>
 
-Media::Media (const QString& type, const QString& title, const QString& url,
-              const QString& thumbnail)
-    : m_type(type), m_title(title), m_url(url), m_thumbnail(thumbnail)
+class Media::Private
+{
+public:
+    //This timer is used to emit the updated() signal only once after more than
+    //one property has been updateds
+    QTimer updateTimer;
+};
+
+Media::Media(const QString& type, const QString& title, const QString& url,
+             const QString& thumbnail, QObject* parent)
+    : QObject(parent), d(new Private())
+    , m_type(type), m_title(title), m_url(url), m_thumbnail(thumbnail)
 {
     m_sha = calculateSha(url);
+
+    d->updateTimer.setInterval(0);
+    d->updateTimer.setSingleShot(true);
+    connect(&d->updateTimer, SIGNAL(timeout()), SIGNAL(updated()));
 }
 
-Media::Media ()
+Media::Media () : d(new Private())
 {
+}
+
+void Media::emitUpdate()
+{
+    d->updateTimer.start();
 }
 
 QString Media::calculateSha(const QString& url)
@@ -47,6 +66,7 @@ const QString& Media::title() const
 void Media::setTitle(const QString& title)
 {
     m_title = title;
+    emitUpdate();
 }
 
 const QString& Media::url() const
@@ -57,6 +77,7 @@ const QString& Media::url() const
 void Media::setUrl(const QString& url)
 {
     m_url = url;
+    emitUpdate();
 }
 
 const QString& Media::thumbnail() const
@@ -67,6 +88,7 @@ const QString& Media::thumbnail() const
 void Media::setThumbnail(const QString& thumbnail)
 {
     m_thumbnail = thumbnail;
+    emitUpdate();
 }
 
 const QString& Media::sha() const
@@ -77,6 +99,7 @@ const QString& Media::sha() const
 void Media::setType(const QString& type)
 {
     m_type = type;
+    emitUpdate();
 }
 
 const QString& Media::type() const

@@ -20,16 +20,18 @@
 #ifndef MEDIA_H
 #define MEDIA_H
 
-#include <QtCore/QString>
+#include <QString>
+#include <QObject>
 
 #include <odb/core.hxx>
 
 #pragma db object
-class Media
+class Media : public QObject
 {
+    Q_OBJECT
 public:
-    Media (const QString &type, const QString& title, const QString& url,
-           const QString& thumbnail);
+    Media(const QString &type, const QString& title, const QString& url,
+           const QString& thumbnail, QObject* parent = 0);
 
     const QString& sha() const;
 
@@ -47,6 +49,9 @@ public:
 
     static QString calculateSha(const QString& url);
 
+signals:
+    void updated();
+
 private:
     Media();
     friend class odb::access;
@@ -57,6 +62,12 @@ private:
     QString m_url;
     QString m_thumbnail;
     QString m_type;
+
+    class Private;
+    #pragma db transient
+    Private * const d;
+
+    inline void emitUpdate();
 };
 
 #endif // MEDIA_H
