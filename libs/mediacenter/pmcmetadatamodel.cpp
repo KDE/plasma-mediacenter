@@ -47,7 +47,6 @@ public:
     Private()
         : thumbnailerPlugins(new QStringList(KIO::PreviewJob::availablePlugins()))
         , isSearchTermValid(false)
-        , numberOfEntries(0)
     {
     }
     Nepomuk2::Query::Term term;
@@ -64,8 +63,7 @@ public:
     QTimer updateTimer;
     QTimer metadataFetchTimer;
     Nepomuk2::Query::ResourceTypeTerm resourceTypeTerm;
-    QHash<int, QHash<int, QVariant> > metadataValues;
-    int numberOfEntries;
+    QList< QHash<int, QVariant> > metadataValues;
     QList<int> rowsToFetchMetadataFor;
     QStringList mediaUrlWhichFailedThumbnailGeneration;
     QVariant defaultDecoration;
@@ -137,32 +135,24 @@ void PmcMetadataModel::showMediaType(MediaCenter::MediaType mediaType)
 
 void PmcMetadataModel::handleNewMedia(const QList< QSharedPointer< PmcMedia > >& media)
 {
-    kDebug() << "NEW MEDIA " << media.count();
     const int existingRowCount = rowCount();
 
     QList< QHash<int, QVariant> > mediaInfoToInsert;
     foreach (QSharedPointer<PmcMedia> m, media) {
-        if (m->type() != d->mediaType) continue;
-
-        QHash<int, QVariant> mediainfo;
-        mediainfo.insert(Qt::DisplayRole, m->title());
-        mediainfo.insert(Qt::DecorationRole, m->thumbnail());
-        mediainfo.insert(MediaCenter::MediaUrlRole, m->url());
-        mediainfo.insert(MediaCenter::MediaTypeRole, m->type());
-        mediaInfoToInsert.append(mediainfo);
+        if (m->type() == d->mediaType) {
+            QHash<int, QVariant> mediainfo;
+            mediainfo.insert(Qt::DisplayRole, m->title());
+            mediainfo.insert(Qt::DecorationRole, m->thumbnail());
+            mediainfo.insert(MediaCenter::MediaUrlRole, m->url());
+            mediainfo.insert(MediaCenter::MediaTypeRole, m->type());
+            mediaInfoToInsert.append(mediainfo);
+        }
     }
 
     beginInsertRows(QModelIndex(), existingRowCount,
                     existingRowCount + mediaInfoToInsert.count());
 
-    //FIXME: Get rid of the hash, use a list
-    int i = existingRowCount;
-    typedef QHash<int, QVariant> HashOfVariants;
-    foreach (HashOfVariants mediaInfo, mediaInfoToInsert) {
-        d->metadataValues.insert(i++, mediaInfo);
-    }
-
-    d->numberOfEntries += d->metadataValues.keys().count();
+    d->metadataValues.append(mediaInfoToInsert);
     endInsertRows();
 }
 
@@ -187,19 +177,13 @@ void PmcMetadataModel::addTerm(const Nepomuk2::Query::Term& term)
 
 QVariant PmcMetadataModel::metadataValueForRole(const QModelIndex& index, int role) const
 {
-    kDebug() << "VALUES " << d->metadataValues.value(index.row());
-    return d->metadataValues.value(index.row()).value(role);
+    return d->metadataValues.at(index.row()).value(role);
 }
 
 QVariant PmcMetadataModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid() || index.row() >= rowCount())
         return QVariant();
-    if (!d->metadataValues.keys().contains(index.row())) {
-        d->rowsToFetchMetadataFor.append(index.row());
-        d->metadataFetchTimer.start(100);
-        return QVariant();
-    }
 
     const QVariant metadataValue = metadataValueForRole(index, role);
     switch(role) {
@@ -266,24 +250,7 @@ QString PmcMetadataModel::mimetypeForResource(const Nepomuk2::Resource& resource
 int PmcMetadataModel::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
-    return d->numberOfEntries;
-}
-
-void PmcMetadataModel::saveMetadata(int row, const QHash< int, QVariant >& values )
-{
-    if (row >= rowCount() || d->metadataValues.contains(row))
-        return;
-
-    d->metadataValues.insert(row, values);
-    emit dataChanged(createIndex(row, 0), createIndex(row, 0));
-}
-
-void PmcMetadataModel::newEntries(int count)
-{
-    int existingCount = rowCount();
-    beginInsertRows(QModelIndex(), existingCount, existingCount+count);
-    d->numberOfEntries += count;
-    endInsertRows();
+    return d->metadataValues.count();
 }
 
 void PmcMetadataModel::finishedListing()
@@ -382,7 +349,6 @@ void PmcMetadataModel::handleUpdaterReset()
 void PmcMetadataModel::resetModel()
 {
     beginResetModel();
-    d->numberOfEntries = 0;
     d->metadataValues.clear();
     endResetModel();
 }

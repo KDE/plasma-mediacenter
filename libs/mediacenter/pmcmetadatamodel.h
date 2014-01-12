@@ -62,7 +62,6 @@ public:
 
 public Q_SLOTS:
     void clearAllFilters();
-    void saveMetadata(int row, const QHash< int, QVariant >& values);
     void handleNewMedia(const QList<QSharedPointer<PmcMedia> > &media);
 
 signals:
@@ -83,7 +82,6 @@ protected:
     void resetModel();
 
 private Q_SLOTS:
-    void newEntries(int count);
     void showPreview(const KFileItem &item, const QPixmap &preview);
     void previewFailed(const KFileItem &item);
     void fetchMetadata();
