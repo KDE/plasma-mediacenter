@@ -6,6 +6,8 @@ include_directories(
     ${TAGLIB_INCLUDES}
 )
 
+set (CMAKE_CXX_FLAGS "-Wno-pragmas")
+
 set (plasmamediacenter_SRCS
     media.cpp
     lastfmimagefetcher.cpp
