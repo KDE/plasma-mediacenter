@@ -30,6 +30,9 @@
 
 #include "mediacenter_export.h"
 #include "mediacenter.h"
+#include "pmcmedia.h"
+
+#include <QSharedPointer>
 
 namespace Nepomuk2 {
 namespace Query {
@@ -60,6 +63,7 @@ public:
 public Q_SLOTS:
     void clearAllFilters();
     void saveMetadata(int row, const QHash< int, QVariant >& values);
+    void handleNewMedia(const QList<QSharedPointer<PmcMedia> > &media);
 
 signals:
     void queryStarted();

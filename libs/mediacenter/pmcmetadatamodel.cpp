@@ -69,6 +69,7 @@ public:
     QList<int> rowsToFetchMetadataFor;
     QStringList mediaUrlWhichFailedThumbnailGeneration;
     QVariant defaultDecoration;
+    QString mediaType;
 };
 
 PmcMetadataModel::PmcMetadataModel(QObject* parent):
@@ -114,35 +115,55 @@ void PmcMetadataModel::updateModel()
 
 void PmcMetadataModel::showMediaType(MediaCenter::MediaType mediaType)
 {
-    QString type;
-
     switch (mediaType) {
         case MediaCenter::Music:
-            type ="audio";
-	    break;
+            d->mediaType ="audio";
+            break;
         case MediaCenter::Picture:
-            type = "image";
-	    break;
+            d->mediaType = "image";
+            break;
         case MediaCenter::Video:
-            type = "video";
+            d->mediaType = "video";
     }
-    QList <QSharedPointer<PmcMedia> > mediaData = MediaLibrary::instance()->getMedia(type);
+    QList <QSharedPointer<PmcMedia> > mediaData = MediaLibrary::instance()->getMedia(d->mediaType);
+    connect(MediaLibrary::instance(),
+            SIGNAL(newMedia(QList<QSharedPointer<PmcMedia> >)),
+            SLOT(handleNewMedia(QList<QSharedPointer<PmcMedia> >)));
 
-    beginResetModel();
-    int i = 0;
-    foreach (QSharedPointer<PmcMedia> m, mediaData) {
+    handleNewMedia(mediaData);
+   // clearAllFilters();
+    //d->updateTimer.start(100);
+}
+
+void PmcMetadataModel::handleNewMedia(const QList< QSharedPointer< PmcMedia > >& media)
+{
+    kDebug() << "NEW MEDIA " << media.count();
+    const int existingRowCount = rowCount();
+
+    QList< QHash<int, QVariant> > mediaInfoToInsert;
+    foreach (QSharedPointer<PmcMedia> m, media) {
+        if (m->type() != d->mediaType) continue;
+
         QHash<int, QVariant> mediainfo;
         mediainfo.insert(Qt::DisplayRole, m->title());
         mediainfo.insert(Qt::DecorationRole, m->thumbnail());
         mediainfo.insert(MediaCenter::MediaUrlRole, m->url());
         mediainfo.insert(MediaCenter::MediaTypeRole, m->type());
-        d->metadataValues.insert(i++, mediainfo);
+        mediaInfoToInsert.append(mediainfo);
     }
 
-    d->numberOfEntries = d->metadataValues.keys().count();
-    endResetModel();
-   // clearAllFilters();
-    //d->updateTimer.start(100);
+    beginInsertRows(QModelIndex(), existingRowCount,
+                    existingRowCount + mediaInfoToInsert.count());
+
+    //FIXME: Get rid of the hash, use a list
+    int i = existingRowCount;
+    typedef QHash<int, QVariant> HashOfVariants;
+    foreach (HashOfVariants mediaInfo, mediaInfoToInsert) {
+        d->metadataValues.insert(i++, mediaInfo);
+    }
+
+    d->numberOfEntries += d->metadataValues.keys().count();
+    endInsertRows();
 }
 
 void PmcMetadataModel::showMediaForProperty(Nepomuk2::Types::Property property)

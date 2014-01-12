@@ -74,6 +74,8 @@ MediaLibrary::MediaLibrary(QObject* parent)
     : QThread(parent)
     , d(new Private())
 {
+    qRegisterMetaType< QList< QSharedPointer<PmcMedia> > >("QList< QSharedPointer<PmcMedia> >");
+
     moveToThread(this);
 
     d->newMediaTimer.setInterval(0);
