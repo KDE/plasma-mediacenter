@@ -125,11 +125,11 @@ void PmcMetadataModel::showMediaType(MediaCenter::MediaType mediaType)
         case MediaCenter::Video:
             type = "video";
     }
-    QList <QSharedPointer<Media> > mediaData = MediaLibrary::instance()->getMedia(type);
+    QList <QSharedPointer<MediaImpl> > mediaData = MediaLibrary::instance()->getMedia(type);
 
     beginResetModel();
     int i = 0;
-    foreach (QSharedPointer<Media> m, mediaData) {
+    foreach (QSharedPointer<MediaImpl> m, mediaData) {
         QHash<int, QVariant> mediainfo;
         mediainfo.insert(Qt::DisplayRole, m->title());
         mediainfo.insert(Qt::DecorationRole, m->thumbnail());
