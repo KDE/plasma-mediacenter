@@ -30,6 +30,7 @@ set (plasmamediacenter_SRCS
     filterplaylistmodel.cpp
     multipleplaylistmodel.cpp
     medialibrary.cpp
+    pmcmedia.cpp
 )
 
 set (plasmamediacenter_ODB_SRCS

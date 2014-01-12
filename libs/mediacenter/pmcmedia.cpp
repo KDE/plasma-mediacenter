@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
+ *   Copyright 2014 Sinny Kumari <ksinny@gmail.com>                                *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,50 +16,41 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef MEDIALIBRARY_H
-#define MEDIALIBRARY_H
-
-#include "mediacenter_export.h"
-
-#include <QHash>
-#include <QThread>
-#include <QSharedPointer>
-
-#include "media.h"
 #include "pmcmedia.h"
 
-class MEDIACENTER_EXPORT MediaLibrary : public QThread
+PmcMedia::PmcMedia(QSharedPointer<Media> media) :
+                   m_media(media)
 {
-    Q_OBJECT
-public:
-    class Singleton;
 
-    static MediaLibrary *instance();
+}
 
-    explicit MediaLibrary(QObject* parent = 0);
-    ~MediaLibrary();
+PmcMedia::~PmcMedia()
+{
 
-    virtual void run();
+}
 
-    void updateMedia(const QHash<int, QVariant> &data);
-    void updateMedia(const QString &url, const QHash<int, QVariant> &data);
-    QList<QSharedPointer <PmcMedia> > getMedia(const QString &type);
+const QString& PmcMedia::sha() const
+{
+    return m_media->sha();
+}
 
-private Q_SLOTS:
-    void processRemainingRequests();
-    void initDb();
+const QString& PmcMedia::thumbnail() const
+{
+    return m_media->thumbnail();
+}
 
-private:
-    class Private;
-    Private * const d;
+const QString& PmcMedia::title() const
+{
+    return m_media->title();
+}
 
-    bool areThereUpdateRequests();
-    void processNextRequest();
-    QPair<QString, QHash<int, QVariant> > takeRequest();
-    void updateLibrary();
-    bool mediaExists(const QString &first) const;
-    void addMedia(const QSharedPointer< Media > &m);
-    QSharedPointer<Media> mediaForSha(const QString &sha);
-};
+const QString& PmcMedia::type() const
+{
+    return m_media->type();
+}
 
-#endif // MEDIALIBRARY_H
+const QString& PmcMedia::url() const
+{
+    return m_media->url();
+}
+

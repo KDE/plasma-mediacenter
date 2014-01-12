@@ -24,6 +24,7 @@
 #include "lastfmimagefetcher.h"
 #include "media.h"
 #include "medialibrary.h"
+#include "pmcmedia.h"
 
 #include <Nepomuk2/Query/Query>
 #include <Nepomuk2/Vocabulary/NIE>
@@ -125,11 +126,11 @@ void PmcMetadataModel::showMediaType(MediaCenter::MediaType mediaType)
         case MediaCenter::Video:
             type = "video";
     }
-    QList <QSharedPointer<Media> > mediaData = MediaLibrary::instance()->getMedia(type);
+    QList <QSharedPointer<PmcMedia> > mediaData = MediaLibrary::instance()->getMedia(type);
 
     beginResetModel();
     int i = 0;
-    foreach (QSharedPointer<Media> m, mediaData) {
+    foreach (QSharedPointer<PmcMedia> m, mediaData) {
         QHash<int, QVariant> mediainfo;
         mediainfo.insert(Qt::DisplayRole, m->title());
         mediainfo.insert(Qt::DecorationRole, m->thumbnail());
