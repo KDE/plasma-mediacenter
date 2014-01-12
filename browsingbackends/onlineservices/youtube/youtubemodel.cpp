@@ -62,6 +62,7 @@ QVariant YoutubeModel::data(const QModelIndex& index, int role) const
 
 int YoutubeModel::rowCount(const QModelIndex& parent) const
 {
+    Q_UNUSED(parent);
     return m_videos.count();
 }
 

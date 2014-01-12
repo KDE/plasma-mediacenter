@@ -43,8 +43,8 @@ class PmcMetadataModel::Private
 public:
     Private()
         : thumbnailerPlugins(new QStringList(KIO::PreviewJob::availablePlugins()))
-        , numberOfEntries(0)
         , isSearchTermValid(false)
+        , numberOfEntries(0)
     {
     }
     Nepomuk2::Query::Term term;
@@ -248,6 +248,7 @@ QString PmcMetadataModel::mimetypeForResource(const Nepomuk2::Resource& resource
 
 int PmcMetadataModel::rowCount(const QModelIndex& parent) const
 {
+    Q_UNUSED(parent);
     return d->numberOfEntries;
 }
 

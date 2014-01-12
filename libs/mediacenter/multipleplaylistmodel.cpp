@@ -42,7 +42,7 @@ MultiplePlaylistModel::~MultiplePlaylistModel()
 
 int MultiplePlaylistModel::rowCount(const QModelIndex& parent) const
 {
-
+    Q_UNUSED(parent);
     return m_multiplePlaylistList.size();
 }
 

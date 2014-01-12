@@ -38,7 +38,7 @@ namespace {
     //static const char* s_secret = "";
 }
 
-FlickrModel::FlickrModel (QObject* parent)
+FlickrModel::FlickrModel(QObject* parent): QAbstractListModel(parent)
 {
     setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
     query("kde");
@@ -149,6 +149,7 @@ QVariant FlickrModel::data (const QModelIndex& index, int role) const
 
 int FlickrModel::rowCount (const QModelIndex& parent) const
 {
+    Q_UNUSED(parent);
     return m_photos.count();
 }
 

@@ -120,6 +120,7 @@ bool LocalFilesAbstractBackend::okToLoad() const
 
 void LocalFilesAbstractBackend::slotStorageSetupDone(Solid::ErrorType error,const QVariant& errorData,const QString& udi)
 {
+    //FIXME: Handle errors
     expand(m_placesRow);
 }
 

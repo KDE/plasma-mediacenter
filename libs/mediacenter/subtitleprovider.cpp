@@ -67,7 +67,6 @@ void SubtitleProvider::computeAndStoreSubtitle(qint64 input)
 {
     struct Subtitle sub;
     struct Subtitle next;
-    bool isLast = false;
 
     if (input >= currentSubtitleStartTime && input <= currentSubtitleEndTime)
         return;

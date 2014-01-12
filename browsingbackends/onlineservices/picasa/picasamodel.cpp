@@ -46,6 +46,7 @@ PicasaModel::~PicasaModel()
 
 int PicasaModel::rowCount(const QModelIndex& parent) const
 {
+    Q_UNUSED(parent);
     return (m_expandable ?  m_albums.count() : m_photos.count());
 }
 

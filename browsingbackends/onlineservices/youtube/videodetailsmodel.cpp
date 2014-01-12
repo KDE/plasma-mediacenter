@@ -36,11 +36,13 @@ VideoDetailsModel::~VideoDetailsModel()
 
 int VideoDetailsModel::rowCount(const QModelIndex& parent) const
 {
+    Q_UNUSED(parent);
     return 1;
 }
 
 QVariant VideoDetailsModel::data(const QModelIndex& index, int role) const
 {
+    Q_UNUSED(index);
     switch (role) {
         case MediaCenter::HideLabelRole:
             return false;

@@ -48,25 +48,25 @@ QVariant CategoriesModel::data(const QModelIndex& index, int role) const
 
 int CategoriesModel::columnCount(const QModelIndex& parent) const
 {
-
+  Q_UNUSED(parent);
   return 1;
 }
 
 int CategoriesModel::rowCount(const QModelIndex& parent) const
 {
-
+    Q_UNUSED(parent);
     return m_categories.size();
 }
 
 QModelIndex CategoriesModel::parent(const QModelIndex& child) const
 {
-
+    Q_UNUSED(child);
     return QModelIndex();
 }
 
 QModelIndex CategoriesModel::index(int row, int column, const QModelIndex& parent) const
 {
-
+    Q_UNUSED(parent);
     return createIndex(row,column);
 }
 

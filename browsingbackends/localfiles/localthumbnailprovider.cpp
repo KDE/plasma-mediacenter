@@ -44,6 +44,7 @@ ThumbnailProvider::~ThumbnailProvider()
 
 void ThumbnailProvider::loadThumbnails(const KUrl::List& fileList, const QSize& size)
 {
+    //FIXME: Why is size unused?
     KFileItemList fileItems;
     for(KUrl::List::ConstIterator it = fileList.begin(); it != fileList.end(); ++it) {
         if (!(*it).isValid())
