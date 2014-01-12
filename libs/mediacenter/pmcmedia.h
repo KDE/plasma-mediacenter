@@ -37,6 +37,9 @@ public:
     const QString& thumbnail () const;
     const QString& type() const;
 
+signals:
+    void updated();
+
 private:
     class Private;
     Private * const d;
