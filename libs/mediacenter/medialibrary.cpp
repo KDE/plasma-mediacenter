@@ -209,7 +209,12 @@ void MediaLibrary::addMedia(const QSharedPointer< Media >& m)
     d->mediaByType[m->type()].append(m);
 }
 
-QList< QSharedPointer< Media > > MediaLibrary::getMedia(const QString& type)
+QList< QSharedPointer<PmcMedia> > MediaLibrary::getMedia(const QString& type)
 {
-    return d->mediaByType.value(type);
+    QList<QSharedPointer<PmcMedia> > pmcMedia;
+    foreach (QSharedPointer<Media> m, d->mediaByType.value(type)) {
+        QSharedPointer<PmcMedia> pm = QSharedPointer<PmcMedia> (new PmcMedia(m));
+        pmcMedia.append(pm);
+    }
+    return pmcMedia;
 }
