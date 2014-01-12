@@ -61,8 +61,13 @@ public:
     QList<Media> mediaToPersist;
     QMutex mediaToPersistMutex;
 
-    QHash <QString, QList<QSharedPointer<Media> > > mediaByType;
+    QMutex mediaMutex;
+    QHash <QString, QList<QSharedPointer<PmcMedia> > > pmcMediaByType;
     QHash <QString, QSharedPointer<Media> > mediaBySha;
+    QHash <QString, QSharedPointer<PmcMedia> > pmcMediaBySha;
+
+    QList< QSharedPointer<PmcMedia> > newMediaList;
+    QTimer newMediaTimer;
 };
 
 MediaLibrary::MediaLibrary(QObject* parent)
@@ -70,6 +75,12 @@ MediaLibrary::MediaLibrary(QObject* parent)
     , d(new Private())
 {
     moveToThread(this);
+
+    d->newMediaTimer.setInterval(0);
+    d->newMediaTimer.setSingleShot(true);
+    connect(&d->newMediaTimer, SIGNAL(timeout()),
+            SLOT(emitNewMediaWithMediaList()));
+
     QTimer::singleShot(0, this , SLOT(initDb()));
     start();
 }
@@ -205,16 +216,32 @@ void MediaLibrary::updateLibrary()
 
 void MediaLibrary::addMedia(const QSharedPointer< Media >& m)
 {
+    QMutexLocker l(&d->mediaMutex);
+
     d->mediaBySha.insert(m->sha(), m);
-    d->mediaByType[m->type()].append(m);
+    QSharedPointer<PmcMedia> pmcMedia(new PmcMedia(m));
+
+    d->pmcMediaBySha.insert(m->sha(), pmcMedia);
+    d->pmcMediaByType[m->type()].append(pmcMedia);
+
+    d->newMediaList.append(pmcMedia);
+    emitNewMedia();
 }
 
 QList< QSharedPointer<PmcMedia> > MediaLibrary::getMedia(const QString& type)
 {
-    QList<QSharedPointer<PmcMedia> > pmcMedia;
-    foreach (QSharedPointer<Media> m, d->mediaByType.value(type)) {
-        QSharedPointer<PmcMedia> pm = QSharedPointer<PmcMedia> (new PmcMedia(m));
-        pmcMedia.append(pm);
-    }
-    return pmcMedia;
+    QMutexLocker l(&d->mediaMutex);
+
+    return d->pmcMediaByType.value(type);
+}
+
+void MediaLibrary::emitNewMedia()
+{
+    d->newMediaTimer.start();
+}
+
+void MediaLibrary::emitNewMediaWithMediaList()
+{
+    emit newMedia(d->newMediaList);
+    d->newMediaList.clear();
 }

@@ -45,9 +45,13 @@ public:
     void updateMedia(const QString &url, const QHash<int, QVariant> &data);
     QList<QSharedPointer <PmcMedia> > getMedia(const QString &type);
 
+Q_SIGNALS:
+    void newMedia(const QList< QSharedPointer<PmcMedia> > &media);
+
 private Q_SLOTS:
     void processRemainingRequests();
     void initDb();
+    void emitNewMediaWithMediaList();
 
 private:
     class Private;
@@ -60,6 +64,7 @@ private:
     bool mediaExists(const QString &first) const;
     void addMedia(const QSharedPointer< Media > &m);
     QSharedPointer<Media> mediaForSha(const QString &sha);
+    void emitNewMedia();
 };
 
 #endif // MEDIALIBRARY_H
