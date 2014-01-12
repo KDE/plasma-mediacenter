@@ -42,7 +42,7 @@ public:
 
     void updateMedia(const QHash<int, QVariant> &data);
     void updateMedia(const QString &url, const QHash<int, QVariant> &data);
-    QList<QSharedPointer <Media> > getMedia(const QString &type);
+    QList<QSharedPointer <MediaImpl> > getMedia(const QString &type);
 
 private Q_SLOTS:
     void processRemainingRequests();
@@ -57,8 +57,8 @@ private:
     QPair<QString, QHash<int, QVariant> > takeRequest();
     void updateLibrary();
     bool mediaExists(const QString &first) const;
-    void addMedia(const QSharedPointer< Media > &m);
-    QSharedPointer<Media> mediaForSha(const QString &sha);
+    void addMedia(const QSharedPointer< MediaImpl > &m);
+    QSharedPointer<MediaImpl> mediaForSha(const QString &sha);
 };
 
 #endif // MEDIALIBRARY_H

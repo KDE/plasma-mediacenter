@@ -34,8 +34,8 @@
 #include <odb/sqlite/database.hxx>
 #include <odb/sqlite/exceptions.hxx>
 
-typedef odb::query<Media> MediaQuery;
-typedef odb::result<Media> MediaResult;
+typedef odb::query<MediaImpl> MediaQuery;
+typedef odb::result<MediaImpl> MediaResult;
 
 class MediaLibrary::Singleton
 {
@@ -58,11 +58,11 @@ public:
     QList< QPair <QString, QHash<int, QVariant> > > updateRequests;
     QMutex updateRequestsMutex;
 
-    QList<Media> mediaToPersist;
+    QList<MediaImpl> mediaToPersist;
     QMutex mediaToPersistMutex;
 
-    QHash <QString, QList<QSharedPointer<Media> > > mediaByType;
-    QHash <QString, QSharedPointer<Media> > mediaBySha;
+    QHash <QString, QList<QSharedPointer<MediaImpl> > > mediaByType;
+    QHash <QString, QSharedPointer<MediaImpl> > mediaBySha;
 };
 
 MediaLibrary::MediaLibrary(QObject* parent)
@@ -110,9 +110,9 @@ void MediaLibrary::processNextRequest()
 
     qDebug() << "Processing " << request.first;
 
-    const QString mediaSha = Media::calculateSha(request.first);
+    const QString mediaSha = MediaImpl::calculateSha(request.first);
     if (mediaExists(mediaSha)) {
-        QSharedPointer<Media> media = mediaForSha(mediaSha);
+        QSharedPointer<MediaImpl> media = mediaForSha(mediaSha);
         media->setTitle(request.second.value(Qt::DisplayRole).toString());
         media->setThumbnail(request.second.value(Qt::DecorationRole).toString());
         media->setType(request.second.value(MediaCenter::MediaTypeRole).toString());
@@ -120,8 +120,8 @@ void MediaLibrary::processNextRequest()
         d->db->update(media);
         qDebug() << "Updated " << media->url();
     } else {
-        QSharedPointer<Media> media(
-            new Media(request.second.value(MediaCenter::MediaTypeRole).toString(),
+        QSharedPointer<MediaImpl> media(
+            new MediaImpl(request.second.value(MediaCenter::MediaTypeRole).toString(),
                       request.second.value(Qt::DisplayRole).toString(),
                       request.first,
                       request.second.value(Qt::DecorationRole).toString()));
@@ -136,7 +136,7 @@ bool MediaLibrary::mediaExists(const QString& sha) const
     return d->mediaBySha.contains(sha);
 }
 
-QSharedPointer< Media > MediaLibrary::mediaForSha(const QString& sha)
+QSharedPointer< MediaImpl > MediaLibrary::mediaForSha(const QString& sha)
 {
     return d->mediaBySha.value(sha);
 }
@@ -195,21 +195,21 @@ void MediaLibrary::updateLibrary()
     odb::connection_ptr c (d->db->connection ());
     odb::transaction t (c->begin ());
 
-    MediaResult results (d->db->query<Media>());
+    MediaResult results (d->db->query<MediaImpl>());
 
     for (MediaResult::iterator i=results.begin(); i!=results.end(); ++i) {
-        QSharedPointer<Media> m = i.load();
+        QSharedPointer<MediaImpl> m = i.load();
         addMedia(m);
     }
 }
 
-void MediaLibrary::addMedia(const QSharedPointer< Media >& m)
+void MediaLibrary::addMedia(const QSharedPointer< MediaImpl >& m)
 {
     d->mediaBySha.insert(m->sha(), m);
     d->mediaByType[m->type()].append(m);
 }
 
-QList< QSharedPointer< Media > > MediaLibrary::getMedia(const QString& type)
+QList< QSharedPointer< MediaImpl > > MediaLibrary::getMedia(const QString& type)
 {
     return d->mediaByType.value(type);
 }
