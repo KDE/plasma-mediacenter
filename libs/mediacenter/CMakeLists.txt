@@ -7,7 +7,7 @@ include_directories(
 )
 
 set (plasmamediacenter_SRCS
-    mediaimpl.cpp
+    media.cpp
     lastfmimagefetcher.cpp
     modelmetadata.cpp
     objectpair.cpp

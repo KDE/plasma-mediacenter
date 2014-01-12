@@ -17,46 +17,69 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef MEDIA_H
-#define MEDIA_H
+#include "media.h"
 
-#include <QtCore/QString>
+#include <QCryptographicHash>
 
-#include <odb/core.hxx>
-
-#pragma db object
-class MediaImpl
+Media::Media (const QString& type, const QString& title, const QString& url,
+              const QString& thumbnail)
+    : m_type(type), m_title(title), m_url(url), m_thumbnail(thumbnail)
 {
-public:
-    MediaImpl (const QString &type, const QString& title, const QString& url,
-           const QString& thumbnail);
+    m_sha = calculateSha(url);
+}
 
-    const QString& sha() const;
+Media::Media ()
+{
+}
 
-    const QString& title () const;
-    void setTitle(const QString &title);
+QString Media::calculateSha(const QString& url)
+{
+    QCryptographicHash hash(QCryptographicHash::Sha1);
+    hash.addData(url.toUtf8());
+    return hash.result().toHex();
+}
 
-    const QString& url() const;
-    void setUrl(const QString &url);
+const QString& Media::title() const
+{
+    return m_title;
+}
 
-    const QString& thumbnail () const;
-    void setThumbnail(const QString &thumbnail);
+void Media::setTitle(const QString& title)
+{
+    m_title = title;
+}
 
-    const QString& type() const;
-    void setType(const QString &type);
+const QString& Media::url() const
+{
+    return m_url;
+}
 
-    static QString calculateSha(const QString& url);
+void Media::setUrl(const QString& url)
+{
+    m_url = url;
+}
 
-private:
-    MediaImpl();
-    friend class odb::access;
+const QString& Media::thumbnail() const
+{
+    return m_thumbnail;
+}
 
-    #pragma db id
-    QString m_sha;
-    QString m_title;
-    QString m_url;
-    QString m_thumbnail;
-    QString m_type;
-};
+void Media::setThumbnail(const QString& thumbnail)
+{
+    m_thumbnail = thumbnail;
+}
 
-#endif // MEDIA_H
+const QString& Media::sha() const
+{
+    return m_sha;
+}
+
+void Media::setType(const QString& type)
+{
+    m_type = type;
+}
+
+const QString& Media::type() const
+{
+    return m_type;
+}
