@@ -39,6 +39,8 @@ enum AdditionalMediaRoles {
     ResourceIdRole,
     MediaThumbnailRole,
     DurationRole,
+    ArtistRole,
+    AlbumRole,
     AdditionalRoles     //If additional roles are needed to be defined
 };
 
