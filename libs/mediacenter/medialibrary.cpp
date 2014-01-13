@@ -34,7 +34,9 @@
 #include <odb/sqlite/database.hxx>
 #include <odb/sqlite/exceptions.hxx>
 
-typedef odb::query<Media> MediaQuery;
+typedef odb::query<Album> AlbumQuery;
+typedef odb::result<Album> AlbumResult;
+
 typedef odb::result<Media> MediaResult;
 
 class MediaLibrary::Singleton
@@ -105,6 +107,7 @@ void MediaLibrary::processRemainingRequests()
     Q_ASSERT(thread() == this);
 
     bool hasProcessedAnyRequest = false;
+    odb::session s;
     odb::core::transaction t(d->db->begin());
 
     while (areThereUpdateRequests()) {
