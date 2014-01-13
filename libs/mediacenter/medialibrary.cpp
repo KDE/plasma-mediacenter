@@ -138,11 +138,11 @@ void MediaLibrary::processNextRequest()
             qDebug() << "Updated " << media->url();
         }
     } else {
-        QSharedPointer<Media> media(
-            new Media(request.second.value(MediaCenter::MediaTypeRole).toString(),
-                      request.second.value(Qt::DisplayRole).toString(),
-                      request.first,
-                      request.second.value(Qt::DecorationRole).toString()));
+        QSharedPointer<Media> media(new Media(request.first));
+        foreach(int role, request.second.keys()) {
+            media->setValueForRole(role, request.second.value(role));
+        }
+
         addMedia(media);
         const QString sha = d->db->persist(media);
         qDebug() << "Saved " << sha;

@@ -37,8 +37,7 @@ class Media : public QObject
 {
     Q_OBJECT
 public:
-    Media(const QString &type, const QString& title, const QString& url,
-           const QString& thumbnail, QObject* parent = 0);
+    Media(const QString &url, QObject* parent = 0);
 
     const QString& sha() const;
 
@@ -46,7 +45,6 @@ public:
     bool setTitle(const QString &title);
 
     const QString& url() const;
-    bool setUrl(const QString &url);
 
     const QString& thumbnail () const;
     bool setThumbnail(const QString &thumbnail);
@@ -61,7 +59,7 @@ signals:
     void updated();
 
 private:
-    Media();
+    explicit Media(QObject* parent = 0);
     friend class odb::access;
 
     #pragma db id
@@ -79,6 +77,7 @@ private:
     Private * const d;
 
     inline void emitUpdate();
+    void initUpdateTimer();
 };
 
 #endif // MEDIA_H

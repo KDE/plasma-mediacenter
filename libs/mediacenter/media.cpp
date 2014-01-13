@@ -39,19 +39,25 @@ public:
     QTimer updateTimer;
 };
 
-Media::Media(const QString& type, const QString& title, const QString& url,
-             const QString& thumbnail, QObject* parent)
-    : QObject(parent), d(new Private())
-    , m_type(type), m_title(title), m_url(url), m_thumbnail(thumbnail)
+Media::Media(const QString& url, QObject* parent)
+    : QObject(parent)
     , m_sha(calculateSha(url))
+    , m_url(url)
+    , d(new Private())
+{
+    initUpdateTimer();
+}
+
+Media::Media(QObject* parent): QObject(parent), d(new Private())
+{
+    initUpdateTimer();
+}
+
+void Media::initUpdateTimer()
 {
     d->updateTimer.setInterval(0);
     d->updateTimer.setSingleShot(true);
     connect(&d->updateTimer, SIGNAL(timeout()), SIGNAL(updated()));
-}
-
-Media::Media () : d(new Private())
-{
 }
 
 void Media::emitUpdate()
@@ -79,11 +85,6 @@ bool Media::setTitle(const QString& title)
 const QString& Media::url() const
 {
     return m_url;
-}
-
-bool Media::setUrl(const QString& url)
-{
-    UPDATE(m_url, url);
 }
 
 const QString& Media::thumbnail() const
@@ -119,11 +120,16 @@ bool Media::setValueForRole(int role, const QVariant& value)
         case Qt::DisplayRole:
             return setTitle(value.toString());
         case MediaCenter::MediaUrlRole:
-            return setUrl(value.toString());
+            if (m_url != value.toString()) {
+                qWarning() << "Media URLs CANNOT be changed";
+            }
+            return false;
         case MediaCenter::MediaThumbnailRole:
             return setThumbnail(value.toString());
+        case Qt::DecorationRole:
+            return thumbnail().isEmpty() ? setThumbnail(value.toString()) : false;
         default:
-            qWarning() << "Unknown role " << role << " for value " << value;
+            //qWarning() << "Unknown role " << role << " for value " << value;
             return false;
     }
 }
