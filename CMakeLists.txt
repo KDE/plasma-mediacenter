@@ -1,7 +1,6 @@
 project(MediaCenterElements)
 
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake )
-set (CMAKE_CXX_FLAGS "-Wno-pragmas")
 
 find_package(KDE4 REQUIRED)
 include(KDE4Defaults)
