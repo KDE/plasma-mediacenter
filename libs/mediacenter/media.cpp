@@ -21,6 +21,7 @@
 
 #include <QCryptographicHash>
 #include <QTimer>
+#include <QDebug>
 
 #define UPDATE(property, value) \
     if (property != value) { \
@@ -108,4 +109,21 @@ bool Media::setType(const QString& type)
 const QString& Media::type() const
 {
     return m_type;
+}
+
+bool Media::setValueForRole(int role, const QVariant& value)
+{
+    switch (role) {
+        case MediaCenter::MediaTypeRole:
+            return setType(value.toString());
+        case Qt::DisplayRole:
+            return setTitle(value.toString());
+        case MediaCenter::MediaUrlRole:
+            return setUrl(value.toString());
+        case MediaCenter::MediaThumbnailRole:
+            return setThumbnail(value.toString());
+        default:
+            qWarning() << "Unknown role " << role << " for value " << value;
+            return false;
+    }
 }

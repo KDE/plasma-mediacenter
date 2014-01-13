@@ -23,12 +23,14 @@
 #include <QString>
 #include <QObject>
 #include <QSharedPointer>
+#include <QVariant>
 
 #include <odb/core.hxx>
 #include <odb/traits.hxx>
 
 #include "album.h"
 #include "artist.h"
+#include "mediacenter.h"
 
 #pragma db object
 class Media : public QObject
@@ -52,6 +54,7 @@ public:
     const QString& type() const;
     bool setType(const QString &type);
 
+    bool setValueForRole(int role, const QVariant &value);
     static QString calculateSha(const QString& url);
 
 signals:

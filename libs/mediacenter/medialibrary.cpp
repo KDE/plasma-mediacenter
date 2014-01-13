@@ -128,10 +128,12 @@ void MediaLibrary::processNextRequest()
     if (mediaExists(mediaSha)) {
         QSharedPointer<Media> media = mediaForSha(mediaSha);
 
-        if (media->setTitle(request.second.value(Qt::DisplayRole).toString())
-            || media->setThumbnail(request.second.value(Qt::DecorationRole).toString())
-            || media->setType(request.second.value(MediaCenter::MediaTypeRole).toString())) {
+        bool wasUpdated = false;
+        foreach(int role, request.second.keys()) {
+            wasUpdated = wasUpdated || media->setValueForRole(role, request.second.value(role));
+        }
 
+        if (wasUpdated) {
             d->db->update(media);
             qDebug() << "Updated " << media->url();
         }
