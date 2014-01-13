@@ -42,9 +42,8 @@ Media::Media(const QString& type, const QString& title, const QString& url,
              const QString& thumbnail, QObject* parent)
     : QObject(parent), d(new Private())
     , m_type(type), m_title(title), m_url(url), m_thumbnail(thumbnail)
+    , m_sha(calculateSha(url))
 {
-    m_sha = calculateSha(url);
-
     d->updateTimer.setInterval(0);
     d->updateTimer.setSingleShot(true);
     connect(&d->updateTimer, SIGNAL(timeout()), SIGNAL(updated()));
