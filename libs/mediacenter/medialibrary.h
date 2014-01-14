@@ -65,6 +65,7 @@ private:
     void addMedia(const QSharedPointer< Media > &m);
     QSharedPointer<Media> mediaForSha(const QString &sha);
     void emitNewMedia();
+    bool extractAndSaveAlbumInfo(const QPair< QString, QHash< int, QVariant > >& request, const QSharedPointer< Media >& media);
 };
 
 #endif // MEDIALIBRARY_H

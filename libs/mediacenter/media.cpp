@@ -133,3 +133,8 @@ bool Media::setValueForRole(int role, const QVariant& value)
             return false;
     }
 }
+
+void Media::setAlbum(const QSharedPointer< Album >& album)
+{
+    m_album = album;
+}

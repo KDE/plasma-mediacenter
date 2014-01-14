@@ -80,7 +80,7 @@ MediaLibrary::MediaLibrary(QObject* parent)
 
     moveToThread(this);
 
-    d->newMediaTimer.setInterval(0);
+    d->newMediaTimer.setInterval(1000);
     d->newMediaTimer.setSingleShot(true);
     connect(&d->newMediaTimer, SIGNAL(timeout()),
             SLOT(emitNewMediaWithMediaList()));
@@ -91,14 +91,14 @@ MediaLibrary::MediaLibrary(QObject* parent)
 
 MediaLibrary::~MediaLibrary()
 {
+    qDebug() << "Waiting for Media Library to finish...";
     quit();
-    wait(5000);
+    wait();
     delete d;
 }
 
 void MediaLibrary::run()
 {
-    QTimer::singleShot(0, this, SLOT(processRemainingRequests()));
     exec();
 }
 
@@ -124,13 +124,18 @@ void MediaLibrary::processNextRequest()
 {
     QPair<QString, QHash<int, QVariant> > request = takeRequest();
 
+//     qDebug() << "Process " << request.first;
     const QString mediaSha = Media::calculateSha(request.first);
     if (mediaExists(mediaSha)) {
         QSharedPointer<Media> media = mediaForSha(mediaSha);
 
         bool wasUpdated = false;
         foreach(int role, request.second.keys()) {
-            wasUpdated = wasUpdated || media->setValueForRole(role, request.second.value(role));
+            if (role == MediaCenter::AlbumRole) {
+                wasUpdated = wasUpdated || extractAndSaveAlbumInfo(request, media);
+            } else {
+                wasUpdated = wasUpdated || media->setValueForRole(role, request.second.value(role));
+            }
         }
 
         if (wasUpdated) {
@@ -140,13 +145,39 @@ void MediaLibrary::processNextRequest()
     } else {
         QSharedPointer<Media> media(new Media(request.first));
         foreach(int role, request.second.keys()) {
-            media->setValueForRole(role, request.second.value(role));
+            if (role == MediaCenter::AlbumRole) {
+                extractAndSaveAlbumInfo(request, media);
+            } else {
+                media->setValueForRole(role, request.second.value(role));
+            }
         }
 
         addMedia(media);
         const QString sha = d->db->persist(media);
         qDebug() << "Saved " << sha;
     }
+}
+
+bool MediaLibrary::extractAndSaveAlbumInfo(
+    const QPair<QString, QHash<int, QVariant> > &request,
+    const QSharedPointer<Media> &media)
+{
+    const QString albumName = request.second.value(MediaCenter::AlbumRole).toString();
+        if (!albumName.isEmpty() && albumName.length() < 250) {
+            qDebug() << "Album Name " << albumName;
+            AlbumResult results (d->db->query<Album>(AlbumQuery::name == albumName));
+            if (results.empty()) {
+                QSharedPointer<Album> album(new Album(albumName));
+                media->setAlbum(album);
+                d->db->persist(album);
+            } else {
+                QSharedPointer<Album> album(results.begin().load());
+                media->setAlbum(album);
+            }
+
+            return true;
+        }
+    return false;
 }
 
 bool MediaLibrary::mediaExists(const QString& sha) const
@@ -206,10 +237,12 @@ void MediaLibrary::initDb()
     c->execute ("PRAGMA foreign_keys=ON");
 
     updateLibrary();
+    QTimer::singleShot(0, this, SLOT(processRemainingRequests()));
 }
 
 void MediaLibrary::updateLibrary()
 {
+    odb::session s;
     odb::connection_ptr c (d->db->connection ());
     odb::transaction t (c->begin ());
 
@@ -244,11 +277,14 @@ QList< QSharedPointer<PmcMedia> > MediaLibrary::getMedia(const QString& type)
 
 void MediaLibrary::emitNewMedia()
 {
-    d->newMediaTimer.start();
+    if (!d->newMediaTimer.isActive()) {
+        d->newMediaTimer.start();
+    }
 }
 
 void MediaLibrary::emitNewMediaWithMediaList()
 {
+    qDebug() << "Emitting new media";
     emit newMedia(d->newMediaList);
     d->newMediaList.clear();
 }

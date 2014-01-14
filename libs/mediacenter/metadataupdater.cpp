@@ -40,11 +40,13 @@ static const int s_queryLimit = 2000;
 MetadataUpdater::MetadataUpdater(QObject* parent)
     : QThread(parent), m_termChanged(false), m_queryServiceClient(0)
 {
+    //MediaTypeRole MUST be before AlbumRole
     m_rolesRequested << Qt::DisplayRole
         << MediaCenter::ResourceIdRole
         << MediaCenter::MediaUrlRole
         << MediaCenter::MediaTypeRole
-        << Qt::DecorationRole;
+        << Qt::DecorationRole
+        << MediaCenter::AlbumRole;
 
     moveToThread(this);
 }
@@ -164,12 +166,20 @@ void MetadataUpdater::fetchValuesForResult(int i, const Nepomuk2::Query::Result&
         case MediaCenter::MediaUrlRole:
             values.insert(role, urlForResource(result.resource()));
             break;
-        case MediaCenter::MediaTypeRole:
+        case MediaCenter::MediaTypeRole: {
             const QString mimetype = mimetypeForResource(result.resource());
             if (mimetype.isEmpty() || !mimetype.contains('/')) {
                 values.insert(role, mimetype);
             } else {
                 values.insert(role, mimetype.split('/').at(0));
+            }
+            break;
+        }
+        case MediaCenter::AlbumRole:
+            if (values.value(MediaCenter::MediaTypeRole).toString() == "audio") {
+                Nepomuk2::Resource album = result.resource().property(
+                    Nepomuk2::Vocabulary::NMM::performer()).toResource();
+                values.insert(role, album.genericLabel());
             }
             break;
         }
