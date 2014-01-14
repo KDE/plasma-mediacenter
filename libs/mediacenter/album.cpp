@@ -30,3 +30,8 @@ Album::Album()
 Album::~Album()
 {
 }
+
+const QString& Album::name() const
+{
+    return m_name;
+}

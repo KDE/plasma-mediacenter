@@ -34,6 +34,8 @@ public:
     Album(const QString &name);
     ~Album();
 
+    const QString& name() const;
+
 private:
     Album();
     friend class odb::access;

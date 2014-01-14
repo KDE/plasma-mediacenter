@@ -24,6 +24,7 @@
 #include <QTimer>
 #include <QDebug>
 
+#include "album.h"
 #include "mediacenter.h"
 #include "media_odb.h"
 
@@ -163,20 +164,24 @@ bool MediaLibrary::extractAndSaveAlbumInfo(
     const QSharedPointer<Media> &media)
 {
     const QString albumName = request.second.value(MediaCenter::AlbumRole).toString();
-        if (!albumName.isEmpty() && albumName.length() < 250) {
-            qDebug() << "Album Name " << albumName;
-            AlbumResult results (d->db->query<Album>(AlbumQuery::name == albumName));
-            if (results.empty()) {
-                QSharedPointer<Album> album(new Album(albumName));
-                media->setAlbum(album);
-                d->db->persist(album);
-            } else {
-                QSharedPointer<Album> album(results.begin().load());
-                media->setAlbum(album);
-            }
+    if (!media->album().isNull() && media->album()->name() == albumName) {
+        return false;
+    }
 
-            return true;
+    if (!albumName.isEmpty() && albumName.length() < 250) {
+        qDebug() << "Album Name " << albumName;
+        AlbumResult results (d->db->query<Album>(AlbumQuery::name == albumName));
+        if (results.empty()) {
+            QSharedPointer<Album> album(new Album(albumName));
+            media->setAlbum(album);
+            d->db->persist(album);
+        } else {
+            QSharedPointer<Album> album(results.begin().load());
+            media->setAlbum(album);
         }
+
+        return true;
+    }
     return false;
 }
 

@@ -55,6 +55,7 @@ public:
     bool setValueForRole(int role, const QVariant &value);
     static QString calculateSha(const QString& url);
 
+    const QSharedPointer<Album>& album() const;
     void setAlbum(const QSharedPointer<Album> &album);
 
 signals:
