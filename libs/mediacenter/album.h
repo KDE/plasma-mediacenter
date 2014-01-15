@@ -27,6 +27,7 @@
 
 class Media;
 
+//TODO: Album should also know its artist
 #pragma db object
 class Album
 {

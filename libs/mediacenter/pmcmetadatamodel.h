@@ -46,7 +46,7 @@ public:
     void setDefaultDecoration(const QVariant &decoration);
 
 public Q_SLOTS:
-    void handleNewMedia(const QList<QSharedPointer<PmcMedia> > &media);
+    void showAlbums();
 
 signals:
     void queryStarted();
@@ -54,6 +54,8 @@ signals:
     void queryError(const QString &message);
 
 protected Q_SLOTS:
+    void handleNewMedia(const QList<QSharedPointer<PmcMedia> > &media);
+    void handleNewAlbums(const QList< QSharedPointer< Album > > &mediaData);
     void updateModel();
     void delayedPreview();
 

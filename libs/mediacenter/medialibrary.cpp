@@ -299,6 +299,7 @@ void MediaLibrary::addAlbum(const QSharedPointer< Album >& a)
 {
     QMutexLocker l(&d->albumListMutex);
 
+    qDebug() << a->name();
     d->albumList.append(a);
 }
 

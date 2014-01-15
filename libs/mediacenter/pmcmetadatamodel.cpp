@@ -102,8 +102,15 @@ void PmcMetadataModel::showMediaType(MediaCenter::MediaType mediaType)
             SLOT(handleNewMedia(QList<QSharedPointer<PmcMedia> >)));
 
     handleNewMedia(mediaData);
-   // clearAllFilters();
-    //d->updateTimer.start(100);
+}
+
+void PmcMetadataModel::showAlbums()
+{
+    QList <QSharedPointer<Album> > mediaData = MediaLibrary::instance()->getAlbums();
+
+    //TODO : Album updates
+
+    handleNewAlbums(mediaData);
 }
 
 void PmcMetadataModel::handleNewMedia(const QList< QSharedPointer< PmcMedia > >& media)
@@ -128,6 +135,26 @@ void PmcMetadataModel::handleNewMedia(const QList< QSharedPointer< PmcMedia > >&
     d->metadataValues.append(mediaInfoToInsert);
     endInsertRows();
 }
+
+void PmcMetadataModel::handleNewAlbums(const QList< QSharedPointer< Album > >& mediaData)
+{
+    const int existingRowCount = rowCount();
+
+    QList< QHash<int, QVariant> > mediaInfoToInsert;
+    foreach (QSharedPointer<Album> a, mediaData) {
+        QHash<int, QVariant> mediainfo;
+        mediainfo.insert(Qt::DisplayRole, a->name());
+        mediainfo.insert(MediaCenter::MediaTypeRole, "album");
+        mediaInfoToInsert.append(mediainfo);
+    }
+
+    beginInsertRows(QModelIndex(), existingRowCount,
+                    existingRowCount + mediaInfoToInsert.count());
+
+    d->metadataValues.append(mediaInfoToInsert);
+    endInsertRows();
+}
+
 
 QVariant PmcMetadataModel::metadataValueForRole(const QModelIndex& index, int role) const
 {
@@ -162,7 +189,7 @@ QVariant PmcMetadataModel::data(const QModelIndex& index, int role) const
 
 QVariant PmcMetadataModel::decorationForMetadata(const QVariant &metadataValue, const QModelIndex &index) const
 {
-    if (metadataValue.type() == QVariant::String && metadataValue.toString().isEmpty()) {
+    if (metadataValue.isNull() || (metadataValue.type() == QVariant::String && metadataValue.toString().isEmpty())) {
         const QString mediaType = metadataValueForRole(index, MediaCenter::MediaTypeRole).toString();
         if (mediaType == "album") {
             const QString albumName = metadataValueForRole(index, Qt::DisplayRole).toString();
@@ -170,6 +197,7 @@ QVariant PmcMetadataModel::decorationForMetadata(const QVariant &metadataValue, 
             if (PmcImageCache::instance()->containsId(albumUri)) {
                 return QString("image://%1/%2").arg(PmcImageProvider::identificationString, albumUri);
             } else {
+                //FIXME: Album no longer has artist
                 //MediaUrlRole is abused for albums to pass on the artist name
                 const QString artistNameForAlbum = metadataValueForRole(index, MediaCenter::MediaUrlRole).toString();
                 LastFmImageFetcher::instance()->fetchImage("album", QPersistentModelIndex(index), artistNameForAlbum, albumName);
