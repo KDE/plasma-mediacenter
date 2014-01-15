@@ -93,8 +93,8 @@ bool MetadataMusicBackend::initImpl()
 
 void MetadataMusicBackend::initializeModels()
 {
-    m_albumsModel->showMediaForProperty(Nepomuk2::Vocabulary::NMM::musicAlbum());
-    m_artistsModel->showMediaForProperty(Nepomuk2::Vocabulary::NMM::performer());
+    kDebug() << "************** ALBUM MODEL MISSING!!";
+    kDebug() << "************** ARTIST MODEL MISSING!!";
     m_musicModel->showMediaType(MediaCenter::Music);
     updateModelAccordingToFilters();
 }
@@ -130,7 +130,7 @@ void MetadataMusicBackend::setArtistFilter(const QString& filter)
 void MetadataMusicBackend::clearFilters()
 {
     m_musicModelMetadata->setHeaderText(QString());
-    m_musicModel->clearAllFilters();
+    kDebug() << "************** CLEAR ALL FILTERS NOT IMPLEMENTED!!";
 }
 
 void MetadataMusicBackend::updateModelAccordingToFilters()
@@ -140,12 +140,12 @@ void MetadataMusicBackend::updateModelAccordingToFilters()
     if (!m_albumFilter.isEmpty()) {
         Nepomuk2::Resource r(m_albumFilter);
         m_musicModelMetadata->setHeaderText(QString("Showing music from %1, click %2 to reset").arg(r.genericLabel()).arg(s_showAllButton));
-        m_musicModel->addFilter(Nepomuk2::Vocabulary::NMM::musicAlbum(), Nepomuk2::Query::ResourceTerm(m_albumFilter));
+        kDebug() << "************** ADD FILTER NOT IMPLEMENTED!!";
     }
     if (!m_artistFilter.isEmpty()) {
         Nepomuk2::Resource r(m_artistFilter);
         m_musicModelMetadata->setHeaderText(QString("Showing music from %1, click %2 to reset").arg(r.genericLabel()).arg(s_showAllButton));
-        m_musicModel->addFilter(Nepomuk2::Vocabulary::NMM::performer(), Nepomuk2::Query::ResourceTerm(m_artistFilter));
+        kDebug() << "************** ADD FILTER NOT IMPLEMENTED!!";
     }
 }
 

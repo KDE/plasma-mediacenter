@@ -20,25 +20,14 @@
 #ifndef PMCMETADATAMODEL_H
 #define PMCMETADATAMODEL_H
 
-#include <QtCore/QAbstractItemModel>
-
-#include <Nepomuk2/Query/Result>
-#include <Nepomuk2/Query/Term>
-#include <Nepomuk2/Types/Property>
-#include <Nepomuk2/Resource>
-#include <Nepomuk2/Query/ComparisonTerm>
-
 #include "mediacenter_export.h"
 #include "mediacenter.h"
 #include "pmcmedia.h"
 
-#include <QSharedPointer>
+#include <KUrl>
 
-namespace Nepomuk2 {
-namespace Query {
-class ResourceTypeTerm;
-}
-}
+#include <QtCore/QAbstractItemModel>
+#include <QSharedPointer>
 
 class QPixmap;
 class KFileItem;
@@ -53,17 +42,11 @@ public:
     virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
 
     void showMediaType(MediaCenter::MediaType mediaType);
-    void showMediaForProperty(Nepomuk2::Types::Property property);
-    void setTerm(const Nepomuk2::Query::Term &term);
-    void addTerm(const Nepomuk2::Query::Term &term);
-    void addFilter(const Nepomuk2::Types::Property& property, const Nepomuk2::Query::Term& term, Nepomuk2::Query::ComparisonTerm::Comparator comparator = Nepomuk2::Query::ComparisonTerm::Contains);
     void setSearchTerm(const QString &searchTerm);
     void setDefaultDecoration(const QVariant &decoration);
 
 public Q_SLOTS:
-    void clearAllFilters();
     void handleNewMedia(const QList<QSharedPointer<PmcMedia> > &media);
-    void showAlbums();
 
 signals:
     void queryStarted();
@@ -71,14 +54,11 @@ signals:
     void queryError(const QString &message);
 
 protected Q_SLOTS:
-    void finishedListing();
     void updateModel();
     void delayedPreview();
 
 protected:
     QString fetchPreview(const KUrl& url, const QModelIndex& index);
-    QString urlForResource(const Nepomuk2::Resource &resource) const;
-    QString mimetypeForResource(const Nepomuk2::Resource &resource) const;
     inline QList<int> rolesNeeded() const;
     void resetModel();
 

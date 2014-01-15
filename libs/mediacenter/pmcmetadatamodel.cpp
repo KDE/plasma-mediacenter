@@ -26,16 +26,6 @@
 #include "medialibrary.h"
 #include "pmcmedia.h"
 
-#include <Nepomuk2/Query/Query>
-#include <Nepomuk2/Vocabulary/NIE>
-#include <Nepomuk2/Vocabulary/NFO>
-#include <Nepomuk2/Query/ResourceTypeTerm>
-#include <Nepomuk2/Query/AndTerm>
-#include <Nepomuk2/Query/QueryServiceClient>
-#include <Nepomuk2/Query/Result>
-#include <Nepomuk2/Variant>
-#include <Nepomuk2/Query/QueryParser>
-
 #include <KIO/PreviewJob>
 #include <KDebug>
 
@@ -49,10 +39,7 @@ public:
         , isSearchTermValid(false)
     {
     }
-    Nepomuk2::Query::Term term;
-    Nepomuk2::Query::Term searchTerm;
     bool isSearchTermValid;
-    QList< Nepomuk2::Query::Result > queryResults;
 
     //Thumbnail stuff
     const QStringList *thumbnailerPlugins;
@@ -62,7 +49,6 @@ public:
     QTimer previewTimer;
     QTimer updateTimer;
     QTimer metadataFetchTimer;
-    Nepomuk2::Query::ResourceTypeTerm resourceTypeTerm;
     QList< QHash<int, QVariant> > metadataValues;
     QList<int> rowsToFetchMetadataFor;
     QStringList mediaUrlWhichFailedThumbnailGeneration;
@@ -95,19 +81,6 @@ PmcMetadataModel::~PmcMetadataModel()
 
 void PmcMetadataModel::updateModel()
 {
-    QList<Nepomuk2::Query::Term> listOfTerms;
-    listOfTerms.append(d->term);
-
-    if (d->resourceTypeTerm.isValid()) {
-        Nepomuk2::Query::ComparisonTerm sortTerm(Nepomuk2::Vocabulary::NIE::lastModified(), Nepomuk2::Query::Term());
-        sortTerm.setSortWeight(1, Qt::DescendingOrder);
-        listOfTerms.append(sortTerm);
-    }
-
-    if (d->isSearchTermValid) {
-        listOfTerms.append(d->searchTerm);
-    }
-
     emit queryStarted();
 }
 
@@ -154,25 +127,6 @@ void PmcMetadataModel::handleNewMedia(const QList< QSharedPointer< PmcMedia > >&
 
     d->metadataValues.append(mediaInfoToInsert);
     endInsertRows();
-}
-
-void PmcMetadataModel::showMediaForProperty(Nepomuk2::Types::Property property)
-{
-    Nepomuk2::Query::ComparisonTerm ct(property, Nepomuk2::Query::Term());
-    ct.setInverted(true);
-    setTerm(ct);
-}
-
-void PmcMetadataModel::setTerm(const Nepomuk2::Query::Term& term)
-{
-     d->term = term;
-     d->updateTimer.start(100);
-}
-
-void PmcMetadataModel::addTerm(const Nepomuk2::Query::Term& term)
-{
-    d->term = Nepomuk2::Query::AndTerm(d->term, term);
-    d->updateTimer.start(100);
 }
 
 QVariant PmcMetadataModel::metadataValueForRole(const QModelIndex& index, int role) const
@@ -242,25 +196,10 @@ void PmcMetadataModel::fetchMetadata()
 }
 
 
-QString PmcMetadataModel::mimetypeForResource(const Nepomuk2::Resource& resource) const
-{
-    return resource.property(Nepomuk2::Vocabulary::NIE::mimeType()).toString();
-}
-
 int PmcMetadataModel::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
     return d->metadataValues.count();
-}
-
-void PmcMetadataModel::finishedListing()
-{
-    qobject_cast<Nepomuk2::Query::QueryServiceClient*>(sender())->close();
-}
-
-QString PmcMetadataModel::urlForResource(const Nepomuk2::Resource &resource) const
-{
-    return resource.property(Nepomuk2::Vocabulary::NIE::url()).toString();
 }
 
 QString PmcMetadataModel::fetchPreview(const KUrl &url, const QModelIndex& index)
@@ -322,25 +261,6 @@ void PmcMetadataModel::previewFailed(const KFileItem &item)
     }
 }
 
-void PmcMetadataModel::addFilter(const Nepomuk2::Types::Property& property, const Nepomuk2::Query::Term& term, Nepomuk2::Query::ComparisonTerm::Comparator comparator)
-{
-    QList<Nepomuk2::Query::Term> termsList;
-
-    termsList.append(d->term);
-    termsList.append(Nepomuk2::Query::ComparisonTerm(property, term, comparator));
-
-    d->term = Nepomuk2::Query::AndTerm(termsList);
-    d->updateTimer.start(100);
-}
-
-void PmcMetadataModel::clearAllFilters()
-{
-    if (d->term == d->resourceTypeTerm)
-        return;
-    d->term = d->resourceTypeTerm;
-    d->updateTimer.start(100);
-}
-
 void PmcMetadataModel::handleUpdaterReset()
 {
     resetModel();
@@ -355,13 +275,7 @@ void PmcMetadataModel::resetModel()
 
 void PmcMetadataModel::setSearchTerm(const QString& searchTerm)
 {
-    if (searchTerm.isEmpty()) {
-        d->isSearchTermValid = false;
-    } else {
-        d->searchTerm = Nepomuk2::Query::QueryParser::parseQuery(searchTerm).term();
-        d->isSearchTermValid = true;
-    }
-    d->updateTimer.start(100);
+    kDebug() << "NOT IMPLEMENTED!!";
 }
 
 void PmcMetadataModel::setDefaultDecoration ( const QVariant& decoration )
