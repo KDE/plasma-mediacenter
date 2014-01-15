@@ -44,6 +44,7 @@ public:
     void updateMedia(const QHash<int, QVariant> &data);
     void updateMedia(const QString &url, const QHash<int, QVariant> &data);
     QList<QSharedPointer <PmcMedia> > getMedia(const QString &type);
+    QList<QSharedPointer <Album> > getAlbums();
 
 Q_SIGNALS:
     void newMedia(const QList< QSharedPointer<PmcMedia> > &media);
@@ -66,6 +67,7 @@ private:
     QSharedPointer<Media> mediaForSha(const QString &sha);
     void emitNewMedia();
     bool extractAndSaveAlbumInfo(const QPair< QString, QHash< int, QVariant > >& request, const QSharedPointer< Media >& media);
+    void addAlbum(const QSharedPointer< Album >& a);
 };
 
 #endif // MEDIALIBRARY_H

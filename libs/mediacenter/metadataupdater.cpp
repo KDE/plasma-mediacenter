@@ -55,7 +55,7 @@ MetadataUpdater::~MetadataUpdater()
 {
     kDebug() << "Waiting for metadata updater to quit...";
     quit();
-    wait(5000);
+    wait();
 }
 
 void MetadataUpdater::run()

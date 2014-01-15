@@ -63,6 +63,7 @@ public:
 public Q_SLOTS:
     void clearAllFilters();
     void handleNewMedia(const QList<QSharedPointer<PmcMedia> > &media);
+    void showAlbums();
 
 signals:
     void queryStarted();
