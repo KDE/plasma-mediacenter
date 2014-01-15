@@ -61,7 +61,6 @@ protected:
 
 protected slots:
     void runQuery();
-    void processPendingIndices();
 
 private slots:
     void newEntries(const QList<Nepomuk2::Query::Result> &results);
@@ -69,22 +68,13 @@ private slots:
 
 private:
     QList<int> m_rolesRequested;
-    QList<int> m_indices;
-    bool m_termChanged;
     Nepomuk2::Query::Term m_term;
     QMutex m_termMutex;
-    QMutex m_resultsMutex;
-    QMutex m_indicesMutex;
-    QList<Nepomuk2::Query::Result> m_resultList;
     Nepomuk2::Query::QueryServiceClient *m_queryServiceClient;
 
     QString mimetypeForResource(const Nepomuk2::Resource& resource) const;
     QString urlForResource(const Nepomuk2::Resource &resource) const;
     void fetchValuesForResult(int i, const Nepomuk2::Query::Result& result);
-    bool areThereIndicesToProcess();
-    int nextIndexToProcess();
-    Nepomuk2::Query::Result resultForRow(int row);
-    bool hasTermChanged();
 };
 
 #endif // METADATAUPDATER_H

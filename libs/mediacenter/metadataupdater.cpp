@@ -38,7 +38,7 @@
 static const int s_queryLimit = 2000;
 
 MetadataUpdater::MetadataUpdater(QObject* parent)
-    : QThread(parent), m_termChanged(false), m_queryServiceClient(0)
+    : QThread(parent), m_queryServiceClient(0)
 {
     //MediaTypeRole MUST be before AlbumRole
     m_rolesRequested << Qt::DisplayRole
@@ -75,25 +75,11 @@ void MetadataUpdater::setTerm(const Nepomuk2::Query::Term& term)
 {
     QMutexLocker locker(&m_termMutex);
     m_term = term;
-    m_termChanged = true;
-    QTimer::singleShot(0, this, SLOT(processPendingIndices()));
-}
-
-bool MetadataUpdater::hasTermChanged()
-{
-    QMutexLocker locker(&m_termMutex);
-    bool isChanged = m_termChanged;
-    if (isChanged) {
-        m_termChanged = false;
-    }
-    return isChanged;
+    QTimer::singleShot(0, this, SLOT(runQuery()));
 }
 
 void MetadataUpdater::runQuery()
 {
-    m_indices.clear();
-    m_resultList.clear();
-
     Nepomuk2::Query::Query myQuery;
     if (m_queryServiceClient) {
         m_queryServiceClient->close();
@@ -122,26 +108,11 @@ void MetadataUpdater::runQuery()
 
 void MetadataUpdater::newEntries(const QList< Nepomuk2::Query::Result >& results)
 {
-    m_resultList.append(results);
     int i = 0;
     foreach (const Nepomuk2::Query::Result& r, results) {
         fetchValuesForResult(i++, r);
     }
     emit newResults(results.size());
-}
-
-void MetadataUpdater::processPendingIndices()
-{
-    Q_ASSERT(thread() == this);
-
-    if (hasTermChanged())
-        runQuery();
-
-    if (areThereIndicesToProcess()) {
-        const int i = nextIndexToProcess();
-        fetchValuesForResult(i, resultForRow(i));
-        QTimer::singleShot(10, this, SLOT(processPendingIndices()));
-    }
 }
 
 void MetadataUpdater::fetchValuesForResult(int i, const Nepomuk2::Query::Result& result)
@@ -187,40 +158,6 @@ void MetadataUpdater::fetchValuesForResult(int i, const Nepomuk2::Query::Result&
 
     MediaLibrary::instance()->updateMedia(values);
     emit gotMetadata(i, values);
-}
-
-void MetadataUpdater::fetchMetadata(int row)
-{
-    QMutexLocker lock(&m_indicesMutex);
-    m_indices.append(row);
-    QTimer::singleShot(0, this, SLOT(processPendingIndices()));
-}
-
-void MetadataUpdater::fetchMetadata(const QList< int >& rows)
-{
-    QMutexLocker lock(&m_indicesMutex);
-    m_indices.append(rows);
-    QTimer::singleShot(0, this, SLOT(processPendingIndices()));
-}
-
-int MetadataUpdater::nextIndexToProcess()
-{
-    QMutexLocker lock(&m_indicesMutex);
-    return m_indices.takeLast();
-}
-
-Nepomuk2::Query::Result MetadataUpdater::resultForRow(int row)
-{
-    QMutexLocker lock(&m_resultsMutex);
-    if (row >= m_resultList.size())
-        return Nepomuk2::Query::Result();
-    return m_resultList.at(row);
-}
-
-bool MetadataUpdater::areThereIndicesToProcess()
-{
-    QMutexLocker lock(&m_indicesMutex);
-    return !m_indices.isEmpty();
 }
 
 QString MetadataUpdater::mimetypeForResource(const Nepomuk2::Resource& resource) const
