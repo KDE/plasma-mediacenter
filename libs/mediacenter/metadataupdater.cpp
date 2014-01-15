@@ -53,6 +53,7 @@ MetadataUpdater::MetadataUpdater(QObject* parent)
 
 MetadataUpdater::~MetadataUpdater()
 {
+    kDebug() << "Waiting for metadata updater to quit...";
     quit();
     wait(5000);
 }
