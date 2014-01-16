@@ -94,7 +94,7 @@ bool MetadataMusicBackend::initImpl()
 void MetadataMusicBackend::initializeModels()
 {
     m_albumsModel->showAlbums();
-    kDebug() << "************** ARTIST MODEL MISSING!!";
+    m_artistsModel->showArtist();
     m_musicModel->showMediaType(MediaCenter::Music);
     updateModelAccordingToFilters();
 }

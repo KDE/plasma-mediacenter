@@ -46,7 +46,8 @@ MetadataUpdater::MetadataUpdater(QObject* parent)
         << MediaCenter::MediaUrlRole
         << MediaCenter::MediaTypeRole
         << Qt::DecorationRole
-        << MediaCenter::AlbumRole;
+        << MediaCenter::AlbumRole
+        << MediaCenter::ArtistRole;
 
     moveToThread(this);
 }
@@ -150,8 +151,15 @@ void MetadataUpdater::fetchValuesForResult(int i, const Nepomuk2::Query::Result&
         case MediaCenter::AlbumRole:
             if (values.value(MediaCenter::MediaTypeRole).toString() == "audio") {
                 Nepomuk2::Resource album = result.resource().property(
-                    Nepomuk2::Vocabulary::NMM::performer()).toResource();
+                    Nepomuk2::Vocabulary::NMM::musicAlbum()).toResource();
                 values.insert(role, album.genericLabel());
+            }
+            break;
+        case MediaCenter::ArtistRole:
+            if (values.value(MediaCenter::MediaTypeRole).toString() == "audio") {
+                Nepomuk2::Resource artist = result.resource().property(
+                    Nepomuk2::Vocabulary::NMM::performer()).toResource();
+                values.insert(role, artist.genericLabel());
             }
             break;
         }

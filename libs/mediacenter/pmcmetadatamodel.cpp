@@ -113,6 +113,12 @@ void PmcMetadataModel::showAlbums()
     handleNewAlbums(mediaData);
 }
 
+void PmcMetadataModel::showArtist()
+{
+    QList <QSharedPointer<Artist> > mediaData = MediaLibrary::instance()->getArtist();
+    handleNewArtists(mediaData);
+}
+
 void PmcMetadataModel::handleNewMedia(const QList< QSharedPointer< PmcMedia > >& media)
 {
     const int existingRowCount = rowCount();
@@ -145,6 +151,24 @@ void PmcMetadataModel::handleNewAlbums(const QList< QSharedPointer< Album > >& m
         QHash<int, QVariant> mediainfo;
         mediainfo.insert(Qt::DisplayRole, a->name());
         mediainfo.insert(MediaCenter::MediaTypeRole, "album");
+        mediaInfoToInsert.append(mediainfo);
+    }
+
+    beginInsertRows(QModelIndex(), existingRowCount,
+                    existingRowCount + mediaInfoToInsert.count());
+
+    d->metadataValues.append(mediaInfoToInsert);
+    endInsertRows();
+}
+
+void PmcMetadataModel::handleNewArtists(const QList< QSharedPointer<Artist> >& mediaData)
+{
+    const int existingRowCount = rowCount();
+    QList< QHash<int, QVariant> > mediaInfoToInsert;
+    foreach (QSharedPointer<Artist> a, mediaData) {
+        QHash<int, QVariant> mediainfo;
+        mediainfo.insert(Qt::DisplayRole, a->name());
+        mediainfo.insert(MediaCenter::MediaTypeRole, "artist");
         mediaInfoToInsert.append(mediainfo);
     }
 

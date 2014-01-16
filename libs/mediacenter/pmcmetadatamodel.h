@@ -47,6 +47,7 @@ public:
 
 public Q_SLOTS:
     void showAlbums();
+    void showArtist();
 
 signals:
     void queryStarted();
@@ -56,6 +57,7 @@ signals:
 protected Q_SLOTS:
     void handleNewMedia(const QList<QSharedPointer<PmcMedia> > &media);
     void handleNewAlbums(const QList< QSharedPointer< Album > > &mediaData);
+    void handleNewArtists(const QList< QSharedPointer< Artist > > &mediaData);
     void updateModel();
     void delayedPreview();
 

@@ -58,6 +58,9 @@ public:
     const QSharedPointer<Album>& album() const;
     void setAlbum(const QSharedPointer<Album> &album);
 
+    const QSharedPointer<Artist>& artist() const;
+    void setArtist(const QSharedPointer<Artist> &artist);
+
 signals:
     void updated();
 

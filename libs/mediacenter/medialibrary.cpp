@@ -25,6 +25,7 @@
 #include <QDebug>
 
 #include "album.h"
+#include "artist.h"
 #include "mediacenter.h"
 #include "media_odb.h"
 
@@ -37,6 +38,8 @@
 
 typedef odb::query<Album> AlbumQuery;
 typedef odb::result<Album> AlbumResult;
+typedef odb::query<Artist> ArtistQuery;
+typedef odb::result<Artist> ArtistResult;
 
 typedef odb::result<Media> MediaResult;
 
@@ -85,6 +88,9 @@ public:
 
     QMutex albumListMutex;
     QList< QSharedPointer<Album> > albumList;
+
+    QMutex artistListMutex;
+    QList<QSharedPointer<Artist> > artistList;
 };
 
 MediaLibrary::MediaLibrary(QObject* parent)
@@ -148,6 +154,8 @@ void MediaLibrary::processNextRequest()
         foreach(int role, request.second.keys()) {
             if (role == MediaCenter::AlbumRole) {
                 wasUpdated = wasUpdated || extractAndSaveAlbumInfo(request, media);
+            } else if (role == MediaCenter::ArtistRole) {
+                wasUpdated = wasUpdated || extractAndSaveArtistInfo(request, media);
             } else {
                 wasUpdated = wasUpdated || media->setValueForRole(role, request.second.value(role));
             }
@@ -162,6 +170,8 @@ void MediaLibrary::processNextRequest()
         foreach(int role, request.second.keys()) {
             if (role == MediaCenter::AlbumRole) {
                 extractAndSaveAlbumInfo(request, media);
+            } else if(role == MediaCenter::ArtistRole) {
+                extractAndSaveArtistInfo(request, media);
             } else {
                 media->setValueForRole(role, request.second.value(role));
             }
@@ -279,6 +289,14 @@ void MediaLibrary::updateLibrary()
         QSharedPointer<Album> a = i.load();
         addAlbum(a);
     }
+
+    // Albums
+    ArtistResult artists (d->db->query<Artist>());
+    for (ArtistResult::iterator i=artists.begin(); i!=artists.end(); i++) {
+        QSharedPointer<Artist> a = i.load();
+        addArtist(a);
+    }
+
 }
 
 void MediaLibrary::addMedia(const QSharedPointer< Media >& m)
@@ -329,4 +347,43 @@ QList< QSharedPointer< Album > > MediaLibrary::getAlbums()
     QMutexLocker l(&d->albumListMutex);
 
     return d->albumList;
+}
+
+QList< QSharedPointer< Artist > > MediaLibrary::getArtist()
+{
+    QMutexLocker l(&d->artistListMutex);
+    return d->artistList;
+}
+
+void MediaLibrary::addArtist(const QSharedPointer< Artist >& artist)
+{
+    QMutexLocker l(&d->artistListMutex);
+    qDebug() << artist->name();
+    d->artistList.append(artist);
+}
+
+bool MediaLibrary::extractAndSaveArtistInfo(
+    const QPair< QString, QHash< int, QVariant > >& request,
+    const QSharedPointer< Media >& media)
+{
+    const QString artistName = request.second.value(MediaCenter::ArtistRole).toString();
+    if (!media->artist().isNull() && media->artist()->name() == artistName) {
+        return false;
+    }
+
+    if (!artistName.isEmpty() && artistName.length() < 250) {
+        qDebug() << "Artist Name " << artistName;
+        ArtistResult results (d->db->query<Artist>(ArtistQuery::name == artistName));
+        if (results.empty()) {
+            QSharedPointer<Artist> artist(new Artist(artistName));
+            media->setArtist(artist);
+            d->db->persist(artist);
+        } else {
+            QSharedPointer<Artist> artist(results.begin().load());
+            media->setArtist(artist);
+        }
+
+        return true;
+    }
+    return false;
 }

@@ -143,3 +143,13 @@ void Media::setAlbum(const QSharedPointer< Album >& album)
 {
     m_album = album;
 }
+
+const QSharedPointer< Artist >& Media::artist() const
+{
+    return m_artist;
+}
+
+void Media::setArtist(const QSharedPointer< Artist >& artist)
+{
+    m_artist = artist;
+}

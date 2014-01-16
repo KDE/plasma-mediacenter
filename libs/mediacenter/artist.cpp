@@ -30,3 +30,8 @@ Artist::Artist()
 Artist::~Artist()
 {
 }
+
+const QString& Artist::name() const
+{
+    return m_name;
+}

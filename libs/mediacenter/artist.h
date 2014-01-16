@@ -34,6 +34,8 @@ public:
     Artist(const QString &name);
     ~Artist();
 
+    const QString& name() const;
+
 private:
     Artist();
     friend class odb::access;
