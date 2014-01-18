@@ -188,6 +188,25 @@ void MediaLibrary::processNextRequest()
     }
 }
 
+bool MediaLibrary::extractAndSaveArtistInfo(
+    const QPair< QString, QHash< int, QVariant > >& request,
+    QSharedPointer< Media >& media)
+{
+    const QString artistName = request.second.value(MediaCenter::ArtistRole).toString();
+    if (!media->artist().isNull() && media->artist()->name() == artistName) {
+        return false;
+    }
+
+    QSharedPointer<Artist> artist = loadOrCreate<Artist>(artistName, media);
+
+    if (artist.isNull()) {
+        return false;
+    }
+
+    media->setArtist(artist);
+    return true;
+}
+
 bool MediaLibrary::extractAndSaveAlbumInfo(
     const QPair<QString, QHash<int, QVariant> > &request,
     QSharedPointer<Media> &media)
@@ -197,21 +216,36 @@ bool MediaLibrary::extractAndSaveAlbumInfo(
         return false;
     }
 
-    if (!albumName.isEmpty() && albumName.length() < 250) {
-        AlbumResult results (d->db->query<Album>(AlbumQuery::name == albumName));
-        if (results.empty()) {
-            QSharedPointer<Album> album(new Album(albumName));
-            media->setAlbum(album);
-            d->db->persist(album);
-        } else {
-            QSharedPointer<Album> album(results.begin().load());
-            media->setAlbum(album);
-        }
+    QSharedPointer<Album> album = loadOrCreate<Album>(albumName, media);
 
-        return true;
+    if (album.isNull()) {
+        return false;
     }
-    return false;
+
+    media->setAlbum(album);
+    return true;
 }
+
+template <class X> QSharedPointer<X> MediaLibrary::loadOrCreate(const QString &name, QSharedPointer<Media> &media)
+{
+    typedef odb::query<X> XQuery;
+    typedef odb::result<X> XResult;
+
+    if (!name.isEmpty() && name.length() < 250) {
+        XResult results (d->db->query<X>(XQuery::name == name));
+        if (results.empty()) {
+            QSharedPointer<X> x(new X(name));
+            d->db->persist(x);
+            return x;
+        } else {
+            QSharedPointer<X> x(results.begin().load());
+            return x;
+        }
+    }
+
+    return QSharedPointer<X>();
+}
+
 
 bool MediaLibrary::mediaExists(const QString& sha) const
 {
@@ -377,29 +411,4 @@ QList< QSharedPointer< PmcArtist > > MediaLibrary::getArtists() const
 {
     QMutexLocker l(&d->artistListMutex);
     return d->pmcArtistList;
-}
-
-bool MediaLibrary::extractAndSaveArtistInfo(
-    const QPair< QString, QHash< int, QVariant > >& request,
-    QSharedPointer< Media >& media)
-{
-    const QString artistName = request.second.value(MediaCenter::ArtistRole).toString();
-    if (!media->artist().isNull() && media->artist()->name() == artistName) {
-        return false;
-    }
-
-    if (!artistName.isEmpty() && artistName.length() < 250) {
-        ArtistResult results (d->db->query<Artist>(ArtistQuery::name == artistName));
-        if (results.empty()) {
-            QSharedPointer<Artist> artist(new Artist(artistName));
-            media->setArtist(artist);
-            d->db->persist(artist);
-        } else {
-            QSharedPointer<Artist> artist(results.begin().load());
-            media->setArtist(artist);
-        }
-
-        return true;
-    }
-    return false;
 }
