@@ -106,7 +106,7 @@ void PmcMetadataModel::showMediaType(MediaCenter::MediaType mediaType)
 
 void PmcMetadataModel::showAlbums()
 {
-    QList <QSharedPointer<Album> > mediaData = MediaLibrary::instance()->getAlbums();
+    QList <QSharedPointer<PmcAlbum> > mediaData = MediaLibrary::instance()->getAlbums();
 
     //TODO : Album updates
 
@@ -115,7 +115,7 @@ void PmcMetadataModel::showAlbums()
 
 void PmcMetadataModel::showArtist()
 {
-    QList <QSharedPointer<Artist> > mediaData = MediaLibrary::instance()->getArtist();
+    QList <QSharedPointer<PmcArtist> > mediaData = MediaLibrary::instance()->getArtists();
     handleNewArtists(mediaData);
 }
 
@@ -142,12 +142,12 @@ void PmcMetadataModel::handleNewMedia(const QList< QSharedPointer< PmcMedia > >&
     endInsertRows();
 }
 
-void PmcMetadataModel::handleNewAlbums(const QList< QSharedPointer< Album > >& mediaData)
+void PmcMetadataModel::handleNewAlbums(const QList< QSharedPointer< PmcAlbum > >& mediaData)
 {
     const int existingRowCount = rowCount();
 
     QList< QHash<int, QVariant> > mediaInfoToInsert;
-    foreach (QSharedPointer<Album> a, mediaData) {
+    foreach (QSharedPointer<PmcAlbum> a, mediaData) {
         QHash<int, QVariant> mediainfo;
         mediainfo.insert(Qt::DisplayRole, a->name());
         mediainfo.insert(MediaCenter::MediaTypeRole, "album");
@@ -161,11 +161,11 @@ void PmcMetadataModel::handleNewAlbums(const QList< QSharedPointer< Album > >& m
     endInsertRows();
 }
 
-void PmcMetadataModel::handleNewArtists(const QList< QSharedPointer<Artist> >& mediaData)
+void PmcMetadataModel::handleNewArtists(const QList< QSharedPointer< PmcArtist > >& mediaData)
 {
     const int existingRowCount = rowCount();
     QList< QHash<int, QVariant> > mediaInfoToInsert;
-    foreach (QSharedPointer<Artist> a, mediaData) {
+    foreach (QSharedPointer<PmcArtist> a, mediaData) {
         QHash<int, QVariant> mediainfo;
         mediainfo.insert(Qt::DisplayRole, a->name());
         mediainfo.insert(MediaCenter::MediaTypeRole, "artist");

@@ -23,11 +23,14 @@
 #include "mediacenter_export.h"
 #include "mediacenter.h"
 #include "pmcmedia.h"
+#include "pmcalbum.h"
+#include "pmcartist.h"
 
 #include <KUrl>
 
 #include <QtCore/QAbstractItemModel>
 #include <QSharedPointer>
+#include <QList>
 
 class QPixmap;
 class KFileItem;
@@ -56,8 +59,8 @@ signals:
 
 protected Q_SLOTS:
     void handleNewMedia(const QList<QSharedPointer<PmcMedia> > &media);
-    void handleNewAlbums(const QList< QSharedPointer< Album > > &mediaData);
-    void handleNewArtists(const QList< QSharedPointer< Artist > > &mediaData);
+    void handleNewAlbums(const QList< QSharedPointer< PmcAlbum > > &mediaData);
+    void handleNewArtists(const QList< QSharedPointer< PmcArtist > > &mediaData);
     void updateModel();
     void delayedPreview();
 

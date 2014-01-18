@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2014 Sinny Kumari <ksinny@gmail.com>                                *
+ *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,33 +16,26 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef PMCMEDIA_H
-#define PMCMEDIA_H
+#ifndef PMCALBUM_H
+#define PMCALBUM_H
 
-#include "media.h"
+#include "album.h"
 
-#include <QString>
+#include <QObject>
 #include <QSharedPointer>
 
-class PmcMedia : public QObject
+class PmcAlbum : public QObject
 {
     Q_OBJECT
 public:
-    explicit PmcMedia(const QSharedPointer< Media >& media, QObject* parent = 0);
-    ~PmcMedia();
+    explicit PmcAlbum(const QSharedPointer<Album> &album, QObject* parent = 0);
+    ~PmcAlbum();
 
-    const QString& sha() const;
-    const QString& title () const;
-    const QString& url() const;
-    const QString& thumbnail () const;
-    const QString& type() const;
-
-signals:
-    void updated();
+    const QString& name() const;
 
 private:
     class Private;
     Private * const d;
 };
 
-#endif // PMCMEDIA_H
+#endif // PMCALBUM_H

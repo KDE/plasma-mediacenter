@@ -24,7 +24,7 @@ public:
     QSharedPointer<Media> media;
 };
 
-PmcMedia::PmcMedia(QSharedPointer< Media > media, QObject* parent)
+PmcMedia::PmcMedia(const QSharedPointer< Media > &media, QObject* parent)
     : QObject(parent)
     , d(new Private())
 {

@@ -27,6 +27,8 @@
 
 #include "media.h"
 #include "pmcmedia.h"
+#include "pmcartist.h"
+#include "pmcalbum.h"
 
 class MEDIACENTER_EXPORT MediaLibrary : public QThread
 {
@@ -43,12 +45,14 @@ public:
 
     void updateMedia(const QHash<int, QVariant> &data);
     void updateMedia(const QString &url, const QHash<int, QVariant> &data);
-    QList<QSharedPointer <PmcMedia> > getMedia(const QString &type);
-    QList<QSharedPointer <Album> > getAlbums();
-    QList<QSharedPointer <Artist> > getArtist();
+    QList<QSharedPointer <PmcMedia> > getMedia(const QString &type) const;
+    QList< QSharedPointer< PmcAlbum > > getAlbums() const;
+    QList< QSharedPointer< PmcArtist > > getArtists() const;
 
 Q_SIGNALS:
     void newMedia(const QList< QSharedPointer<PmcMedia> > &media);
+    void newAlbums(const QList< QSharedPointer<PmcAlbum> > &album);
+    void newArtists(const QList< QSharedPointer<PmcArtist> > &artist);
 
 private Q_SLOTS:
     void processRemainingRequests();
