@@ -349,34 +349,21 @@ void MediaLibrary::emitNewMedia()
     }
 }
 
+#define PMC_ML_EMIT_IF_NEEDED(mutex, list, signal) \
+    { \
+        QMutexLocker l(&mutex); \
+        if (!list.isEmpty()) { \
+            qDebug() << "Emitting " << SIGNAL(signal); \
+            emit signal(list); \
+            list.clear(); \
+        } \
+    } \
+
 void MediaLibrary::emitNewMediaWithMediaList()
 {
-    {
-        QMutexLocker l(&d->mediaMutex);
-        if (!d->newMediaList.isEmpty()) {
-            qDebug() << "Emitting new media";
-            emit newMedia(d->newMediaList);
-            d->newMediaList.clear();
-        }
-    }
-
-    {
-        QMutexLocker l(&d->albumListMutex);
-        if (!d->newAlbumList.isEmpty()) {
-            qDebug() << "Emitting new Album";
-            emit newAlbums(d->newAlbumList);
-            d->newAlbumList.clear();
-        }
-    }
-
-    {
-        QMutexLocker l(&d->artistListMutex);
-        if (!d->newArtistList.isEmpty()) {
-            qDebug() << "Emitting new Artist";
-            emit newArtists(d->newArtistList);
-            d->newArtistList.clear();
-        }
-    }
+    PMC_ML_EMIT_IF_NEEDED(d->mediaMutex, d->newMediaList, newMedia)
+    PMC_ML_EMIT_IF_NEEDED(d->albumListMutex, d->newAlbumList, newAlbums)
+    PMC_ML_EMIT_IF_NEEDED(d->artistListMutex, d->newArtistList, newArtists)
 }
 
 QList< QSharedPointer< PmcAlbum > > MediaLibrary::getAlbums() const
