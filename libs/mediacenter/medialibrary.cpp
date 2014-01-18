@@ -283,8 +283,6 @@ void MediaLibrary::updateLibrary()
     for (MediaResult::iterator i=mediaResults.begin(); i!=mediaResults.end(); ++i) {
         QSharedPointer<Media> m = i.load();
         addMedia(m);
-        addAlbum(m->album());
-        addArtist(m->artist());
     }
 }
 
@@ -299,6 +297,9 @@ void MediaLibrary::addMedia(const QSharedPointer< Media >& m)
     d->pmcMediaByType[m->type()].append(pmcMedia);
 
     d->newMediaList.append(pmcMedia);
+
+    addAlbum(m->album());
+    addArtist(m->artist());
     emitNewMedia();
 }
 
