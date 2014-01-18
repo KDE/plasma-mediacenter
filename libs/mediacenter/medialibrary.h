@@ -24,6 +24,7 @@
 #include <QHash>
 #include <QThread>
 #include <QSharedPointer>
+#include <QMutex>
 
 #include "media.h"
 #include "pmcmedia.h"
@@ -73,8 +74,11 @@ private:
     void emitNewMedia();
     bool extractAndSaveAlbumInfo(const QPair< QString, QHash< int, QVariant > >& request, const QSharedPointer< Media >& media);
     bool extractAndSaveArtistInfo(const QPair< QString, QHash< int, QVariant > >& request, const QSharedPointer< Media >& media);
-    void addAlbum(const QSharedPointer< Album >& a);
-    void addArtist(const QSharedPointer<Artist>& artist);
+
+    inline void addAlbum(const QSharedPointer< Album >& album);
+    inline void addArtist(const QSharedPointer<Artist>& artist);
+    template <class X, class Y> void addAlbumOrArtist(
+        const QSharedPointer< X >& value, QMutex& mutex, QList< QSharedPointer< X > >& valueList, QList< QSharedPointer< Y > >& wrapperList, QList< QSharedPointer< Y > >& updatesList);
 };
 
 #endif // MEDIALIBRARY_H

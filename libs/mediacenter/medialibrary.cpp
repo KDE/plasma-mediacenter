@@ -19,7 +19,6 @@
 #include "medialibrary.h"
 #include <KDE/KGlobal>
 
-#include <QMutex>
 #include <QVariant>
 #include <QTimer>
 #include <QDebug>
@@ -303,32 +302,35 @@ void MediaLibrary::addMedia(const QSharedPointer< Media >& m)
     emitNewMedia();
 }
 
-void MediaLibrary::addAlbum(const QSharedPointer< Album >& a)
+void MediaLibrary::addAlbum(const QSharedPointer< Album >& album)
 {
-    if (a.isNull()) return;
-    QMutexLocker l(&d->albumListMutex);
-
-    if (!d->albumList.contains(a)) {
-        QSharedPointer<PmcAlbum> pa(new PmcAlbum(a));
-        d->albumList.append(a);
-        d->pmcAlbumList.append(pa);
-
-        d->newAlbumList.append(pa);
-        emitNewMedia();
-    }
+    addAlbumOrArtist<Album, PmcAlbum>(album, d->albumListMutex, d->albumList,
+                                      d->pmcAlbumList, d->newAlbumList);
 }
 
 void MediaLibrary::addArtist(const QSharedPointer< Artist >& artist)
 {
-    if (artist.isNull()) return;
-    QMutexLocker l(&d->artistListMutex);
+    addAlbumOrArtist<Artist, PmcArtist>(artist, d->artistListMutex,
+                                        d->artistList, d->pmcArtistList,
+                                        d->newArtistList);
+}
 
-    if (!d->artistList.contains(artist)) {
-        QSharedPointer<PmcArtist> pa(new PmcArtist(artist));
-        d->artistList.append(artist);
-        d->pmcArtistList.append(pa);
+template <class X, class Y>
+void MediaLibrary::addAlbumOrArtist(const QSharedPointer< X >& value,
+                                    QMutex &mutex,
+                                    QList< QSharedPointer< X > >& valueList,
+                                    QList< QSharedPointer< Y > >& wrapperList,
+                                    QList< QSharedPointer< Y > >& updatesList)
+{
+    if (value.isNull()) return;
+    QMutexLocker l(&mutex);
 
-        d->newArtistList.append(pa);
+    if (!valueList.contains(value)) {
+        QSharedPointer<Y> pa(new Y(value));
+        valueList.append(value);
+        wrapperList.append(pa);
+
+        updatesList.append(pa);
         emitNewMedia();
     }
 }
