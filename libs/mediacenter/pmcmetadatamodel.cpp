@@ -108,14 +108,19 @@ void PmcMetadataModel::showAlbums()
 {
     QList <QSharedPointer<PmcAlbum> > mediaData = MediaLibrary::instance()->getAlbums();
 
-    //TODO : Album updates
-
+    connect(MediaLibrary::instance(),
+            SIGNAL(newAlbums(QList<QSharedPointer<PmcAlbum> >)),
+            SLOT(handleNewAlbums(QList<QSharedPointer<PmcAlbum> >)));
     handleNewAlbums(mediaData);
 }
 
 void PmcMetadataModel::showArtist()
 {
     QList <QSharedPointer<PmcArtist> > mediaData = MediaLibrary::instance()->getArtists();
+
+    connect(MediaLibrary::instance(),
+            SIGNAL(newArtists(QList<QSharedPointer<PmcArtist> >)),
+            SLOT(handleNewArtists(QList<QSharedPointer<PmcArtist> >)));
     handleNewArtists(mediaData);
 }
 

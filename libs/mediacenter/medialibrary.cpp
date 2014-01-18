@@ -89,10 +89,12 @@ public:
     QTimer newMediaTimer;
 
     QMutex albumListMutex;
-    QList< QSharedPointer<PmcAlbum> > albumList;
+    QList< QSharedPointer<Album> > albumList;
+    QList< QSharedPointer<PmcAlbum> > pmcAlbumList;
 
     QMutex artistListMutex;
-    QList<QSharedPointer<PmcArtist> > artistList;
+    QList<QSharedPointer<Artist> > artistList;
+    QList<QSharedPointer<PmcArtist> > pmcArtistList;
 };
 
 MediaLibrary::MediaLibrary(QObject* parent)
@@ -100,6 +102,8 @@ MediaLibrary::MediaLibrary(QObject* parent)
     , d(new Private())
 {
     qRegisterMetaType< QList< QSharedPointer<PmcMedia> > >("QList< QSharedPointer<PmcMedia> >");
+    qRegisterMetaType< QList< QSharedPointer<PmcMedia> > >("QList< QSharedPointer<PmcAlbum> >");
+    qRegisterMetaType< QList< QSharedPointer<PmcMedia> > >("QList< QSharedPointer<PmcArtist> >");
 
     moveToThread(this);
 
@@ -195,7 +199,6 @@ bool MediaLibrary::extractAndSaveAlbumInfo(
     }
 
     if (!albumName.isEmpty() && albumName.length() < 250) {
-        qDebug() << "Album Name " << albumName;
         AlbumResult results (d->db->query<Album>(AlbumQuery::name == albumName));
         if (results.empty()) {
             QSharedPointer<Album> album(new Album(albumName));
@@ -276,7 +279,6 @@ void MediaLibrary::updateLibrary()
     odb::connection_ptr c (d->db->connection ());
     odb::transaction t (c->begin ());
 
-    //Media
     MediaResult mediaResults (d->db->query<Media>());
 
     for (MediaResult::iterator i=mediaResults.begin(); i!=mediaResults.end(); ++i) {
@@ -306,10 +308,14 @@ void MediaLibrary::addAlbum(const QSharedPointer< Album >& a)
     if (a.isNull()) return;
     QMutexLocker l(&d->albumListMutex);
 
-    QSharedPointer<PmcAlbum> pa(new PmcAlbum(a));
-    d->albumList.insert(pa);
+    if (!d->albumList.contains(a)) {
+        QSharedPointer<PmcAlbum> pa(new PmcAlbum(a));
+        d->albumList.append(a);
+        d->pmcAlbumList.append(pa);
 
-    emitNewMedia();
+        d->newAlbumList.append(pa);
+        emitNewMedia();
+    }
 }
 
 void MediaLibrary::addArtist(const QSharedPointer< Artist >& artist)
@@ -317,10 +323,14 @@ void MediaLibrary::addArtist(const QSharedPointer< Artist >& artist)
     if (artist.isNull()) return;
     QMutexLocker l(&d->artistListMutex);
 
-    QSharedPointer<PmcArtist> pa(new PmcArtist(artist));
-    d->artistList.insert(pa);
+    if (!d->artistList.contains(artist)) {
+        QSharedPointer<PmcArtist> pa(new PmcArtist(artist));
+        d->artistList.append(artist);
+        d->pmcArtistList.append(pa);
 
-    emitNewMedia();
+        d->newArtistList.append(pa);
+        emitNewMedia();
+    }
 }
 
 QList< QSharedPointer<PmcMedia> > MediaLibrary::getMedia(const QString& type) const
@@ -339,34 +349,44 @@ void MediaLibrary::emitNewMedia()
 
 void MediaLibrary::emitNewMediaWithMediaList()
 {
-    if (!d->newMediaList.isEmpty()) {
-        qDebug() << "Emitting new media";
-        emit newMedia(d->newMediaList);
-        d->newMediaList.clear();
+    {
+        QMutexLocker l(&d->mediaMutex);
+        if (!d->newMediaList.isEmpty()) {
+            qDebug() << "Emitting new media";
+            emit newMedia(d->newMediaList);
+            d->newMediaList.clear();
+        }
     }
-    if (!d->newAlbumList.isEmpty()) {
-        qDebug() << "Emitting new Album";
-        emit newAlbums(d->newAlbumList);
-        d->newAlbumList.clear();
+
+    {
+        QMutexLocker l(&d->albumListMutex);
+        if (!d->newAlbumList.isEmpty()) {
+            qDebug() << "Emitting new Album";
+            emit newAlbums(d->newAlbumList);
+            d->newAlbumList.clear();
+        }
     }
-    if (!d->newArtistList.isEmpty()) {
-        qDebug() << "Emitting new Artist";
-        emit newArtists(d->newArtistList);
-        d->newArtistList.clear();
+
+    {
+        QMutexLocker l(&d->artistListMutex);
+        if (!d->newArtistList.isEmpty()) {
+            qDebug() << "Emitting new Artist";
+            emit newArtists(d->newArtistList);
+            d->newArtistList.clear();
+        }
     }
 }
 
 QList< QSharedPointer< PmcAlbum > > MediaLibrary::getAlbums() const
 {
     QMutexLocker l(&d->albumListMutex);
-
-    return d->albumList;
+    return d->pmcAlbumList;
 }
 
 QList< QSharedPointer< PmcArtist > > MediaLibrary::getArtists() const
 {
     QMutexLocker l(&d->artistListMutex);
-    return d->artistList;
+    return d->pmcArtistList;
 }
 
 bool MediaLibrary::extractAndSaveArtistInfo(
@@ -379,7 +399,6 @@ bool MediaLibrary::extractAndSaveArtistInfo(
     }
 
     if (!artistName.isEmpty() && artistName.length() < 250) {
-        qDebug() << "Artist Name " << artistName;
         ArtistResult results (d->db->query<Artist>(ArtistQuery::name == artistName));
         if (results.empty()) {
             QSharedPointer<Artist> artist(new Artist(artistName));
