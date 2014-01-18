@@ -190,7 +190,7 @@ void MediaLibrary::processNextRequest()
 
 bool MediaLibrary::extractAndSaveAlbumInfo(
     const QPair<QString, QHash<int, QVariant> > &request,
-    const QSharedPointer<Media> &media)
+    QSharedPointer<Media> &media)
 {
     const QString albumName = request.second.value(MediaCenter::AlbumRole).toString();
     if (!media->album().isNull() && media->album()->name() == albumName) {
@@ -380,7 +380,7 @@ QList< QSharedPointer< PmcArtist > > MediaLibrary::getArtists() const
 
 bool MediaLibrary::extractAndSaveArtistInfo(
     const QPair< QString, QHash< int, QVariant > >& request,
-    const QSharedPointer< Media >& media)
+    QSharedPointer< Media >& media)
 {
     const QString artistName = request.second.value(MediaCenter::ArtistRole).toString();
     if (!media->artist().isNull() && media->artist()->name() == artistName) {

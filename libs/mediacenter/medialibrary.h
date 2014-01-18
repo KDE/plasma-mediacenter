@@ -72,8 +72,8 @@ private:
     void addMedia(const QSharedPointer< Media > &m);
     QSharedPointer<Media> mediaForSha(const QString &sha);
     void emitNewMedia();
-    bool extractAndSaveAlbumInfo(const QPair< QString, QHash< int, QVariant > >& request, const QSharedPointer< Media >& media);
-    bool extractAndSaveArtistInfo(const QPair< QString, QHash< int, QVariant > >& request, const QSharedPointer< Media >& media);
+    bool extractAndSaveAlbumInfo(const QPair< QString, QHash< int, QVariant > >& request, QSharedPointer< Media >& media);
+    bool extractAndSaveArtistInfo(const QPair< QString, QHash< int, QVariant > >& request, QSharedPointer< Media >& media);
 
     inline void addAlbum(const QSharedPointer< Album >& album);
     inline void addArtist(const QSharedPointer<Artist>& artist);
