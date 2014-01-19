@@ -23,6 +23,8 @@
 #include "metadatavideobackend.h"
 #include "metadatavideomodel.h"
 
+#include <libs/mediacenter/filtermediamodel.h>
+
 #include <Nepomuk2/Query/QueryParser>
 
 #include <QDebug>
@@ -42,7 +44,11 @@ bool MetadataVideoBackend::initImpl()
 {
     AbstractMetadataBackend::initImpl();
     MetadataVideoModel *model = new MetadataVideoModel(this);
-    ModelMetadata *metadata = new ModelMetadata(model, this);
+
+    FilterMediaModel *filteredModel = new FilterMediaModel(this);
+    filteredModel->setSourceModel(model);
+    ModelMetadata *metadata = new ModelMetadata(filteredModel, this);
+
     metadata->setSupportsSearch(true);
     handleBusySignals(model);
     setModel(metadata);
@@ -51,7 +57,9 @@ bool MetadataVideoBackend::initImpl()
 
 void MetadataVideoBackend::search(const QString& searchTerm)
 {
-    qobject_cast<PmcMetadataModel*>(model())->setSearchTerm(QString(searchTerm).prepend("*").append("*"));
+    if (model()) {
+        static_cast<FilterMediaModel *> (model())->setSearchText(searchTerm);
+    }
 }
 
 #include "metadatavideobackend.moc"

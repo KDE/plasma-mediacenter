@@ -37,6 +37,7 @@ set (plasmamediacenter_SRCS
     pmcmedia.cpp
     pmcalbum.cpp
     pmcartist.cpp
+    filtermediamodel.cpp
 )
 
 set (plasmamediacenter_ODB_SRCS
