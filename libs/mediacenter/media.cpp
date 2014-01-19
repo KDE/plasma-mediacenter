@@ -18,6 +18,7 @@
  ***********************************************************************************/
 
 #include "media.h"
+#include "mediacenter.h"
 
 #include <QCryptographicHash>
 #include <QTimer>

@@ -30,7 +30,6 @@
 
 #include "album.h"
 #include "artist.h"
-#include "mediacenter.h"
 
 #pragma db object
 class Media : public QObject
