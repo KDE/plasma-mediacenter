@@ -303,6 +303,8 @@ void MediaLibrary::updateLibrary()
         QSharedPointer<Media> m = i.load();
         addMedia(m);
     }
+
+//     d->db->tracer(odb::stderr_tracer);
 }
 
 void MediaLibrary::addMedia(const QSharedPointer< Media >& m)
