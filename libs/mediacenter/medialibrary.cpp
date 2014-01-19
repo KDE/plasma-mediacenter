@@ -127,16 +127,16 @@ void MediaLibrary::processRemainingRequests()
     Q_ASSERT(thread() == this);
 
     bool hasProcessedAnyRequest = false;
-    odb::core::transaction t(d->db->begin());
 
+    if (!areThereUpdateRequests()) {
+        return;
+    }
+
+    odb::core::transaction t(d->db->begin());
     while (areThereUpdateRequests()) {
-        hasProcessedAnyRequest = true;
         processNextRequest();
     }
-
-    if (hasProcessedAnyRequest) {
-        t.commit();
-    }
+    t.commit();
 }
 
 void MediaLibrary::processNextRequest()
