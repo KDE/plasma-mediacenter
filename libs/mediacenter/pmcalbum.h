@@ -32,6 +32,7 @@ public:
     ~PmcAlbum();
 
     const QString& name() const;
+    const QString& albumArtist() const;
 
 private:
     class Private;

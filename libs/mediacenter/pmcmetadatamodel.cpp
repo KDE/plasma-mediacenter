@@ -156,6 +156,8 @@ void PmcMetadataModel::handleNewAlbums(const QList< QSharedPointer< PmcAlbum > >
         QHash<int, QVariant> mediainfo;
         mediainfo.insert(Qt::DisplayRole, a->name());
         mediainfo.insert(MediaCenter::MediaTypeRole, "album");
+        //MediaUrlRole is abused for albums to pass on the artist name
+        mediainfo.insert(MediaCenter::MediaUrlRole, a->albumArtist());
         mediaInfoToInsert.append(mediainfo);
     }
 
@@ -187,7 +189,8 @@ void PmcMetadataModel::handleNewArtists(const QList< QSharedPointer< PmcArtist >
 
 QVariant PmcMetadataModel::metadataValueForRole(const QModelIndex& index, int role) const
 {
-    return d->metadataValues.at(index.row()).value(role);
+    return index.isValid() && index.row() > 0 && index.row() < d->metadataValues.size() ?
+        d->metadataValues.at(index.row()).value(role) : QVariant();
 }
 
 QVariant PmcMetadataModel::data(const QModelIndex& index, int role) const
@@ -226,7 +229,6 @@ QVariant PmcMetadataModel::decorationForMetadata(const QVariant &metadataValue, 
             if (PmcImageCache::instance()->containsId(albumUri)) {
                 return QString("image://%1/%2").arg(PmcImageProvider::identificationString, albumUri);
             } else {
-                //FIXME: Album no longer has artist
                 //MediaUrlRole is abused for albums to pass on the artist name
                 const QString artistNameForAlbum = metadataValueForRole(index, MediaCenter::MediaUrlRole).toString();
                 LastFmImageFetcher::instance()->fetchImage("album", QPersistentModelIndex(index), artistNameForAlbum, albumName);

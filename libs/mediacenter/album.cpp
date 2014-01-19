@@ -35,3 +35,8 @@ const QString& Album::name() const
 {
     return m_name;
 }
+
+const QString& Album::albumArtist() const
+{
+    return m_media.size() ? m_media.at(0).toStrongRef()->artist()->name() : QString();
+}
