@@ -192,16 +192,14 @@ bool MediaLibrary::extractAndSaveArtistInfo(
     const QPair< QString, QHash< int, QVariant > >& request,
     QSharedPointer< Media >& media)
 {
-    const QString artistName = request.second.value(MediaCenter::ArtistRole).toString();
+    QString artistName = request.second.value(MediaCenter::ArtistRole).toString();
+
+    if (artistName.isEmpty())    artistName = "Unknown Artist";
     if (!media->artist().isNull() && media->artist()->name() == artistName) {
         return false;
     }
 
-    QSharedPointer<Artist> artist = loadOrCreate<Artist>(artistName, media);
-
-    if (artist.isNull()) {
-        return false;
-    }
+    QSharedPointer<Artist> artist = loadOrCreate<Artist>(artistName);
 
     media->setArtist(artist);
     return true;
@@ -211,41 +209,31 @@ bool MediaLibrary::extractAndSaveAlbumInfo(
     const QPair<QString, QHash<int, QVariant> > &request,
     QSharedPointer<Media> &media)
 {
-    const QString albumName = request.second.value(MediaCenter::AlbumRole).toString();
+    QString albumName = request.second.value(MediaCenter::AlbumRole).toString();
+
+    if (albumName.isEmpty())    albumName = "Unknown Album";
     if (!media->album().isNull() && media->album()->name() == albumName) {
         return false;
     }
 
-    QSharedPointer<Album> album = loadOrCreate<Album>(albumName, media);
-
-    if (album.isNull()) {
-        return false;
-    }
+    QSharedPointer<Album> album = loadOrCreate<Album>(albumName);
 
     media->setAlbum(album);
     return true;
 }
 
-template <class X> QSharedPointer<X> MediaLibrary::loadOrCreate(const QString &name, QSharedPointer<Media> &media)
+template <typename T>
+typename odb::object_traits< T >::pointer_type MediaLibrary::loadOrCreate(
+    const typename odb::object_traits< T >::id_type& id)
 {
-    typedef odb::query<X> XQuery;
-    typedef odb::result<X> XResult;
-
-    if (!name.isEmpty() && name.length() < 250) {
-        XResult results (d->db->query<X>(XQuery::name == name));
-        if (results.empty()) {
-            QSharedPointer<X> x(new X(name));
-            d->db->persist(x);
-            return x;
-        } else {
-            QSharedPointer<X> x(results.begin().load());
-            return x;
-        }
+    try {
+        return d->db->load<T>(id);
+    } catch (odb::object_not_persistent e) {
+        typename odb::object_traits< T >::pointer_type p(new T(id));
+        d->db->persist(p);
+        return p;
     }
-
-    return QSharedPointer<X>();
 }
-
 
 bool MediaLibrary::mediaExists(const QString& sha) const
 {

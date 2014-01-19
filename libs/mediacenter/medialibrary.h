@@ -21,6 +21,7 @@
 
 #include "mediacenter_export.h"
 
+#include <odb/traits.hxx>
 #include <QHash>
 #include <QThread>
 #include <QSharedPointer>
@@ -74,7 +75,9 @@ private:
     void emitNewMedia();
     bool extractAndSaveAlbumInfo(const QPair< QString, QHash< int, QVariant > >& request, QSharedPointer< Media >& media);
     bool extractAndSaveArtistInfo(const QPair< QString, QHash< int, QVariant > >& request, QSharedPointer< Media >& media);
-    template <class X> QSharedPointer<X> loadOrCreate(const QString& name, QSharedPointer< Media >& media);
+
+    template <typename T>
+    typename odb::object_traits<T>::pointer_type loadOrCreate (const typename odb::object_traits<T>::id_type& id);
 
     inline void addAlbum(const QSharedPointer< Album >& album);
     inline void addArtist(const QSharedPointer<Artist>& artist);
