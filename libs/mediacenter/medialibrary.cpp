@@ -35,11 +35,6 @@
 #include <odb/sqlite/database.hxx>
 #include <odb/sqlite/exceptions.hxx>
 
-typedef odb::query<Album> AlbumQuery;
-typedef odb::result<Album> AlbumResult;
-typedef odb::query<Artist> ArtistQuery;
-typedef odb::result<Artist> ArtistResult;
-
 typedef odb::result<Media> MediaResult;
 
 class MediaLibrary::Singleton
