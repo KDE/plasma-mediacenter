@@ -18,14 +18,9 @@
 
 #include "album.h"
 
-#include "artist.h"
-
-Album::Album(const Album::AlbumAndArtistNames& albumAndArtistNames)
+Album::Album(const QString& name)
+    : m_name(name)
 {
-    Q_ASSERT(!albumAndArtistNames.albumName.isEmpty());
-    Q_ASSERT(!albumAndArtistNames.artistName.isEmpty());
-
-    m_albumAndArtistNames = albumAndArtistNames;
 }
 
 Album::Album()
@@ -38,27 +33,5 @@ Album::~Album()
 
 const QString& Album::name() const
 {
-    return m_albumAndArtistNames.albumName;
-}
-
-const QSharedPointer< Artist > Album::albumArtist() const
-{
-    return m_albumArtist;
-}
-
-bool Album::setAlbumArtist(const QSharedPointer< Artist >& artist)
-{
-    if (artist && artist->name() != m_albumAndArtistNames.artistName) {
-        m_albumArtist = artist;
-        m_albumAndArtistNames.artistName = artist->name();
-        return true;
-    }
-
-    return false;
-}
-
-bool operator<(const Album::AlbumAndArtistNames &lhs,
-                              const Album::AlbumAndArtistNames &rhs)
-{
-    return (lhs.albumName < rhs.albumName) && (lhs.artistName < rhs.artistName);
+    return m_name;
 }

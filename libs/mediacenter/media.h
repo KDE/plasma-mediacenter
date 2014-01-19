@@ -55,7 +55,10 @@ public:
     static QString calculateSha(const QString& url);
 
     const QSharedPointer<Album>& album() const;
-    bool setAlbum(const QSharedPointer< Album >& album);
+    void setAlbum(const QSharedPointer<Album> &album);
+
+    const QSharedPointer<Artist>& artist() const;
+    void setArtist(const QSharedPointer<Artist> &artist);
 
 signals:
     void updated();
@@ -72,6 +75,7 @@ private:
     QString m_type;
 
     QSharedPointer<Album> m_album;
+    QSharedPointer<Artist> m_artist;
 
     class Private;
     #pragma db transient
