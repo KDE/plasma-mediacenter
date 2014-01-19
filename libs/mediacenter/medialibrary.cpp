@@ -53,9 +53,7 @@ MediaLibrary *MediaLibrary::instance()
 class MediaLibrary::Private
 {
 public:
-    Private() : session(0)
-    {
-    }
+    Private() : session(0) { }
 
     ~Private()
     {
@@ -189,7 +187,9 @@ bool MediaLibrary::extractAndSaveArtistInfo(
 {
     QString artistName = request.second.value(MediaCenter::ArtistRole).toString();
 
-    if (artistName.isEmpty())    artistName = "Unknown Artist";
+    if (artistName.isEmpty()) {
+        artistName = "Unknown Artist";
+    }
     if (!media->artist().isNull() && media->artist()->name() == artistName) {
         return false;
     }
@@ -206,7 +206,9 @@ bool MediaLibrary::extractAndSaveAlbumInfo(
 {
     QString albumName = request.second.value(MediaCenter::AlbumRole).toString();
 
-    if (albumName.isEmpty())    albumName = "Unknown Album";
+    if (albumName.isEmpty()){
+        albumName = "Unknown Album";
+    }
     if (!media->album().isNull() && media->album()->name() == albumName) {
         return false;
     }
