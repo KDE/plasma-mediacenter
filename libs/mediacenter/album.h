@@ -26,27 +26,42 @@
 #include <odb/core.hxx>
 
 class Media;
+class Artist;
 
-//TODO: Album should also know its artist
 #pragma db object
 class Album
 {
 public:
-    Album(const QString &name);
+    #pragma db value
+    class AlbumAndArtistNames
+    {
+    public:
+        QString albumName;
+        QString artistName;
+        friend bool operator<(const Album::AlbumAndArtistNames &lhs,
+                              const Album::AlbumAndArtistNames &rhs);
+    };
+
+    Album(const AlbumAndArtistNames &albumAndArtistNames);
     ~Album();
 
     const QString& name() const;
+
+    bool setAlbumArtist(const QSharedPointer<Artist> &artist);
+    const QSharedPointer<Artist> albumArtist() const;
 
 private:
     Album();
     friend class odb::access;
 
-    #pragma db id
-    QString m_name;
-
     //See http://codesynthesis.com/products/odb/doc/manual.xhtml#6.2
     #pragma db inverse(m_album)
     QList< QWeakPointer<Media> > m_media;
+
+    QSharedPointer<Artist> m_albumArtist;
+
+    #pragma db id
+    Album::AlbumAndArtistNames m_albumAndArtistNames;
 };
 
 #include "media.h"

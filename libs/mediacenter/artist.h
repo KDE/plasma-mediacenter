@@ -25,6 +25,8 @@
 
 #include <odb/core.hxx>
 
+#include "album.h"
+
 class Media;
 
 #pragma db object
@@ -44,8 +46,8 @@ private:
     QString m_name;
 
     //See http://codesynthesis.com/products/odb/doc/manual.xhtml#6.2
-    #pragma db inverse(m_artist)
-    QList< QWeakPointer<Media> > m_media;
+    #pragma db inverse(m_albumArtist)
+    QList< QWeakPointer<Album> > m_albums;
 };
 
 #include "media.h"

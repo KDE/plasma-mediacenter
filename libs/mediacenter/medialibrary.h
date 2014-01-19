@@ -25,6 +25,7 @@
 #include <QThread>
 #include <QSharedPointer>
 #include <QMutex>
+#include <odb/sqlite/query.hxx>
 
 #include "media.h"
 #include "pmcmedia.h"
@@ -72,9 +73,8 @@ private:
     void addMedia(const QSharedPointer< Media > &m);
     QSharedPointer<Media> mediaForSha(const QString &sha);
     void emitNewMedia();
-    bool extractAndSaveAlbumInfo(const QPair< QString, QHash< int, QVariant > >& request, QSharedPointer< Media >& media);
-    bool extractAndSaveArtistInfo(const QPair< QString, QHash< int, QVariant > >& request, QSharedPointer< Media >& media);
-    template <class X> QSharedPointer<X> loadOrCreate(const QString& name, QSharedPointer< Media >& media);
+    bool extractAndSaveAlbumAndArtistInfo(const QPair< QString, QHash< int, QVariant > >& request, QSharedPointer< Media >& media);
+    template <class X> QSharedPointer<X> loadOrCreate(const QString& name, QSharedPointer< Media >& media, odb::sqlite::query_base query_params, bool &created = bool());
 
     inline void addAlbum(const QSharedPointer< Album >& album);
     inline void addArtist(const QSharedPointer<Artist>& artist);

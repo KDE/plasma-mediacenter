@@ -150,20 +150,17 @@ void MediaLibrary::processNextRequest()
 {
     QPair<QString, QHash<int, QVariant> > request = takeRequest();
 
-//     qDebug() << "Process " << request.first;
     const QString mediaSha = Media::calculateSha(request.first);
     if (mediaExists(mediaSha)) {
         QSharedPointer<Media> media = mediaForSha(mediaSha);
 
         bool wasUpdated = false;
-        foreach(int role, request.second.keys()) {
-            if (role == MediaCenter::AlbumRole) {
-                wasUpdated = wasUpdated || extractAndSaveAlbumInfo(request, media);
-            } else if (role == MediaCenter::ArtistRole) {
-                wasUpdated = wasUpdated || extractAndSaveArtistInfo(request, media);
-            } else {
-                wasUpdated = wasUpdated || media->setValueForRole(role, request.second.value(role));
-            }
+        wasUpdated = wasUpdated || media->setTitle(request.second.value(Qt::DisplayRole).toString());
+        wasUpdated = wasUpdated || media->setThumbnail(request.second.value(Qt::DecorationRole).toString());
+        wasUpdated = wasUpdated || media->setType(request.second.value(MediaCenter::MediaTypeRole).toString());
+
+        if (media->type() == "audio") {
+            wasUpdated = wasUpdated || extractAndSaveAlbumAndArtistInfo(request, media);
         }
 
         if (wasUpdated) {
@@ -172,14 +169,13 @@ void MediaLibrary::processNextRequest()
         }
     } else {
         QSharedPointer<Media> media(new Media(request.first));
-        foreach(int role, request.second.keys()) {
-            if (role == MediaCenter::AlbumRole) {
-                extractAndSaveAlbumInfo(request, media);
-            } else if(role == MediaCenter::ArtistRole) {
-                extractAndSaveArtistInfo(request, media);
-            } else {
-                media->setValueForRole(role, request.second.value(role));
-            }
+
+        media->setTitle(request.second.value(Qt::DisplayRole).toString());
+        media->setThumbnail(request.second.value(Qt::DecorationRole).toString());
+        media->setType(request.second.value(MediaCenter::MediaTypeRole).toString());
+
+        if (media->type() == "audio") {
+            extractAndSaveAlbumAndArtistInfo(request, media);
         }
 
         addMedia(media);
@@ -188,61 +184,86 @@ void MediaLibrary::processNextRequest()
     }
 }
 
-bool MediaLibrary::extractAndSaveArtistInfo(
-    const QPair< QString, QHash< int, QVariant > >& request,
-    QSharedPointer< Media >& media)
-{
-    const QString artistName = request.second.value(MediaCenter::ArtistRole).toString();
-    if (!media->artist().isNull() && media->artist()->name() == artistName) {
-        return false;
-    }
-
-    QSharedPointer<Artist> artist = loadOrCreate<Artist>(artistName, media);
-
-    if (artist.isNull()) {
-        return false;
-    }
-
-    media->setArtist(artist);
-    return true;
-}
-
-bool MediaLibrary::extractAndSaveAlbumInfo(
+bool MediaLibrary::extractAndSaveAlbumAndArtistInfo(
     const QPair<QString, QHash<int, QVariant> > &request,
     QSharedPointer<Media> &media)
 {
-    const QString albumName = request.second.value(MediaCenter::AlbumRole).toString();
-    if (!media->album().isNull() && media->album()->name() == albumName) {
-        return false;
+    bool modified = false;
+
+    QString albumName = request.second.value(MediaCenter::AlbumRole).toString();
+    QString artistName = request.second.value(MediaCenter::ArtistRole).toString();
+    qDebug() << "Extracting " << albumName << artistName;
+
+    if (albumName.isEmpty()) {
+        albumName = "Unknown Album";
+    }
+    if (artistName.isEmpty()) {
+        artistName = "Unknown Artist";
+    }
+    //FIXME: RESTORE THIS
+//     if (!media->album().isNull() && media->album()->name() == albumName
+//         || albumName.isEmpty())
+//     {
+//         return false;
+//     }
+
+    bool artistCreated = false;
+    QSharedPointer<Artist> artist;
+    try {
+        artist = QSharedPointer<Artist>(d->db->load<Artist>(artistName));
+    } catch(odb::object_not_persistent e) {
+        artist = QSharedPointer<Artist>(new Artist(artistName));
+        artistCreated = true;
     }
 
-    QSharedPointer<Album> album = loadOrCreate<Album>(albumName, media);
-
-    if (album.isNull()) {
-        return false;
+    if (artistCreated) {
+        d->db->persist(artist);
     }
 
-    media->setAlbum(album);
-    return true;
+    bool albumCreated = false;
+    QSharedPointer<Album> album;
+    Album::AlbumAndArtistNames id; id.albumName=albumName; id.artistName=artistName;
+
+    try {
+        album = QSharedPointer<Album>(d->db->load<Album>(id));
+    } catch(odb::object_not_persistent e) {
+        album = QSharedPointer<Album>(new Album(id));
+        albumCreated = true;
+    }
+
+    if (albumCreated) {
+        d->db->persist(album);
+    }
+
+    if (media->setAlbum(album)) {
+        modified = true;
+    }
+
+    modified = modified || artistCreated || albumCreated;
+    qDebug() << media->album()->name();
+    return modified;
 }
 
-template <class X> QSharedPointer<X> MediaLibrary::loadOrCreate(const QString &name, QSharedPointer<Media> &media)
+template <class X> QSharedPointer<X> MediaLibrary::loadOrCreate(
+    const QString& name, QSharedPointer< Media >& media, odb::sqlite::query_base query_params, bool& created)
 {
     typedef odb::query<X> XQuery;
     typedef odb::result<X> XResult;
 
     if (!name.isEmpty() && name.length() < 250) {
-        XResult results (d->db->query<X>(XQuery::name == name));
+        XResult results (d->db->query<X>(query_params));
         if (results.empty()) {
             QSharedPointer<X> x(new X(name));
-            d->db->persist(x);
+            created = true;
             return x;
         } else {
             QSharedPointer<X> x(results.begin().load());
+            created = false;
             return x;
         }
     }
 
+    //TODO: Handle this in the callers
     return QSharedPointer<X>();
 }
 
@@ -332,8 +353,10 @@ void MediaLibrary::addMedia(const QSharedPointer< Media >& m)
 
     d->newMediaList.append(pmcMedia);
 
-    addAlbum(m->album());
-    addArtist(m->artist());
+    if (m->type() == "audio") {
+        addAlbum(m->album());
+        addArtist(m->album()->albumArtist());
+    }
     emitNewMedia();
 }
 

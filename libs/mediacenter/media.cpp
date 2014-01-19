@@ -140,17 +140,11 @@ const QSharedPointer< Album >& Media::album() const
     return m_album;
 }
 
-void Media::setAlbum(const QSharedPointer< Album >& album)
+bool Media::setAlbum(const QSharedPointer< Album >& album)
 {
-    m_album = album;
-}
-
-const QSharedPointer< Artist >& Media::artist() const
-{
-    return m_artist;
-}
-
-void Media::setArtist(const QSharedPointer< Artist >& artist)
-{
-    m_artist = artist;
+    if (m_album != album) {
+        m_album = album;
+        return true;
+    }
+    return false;
 }
