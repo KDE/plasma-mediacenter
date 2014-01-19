@@ -52,7 +52,6 @@ public:
 
     Q_INVOKABLE void searchArtist(const QString &artist);
     Q_INVOKABLE void searchAlbum(const QString &album);
-    Q_INVOKABLE void searchMusic(const QString &music);
 
     Q_INVOKABLE void addAllSongsToPlaylist( QObject* playlistModel );
     Q_INVOKABLE void stopAddingSongsToPlaylist();

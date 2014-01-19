@@ -26,6 +26,7 @@
 
 #include <libs/mediacenter/pmcmetadatamodel.h>
 #include <libs/mediacenter/playlistmodel.h>
+#include <libs/mediacenter/filtermediamodel.h>
 
 #include <Nepomuk2/Vocabulary/NMM>
 #include <Nepomuk2/Vocabulary/NFO>
@@ -71,9 +72,17 @@ bool MetadataMusicBackend::initImpl()
     m_albumsModel->setDefaultDecoration("pmcnocover");
     connect(m_musicModel, SIGNAL(modelReset()), SLOT(musicModelReset()));
 
-    m_musicModelMetadata = new ModelMetadata(m_musicModel, this);
-    m_albumsModelMetadata = new ModelMetadata(m_albumsModel, this);
-    m_artistsModelMetadata = new ModelMetadata(m_artistsModel, this);
+    FilterMediaModel *musicFilteredModel = new FilterMediaModel(this);
+    musicFilteredModel->setSourceModel(m_musicModel);
+    m_musicModelMetadata = new ModelMetadata(musicFilteredModel, this);
+
+    FilterMediaModel *albumFilteredModel = new FilterMediaModel(this);
+    albumFilteredModel->setSourceModel(m_albumsModel);
+    m_albumsModelMetadata = new ModelMetadata(albumFilteredModel, this);
+
+    FilterMediaModel *artistFilteredModel = new FilterMediaModel(this);
+    artistFilteredModel->setSourceModel(m_artistsModel);
+    m_artistsModelMetadata = new ModelMetadata(artistFilteredModel, this);
 
     m_albumsModelMetadata->setName("Albums");
     m_artistsModelMetadata->setName("Artists");
@@ -157,11 +166,6 @@ void MetadataMusicBackend::searchAlbum(const QString& album)
 void MetadataMusicBackend::searchArtist(const QString& artist)
 {
     m_artistsModel->setSearchTerm(artist);
-}
-
-void MetadataMusicBackend::searchMusic(const QString& music)
-{
-    m_musicModel->setSearchTerm(music);
 }
 
 void MetadataMusicBackend::addAllSongsToPlaylist (QObject* playlistModel)
@@ -251,13 +255,7 @@ void MetadataMusicBackend::handleButtonClick(const QString& buttonName)
 
 void MetadataMusicBackend::searchModel(const QString& searchTerm, QAbstractItemModel* model)
 {
-    if (model == m_musicModel) {
-        searchMusic(searchTerm);
-    } else if (model == m_artistsModel) {
-        searchArtist(searchTerm);
-    } else if (model == m_albumsModel) {
-        searchAlbum(searchTerm);
-    }
+    static_cast<FilterMediaModel *> (model)->setSearchText(searchTerm);
 }
 
 #include "metadatamusicbackend.moc"
