@@ -11,6 +11,7 @@ set(plasma-mediacenter_SRCS
     settings.cpp
     main.cpp
     mainwindow.cpp
+    application.cpp
 )
 
 kde4_add_executable(plasma-mediacenter ${plasma-mediacenter_SRCS})

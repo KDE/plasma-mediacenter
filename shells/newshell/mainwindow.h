@@ -26,6 +26,7 @@
 
 #include <QDeclarativeView>
 #include <QtCore/QTimer>
+#include "application.h"
 
 class QKeyEvent;
 class QMouseEvent;
@@ -36,7 +37,7 @@ class MainWindow : public KMainWindow
     Q_PROPERTY(bool mousePointerAutoHide READ mousePointerAutoHide
                 WRITE setMousePointerAutoHide NOTIFY mousePointerAutoHideChanged)
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(Application *parent);
 
     bool mousePointerAutoHide() const;
     void setMousePointerAutoHide(bool value);

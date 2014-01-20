@@ -20,10 +20,11 @@
 #include <KDE/KApplication>
 #include <KDE/KAboutData>
 #include <KDE/KCmdLineArgs>
+#include <KDE/KUniqueApplication>
 
 #include <Plasma/Theme>
+#include "application.h"
 
-#include "mainwindow.h"
 
 int main(int argc, char *argv[])
 {
@@ -61,10 +62,13 @@ int main(int argc, char *argv[])
     options.add("disable-opengl", ki18n("Starts Plasma Media Center without OpenGL support"));
     options.add("+[Url]", ki18nc("@info:shell", "Document to open"));
     KCmdLineArgs::addCmdLineOptions(options);
+    KUniqueApplication::addCmdLineOptions();
 
-    KApplication app;
+    if( !KUniqueApplication::start() ) {
+        qDebug() << "Plasma Mediacenter is already running";
+        return 0;
+    }
 
-    MainWindow *mw  = new MainWindow;
-    mw->show();
+    Application app;
     return app.exec();
 }

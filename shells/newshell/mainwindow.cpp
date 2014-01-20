@@ -48,8 +48,8 @@
 #include <QDebug>
 #include <QTimer>
 
-MainWindow::MainWindow(QWidget *parent)
-    : KMainWindow(parent)
+MainWindow::MainWindow(Application *parent)
+    : KMainWindow(dynamic_cast <QWidget *> (parent))
     , m_mousePointerAutoHide(false)
 {
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
