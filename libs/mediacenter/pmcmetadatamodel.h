@@ -45,7 +45,6 @@ public:
     virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
 
     void showMediaType(MediaCenter::MediaType mediaType);
-    void setSearchTerm(const QString &searchTerm);
     void setDefaultDecoration(const QVariant &decoration);
 
 public Q_SLOTS:

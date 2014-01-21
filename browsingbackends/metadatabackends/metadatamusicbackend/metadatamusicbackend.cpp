@@ -158,16 +158,6 @@ void MetadataMusicBackend::updateModelAccordingToFilters()
     }
 }
 
-void MetadataMusicBackend::searchAlbum(const QString& album)
-{
-    m_albumsModel->setSearchTerm(album);
-}
-
-void MetadataMusicBackend::searchArtist(const QString& artist)
-{
-    m_artistsModel->setSearchTerm(artist);
-}
-
 void MetadataMusicBackend::addAllSongsToPlaylist (QObject* playlistModel)
 {
     m_shallAddMediaToPlaylist = true;

@@ -332,11 +332,6 @@ void PmcMetadataModel::resetModel()
     endResetModel();
 }
 
-void PmcMetadataModel::setSearchTerm(const QString& searchTerm)
-{
-    kDebug() << "NOT IMPLEMENTED!!";
-}
-
 void PmcMetadataModel::setDefaultDecoration ( const QVariant& decoration )
 {
     d->defaultDecoration = decoration;

@@ -50,9 +50,6 @@ public:
     void setArtistFilter(const QString &filter);
     void setAlbumFilter(const QString &filter);
 
-    Q_INVOKABLE void searchArtist(const QString &artist);
-    Q_INVOKABLE void searchAlbum(const QString &album);
-
     Q_INVOKABLE void addAllSongsToPlaylist( QObject* playlistModel );
     Q_INVOKABLE void stopAddingSongsToPlaylist();
 
