@@ -58,7 +58,7 @@ bool MetadataVideoBackend::initImpl()
 void MetadataVideoBackend::search(const QString& searchTerm)
 {
     if (model()) {
-        static_cast<FilterMediaModel *> (model())->setSearchText(searchTerm);
+        static_cast<FilterMediaModel *> (model())->setFilter(Qt::DisplayRole, searchTerm);
     }
 }
 

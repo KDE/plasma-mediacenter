@@ -20,7 +20,8 @@
 
 FilterMediaModel::FilterMediaModel(QObject* parent): QSortFilterProxyModel(parent)
 {
-
+    setSortCaseSensitivity(Qt::CaseInsensitive);
+    setDynamicSortFilter(true);
 }
 
 FilterMediaModel::~FilterMediaModel()
@@ -34,18 +35,39 @@ bool FilterMediaModel::filterAcceptsRow(int source_row, const QModelIndex& sourc
     if(!sourceModel()) {
         return false;
     }
-    if (m_searchText == "") {
+
+    if (m_filters.keys().isEmpty()) {
         return true;
     }
 
-    return sourceModel()->data(sourceModel()->index(source_row, 0),
-                               Qt::DisplayRole).toString().contains(m_searchText,Qt::CaseInsensitive);
+    const QModelIndex index = sourceModel()->index(source_row, 0);
+
+    Q_FOREACH (int role, m_filters.keys()) {
+        const QVariant value = m_filters.value(role);
+        if (value.canConvert(QVariant::String)) {
+            if (!sourceModel()->data(index, role).toString().contains(
+                value.toString(), sortCaseSensitivity())) {
+                return false;
+            }
+        }
+    }
+
+    return true;
 }
 
-void FilterMediaModel::setSearchText(const QString& text)
+void FilterMediaModel::addFilter(int role, const QVariant& filterValue)
 {
-    beginResetModel();
-    m_searchText = text;
-    endResetModel();
+    m_filters.insert(role, filterValue);
+    invalidateFilter();
 }
 
+void FilterMediaModel::clearFilters()
+{
+    return m_filters.clear();
+}
+
+void FilterMediaModel::setFilter(int role, const QVariant& filterValue)
+{
+    clearFilters();
+    addFilter(role, filterValue);
+}

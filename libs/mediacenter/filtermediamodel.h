@@ -29,10 +29,13 @@ public:
     FilterMediaModel(QObject* parent = 0);
     ~FilterMediaModel();
     virtual bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const;
-    void setSearchText (const QString& text);
+
+    void setFilter(int role, const QVariant &filterValue);
+    void addFilter(int role, const QVariant &filterValue);
+    void clearFilters();
 
 private:
-    QString m_searchText;
+    QHash<int, QVariant> m_filters;
 };
 
 #endif // FILTERMEDIAMODEL_H
