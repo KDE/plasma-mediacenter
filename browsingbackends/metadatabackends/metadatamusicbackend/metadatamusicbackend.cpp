@@ -72,17 +72,17 @@ bool MetadataMusicBackend::initImpl()
     m_albumsModel->setDefaultDecoration("pmcnocover");
     connect(m_musicModel, SIGNAL(modelReset()), SLOT(musicModelReset()));
 
-    FilterMediaModel *musicFilteredModel = new FilterMediaModel(this);
-    musicFilteredModel->setSourceModel(m_musicModel);
-    m_musicModelMetadata = new ModelMetadata(musicFilteredModel, this);
+    m_musicFilteredModel = new FilterMediaModel(this);
+    m_musicFilteredModel->setSourceModel(m_musicModel);
+    m_musicModelMetadata = new ModelMetadata(m_musicFilteredModel, this);
 
-    FilterMediaModel *albumFilteredModel = new FilterMediaModel(this);
-    albumFilteredModel->setSourceModel(m_albumsModel);
-    m_albumsModelMetadata = new ModelMetadata(albumFilteredModel, this);
+    m_albumFilteredModel = new FilterMediaModel(this);
+    m_albumFilteredModel->setSourceModel(m_albumsModel);
+    m_albumsModelMetadata = new ModelMetadata(m_albumFilteredModel, this);
 
-    FilterMediaModel *artistFilteredModel = new FilterMediaModel(this);
-    artistFilteredModel->setSourceModel(m_artistsModel);
-    m_artistsModelMetadata = new ModelMetadata(artistFilteredModel, this);
+    m_artistFilteredModel = new FilterMediaModel(this);
+    m_artistFilteredModel->setSourceModel(m_artistsModel);
+    m_artistsModelMetadata = new ModelMetadata(m_artistFilteredModel, this);
 
     m_albumsModelMetadata->setName("Albums");
     m_artistsModelMetadata->setName("Artists");
@@ -136,25 +136,15 @@ void MetadataMusicBackend::setArtistFilter(const QString& filter)
     updateModelAccordingToFilters();
 }
 
-void MetadataMusicBackend::clearFilters()
-{
-    m_musicModelMetadata->setHeaderText(QString());
-    kDebug() << "************** CLEAR ALL FILTERS NOT IMPLEMENTED!!";
-}
-
 void MetadataMusicBackend::updateModelAccordingToFilters()
 {
-    clearFilters();
+    FilterMediaModel *filterModel = static_cast<FilterMediaModel *> (m_musicFilteredModel);
 
     if (!m_albumFilter.isEmpty()) {
-        Nepomuk2::Resource r(m_albumFilter);
-        m_musicModelMetadata->setHeaderText(QString("Showing music from %1, click %2 to reset").arg(r.genericLabel()).arg(s_showAllButton));
-        kDebug() << "************** ADD FILTER NOT IMPLEMENTED!!";
+        filterModel->setFilter(MediaCenter::AlbumRole, m_albumFilter);
     }
     if (!m_artistFilter.isEmpty()) {
-        Nepomuk2::Resource r(m_artistFilter);
-        m_musicModelMetadata->setHeaderText(QString("Showing music from %1, click %2 to reset").arg(r.genericLabel()).arg(s_showAllButton));
-        kDebug() << "************** ADD FILTER NOT IMPLEMENTED!!";
+        filterModel->setFilter(MediaCenter::ArtistRole, m_artistFilter);
     }
 }
 
@@ -203,12 +193,12 @@ bool MetadataMusicBackend::expand(int row, QAbstractItemModel* model)
 {
     if (!model) return false;
 
-    const QString filter = model->data(model->index(row, 0), MediaCenter::ResourceIdRole).toString();
+    const QString filter = model->data(model->index(row, 0), Qt::DisplayRole).toString();
 
-    if (model == m_albumsModel) {
+    if (model == m_albumFilteredModel) {
         setAlbumFilter(filter);
         emit modelNeedsAttention(m_musicModelMetadata);
-    } else if (model == m_artistsModel) {
+    } else if (model == m_artistFilteredModel) {
         setArtistFilter(filter);
         emit modelNeedsAttention(m_musicModelMetadata);
     }

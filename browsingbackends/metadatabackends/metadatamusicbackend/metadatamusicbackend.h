@@ -26,6 +26,7 @@
 #include "../abstractmetadatabackend.h"
 #include "categoriesmodel.h"
 
+class FilterMediaModel;
 class MetadataBackendCommonModel;
 class AlwaysExpandedMetadataModel;
 class PlaylistModel;
@@ -66,7 +67,6 @@ Q_SIGNALS:
 
 protected:
     void updateModelAccordingToFilters();
-    void clearFilters();
     virtual bool initImpl();
 
 private slots:
@@ -86,6 +86,9 @@ private:
     ModelMetadata* m_musicModelMetadata;
     ModelMetadata* m_albumsModelMetadata;
     ModelMetadata* m_artistsModelMetadata;
+    FilterMediaModel* m_musicFilteredModel;
+    FilterMediaModel* m_albumFilteredModel;
+    FilterMediaModel* m_artistFilteredModel;
 };
 
 #endif // METADATAMUSICBACKEND_H
