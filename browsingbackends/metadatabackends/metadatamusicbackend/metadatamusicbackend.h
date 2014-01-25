@@ -51,8 +51,7 @@ public:
     void setArtistFilter(const QString &filter);
     void setAlbumFilter(const QString &filter);
 
-    Q_INVOKABLE void addAllSongsToPlaylist( QObject* playlistModel );
-    Q_INVOKABLE void stopAddingSongsToPlaylist();
+    void addAllSongsToPlaylist( QObject* playlistModelObject );
 
     virtual bool expand(int row, QAbstractItemModel* model);
 
@@ -70,8 +69,7 @@ protected:
     virtual bool initImpl();
 
 private slots:
-    void musicModelDataChanged ( const QModelIndex& startIndex, const QModelIndex& endIndex );
-    void musicModelReset();
+
     void initializeModels();
 
 private:
@@ -82,7 +80,6 @@ private:
 
     QString m_artistFilter;
     QString m_albumFilter;
-    bool m_shallAddMediaToPlaylist : 1;
     ModelMetadata* m_musicModelMetadata;
     ModelMetadata* m_albumsModelMetadata;
     ModelMetadata* m_artistsModelMetadata;

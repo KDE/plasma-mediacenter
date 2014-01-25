@@ -53,8 +53,6 @@ MetadataMusicBackend::MetadataMusicBackend(QObject* parent, const QVariantList& 
     , m_artistsModel(0)
     , m_albumsModel(0)
     , m_musicModel(0)
-    , m_playlistModel(0)
-    , m_shallAddMediaToPlaylist(false)
 {
 }
 
@@ -149,45 +147,16 @@ void MetadataMusicBackend::updateModelAccordingToFilters()
     }
 }
 
-void MetadataMusicBackend::addAllSongsToPlaylist (QObject* playlistModel)
+void MetadataMusicBackend::addAllSongsToPlaylist (QObject* playlistModelObject)
 {
-    m_shallAddMediaToPlaylist = true;
-    m_playlistModel = qobject_cast<PlaylistModel*>(playlistModel);
-    if (!m_playlistModel)
-        return;
-    for (int i=0; i<m_musicModel->rowCount(); ++i) {
-        const QString url = m_musicModel->data(m_musicModel->index(i), MediaCenter::MediaUrlRole).toString();
-        const QString name = m_musicModel->data(m_musicModel->index(i), Qt::DisplayRole).toString();
+    PlaylistModel* playlistModel = static_cast<PlaylistModel *> (playlistModelObject);
+    for (int i=0; i<m_musicFilteredModel->rowCount(); ++i) {
+        const QString url = m_musicFilteredModel->data(m_musicFilteredModel->index(i, 0), MediaCenter::MediaUrlRole).toString();
+        const QString name = m_musicFilteredModel->data(m_musicFilteredModel->index(i, 0), Qt::DisplayRole).toString();
         if (!url.isEmpty() && !name.isEmpty()) {
-            m_playlistModel->addToPlaylist(url);
+            playlistModel->addToPlaylist(url);
         }
     }
-
-    disconnect(m_musicModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(musicModelDataChanged(QModelIndex,QModelIndex)));
-    connect(m_musicModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(musicModelDataChanged(QModelIndex,QModelIndex)));
-}
-
-void MetadataMusicBackend::musicModelDataChanged ( const QModelIndex &startIndex, const QModelIndex &endIndex )
-{
-    if ( !(startIndex.isValid() && endIndex.isValid() && m_shallAddMediaToPlaylist ))
-        return;
-    for (int i=startIndex.row(); i<=endIndex.row(); ++i) {
-        const QString url = m_musicModel->data(m_musicModel->index(i), MediaCenter::MediaUrlRole).toString();
-        const QString name = m_musicModel->data(m_musicModel->index(i), Qt::DisplayRole).toString();
-        if (!url.isEmpty() && !name.isEmpty()) {
-            m_playlistModel->addToPlaylist(url);
-        }
-    }
-}
-
-void MetadataMusicBackend::musicModelReset()
-{
-    disconnect(m_musicModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(musicModelDataChanged(QModelIndex,QModelIndex)));
-}
-
-void MetadataMusicBackend::stopAddingSongsToPlaylist()
-{
-    m_shallAddMediaToPlaylist = false;
 }
 
 bool MetadataMusicBackend::expand(int row, QAbstractItemModel* model)
