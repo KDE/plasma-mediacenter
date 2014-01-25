@@ -65,13 +65,12 @@ protected Q_SLOTS:
 
 protected:
     QString fetchPreview(const KUrl& url, const QModelIndex& index);
-    inline QList<int> rolesNeeded() const;
 
 private Q_SLOTS:
     void showPreview(const KFileItem &item, const QPixmap &preview);
     void previewFailed(const KFileItem &item);
     void fetchMetadata();
-    void signalUpdate(const QPersistentModelIndex &index, const QString &displayString = QString());
+    void signalUpdate(const QVariant& resourceId, const QString& displayString = QString());
 
 private:
     enum Mode { Music, Picture, Video, Album, Artist };
@@ -79,13 +78,14 @@ private:
     class Private;
     Private * const d;
 
-    QVariant decorationForMetadata(const QVariant& metadataValue, const QModelIndex& index) const;
     QVariant metadataValueForRole(const QModelIndex& index, int role) const;
     QVariant dataForMedia(const QModelIndex& row, int role) const;
     QVariant dataForArtist(int row, int role) const;
     QVariant dataForAlbum(int row, int role) const;
 
     template <class T> void handleNewAlbumsOrArtists(const QList< QSharedPointer< T > > &mediaData);
+    QVariant getAlbumArt(const QString& albumName, const QString& albumArtist, const QString& resourceId) const;
+    QVariant getArtistImage(const QString& artistName, const QString& resourceId) const;
 };
 
 #endif // PMCMETADATAMODEL_H

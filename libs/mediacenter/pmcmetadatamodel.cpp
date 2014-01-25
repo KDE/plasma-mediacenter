@@ -80,8 +80,8 @@ PmcMetadataModel::PmcMetadataModel(QObject* parent):
     d->thumbnailSize = QSize(512, 512);
 
     connect(LastFmImageFetcher::instance(),
-            SIGNAL(imageFetched(QPersistentModelIndex,QString)),
-            SLOT(signalUpdate(QPersistentModelIndex,QString)));
+            SIGNAL(imageFetched(QVariant,QString)),
+            SLOT(signalUpdate(QVariant,QString)));
 }
 
 PmcMetadataModel::~PmcMetadataModel()
@@ -174,7 +174,7 @@ void PmcMetadataModel::handleNewAlbumsOrArtists(const QList< QSharedPointer< T >
 
     foreach (const QSharedPointer<T> &a, mediaData) {
         if (d->mediaByResourceId.contains(a->name())) {
-            kWarning() << "Already has " << a->name();
+            kWarning() << "ALREADY HAS " << a->name();
             continue;
         }
         d->mediaByResourceId.insert(a->name(), QSharedPointer<QObject>(a));
@@ -248,15 +248,15 @@ QVariant PmcMetadataModel::dataForMedia(const QModelIndex &index, int role) cons
 
 QVariant PmcMetadataModel::dataForAlbum(int row, int role) const
 {
-    const QSharedPointer<QObject> mediaObject = d->mediaByResourceId.value(d->mediaResourceIds.at(row));
+    const QString resourceId = d->mediaResourceIds.at(row);
+    const QSharedPointer<QObject> mediaObject = d->mediaByResourceId.value(resourceId);
     const QSharedPointer<PmcAlbum> album = qSharedPointerObjectCast<PmcAlbum>(mediaObject);
 
     switch (role) {
     case Qt::DisplayRole:
         return album->name();
     case Qt::DecorationRole:
-        //TODO: Return album art
-        return d->defaultDecoration;
+        return getAlbumArt(album->name(), album->albumArtist(), resourceId);
     }
 
     return QVariant();
@@ -264,48 +264,43 @@ QVariant PmcMetadataModel::dataForAlbum(int row, int role) const
 
 QVariant PmcMetadataModel::dataForArtist(int row, int role) const
 {
-    const QSharedPointer<QObject> mediaObject = d->mediaByResourceId.value(d->mediaResourceIds.at(row));
+    const QString resourceId = d->mediaResourceIds.at(row);
+    const QSharedPointer<QObject> mediaObject = d->mediaByResourceId.value(resourceId);
     const QSharedPointer<PmcArtist> artist = qSharedPointerObjectCast<PmcArtist>(mediaObject);
 
     switch (role) {
     case Qt::DisplayRole:
         return artist->name();
     case Qt::DecorationRole:
-        //TODO: Return artist image
-        return d->defaultDecoration;
+        return getArtistImage(artist->name(), resourceId);
     }
 
     return QVariant();
 }
 
-QVariant PmcMetadataModel::decorationForMetadata(const QVariant &metadataValue, const QModelIndex &index) const
+QVariant PmcMetadataModel::getAlbumArt(const QString& albumName, const QString& albumArtist, const QString &resourceId) const
 {
-    if (metadataValue.isNull() || (metadataValue.type() == QVariant::String && metadataValue.toString().isEmpty())) {
-        const QString mediaType = metadataValueForRole(index, MediaCenter::MediaTypeRole).toString();
-        if (mediaType == "album") {
-            const QString albumName = metadataValueForRole(index, Qt::DisplayRole).toString();
-            const QString albumUri = QString("album:%1").arg(albumName);
-            if (PmcImageCache::instance()->containsId(albumUri)) {
-                return QString("image://%1/%2").arg(PmcImageProvider::identificationString, albumUri);
-            } else {
-                //MediaUrlRole is abused for albums to pass on the artist name
-                const QString artistNameForAlbum = metadataValueForRole(index, MediaCenter::MediaUrlRole).toString();
-                LastFmImageFetcher::instance()->fetchImage("album", QPersistentModelIndex(index), artistNameForAlbum, albumName);
-            }
-        } else if (mediaType == "artist") {
-            const QString artistName = metadataValueForRole(index, Qt::DisplayRole).toString();
-            const QString artistUri = QString("artist:%1").arg(artistName);
-            if (PmcImageCache::instance()->containsId(artistUri)) {
-                return QString("image://%1/%2").arg(PmcImageProvider::identificationString, artistUri);
-            } else {
-                LastFmImageFetcher::instance()->fetchImage("artist", QPersistentModelIndex(index), artistName);
-            }
-        }
-        if (d->defaultDecoration.isValid()) {
-            return d->defaultDecoration;
-        }
+    const QString albumUri = QString("album:%1").arg(albumName);
+
+    if (PmcImageCache::instance()->containsId(albumUri)) {
+        return QString("image://%1/%2").arg(PmcImageProvider::identificationString, albumUri);
+    } else {
+        LastFmImageFetcher::instance()->fetchImage("album", resourceId, albumArtist, albumName);
     }
-    return metadataValue;
+
+    return d->defaultDecoration;
+}
+
+QVariant PmcMetadataModel::getArtistImage(const QString& artistName, const QString& resourceId) const
+{
+    const QString artistUri = QString("artist:%1").arg(artistName);
+    if (PmcImageCache::instance()->containsId(artistUri)) {
+        return QString("image://%1/%2").arg(PmcImageProvider::identificationString, artistUri);
+    } else {
+        LastFmImageFetcher::instance()->fetchImage("artist", resourceId, artistName);
+    }
+
+    return d->defaultDecoration;
 }
 
 void PmcMetadataModel::fetchMetadata()
@@ -384,14 +379,15 @@ void PmcMetadataModel::setDefaultDecoration(const QVariant& decoration)
     d->defaultDecoration = decoration;
 }
 
-void PmcMetadataModel::signalUpdate(const QPersistentModelIndex& index, const QString& displayString)
+void PmcMetadataModel::signalUpdate(const QVariant& resourceId, const QString& displayString)
 {
-    if (!displayString.isEmpty() &&
-        metadataValueForRole(index, Qt::DisplayRole).toString() != displayString) {
+    if (displayString.isEmpty() || !d->mediaByResourceId.contains(resourceId.toString())) {
         return;
     }
 
-    emit dataChanged(index, index);
+    const int rowForResource = d->mediaResourceIds.indexOf(resourceId.toString());
+    const QModelIndex changedIndex = index(rowForResource);
+    emit dataChanged(changedIndex, changedIndex);
 }
 
 #include "pmcmetadatamodel.moc"
