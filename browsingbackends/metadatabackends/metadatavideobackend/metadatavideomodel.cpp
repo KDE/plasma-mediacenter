@@ -45,8 +45,6 @@ QVariant MetadataVideoModel::data(const QModelIndex& index, int role) const
         return "video";
     case MediaCenter::HideLabelRole:
         return false;
-    case Qt::DecorationRole:
-        return PmcMetadataModel::data(index, MediaCenter::MediaThumbnailRole);
     }
 
     return PmcMetadataModel::data(index, role);
