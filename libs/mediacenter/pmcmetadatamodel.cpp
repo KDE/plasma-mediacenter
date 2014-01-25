@@ -38,6 +38,9 @@ public:
         : thumbnailerPlugins(new QStringList(KIO::PreviewJob::availablePlugins()))
         , isSearchTermValid(false)
     {
+        modeForMediaType["audio"] = Music;
+        modeForMediaType["image"] = Picture;
+        modeForMediaType["video"] = Video;
     }
     bool isSearchTermValid;
 
@@ -53,7 +56,12 @@ public:
     QList<int> rowsToFetchMetadataFor;
     QStringList mediaUrlWhichFailedThumbnailGeneration;
     QVariant defaultDecoration;
-    QString mediaType;
+    Mode currentMode;
+
+    QStringList mediaResourceIds;
+    QHash< QString, QSharedPointer<QObject> > mediaByResourceId;
+
+    QHash<QString, Mode> modeForMediaType;
 };
 
 PmcMetadataModel::PmcMetadataModel(QObject* parent):
@@ -71,7 +79,9 @@ PmcMetadataModel::PmcMetadataModel(QObject* parent):
 
     d->thumbnailSize = QSize(512, 512);
 
-    connect(LastFmImageFetcher::instance(), SIGNAL(imageFetched(QPersistentModelIndex,QString)), SLOT(signalUpdate(QPersistentModelIndex,QString)));
+    connect(LastFmImageFetcher::instance(),
+            SIGNAL(imageFetched(QPersistentModelIndex,QString)),
+            SLOT(signalUpdate(QPersistentModelIndex,QString)));
 }
 
 PmcMetadataModel::~PmcMetadataModel()
@@ -88,15 +98,17 @@ void PmcMetadataModel::showMediaType(MediaCenter::MediaType mediaType)
 {
     switch (mediaType) {
         case MediaCenter::Music:
-            d->mediaType ="audio";
+            d->currentMode = Music;
             break;
         case MediaCenter::Picture:
-            d->mediaType = "image";
+            d->currentMode = Picture;
             break;
         case MediaCenter::Video:
-            d->mediaType = "video";
+            d->currentMode = Video;
     }
-    QList <QSharedPointer<PmcMedia> > mediaData = MediaLibrary::instance()->getMedia(d->mediaType);
+    const QString mediaTypeString = d->modeForMediaType.key(d->currentMode);
+    QList <QSharedPointer<PmcMedia> > mediaData = MediaLibrary::instance()->getMedia(mediaTypeString);
+
     connect(MediaLibrary::instance(),
             SIGNAL(newMedia(QList<QSharedPointer<PmcMedia> >)),
             SLOT(handleNewMedia(QList<QSharedPointer<PmcMedia> >)));
@@ -107,6 +119,7 @@ void PmcMetadataModel::showMediaType(MediaCenter::MediaType mediaType)
 void PmcMetadataModel::showAlbums()
 {
     QList <QSharedPointer<PmcAlbum> > mediaData = MediaLibrary::instance()->getAlbums();
+    d->currentMode = Album;
 
     connect(MediaLibrary::instance(),
             SIGNAL(newAlbums(QList<QSharedPointer<PmcAlbum> >)),
@@ -117,6 +130,7 @@ void PmcMetadataModel::showAlbums()
 void PmcMetadataModel::showArtist()
 {
     QList <QSharedPointer<PmcArtist> > mediaData = MediaLibrary::instance()->getArtists();
+    d->currentMode = Artist;
 
     connect(MediaLibrary::instance(),
             SIGNAL(newArtists(QList<QSharedPointer<PmcArtist> >)),
@@ -127,93 +141,138 @@ void PmcMetadataModel::showArtist()
 void PmcMetadataModel::handleNewMedia(const QList< QSharedPointer< PmcMedia > >& media)
 {
     const int existingRowCount = rowCount();
+    QStringList resourceIdsToBeInserted;
 
-    QList< QHash<int, QVariant> > mediaInfoToInsert;
-    foreach (QSharedPointer<PmcMedia> m, media) {
-        if (m->type() == d->mediaType) {
-            QHash<int, QVariant> mediainfo;
-            mediainfo.insert(Qt::DisplayRole, m->title());
-            mediainfo.insert(Qt::DecorationRole, m->thumbnail());
-            mediainfo.insert(MediaCenter::MediaUrlRole, m->url());
-            mediainfo.insert(MediaCenter::MediaTypeRole, m->type());
-            mediaInfoToInsert.append(mediainfo);
+    foreach (const QSharedPointer<PmcMedia> &m, media) {
+        if (d->modeForMediaType.value(m->type()) == d->currentMode) {
+            d->mediaByResourceId.insert(m->sha(), QSharedPointer<QObject>(m));
+            resourceIdsToBeInserted.append(m->sha());
         }
     }
 
     beginInsertRows(QModelIndex(), existingRowCount,
-                    existingRowCount + mediaInfoToInsert.count());
-
-    d->metadataValues.append(mediaInfoToInsert);
+                    existingRowCount + resourceIdsToBeInserted.size());
+    d->mediaResourceIds.append(resourceIdsToBeInserted);
     endInsertRows();
 }
 
 void PmcMetadataModel::handleNewAlbums(const QList< QSharedPointer< PmcAlbum > >& mediaData)
 {
-    const int existingRowCount = rowCount();
-
-    QList< QHash<int, QVariant> > mediaInfoToInsert;
-    foreach (QSharedPointer<PmcAlbum> a, mediaData) {
-        QHash<int, QVariant> mediainfo;
-        mediainfo.insert(Qt::DisplayRole, a->name());
-        mediainfo.insert(MediaCenter::MediaTypeRole, "album");
-        //MediaUrlRole is abused for albums to pass on the artist name
-        mediainfo.insert(MediaCenter::MediaUrlRole, a->albumArtist());
-        mediaInfoToInsert.append(mediainfo);
-    }
-
-    beginInsertRows(QModelIndex(), existingRowCount,
-                    existingRowCount + mediaInfoToInsert.count());
-
-    d->metadataValues.append(mediaInfoToInsert);
-    endInsertRows();
+    handleNewAlbumsOrArtists<PmcAlbum>(mediaData);
 }
 
 void PmcMetadataModel::handleNewArtists(const QList< QSharedPointer< PmcArtist > >& mediaData)
 {
+    handleNewAlbumsOrArtists<PmcArtist>(mediaData);
+}
+
+template <class T>
+void PmcMetadataModel::handleNewAlbumsOrArtists(const QList< QSharedPointer< T > > &mediaData)
+{
     const int existingRowCount = rowCount();
-    QList< QHash<int, QVariant> > mediaInfoToInsert;
-    foreach (QSharedPointer<PmcArtist> a, mediaData) {
-        QHash<int, QVariant> mediainfo;
-        mediainfo.insert(Qt::DisplayRole, a->name());
-        mediainfo.insert(MediaCenter::MediaTypeRole, "artist");
-        mediaInfoToInsert.append(mediainfo);
+    QStringList resourceIdsToBeInserted;
+
+    foreach (const QSharedPointer<T> &a, mediaData) {
+        if (d->mediaByResourceId.contains(a->name())) {
+            kWarning() << "Already has " << a->name();
+            continue;
+        }
+        d->mediaByResourceId.insert(a->name(), QSharedPointer<QObject>(a));
+        resourceIdsToBeInserted.append(a->name());
     }
 
     beginInsertRows(QModelIndex(), existingRowCount,
-                    existingRowCount + mediaInfoToInsert.count());
+                    existingRowCount + resourceIdsToBeInserted.size());
+    d->mediaResourceIds.append(resourceIdsToBeInserted);
 
-    d->metadataValues.append(mediaInfoToInsert);
+    Q_ASSERT(d->mediaByResourceId.keys().size() == d->mediaResourceIds.size());
     endInsertRows();
 }
 
 
 QVariant PmcMetadataModel::metadataValueForRole(const QModelIndex& index, int role) const
 {
+    //FIXME: If the logic is correct elsewhere, this check should not be required
     return index.isValid() && index.row() > 0 && index.row() < d->metadataValues.size() ?
         d->metadataValues.at(index.row()).value(role) : QVariant();
 }
 
 QVariant PmcMetadataModel::data(const QModelIndex& index, int role) const
 {
-    if (!index.isValid() || index.row() >= rowCount())
+    const int row = index.row();
+    if (!index.isValid() || row >= rowCount())
         return QVariant();
 
-    const QVariant metadataValue = metadataValueForRole(index, role);
-    switch(role) {
+    switch (d->currentMode) {
+        case Music:
+        case Picture:
+        case Video:
+            return dataForMedia(index, role);
+        case Album:
+            return dataForAlbum(row, role);
+        case Artist:
+            return dataForArtist(row, role);
+    }
+
+    return QVariant();
+}
+
+QVariant PmcMetadataModel::dataForMedia(const QModelIndex &index, int role) const
+{
+    const int row = index.row();
+    const QSharedPointer<QObject> mediaObject = d->mediaByResourceId.value(d->mediaResourceIds.at(row));
+    const QSharedPointer<PmcMedia> media = qSharedPointerObjectCast<PmcMedia>(mediaObject);
+
+    switch (role) {
     case MediaCenter::ResourceIdRole:
+        return media->sha();
     case MediaCenter::MediaUrlRole:
+        return media->url();
     case MediaCenter::MediaTypeRole:
+        return media->type();
     case Qt::DisplayRole:
-        return metadataValue;
+        return media->title();
     case Qt::DecorationRole:
-        return decorationForMetadata(metadataValue, index);
-    case MediaCenter::MediaThumbnailRole:
-        if (metadataValueForRole(index, MediaCenter::MediaTypeRole) == "video") {
-            KUrl url = d->metadataValues.value(index.row()).value(MediaCenter::MediaUrlRole).toUrl();
+        if (media->type() == "video") {
+            const KUrl url(media->url());
             if (d->mediaUrlWhichFailedThumbnailGeneration.contains(url.prettyUrl()))
                 return "image-missing";
             return const_cast<PmcMetadataModel*>(this)->fetchPreview(url, index);
+        } else {
+            return media->thumbnail();
         }
+    }
+
+    return QVariant();
+}
+
+QVariant PmcMetadataModel::dataForAlbum(int row, int role) const
+{
+    const QSharedPointer<QObject> mediaObject = d->mediaByResourceId.value(d->mediaResourceIds.at(row));
+    const QSharedPointer<PmcAlbum> album = qSharedPointerObjectCast<PmcAlbum>(mediaObject);
+
+    switch (role) {
+    case Qt::DisplayRole:
+        return album->name();
+    case Qt::DecorationRole:
+        //TODO: Return album art
+        return d->defaultDecoration;
+    }
+
+    return QVariant();
+}
+
+QVariant PmcMetadataModel::dataForArtist(int row, int role) const
+{
+    const QSharedPointer<QObject> mediaObject = d->mediaByResourceId.value(d->mediaResourceIds.at(row));
+    const QSharedPointer<PmcArtist> artist = qSharedPointerObjectCast<PmcArtist>(mediaObject);
+
+    switch (role) {
+    case Qt::DisplayRole:
+        return artist->name();
+    case Qt::DecorationRole:
+        //TODO: Return artist image
+        return d->defaultDecoration;
     }
 
     return QVariant();
@@ -258,7 +317,7 @@ void PmcMetadataModel::fetchMetadata()
 int PmcMetadataModel::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
-    return d->metadataValues.count();
+    return d->mediaResourceIds.size();
 }
 
 QString PmcMetadataModel::fetchPreview(const KUrl &url, const QModelIndex& index)
@@ -270,7 +329,7 @@ QString PmcMetadataModel::fetchPreview(const KUrl &url, const QModelIndex& index
 
     d->filesToPreview.insert(url, QPersistentModelIndex(index));
     d->previewTimer.start(100);
-    return QString();
+    return d->defaultDecoration.toString();
 }
 
 void PmcMetadataModel::delayedPreview()
@@ -318,23 +377,6 @@ void PmcMetadataModel::previewFailed(const KFileItem &item)
         d->mediaUrlWhichFailedThumbnailGeneration.append(item.url().prettyUrl());
         emit dataChanged(index, index);
     }
-}
-
-void PmcMetadataModel::handleUpdaterReset()
-{
-    resetModel();
-}
-
-void PmcMetadataModel::resetModel()
-{
-    beginResetModel();
-    d->metadataValues.clear();
-    endResetModel();
-}
-
-void PmcMetadataModel::setDefaultDecoration ( const QVariant& decoration )
-{
-    d->defaultDecoration = decoration;
 }
 
 void PmcMetadataModel::signalUpdate(const QPersistentModelIndex& index, const QString& displayString)
