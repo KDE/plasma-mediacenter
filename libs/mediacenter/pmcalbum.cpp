@@ -43,7 +43,7 @@ const QString& PmcAlbum::name() const
     return d->album->name();
 }
 
-const QString& PmcAlbum::albumArtist() const
+QString PmcAlbum::albumArtist() const
 {
     return d->album->albumArtist();
 }

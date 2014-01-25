@@ -36,7 +36,15 @@ const QString& Album::name() const
     return m_name;
 }
 
-const QString& Album::albumArtist() const
+QString Album::albumArtist() const
 {
-    return m_media.size() ? m_media.at(0).toStrongRef()->artist()->name() : QString();
+    //Return the first non-empty artist name
+    Q_FOREACH (const QWeakPointer<Media> &m, m_media) {
+        const QString artistName = m.toStrongRef()->artist()->name();
+        if (!artistName.isEmpty()) {
+            return artistName;
+        }
+    }
+
+    return QString();
 }

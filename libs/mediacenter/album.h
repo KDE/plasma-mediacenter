@@ -36,7 +36,7 @@ public:
     ~Album();
 
     const QString& name() const;
-    const QString& albumArtist() const;
+    QString albumArtist() const;
 
 private:
     Album();
