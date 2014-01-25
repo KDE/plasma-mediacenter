@@ -24,6 +24,7 @@
 
 class FilterMediaModel: public QSortFilterProxyModel
 {
+    Q_OBJECT
 public:
     FilterMediaModel(QObject* parent = 0);
     ~FilterMediaModel();
