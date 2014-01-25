@@ -32,7 +32,7 @@ public:
 
     void setFilter(int role, const QVariant &filterValue);
     void addFilter(int role, const QVariant &filterValue);
-    void clearFilters();
+    void clearFilters(bool invalidate = true);
 
 private:
     QHash<int, QVariant> m_filters;

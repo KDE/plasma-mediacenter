@@ -61,13 +61,15 @@ void FilterMediaModel::addFilter(int role, const QVariant& filterValue)
     invalidateFilter();
 }
 
-void FilterMediaModel::clearFilters()
+void FilterMediaModel::clearFilters(bool invalidate)
 {
-    return m_filters.clear();
+    m_filters.clear();
+
+    if (invalidate) invalidateFilter();
 }
 
 void FilterMediaModel::setFilter(int role, const QVariant& filterValue)
 {
-    clearFilters();
+    clearFilters(false);
     addFilter(role, filterValue);
 }

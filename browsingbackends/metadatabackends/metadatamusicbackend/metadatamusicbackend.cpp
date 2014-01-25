@@ -139,6 +139,7 @@ void MetadataMusicBackend::setArtistFilter(const QString& filter)
 void MetadataMusicBackend::updateModelAccordingToFilters()
 {
     FilterMediaModel *filterModel = static_cast<FilterMediaModel *> (m_musicFilteredModel);
+    filterModel->clearFilters();
 
     if (!m_albumFilter.isEmpty()) {
         filterModel->setFilter(MediaCenter::AlbumRole, m_albumFilter);
