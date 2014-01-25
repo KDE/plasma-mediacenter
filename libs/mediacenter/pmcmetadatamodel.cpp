@@ -151,8 +151,9 @@ void PmcMetadataModel::handleNewMedia(const QList< QSharedPointer< PmcMedia > >&
     }
 
     beginInsertRows(QModelIndex(), existingRowCount,
-                    existingRowCount + resourceIdsToBeInserted.size());
+                    existingRowCount + resourceIdsToBeInserted.size() - 1);
     d->mediaResourceIds.append(resourceIdsToBeInserted);
+    Q_ASSERT(d->mediaByResourceId.keys().size() == d->mediaResourceIds.size());
     endInsertRows();
 }
 
@@ -182,7 +183,7 @@ void PmcMetadataModel::handleNewAlbumsOrArtists(const QList< QSharedPointer< T >
     }
 
     beginInsertRows(QModelIndex(), existingRowCount,
-                    existingRowCount + resourceIdsToBeInserted.size());
+                    existingRowCount + resourceIdsToBeInserted.size() -1);
     d->mediaResourceIds.append(resourceIdsToBeInserted);
 
     Q_ASSERT(d->mediaByResourceId.keys().size() == d->mediaResourceIds.size());
