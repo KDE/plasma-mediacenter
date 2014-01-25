@@ -57,15 +57,16 @@ bool FilterMediaModel::filterAcceptsRow(int source_row, const QModelIndex& sourc
 
 void FilterMediaModel::addFilter(int role, const QVariant& filterValue)
 {
+    beginResetModel();
     m_filters.insert(role, filterValue);
-    invalidateFilter();
+    endResetModel();
 }
 
 void FilterMediaModel::clearFilters(bool invalidate)
 {
+    if (invalidate) beginResetModel();
     m_filters.clear();
-
-    if (invalidate) invalidateFilter();
+    if (invalidate) endResetModel();
 }
 
 void FilterMediaModel::setFilter(int role, const QVariant& filterValue)
