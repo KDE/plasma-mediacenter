@@ -332,21 +332,19 @@ void MediaLibrary::addMedia(const QSharedPointer< Media >& m)
 void MediaLibrary::addAlbum(const QSharedPointer< Album >& album)
 {
     addAlbumOrArtist<Album, PmcAlbum>(album, d->albumListMutex, d->albumList,
-                                      d->pmcAlbumList, d->newAlbumList);
+                                      d->newAlbumList);
 }
 
 void MediaLibrary::addArtist(const QSharedPointer< Artist >& artist)
 {
     addAlbumOrArtist<Artist, PmcArtist>(artist, d->artistListMutex,
-                                        d->artistList, d->pmcArtistList,
-                                        d->newArtistList);
+                                        d->artistList, d->newArtistList);
 }
 
 template <class X, class Y>
 void MediaLibrary::addAlbumOrArtist(const QSharedPointer< X >& value,
                                     QMutex &mutex,
                                     QList< QSharedPointer< X > >& valueList,
-                                    QList< QSharedPointer< Y > >& wrapperList,
                                     QList< QSharedPointer< Y > >& updatesList)
 {
     if (value.isNull()) return;
@@ -355,7 +353,6 @@ void MediaLibrary::addAlbumOrArtist(const QSharedPointer< X >& value,
     if (!valueList.contains(value)) {
         QSharedPointer<Y> pa(new Y(value));
         valueList.append(value);
-        wrapperList.append(pa);
 
         updatesList.append(pa);
         emitNewMedia();
@@ -376,21 +373,22 @@ void MediaLibrary::emitNewMedia()
     }
 }
 
-#define PMC_ML_EMIT_IF_NEEDED(mutex, list, signal) \
+#define PMC_ML_EMIT_IF_NEEDED(mutex, list, wrapperList, signal) \
     { \
         QMutexLocker l(&mutex); \
         if (!list.isEmpty()) { \
             qDebug() << "Emitting " << SIGNAL(signal); \
             emit signal(list); \
+            wrapperList << list; \
             list.clear(); \
         } \
     } \
 
 void MediaLibrary::emitNewMediaWithMediaList()
 {
-    PMC_ML_EMIT_IF_NEEDED(d->mediaMutex, d->newMediaList, newMedia)
-    PMC_ML_EMIT_IF_NEEDED(d->albumListMutex, d->newAlbumList, newAlbums)
-    PMC_ML_EMIT_IF_NEEDED(d->artistListMutex, d->newArtistList, newArtists)
+    PMC_ML_EMIT_IF_NEEDED(d->mediaMutex, d->newMediaList, QList< QSharedPointer<PmcMedia> >(), newMedia)
+    PMC_ML_EMIT_IF_NEEDED(d->albumListMutex, d->newAlbumList, d->pmcAlbumList, newAlbums)
+    PMC_ML_EMIT_IF_NEEDED(d->artistListMutex, d->newArtistList, d->pmcArtistList, newArtists)
 }
 
 QList< QSharedPointer< PmcAlbum > > MediaLibrary::getAlbums() const

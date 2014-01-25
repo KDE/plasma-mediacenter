@@ -82,7 +82,7 @@ private:
     inline void addAlbum(const QSharedPointer< Album >& album);
     inline void addArtist(const QSharedPointer<Artist>& artist);
     template <class X, class Y> void addAlbumOrArtist(
-        const QSharedPointer< X >& value, QMutex& mutex, QList< QSharedPointer< X > >& valueList, QList< QSharedPointer< Y > >& wrapperList, QList< QSharedPointer< Y > >& updatesList);
+        const QSharedPointer< X >& value, QMutex& mutex, QList< QSharedPointer< X > >& valueList, QList< QSharedPointer< Y > >& updatesList);
 };
 
 #endif // MEDIALIBRARY_H
