@@ -379,6 +379,11 @@ void PmcMetadataModel::previewFailed(const KFileItem &item)
     }
 }
 
+void PmcMetadataModel::setDefaultDecoration(const QVariant& decoration)
+{
+    d->defaultDecoration = decoration;
+}
+
 void PmcMetadataModel::signalUpdate(const QPersistentModelIndex& index, const QString& displayString)
 {
     if (!displayString.isEmpty() &&
