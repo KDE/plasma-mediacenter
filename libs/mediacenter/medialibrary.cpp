@@ -26,6 +26,7 @@
 #include "album.h"
 #include "artist.h"
 #include "mediacenter.h"
+#include "medialibrarywrappercache.h"
 #include "media_odb.h"
 
 #include <odb/database.hxx>
@@ -71,9 +72,7 @@ public:
     QMutex mediaToPersistMutex;
 
     QMutex mediaMutex;
-    QHash <QString, QList<QSharedPointer<PmcMedia> > > pmcMediaByType;
     QHash <QString, QSharedPointer<Media> > mediaBySha;
-    QHash <QString, QSharedPointer<PmcMedia> > pmcMediaBySha;
 
     QList< QSharedPointer<PmcMedia> > newMediaList;
     QList< QSharedPointer<PmcAlbum> > newAlbumList;
@@ -82,11 +81,11 @@ public:
 
     QMutex albumListMutex;
     QList< QSharedPointer<Album> > albumList;
-    QList< QSharedPointer<PmcAlbum> > pmcAlbumList;
 
     QMutex artistListMutex;
     QList<QSharedPointer<Artist> > artistList;
-    QList<QSharedPointer<PmcArtist> > pmcArtistList;
+
+    MediaLibraryWrapperCache *wrapperCache;
 };
 
 MediaLibrary::MediaLibrary(QObject* parent)
@@ -98,6 +97,8 @@ MediaLibrary::MediaLibrary(QObject* parent)
     qRegisterMetaType< QList< QSharedPointer<PmcMedia> > >("QList< QSharedPointer<PmcArtist> >");
 
     moveToThread(this);
+
+    d->wrapperCache = new MediaLibraryWrapperCache(this);
 
     d->newMediaTimer.setInterval(1000);
     d->newMediaTimer.setSingleShot(true);
@@ -319,9 +320,6 @@ void MediaLibrary::addMedia(const QSharedPointer< Media >& m)
     d->mediaBySha.insert(m->sha(), m);
     QSharedPointer<PmcMedia> pmcMedia(new PmcMedia(m));
 
-    d->pmcMediaBySha.insert(m->sha(), pmcMedia);
-    d->pmcMediaByType[m->type()].append(pmcMedia);
-
     d->newMediaList.append(pmcMedia);
 
     addAlbum(m->album());
@@ -362,8 +360,7 @@ void MediaLibrary::addAlbumOrArtist(const QSharedPointer< X >& value,
 QList< QSharedPointer<PmcMedia> > MediaLibrary::getMedia(const QString& type) const
 {
     QMutexLocker l(&d->mediaMutex);
-
-    return d->pmcMediaByType.value(type);
+    return d->wrapperCache->getMedia(type);
 }
 
 void MediaLibrary::emitNewMedia()
@@ -373,32 +370,31 @@ void MediaLibrary::emitNewMedia()
     }
 }
 
-#define PMC_ML_EMIT_IF_NEEDED(mutex, list, wrapperList, signal) \
+#define PMC_ML_EMIT_IF_NEEDED(mutex, list, signal) \
     { \
         QMutexLocker l(&mutex); \
         if (!list.isEmpty()) { \
             qDebug() << "Emitting " << SIGNAL(signal); \
             emit signal(list); \
-            wrapperList << list; \
             list.clear(); \
         } \
     } \
 
 void MediaLibrary::emitNewMediaWithMediaList()
 {
-    PMC_ML_EMIT_IF_NEEDED(d->mediaMutex, d->newMediaList, QList< QSharedPointer<PmcMedia> >(), newMedia)
-    PMC_ML_EMIT_IF_NEEDED(d->albumListMutex, d->newAlbumList, d->pmcAlbumList, newAlbums)
-    PMC_ML_EMIT_IF_NEEDED(d->artistListMutex, d->newArtistList, d->pmcArtistList, newArtists)
+    PMC_ML_EMIT_IF_NEEDED(d->mediaMutex, d->newMediaList, newMedia)
+    PMC_ML_EMIT_IF_NEEDED(d->albumListMutex, d->newAlbumList, newAlbums)
+    PMC_ML_EMIT_IF_NEEDED(d->artistListMutex, d->newArtistList, newArtists)
 }
 
 QList< QSharedPointer< PmcAlbum > > MediaLibrary::getAlbums() const
 {
     QMutexLocker l(&d->albumListMutex);
-    return d->pmcAlbumList;
+    return d->wrapperCache->getAlbums();
 }
 
 QList< QSharedPointer< PmcArtist > > MediaLibrary::getArtists() const
 {
     QMutexLocker l(&d->artistListMutex);
-    return d->pmcArtistList;
+    return d->wrapperCache->getArtists();
 }

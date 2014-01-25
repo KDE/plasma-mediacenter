@@ -9,6 +9,7 @@ include_directories(
 set (CMAKE_CXX_FLAGS "-Wno-pragmas")
 
 set (plasmamediacenter_SRCS
+    medialibrarywrappercache.cpp
     artist.cpp
     album.cpp
     media.cpp
