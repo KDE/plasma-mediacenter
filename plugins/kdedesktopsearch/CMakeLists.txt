@@ -1,5 +1,5 @@
 set(kdedesktopsearch_SRCS
-    metadataupdater.cpp
+    kdemetadatamediasource.cpp
 )
 
 qt4_automoc(${kdedesktopsearch_SRCS})

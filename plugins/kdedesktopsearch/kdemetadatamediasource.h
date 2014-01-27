@@ -17,8 +17,8 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef METADATAUPDATER_H
-#define METADATAUPDATER_H
+#ifndef KDEMETADATAMEDIASOURCE_H
+#define KDEMETADATAMEDIASOURCE_H
 
 #include <libs/mediacenter/abstractmediasource.h>
 
@@ -37,12 +37,12 @@ namespace Nepomuk2 {
     class Resource;
 }
 
-class MetadataUpdater : public MediaCenter::AbstractMediaSource
+class KdeMetadataMediaSource : public MediaCenter::AbstractMediaSource
 {
     Q_OBJECT
 public:
-    explicit MetadataUpdater(QObject* parent = 0, const QVariantList& args = QVariantList());
-    virtual ~MetadataUpdater();
+    explicit KdeMetadataMediaSource(QObject* parent = 0, const QVariantList& args = QVariantList());
+    virtual ~KdeMetadataMediaSource();
     void fetchMetadata(int row);
     void fetchMetadata(const QList<int> &rows);
     void setTerm(const Nepomuk2::Query::Term &term);
@@ -76,4 +76,4 @@ private:
     void fetchValuesForResult(int i, const Nepomuk2::Query::Result& result);
 };
 
-#endif // METADATAUPDATER_H
+#endif // KDEMETADATAMEDIASOURCE_H
