@@ -20,7 +20,6 @@
 #include "pmcmetadatamodel.h"
 #include "pmcimagecache.h"
 #include "pmcimageprovider.h"
-#include "metadataupdater.h"
 #include "lastfmimagefetcher.h"
 #include "media.h"
 #include "medialibrary.h"

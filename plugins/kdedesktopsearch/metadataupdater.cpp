@@ -19,8 +19,8 @@
 
 #include "metadataupdater.h"
 
-#include "mediacenter.h"
-#include "medialibrary.h"
+#include <libs/mediacenter/mediacenter.h>
+#include <libs/mediacenter/medialibrary.h>
 
 #include <Nepomuk2/Resource>
 #include <Nepomuk2/Variant>
@@ -35,10 +35,12 @@
 
 #include <QtCore/QTimer>
 
+MEDIACENTER_EXPORT_MEDIASOURCE(MetadataUpdater)
+
 static const int s_queryLimit = 2000;
 
-MetadataUpdater::MetadataUpdater(QObject* parent)
-    : QThread(parent), m_queryServiceClient(0)
+MetadataUpdater::MetadataUpdater(QObject* parent, const QVariantList& args)
+    : AbstractMediaSource(parent, args), m_queryServiceClient(0)
 {
     //MediaTypeRole MUST be before AlbumRole
     m_rolesRequested << Qt::DisplayRole

@@ -24,7 +24,6 @@ set (plasmamediacenter_SRCS
     abstractbrowsingbackend.cpp
     backendsmodel.cpp
     mediainfoservice.cpp
-    metadataupdater.cpp
     playlistitem.cpp
     playlistmodel.cpp
     pmccoverartprovider.cpp
@@ -39,6 +38,8 @@ set (plasmamediacenter_SRCS
     pmcalbum.cpp
     pmcartist.cpp
     filtermediamodel.cpp
+    abstractmediasource.cpp
+    mediasourcesloader.cpp
 )
 
 set (plasmamediacenter_ODB_SRCS
@@ -69,7 +70,6 @@ target_link_libraries(plasmamediacenter
     ${KDE4_PLASMA_LIBS}
     ${KDE4_SOLID_LIBS}
     ${TAGLIB_LIBRARIES}
-    ${NEPOMUK_CORE_LIBRARY}
     -lodb -lodb-sqlite -lodb-qt
     )
 set_target_properties(plasmamediacenter PROPERTIES VERSION 1.2 SOVERSION 1.2)
@@ -86,3 +86,4 @@ set (plasmamediacenter_HDRS
 
 install(FILES ${plasmamediacenter_HDRS} DESTINATION ${INCLUDE_INSTALL_DIR}/mediacenter COMPONENT Devel)
 install(FILES data/servicetypes/pmc_browsingbackend.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
+install(FILES data/servicetypes/pmc_mediasource.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})

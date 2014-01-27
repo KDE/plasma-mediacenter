@@ -21,6 +21,7 @@ include_directories(
 )
 
 add_subdirectory(browsingbackends)
+add_subdirectory(plugins)
 add_subdirectory(mediaelements)
 add_subdirectory(components)
 add_subdirectory(libs)

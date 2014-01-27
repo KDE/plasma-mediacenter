@@ -18,7 +18,7 @@
  ***************************************************************************/
 
 #include <mediacenter/medialibrary.h>
-#include <mediacenter/metadataupdater.h>
+#include <mediacenter/mediasourcesloader.h>
 
 #include <KDE/KApplication>
 #include <KDE/KAboutData>
@@ -69,8 +69,8 @@ int main(int argc, char *argv[])
     MediaLibrary::instance();
 
     qRegisterMetaType< QHash<int,QVariant> >("QHash<int,QVariant>");
-    MetadataUpdater metadataUpdater;
-    metadataUpdater.start();
+    MediaSourcesLoader mediaSourcesLoader;
+    mediaSourcesLoader.load();
 
     MainWindow *mw  = new MainWindow;
     mw->show();

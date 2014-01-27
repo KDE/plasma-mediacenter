@@ -20,8 +20,7 @@
 #ifndef METADATAUPDATER_H
 #define METADATAUPDATER_H
 
-#include "mediacenter_export.h"
-#include <QtCore/QThread>
+#include <libs/mediacenter/abstractmediasource.h>
 
 #include <Nepomuk2/Query/Result>
 #include <Nepomuk2/Query/QueryServiceClient>
@@ -38,11 +37,11 @@ namespace Nepomuk2 {
     class Resource;
 }
 
-class MEDIACENTER_EXPORT MetadataUpdater : public QThread
+class MetadataUpdater : public MediaCenter::AbstractMediaSource
 {
     Q_OBJECT
 public:
-    explicit MetadataUpdater(QObject* parent = 0);
+    explicit MetadataUpdater(QObject* parent = 0, const QVariantList& args = QVariantList());
     virtual ~MetadataUpdater();
     void fetchMetadata(int row);
     void fetchMetadata(const QList<int> &rows);
