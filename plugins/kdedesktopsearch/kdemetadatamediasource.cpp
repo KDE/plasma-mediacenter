@@ -21,6 +21,7 @@
 
 #include <libs/mediacenter/mediacenter.h>
 #include <libs/mediacenter/medialibrary.h>
+#include <mediacenter/singletonfactory.h>
 
 #include <Nepomuk2/Resource>
 #include <Nepomuk2/Variant>
@@ -167,7 +168,7 @@ void KdeMetadataMediaSource::fetchValuesForResult(int i, const Nepomuk2::Query::
         }
     }
 
-    MediaLibrary::instance()->updateMedia(values);
+    SingletonFactory::instanceFor<MediaLibrary>()->updateMedia(values);
     emit gotMetadata(i, values);
 }
 

@@ -40,6 +40,7 @@ set (plasmamediacenter_SRCS
     filtermediamodel.cpp
     abstractmediasource.cpp
     mediasourcesloader.cpp
+    singletonfactory.cpp
 )
 
 set (plasmamediacenter_ODB_SRCS

@@ -19,6 +19,7 @@
 
 #include <mediacenter/medialibrary.h>
 #include <mediacenter/mediasourcesloader.h>
+#include <mediacenter/singletonfactory.h>
 
 #include <KDE/KApplication>
 #include <KDE/KAboutData>
@@ -66,7 +67,7 @@ int main(int argc, char *argv[])
     KCmdLineArgs::addCmdLineOptions(options);
 
     KApplication app;
-    MediaLibrary::instance();
+    SingletonFactory::instanceFor<MediaLibrary>()->start();
 
     qRegisterMetaType< QHash<int,QVariant> >("QHash<int,QVariant>");
     MediaSourcesLoader mediaSourcesLoader;

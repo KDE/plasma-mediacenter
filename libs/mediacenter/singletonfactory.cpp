@@ -16,36 +16,6 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#include "medialibrarytest.h"
+#include "singletonfactory.h"
 
-#include <mediacenter/medialibrary.h>
-
-#include <qtest_kde.h>
-
-QTEST_KDEMAIN(MediaLibraryTest, NoGUI);
-
-void MediaLibraryTest::initTestCase()
-{
-    mediaLibrary = new MediaLibrary(this);
-}
-
-void MediaLibraryTest::cleanupTestCase()
-{
-    // Called after the last testfunction was executed
-}
-
-void MediaLibraryTest::init()
-{
-    // Called before each testfunction is executed
-}
-
-void MediaLibraryTest::cleanup()
-{
-    // Called after every testfunction
-}
-
-void MediaLibraryTest::createsDbWhenNotPresent()
-{
-}
-
-#include "medialibrarytest.moc"
+QHash<QString, QObject*> SingletonFactory::instances;

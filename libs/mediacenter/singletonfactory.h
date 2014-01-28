@@ -16,36 +16,31 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#include "medialibrarytest.h"
+#ifndef SINGLETONFACTORY_H
+#define SINGLETONFACTORY_H
 
-#include <mediacenter/medialibrary.h>
+#include <QObject>
+#include <QHash>
 
-#include <qtest_kde.h>
+#include <typeinfo>
 
-QTEST_KDEMAIN(MediaLibraryTest, NoGUI);
-
-void MediaLibraryTest::initTestCase()
+class SingletonFactory
 {
-    mediaLibrary = new MediaLibrary(this);
-}
+public:
+    template <class T> static T* instanceFor()
+    {
+        const QString typeName(typeid(T).name());
 
-void MediaLibraryTest::cleanupTestCase()
-{
-    // Called after the last testfunction was executed
-}
+        if (!instances.contains(typeName)) {
+            instances.insert(typeName, static_cast<QObject*>(new T()));
+        }
 
-void MediaLibraryTest::init()
-{
-    // Called before each testfunction is executed
-}
+        return static_cast<T*>(instances.value(typeName));
+    }
+private:
+    explicit SingletonFactory(QObject* parent = 0);
 
-void MediaLibraryTest::cleanup()
-{
-    // Called after every testfunction
-}
+    static QHash<QString, QObject*> instances;
+};
 
-void MediaLibraryTest::createsDbWhenNotPresent()
-{
-}
-
-#include "medialibrarytest.moc"
+#endif // SINGLETONFACTORY_H

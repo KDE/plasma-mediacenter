@@ -23,6 +23,8 @@
 #include <QtCore/QThread>
 #include <KService>
 
+class MediaLibrary;
+
 namespace MediaCenter {
 class AbstractMediaSource : public QThread
 {
@@ -31,7 +33,15 @@ public:
     explicit AbstractMediaSource(QObject* parent = 0, const QVariantList &args = QVariantList());
     ~AbstractMediaSource();
 
+    void setMediaLibrary(MediaLibrary *mediaLibrary);
     static KService::List availableMediaSourcePlugins();
+
+protected:
+    MediaLibrary *mediaLibrary() const;
+
+private:
+    class Private;
+    Private * const d;
 };
 }
 

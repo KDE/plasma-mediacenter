@@ -18,7 +18,11 @@
  ***********************************************************************************/
 
 #include "mediasourcesloader.h"
-#include <abstractmediasource.h>
+#include "medialibrary.h"
+#include "abstractmediasource.h"
+
+#include "singletonfactory.h"
+
 #include <KPluginInfo>
 #include <KDebug>
 
@@ -52,6 +56,7 @@ void MediaSourcesLoader::load()
 
         if (mediaSource) {
             mediaSource->setParent(this);
+            mediaSource->setMediaLibrary(SingletonFactory::instanceFor<MediaLibrary>());
             mediaSource->start();
         } else {
             kDebug() << "Could not create a instance for the media source " << info.name() << errorMessage;

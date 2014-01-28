@@ -23,7 +23,15 @@
 
 using namespace MediaCenter;
 
-AbstractMediaSource::AbstractMediaSource(QObject* parent, const QVariantList& args): QThread(parent)
+class AbstractMediaSource::Private
+{
+public:
+    Private() : mediaLibrary(0) {}
+    MediaLibrary* mediaLibrary;
+};
+
+AbstractMediaSource::AbstractMediaSource(QObject* parent, const QVariantList& args)
+    : QThread(parent), d(new Private)
 {
 
 }
@@ -40,4 +48,14 @@ KService::List AbstractMediaSource::availableMediaSourcePlugins()
         kWarning() << "no available media sources";
     }
     return plugins;
+}
+
+void AbstractMediaSource::setMediaLibrary(MediaLibrary* mediaLibrary)
+{
+    d->mediaLibrary = mediaLibrary;
+}
+
+MediaLibrary* AbstractMediaSource::mediaLibrary() const
+{
+    return d->mediaLibrary;
 }

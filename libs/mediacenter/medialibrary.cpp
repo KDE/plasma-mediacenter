@@ -17,7 +17,6 @@
  ***********************************************************************************/
 
 #include "medialibrary.h"
-#include <KDE/KGlobal>
 
 #include <QVariant>
 #include <QTimer>
@@ -37,19 +36,6 @@
 #include <odb/sqlite/exceptions.hxx>
 
 typedef odb::result<Media> MediaResult;
-
-class MediaLibrary::Singleton
-{
-public:
-    MediaLibrary q;
-};
-
-K_GLOBAL_STATIC( MediaLibrary::Singleton, singleton )
-
-MediaLibrary *MediaLibrary::instance()
-{
-    return &( singleton->q );
-}
 
 class MediaLibrary::Private
 {
@@ -106,7 +92,6 @@ MediaLibrary::MediaLibrary(QObject* parent)
             SLOT(emitNewMediaWithMediaList()));
 
     QTimer::singleShot(0, this , SLOT(initDb()));
-    start();
 }
 
 MediaLibrary::~MediaLibrary()
@@ -310,6 +295,7 @@ void MediaLibrary::updateLibrary()
         addMedia(m);
     }
 
+    emit initialized();
 //     d->db->tracer(odb::stderr_tracer);
 }
 

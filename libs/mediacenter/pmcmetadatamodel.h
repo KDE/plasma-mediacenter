@@ -32,6 +32,7 @@
 #include <QSharedPointer>
 #include <QList>
 
+class MediaLibrary;
 class QPixmap;
 class KFileItem;
 
@@ -39,7 +40,7 @@ class MEDIACENTER_EXPORT PmcMetadataModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    explicit PmcMetadataModel(QObject* parent = 0);
+    explicit PmcMetadataModel(QObject* parent = 0, MediaLibrary* mediaLibrary = 0);
     virtual ~PmcMetadataModel();
     virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
     virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;

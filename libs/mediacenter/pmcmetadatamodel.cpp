@@ -24,6 +24,7 @@
 #include "media.h"
 #include "medialibrary.h"
 #include "pmcmedia.h"
+#include "singletonfactory.h"
 
 #include <KIO/PreviewJob>
 #include <KDebug>
@@ -61,12 +62,15 @@ public:
     QHash< QString, QSharedPointer<QObject> > mediaByResourceId;
 
     QHash<QString, Mode> modeForMediaType;
+    MediaLibrary *mediaLibrary;
 };
 
-PmcMetadataModel::PmcMetadataModel(QObject* parent):
+PmcMetadataModel::PmcMetadataModel(QObject* parent, MediaLibrary* mediaLibrary):
     QAbstractListModel(parent),
     d(new Private())
 {
+    d->mediaLibrary = mediaLibrary ? mediaLibrary : SingletonFactory::instanceFor<MediaLibrary>();
+
     setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
 
     d->previewTimer.setSingleShot(true);
@@ -106,9 +110,9 @@ void PmcMetadataModel::showMediaType(MediaCenter::MediaType mediaType)
             d->currentMode = Video;
     }
     const QString mediaTypeString = d->modeForMediaType.key(d->currentMode);
-    QList <QSharedPointer<PmcMedia> > mediaData = MediaLibrary::instance()->getMedia(mediaTypeString);
+    QList <QSharedPointer<PmcMedia> > mediaData = d->mediaLibrary->getMedia(mediaTypeString);
 
-    connect(MediaLibrary::instance(),
+    connect(d->mediaLibrary,
             SIGNAL(newMedia(QList<QSharedPointer<PmcMedia> >)),
             SLOT(handleNewMedia(QList<QSharedPointer<PmcMedia> >)));
 
@@ -117,10 +121,10 @@ void PmcMetadataModel::showMediaType(MediaCenter::MediaType mediaType)
 
 void PmcMetadataModel::showAlbums()
 {
-    QList <QSharedPointer<PmcAlbum> > mediaData = MediaLibrary::instance()->getAlbums();
+    QList <QSharedPointer<PmcAlbum> > mediaData = d->mediaLibrary->getAlbums();
     d->currentMode = Album;
 
-    connect(MediaLibrary::instance(),
+    connect(d->mediaLibrary,
             SIGNAL(newAlbums(QList<QSharedPointer<PmcAlbum> >)),
             SLOT(handleNewAlbums(QList<QSharedPointer<PmcAlbum> >)));
     handleNewAlbums(mediaData);
@@ -128,10 +132,10 @@ void PmcMetadataModel::showAlbums()
 
 void PmcMetadataModel::showArtist()
 {
-    QList <QSharedPointer<PmcArtist> > mediaData = MediaLibrary::instance()->getArtists();
+    QList <QSharedPointer<PmcArtist> > mediaData = d->mediaLibrary->getArtists();
     d->currentMode = Artist;
 
-    connect(MediaLibrary::instance(),
+    connect(d->mediaLibrary,
             SIGNAL(newArtists(QList<QSharedPointer<PmcArtist> >)),
             SLOT(handleNewArtists(QList<QSharedPointer<PmcArtist> >)));
     handleNewArtists(mediaData);

@@ -36,10 +36,6 @@ class MEDIACENTER_EXPORT MediaLibrary : public QThread
 {
     Q_OBJECT
 public:
-    class Singleton;
-
-    static MediaLibrary *instance();
-
     explicit MediaLibrary(QObject* parent = 0);
     ~MediaLibrary();
 
@@ -52,6 +48,8 @@ public:
     QList< QSharedPointer< PmcArtist > > getArtists() const;
 
 Q_SIGNALS:
+    void initialized();
+
     void newMedia(const QList< QSharedPointer<PmcMedia> > &media);
     void newAlbums(const QList< QSharedPointer<PmcAlbum> > &album);
     void newArtists(const QList< QSharedPointer<PmcArtist> > &artist);
