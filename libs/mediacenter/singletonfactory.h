@@ -38,8 +38,6 @@ public:
         return static_cast<T*>(instances.value(typeName));
     }
 private:
-    explicit SingletonFactory(QObject* parent = 0);
-
     static QHash<QString, QObject*> instances;
 };
 
