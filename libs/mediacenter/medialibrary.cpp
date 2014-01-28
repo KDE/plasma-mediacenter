@@ -40,12 +40,16 @@ typedef odb::result<Media> MediaResult;
 class MediaLibrary::Private
 {
 public:
-    Private() : session(0) { }
+    Private() : db(0), session(0) { }
 
     ~Private()
     {
         if (session) {
             delete session;
+        }
+
+        if (db) {
+            delete db;
         }
     }
     odb::core::database *db;
