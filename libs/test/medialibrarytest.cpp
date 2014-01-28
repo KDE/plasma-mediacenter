@@ -21,6 +21,7 @@
 #include <mediacenter/medialibrary.h>
 
 #include <qtest_kde.h>
+#include <mediacenter/mediacenter.h>
 
 QTEST_KDEMAIN(MediaLibraryTest, NoGUI);
 
@@ -67,6 +68,40 @@ void MediaLibraryTest::createsDbWhenNotPresent()
 
     QVERIFY2(initializedSpy.size() == 1, "MediaLibrary did not emit initialized exactly 1 time");
     QVERIFY2(QDir::current().exists("plasma-mediacenter.db"), "The DB was not created");
+}
+
+void MediaLibraryTest::addsNewMedia()
+{
+    MediaLibrary mediaLibrary;
+
+    QSignalSpy newMediaSpy(&mediaLibrary, SIGNAL(newMedia(QList< QSharedPointer<PmcMedia> >)));
+    QVERIFY2(newMediaSpy.isValid(), "Could not listen to signal newMedia");
+
+    mediaLibrary.start();
+
+    QHash<int,QVariant> data;
+    data.insert(MediaCenter::MediaUrlRole, "/foo/bar");
+    data.insert(Qt::DisplayRole, "Title");
+    data.insert(MediaCenter::MediaTypeRole, "audio");
+    data.insert(Qt::DecorationRole, "smiley");
+    data.insert(MediaCenter::AlbumRole, "album");
+    data.insert(MediaCenter::ArtistRole, "artist");
+
+    mediaLibrary.updateMedia(data);
+
+    waitForSignal(&newMediaSpy, 2000);
+
+    QCOMPARE(newMediaSpy.size(), 1);
+    QList<QSharedPointer<PmcMedia> > returned = newMediaSpy.takeFirst().first().value< QList<QSharedPointer<PmcMedia> > >();
+    QCOMPARE(returned.size(), 1);
+
+    QSharedPointer<PmcMedia> media = returned.first();
+    QCOMPARE(media->url(), data.value(MediaCenter::MediaUrlRole).toString());
+    QCOMPARE(media->title(), data.value(Qt::DisplayRole).toString());
+    QCOMPARE(media->type(), data.value(MediaCenter::MediaTypeRole).toString());
+    QCOMPARE(media->thumbnail(), data.value(Qt::DecorationRole).toString());
+    QCOMPARE(media->album(), data.value(MediaCenter::AlbumRole).toString());
+    QCOMPARE(media->artist(), data.value(MediaCenter::ArtistRole).toString());
 }
 
 #include "medialibrarytest.moc"

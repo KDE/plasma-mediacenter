@@ -20,7 +20,10 @@
 #define MEDIALIBRARYTEST_H
 
 #include <QObject>
+#include <QMetaType>
+#include <QSharedPointer>
 
+class PmcMedia;
 class QSignalSpy;
 class MediaLibrary;
 class MediaLibraryTest : public QObject
@@ -35,8 +38,12 @@ private slots:
 
     void createsDbWhenNotPresent();
 
+    void addsNewMedia();
+
 private:
     bool waitForSignal(QSignalSpy* spy, int timeoutms);
 };
+
+Q_DECLARE_METATYPE(QList<QSharedPointer<PmcMedia> >)
 
 #endif // MEDIALIBRARYTEST_H
