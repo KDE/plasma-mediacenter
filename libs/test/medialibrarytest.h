@@ -21,6 +21,7 @@
 
 #include <QObject>
 
+class QSignalSpy;
 class MediaLibrary;
 class MediaLibraryTest : public QObject
 {
@@ -35,7 +36,7 @@ private slots:
     void createsDbWhenNotPresent();
 
 private:
-    MediaLibrary *mediaLibrary;
+    bool waitForSignal(QSignalSpy* spy, int timeoutms);
 };
 
 #endif // MEDIALIBRARYTEST_H

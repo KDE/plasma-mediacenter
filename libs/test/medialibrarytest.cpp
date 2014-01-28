@@ -26,7 +26,6 @@ QTEST_KDEMAIN(MediaLibraryTest, NoGUI);
 
 void MediaLibraryTest::initTestCase()
 {
-    mediaLibrary = new MediaLibrary(this);
 }
 
 void MediaLibraryTest::cleanupTestCase()
@@ -36,7 +35,7 @@ void MediaLibraryTest::cleanupTestCase()
 
 void MediaLibraryTest::init()
 {
-    // Called before each testfunction is executed
+    QDir::current().remove("plasma-mediacenter.db");
 }
 
 void MediaLibraryTest::cleanup()
@@ -44,8 +43,30 @@ void MediaLibraryTest::cleanup()
     // Called after every testfunction
 }
 
+//from https://bugreports.qt-project.org/browse/QTBUG-2986
+bool MediaLibraryTest::waitForSignal(QSignalSpy* spy, int timeoutms)
+{
+    QTime timer;
+    timer.start();
+    while (spy->isEmpty() && timer.elapsed() < timeoutms)
+    {
+        QCoreApplication::processEvents();
+    }
+    return !spy->isEmpty();
+}
+
 void MediaLibraryTest::createsDbWhenNotPresent()
 {
+    MediaLibrary mediaLibrary;
+
+    QSignalSpy initializedSpy(&mediaLibrary, SIGNAL(initialized()));
+    QVERIFY2(initializedSpy.isValid(), "Could not listen to signal initialized");
+
+    mediaLibrary.start();
+    waitForSignal(&initializedSpy, 2000);
+
+    QVERIFY2(initializedSpy.size() == 1, "MediaLibrary did not emit initialized exactly 1 time");
+    QVERIFY2(QDir::current().exists("plasma-mediacenter.db"), "The DB was not created");
 }
 
 #include "medialibrarytest.moc"
