@@ -125,8 +125,6 @@ bool Media::setValueForRole(int role, const QVariant& value)
                 qWarning() << "Media URLs CANNOT be changed";
             }
             return false;
-        case MediaCenter::MediaThumbnailRole:
-            return setThumbnail(value.toString());
         case Qt::DecorationRole:
             return thumbnail().isEmpty() ? setThumbnail(value.toString()) : false;
         default:

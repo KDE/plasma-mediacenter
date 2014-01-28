@@ -37,7 +37,6 @@ enum AdditionalMediaRoles {
     DecorationTypeRole,
     HideLabelRole,
     ResourceIdRole,
-    MediaThumbnailRole,
     DurationRole,
     ArtistRole,
     AlbumRole,
