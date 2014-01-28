@@ -62,12 +62,12 @@ const QString& PmcMedia::url() const
     return d->media->url();
 }
 
-const QString& PmcMedia::album() const
+QString PmcMedia::album() const
 {
     return d->media->album() ? d->media->album()->name() : QString();
 }
 
-const QString& PmcMedia::artist() const
+QString PmcMedia::artist() const
 {
     return d->media->artist() ? d->media->artist()->name() : QString();
 }

@@ -36,8 +36,8 @@ public:
     const QString& url() const;
     const QString& thumbnail () const;
     const QString& type() const;
-    const QString& album() const;
-    const QString& artist() const;
+    QString album() const;
+    QString artist() const;
 
 signals:
     void updated();
