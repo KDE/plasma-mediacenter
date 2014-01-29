@@ -23,6 +23,8 @@
 #include <QMetaType>
 #include <QSharedPointer>
 
+class PmcArtist;
+class PmcAlbum;
 class PmcMedia;
 class QSignalSpy;
 class MediaLibrary;
@@ -38,12 +40,14 @@ private slots:
 
     void createsDbWhenNotPresent();
 
-    void addsNewMedia();
+    void addsNewMediaAndItsAlbumArtist();
 
 private:
     bool waitForSignal(QSignalSpy* spy, int timeoutms);
 };
 
 Q_DECLARE_METATYPE(QList<QSharedPointer<PmcMedia> >)
+Q_DECLARE_METATYPE(QList<QSharedPointer<PmcAlbum> >)
+Q_DECLARE_METATYPE(QList<QSharedPointer<PmcArtist> >)
 
 #endif // MEDIALIBRARYTEST_H

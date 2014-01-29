@@ -70,12 +70,16 @@ void MediaLibraryTest::createsDbWhenNotPresent()
     QVERIFY2(QDir::current().exists("plasma-mediacenter.db"), "The DB was not created");
 }
 
-void MediaLibraryTest::addsNewMedia()
+void MediaLibraryTest::addsNewMediaAndItsAlbumArtist()
 {
     MediaLibrary mediaLibrary;
 
     QSignalSpy newMediaSpy(&mediaLibrary, SIGNAL(newMedia(QList< QSharedPointer<PmcMedia> >)));
     QVERIFY2(newMediaSpy.isValid(), "Could not listen to signal newMedia");
+    QSignalSpy newAlbumSpy(&mediaLibrary, SIGNAL(newAlbums(QList< QSharedPointer<PmcAlbum> >)));
+    QVERIFY2(newAlbumSpy.isValid(), "Could not listen to signal newAlbums");
+    QSignalSpy newArtistSpy(&mediaLibrary, SIGNAL(newArtists(QList< QSharedPointer<PmcArtist> >)));
+    QVERIFY2(newArtistSpy.isValid(), "Could not listen to signal newArtists");
 
     mediaLibrary.start();
 
@@ -90,18 +94,37 @@ void MediaLibraryTest::addsNewMedia()
     mediaLibrary.updateMedia(data);
 
     waitForSignal(&newMediaSpy, 2000);
+    waitForSignal(&newAlbumSpy, 2000);
+    waitForSignal(&newArtistSpy, 2000);
 
     QCOMPARE(newMediaSpy.size(), 1);
-    QList<QSharedPointer<PmcMedia> > returned = newMediaSpy.takeFirst().first().value< QList<QSharedPointer<PmcMedia> > >();
-    QCOMPARE(returned.size(), 1);
+    QList<QSharedPointer<PmcMedia> > returnedMedia = newMediaSpy.takeFirst().first().value< QList<QSharedPointer<PmcMedia> > >();
+    QCOMPARE(returnedMedia.size(), 1);
 
-    QSharedPointer<PmcMedia> media = returned.first();
+    QSharedPointer<PmcMedia> media = returnedMedia.first();
     QCOMPARE(media->url(), data.value(MediaCenter::MediaUrlRole).toString());
     QCOMPARE(media->title(), data.value(Qt::DisplayRole).toString());
     QCOMPARE(media->type(), data.value(MediaCenter::MediaTypeRole).toString());
     QCOMPARE(media->thumbnail(), data.value(Qt::DecorationRole).toString());
     QCOMPARE(media->album(), data.value(MediaCenter::AlbumRole).toString());
     QCOMPARE(media->artist(), data.value(MediaCenter::ArtistRole).toString());
+
+
+    QCOMPARE(newAlbumSpy.size(), 1);
+    QList<QSharedPointer<PmcAlbum> > returnedAlbum = newAlbumSpy.takeFirst().first().value< QList<QSharedPointer<PmcAlbum> > >();
+    QCOMPARE(returnedAlbum.size(), 1);
+
+    QSharedPointer<PmcAlbum> album = returnedAlbum.first();
+    QCOMPARE(album->name(), data.value(MediaCenter::AlbumRole).toString());
+    QCOMPARE(album->albumArtist(), data.value(MediaCenter::ArtistRole).toString());
+
+
+    QCOMPARE(newArtistSpy.size(), 1);
+    QList<QSharedPointer<PmcArtist> > returnedArtist = newArtistSpy.takeFirst().first().value< QList<QSharedPointer<PmcArtist> > >();
+    QCOMPARE(returnedArtist.size(), 1);
+
+    QSharedPointer<PmcArtist> artist = returnedArtist.first();
+    QCOMPARE(artist->name(), data.value(MediaCenter::ArtistRole).toString());
 }
 
 #include "medialibrarytest.moc"

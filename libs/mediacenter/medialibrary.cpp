@@ -167,6 +167,7 @@ void MediaLibrary::processNextRequest()
 
         addMedia(media);
         const QString sha = d->db->persist(media);
+        d->db->reload(media->album());
         qDebug() << "Saved " << sha;
     }
 }
