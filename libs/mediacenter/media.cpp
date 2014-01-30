@@ -24,14 +24,6 @@
 #include <QTimer>
 #include <QDebug>
 
-#define UPDATE(property, value) \
-    if (property != value) { \
-        property = value; \
-        emitUpdate(); \
-        return true; \
-    } \
-    return false;
-
 class Media::Private
 {
 public:
@@ -52,6 +44,17 @@ Media::Media(const QString& url, QObject* parent)
 Media::Media(QObject* parent): QObject(parent), d(new Private())
 {
     initUpdateTimer();
+}
+
+template <class T>
+bool Media::updateIfChanged(T& variable, const T& newValue)
+{
+    if (variable != newValue) {
+        variable = newValue;
+        emitUpdate();
+        return true;
+    }
+    return false;
 }
 
 void Media::initUpdateTimer()
@@ -80,7 +83,7 @@ const QString& Media::title() const
 
 bool Media::setTitle(const QString& title)
 {
-    UPDATE(m_title, title);
+    updateIfChanged(m_title, title);
 }
 
 const QString& Media::url() const
@@ -95,7 +98,7 @@ const QString& Media::thumbnail() const
 
 bool Media::setThumbnail(const QString& thumbnail)
 {
-    UPDATE(m_thumbnail, thumbnail);
+    updateIfChanged(m_thumbnail, thumbnail);
 }
 
 const QString& Media::sha() const
@@ -105,7 +108,7 @@ const QString& Media::sha() const
 
 bool Media::setType(const QString& type)
 {
-    UPDATE(m_type, type);
+    updateIfChanged(m_type, type);
 }
 
 const QString& Media::type() const
@@ -140,7 +143,7 @@ const QSharedPointer< Album >& Media::album() const
 
 void Media::setAlbum(const QSharedPointer< Album >& album)
 {
-    m_album = album;
+    updateIfChanged(m_album, album);
 }
 
 const QSharedPointer< Artist >& Media::artist() const
@@ -150,5 +153,5 @@ const QSharedPointer< Artist >& Media::artist() const
 
 void Media::setArtist(const QSharedPointer< Artist >& artist)
 {
-    m_artist = artist;
+    updateIfChanged(m_artist, artist);
 }

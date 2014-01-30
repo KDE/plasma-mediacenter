@@ -83,6 +83,8 @@ private:
 
     inline void emitUpdate();
     void initUpdateTimer();
+
+    template <class T> bool updateIfChanged(T &variable, const T &newValue);
 };
 
 #endif // MEDIA_H
