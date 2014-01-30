@@ -41,7 +41,7 @@ void MediaLibraryTest::init()
 
 void MediaLibraryTest::cleanup()
 {
-    // Called after every testfunction
+    QDir::current().remove("plasma-mediacenter.db");
 }
 
 //from https://bugreports.qt-project.org/browse/QTBUG-2986
