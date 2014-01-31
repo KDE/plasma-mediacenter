@@ -28,6 +28,7 @@ class PmcAlbum;
 class PmcMedia;
 class QSignalSpy;
 class MediaLibrary;
+
 class MediaLibraryTest : public QObject
 {
     Q_OBJECT
@@ -42,8 +43,14 @@ private slots:
 
     void addsNewMediaAndItsAlbumArtist();
 
+    void shouldNotEmitNewMediaWhenExistingMediaUpdated();
+
+    void shouldNotEmitUpdatedWhenNothingUpdated();
+
 private:
     bool waitForSignal(QSignalSpy* spy, int timeoutms);
+    QHash< int, QVariant > createTestMediaData() const;
+    QHash< int, QVariant > createTestMediaDataWithAlbumArtist() const;
 };
 
 Q_DECLARE_METATYPE(QList<QSharedPointer<PmcMedia> >)

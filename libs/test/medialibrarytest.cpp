@@ -56,6 +56,26 @@ bool MediaLibraryTest::waitForSignal(QSignalSpy* spy, int timeoutms)
     return !spy->isEmpty();
 }
 
+QHash<int,QVariant> MediaLibraryTest::createTestMediaData() const
+{
+    QHash<int,QVariant> data;
+    data.insert(MediaCenter::MediaUrlRole, "/foo/bar");
+    data.insert(Qt::DisplayRole, "Title");
+    data.insert(MediaCenter::MediaTypeRole, "audio");
+    data.insert(Qt::DecorationRole, "smiley");
+
+    return data;
+}
+
+QHash< int, QVariant > MediaLibraryTest::createTestMediaDataWithAlbumArtist() const
+{
+    QHash<int,QVariant> data = createTestMediaData();
+    data.insert(MediaCenter::AlbumRole, "album");
+    data.insert(MediaCenter::ArtistRole, "artist");
+
+    return data;
+}
+
 void MediaLibraryTest::createsDbWhenNotPresent()
 {
     MediaLibrary mediaLibrary;
@@ -73,6 +93,7 @@ void MediaLibraryTest::createsDbWhenNotPresent()
 void MediaLibraryTest::addsNewMediaAndItsAlbumArtist()
 {
     MediaLibrary mediaLibrary;
+    mediaLibrary.start();
 
     QSignalSpy newMediaSpy(&mediaLibrary, SIGNAL(newMedia(QList< QSharedPointer<PmcMedia> >)));
     QVERIFY2(newMediaSpy.isValid(), "Could not listen to signal newMedia");
@@ -81,15 +102,7 @@ void MediaLibraryTest::addsNewMediaAndItsAlbumArtist()
     QSignalSpy newArtistSpy(&mediaLibrary, SIGNAL(newArtists(QList< QSharedPointer<PmcArtist> >)));
     QVERIFY2(newArtistSpy.isValid(), "Could not listen to signal newArtists");
 
-    mediaLibrary.start();
-
-    QHash<int,QVariant> data;
-    data.insert(MediaCenter::MediaUrlRole, "/foo/bar");
-    data.insert(Qt::DisplayRole, "Title");
-    data.insert(MediaCenter::MediaTypeRole, "audio");
-    data.insert(Qt::DecorationRole, "smiley");
-    data.insert(MediaCenter::AlbumRole, "album");
-    data.insert(MediaCenter::ArtistRole, "artist");
+    QHash<int,QVariant> data = createTestMediaDataWithAlbumArtist();
 
     mediaLibrary.updateMedia(data);
 
@@ -125,6 +138,67 @@ void MediaLibraryTest::addsNewMediaAndItsAlbumArtist()
 
     QSharedPointer<PmcArtist> artist = returnedArtist.first();
     QCOMPARE(artist->name(), data.value(MediaCenter::ArtistRole).toString());
+}
+
+void MediaLibraryTest::shouldNotEmitNewMediaWhenExistingMediaUpdated()
+{
+    MediaLibrary mediaLibrary;
+    mediaLibrary.start();
+
+    QHash<int,QVariant> data = createTestMediaData();
+
+    QSignalSpy newMediaSpy(&mediaLibrary, SIGNAL(newMedia(QList< QSharedPointer<PmcMedia> >)));
+    QVERIFY2(newMediaSpy.isValid(), "Could not listen to signal newMedia");
+
+    mediaLibrary.updateMedia(data);
+
+    waitForSignal(&newMediaSpy, 2000);
+    QCOMPARE(newMediaSpy.size(), 1);
+    QList<QSharedPointer<PmcMedia> > returnedMedia = newMediaSpy.takeFirst().first().value< QList<QSharedPointer<PmcMedia> > >();
+    QCOMPARE(returnedMedia.size(), 1);
+
+    QSharedPointer<PmcMedia> pmcMedia = returnedMedia.at(0);
+    QSignalSpy mediaUpdatedSpy(pmcMedia.data(), SIGNAL(updated()));
+
+    data.insert(Qt::DisplayRole, "New title");
+    mediaLibrary.updateMedia(data);
+
+    //Should not emit newMedia
+    waitForSignal(&newMediaSpy, 2000);
+    QCOMPARE(newMediaSpy.size(), 0);
+
+    //Should emit updated for the PmcMedia
+    QCOMPARE(mediaUpdatedSpy.size(), 1);
+}
+
+void MediaLibraryTest::shouldNotEmitUpdatedWhenNothingUpdated()
+{
+    MediaLibrary mediaLibrary;
+    mediaLibrary.start();
+
+    QHash<int,QVariant> data = createTestMediaData();
+
+    QSignalSpy newMediaSpy(&mediaLibrary, SIGNAL(newMedia(QList< QSharedPointer<PmcMedia> >)));
+    QVERIFY2(newMediaSpy.isValid(), "Could not listen to signal newMedia");
+
+    mediaLibrary.updateMedia(data);
+
+    waitForSignal(&newMediaSpy, 2000);
+    QCOMPARE(newMediaSpy.size(), 1);
+    QList<QSharedPointer<PmcMedia> > returnedMedia = newMediaSpy.takeFirst().first().value< QList<QSharedPointer<PmcMedia> > >();
+    QCOMPARE(returnedMedia.size(), 1);
+
+    QSharedPointer<PmcMedia> pmcMedia = returnedMedia.at(0);
+    QSignalSpy mediaUpdatedSpy(pmcMedia.data(), SIGNAL(updated()));
+
+    mediaLibrary.updateMedia(data);
+
+    //Should not emit newMedia
+    waitForSignal(&newMediaSpy, 2000);
+    QCOMPARE(newMediaSpy.size(), 0);
+
+    //Should not emit updated for the PmcMedia
+    QCOMPARE(mediaUpdatedSpy.size(), 0);
 }
 
 #include "medialibrarytest.moc"
