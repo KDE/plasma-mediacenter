@@ -145,7 +145,7 @@ void MediaLibraryTest::shouldNotEmitNewMediaWhenExistingMediaUpdated()
     MediaLibrary mediaLibrary;
     mediaLibrary.start();
 
-    QHash<int,QVariant> data = createTestMediaData();
+    QHash<int,QVariant> data = createTestMediaDataWithAlbumArtist();
 
     QSignalSpy newMediaSpy(&mediaLibrary, SIGNAL(newMedia(QList< QSharedPointer<PmcMedia> >)));
     QVERIFY2(newMediaSpy.isValid(), "Could not listen to signal newMedia");
@@ -176,7 +176,7 @@ void MediaLibraryTest::shouldNotEmitUpdatedWhenNothingUpdated()
     MediaLibrary mediaLibrary;
     mediaLibrary.start();
 
-    QHash<int,QVariant> data = createTestMediaData();
+    QHash<int,QVariant> data = createTestMediaDataWithAlbumArtist();
 
     QSignalSpy newMediaSpy(&mediaLibrary, SIGNAL(newMedia(QList< QSharedPointer<PmcMedia> >)));
     QVERIFY2(newMediaSpy.isValid(), "Could not listen to signal newMedia");
