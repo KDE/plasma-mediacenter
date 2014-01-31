@@ -32,11 +32,13 @@
 #include "pmcartist.h"
 #include "pmcalbum.h"
 
+class MediaValidator;
+
 class MEDIACENTER_EXPORT MediaLibrary : public QThread
 {
     Q_OBJECT
 public:
-    explicit MediaLibrary(QObject* parent = 0);
+    explicit MediaLibrary(MediaValidator *mediaValidator = 0, QObject* parent = 0);
     ~MediaLibrary();
 
     virtual void run();

@@ -41,6 +41,7 @@ set (plasmamediacenter_SRCS
     abstractmediasource.cpp
     mediasourcesloader.cpp
     singletonfactory.cpp
+    mediavalidator.cpp
 )
 
 set (plasmamediacenter_ODB_SRCS

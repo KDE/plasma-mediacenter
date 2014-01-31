@@ -29,6 +29,11 @@ namespace {
     static const int TIMEOUT_FOR_SIGNALS = 2000;
 }
 
+bool FakeMediaValidator::fileWithUrlExists(const QString& url)
+{
+    return true;
+}
+
 void MediaLibraryTest::initTestCase()
 {
 }
@@ -96,7 +101,8 @@ void MediaLibraryTest::createsDbWhenNotPresent()
 
 void MediaLibraryTest::addsNewMediaAndItsAlbumArtist()
 {
-    MediaLibrary mediaLibrary;
+    FakeMediaValidator validator;
+    MediaLibrary mediaLibrary(&validator);
     mediaLibrary.start();
 
     QSignalSpy newMediaSpy(&mediaLibrary, SIGNAL(newMedia(QList< QSharedPointer<PmcMedia> >)));
@@ -146,7 +152,8 @@ void MediaLibraryTest::addsNewMediaAndItsAlbumArtist()
 
 void MediaLibraryTest::shouldEmitUpdatedForMediaInsteadOfNewMediaWhenDataUpdated()
 {
-    MediaLibrary mediaLibrary;
+    FakeMediaValidator validator;
+    MediaLibrary mediaLibrary(&validator);
     mediaLibrary.start();
 
     QHash<int,QVariant> data = createTestMediaDataWithAlbumArtist();
@@ -177,7 +184,8 @@ void MediaLibraryTest::shouldEmitUpdatedForMediaInsteadOfNewMediaWhenDataUpdated
 
 void MediaLibraryTest::shouldNotEmitUpdatedWhenNothingUpdated()
 {
-    MediaLibrary mediaLibrary;
+    FakeMediaValidator validator;
+    MediaLibrary mediaLibrary(&validator);
     mediaLibrary.start();
 
     QHash<int,QVariant> data = createTestMediaDataWithAlbumArtist();
@@ -207,7 +215,8 @@ void MediaLibraryTest::shouldNotEmitUpdatedWhenNothingUpdated()
 
 void MediaLibraryTest::shouldEmitUpdatedWhenAlbumOrArtistChanged()
 {
-    MediaLibrary mediaLibrary;
+    FakeMediaValidator validator;
+    MediaLibrary mediaLibrary(&validator);
     mediaLibrary.start();
 
     QHash<int,QVariant> data = createTestMediaDataWithAlbumArtist();
@@ -245,6 +254,57 @@ void MediaLibraryTest::shouldEmitUpdatedWhenAlbumOrArtistChanged()
 
     //Should emit updated for the PmcMedia
     QCOMPARE(mediaUpdatedSpy.size(), 1);
+}
+
+void MediaLibraryTest::shouldNotAddMediaForNonExistentFile()
+{
+    MediaLibrary mediaLibrary;
+    mediaLibrary.start();
+
+    QSignalSpy newMediaSpy(&mediaLibrary, SIGNAL(newMedia(QList< QSharedPointer<PmcMedia> >)));
+    QVERIFY2(newMediaSpy.isValid(), "Could not listen to signal newMedia");
+
+    QHash<int,QVariant> data = createTestMediaDataWithAlbumArtist();
+
+    mediaLibrary.updateMedia(data);
+
+    waitForSignal(&newMediaSpy, TIMEOUT_FOR_SIGNALS*2);
+
+    QCOMPARE(newMediaSpy.size(), 0);
+}
+
+void MediaLibraryTest::shouldCleanupEntriesForNonExistentMedia()
+{
+    FakeMediaValidator validator;
+    MediaLibrary *mediaLibrary = new MediaLibrary(&validator);
+    mediaLibrary->start();
+
+    QSignalSpy newMediaSpy(mediaLibrary, SIGNAL(newMedia(QList< QSharedPointer<PmcMedia> >)));
+    QVERIFY2(newMediaSpy.isValid(), "Could not listen to signal newMedia");
+
+    QHash<int,QVariant> data = createTestMediaDataWithAlbumArtist();
+
+    mediaLibrary->updateMedia(data);
+
+    waitForSignal(&newMediaSpy, TIMEOUT_FOR_SIGNALS);
+
+    QCOMPARE(newMediaSpy.size(), 1);
+    QList<QSharedPointer<PmcMedia> > returnedMedia = newMediaSpy.takeFirst().first().value< QList<QSharedPointer<PmcMedia> > >();
+    QCOMPARE(returnedMedia.size(), 1);
+
+    delete mediaLibrary;
+
+    mediaLibrary = new MediaLibrary();
+
+    QSignalSpy anotherNewMediaSpy(mediaLibrary, SIGNAL(newMedia(QList< QSharedPointer<PmcMedia> >)));
+    QVERIFY2(anotherNewMediaSpy.isValid(), "Could not listen to signal newMedia");
+
+    mediaLibrary->start();
+
+    waitForSignal(&anotherNewMediaSpy, TIMEOUT_FOR_SIGNALS*2);
+    QCOMPARE(anotherNewMediaSpy.size(), 0);
+
+    delete mediaLibrary;
 }
 
 #include "medialibrarytest.moc"

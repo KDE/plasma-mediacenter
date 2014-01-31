@@ -26,6 +26,7 @@
 #include "artist.h"
 #include "mediacenter.h"
 #include "medialibrarywrappercache.h"
+#include "mediavalidator.h"
 #include "media_odb.h"
 
 #include <odb/database.hxx>
@@ -76,9 +77,10 @@ public:
     QList<QSharedPointer<Artist> > artistList;
 
     MediaLibraryWrapperCache *wrapperCache;
+    MediaValidator *mediaValidator;
 };
 
-MediaLibrary::MediaLibrary(QObject* parent)
+MediaLibrary::MediaLibrary(MediaValidator* mediaValidator, QObject* parent)
     : QThread(parent)
     , d(new Private())
 {
@@ -89,6 +91,7 @@ MediaLibrary::MediaLibrary(QObject* parent)
     moveToThread(this);
 
     d->wrapperCache = new MediaLibraryWrapperCache(this);
+    d->mediaValidator = mediaValidator ? mediaValidator : new MediaValidator(this);
 
     d->newMediaTimer.setInterval(1000);
     d->newMediaTimer.setSingleShot(true);
@@ -154,20 +157,22 @@ void MediaLibrary::processNextRequest()
             qDebug() << "Updated " << media->url();
         }
     } else {
-        QSharedPointer<Media> media(new Media(request.first));
-        foreach(int role, request.second.keys()) {
-            if (role == MediaCenter::AlbumRole) {
-                extractAndSaveAlbumInfo(request, media);
-            } else if(role == MediaCenter::ArtistRole) {
-                extractAndSaveArtistInfo(request, media);
-            } else {
-                media->setValueForRole(role, request.second.value(role));
+        if (d->mediaValidator->fileWithUrlExists(request.first)) {
+            QSharedPointer<Media> media(new Media(request.first));
+            foreach(int role, request.second.keys()) {
+                if (role == MediaCenter::AlbumRole) {
+                    extractAndSaveAlbumInfo(request, media);
+                } else if(role == MediaCenter::ArtistRole) {
+                    extractAndSaveArtistInfo(request, media);
+                } else {
+                    media->setValueForRole(role, request.second.value(role));
+                }
             }
-        }
 
-        addMedia(media);
-        const QString sha = persistMedia(media);
-        qDebug() << "Saved " << sha;
+            addMedia(media);
+            const QString sha = persistMedia(media);
+            qDebug() << "Saved " << sha;
+        }
     }
 }
 
@@ -309,9 +314,14 @@ void MediaLibrary::updateLibrary()
 
     for (MediaResult::iterator i=mediaResults.begin(); i!=mediaResults.end(); ++i) {
         QSharedPointer<Media> m = i.load();
-        addMedia(m);
+        if (d->mediaValidator->fileWithUrlExists(m->url())) {
+            addMedia(m);
+        } else {
+            d->db->erase(m);
+        }
     }
 
+    t.commit();
     emit initialized();
 //     d->db->tracer(odb::stderr_tracer);
 }

@@ -16,57 +16,17 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef MEDIALIBRARYTEST_H
-#define MEDIALIBRARYTEST_H
+#include "mediavalidator.h"
 
-#include <QObject>
-#include <QMetaType>
-#include <QSharedPointer>
-#include <mediacenter/mediavalidator.h>
+#include <QFile>
+#include <QUrl>
 
-class PmcArtist;
-class PmcAlbum;
-class PmcMedia;
-class QSignalSpy;
-class MediaLibrary;
-
-class MediaLibraryTest : public QObject
+MediaValidator::MediaValidator(QObject* parent): QObject(parent)
 {
-    Q_OBJECT
-private slots:
-    void initTestCase();
-    void cleanupTestCase();
 
-    void init();
-    void cleanup();
+}
 
-    void createsDbWhenNotPresent();
-
-    void addsNewMediaAndItsAlbumArtist();
-
-    void shouldEmitUpdatedForMediaInsteadOfNewMediaWhenDataUpdated();
-
-    void shouldNotEmitUpdatedWhenNothingUpdated();
-
-    void shouldEmitUpdatedWhenAlbumOrArtistChanged();
-
-    void shouldNotAddMediaForNonExistentFile();
-
-    void shouldCleanupEntriesForNonExistentMedia();
-
-private:
-    bool waitForSignal(QSignalSpy* spy, int timeoutms);
-    QHash< int, QVariant > createTestMediaData() const;
-    QHash< int, QVariant > createTestMediaDataWithAlbumArtist() const;
-};
-
-class FakeMediaValidator : public MediaValidator
+bool MediaValidator::fileWithUrlExists(const QString& url)
 {
-    virtual bool fileWithUrlExists(const QString& url);
-};
-
-Q_DECLARE_METATYPE(QList<QSharedPointer<PmcMedia> >)
-Q_DECLARE_METATYPE(QList<QSharedPointer<PmcAlbum> >)
-Q_DECLARE_METATYPE(QList<QSharedPointer<PmcArtist> >)
-
-#endif // MEDIALIBRARYTEST_H
+    return QFile::exists(QUrl(url).toLocalFile());
+}
