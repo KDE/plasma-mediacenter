@@ -43,9 +43,11 @@ private slots:
 
     void addsNewMediaAndItsAlbumArtist();
 
-    void shouldNotEmitNewMediaWhenExistingMediaUpdated();
+    void shouldEmitUpdatedForMediaInsteadOfNewMediaWhenDataUpdated();
 
     void shouldNotEmitUpdatedWhenNothingUpdated();
+
+    void shouldEmitUpdatedWhenAlbumOrArtistChanged();
 
 private:
     bool waitForSignal(QSignalSpy* spy, int timeoutms);
