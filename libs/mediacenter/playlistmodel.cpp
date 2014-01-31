@@ -258,7 +258,9 @@ void PlaylistModel::saveToFile(const QString& path) const
 
 void PlaylistModel::savePlaylist()
 {
+    beginResetModel();
     saveToFile(playlistFilePath());
+    endResetModel();
 }
 
 bool PlaylistModel::removeCurrentPlaylist(const QString &playlistToSwitchToAfterDeletion)

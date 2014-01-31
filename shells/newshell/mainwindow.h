@@ -26,6 +26,7 @@
 
 #include <QDeclarativeView>
 #include <QtCore/QTimer>
+#include <libs/mediacenter/playlistmodel.h>
 #include "application.h"
 
 class QKeyEvent;
@@ -48,6 +49,8 @@ public Q_SLOTS:
     void hideMousePointer();
     void showMousePointer();
     void playPlaylist();
+    void addToMiscPlaylist(QList<KUrl> &urls, bool clearPlaylist);
+    void addNewInstanceArgsPlaylist();
 
 Q_SIGNALS:
     void mousePointerAutoHideChanged();
@@ -68,6 +71,7 @@ private:
     QTimer m_mousePointerAutoHideTimer;
 
     QDeclarativeView *view;
+    PlaylistModel *playlistModel;
 };
 
 #endif // MAINWINDOW_H

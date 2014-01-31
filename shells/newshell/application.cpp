@@ -40,6 +40,8 @@ int Application::newInstance()
         m_mainWindow = new MainWindow(this);
 
         m_mainWindow->show();
+    } else {
+        m_mainWindow->addNewInstanceArgsPlaylist();
     }
 
     return 0;
