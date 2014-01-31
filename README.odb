@@ -1,0 +1,38 @@
+Building ODB:
+==========
+Goto http://www.codesynthesis.com/products/odb/download.xhtml -
+
+1. Install ODB Compiler using a deb/rpm package or compile the tarballs on the Download page.
+For example, for Debian/Ubuntu 64bit you should download odb_2.3.0-1_amd64.deb (as of today)
+
+2. Download the tarball for "Common Runtime Library", extract it and build/install it using-
+./configure && make && sudo make install
+
+3. From "Database Runtime Libraries" download the one for libodb-sqlite, extract it and 
+build/install it using-
+
+./configure && make && sudo make install
+
+If it complains about sqlite3 not found, install the sqlite3 development package for your distribution.
+For example it is called libsqlite3-dev on debian/ubuntu
+
+4. From "Profile Libraries" download the one for libodb-qt and first apply odb.patch found in the same
+directory as this README by running patch from the libodb-qt directory-
+
+patch -p1 < /path/to/odb.patch
+
+Finally build and install it using-
+
+./configure && make && sudo make install
+
+If you get an error saying "QtCore is not found", you might need to install the qt4 development package for
+your distribution. For example it is called libqt4-dev on debian/ubuntu
+If that is not enough, you might have to manually specify the QtCore path using the syntax-
+
+CPPFLAGS=-I/usr/include/qt4 ./configure
+make && sudo make install
+
+(/usr/include/qt4 is the path on Ubuntu, you might have to change yours accordingly)
+
+If you get stuck, feel free to post your question to plasma-devel@kde.org
+
