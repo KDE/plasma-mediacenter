@@ -34,5 +34,9 @@ make && sudo make install
 
 (/usr/include/qt4 is the path on Ubuntu, you might have to change yours accordingly)
 
+Please do run command: sudo ldconfig; to set all your new installed libraries get picked up.
+If that doesn't works for you, please create a conf file in /etc/ld.so.conf.d/ and then can updated the path
+where the libraries got installed in the conf file and then run sudo ldconfig.
+
 If you get stuck, feel free to post your question to plasma-devel@kde.org
 
