@@ -2,6 +2,7 @@
 Type=Service
 Icon=youtube-pmc
 Name=YouTube Videos
+Name[bs]=YouTube videozapisi
 Name[ca]=Vídeos de YouTube
 Name[ca@valencia]=Vídeos de YouTube
 Name[cs]=Videa YouTube
@@ -25,6 +26,7 @@ Name[uk]=Відео з YouTube
 Name[x-test]=xxYouTube Videosxx
 Name[zh_TW]=YouTube 影片
 Comment=Watch videos from Youtube
+Comment[bs]=Gledaj videozapise preko YouTube-a
 Comment[ca]=Mostra els vídeos des de YouTube
 Comment[ca@valencia]=Mostra els vídeos des de YouTube
 Comment[cs]=Sledujte videa z Youtube

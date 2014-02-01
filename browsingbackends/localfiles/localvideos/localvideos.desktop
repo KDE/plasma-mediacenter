@@ -2,6 +2,7 @@
 Type=Service
 Icon=folder-video
 Name=Browse videos
+Name[bs]=Pregled videozapisa
 Name[ca]=Explora els vídeos
 Name[ca@valencia]=Explora els vídeos
 Name[cs]=Procházet videa
@@ -29,6 +30,7 @@ Name[x-test]=xxBrowse videosxx
 Name[zh_TW]=瀏覽影片
 
 Comment=Browse folders on your device for videos
+Comment[bs]=Pregled direktorija na uređaju za videozapise
 Comment[ca]=Explora les carpetes al vostre dispositiu per als vídeos
 Comment[ca@valencia]=Explora les carpetes al vostre dispositiu per als vídeos
 Comment[cs]=Vyhledat videa ve složkách na zařízení

@@ -2,6 +2,7 @@
 Type=Service
 Icon=tools-rip-video-cd
 Name=All videos
+Name[bs]=Svi Videozapisi
 Name[ca]=Tots els vídeos
 Name[ca@valencia]=Tots els vídeos
 Name[cs]=Všechna videa
@@ -27,6 +28,7 @@ Name[uk]=Всі відео
 Name[x-test]=xxAll videosxx
 Name[zh_TW]=所有影片
 Comment=Watch the videos on your device
+Comment[bs]=Gledaj videozapise na svom uređaju
 Comment[ca]=Mostra els vídeos en el dispositiu
 Comment[ca@valencia]=Mostra els vídeos en el dispositiu
 Comment[cs]=Dívejte se na videa na vašem zařízení

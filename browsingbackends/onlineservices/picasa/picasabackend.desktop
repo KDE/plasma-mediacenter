@@ -2,6 +2,7 @@
 Type=Service
 Icon=image-x-generic
 Name=Picasa
+Name[bs]=Picasa
 Name[ca]=Picasa
 Name[ca@valencia]=Picasa
 Name[cs]=Picasa
@@ -31,6 +32,7 @@ Name[uk]=Picasa
 Name[x-test]=xxPicasaxx
 Name[zh_TW]=Picasa
 Comment=See pictures from your Picasa account
+Comment[bs]=Pregledaj slike sa svog Picasa računa
 Comment[ca]=Mostra les imatges del vostre compte de «Picasa»
 Comment[ca@valencia]=Mostra les imatges del vostre compte de «Picasa»
 Comment[cs]=rohlížejte si obrázky z vašeho účtu Picasa

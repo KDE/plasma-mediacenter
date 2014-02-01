@@ -2,6 +2,7 @@
 Type=Service
 Icon=view-fullscreen
 Name=Fullscreen
+Name[bs]=Preko cijelog ekrana
 Name[ca]=Pantalla completa
 Name[ca@valencia]=Pantalla completa
 Name[cs]=Celá obrazovka
@@ -28,6 +29,7 @@ Name[uk]=На весь екран
 Name[x-test]=xxFullscreenxx
 Name[zh_TW]=全螢幕
 Comment=Toggle fullscreen mode
+Comment[bs]=Postavi preko cijelog ekrana
 Comment[ca]=Commuta el mode de pantalla completa
 Comment[ca@valencia]=Commuta el mode de pantalla completa
 Comment[cs]=Přepnout do celoobrazovkového režimu
