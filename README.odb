@@ -16,13 +16,7 @@ build/install it using-
 If it complains about sqlite3 not found, install the sqlite3 development package for your distribution.
 For example it is called libsqlite3-dev on debian/ubuntu
 
-4. From "Profile Libraries" download the one for libodb-qt and first apply odb.patch found in the same
-directory as this README by running patch from the libodb-qt directory-
-
-patch -p1 < /path/to/odb.patch
-
-Finally build and install it using-
-
+4. From "Profile Libraries" download the one for libodb-qt, extract it and build/install it using-
 ./configure && make && sudo make install
 
 If you get an error saying "QtCore is not found", you might need to install the qt4 development package for
