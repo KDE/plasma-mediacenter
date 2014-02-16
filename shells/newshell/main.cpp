@@ -73,12 +73,12 @@ int main(int argc, char *argv[])
         return 0;
     }
 
+    Application app;
     SingletonFactory::instanceFor<MediaLibrary>()->start();
 
     qRegisterMetaType< QHash<int,QVariant> >("QHash<int,QVariant>");
     MediaSourcesLoader mediaSourcesLoader;
     mediaSourcesLoader.load();
 
-    Application app;
     return app.exec();
 }
