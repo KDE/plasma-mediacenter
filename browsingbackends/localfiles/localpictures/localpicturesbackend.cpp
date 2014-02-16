@@ -39,3 +39,7 @@ void LocalPicturesBackend::initModel()
     setModel(m_model);
 }
 
+QVariantList LocalPicturesBackend::buttons()
+{
+    return QVariantList();
+}

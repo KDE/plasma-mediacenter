@@ -22,22 +22,32 @@
 #include "localfilesabstractbackend.h"
 #include "localfilesabstractmodel.h"
 #include "localplacesmodel.h"
+#include <libs/mediacenter/playlistmodel.h>
 
 #include <KDE/KFilePlacesModel>
 #include <KDE/KUrl>
+
+#include <QDeclarativeEngine>
+#include <QDeclarativeContext>
+
+namespace {
+    static const char *s_playAllButton = "Play All";
+}
 
 LocalFilesAbstractBackend::LocalFilesAbstractBackend (QObject* parent, const QVariantList& args)
     : AbstractBrowsingBackend (parent, args)
     , m_placesModel(0)
     , m_placesRow(0)
+    , m_isShowingPlacesModel(false)
 {
-    m_isShowingPlacesModel = false;
+
 }
 
 bool LocalFilesAbstractBackend::initImpl()
 {
     setModel(qobject_cast<QAbstractItemModel*>(placesModel()));
-    m_isShowingPlacesModel = true;
+    setShowingPlacesModel(true);
+
     return true;
 }
 
@@ -51,7 +61,7 @@ bool LocalFilesAbstractBackend::goOneLevelUp()
     LocalFilesAbstractModel *filesModel = qobject_cast<LocalFilesAbstractModel*>(model());
     if(!m_isShowingPlacesModel) {
         if(!filesModel-> goOneLevelUp()) {
-            m_isShowingPlacesModel = true;
+            setShowingPlacesModel(true);
             setModel(qobject_cast<QAbstractItemModel*>(placesModel()));
             return true;
         }
@@ -73,7 +83,7 @@ bool LocalFilesAbstractBackend::expand (int row)
     if (m_isShowingPlacesModel)
     {
         if (browseToPlace(row)) {
-            m_isShowingPlacesModel = false;
+            setShowingPlacesModel(false);
             initModel();
             return (qobject_cast<LocalFilesAbstractModel*>(model()))->browseToUrl(url);
         } else {
@@ -122,6 +132,46 @@ void LocalFilesAbstractBackend::slotStorageSetupDone(Solid::ErrorType error,cons
 {
     //FIXME: Handle errors
     expand(m_placesRow);
+}
+
+QVariantList LocalFilesAbstractBackend::buttons()
+{
+    if (m_isShowingPlacesModel) {
+        return QVariantList();
+    }
+    QVariantList buttonList;
+    buttonList << s_playAllButton;
+    return buttonList;
+}
+
+void LocalFilesAbstractBackend::handleButtonClick(const QString& buttonName)
+{
+    if (buttonName == s_playAllButton) {
+        PlaylistModel *model = qobject_cast<PlaylistModel*>(declarativeEngine()->rootContext()->contextProperty("playlistModel").value<QObject*>());
+        if (model) {
+            addAllSongsToPlaylist(model);
+        }
+    }
+}
+
+void LocalFilesAbstractBackend::addAllSongsToPlaylist(PlaylistModel* playlistModel)
+{
+    LocalFilesAbstractModel *model = qobject_cast<LocalFilesAbstractModel*>(this->model());
+    for (int i=0; i<model->rowCount(); ++i) {
+        if (!model->data(model->index(i, 0), MediaCenter::IsExpandableRole).toBool()) {
+            const QString url = model->data(model->index(i, 0), MediaCenter::MediaUrlRole).toString();
+            const QString name = model->data(model->index(i, 0), Qt::DisplayRole).toString();
+            if (!url.isEmpty() && !name.isEmpty()) {
+                playlistModel->addToPlaylist(url);
+            }
+        }
+    }
+}
+
+void LocalFilesAbstractBackend::setShowingPlacesModel(bool showing)
+{
+    m_isShowingPlacesModel = showing;
+    emit buttonsChanged();
 }
 
 #include "localfilesabstractbackend.h"

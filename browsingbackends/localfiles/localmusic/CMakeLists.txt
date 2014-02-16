@@ -18,6 +18,7 @@ target_link_libraries(pmc_localmusic
     ${KDE4_KFILE_LIBS}
     ${TAGLIB_LIBRARIES}
     ${KDE4_SOLID_LIBS}
+    ${QT_QTDECLARATIVE_LIBRARIES}
 )
 
 install(TARGETS pmc_localmusic DESTINATION ${PLUGIN_INSTALL_DIR})

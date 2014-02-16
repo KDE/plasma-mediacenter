@@ -2,7 +2,7 @@
     Copyright (C) 2010  Alessandro Diaferia <alediaferia@gmail.com>
     Copyright (C) 2011  Shantanu Tushar <shantanu@kde.org>
     Copyright (C) 2013  Akshay Ratan  <akshayratan@gmail.com>
-    
+
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
     License as published by the Free Software Foundation; either
@@ -32,8 +32,9 @@
  *instance will be declared of LocalPlacesModel and LocalFilesAbstractModel
  */
 
+class PlaylistModel;
 class LocalPlacesModel;
-class LocalFilesAbstractModel; 
+class LocalFilesAbstractModel;
 
 /**
  * @class LocalFilesAbstractBackend @author Alessandro Diaferia @author Shantanu Tushar @author Akshay Ratan
@@ -49,64 +50,68 @@ class LocalFilesAbstractModel;
 class LocalFilesAbstractBackend : public MediaCenter::AbstractBrowsingBackend
 {
     Q_OBJECT
-    
+
 public:
-  
+
     /**
      * Constructor
      * Used to load backend instances
      * @param parent is a QObject pointer
      * The first argument of @param args must be the unique storageID of the KService
      */
-    
+
     LocalFilesAbstractBackend (QObject* parent, const QVariantList& args);
 
     /**
      * Used to go one level back/up the current mediabrowser page
      */
     virtual bool goOneLevelUp();
-    
+
     /**
      * This function expands the folder and show its contents by calling browseTo function accessed by LocalFilesAbstractModel
      * Sets up the needed values at the runtime
      * @param row is the number used to pass in the model as a row number
      */
     virtual bool expand (int row);
-    
+
     /** @return the pointer to the LocalPlacesModel
      * Initializes the LocalPlacesModel
      */
     Q_INVOKABLE QObject *placesModel();
-    
+
     /**
      * @return boolean value depending whether the disk is mounted or not
      * Used for browsing disk which is not yet mounted
      */
     bool browseToPlace(int row);
-    
+
     /**
      * Calls the goOneLevelUp() function
      */
-    
+
     Q_INVOKABLE void browseOneLevelUp();
-    
+
     /**
      * Uses the KConfigService
      * @returns true if its ok to load this backend, false otherwise
      */
     virtual bool okToLoad() const;
 
+    virtual QVariantList buttons();
+    virtual void handleButtonClick(const QString& buttonName);
+    void addAllSongsToPlaylist( PlaylistModel* playlistModel);
+
 protected:
-    
+
   /**
      * Used for general initialization purposes
      * @returns true
-     */  
+     */
     virtual bool initImpl();
-    
+
     /**
      * Used to initialize local models
-     */  
+     */
     virtual void initModel() = 0;
     LocalPlacesModel *m_placesModel;
 
@@ -114,12 +119,13 @@ private slots:
 
     /**
      * Calls expand(int row) function after being connected by a signal in browseToPlace function
-     */  
+     */
     void slotStorageSetupDone(Solid::ErrorType error, const QVariant& errordata, const QString& udi);
 
 private:
     int m_placesRow;
     bool m_isShowingPlacesModel;
+    void setShowingPlacesModel(bool showing);
 };
 
 #endif // LOCALFILESABSTRACTBACKEND_H
