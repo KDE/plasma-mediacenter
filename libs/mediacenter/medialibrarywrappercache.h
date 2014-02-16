@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2009-2010 by Alessandro Diaferia <alediaferia@gmail.com>            *
+ *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,41 +16,37 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef MEDIACENTER_H
-#define MEDIACENTER_H
+#ifndef MEDIALIBRARYWRAPPERCACHE_H
+#define MEDIALIBRARYWRAPPERCACHE_H
 
-#include "mediacenter_export.h"
+#include <QObject>
+#include <QSharedPointer>
 
-#include <QPair>
-#include <QHash>
+class PmcMedia;
+class PmcAlbum;
+class PmcArtist;
+class MediaLibrary;
 
-namespace Phonon {
-class MediaSource;
-}
+class MediaLibraryWrapperCache : public QObject
+{
+    Q_OBJECT
+public:
+    explicit MediaLibraryWrapperCache(MediaLibrary *parent);
+    ~MediaLibraryWrapperCache();
 
-namespace MediaCenter {
+    QList< QSharedPointer< PmcAlbum > > getAlbums() const;
+    QList< QSharedPointer< PmcArtist > > getArtists() const;
+    QList< QSharedPointer< PmcMedia > > getMedia(const QString &type);
 
-enum AdditionalMediaRoles {
-    MediaUrlRole = Qt::UserRole + 1,
-    IsExpandableRole,
-    MediaTypeRole,
-    DecorationTypeRole,
-    HideLabelRole,
-    ResourceIdRole,
-    DurationRole,
-    ArtistRole,
-    AlbumRole,
-    AdditionalRoles     //If additional roles are needed to be defined
+private slots:
+    void saveNewAlbums(const QList< QSharedPointer< PmcAlbum > >& albums);
+    void saveNewArtists(const QList< QSharedPointer< PmcArtist > >& artists);
+
+private:
+    class Private;
+    Private * const d;
+public slots:
+    void saveNewMedia(const QList< QSharedPointer< PmcMedia > >& media);
 };
 
-enum MediaType {
-    Music,
-    Picture,
-    Video
-};
-
-MEDIACENTER_EXPORT QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> &roles);
-MEDIACENTER_EXPORT QString dataDirForComponent (const QString &component);
-} // namespace MediaCenter
-
-#endif // MEDIACENTER_H
+#endif // MEDIALIBRARYWRAPPERCACHE_H

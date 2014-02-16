@@ -17,6 +17,10 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
+#include <mediacenter/medialibrary.h>
+#include <mediacenter/mediasourcesloader.h>
+#include <mediacenter/singletonfactory.h>
+
 #include <KDE/KApplication>
 #include <KDE/KAboutData>
 #include <KDE/KCmdLineArgs>
@@ -68,6 +72,12 @@ int main(int argc, char *argv[])
         qDebug() << "Plasma Mediacenter is already running";
         return 0;
     }
+
+    SingletonFactory::instanceFor<MediaLibrary>()->start();
+
+    qRegisterMetaType< QHash<int,QVariant> >("QHash<int,QVariant>");
+    MediaSourcesLoader mediaSourcesLoader;
+    mediaSourcesLoader.load();
 
     Application app;
     return app.exec();

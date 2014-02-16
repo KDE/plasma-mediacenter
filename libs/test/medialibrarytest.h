@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2009-2010 by Alessandro Diaferia <alediaferia@gmail.com>            *
+ *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,41 +16,57 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef MEDIACENTER_H
-#define MEDIACENTER_H
+#ifndef MEDIALIBRARYTEST_H
+#define MEDIALIBRARYTEST_H
 
-#include "mediacenter_export.h"
+#include <QObject>
+#include <QMetaType>
+#include <QSharedPointer>
+#include <mediacenter/mediavalidator.h>
 
-#include <QPair>
-#include <QHash>
+class PmcArtist;
+class PmcAlbum;
+class PmcMedia;
+class QSignalSpy;
+class MediaLibrary;
 
-namespace Phonon {
-class MediaSource;
-}
+class MediaLibraryTest : public QObject
+{
+    Q_OBJECT
+private slots:
+    void initTestCase();
+    void cleanupTestCase();
 
-namespace MediaCenter {
+    void init();
+    void cleanup();
 
-enum AdditionalMediaRoles {
-    MediaUrlRole = Qt::UserRole + 1,
-    IsExpandableRole,
-    MediaTypeRole,
-    DecorationTypeRole,
-    HideLabelRole,
-    ResourceIdRole,
-    DurationRole,
-    ArtistRole,
-    AlbumRole,
-    AdditionalRoles     //If additional roles are needed to be defined
+    void createsDbWhenNotPresent();
+
+    void addsNewMediaAndItsAlbumArtist();
+
+    void shouldEmitUpdatedForMediaInsteadOfNewMediaWhenDataUpdated();
+
+    void shouldNotEmitUpdatedWhenNothingUpdated();
+
+    void shouldEmitUpdatedWhenAlbumOrArtistChanged();
+
+    void shouldNotAddMediaForNonExistentFile();
+
+    void shouldCleanupEntriesForNonExistentMedia();
+
+private:
+    bool waitForSignal(QSignalSpy* spy, int timeoutms);
+    QHash< int, QVariant > createTestMediaData() const;
+    QHash< int, QVariant > createTestMediaDataWithAlbumArtist() const;
 };
 
-enum MediaType {
-    Music,
-    Picture,
-    Video
+class FakeMediaValidator : public MediaValidator
+{
+    virtual bool fileWithUrlExists(const QString& url);
 };
 
-MEDIACENTER_EXPORT QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> &roles);
-MEDIACENTER_EXPORT QString dataDirForComponent (const QString &component);
-} // namespace MediaCenter
+Q_DECLARE_METATYPE(QList<QSharedPointer<PmcMedia> >)
+Q_DECLARE_METATYPE(QList<QSharedPointer<PmcAlbum> >)
+Q_DECLARE_METATYPE(QList<QSharedPointer<PmcArtist> >)
 
-#endif // MEDIACENTER_H
+#endif // MEDIALIBRARYTEST_H

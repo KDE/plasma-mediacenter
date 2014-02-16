@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2009-2010 by Alessandro Diaferia <alediaferia@gmail.com>            *
+ *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,41 +16,35 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef MEDIACENTER_H
-#define MEDIACENTER_H
+#include "album.h"
 
-#include "mediacenter_export.h"
-
-#include <QPair>
-#include <QHash>
-
-namespace Phonon {
-class MediaSource;
+Album::Album(const QString& name)
+    : m_name(name)
+{
 }
 
-namespace MediaCenter {
+Album::Album()
+{
+}
 
-enum AdditionalMediaRoles {
-    MediaUrlRole = Qt::UserRole + 1,
-    IsExpandableRole,
-    MediaTypeRole,
-    DecorationTypeRole,
-    HideLabelRole,
-    ResourceIdRole,
-    DurationRole,
-    ArtistRole,
-    AlbumRole,
-    AdditionalRoles     //If additional roles are needed to be defined
-};
+Album::~Album()
+{
+}
 
-enum MediaType {
-    Music,
-    Picture,
-    Video
-};
+const QString& Album::name() const
+{
+    return m_name;
+}
 
-MEDIACENTER_EXPORT QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> &roles);
-MEDIACENTER_EXPORT QString dataDirForComponent (const QString &component);
-} // namespace MediaCenter
+QString Album::albumArtist() const
+{
+    //Return the first non-empty artist name
+    Q_FOREACH (const QWeakPointer<Media> &m, m_media) {
+        const QString artistName = m.toStrongRef()->artist()->name();
+        if (!artistName.isEmpty()) {
+            return artistName;
+        }
+    }
 
-#endif // MEDIACENTER_H
+    return QString();
+}
