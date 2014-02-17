@@ -24,7 +24,6 @@ import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
 
 FocusScope {
     id: playlistItem
-    property QtObject backend
     property bool active: false
     signal playRequested(string url)
 
@@ -92,16 +91,14 @@ FocusScope {
                     width: height
                     height: parent.height
                     iconSource: "edit-clear-list"
-                    onClicked: {
-                        if(playlistItem.backend.stopAddingSongsToPlaylist)
-                            playlistItem.backend.stopAddingSongsToPlaylist
-                        playlistModel.clearPlaylist();
-                    }
+                    onClicked: playlistModel.clearPlaylist()
                 }
             }
 
             ListView {
                 id: playlistList
+                property int currentlyPlayingIndex: playlistModel.currentIndex
+
                 anchors { top: playlistActions.bottom; left: parent.left; right: parent.right }
                 anchors.bottom: parent.bottom
                 anchors.margins: 5
@@ -115,11 +112,9 @@ FocusScope {
                 delegate: PlaylistDelegate {
                     width: playlistList.width - playlistScrollbar.width ; height: 32
                     onPlayRequested: {
-                        playlistItem.active = true;
                         playlistList.currentIndex = index;
-                        playlistModel.currentIndex = originalIndex;
-                        playlistItem.playRequested(url);
-                        filterText.text = "";
+                        playlistModel.play(index);
+                        playCurrent();
                     }
                 }
 
@@ -141,12 +136,21 @@ FocusScope {
                     }
                 }
 
+                onCurrentlyPlayingIndexChanged: playCurrent()
+
                 Keys.onPressed: if (event.key == Qt.Key_Up && currentIndex == 0) {
                     filterText.focus = true;
                     event.accepted = true;
                 } else if (event.key != Qt.Key_Escape && event.text && filterText.visible) {
                     filterText.focus = true;
                     filterText.text = event.text;
+                }
+
+                function playCurrent()
+                {
+                    playlistItem.active = true;
+                    playlistItem.playRequested(playlistModel.currentUrl);
+                    filterText.text = "";
                 }
             }
         }
@@ -163,4 +167,13 @@ FocusScope {
         playlistList.currentIndex = playlistList.currentIndex == 0 ? playlistList.count-1 : playlistList.currentIndex-1;
         playlistList.currentItem.requestPlayback();
     }
+
+    function playCurrent()
+    {
+        if (playlistModel.currentIndex != -1) {
+            playlistList.playCurrent();
+        }
+    }
+
+    Component.onCompleted: playCurrent();
 }

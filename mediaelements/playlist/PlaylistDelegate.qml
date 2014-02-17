@@ -24,6 +24,9 @@ import org.kde.plasma.components 0.1 as PlasmaComponents
 
 Item {
     id: listViewItem
+    property bool isCurrentlyPlaying: index == playlistModel.currentIndex
+    property variant url: mediaUrl
+
     signal playRequested(string url)
 
     Row {
@@ -37,7 +40,7 @@ Item {
                     right: artistText.left; margins: 5
                 }
                 text: display
-                color: index == playlistModel.currentIndex && listViewItem.ListView.view.model.filterString == "" ? "red" : theme.textColor
+                color: listViewItem.isCurrentlyPlaying && listViewItem.ListView.view.model.filterString == "" ? "red" : theme.textColor
                 elide: Text.ElideRight
                 font.pixelSize: 18
                 style: Text.Sunken
@@ -148,7 +151,6 @@ Item {
     Keys.onReturnPressed: requestPlayback()
 
     function requestPlayback() {
-        listViewItem.ListView.view.model.currentIndex = index;
-        listViewItem.playRequested(mediaUrl);
+        listViewItem.playRequested(mediaUrl)
     }
 }

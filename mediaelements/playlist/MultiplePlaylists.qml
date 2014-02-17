@@ -48,6 +48,7 @@ FocusScope {
             model: MediaCenterElements.MultiplePlaylistModel {
                 playlistModelAddress: playlistModel
             }
+            currentIndex: model.currentIndex
 
             delegate:
             Item {
@@ -69,38 +70,7 @@ FocusScope {
 
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: playlistText.ListView.view.currentIndex = index
-                }
-
-                Component.onCompleted: {
-                    if( ( display == "Misc" ) && ( multiplePlaylistList.model.checkCmdLineStat() )) {
-                         autoSelectPlaylistTimer.start();
-                    }
-                }
-
-                Timer {
-                    id: autoSelectPlaylistTimer
-                    interval: 10
-                    onTriggered: {
-                       multiplePlaylistList.currentIndex = index;
-                       if( multiplePlaylistList.model.checkCmdLineStat() )
-                           multiplePlaylistList.model.setCmdLineStat(false);
-                    }
-                }
-            }
-
-            onCurrentIndexChanged: {
-                if( multiplePlaylistList.model.checkCmdLineStat() ) {
-                    multiplePlaylistList.model.switchToPlaylist("Misc");
-                } else {
-                    multiplePlaylistList.model.switchToPlaylist(
-                    currentItem.currentPlaylist);
-                }
-            }
-
-            Component.onCompleted: {
-                if( multiplePlaylistList.model.checkCmdLineStat() ) {
-                    multiplePlaylistList.model.switchToPlaylist("Misc");
+                    onClicked: playlistText.ListView.view.model.switchToPlaylist(itemText.text)
                 }
             }
         }
