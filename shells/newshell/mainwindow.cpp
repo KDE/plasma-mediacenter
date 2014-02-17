@@ -53,15 +53,6 @@ MainWindow::MainWindow(Application *parent)
 {
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-    const int argsCount = args->count();
-
-    QList<KUrl> urls;
-    for (int i = 0; i < argsCount; ++i) {
-        const KUrl url = args->url(i);
-        if (url.isValid()) {
-            urls.append(url);
-        }
-    }
     if (args->isSet("fullscreen") || Settings().value("fullscreen", false).toBool()) {
         toggleFullScreen();
     }
@@ -79,7 +70,6 @@ MainWindow::MainWindow(Application *parent)
         view->setViewport(widget);
 #endif
     }
-    args->clear();
 
     view->setAttribute(Qt::WA_OpaquePaintEvent);
     view->setAttribute(Qt::WA_NoSystemBackground);
@@ -104,7 +94,9 @@ MainWindow::MainWindow(Application *parent)
     view->rootContext()->setContextProperty("backendsModel", backendsModel);
 
     playlistModel = new PlaylistModel(this);
-    addToMiscPlaylist(urls,"true");
+    if (playlistModel->processCommandLineArgs(args)) {
+        QTimer::singleShot(500, this, SLOT(playPlaylist()));
+    }
     view->rootContext()->setContextProperty("playlistModel", playlistModel);
 
     view->rootContext()->setContextProperty("_pmc_mainwindow", this);
@@ -127,9 +119,6 @@ MainWindow::MainWindow(Application *parent)
 
     view->setSource(QUrl(package->filePath("mainscript")));
 
-    if (view->rootObject() && urls.count() > 0) {
-        QTimer::singleShot(500, this, SLOT(playPlaylist()));
-    }
     resize(1366, 768);
 
     installEventFilter(this);
@@ -216,34 +205,7 @@ void MainWindow::playPlaylist()
 void MainWindow::addNewInstanceArgsPlaylist()
 {
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-
-    const int argsCount = args->count();
-
-    QList<KUrl> urls;
-    for (int i = 0; i < argsCount; ++i) {
-        const KUrl url = args->url(i);
-        if (url.isValid()) {
-            urls.append(url);
-        }
-    }
-    bool clearPlaylist = "false";
-    addToMiscPlaylist(urls,false);
-}
-
-void MainWindow::addToMiscPlaylist(QList< KUrl >& urls, bool clearPlaylist)
-{
-    if (urls.length() > 0) {
-        playlistModel->setCmdLineURL(true);
-        playlistModel->setPlaylistName("Misc");
-        if( playlistModel->checkPlaylistPathExists("Misc") && clearPlaylist) {
-            playlistModel->clearPlaylist();
-        }
-        foreach (const KUrl &url, urls) {
-            playlistModel->addToPlaylist(url.prettyUrl());
-        }
-        playlistModel->savePlaylist();
-    } else {
-        playlistModel->setCmdLineURL(false);
+    if (playlistModel->processCommandLineArgs(args)) {
+        QTimer::singleShot(500, this, SLOT(playPlaylist()));
     }
 }
-

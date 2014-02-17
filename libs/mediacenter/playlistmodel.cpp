@@ -21,12 +21,18 @@
 #include <KDebug>
 #include <KDE/KStandardDirs>
 #include <KDE/KCmdLineArgs>
+#include <KUrl>
 
 #include <QtCore/QDir>
 #include <QtCore/QStringList>
 #include <QtCore/QDateTime>
 #include <QtCore/QCoreApplication>
 #include <QtXml/QDomDocument>
+#include <QApplication>
+
+namespace {
+    static const char DEFAULT_PLAYLIST_NAME[] = "Default";
+}
 
 class PlaylistModel::Private
 {
@@ -44,7 +50,7 @@ PlaylistModel::PlaylistModel(QObject* parent):
     QAbstractListModel(parent),
     d(new Private)
 {
-    d->playlistName = "Default";
+    d->playlistName = DEFAULT_PLAYLIST_NAME;
     loadFromFile(playlistFilePath());
 
     d->currentIndex = -1;
@@ -59,6 +65,8 @@ PlaylistModel::PlaylistModel(QObject* parent):
     qsrand(QDateTime::currentMSecsSinceEpoch());
 
     connect(QCoreApplication::instance(), SIGNAL(aboutToQuit()), SLOT(savePlaylist()));
+
+    connect(this, SIGNAL(currentIndexChanged()), SIGNAL(currentUrlChanged()));
 }
 
 PlaylistModel::~PlaylistModel()
@@ -68,6 +76,10 @@ PlaylistModel::~PlaylistModel()
 
 QVariant PlaylistModel::data(const QModelIndex& index, int role) const
 {
+    if (index.row() < 0 || index.row() >= rowCount()) {
+        return QVariant();
+    }
+
     switch(role) {
     case Qt::DisplayRole:
         return d->musicList.at(index.row())->mediaName();
@@ -85,19 +97,30 @@ QVariant PlaylistModel::data(const QModelIndex& index, int role) const
 
 int PlaylistModel::rowCount(const QModelIndex& parent) const
 {
-    return d->musicList.count();
+    return d->musicList.size();
+}
+
+int PlaylistModel::addToPlaylist(const QStringList& urls)
+{
+    const int n = rowCount();
+    if (urls.isEmpty()) return n-1;
+
+    beginInsertRows(QModelIndex(), n, n+urls.size());
+
+    Q_FOREACH(const QString &url, urls) {
+        PlaylistItem *item = new PlaylistItem(url, this);
+        connect(item, SIGNAL(updated()), SLOT(playlistItemUpdated()));
+        d->musicList.append(item);
+    }
+
+    endInsertRows();
+
+    return n;
 }
 
 void PlaylistModel::addToPlaylist(const QString& url)
 {
-    const int n = rowCount();
-    beginInsertRows(QModelIndex(), n, n);
-
-    PlaylistItem *item = new PlaylistItem(url, this);
-    connect(item, SIGNAL(updated()), SLOT(playlistItemUpdated()));
-    d->musicList.append(item);
-
-    endInsertRows();
+    addToPlaylist(QStringList() << url);
 }
 
 void PlaylistModel::removeFromPlaylist(const int& index)
@@ -189,7 +212,6 @@ void PlaylistModel::shuffle()
     setCurrentIndex(0);
 }
 
-
 void PlaylistModel::playlistItemUpdated()
 {
     PlaylistItem *item = qobject_cast<PlaylistItem*>(sender());
@@ -214,7 +236,7 @@ void PlaylistModel::loadFromFile(const QString& path)
 
             QDomNodeList itemList = doc.elementsByTagName("item");
             d->musicList.clear();
-            d->currentIndex = -1;
+            setCurrentIndex(-1);
             for (int i=0; i<itemList.count(); i++) {
                 QDomNode node = itemList.at(i);
                 if (node.isNull()) continue;
@@ -258,14 +280,12 @@ void PlaylistModel::saveToFile(const QString& path) const
 
 void PlaylistModel::savePlaylist()
 {
-    beginResetModel();
     saveToFile(playlistFilePath());
-    endResetModel();
 }
 
 bool PlaylistModel::removeCurrentPlaylist(const QString &playlistToSwitchToAfterDeletion)
 {
-    if (d->playlistName == "Default") {
+    if (d->playlistName == DEFAULT_PLAYLIST_NAME) {
         clearPlaylist();
         return false;
     } else {
@@ -288,6 +308,8 @@ QString PlaylistModel::playlistName() const
 
 void PlaylistModel::setPlaylistName(const QString& name)
 {
+    if (playlistName() == name) return;
+
     beginResetModel();
     saveToFile(playlistFilePath());
 
@@ -298,23 +320,6 @@ void PlaylistModel::setPlaylistName(const QString& name)
     endResetModel();
 }
 
-bool PlaylistModel::checkPlaylistPathExists(const QString& name)
-{
-    QString playlistAbsolutePath = getPlaylistPath() + name;
-    return QFile::exists(playlistAbsolutePath);
-}
-
-bool PlaylistModel::setCmdLineURL(bool value)
-{
-    d->cmdLineURL = value;
-    return d->cmdLineURL;
-}
-
-bool PlaylistModel::getCmdLineURL()
-{
-    return d->cmdLineURL;
-}
-
 QString PlaylistModel::getPlaylistPath() const
 {
     if (d->playlistsDirectoryPath.isEmpty()) {
@@ -322,4 +327,36 @@ QString PlaylistModel::getPlaylistPath() const
         QDir().mkpath(d->playlistsDirectoryPath);
     }
     return d->playlistsDirectoryPath;
+}
+
+bool PlaylistModel::processCommandLineArgs(const KCmdLineArgs* args)
+{
+    QStringList urls;
+
+    for (int i=0; i<args->count(); ++i) {
+        const KUrl url = args->url(i);
+        if (url.isValid()) {
+            urls.append(url.toLocalFile(KUrl::RemoveTrailingSlash));
+        }
+    }
+
+    if (urls.size()) {
+        setPlaylistName(DEFAULT_PLAYLIST_NAME);
+        const int indexOfFirstMedia = addToPlaylist(urls);
+
+        setCurrentIndex(indexOfFirstMedia);
+        return true;
+    }
+
+    return false;
+}
+
+void PlaylistModel::play(int index)
+{
+    setCurrentIndex(index);
+}
+
+QString PlaylistModel::currentUrl() const
+{
+    return data(index(currentIndex()), MediaCenter::MediaUrlRole).toString();
 }

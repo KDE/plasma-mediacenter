@@ -247,7 +247,6 @@ Image {
         Component {
             id: pmcPlaylistComponent
             MediaCenterElements.Playlist {
-                backend: runtimeData.currentBrowsingBackend
                 onPlayRequested: {
                     if (!mediaPlayerInstance) {
                         pmcPageStack.pushAndFocus(getMediaPlayer());
@@ -358,7 +357,6 @@ Image {
     //FIXME: Hack to play params passed from the command line
     function play() {
         pmcPageStack.pushAndFocus(getPlaylist());
-        getPlaylist().playRequested(playlistModel.getNextUrl());
     }
 
     function showController(itemToFocus)

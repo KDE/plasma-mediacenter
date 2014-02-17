@@ -35,10 +35,8 @@ Application::~Application()
 
 int Application::newInstance()
 {
-    if (!m_mainWindow)
-    {
+    if (!m_mainWindow) {
         m_mainWindow = new MainWindow(this);
-
         m_mainWindow->show();
     } else {
         m_mainWindow->addNewInstanceArgsPlaylist();

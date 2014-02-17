@@ -26,10 +26,12 @@
 #include "mediacenter_export.h"
 #include "mediacenter.h"
 
+class KCmdLineArgs;
 class MEDIACENTER_EXPORT PlaylistModel : public QAbstractListModel
 {
     Q_OBJECT
-    Q_PROPERTY(int currentIndex READ currentIndex WRITE setCurrentIndex NOTIFY currentIndexChanged)
+    Q_PROPERTY(int currentIndex READ currentIndex NOTIFY currentIndexChanged)
+    Q_PROPERTY(QString currentUrl READ currentUrl NOTIFY currentUrlChanged)
 
 public:
     enum Roles {
@@ -55,17 +57,19 @@ public:
     bool random() const;
     Q_INVOKABLE void shuffle();
     bool removeCurrentPlaylist (const QString& playlistToSwitchToAfterDeletion);
+    bool processCommandLineArgs(const KCmdLineArgs *args);
+    Q_INVOKABLE void play(int index);
 
     QString playlistName() const;
     void setPlaylistName(const QString &name);
-    bool checkPlaylistPathExists(const QString &name);
-    bool setCmdLineURL(bool value);
-    bool getCmdLineURL();
     QString getPlaylistPath() const;
+
+    QString currentUrl() const;
 
 Q_SIGNALS:
     void currentIndexChanged();
     void randomChanged();
+    void currentUrlChanged();
 
 public Q_SLOTS:
     void savePlaylist();
@@ -81,6 +85,7 @@ private:
     void saveToFile(const QString &path) const;
     QString playlistFilePath() const;
     void clearPlaylistWithoutModelReset();
+    int addToPlaylist(const QStringList &urls);
 };
 
 #endif // PLAYLISTMODEL_H

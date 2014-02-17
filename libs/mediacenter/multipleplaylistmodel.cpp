@@ -77,7 +77,7 @@ void MultiplePlaylistModel::setPlaylistModelAddress(QObject* model)
     }
 }
 
-QObject* MultiplePlaylistModel::playlistModelAddress()
+QObject* MultiplePlaylistModel::playlistModelAddress() const
 {
     return m_playlistModel;
 }
@@ -86,6 +86,7 @@ void MultiplePlaylistModel::switchToPlaylist(const QString &name)
 {
     if (!name.isEmpty()) {
         m_playlistModel->setPlaylistName(name);
+        emit currentIndexChanged();
     }
 }
 
@@ -117,14 +118,8 @@ void MultiplePlaylistModel::removeCurrentPlaylist()
     endResetModel();
 }
 
-bool MultiplePlaylistModel::checkCmdLineStat()
+int MultiplePlaylistModel::currentIndex() const
 {
-    PlaylistModel *p = dynamic_cast<PlaylistModel*> (playlistModelAddress());
-    return p->getCmdLineURL();
-}
-
-void MultiplePlaylistModel::setCmdLineStat(bool val)
-{
-    PlaylistModel *p = dynamic_cast<PlaylistModel*> (playlistModelAddress());
-    p->setCmdLineURL(val);
+    PlaylistModel *p = qobject_cast<PlaylistModel*> (playlistModelAddress());
+    return m_multiplePlaylistList.indexOf(p->playlistName());
 }

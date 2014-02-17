@@ -49,7 +49,6 @@ public Q_SLOTS:
     void hideMousePointer();
     void showMousePointer();
     void playPlaylist();
-    void addToMiscPlaylist(QList<KUrl> &urls, bool clearPlaylist);
     void addNewInstanceArgsPlaylist();
 
 Q_SIGNALS:
