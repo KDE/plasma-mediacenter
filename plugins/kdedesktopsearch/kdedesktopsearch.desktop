@@ -2,7 +2,21 @@
 Type=Service
 Icon=nepomuk
 Name=KDE Desktop Search
+Name[de]=KDE Desktop-Suche
+Name[pt]=Pesquisa no Ambiente de Trabalho KDE
+Name[pt_BR]=Pesquisa no Desktop do KDE
+Name[sk]=KDE hľadanie na ploche
+Name[sv]=KDE skrivbordssökning
+Name[uk]=Стільничний пошук KDE
+Name[x-test]=xxKDE Desktop Searchxx
 Comment=Get media from KDE Desktop Search
+Comment[de]=Medien von der KDE Desktop-Suche holen
+Comment[pt]=Obter conteúdos da pesquisa no ambiente de trabalho KDE
+Comment[pt_BR]=Obtém a mídia a partir do Pesquisa no Desktop do KDE
+Comment[sk]=Získať médiá z KDE hľadania na ploche
+Comment[sv]=Hämta media från KDE skrivbordssökning
+Comment[uk]=Отримати дані із засобу стільничного пошуку KDE
+Comment[x-test]=xxGet media from KDE Desktop Searchxx
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/MediaSource
 
