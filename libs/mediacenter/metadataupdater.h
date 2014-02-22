@@ -17,10 +17,10 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef KDEMETADATAMEDIASOURCE_H
-#define KDEMETADATAMEDIASOURCE_H
+#ifndef METADATAUPDATER_H
+#define METADATAUPDATER_H
 
-#include <libs/mediacenter/abstractmediasource.h>
+#include <QtCore/QThread>
 
 #include <Nepomuk2/Query/Result>
 #include <Nepomuk2/Query/QueryServiceClient>
@@ -37,12 +37,12 @@ namespace Nepomuk2 {
     class Resource;
 }
 
-class KdeMetadataMediaSource : public MediaCenter::AbstractMediaSource
+class MetadataUpdater : public QThread
 {
     Q_OBJECT
 public:
-    explicit KdeMetadataMediaSource(QObject* parent = 0, const QVariantList& args = QVariantList());
-    virtual ~KdeMetadataMediaSource();
+    explicit MetadataUpdater(const QList<int> &rolesRequested, QObject* parent = 0);
+    virtual ~MetadataUpdater();
     void fetchMetadata(int row);
     void fetchMetadata(const QList<int> &rows);
     void setTerm(const Nepomuk2::Query::Term &term);
@@ -60,6 +60,7 @@ protected:
 
 protected slots:
     void runQuery();
+    void processPendingIndices();
 
 private slots:
     void newEntries(const QList<Nepomuk2::Query::Result> &results);
@@ -67,13 +68,22 @@ private slots:
 
 private:
     QList<int> m_rolesRequested;
+    QList<int> m_indices;
+    bool m_termChanged;
     Nepomuk2::Query::Term m_term;
     QMutex m_termMutex;
+    QMutex m_resultsMutex;
+    QMutex m_indicesMutex;
+    QList<Nepomuk2::Query::Result> m_resultList;
     Nepomuk2::Query::QueryServiceClient *m_queryServiceClient;
 
     QString mimetypeForResource(const Nepomuk2::Resource& resource) const;
     QString urlForResource(const Nepomuk2::Resource &resource) const;
     void fetchValuesForResult(int i, const Nepomuk2::Query::Result& result);
+    bool areThereIndicesToProcess();
+    int nextIndexToProcess();
+    Nepomuk2::Query::Result resultForRow(int row);
+    bool hasTermChanged();
 };
 
-#endif // KDEMETADATAMEDIASOURCE_H
+#endif // METADATAUPDATER_H

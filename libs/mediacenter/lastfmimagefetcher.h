@@ -23,7 +23,7 @@
 #include <QQueue>
 #include <QHash>
 #include <QNetworkAccessManager>
-#include <QVariant>
+#include <QPersistentModelIndex>
 
 class LastFmImageFetcher : public QObject
 {
@@ -36,10 +36,11 @@ public:
     explicit LastFmImageFetcher(QObject* parent = 0);
     ~LastFmImageFetcher();
 
-    void fetchImage(const QString& type, const QVariant& identifier, const QString& artistName, const QString& albumName = QString());
+    void fetchImage(const QString& type, const QPersistentModelIndex& index,
+                    const QString& name, const QString& albumName = QString());
 
 Q_SIGNALS:
-    void imageFetched(const QVariant &index, const QString &artistName);
+    void imageFetched(const QPersistentModelIndex &index, const QString &artistName);
 
 private Q_SLOTS:
     void processQueue();
@@ -57,7 +58,7 @@ private:
     QNetworkAccessManager m_imageDownloadManager;
     QHash<QNetworkReply*, QString> m_currentInfoDownloads;
     QHash<QNetworkReply*, QPair<QString,QString> > m_currentImageDownloads;
-    QHash<QString, QVariant> m_identifiers;
+    QHash<QString, QPersistentModelIndex> m_modelIndexes;
 };
 
 #endif // LASTFMIMAGEFETCHER_H_H

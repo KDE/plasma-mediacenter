@@ -17,11 +17,9 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#include "kdemetadatamediasource.h"
+#include "metadataupdater.h"
 
-#include <libs/mediacenter/mediacenter.h>
-#include <libs/mediacenter/medialibrary.h>
-#include <mediacenter/singletonfactory.h>
+#include "mediacenter.h"
 
 #include <Nepomuk2/Resource>
 #include <Nepomuk2/Variant>
@@ -30,61 +28,53 @@
 #include <Nepomuk2/Vocabulary/NCO>
 #include <Nepomuk2/Vocabulary/NMM>
 #include <Nepomuk2/Query/ResourceTypeTerm>
-#include <Nepomuk2/Query/OrTerm>
 
 #include <KDebug>
 
 #include <QtCore/QTimer>
 
-MEDIACENTER_EXPORT_MEDIASOURCE(KdeMetadataMediaSource)
-
 static const int s_queryLimit = 2000;
 
-KdeMetadataMediaSource::KdeMetadataMediaSource(QObject* parent, const QVariantList& args)
-    : AbstractMediaSource(parent, args), m_queryServiceClient(0)
+MetadataUpdater::MetadataUpdater(const QList< int >& rolesRequested, QObject* parent)
+    : QThread(parent), m_rolesRequested(rolesRequested), m_termChanged(false), m_queryServiceClient(0)
 {
-    //MediaTypeRole MUST be before AlbumRole
-    m_rolesRequested << Qt::DisplayRole
-        << MediaCenter::ResourceIdRole
-        << MediaCenter::MediaUrlRole
-        << MediaCenter::MediaTypeRole
-        << Qt::DecorationRole
-        << MediaCenter::AlbumRole
-        << MediaCenter::ArtistRole;
-
     moveToThread(this);
 }
 
-KdeMetadataMediaSource::~KdeMetadataMediaSource()
+MetadataUpdater::~MetadataUpdater()
 {
-    kDebug() << "Waiting for metadata updater to quit...";
-    quit();
-    wait();
+    deleteLater();
 }
 
-void KdeMetadataMediaSource::run()
+void MetadataUpdater::run()
 {
-    Nepomuk2::Query::ResourceTypeTerm audioTerm(
-        Nepomuk2::Query::ResourceTypeTerm(Nepomuk2::Vocabulary::NFO::Audio()));
-    Nepomuk2::Query::ResourceTypeTerm videoTerm(
-        Nepomuk2::Query::ResourceTypeTerm(Nepomuk2::Vocabulary::NFO::Video()));
-    Nepomuk2::Query::ResourceTypeTerm imageTerm(
-        Nepomuk2::Query::ResourceTypeTerm(Nepomuk2::Vocabulary::NFO::Image()));
-
-    setTerm(Nepomuk2::Query::OrTerm(audioTerm, videoTerm, imageTerm));
-
+    QTimer::singleShot(0, this, SLOT(processPendingIndices()));
     exec();
 }
 
-void KdeMetadataMediaSource::setTerm(const Nepomuk2::Query::Term& term)
+void MetadataUpdater::setTerm(const Nepomuk2::Query::Term& term)
 {
     QMutexLocker locker(&m_termMutex);
     m_term = term;
-    QTimer::singleShot(0, this, SLOT(runQuery()));
+    m_termChanged = true;
+    QTimer::singleShot(0, this, SLOT(processPendingIndices()));
 }
 
-void KdeMetadataMediaSource::runQuery()
+bool MetadataUpdater::hasTermChanged()
 {
+    QMutexLocker locker(&m_termMutex);
+    bool isChanged = m_termChanged;
+    if (isChanged) {
+        m_termChanged = false;
+    }
+    return isChanged;
+}
+
+void MetadataUpdater::runQuery()
+{
+    m_indices.clear();
+    m_resultList.clear();
+
     Nepomuk2::Query::Query myQuery;
     if (m_queryServiceClient) {
         m_queryServiceClient->close();
@@ -111,16 +101,27 @@ void KdeMetadataMediaSource::runQuery()
     emit queryStarted();
 }
 
-void KdeMetadataMediaSource::newEntries(const QList< Nepomuk2::Query::Result >& results)
+void MetadataUpdater::newEntries(const QList< Nepomuk2::Query::Result >& results)
 {
-    int i = 0;
-    foreach (const Nepomuk2::Query::Result& r, results) {
-        fetchValuesForResult(i++, r);
-    }
+    m_resultList.append(results);
     emit newResults(results.size());
 }
 
-void KdeMetadataMediaSource::fetchValuesForResult(int i, const Nepomuk2::Query::Result& result)
+void MetadataUpdater::processPendingIndices()
+{
+    Q_ASSERT(thread() == this);
+
+    if (hasTermChanged())
+        runQuery();
+
+    if (areThereIndicesToProcess()) {
+        const int i = nextIndexToProcess();
+        fetchValuesForResult(i, resultForRow(i));
+        QTimer::singleShot(10, this, SLOT(processPendingIndices()));
+    }
+}
+
+void MetadataUpdater::fetchValuesForResult(int i, const Nepomuk2::Query::Result& result)
 {
     QHash<int, QVariant> values;
     foreach(int role, m_rolesRequested) {
@@ -142,7 +143,7 @@ void KdeMetadataMediaSource::fetchValuesForResult(int i, const Nepomuk2::Query::
         case MediaCenter::MediaUrlRole:
             values.insert(role, urlForResource(result.resource()));
             break;
-        case MediaCenter::MediaTypeRole: {
+        case MediaCenter::MediaTypeRole:
             const QString mimetype = mimetypeForResource(result.resource());
             if (mimetype.isEmpty() || !mimetype.contains('/')) {
                 values.insert(role, mimetype);
@@ -151,28 +152,46 @@ void KdeMetadataMediaSource::fetchValuesForResult(int i, const Nepomuk2::Query::
             }
             break;
         }
-        case MediaCenter::AlbumRole:
-            if (values.value(MediaCenter::MediaTypeRole).toString() == "audio") {
-                Nepomuk2::Resource album = result.resource().property(
-                    Nepomuk2::Vocabulary::NMM::musicAlbum()).toResource();
-                values.insert(role, album.genericLabel());
-            }
-            break;
-        case MediaCenter::ArtistRole:
-            if (values.value(MediaCenter::MediaTypeRole).toString() == "audio") {
-                Nepomuk2::Resource artist = result.resource().property(
-                    Nepomuk2::Vocabulary::NMM::performer()).toResource();
-                values.insert(role, artist.genericLabel());
-            }
-            break;
-        }
     }
 
-    SingletonFactory::instanceFor<MediaLibrary>()->updateMedia(values);
     emit gotMetadata(i, values);
 }
 
-QString KdeMetadataMediaSource::mimetypeForResource(const Nepomuk2::Resource& resource) const
+void MetadataUpdater::fetchMetadata(int row)
+{
+    QMutexLocker lock(&m_indicesMutex);
+    m_indices.append(row);
+    QTimer::singleShot(0, this, SLOT(processPendingIndices()));
+}
+
+void MetadataUpdater::fetchMetadata(const QList< int >& rows)
+{
+    QMutexLocker lock(&m_indicesMutex);
+    m_indices.append(rows);
+    QTimer::singleShot(0, this, SLOT(processPendingIndices()));
+}
+
+int MetadataUpdater::nextIndexToProcess()
+{
+    QMutexLocker lock(&m_indicesMutex);
+    return m_indices.takeLast();
+}
+
+Nepomuk2::Query::Result MetadataUpdater::resultForRow(int row)
+{
+    QMutexLocker lock(&m_resultsMutex);
+    if (row >= m_resultList.size())
+        return Nepomuk2::Query::Result();
+    return m_resultList.at(row);
+}
+
+bool MetadataUpdater::areThereIndicesToProcess()
+{
+    QMutexLocker lock(&m_indicesMutex);
+    return !m_indices.isEmpty();
+}
+
+QString MetadataUpdater::mimetypeForResource(const Nepomuk2::Resource& resource) const
 {
     const QString mime = resource.property(Nepomuk2::Vocabulary::NIE::mimeType()).toString();
     if (mime.isEmpty()) {
@@ -185,7 +204,7 @@ QString KdeMetadataMediaSource::mimetypeForResource(const Nepomuk2::Resource& re
     return mime;
 }
 
-QString KdeMetadataMediaSource::urlForResource(const Nepomuk2::Resource &resource) const
+QString MetadataUpdater::urlForResource(const Nepomuk2::Resource &resource) const
 {
     //Misusing URL role for returning Artist for Albums, not too bad I guess
     if (resource.type() == Nepomuk2::Vocabulary::NMM::MusicAlbum()) {
@@ -195,10 +214,10 @@ QString KdeMetadataMediaSource::urlForResource(const Nepomuk2::Resource &resourc
     }
 }
 
-void KdeMetadataMediaSource::finishedListing()
+void MetadataUpdater::finishedListing()
 {
     emit queryFinished();
     qobject_cast<Nepomuk2::Query::QueryServiceClient*>(sender())->close();
 }
 
-#include "kdemetadatamediasource.moc"
+#include "metadataupdater.moc"

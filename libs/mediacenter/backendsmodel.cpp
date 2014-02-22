@@ -69,11 +69,7 @@ void BackendsModel::loadBrowsingBackends()
 
         const QString key = service->library();
         QString errorMessage;
-
-        MediaCenter::AbstractBrowsingBackend *backend =
-            service->createInstance<MediaCenter::AbstractBrowsingBackend>(
-                0, QVariantList() << service->storageId(), &errorMessage);
-
+        MediaCenter::AbstractBrowsingBackend *backend = service->createInstance<MediaCenter::AbstractBrowsingBackend>(0, QVariantList() << service->storageId(), &errorMessage);
         if (backend) {
             if (!backend->okToLoad()) {
                 kDebug() << "Backend " << info.name() << " doesn't want to be loaded";

@@ -21,7 +21,6 @@
 #include <KDE/KCmdLineArgs>
 #include <QDebug>
 #include <QDir>
-#include <QCoreApplication>
 
 MultiplePlaylistModel::MultiplePlaylistModel(QObject* parent): QAbstractListModel(parent)
 {
