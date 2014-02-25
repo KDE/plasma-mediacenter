@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2009-2010 by Alessandro Diaferia <alediaferia@gmail.com>            *
+ *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,41 +16,29 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef MEDIACENTER_H
-#define MEDIACENTER_H
 
-#include "mediacenter_export.h"
+#ifndef PMCARTIST_H
+#define PMCARTIST_H
 
-#include <QPair>
-#include <QHash>
+#include "precompiled.h"
+#include "artist.h"
 
-namespace Phonon {
-class MediaSource;
-}
+#include <QObject>
+#include <QSharedPointer>
 
-namespace MediaCenter {
+class PmcArtist : public QObject
+{
+    Q_OBJECT
+public:
+    explicit PmcArtist(const QSharedPointer< Artist >& artist, QObject* parent = 0);
+    ~PmcArtist();
 
-enum AdditionalMediaRoles {
-    MediaUrlRole = Qt::UserRole + 1,
-    IsExpandableRole,
-    MediaTypeRole,
-    DecorationTypeRole,
-    HideLabelRole,
-    ResourceIdRole,
-    DurationRole,
-    ArtistRole,
-    AlbumRole,
-    AdditionalRoles     //If additional roles are needed to be defined
+    const QString& name() const;
+
+private:
+    class Private;
+    Private * const d;
 };
 
-enum MediaType {
-    Music,
-    Picture,
-    Video
-};
 
-MEDIACENTER_EXPORT QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> &roles);
-MEDIACENTER_EXPORT QString dataDirForComponent (const QString &component);
-} // namespace MediaCenter
-
-#endif // MEDIACENTER_H
+#endif // PMCARTIST_H

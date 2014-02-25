@@ -26,6 +26,7 @@
 #include "../abstractmetadatabackend.h"
 #include "categoriesmodel.h"
 
+class FilterMediaModel;
 class MetadataBackendCommonModel;
 class AlwaysExpandedMetadataModel;
 class PlaylistModel;
@@ -50,12 +51,7 @@ public:
     void setArtistFilter(const QString &filter);
     void setAlbumFilter(const QString &filter);
 
-    Q_INVOKABLE void searchArtist(const QString &artist);
-    Q_INVOKABLE void searchAlbum(const QString &album);
-    Q_INVOKABLE void searchMusic(const QString &music);
-
-    Q_INVOKABLE void addAllSongsToPlaylist( QObject* playlistModel );
-    Q_INVOKABLE void stopAddingSongsToPlaylist();
+    void addAllSongsToPlaylist( QObject* playlistModelObject );
 
     virtual bool expand(int row, QAbstractItemModel* model);
 
@@ -70,12 +66,10 @@ Q_SIGNALS:
 
 protected:
     void updateModelAccordingToFilters();
-    void clearFilters();
     virtual bool initImpl();
 
 private slots:
-    void musicModelDataChanged ( const QModelIndex& startIndex, const QModelIndex& endIndex );
-    void musicModelReset();
+
     void initializeModels();
 
 private:
@@ -86,10 +80,12 @@ private:
 
     QString m_artistFilter;
     QString m_albumFilter;
-    bool m_shallAddMediaToPlaylist : 1;
     ModelMetadata* m_musicModelMetadata;
     ModelMetadata* m_albumsModelMetadata;
     ModelMetadata* m_artistsModelMetadata;
+    FilterMediaModel* m_musicFilteredModel;
+    FilterMediaModel* m_albumFilteredModel;
+    FilterMediaModel* m_artistFilteredModel;
 };
 
 #endif // METADATAMUSICBACKEND_H

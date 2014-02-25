@@ -1,5 +1,6 @@
 /***********************************************************************************
- *   Copyright 2009-2010 by Alessandro Diaferia <alediaferia@gmail.com>            *
+ *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
+ *   Copyright 2014 Sinny Kumari <ksinny@gmail.com>                                *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,41 +17,36 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef MEDIACENTER_H
-#define MEDIACENTER_H
+#ifndef ABSTRACTMEDIASOURCE_H
+#define ABSTRACTMEDIASOURCE_H
 
-#include "mediacenter_export.h"
+#include <QtCore/QThread>
+#include <KService>
 
-#include <QPair>
-#include <QHash>
-
-namespace Phonon {
-class MediaSource;
-}
+class MediaLibrary;
 
 namespace MediaCenter {
+class AbstractMediaSource : public QThread
+{
+    Q_OBJECT
+public:
+    explicit AbstractMediaSource(QObject* parent = 0, const QVariantList &args = QVariantList());
+    ~AbstractMediaSource();
 
-enum AdditionalMediaRoles {
-    MediaUrlRole = Qt::UserRole + 1,
-    IsExpandableRole,
-    MediaTypeRole,
-    DecorationTypeRole,
-    HideLabelRole,
-    ResourceIdRole,
-    DurationRole,
-    ArtistRole,
-    AlbumRole,
-    AdditionalRoles     //If additional roles are needed to be defined
+    void setMediaLibrary(MediaLibrary *mediaLibrary);
+    static KService::List availableMediaSourcePlugins();
+
+protected:
+    MediaLibrary *mediaLibrary() const;
+
+private:
+    class Private;
+    Private * const d;
 };
+}
 
-enum MediaType {
-    Music,
-    Picture,
-    Video
-};
+#define MEDIACENTER_EXPORT_MEDIASOURCE( c ) \
+    K_PLUGIN_FACTORY( MediaSourceFactory, registerPlugin< c >(); ) \
+    K_EXPORT_PLUGIN( MediaSourceFactory("c") )
 
-MEDIACENTER_EXPORT QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> &roles);
-MEDIACENTER_EXPORT QString dataDirForComponent (const QString &component);
-} // namespace MediaCenter
-
-#endif // MEDIACENTER_H
+#endif // ABSTRACTMEDIASOURCE_H

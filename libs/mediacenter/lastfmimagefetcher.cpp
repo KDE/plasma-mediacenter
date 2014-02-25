@@ -59,8 +59,7 @@ LastFmImageFetcher::~LastFmImageFetcher()
 
 }
 
-void LastFmImageFetcher::fetchImage(const QString& type, const QPersistentModelIndex& index,
-                                    const QString& artistName, const QString &albumName)
+void LastFmImageFetcher::fetchImage(const QString& type, const QVariant& identifier, const QString& artistName, const QString& albumName)
 {
     QStringList nameList;
     nameList << type << artistName;
@@ -68,7 +67,7 @@ void LastFmImageFetcher::fetchImage(const QString& type, const QPersistentModelI
         nameList << albumName;
     }
     m_pendingQueue.enqueue(nameList);
-    m_modelIndexes.insert(albumName.isEmpty() ? artistName : albumName, index);
+    m_identifiers.insert(albumName.isEmpty() ? artistName : albumName, identifier);
     QTimer::singleShot(0, this, SLOT(processQueue()));
 }
 
@@ -146,5 +145,5 @@ void LastFmImageFetcher::gotImage(QNetworkReply* reply)
     m_busy = false;
     QTimer::singleShot(0, this, SLOT(processQueue()));
 
-    emit imageFetched(m_modelIndexes.take(name), name);
+    emit imageFetched(m_identifiers.take(name), name);
 }

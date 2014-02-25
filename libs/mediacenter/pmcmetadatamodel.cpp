@@ -20,18 +20,13 @@
 #include "pmcmetadatamodel.h"
 #include "pmcimagecache.h"
 #include "pmcimageprovider.h"
-#include "metadataupdater.h"
 #include "lastfmimagefetcher.h"
-
-#include <Nepomuk2/Query/Query>
-#include <Nepomuk2/Vocabulary/NIE>
-#include <Nepomuk2/Vocabulary/NFO>
-#include <Nepomuk2/Query/ResourceTypeTerm>
-#include <Nepomuk2/Query/AndTerm>
-#include <Nepomuk2/Query/QueryServiceClient>
-#include <Nepomuk2/Query/Result>
-#include <Nepomuk2/Variant>
-#include <Nepomuk2/Query/QueryParser>
+#include "media.h"
+#include "medialibrary.h"
+#include "pmcmedia.h"
+#include "singletonfactory.h"
+#include "pmcalbum.h"
+#include "pmcartist.h"
 
 #include <KIO/PreviewJob>
 #include <KDebug>
@@ -44,13 +39,12 @@ public:
     Private()
         : thumbnailerPlugins(new QStringList(KIO::PreviewJob::availablePlugins()))
         , isSearchTermValid(false)
-        , numberOfEntries(0)
     {
+        modeForMediaType["audio"] = Music;
+        modeForMediaType["image"] = Picture;
+        modeForMediaType["video"] = Video;
     }
-    Nepomuk2::Query::Term term;
-    Nepomuk2::Query::Term searchTerm;
     bool isSearchTermValid;
-    QList< Nepomuk2::Query::Result > queryResults;
 
     //Thumbnail stuff
     const QStringList *thumbnailerPlugins;
@@ -60,19 +54,25 @@ public:
     QTimer previewTimer;
     QTimer updateTimer;
     QTimer metadataFetchTimer;
-    Nepomuk2::Query::ResourceTypeTerm resourceTypeTerm;
-    QHash<int, QHash<int, QVariant> > metadataValues;
-    MetadataUpdater *metadataUpdater;
-    int numberOfEntries;
+    QList< QHash<int, QVariant> > metadataValues;
     QList<int> rowsToFetchMetadataFor;
     QStringList mediaUrlWhichFailedThumbnailGeneration;
     QVariant defaultDecoration;
+    Mode currentMode;
+
+    QStringList mediaResourceIds;
+    QHash< QString, QSharedPointer<QObject> > mediaByResourceId;
+
+    QHash<QString, Mode> modeForMediaType;
+    MediaLibrary *mediaLibrary;
 };
 
-PmcMetadataModel::PmcMetadataModel(QObject* parent):
+PmcMetadataModel::PmcMetadataModel(QObject* parent, MediaLibrary* mediaLibrary):
     QAbstractListModel(parent),
     d(new Private())
 {
+    d->mediaLibrary = mediaLibrary ? mediaLibrary : SingletonFactory::instanceFor<MediaLibrary>();
+
     setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
 
     d->previewTimer.setSingleShot(true);
@@ -84,44 +84,18 @@ PmcMetadataModel::PmcMetadataModel(QObject* parent):
 
     d->thumbnailSize = QSize(512, 512);
 
-    qRegisterMetaType< QHash<int,QVariant> >("QHash<int,QVariant>");
-    d->metadataUpdater = new MetadataUpdater(rolesNeeded());
-    connect(d->metadataUpdater, SIGNAL(gotMetadata(int,QHash<int,QVariant>)),
-            SLOT(saveMetadata(int,QHash<int,QVariant>)));
-    connect(d->metadataUpdater, SIGNAL(newResults(int)), SLOT(newEntries(int)));
-    connect(d->metadataUpdater, SIGNAL(reset()), SLOT(handleUpdaterReset()));
-    connect(d->metadataUpdater, SIGNAL(queryStarted()), SIGNAL(queryStarted()));
-    connect(d->metadataUpdater, SIGNAL(queryFinished()), SIGNAL(queryFinished()));
-    connect(d->metadataUpdater, SIGNAL(queryError(QString)), SIGNAL(queryError(QString)));
-    d->metadataUpdater->start(QThread::IdlePriority);
-
-    connect(LastFmImageFetcher::instance(), SIGNAL(imageFetched(QPersistentModelIndex,QString)), SLOT(signalUpdate(QPersistentModelIndex,QString)));
+    connect(LastFmImageFetcher::instance(),
+            SIGNAL(imageFetched(QVariant,QString)),
+            SLOT(signalUpdate(QVariant,QString)));
 }
 
 PmcMetadataModel::~PmcMetadataModel()
 {
-    d->metadataUpdater->quit();
-    kDebug() << "Waiting for metadata thread to quit...";
-    d->metadataUpdater->wait(5000);
     delete d;
 }
 
 void PmcMetadataModel::updateModel()
 {
-    QList<Nepomuk2::Query::Term> listOfTerms;
-    listOfTerms.append(d->term);
-
-    if (d->resourceTypeTerm.isValid()) {
-        Nepomuk2::Query::ComparisonTerm sortTerm(Nepomuk2::Vocabulary::NIE::lastModified(), Nepomuk2::Query::Term());
-        sortTerm.setSortWeight(1, Qt::DescendingOrder);
-        listOfTerms.append(sortTerm);
-    }
-
-    if (d->isSearchTermValid) {
-        listOfTerms.append(d->searchTerm);
-    }
-
-    d->metadataUpdater->setTerm(Nepomuk2::Query::AndTerm(listOfTerms));
     emit queryStarted();
 }
 
@@ -129,154 +103,226 @@ void PmcMetadataModel::showMediaType(MediaCenter::MediaType mediaType)
 {
     switch (mediaType) {
         case MediaCenter::Music:
-            d->resourceTypeTerm = Nepomuk2::Query::ResourceTypeTerm(Nepomuk2::Vocabulary::NFO::Audio());
-	    break;
+            d->currentMode = Music;
+            break;
         case MediaCenter::Picture:
-            d->resourceTypeTerm = Nepomuk2::Query::ResourceTypeTerm(Nepomuk2::Vocabulary::NFO::Image());
-	    break;
+            d->currentMode = Picture;
+            break;
         case MediaCenter::Video:
-            d->resourceTypeTerm = Nepomuk2::Query::ResourceTypeTerm(Nepomuk2::Vocabulary::NFO::Video());
+            d->currentMode = Video;
     }
-    clearAllFilters();
-    d->updateTimer.start(100);
+    const QString mediaTypeString = d->modeForMediaType.key(d->currentMode);
+    QList <QSharedPointer<PmcMedia> > mediaData = d->mediaLibrary->getMedia(mediaTypeString);
+
+    connect(d->mediaLibrary,
+            SIGNAL(newMedia(QList<QSharedPointer<PmcMedia> >)),
+            SLOT(handleNewMedia(QList<QSharedPointer<PmcMedia> >)));
+
+    handleNewMedia(mediaData);
 }
 
-void PmcMetadataModel::showMediaForProperty(Nepomuk2::Types::Property property)
+void PmcMetadataModel::showAlbums()
 {
-    Nepomuk2::Query::ComparisonTerm ct(property, Nepomuk2::Query::Term());
-    ct.setInverted(true);
-    setTerm(ct);
+    QList <QSharedPointer<PmcAlbum> > mediaData = d->mediaLibrary->getAlbums();
+    d->currentMode = Album;
+
+    connect(d->mediaLibrary,
+            SIGNAL(newAlbums(QList<QSharedPointer<PmcAlbum> >)),
+            SLOT(handleNewAlbums(QList<QSharedPointer<PmcAlbum> >)));
+    handleNewAlbums(mediaData);
 }
 
-void PmcMetadataModel::setTerm(const Nepomuk2::Query::Term& term)
+void PmcMetadataModel::showArtist()
 {
-     d->term = term;
-     d->updateTimer.start(100);
+    QList <QSharedPointer<PmcArtist> > mediaData = d->mediaLibrary->getArtists();
+    d->currentMode = Artist;
+
+    connect(d->mediaLibrary,
+            SIGNAL(newArtists(QList<QSharedPointer<PmcArtist> >)),
+            SLOT(handleNewArtists(QList<QSharedPointer<PmcArtist> >)));
+    handleNewArtists(mediaData);
 }
 
-void PmcMetadataModel::addTerm(const Nepomuk2::Query::Term& term)
+void PmcMetadataModel::handleNewMedia(const QList< QSharedPointer< PmcMedia > >& media)
 {
-    d->term = Nepomuk2::Query::AndTerm(d->term, term);
-    d->updateTimer.start(100);
+    const int existingRowCount = rowCount();
+    QStringList resourceIdsToBeInserted;
+
+    foreach (const QSharedPointer<PmcMedia> &m, media) {
+        if (d->modeForMediaType.value(m->type()) == d->currentMode) {
+            d->mediaByResourceId.insert(m->sha(), QSharedPointer<QObject>(m));
+            resourceIdsToBeInserted.append(m->sha());
+        }
+    }
+
+    beginInsertRows(QModelIndex(), existingRowCount,
+                    existingRowCount + resourceIdsToBeInserted.size() - 1);
+    d->mediaResourceIds.append(resourceIdsToBeInserted);
+    Q_ASSERT(d->mediaByResourceId.keys().size() == d->mediaResourceIds.size());
+    endInsertRows();
 }
+
+void PmcMetadataModel::handleNewAlbums(const QList< QSharedPointer< PmcAlbum > >& mediaData)
+{
+    handleNewAlbumsOrArtists<PmcAlbum>(mediaData);
+}
+
+void PmcMetadataModel::handleNewArtists(const QList< QSharedPointer< PmcArtist > >& mediaData)
+{
+    handleNewAlbumsOrArtists<PmcArtist>(mediaData);
+}
+
+template <class T>
+void PmcMetadataModel::handleNewAlbumsOrArtists(const QList< QSharedPointer< T > > &mediaData)
+{
+    const int existingRowCount = rowCount();
+    QStringList resourceIdsToBeInserted;
+
+    foreach (const QSharedPointer<T> &a, mediaData) {
+        if (d->mediaByResourceId.contains(a->name())) {
+            kWarning() << "ALREADY HAS " << a->name();
+            continue;
+        }
+        d->mediaByResourceId.insert(a->name(), QSharedPointer<QObject>(a));
+        resourceIdsToBeInserted.append(a->name());
+    }
+
+    beginInsertRows(QModelIndex(), existingRowCount,
+                    existingRowCount + resourceIdsToBeInserted.size() -1);
+    d->mediaResourceIds.append(resourceIdsToBeInserted);
+
+    Q_ASSERT(d->mediaByResourceId.keys().size() == d->mediaResourceIds.size());
+    endInsertRows();
+}
+
 
 QVariant PmcMetadataModel::metadataValueForRole(const QModelIndex& index, int role) const
 {
-    return d->metadataValues.value(index.row()).value(role);
+    //FIXME: If the logic is correct elsewhere, this check should not be required
+    return index.isValid() && index.row() > 0 && index.row() < d->metadataValues.size() ?
+        d->metadataValues.at(index.row()).value(role) : QVariant();
 }
 
 QVariant PmcMetadataModel::data(const QModelIndex& index, int role) const
 {
-    if (!index.isValid() || index.row() >= rowCount())
+    const int row = index.row();
+    if (!index.isValid() || row >= rowCount())
         return QVariant();
-    if (!d->metadataValues.keys().contains(index.row())) {
-        d->rowsToFetchMetadataFor.append(index.row());
-        d->metadataFetchTimer.start(100);
-        return QVariant();
+
+    switch (d->currentMode) {
+        case Music:
+        case Picture:
+        case Video:
+            return dataForMedia(index, role);
+        case Album:
+            return dataForAlbum(row, role);
+        case Artist:
+            return dataForArtist(row, role);
     }
 
-    const QVariant metadataValue = metadataValueForRole(index, role);
-    switch(role) {
+    return QVariant();
+}
+
+QVariant PmcMetadataModel::dataForMedia(const QModelIndex &index, int role) const
+{
+    const int row = index.row();
+    const QSharedPointer<QObject> mediaObject = d->mediaByResourceId.value(d->mediaResourceIds.at(row));
+    const QSharedPointer<PmcMedia> media = qSharedPointerObjectCast<PmcMedia>(mediaObject);
+
+    switch (role) {
     case MediaCenter::ResourceIdRole:
+        return media->sha();
     case MediaCenter::MediaUrlRole:
+        return media->url();
     case MediaCenter::MediaTypeRole:
+        return media->type();
     case Qt::DisplayRole:
-        return metadataValue;
+        return media->title();
+    case MediaCenter::AlbumRole:
+        return media->album();
+    case MediaCenter::ArtistRole:
+        return media->artist();
     case Qt::DecorationRole:
-        return decorationForMetadata(metadataValue, index);
-    case MediaCenter::MediaThumbnailRole:
-        if (metadataValueForRole(index, MediaCenter::MediaTypeRole) == "video") {
-            KUrl url = d->metadataValues.value(index.row()).value(MediaCenter::MediaUrlRole).toUrl();
+        if (media->type() == "video") {
+            const KUrl url(media->url());
             if (d->mediaUrlWhichFailedThumbnailGeneration.contains(url.prettyUrl()))
                 return "image-missing";
             return const_cast<PmcMetadataModel*>(this)->fetchPreview(url, index);
+        } else {
+            return media->thumbnail();
         }
     }
 
     return QVariant();
 }
 
-QVariant PmcMetadataModel::decorationForMetadata(const QVariant &metadataValue, const QModelIndex &index) const
+QVariant PmcMetadataModel::dataForAlbum(int row, int role) const
 {
-    if (metadataValue.type() == QVariant::String && metadataValue.toString().isEmpty()) {
-        const QString mediaType = metadataValueForRole(index, MediaCenter::MediaTypeRole).toString();
-        if (mediaType == "album") {
-            const QString albumName = metadataValueForRole(index, Qt::DisplayRole).toString();
-            const QString albumUri = QString("album:%1").arg(albumName);
-            if (PmcImageCache::instance()->containsId(albumUri)) {
-                return QString("image://%1/%2").arg(PmcImageProvider::identificationString, albumUri);
-            } else {
-                //MediaUrlRole is abused for albums to pass on the artist name
-                const QString artistNameForAlbum = metadataValueForRole(index, MediaCenter::MediaUrlRole).toString();
-                LastFmImageFetcher::instance()->fetchImage("album", QPersistentModelIndex(index), artistNameForAlbum, albumName);
-            }
-        } else if (mediaType == "artist") {
-            const QString artistName = metadataValueForRole(index, Qt::DisplayRole).toString();
-            const QString artistUri = QString("artist:%1").arg(artistName);
-            if (PmcImageCache::instance()->containsId(artistUri)) {
-                return QString("image://%1/%2").arg(PmcImageProvider::identificationString, artistUri);
-            } else {
-                LastFmImageFetcher::instance()->fetchImage("artist", QPersistentModelIndex(index), artistName);
-            }
-        }
-        if (d->defaultDecoration.isValid()) {
-            return d->defaultDecoration;
-        }
+    const QString resourceId = d->mediaResourceIds.at(row);
+    const QSharedPointer<QObject> mediaObject = d->mediaByResourceId.value(resourceId);
+    const QSharedPointer<PmcAlbum> album = qSharedPointerObjectCast<PmcAlbum>(mediaObject);
+
+    switch (role) {
+    case Qt::DisplayRole:
+        return album->name();
+    case Qt::DecorationRole:
+        return getAlbumArt(album->name(), album->albumArtist(), resourceId);
     }
-    return metadataValue;
+
+    return QVariant();
+}
+
+QVariant PmcMetadataModel::dataForArtist(int row, int role) const
+{
+    const QString resourceId = d->mediaResourceIds.at(row);
+    const QSharedPointer<QObject> mediaObject = d->mediaByResourceId.value(resourceId);
+    const QSharedPointer<PmcArtist> artist = qSharedPointerObjectCast<PmcArtist>(mediaObject);
+
+    switch (role) {
+    case Qt::DisplayRole:
+        return artist->name();
+    case Qt::DecorationRole:
+        return getArtistImage(artist->name(), resourceId);
+    }
+
+    return QVariant();
+}
+
+QVariant PmcMetadataModel::getAlbumArt(const QString& albumName, const QString& albumArtist, const QString &resourceId) const
+{
+    const QString albumUri = QString("album:%1").arg(albumName);
+
+    if (PmcImageCache::instance()->containsId(albumUri)) {
+        return QString("image://%1/%2").arg(PmcImageProvider::identificationString, albumUri);
+    } else {
+        LastFmImageFetcher::instance()->fetchImage("album", resourceId, albumArtist, albumName);
+    }
+
+    return d->defaultDecoration;
+}
+
+QVariant PmcMetadataModel::getArtistImage(const QString& artistName, const QString& resourceId) const
+{
+    const QString artistUri = QString("artist:%1").arg(artistName);
+    if (PmcImageCache::instance()->containsId(artistUri)) {
+        return QString("image://%1/%2").arg(PmcImageProvider::identificationString, artistUri);
+    } else {
+        LastFmImageFetcher::instance()->fetchImage("artist", resourceId, artistName);
+    }
+
+    return d->defaultDecoration;
 }
 
 void PmcMetadataModel::fetchMetadata()
 {
-    d->metadataUpdater->fetchMetadata(d->rowsToFetchMetadataFor);
     d->rowsToFetchMetadataFor.clear();
 }
 
-QList< int > PmcMetadataModel::rolesNeeded() const
-{
-    return QList<int>() << Qt::DisplayRole
-                        << MediaCenter::ResourceIdRole
-                        << MediaCenter::MediaUrlRole
-                        << MediaCenter::MediaTypeRole
-                        << Qt::DecorationRole;
-}
-
-QString PmcMetadataModel::mimetypeForResource(const Nepomuk2::Resource& resource) const
-{
-    return resource.property(Nepomuk2::Vocabulary::NIE::mimeType()).toString();
-}
 
 int PmcMetadataModel::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
-    return d->numberOfEntries;
-}
-
-void PmcMetadataModel::saveMetadata(int row, const QHash< int, QVariant >& values )
-{
-    if (row >= rowCount() || d->metadataValues.contains(row))
-        return;
-
-    d->metadataValues.insert(row, values);
-    emit dataChanged(createIndex(row, 0), createIndex(row, 0));
-}
-
-void PmcMetadataModel::newEntries(int count)
-{
-    int existingCount = rowCount();
-    beginInsertRows(QModelIndex(), existingCount, existingCount+count);
-    d->numberOfEntries += count;
-    endInsertRows();
-}
-
-void PmcMetadataModel::finishedListing()
-{
-    qobject_cast<Nepomuk2::Query::QueryServiceClient*>(sender())->close();
-}
-
-QString PmcMetadataModel::urlForResource(const Nepomuk2::Resource &resource) const
-{
-    return resource.property(Nepomuk2::Vocabulary::NIE::url()).toString();
+    return d->mediaResourceIds.size();
 }
 
 QString PmcMetadataModel::fetchPreview(const KUrl &url, const QModelIndex& index)
@@ -288,7 +334,7 @@ QString PmcMetadataModel::fetchPreview(const KUrl &url, const QModelIndex& index
 
     d->filesToPreview.insert(url, QPersistentModelIndex(index));
     d->previewTimer.start(100);
-    return QString();
+    return d->defaultDecoration.toString();
 }
 
 void PmcMetadataModel::delayedPreview()
@@ -338,62 +384,20 @@ void PmcMetadataModel::previewFailed(const KFileItem &item)
     }
 }
 
-void PmcMetadataModel::addFilter(const Nepomuk2::Types::Property& property, const Nepomuk2::Query::Term& term, Nepomuk2::Query::ComparisonTerm::Comparator comparator)
-{
-    QList<Nepomuk2::Query::Term> termsList;
-
-    termsList.append(d->term);
-    termsList.append(Nepomuk2::Query::ComparisonTerm(property, term, comparator));
-
-    d->term = Nepomuk2::Query::AndTerm(termsList);
-    d->updateTimer.start(100);
-}
-
-void PmcMetadataModel::clearAllFilters()
-{
-    if (d->term == d->resourceTypeTerm)
-        return;
-    d->term = d->resourceTypeTerm;
-    d->updateTimer.start(100);
-}
-
-void PmcMetadataModel::handleUpdaterReset()
-{
-    resetModel();
-}
-
-void PmcMetadataModel::resetModel()
-{
-    beginResetModel();
-    d->numberOfEntries = 0;
-    d->metadataValues.clear();
-    endResetModel();
-}
-
-void PmcMetadataModel::setSearchTerm(const QString& searchTerm)
-{
-    if (searchTerm.isEmpty()) {
-        d->isSearchTermValid = false;
-    } else {
-        d->searchTerm = Nepomuk2::Query::QueryParser::parseQuery(searchTerm).term();
-        d->isSearchTermValid = true;
-    }
-    d->updateTimer.start(100);
-}
-
-void PmcMetadataModel::setDefaultDecoration ( const QVariant& decoration )
+void PmcMetadataModel::setDefaultDecoration(const QVariant& decoration)
 {
     d->defaultDecoration = decoration;
 }
 
-void PmcMetadataModel::signalUpdate(const QPersistentModelIndex& index, const QString& displayString)
+void PmcMetadataModel::signalUpdate(const QVariant& resourceId, const QString& displayString)
 {
-    if (!displayString.isEmpty() &&
-        metadataValueForRole(index, Qt::DisplayRole).toString() != displayString) {
+    if (displayString.isEmpty() || !d->mediaByResourceId.contains(resourceId.toString())) {
         return;
     }
 
-    emit dataChanged(index, index);
+    const int rowForResource = d->mediaResourceIds.indexOf(resourceId.toString());
+    const QModelIndex changedIndex = index(rowForResource);
+    emit dataChanged(changedIndex, changedIndex);
 }
 
 #include "pmcmetadatamodel.moc"

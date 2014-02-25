@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2009-2010 by Alessandro Diaferia <alediaferia@gmail.com>            *
+ *   Copyright 2014 Sinny Kumari <ksinny@gmail.com>                                *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,41 +16,35 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef MEDIACENTER_H
-#define MEDIACENTER_H
+#ifndef PMCMEDIA_H
+#define PMCMEDIA_H
 
-#include "mediacenter_export.h"
+#include <QString>
+#include <QSharedPointer>
 
-#include <QPair>
-#include <QHash>
+class Media;
 
-namespace Phonon {
-class MediaSource;
-}
+class PmcMedia : public QObject
+{
+    Q_OBJECT
+public:
+    explicit PmcMedia(const QSharedPointer< Media >& media, QObject* parent = 0);
+    ~PmcMedia();
 
-namespace MediaCenter {
+    const QString& sha() const;
+    const QString& title () const;
+    const QString& url() const;
+    const QString& thumbnail () const;
+    const QString& type() const;
+    QString album() const;
+    QString artist() const;
 
-enum AdditionalMediaRoles {
-    MediaUrlRole = Qt::UserRole + 1,
-    IsExpandableRole,
-    MediaTypeRole,
-    DecorationTypeRole,
-    HideLabelRole,
-    ResourceIdRole,
-    DurationRole,
-    ArtistRole,
-    AlbumRole,
-    AdditionalRoles     //If additional roles are needed to be defined
+signals:
+    void updated();
+
+private:
+    class Private;
+    Private * const d;
 };
 
-enum MediaType {
-    Music,
-    Picture,
-    Video
-};
-
-MEDIACENTER_EXPORT QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> &roles);
-MEDIACENTER_EXPORT QString dataDirForComponent (const QString &component);
-} // namespace MediaCenter
-
-#endif // MEDIACENTER_H
+#endif // PMCMEDIA_H
