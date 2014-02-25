@@ -228,6 +228,7 @@ Image {
                     } else {
                         runtimeData.stopped = true;
                         if (!runtimeData.userTrigerredStop) {
+                            root.goBack()
                             //FIXME:This breaks playback from runtimeData.playUrl
                             //pmcPageStack.pushAndFocus(getMediaBrowser())
                         }
