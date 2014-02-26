@@ -393,6 +393,7 @@ Image {
     Keys.onPressed: {
         switch (event.key) {
             case Qt.Key_Escape: goBack(); break
+            case Qt.Key_Backspace: goBack(); break
             case Qt.Key_MediaPlay: runtimeData.playPause(); break
             case Qt.Key_MediaNext: playlistInstance.playNext(); break
             case Qt.Key_MediaPrevious: playlistInstance.playPrevious(); break
