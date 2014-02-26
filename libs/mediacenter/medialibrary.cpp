@@ -22,6 +22,7 @@
 #include <QTimer>
 #include <QDebug>
 #include <QApplication>
+#include <QPointer>
 
 #include "media.h"
 
@@ -64,7 +65,7 @@ public:
     QList< QSharedPointer<PmcMedia> > newMediaList;
     QList< QSharedPointer<PmcAlbum> > newAlbumList;
     QList< QSharedPointer<PmcArtist> > newArtistList;
-    QTimer newMediaTimer;
+    QPointer<QTimer> newMediaTimer;
 
     QMutex albumListMutex;
     QList< QSharedPointer<Album> > albumList;
@@ -88,13 +89,14 @@ MediaLibrary::MediaLibrary(MediaValidator* mediaValidator, QObject* parent)
 
     d->wrapperCache = new MediaLibraryWrapperCache(this);
     d->mediaValidator = mediaValidator ? mediaValidator : new MediaValidator(this);
+}
 
-    d->newMediaTimer.setInterval(1000);
-    d->newMediaTimer.setSingleShot(true);
-    connect(&d->newMediaTimer, SIGNAL(timeout()),
-            SLOT(emitNewMediaWithMediaList()));
-
-    QTimer::singleShot(0, this , SLOT(initDb()));
+void MediaLibrary::init()
+{
+    d->newMediaTimer = new QTimer(this);
+    d->newMediaTimer->setInterval(1000);
+    d->newMediaTimer->setSingleShot(true);
+    connect(d->newMediaTimer.data(), SIGNAL(timeout()), SLOT(emitNewMediaWithMediaList()));
 }
 
 MediaLibrary::~MediaLibrary()
@@ -107,6 +109,8 @@ MediaLibrary::~MediaLibrary()
 
 void MediaLibrary::run()
 {
+    init();
+    initDb();
     exec();
 }
 
@@ -202,7 +206,6 @@ bool MediaLibrary::extractAndSaveArtistInfo(
     QSharedPointer< Media >& media)
 {
     QString artistName = request.second.value(MediaCenter::ArtistRole).toString();
-    qDebug() << artistName << media->artist().isNull();
 
     if (artistName.isEmpty()) {
         artistName = "Unknown Artist";
@@ -223,7 +226,6 @@ bool MediaLibrary::extractAndSaveAlbumInfo(
 {
     QString albumName = request.second.value(MediaCenter::AlbumRole).toString();
     QString artistName = request.second.value(MediaCenter::ArtistRole).toString();
-    qDebug() << artistName << albumName << media->album().isNull();
 
     if (albumName.isEmpty()){
         albumName = "Unknown Album";
@@ -253,6 +255,7 @@ QSharedPointer< T > MediaLibrary::loadOrCreate(const QString& id)
 
         if (hasError(daoError)) {
             qWarning() << "Error inserting " << id << ": " << daoError.text();
+            qFatal("Failed while inserting into DB, see above for error");
         }
     }
 
@@ -308,9 +311,15 @@ void MediaLibrary::initDb()
     //TODO: Just the existence of the db file might not be enough proof that the
     // database in the file is in a usable state
     if (!dbExists) {
-        qx::dao::create_table<Artist>();
-        qx::dao::create_table<Album>();
-        qx::dao::create_table<Media>();
+        qDebug() << "Creating database tables";
+        bool error = false;
+        error = error || hasError(qx::dao::create_table<Artist>());
+        error = error || hasError(qx::dao::create_table<Album>());
+        error = error || hasError(qx::dao::create_table<Media>());
+
+        if (error) {
+            qFatal("Failed to create necessary tables");
+        }
     }
 
     updateLibrary();
@@ -391,8 +400,8 @@ QList< QSharedPointer<PmcMedia> > MediaLibrary::getMedia(const QString& type) co
 
 void MediaLibrary::emitNewMedia()
 {
-    if (!d->newMediaTimer.isActive()) {
-        d->newMediaTimer.start();
+    if (!d->newMediaTimer->isActive()) {
+        d->newMediaTimer->start();
     }
 }
 

@@ -59,6 +59,7 @@ Q_SIGNALS:
     void newArtists(const QList< QSharedPointer<PmcArtist> > &artist);
 
 private Q_SLOTS:
+    void init();
     void processRemainingRequests();
     void initDb();
     void emitNewMediaWithMediaList();
