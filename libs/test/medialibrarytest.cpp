@@ -32,7 +32,7 @@ static const char* DB_FILENAME = "plasma-mediacenter.sqlite";
 QTEST_KDEMAIN(MediaLibraryTest, NoGUI);
 
 namespace {
-    static const int TIMEOUT_FOR_SIGNALS = 2000;
+    static const int TIMEOUT_FOR_SIGNALS = 3000;
 }
 
 bool FakeMediaValidator::fileWithUrlExists(const QString& url)
