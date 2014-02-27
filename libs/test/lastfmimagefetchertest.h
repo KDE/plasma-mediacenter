@@ -1,5 +1,6 @@
 /***********************************************************************************
- *   Copyright 2013 Shantanu Tushar <shantanu@kde.org>                             *
+ *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
+ *   Copyright 2014 Sinny Kumari <ksinny@gmail.com>                                *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,44 +17,33 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef LASTFMIMAGEFETCHER_H
-#define LASTFMIMAGEFETCHER_H
+#ifndef LASTFMIMAGEFETCHERTEST_H
+#define LASTFMIMAGEFETCHERTEST_H
 
 #include <QObject>
-#include <QQueue>
-#include <QHash>
-#include <QNetworkAccessManager>
-#include <QVariant>
 
-class LastFmImageFetcher : public QObject
+namespace {
+    static const int TIMEOUT_FOR_SIGNALS = 10000;
+}
+
+class QSignalSpy;
+
+class LastFmImageFetcherTest : public QObject
 {
     Q_OBJECT
-public:
-    explicit LastFmImageFetcher(QObject* parent = 0);
-    ~LastFmImageFetcher();
 
-    void fetchImage(const QString& type, const QVariant& identifier, const QString& artistName, const QString& albumName = QString());
+private slots:
+    void initTestCase();
+    void cleanupTestCase();
 
-Q_SIGNALS:
-    void imageFetched(const QVariant &identifier, const QString &artistName);
+    void init();
+    void cleanup();
 
-private Q_SLOTS:
-    void processQueue();
-    void gotResponse(QNetworkReply* reply);
-    void gotImage(QNetworkReply* reply);
+    void shouldDownloadImageAndSaveToCache();
 
 private:
-    void downloadImage(const QString& type, const QString& name, const QString& url);
+    bool waitForSignal(QSignalSpy *spy, int timeout);
 
-    bool m_busy;
-    QString m_artistInfoUrl;
-    QString m_albumInfoUrl;
-    QQueue< QList<QString> > m_pendingQueue;
-    QNetworkAccessManager m_netAccessManager;
-    QNetworkAccessManager m_imageDownloadManager;
-    QHash<QNetworkReply*, QString> m_currentInfoDownloads;
-    QHash<QNetworkReply*, QPair<QString,QString> > m_currentImageDownloads;
-    QHash<QString, QVariant> m_identifiers;
 };
 
-#endif // LASTFMIMAGEFETCHER_H_H
+#endif // LASTFMIMAGEFETCHERTEST_H

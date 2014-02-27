@@ -18,6 +18,7 @@
 
 #include "pmcimageprovider.h"
 #include "pmcimagecache.h"
+#include "singletonfactory.h"
 
 #include <QDebug>
 
@@ -35,7 +36,7 @@ PmcImageProvider::~PmcImageProvider()
 
 QImage PmcImageProvider::requestImage(const QString& id, QSize* size, const QSize& requestedSize)
 {
-    QImage image = PmcImageCache::instance()->getImage(id);
+    QImage image = SingletonFactory::instanceFor<PmcImageCache>()->getImage(id);
 
     if (size) {
         *size = image.size();

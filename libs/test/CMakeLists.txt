@@ -15,3 +15,8 @@ qt4_automoc(singletonfactorytest.cpp)
 add_executable(singletonfactorytest singletonfactorytest.cpp)
 add_test(pmc-libs-singletonfactorytest singletonfactorytest)
 target_link_libraries(singletonfactorytest plasmamediacenter ${KDE4_KDECORE_LIBRARY} ${QT_QTSQL_LIBRARIES} ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES} -lboost_serialization -lQxOrm)
+
+qt4_automoc(lastfmimagefetchertest.cpp)
+add_executable(lastfmimagefetchertest lastfmimagefetchertest.cpp)
+add_test(pmc-libs-lastfmimagefetchertest lastfmimagefetchertest)
+target_link_libraries(lastfmimagefetchertest plasmamediacenter ${KDE4_KDECORE_LIBRARY} ${QT_QTSQL_LIBRARIES} ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES} -lboost_serialization -lQxOrm)

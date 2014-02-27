@@ -23,6 +23,7 @@
 
 #include "pmccoverartprovider.h"
 #include "pmcimagecache.h"
+#include "singletonfactory.h"
 
 #include <taglib/id3v2tag.h>
 #include <taglib/mpegfile.h>
@@ -67,23 +68,23 @@ QImage PmcCoverArtProvider::requestImage(const QString& id, QSize* size, const Q
 
 bool PmcCoverArtProvider::containsAlbum(const QString& albumName)
 {
-    return PmcImageCache::instance()->containsId(QString(albumName).prepend("album:"));
+    return SingletonFactory::instanceFor<PmcImageCache>()->containsId(QString(albumName).prepend("album:"));
 }
 
 void PmcCoverArtProvider::addCoverArtImage(const QString& albumOrArtistName, const QImage& image)
 {
     if (!image.isNull()) {
-        PmcImageCache::instance()->addImage(QString(albumOrArtistName).prepend(albumIdentification), image);
+        SingletonFactory::instanceFor<PmcImageCache>()->addImage(QString(albumOrArtistName).prepend(albumIdentification), image);
     }
 }
 
 void PmcCoverArtProvider::addAlbumCoverToCache(TagLib::MPEG::File& f, const QImage& image) const
 {
     QString albumName(f.ID3v2Tag()->album().toCString());
-    PmcImageCache::instance()->addImage(albumName.prepend(albumIdentification), image);
+    SingletonFactory::instanceFor<PmcImageCache>()->addImage(albumName.prepend(albumIdentification), image);
 }
 
 bool PmcCoverArtProvider::containsArtist(const QString& artistName)
 {
-    return PmcImageCache::instance()->containsId(QString(artistName).prepend("artist:"));
+    return SingletonFactory::instanceFor<PmcImageCache>()->containsId(QString(artistName).prepend("artist:"));
 }

@@ -18,23 +18,9 @@
 
 #include "pmcimagecache.h"
 
-#include <KDE/KGlobal>
 #include <KDE/KImageCache>
 
 #include <QtCore/QCoreApplication>
-
-class PmcImageCache::Singleton
-{
-public:
-    PmcImageCache q;
-};
-
-K_GLOBAL_STATIC( PmcImageCache::Singleton, singleton )
-
-PmcImageCache *PmcImageCache::instance()
-{
-    return &( singleton->q );
-}
 
 PmcImageCache::~PmcImageCache()
 {

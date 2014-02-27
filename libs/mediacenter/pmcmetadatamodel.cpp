@@ -84,7 +84,7 @@ PmcMetadataModel::PmcMetadataModel(QObject* parent, MediaLibrary* mediaLibrary):
 
     d->thumbnailSize = QSize(512, 512);
 
-    connect(LastFmImageFetcher::instance(),
+    connect(SingletonFactory::instanceFor<LastFmImageFetcher>(),
             SIGNAL(imageFetched(QVariant,QString)),
             SLOT(signalUpdate(QVariant,QString)));
 }
@@ -292,10 +292,10 @@ QVariant PmcMetadataModel::getAlbumArt(const QString& albumName, const QString& 
 {
     const QString albumUri = QString("album:%1").arg(albumName);
 
-    if (PmcImageCache::instance()->containsId(albumUri)) {
+    if (SingletonFactory::instanceFor<PmcImageCache>()->containsId(albumUri)) {
         return QString("image://%1/%2").arg(PmcImageProvider::identificationString, albumUri);
     } else {
-        LastFmImageFetcher::instance()->fetchImage("album", resourceId, albumArtist, albumName);
+        SingletonFactory::instanceFor<LastFmImageFetcher>()->fetchImage("album", resourceId, albumArtist, albumName);
     }
 
     return d->defaultDecoration;
@@ -304,10 +304,10 @@ QVariant PmcMetadataModel::getAlbumArt(const QString& albumName, const QString& 
 QVariant PmcMetadataModel::getArtistImage(const QString& artistName, const QString& resourceId) const
 {
     const QString artistUri = QString("artist:%1").arg(artistName);
-    if (PmcImageCache::instance()->containsId(artistUri)) {
+    if (SingletonFactory::instanceFor<PmcImageCache>()->containsId(artistUri)) {
         return QString("image://%1/%2").arg(PmcImageProvider::identificationString, artistUri);
     } else {
-        LastFmImageFetcher::instance()->fetchImage("artist", resourceId, artistName);
+        SingletonFactory::instanceFor<LastFmImageFetcher>()->fetchImage("artist", resourceId, artistName);
     }
 
     return d->defaultDecoration;
@@ -328,7 +328,7 @@ int PmcMetadataModel::rowCount(const QModelIndex& parent) const
 QString PmcMetadataModel::fetchPreview(const KUrl &url, const QModelIndex& index)
 {
     const QString prettyUrl = url.prettyUrl();
-    if (PmcImageCache::instance()->containsId(prettyUrl)) {
+    if (SingletonFactory::instanceFor<PmcImageCache>()->containsId(prettyUrl)) {
         return "image://" + QString(PmcImageProvider::identificationString) + "/" + prettyUrl;
     }
 
@@ -369,7 +369,7 @@ void PmcMetadataModel::showPreview(const KFileItem &item, const QPixmap &preview
     d->previewJobs.remove(item.url());
 
     if (index.isValid()) {
-        PmcImageCache::instance()->addImage(item.url().prettyUrl(), preview.toImage());
+        SingletonFactory::instanceFor<PmcImageCache>()->addImage(item.url().prettyUrl(), preview.toImage());
         emit dataChanged(index, index);
     }
 }
