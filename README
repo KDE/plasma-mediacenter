@@ -9,7 +9,7 @@ To know Plasma Media Center architecture and other related information browse th
 
 Installation:
 =========
-Once you are done installing ODB, just do the usual cmake stuff-
+Once you are done installing QxOrm, just do the usual cmake stuff-
 
 mkdir build
 cd build
