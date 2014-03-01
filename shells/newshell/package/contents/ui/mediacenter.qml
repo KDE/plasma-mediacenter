@@ -209,8 +209,8 @@ Image {
                 onBackendOverlayChanged: {
                     if (backendOverlay) {
                         pmcPageStack.pushAndFocus(backendOverlay);
-                    } else {
-                        pmcPageStack.popAndFocus(getMediaBrowser());
+                    } else if (pmcPageStack.currentPage != mediaBrowserInstance) {
+                        root.goBack();
                     }
                 }
             }

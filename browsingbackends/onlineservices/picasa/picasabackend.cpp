@@ -21,12 +21,18 @@
 #include "picasabackend.h"
 #include "picasamodel.h"
 
+#include <QTimer>
+
 MEDIACENTER_EXPORT_BROWSINGBACKEND(PicasaBackend)
+
+namespace {
+    static const QString loginButtonText = i18n("Select Account");
+}
 
 PicasaBackend::PicasaBackend(QObject* parent, const QVariantList& args):
                              MediaCenter::AbstractBrowsingBackend(parent, args)
 {
-    m_loginText =  constructQmlSource("picasacomponents", "0.1", "PicasaSidePanel");
+    QTimer::singleShot(2000, this, SLOT(showLoginScreen()));
 }
 
 QString PicasaBackend::backendCategory() const
@@ -82,4 +88,32 @@ void PicasaBackend::setMediaBrowserSidePanel(QString text)
 {
     m_loginText = text;
     emit mediaBrowserSidePanelChanged();
+}
+
+void PicasaBackend::setLoginText(const QString& loginText)
+{
+    m_loginText = loginText;
+    emit mediaBrowserSidePanelChanged();
+}
+
+QVariantList PicasaBackend::buttons()
+{
+    return QVariantList() << loginButtonText;
+}
+
+void PicasaBackend::showLoginScreen()
+{
+    setLoginText(constructQmlSource("picasacomponents", "0.1", "PicasaSidePanel"));
+}
+
+void PicasaBackend::handleButtonClick(const QString& buttonName)
+{
+    if (buttonName == loginButtonText) {
+        showLoginScreen();
+    }
+}
+
+void PicasaBackend::hideLoginScreen()
+{
+    setLoginText(QString());
 }

@@ -72,6 +72,10 @@ public:
      */
     virtual bool initImpl();
 
+    virtual QVariantList buttons();
+
+    virtual void handleButtonClick(const QString& buttonName);
+
 signals:
     void loginSuccessful();
     void loginFailed();
@@ -88,8 +92,13 @@ public Q_SLOTS:
      * @param status determines the login status
      */
     void updateLoginStatus(bool status);
+
+    void showLoginScreen();
+    void hideLoginScreen();
+
 private:
     QString m_loginText;
+    void setLoginText(const QString &loginText);
 };
 
 #endif
