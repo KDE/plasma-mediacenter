@@ -52,7 +52,7 @@ class MEDIACENTER_EXPORT AbstractBrowsingBackend : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
-    Q_PROPERTY(QString mediaBrowserSidePanel READ mediaBrowserSidePanel WRITE setMediaBrowserSidePanel NOTIFY mediaBrowserSidePanelChanged)
+    Q_PROPERTY(QString mediaBrowserSidePanel READ mediaBrowserSidePanel NOTIFY mediaBrowserSidePanelChanged)
     Q_PROPERTY(QVariantList models READ models NOTIFY modelsChanged)
     Q_PROPERTY(QVariantList buttons READ buttons NOTIFY buttonsChanged)
     Q_PROPERTY(QObject* pmcRuntime READ pmcRuntime WRITE setPmcRuntime NOTIFY pmcRuntimeChanged)
@@ -178,7 +178,6 @@ public:
      */
     virtual bool okToLoad() const;
 
-    //TODO: Side panel concept is hacky, replace with a popup of some sort
     /**
      * Override this method if you want your backend to show custom items on a
      * panel/popup. For example this can be used to set filtering options
@@ -186,8 +185,6 @@ public:
      * @return Valid QML string, use constructQmlSource for convenience
      */
      virtual QString mediaBrowserSidePanel() const;
-
-     virtual void setMediaBrowserSidePanel(QString text);
 
     /**
      * Override this method and emit the busyChanged() signal to tell the mediacenter

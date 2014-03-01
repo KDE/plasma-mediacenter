@@ -70,6 +70,8 @@ void PicasaBackend::updateLoginStatus(bool status)
 {
     if (status) {
         emit loginSuccessful();
+        m_loginText = "";
+        emit mediaBrowserSidePanelChanged();
     } else {
         emit loginFailed();
         sender()->deleteLater();

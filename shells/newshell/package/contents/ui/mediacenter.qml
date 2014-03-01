@@ -144,8 +144,8 @@ Image {
                 onBackendSelected: {
                     if (!selectedBackend.init())
                         return;
-                    runtimeData.currentBrowsingBackend = selectedBackend;
                     pmcPageStack.pushAndFocus(getMediaBrowser());
+                    runtimeData.currentBrowsingBackend = selectedBackend;
                 }
                 onEmptyAreaClicked: if (mediaPlayerInstance) pmcPageStack.pushAndFocus(getMediaPlayer());
 
@@ -205,6 +205,13 @@ Image {
                     popupMenuInstance.mediaType = mediaType;
                     popupMenuInstance.currentMediaDelegateIndex = index;
                     pmcPageStack.pushAndFocus(popupMenuInstance);
+                }
+                onBackendOverlayChanged: {
+                    if (backendOverlay) {
+                        pmcPageStack.pushAndFocus(backendOverlay);
+                    } else {
+                        pmcPageStack.popAndFocus(getMediaBrowser());
+                    }
                 }
             }
         }

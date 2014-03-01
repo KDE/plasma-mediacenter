@@ -62,7 +62,7 @@ Rectangle {
          height: 30
          clearButtonShown: true
          placeholderText: i18n("Password")
-         echoMode: TextInput.Password         
+         echoMode: TextInput.Password
          Keys.onPressed: {
              if(event.key==16777220) {
                  enabled: userid.text != '' && password.text != ''
@@ -129,7 +129,6 @@ Rectangle {
 
     function loginSuccessful() {
         busyIndicator.running = false;
-        hideMediaBrowserSidePanel();
     }
     function loginFailed() {
         busyIndicator.running = false;
