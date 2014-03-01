@@ -168,13 +168,6 @@ QString AbstractBrowsingBackend::mediaBrowserSidePanel() const
     return d->mediaBrowserSidePanelText;
 }
 
-void AbstractBrowsingBackend::setMediaBrowserSidePanel(QString text)
-{
-    d->mediaBrowserSidePanelText = text;
-    emit mediaBrowserSidePanelChanged();
-}
-
-
 bool AbstractBrowsingBackend::okToLoad() const
 {
     return true;

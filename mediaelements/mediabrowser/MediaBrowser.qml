@@ -27,24 +27,25 @@ FocusScope {
     id: mediaBrowser
     property QtObject currentBrowsingBackend
     property QtObject previousBrowsingBackend
+    property string mediaBrowserSidePanel: currentBrowsingBackend ? currentBrowsingBackend.mediaBrowserSidePanel : ""
+    property QtObject backendOverlay
 
     signal backRequested
     signal playRequested(int index, string url, string currentMediaType)
     signal popupMenuRequested(int index, string mediaUrl, string mediaType, string display)
 
-    Item {
-        id: mediaBrowserSidePanel
-        property QtObject child
-        property bool enabled
+    Component {
+        id: mediaBrowserSidePanelComponent
+        Item {
+            property QtObject child
+            property bool enabled
 
-        enabled: currentBrowsingBackend ? (currentBrowsingBackend.mediaBrowserSidePanel == "" ? false : true ) : false
-        anchors { top: parent.top; bottom: parent.bottom; left: parent.left }
-        width: enabled ? parent.width*0.2 : 0
-        clip: true
+            clip: true
 
-        Behavior on width {
-            NumberAnimation {
-                duration: 500
+            Behavior on width {
+                NumberAnimation {
+                    duration: 500
+                }
             }
         }
     }
@@ -54,8 +55,7 @@ FocusScope {
         property QtObject mediaBrowserGridView
 
         anchors {
-            top: parent.top; right: parent.right; bottom: parent.bottom;
-            left: mediaBrowserSidePanel.right
+            fill: parent
         }
 
         BrowserToolbar {
@@ -64,7 +64,7 @@ FocusScope {
                 top: parent.top; right: parent.right; left: parent.left;
             }
             height: 40
-            buttons: currentBrowsingBackend.buttons
+            buttons: currentBrowsingBackend ? currentBrowsingBackend.buttons : undefined
             onButtonClicked: currentBrowsingBackend.handleButtonClick(buttonName)
             Keys.onDownPressed: mediaBrowserViewItem.mediaBrowserGridView.focus = true
         }
@@ -105,17 +105,9 @@ FocusScope {
         } else {
             object = mediaBrowserSmartBrowserComponent.createObject(mediaBrowserViewItem);
         }
+
         mediaBrowserViewItem.mediaBrowserGridView = object;
         object.focus = true;
-
-        if (mediaBrowserSidePanel.child) mediaBrowserSidePanel.child.destroy()
-        //Load the panel if the backend supports one
-        if (currentBrowsingBackend.mediaBrowserSidePanel) {
-            var qmlSource = currentBrowsingBackend.mediaBrowserSidePanel;
-            object = Qt.createQmlObject(qmlSource, mediaBrowserSidePanel);
-            mediaBrowserSidePanel.child = object
-            object.backend = (function() { return currentBrowsingBackend; });
-        }
 
         if (currentBrowsingBackend) {
             currentBrowsingBackend.error.connect(errorLabel.setError);
@@ -138,12 +130,6 @@ FocusScope {
     {
         if (mediaBrowserViewItem && mediaBrowserViewItem.mediaBrowserGridView)
             mediaBrowserViewItem.mediaBrowserGridView.model = (function() { return currentBrowsingBackend.models[0]; });
-    }
-
-    function hideMediaBrowserSidePanel()
-    {
-        currentBrowsingBackend.mediaBrowserSidePanel = ""
-        mediaBrowserViewItem.mediaBrowserGridView.focus = true;
     }
 
     Item {
@@ -186,5 +172,18 @@ FocusScope {
     function goBack()
     {
         return mediaBrowser.currentBrowsingBackend.goOneLevelUp();
+    }
+
+    onMediaBrowserSidePanelChanged: {
+        if (mediaBrowser.backendOverlay) {
+            mediaBrowser.backendOverlay.destroy();
+            mediaBrowser.backendOverlay = null;
+        }
+        if (currentBrowsingBackend.mediaBrowserSidePanel) {
+            var qmlSource = currentBrowsingBackend.mediaBrowserSidePanel;
+            object = Qt.createQmlObject(qmlSource, mediaBrowser);
+            object.backend = (function() { return currentBrowsingBackend; });
+            mediaBrowser.backendOverlay = object;
+        }
     }
 }

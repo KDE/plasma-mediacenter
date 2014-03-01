@@ -82,7 +82,7 @@ public Q_SLOTS:
      * Used to go one level up or back in the model
      */
     virtual bool goOneLevelUp();
-    
+
     /**
      * Updates the login status as successful or failed based on the parameters
      * @param status determines the login status
