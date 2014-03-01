@@ -80,6 +80,7 @@ void PicasaBackend::updateLoginStatus(bool status)
         emit mediaBrowserSidePanelChanged();
     } else {
         emit loginFailed();
+        setModel((ModelMetadata*)(0));
         sender()->deleteLater();
     }
 }
