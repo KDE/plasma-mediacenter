@@ -1,4 +1,5 @@
 find_package(Taglib REQUIRED)
+find_package(QxOrm REQUIRED)
 
 include_directories(
     ${TAGLIB_INCLUDES}
@@ -38,6 +39,7 @@ target_link_libraries(plasmamediacenter
     ${KDE4_SOLID_LIBS}
     ${TAGLIB_LIBRARIES}
     ${NEPOMUK_CORE_LIBRARY}
+    ${QxOrm_LIBRARY}
     )
 set_target_properties(plasmamediacenter PROPERTIES VERSION 1.2 SOVERSION 1.2)
 
