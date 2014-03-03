@@ -1,5 +1,5 @@
 find_package(Taglib REQUIRED)
-find_package(QxOrm REQUIRED)
+#find_package(QxOrm REQUIRED)
 
 include_directories(
     ${TAGLIB_INCLUDES}
