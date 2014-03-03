@@ -185,11 +185,11 @@ FocusScope {
 
                 onWheelMoved: {
                     if (wheel.delta < 0) {
-                    volumeSlider.value=volumeSlider.value-3;
-                    runtimeDataObject.volume=volumeSlider.value/100
+                        volumeSlider.value=volumeSlider.value-3;
+                        runtimeDataObject.volume=volumeSlider.value/100
                     } else {
-                    volumeSlider.value=volumeSlider.value+3;
-                    runtimeDataObject.volume=volumeSlider.value/100
+                        volumeSlider.value=volumeSlider.value+3;
+                        runtimeDataObject.volume=volumeSlider.value/100
                     }
                 }
 
