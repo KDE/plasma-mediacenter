@@ -20,6 +20,7 @@
 import QtQuick 1.1
 import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.components 0.1 as PlasmaComponents
+import org.kde.qtextracomponents 0.1 as QtExtraComponents
 
 FocusScope {
     id: controlBarFrame
@@ -153,10 +154,11 @@ FocusScope {
                 }
             }
 
+
             PlasmaComponents.Slider {
                 id: volumeSlider
                 height: parent.height
-                width: volumeButton.checked ? parent.width * 0.1 : 1
+		width: volumeButton.checked ? parent.width * 0.1 : 1
                 visible: volumeButton.checked
                 minimumValue: 0
                 maximumValue: 100
@@ -177,6 +179,7 @@ FocusScope {
                 }
             }
 
+
             PlasmaComponents.ToolButton {
                 id: volumeButton
                 width: parent.height
@@ -190,6 +193,25 @@ FocusScope {
                     else "audio-volume-high"
                 }
                 checkable: true
+
+                QtExtraComponents.MouseEventListener {
+                    anchors.fill: parent
+
+                    onReleased: {
+                        volumeButton.checked=!volumeButton.checked
+                    }
+
+                    onWheelMoved: {
+                        if (wheel.delta < 0) {
+                        volumeSlider.value=volumeSlider.value-3;
+                        runtimeDataObject.volume=volumeSlider.value/100
+                        } else {
+                        volumeSlider.value=volumeSlider.value+3;
+                        runtimeDataObject.volume=volumeSlider.value/100
+                        }
+                    }
+                }
+
             }
 
             PlasmaComponents.ToolButton {
