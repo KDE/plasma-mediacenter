@@ -7,16 +7,19 @@
 
 include(LibFindMacros)
 
+# Use pkg-config to get hints about paths
+libfind_pkg_check_modules(QxOrm_PKGCONF QxOrm)
+
 # Include dir
 find_path(QxOrm_INCLUDE_DIR
   NAMES QxOrm.h
-#  PATHS ${QxOrm_PKGCONF_INCLUDE_DIRS}
+  PATHS ${QxOrm_PKGCONF_INCLUDE_DIRS}
 )
 
 # Finally the library itself
 find_library(QxOrm_LIBRARY
   NAMES QxOrm
-#  PATHS ${QxOrm_PKGCONF_LIBRARY_DIRS}
+  PATHS ${QxOrm_PKGCONF_LIBRARY_DIRS}
 )
 
 # Set the include dir variables and the libraries and let libfind_process do the rest.
