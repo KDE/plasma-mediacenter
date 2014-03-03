@@ -179,39 +179,35 @@ FocusScope {
                 }
             }
 
-
-            PlasmaComponents.ToolButton {
-                id: volumeButton
+            QtExtraComponents.MouseEventListener {
                 width: parent.height
                 height: width
-                iconSource: {
-                    var value = volumeSlider.value
-                    var max = volumeSlider.maximumValue
-                    if (value > 0 && value < max/3) "audio-volume-low"
-                    else if (value > max/3 && value < max*2/3) "audio-volume-medium"
-                    else if (value <= 0) "audio-volume-muted"
-                    else "audio-volume-high"
-                }
-                checkable: true
 
-                QtExtraComponents.MouseEventListener {
+                onWheelMoved: {
+                    if (wheel.delta < 0) {
+                    volumeSlider.value=volumeSlider.value-3;
+                    runtimeDataObject.volume=volumeSlider.value/100
+                    } else {
+                    volumeSlider.value=volumeSlider.value+3;
+                    runtimeDataObject.volume=volumeSlider.value/100
+                    }
+                }
+
+                PlasmaComponents.ToolButton {
+                    id: volumeButton
                     anchors.fill: parent
 
-                    onReleased: {
-                        volumeButton.checked=!volumeButton.checked
+                    iconSource: {
+                        var value = volumeSlider.value
+                        var max = volumeSlider.maximumValue
+                        if (value > 0 && value < max/3) "audio-volume-low"
+                        else if (value > max/3 && value < max*2/3) "audio-volume-medium"
+                        else if (value <= 0) "audio-volume-muted"
+                        else "audio-volume-high"
                     }
+                    checkable: true
 
-                    onWheelMoved: {
-                        if (wheel.delta < 0) {
-                        volumeSlider.value=volumeSlider.value-3;
-                        runtimeDataObject.volume=volumeSlider.value/100
-                        } else {
-                        volumeSlider.value=volumeSlider.value+3;
-                        runtimeDataObject.volume=volumeSlider.value/100
-                        }
-                    }
                 }
-
             }
 
             PlasmaComponents.ToolButton {
