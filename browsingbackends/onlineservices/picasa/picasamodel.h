@@ -21,7 +21,6 @@
 #define PICASAMODEL_H
 
 #include <QObject>
-#include <Plasma/DataEngine>
 #include <QHash>
 #include <QAbstractListModel>
 
@@ -55,18 +54,6 @@ public:
    bool goBack();
 
 signals:
-    /**
-     * @return the entry as Plasma::DataEngine::Data.
-     * each value can be retrieved using the following keys:
-     * "title" for the video title
-     * "description" for the video description
-     * "keywords" for the video keywords
-     *
-     * @param searchTerm is the search term to be used as source name.
-     * @param id is the album/photo id to be used as source key
-     * @param image is the result entry retrieved after the search.
-     */
-    void result(const QString &searchTerm, const QString &id, const Plasma::DataEngine::Data &image);
     void loginComplete(bool status);
 
 protected slots:
