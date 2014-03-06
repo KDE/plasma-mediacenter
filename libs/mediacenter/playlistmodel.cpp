@@ -136,7 +136,11 @@ void PlaylistModel::removeFromPlaylist(const int& index)
 void PlaylistModel::moveItem(int firstIndex, int secondIndex)
 {
     d->musicList.move(firstIndex,secondIndex);
-    emit dataChanged(createIndex(firstIndex, 0), createIndex(secondIndex, 0));
+    if(firstIndex < secondIndex) {
+       emit dataChanged(createIndex(firstIndex, 0), createIndex(secondIndex, 0));
+    } else {
+        emit dataChanged(createIndex(secondIndex, 0), createIndex(firstIndex, 0));
+    }
 }
 
 QString PlaylistModel::getNextUrl()
