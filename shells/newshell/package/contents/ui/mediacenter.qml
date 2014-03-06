@@ -147,7 +147,7 @@ Image {
                     pmcPageStack.pushAndFocus(getMediaBrowser());
                     runtimeData.currentBrowsingBackend = selectedBackend;
                 }
-                onEmptyAreaClicked: if (mediaPlayerInstance) pmcPageStack.pushAndFocus(getMediaPlayer());
+                onEmptyAreaClicked: pmcPageStack.pushAndFocus(mediaPlayerInstance ? getMediaPlayer() : getPlaylist())
 
                 onStatusChanged: {
                     switch (status) {
