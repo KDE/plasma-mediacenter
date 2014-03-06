@@ -148,9 +148,11 @@ FocusScope {
 
                 function playCurrent()
                 {
-                    playlistItem.active = true;
-                    playlistItem.playRequested(playlistModel.currentUrl);
-                    filterText.text = "";
+                    if (playlistModel.currentUrl) {
+                        playlistItem.active = true;
+                        playlistItem.playRequested(playlistModel.currentUrl);
+                        filterText.text = "";
+                    }
                 }
             }
         }
@@ -168,12 +170,12 @@ FocusScope {
         playlistList.currentItem.requestPlayback();
     }
 
-    function playCurrent()
+    function playTheCurrentInList()
     {
         if (playlistModel.currentIndex != -1) {
             playlistList.playCurrent();
         }
     }
 
-    Component.onCompleted: playCurrent();
+    Component.onCompleted: playTheCurrentInList();
 }
