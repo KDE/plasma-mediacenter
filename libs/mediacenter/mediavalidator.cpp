@@ -30,3 +30,5 @@ bool MediaValidator::fileWithUrlExists(const QString& url)
 {
     return QFile::exists(QUrl(url).toLocalFile());
 }
+
+#include "mediavalidator.moc"

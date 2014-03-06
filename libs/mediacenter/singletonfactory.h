@@ -24,7 +24,9 @@
 
 #include <typeinfo>
 
-class SingletonFactory
+#include "mediacenter_export.h"
+
+class MEDIACENTER_EXPORT SingletonFactory
 {
 public:
     template <class T> static T* instanceFor()

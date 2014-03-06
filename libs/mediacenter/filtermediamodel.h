@@ -22,7 +22,9 @@
 #include <QString>
 #include <QSortFilterProxyModel>
 
-class FilterMediaModel: public QSortFilterProxyModel
+#include "mediacenter_export.h"
+
+class MEDIACENTER_EXPORT FilterMediaModel: public QSortFilterProxyModel
 {
     Q_OBJECT
 public:

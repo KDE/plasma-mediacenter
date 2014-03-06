@@ -21,7 +21,6 @@
 
 #include "mediacenter_export.h"
 
-#include <odb/traits.hxx>
 #include <QHash>
 #include <QThread>
 #include <QSharedPointer>

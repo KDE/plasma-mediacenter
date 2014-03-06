@@ -26,7 +26,9 @@
 #include <QObject>
 #include <QSharedPointer>
 
-class PmcArtist : public QObject
+#include "mediacenter_export.h"
+
+class MEDIACENTER_EXPORT PmcArtist : public QObject
 {
     Q_OBJECT
 public:

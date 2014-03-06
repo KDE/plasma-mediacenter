@@ -59,3 +59,5 @@ MediaLibrary* AbstractMediaSource::mediaLibrary() const
 {
     return d->mediaLibrary;
 }
+
+#include "abstractmediasource.moc"

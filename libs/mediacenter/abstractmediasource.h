@@ -23,10 +23,12 @@
 #include <QtCore/QThread>
 #include <KService>
 
+#include "mediacenter_export.h"
+
 class MediaLibrary;
 
 namespace MediaCenter {
-class AbstractMediaSource : public QThread
+class MEDIACENTER_EXPORT AbstractMediaSource : public QThread
 {
     Q_OBJECT
 public:

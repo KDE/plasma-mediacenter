@@ -4,7 +4,7 @@ include_directories(
     ${TAGLIB_INCLUDES}
 )
 
-set (CMAKE_CXX_FLAGS "-D_QX_SERIALIZE_BINARY_ENABLED -D_QX_SERIALIZE_XML_ENABLED -D_BUILDING_PMC")
+add_definitions(-D_QX_SERIALIZE_BINARY_ENABLED -D_QX_SERIALIZE_XML_ENABLED -D_BUILDING_PMC)
 
 set (plasmamediacenter_SRCS
     medialibrarywrappercache.cpp

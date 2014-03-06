@@ -19,11 +19,9 @@
 #ifndef PMC_LIBS_PRECOMPILED_HEADER_H_
 #define PMC_LIBS_PRECOMPILED_HEADER_H_
 
-#define fromStdString(s) fromAscii(s.data(), s.size())
-#define toStdString() toLatin1().constData()
-#define fromStdWString(s) fromWCharArray(s.c_str())
-
+#ifndef Q_MOC_RUN
 #include <QxOrm.h>
+#endif  //Q_MOC_RUN
 
 #include "qxorm_export.h"
 

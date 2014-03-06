@@ -24,7 +24,9 @@
 
 class Album;
 
-class PmcAlbum : public QObject
+#include "mediacenter_export.h"
+
+class MEDIACENTER_EXPORT PmcAlbum : public QObject
 {
     Q_OBJECT
 public:

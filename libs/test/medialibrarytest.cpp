@@ -17,6 +17,7 @@
  ***********************************************************************************/
 
 #include "medialibrarytest.h"
+#include "fakemediavalidator.h"
 
 #include <mediacenter/medialibrary.h>
 #include <mediacenter/mediacenter.h>
@@ -33,11 +34,6 @@ QTEST_KDEMAIN(MediaLibraryTest, NoGUI);
 
 namespace {
     static const int TIMEOUT_FOR_SIGNALS = 3000;
-}
-
-bool FakeMediaValidator::fileWithUrlExists(const QString& url)
-{
-    return true;
 }
 
 void MediaLibraryTest::initTestCase()

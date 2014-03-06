@@ -22,11 +22,15 @@
 #include <QObject>
 
 class QString;
-class MediaValidator : public QObject
+
+#include "mediacenter_export.h"
+
+class MEDIACENTER_EXPORT MediaValidator : public QObject
 {
     Q_OBJECT
 public:
     explicit MediaValidator(QObject* parent = 0);
+
     virtual bool fileWithUrlExists(const QString &url);
 };
 

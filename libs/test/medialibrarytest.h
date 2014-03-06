@@ -60,11 +60,6 @@ private:
     QHash< int, QVariant > createTestMediaDataWithAlbumArtist() const;
 };
 
-class FakeMediaValidator : public MediaValidator
-{
-    virtual bool fileWithUrlExists(const QString& url);
-};
-
 Q_DECLARE_METATYPE(QList<QSharedPointer<PmcMedia> >)
 Q_DECLARE_METATYPE(QList<QSharedPointer<PmcAlbum> >)
 Q_DECLARE_METATYPE(QList<QSharedPointer<PmcArtist> >)

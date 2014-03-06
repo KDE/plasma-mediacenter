@@ -1,6 +1,5 @@
 /***********************************************************************************
  *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
- *   Copyright 2014 Sinny Kumari <ksinny@gmail.com>                                *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -17,19 +16,12 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef MEDIASOURCESLOADER_H
-#define MEDIASOURCESLOADER_H
+#include "fakemediavalidator.h"
 
-#include <QtCore/QObject>
-
-#include "mediacenter_export.h"
-
-class MEDIACENTER_EXPORT MediaSourcesLoader : public QObject
+bool FakeMediaValidator::fileWithUrlExists(const QString& url)
 {
-public:
-    explicit MediaSourcesLoader(QObject* parent = 0);
-    ~MediaSourcesLoader();
-    void load();
-};
+    Q_UNUSED(url)
+    return true;
+}
 
-#endif // MEDIASOURCESLOADER_H
+#include "fakemediavalidator.moc"

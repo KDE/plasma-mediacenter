@@ -106,7 +106,7 @@ const QString& Media::title() const
 
 bool Media::setTitle(const QString& title)
 {
-    updateIfChanged(m_title, title);
+    return updateIfChanged(m_title, title);
 }
 
 const QString& Media::url() const
@@ -121,7 +121,7 @@ const QString& Media::thumbnail() const
 
 bool Media::setThumbnail(const QString& thumbnail)
 {
-    updateIfChanged(m_thumbnail, thumbnail);
+    return updateIfChanged(m_thumbnail, thumbnail);
 }
 
 const QString& Media::sha() const
@@ -131,7 +131,7 @@ const QString& Media::sha() const
 
 bool Media::setType(const QString& type)
 {
-    updateIfChanged(m_type, type);
+    return updateIfChanged(m_type, type);
 }
 
 const QString& Media::type() const

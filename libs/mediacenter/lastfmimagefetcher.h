@@ -25,7 +25,9 @@
 #include <QNetworkAccessManager>
 #include <QVariant>
 
-class LastFmImageFetcher : public QObject
+#include "mediacenter_export.h"
+
+class MEDIACENTER_EXPORT LastFmImageFetcher : public QObject
 {
     Q_OBJECT
 public:
