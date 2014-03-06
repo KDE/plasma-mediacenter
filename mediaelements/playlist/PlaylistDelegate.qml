@@ -133,6 +133,7 @@ Item {
                 }
 
                 onClicked: requestPlayback()
+                onEntered: playlistList.currentIndex = index;
             }
          }
 
