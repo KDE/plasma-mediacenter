@@ -143,24 +143,26 @@ void PlaylistModel::moveItem(int firstIndex, int secondIndex)
     }
 }
 
-QString PlaylistModel::getNextUrl()
+void PlaylistModel::playNext()
 {
     if (d->currentIndex == d->musicList.count() - 1) {
         setCurrentIndex(0);
     } else {
         setCurrentIndex(d->currentIndex + 1);
     }
-    return d->musicList.at(d->currentIndex)->mediaUrl();
+
+    play(currentIndex());
 }
 
-QString PlaylistModel::getPreviousUrl()
+void PlaylistModel::playPrevious()
 {
     if (d->currentIndex == 0) {
         setCurrentIndex(d->musicList.count() - 1);
     } else {
         setCurrentIndex(d->currentIndex - 1);
     }
-    return d->musicList.at(d->currentIndex)->mediaUrl();
+
+    play(currentIndex());
 }
 
 QString PlaylistModel::getUrlofFirstIndex()
