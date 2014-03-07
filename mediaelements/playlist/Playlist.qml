@@ -97,7 +97,7 @@ FocusScope {
 
             ListView {
                 id: playlistList
-                property int currentlyPlayingIndex: playlistModel.currentIndex
+                property string currentlyPlayingUrl: playlistModel.currentUrl
 
                 anchors { top: playlistActions.bottom; left: parent.left; right: parent.right }
                 anchors.bottom: parent.bottom
@@ -135,6 +135,8 @@ FocusScope {
                         positionViewAtIndexTimer.restart();
                     }
                 }
+
+                onCurrentlyPlayingUrlChanged: playCurrent()
 
                 Keys.onPressed: if (event.key == Qt.Key_Up && currentIndex == 0) {
                     filterText.focus = true;
