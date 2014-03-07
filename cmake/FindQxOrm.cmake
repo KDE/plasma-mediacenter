@@ -18,7 +18,7 @@ find_path(QxOrm_INCLUDE_DIR
 
 # Finally the library itself
 find_library(QxOrm_LIBRARY
-  NAMES QxOrmd
+  NAMES QxOrm QxOrmd
   PATHS ${QxOrm_PKGCONF_LIBRARY_DIRS}
 )
 
@@ -27,4 +27,3 @@ find_library(QxOrm_LIBRARY
 set(QxOrm_PROCESS_INCLUDES QxOrm_INCLUDE_DIR QxOrm_INCLUDE_DIRS)
 set(QxOrm_PROCESS_LIBS QxOrm_LIBRARY QxOrm_LIBRARIES)
 libfind_process(QxOrm)
-
