@@ -18,9 +18,7 @@
 
 #include "lastfmimagefetcher.h"
 #include "pmcimagecache.h"
-
-#include <KGlobal>
-#include <KDebug>
+#include "singletonfactory.h"
 
 #include <QNetworkRequest>
 #include <QNetworkReply>
@@ -29,19 +27,7 @@
 
 #include <QTimer>
 #include <QImage>
-
-class LastFmImageFetcher::Singleton
-{
-public:
-    LastFmImageFetcher q;
-};
-
-K_GLOBAL_STATIC( LastFmImageFetcher::Singleton, singleton )
-
-LastFmImageFetcher *LastFmImageFetcher::instance()
-{
-    return &( singleton->q );
-}
+#include <QDebug>
 
 LastFmImageFetcher::LastFmImageFetcher(QObject* parent)
     : QObject(parent)
@@ -59,8 +45,7 @@ LastFmImageFetcher::~LastFmImageFetcher()
 
 }
 
-void LastFmImageFetcher::fetchImage(const QString& type, const QPersistentModelIndex& index,
-                                    const QString& artistName, const QString &albumName)
+void LastFmImageFetcher::fetchImage(const QString& type, const QVariant& identifier, const QString& artistName, const QString& albumName)
 {
     QStringList nameList;
     nameList << type << artistName;
@@ -68,7 +53,7 @@ void LastFmImageFetcher::fetchImage(const QString& type, const QPersistentModelI
         nameList << albumName;
     }
     m_pendingQueue.enqueue(nameList);
-    m_modelIndexes.insert(albumName.isEmpty() ? artistName : albumName, index);
+    m_identifiers.insert(albumName.isEmpty() ? artistName : albumName, identifier);
     QTimer::singleShot(0, this, SLOT(processQueue()));
 }
 
@@ -88,7 +73,7 @@ void LastFmImageFetcher::processQueue()
         apiUrl = QUrl(m_artistInfoUrl.arg(nameList.at(1)));
     }
 
-    kDebug() << "Fetching " << apiUrl;
+    qDebug() << "Fetching " << apiUrl;
     QNetworkReply *reply = m_netAccessManager.get(QNetworkRequest(apiUrl));
     m_currentInfoDownloads.insert(reply,
                                   nameList.count() > 2 ? nameList.at(2) : nameList.at(1));
@@ -117,17 +102,19 @@ void LastFmImageFetcher::gotResponse(QNetworkReply* reply)
         }
     }
 
-    kDebug() << "Webservice has no image for " << name;
+    qDebug() << "Webservice has no image for " << name;
     QTimer::singleShot(0, this, SLOT(processQueue()));
+
+    reply->deleteLater();
 }
 
 void LastFmImageFetcher::downloadImage(const QString& type, const QString& name, const QString& url)
 {
     if (url.isEmpty() || type == "error") {
-        kDebug() << "Webservice has no image for " << name;
+        qDebug() << "Webservice has no image for " << name;
         return;
     }
-    kDebug() << "Downloading image for " << name << " from " << url;
+    qDebug() << "Downloading image for " << name << " from " << url;
     QNetworkReply *reply = m_imageDownloadManager.get(QNetworkRequest(url));
     m_currentImageDownloads.insert(reply, QPair<QString,QString>(type, name));
 }
@@ -140,11 +127,11 @@ void LastFmImageFetcher::gotImage(QNetworkReply* reply)
     const QByteArray data = reply->readAll();
 
     QImage image = QImage::fromData(data);
-    kDebug() << "Adding image " << image.size() << " for " << name;
-    PmcImageCache::instance()->addImage(QString(name).prepend(typePrefix), image);
+    qDebug() << "Adding image " << image.size() << " for " << name;
+    SingletonFactory::instanceFor<PmcImageCache>()->addImage(QString(name).prepend(typePrefix), image);
 
     m_busy = false;
     QTimer::singleShot(0, this, SLOT(processQueue()));
 
-    emit imageFetched(m_modelIndexes.take(name), name);
+    emit imageFetched(m_identifiers.take(name), name);
 }

@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2009-2010 by Alessandro Diaferia <alediaferia@gmail.com>            *
+ *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,41 +16,39 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef MEDIACENTER_H
-#define MEDIACENTER_H
+#include "singletonfactorytest.h"
+#include <mediacenter/singletonfactory.h>
 
-#include "mediacenter_export.h"
+#include <qtest_kde.h>
 
-#include <QPair>
-#include <QHash>
+QTEST_KDEMAIN(SingletonFactoryTest, NoGUI);
 
-namespace Phonon {
-class MediaSource;
+void SingletonFactoryTest::initTestCase()
+{
+    // Called before the first testfunction is executed
 }
 
-namespace MediaCenter {
+void SingletonFactoryTest::cleanupTestCase()
+{
+    // Called after the last testfunction was executed
+}
 
-enum AdditionalMediaRoles {
-    MediaUrlRole = Qt::UserRole + 1,
-    IsExpandableRole,
-    MediaTypeRole,
-    DecorationTypeRole,
-    HideLabelRole,
-    ResourceIdRole,
-    DurationRole,
-    ArtistRole,
-    AlbumRole,
-    AdditionalRoles     //If additional roles are needed to be defined
-};
+void SingletonFactoryTest::init()
+{
+    // Called before each testfunction is executed
+}
 
-enum MediaType {
-    Music,
-    Picture,
-    Video
-};
+void SingletonFactoryTest::cleanup()
+{
+    // Called after every testfunction
+}
 
-MEDIACENTER_EXPORT QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> &roles);
-MEDIACENTER_EXPORT QString dataDirForComponent (const QString &component);
-} // namespace MediaCenter
+void SingletonFactoryTest::shouldReturnSameInstanceEveryTime()
+{
+    QObject *obj1 = SingletonFactory::instanceFor<QObject>();
+    QObject *obj2 = SingletonFactory::instanceFor<QObject>();
 
-#endif // MEDIACENTER_H
+    QVERIFY2(obj1 == obj2, "Objects returned are not equal");
+}
+
+#include "singletonfactorytest.moc"

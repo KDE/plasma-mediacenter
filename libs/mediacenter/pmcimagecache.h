@@ -26,20 +26,16 @@
 
 class KImageCache;
 
-class MEDIACENTER_EXPORT PmcImageCache
+class MEDIACENTER_EXPORT PmcImageCache : public QObject
 {
+    Q_OBJECT
 public:
-    class Singleton;
-
-    static PmcImageCache *instance();
-
+    PmcImageCache();
+    ~PmcImageCache();
     void addImage(const QString& id, const QImage &image);
     bool containsId(const QString &id) const;
     QImage getImage(const QString &id) const;
 private:
-    PmcImageCache();
-    ~PmcImageCache();
-
     KImageCache *m_imageCache;
 };
 

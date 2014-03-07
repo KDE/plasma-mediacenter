@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2009-2010 by Alessandro Diaferia <alediaferia@gmail.com>            *
+ *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,41 +16,25 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef MEDIACENTER_H
-#define MEDIACENTER_H
+#ifndef PMC_LIBS_QXORM_EXPORT_H_
+#define PMC_LIBS_QXORM_EXPORT_H_
 
-#include "mediacenter_export.h"
+#ifdef _BUILDING_PMC
+#define PMC_DLL_EXPORT QX_DLL_EXPORT_HELPER
+#else // _BUILDING_PMC
+#define PMC_DLL_EXPORT QX_DLL_IMPORT_HELPER
+#endif // _BUILDING_PMC
 
-#include <QPair>
-#include <QHash>
+#ifdef _BUILDING_PMC
+#define QX_REGISTER_HPP_PMC QX_REGISTER_HPP_EXPORT_DLL
+#define QX_REGISTER_CPP_PMC QX_REGISTER_CPP_EXPORT_DLL
+#define QX_REGISTER_COMPLEX_CLASS_NAME_HPP_PMC QX_REGISTER_COMPLEX_CLASS_NAME_HPP_EXPORT_DLL
+#define QX_REGISTER_COMPLEX_CLASS_NAME_CPP_PMC QX_REGISTER_COMPLEX_CLASS_NAME_CPP_EXPORT_DLL
+#else
+#define QX_REGISTER_HPP_PMC QX_REGISTER_HPP_IMPORT_DLL
+#define QX_REGISTER_CPP_PMC QX_REGISTER_CPP_IMPORT_DLL
+#define QX_REGISTER_COMPLEX_CLASS_NAME_HPP_PMC QX_REGISTER_COMPLEX_CLASS_NAME_HPP_IMPORT_DLL
+#define QX_REGISTER_COMPLEX_CLASS_NAME_CPP_PMC QX_REGISTER_COMPLEX_CLASS_NAME_CPP_IMPORT_DLL
+#endif // _BUILDING_PMC
 
-namespace Phonon {
-class MediaSource;
-}
-
-namespace MediaCenter {
-
-enum AdditionalMediaRoles {
-    MediaUrlRole = Qt::UserRole + 1,
-    IsExpandableRole,
-    MediaTypeRole,
-    DecorationTypeRole,
-    HideLabelRole,
-    ResourceIdRole,
-    DurationRole,
-    ArtistRole,
-    AlbumRole,
-    AdditionalRoles     //If additional roles are needed to be defined
-};
-
-enum MediaType {
-    Music,
-    Picture,
-    Video
-};
-
-MEDIACENTER_EXPORT QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> &roles);
-MEDIACENTER_EXPORT QString dataDirForComponent (const QString &component);
-} // namespace MediaCenter
-
-#endif // MEDIACENTER_H
+#endif // PMC_LIBS_QXORM_EXPORT_H_

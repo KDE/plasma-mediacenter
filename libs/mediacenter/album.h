@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2009-2010 by Alessandro Diaferia <alediaferia@gmail.com>            *
+ *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,41 +16,36 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef MEDIACENTER_H
-#define MEDIACENTER_H
+#ifndef ALBUM_H
+#define ALBUM_H
 
-#include "mediacenter_export.h"
+#include <QString>
+#include <QList>
+#include <QWeakPointer>
 
-#include <QPair>
-#include <QHash>
+#include "precompiled.h"
 
-namespace Phonon {
-class MediaSource;
-}
+class Media;
 
-namespace MediaCenter {
+//TODO: Album should also know its artist
+class Album
+{
+public:
+    Album();
+    Album(const QString &name);
+    virtual ~Album();
 
-enum AdditionalMediaRoles {
-    MediaUrlRole = Qt::UserRole + 1,
-    IsExpandableRole,
-    MediaTypeRole,
-    DecorationTypeRole,
-    HideLabelRole,
-    ResourceIdRole,
-    DurationRole,
-    ArtistRole,
-    AlbumRole,
-    AdditionalRoles     //If additional roles are needed to be defined
+    const QString& name() const;
+    QString albumArtist() const;
+
+    QString m_name;
+    QList< QSharedPointer<Media> > m_media;
+
+    typedef QSharedPointer<Album> Ptr;
+    typedef QList<Ptr> List;
 };
 
-enum MediaType {
-    Music,
-    Picture,
-    Video
-};
+QX_REGISTER_PRIMARY_KEY(Album, QString)
+QX_REGISTER_HPP_PMC(Album, qx::trait::no_base_class_defined, 0)
 
-MEDIACENTER_EXPORT QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> &roles);
-MEDIACENTER_EXPORT QString dataDirForComponent (const QString &component);
-} // namespace MediaCenter
-
-#endif // MEDIACENTER_H
+#endif // ALBUM_H

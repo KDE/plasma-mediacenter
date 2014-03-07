@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2009-2010 by Alessandro Diaferia <alediaferia@gmail.com>            *
+ *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,41 +16,31 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef MEDIACENTER_H
-#define MEDIACENTER_H
+#ifndef SINGLETONFACTORY_H
+#define SINGLETONFACTORY_H
+
+#include <QObject>
+#include <QHash>
+
+#include <typeinfo>
 
 #include "mediacenter_export.h"
 
-#include <QPair>
-#include <QHash>
+class MEDIACENTER_EXPORT SingletonFactory
+{
+public:
+    template <class T> static T* instanceFor()
+    {
+        const QString typeName(typeid(T).name());
 
-namespace Phonon {
-class MediaSource;
-}
+        if (!instances.contains(typeName)) {
+            instances.insert(typeName, static_cast<QObject*>(new T()));
+        }
 
-namespace MediaCenter {
-
-enum AdditionalMediaRoles {
-    MediaUrlRole = Qt::UserRole + 1,
-    IsExpandableRole,
-    MediaTypeRole,
-    DecorationTypeRole,
-    HideLabelRole,
-    ResourceIdRole,
-    DurationRole,
-    ArtistRole,
-    AlbumRole,
-    AdditionalRoles     //If additional roles are needed to be defined
+        return static_cast<T*>(instances.value(typeName));
+    }
+private:
+    static QHash<QString, QObject*> instances;
 };
 
-enum MediaType {
-    Music,
-    Picture,
-    Video
-};
-
-MEDIACENTER_EXPORT QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> &roles);
-MEDIACENTER_EXPORT QString dataDirForComponent (const QString &component);
-} // namespace MediaCenter
-
-#endif // MEDIACENTER_H
+#endif // SINGLETONFACTORY_H

@@ -40,7 +40,7 @@ FocusScope {
 
     PlasmaComponents.TextField {
         id: searchField
-        anchors { top: parent.top; left: parent.left; right: mediaCountLabel.left }
+        anchors { top: parent.top; left: parent.left; right: parent.right }
         height: visible ? 32 : 0
         opacity: activeFocus ? 1 : 0.8
         visible: (modelMetadata && modelMetadata.model && modelMetadata.supportsSearch) ? true : false
@@ -65,16 +65,6 @@ FocusScope {
                     currentBrowsingBackend.search(searchField.text);
                 }
             }
-        }
-    }
-
-    PlasmaComponents.Label {
-        id: mediaCountLabel
-        visible: searchField.visible
-        text: listView.count + " items"
-
-        anchors {
-            right: parent.right
         }
     }
 

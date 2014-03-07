@@ -1,5 +1,6 @@
 /***********************************************************************************
- *   Copyright 2009-2010 by Alessandro Diaferia <alediaferia@gmail.com>            *
+ *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
+ *   Copyright 2014 Sinny Kumari <ksinny@gmail.com>                                *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,41 +17,47 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef MEDIACENTER_H
-#define MEDIACENTER_H
+#include "abstractmediasource.h"
+#include <KServiceTypeTrader>
+#include <KDebug>
 
-#include "mediacenter_export.h"
+using namespace MediaCenter;
 
-#include <QPair>
-#include <QHash>
+class AbstractMediaSource::Private
+{
+public:
+    Private() : mediaLibrary(0) {}
+    MediaLibrary* mediaLibrary;
+};
 
-namespace Phonon {
-class MediaSource;
+AbstractMediaSource::AbstractMediaSource(QObject* parent, const QVariantList& args)
+    : QThread(parent), d(new Private)
+{
+
 }
 
-namespace MediaCenter {
+AbstractMediaSource::~AbstractMediaSource()
+{
 
-enum AdditionalMediaRoles {
-    MediaUrlRole = Qt::UserRole + 1,
-    IsExpandableRole,
-    MediaTypeRole,
-    DecorationTypeRole,
-    HideLabelRole,
-    ResourceIdRole,
-    DurationRole,
-    ArtistRole,
-    AlbumRole,
-    AdditionalRoles     //If additional roles are needed to be defined
-};
+}
 
-enum MediaType {
-    Music,
-    Picture,
-    Video
-};
+KService::List AbstractMediaSource::availableMediaSourcePlugins()
+{
+    KService::List plugins = KServiceTypeTrader::self()->query("Plasma/MediaCenter/MediaSource");
+    if (plugins.isEmpty()) {
+        kWarning() << "no available media sources";
+    }
+    return plugins;
+}
 
-MEDIACENTER_EXPORT QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> &roles);
-MEDIACENTER_EXPORT QString dataDirForComponent (const QString &component);
-} // namespace MediaCenter
+void AbstractMediaSource::setMediaLibrary(MediaLibrary* mediaLibrary)
+{
+    d->mediaLibrary = mediaLibrary;
+}
 
-#endif // MEDIACENTER_H
+MediaLibrary* AbstractMediaSource::mediaLibrary() const
+{
+    return d->mediaLibrary;
+}
+
+#include "abstractmediasource.moc"

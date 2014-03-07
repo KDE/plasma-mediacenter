@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2009-2010 by Alessandro Diaferia <alediaferia@gmail.com>            *
+ *   Copyright 2014 Sinny Kumari <ksinny@gmail.com>                                *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,41 +16,28 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef MEDIACENTER_H
-#define MEDIACENTER_H
+#ifndef FILTERMEDIAMODEL_H
+#define FILTERMEDIAMODEL_H
+
+#include <QString>
+#include <QSortFilterProxyModel>
 
 #include "mediacenter_export.h"
 
-#include <QPair>
-#include <QHash>
+class MEDIACENTER_EXPORT FilterMediaModel: public QSortFilterProxyModel
+{
+    Q_OBJECT
+public:
+    FilterMediaModel(QObject* parent = 0);
+    ~FilterMediaModel();
+    virtual bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const;
 
-namespace Phonon {
-class MediaSource;
-}
+    void setFilter(int role, const QVariant &filterValue);
+    void addFilter(int role, const QVariant &filterValue);
+    void clearFilters(bool invalidate = true);
 
-namespace MediaCenter {
-
-enum AdditionalMediaRoles {
-    MediaUrlRole = Qt::UserRole + 1,
-    IsExpandableRole,
-    MediaTypeRole,
-    DecorationTypeRole,
-    HideLabelRole,
-    ResourceIdRole,
-    DurationRole,
-    ArtistRole,
-    AlbumRole,
-    AdditionalRoles     //If additional roles are needed to be defined
+private:
+    QHash<int, QVariant> m_filters;
 };
 
-enum MediaType {
-    Music,
-    Picture,
-    Video
-};
-
-MEDIACENTER_EXPORT QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> &roles);
-MEDIACENTER_EXPORT QString dataDirForComponent (const QString &component);
-} // namespace MediaCenter
-
-#endif // MEDIACENTER_H
+#endif // FILTERMEDIAMODEL_H
