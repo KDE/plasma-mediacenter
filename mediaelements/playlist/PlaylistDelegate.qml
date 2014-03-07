@@ -21,6 +21,7 @@
 
 import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
+import "PlaylistDelegateLogic.js" as Logic
 
 Item {
     id: listViewItem
@@ -85,53 +86,9 @@ Item {
                 property bool delegateHeld: false
                 property int newPositionY: index + movedY
                 drag.axis: Drag.XandYAxis
-                onPressAndHold: {
-                    listViewItem.z = 1
-                    posStartX = listViewItem.x
-                    posStartY = listViewItem.y
-                    delegateHeld = true
-                    dragItemArea.drag.target = listViewItem
-                    listViewItem.opacity = 0.5
-                    listViewItem.ListView.interactive = false
-                    drag.maximumX = parent.width
-                    drag.minimumX = 0
-                    drag.maximumY = parent.height*listViewItem.ListView.count
-                    drag.minimumY = 0
-                }
-
-                onPositionChanged: {
-                    posEndX = listViewItem.x
-                    posEndY = listViewItem.y
-                }
-
-                onReleased: {
-                    if(!delegateHeld)
-                        return
-                    if(Math.abs(movedX) >= parent.width/3)
-                        playlistModel.removeFromPlaylist(index)
-                    else
-                        listViewItem.x = posStartX
-                    if (Math.abs(movedY) == 0 && delegateHeld == true){
-                        listViewItem.y = posStartY
-                    }
-                    else
-                    {
-                        listViewItem.z = 0
-                        listViewItem.opacity = 1
-                        if(newPositionY < 1)
-                            newPositionY = 0
-                        else if(newPositionY > playlistList.count-1)
-                            newPositionY = playlistList.count - 1
-                        playlistModel.moveItem(index, newPositionY)
-                        listViewItem.x = posStartX
-                        listViewItem.y = posStartY
-                    }
-                    listViewItem.opacity =1
-                    dragItemArea.drag.target = null
-                    listViewItem.ListView.interactive = true
-                    delegateHeld = false
-                }
-
+                onPressAndHold: Logic.onPressAndHold(dragItemArea, listViewItem)
+                onPositionChanged: Logic.onPositionChanged(dragItemArea, listViewItem)
+                onReleased:Logic.onReleased(dragItemArea, listViewItem, playlistList, playlistModel)
                 onClicked: requestPlayback()
                 onEntered: playlistList.currentIndex = index;
             }

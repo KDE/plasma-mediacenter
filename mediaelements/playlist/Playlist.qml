@@ -114,7 +114,7 @@ FocusScope {
                     onPlayRequested: {
                         playlistList.currentIndex = index;
                         playlistModel.play(index);
-                        playCurrent();
+                        playlistList.playCurrent();
                     }
                 }
 
@@ -135,8 +135,6 @@ FocusScope {
                         positionViewAtIndexTimer.restart();
                     }
                 }
-
-                onCurrentlyPlayingIndexChanged: playCurrent()
 
                 Keys.onPressed: if (event.key == Qt.Key_Up && currentIndex == 0) {
                     filterText.focus = true;

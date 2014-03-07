@@ -133,13 +133,20 @@ void PlaylistModel::removeFromPlaylist(const int& index)
     endResetModel();
 }
 
-void PlaylistModel::moveItem(int firstIndex, int secondIndex)
+void PlaylistModel::moveItem(int originalIndex, int newIndex)
 {
-    d->musicList.move(firstIndex,secondIndex);
-    if(firstIndex < secondIndex) {
-       emit dataChanged(createIndex(firstIndex, 0), createIndex(secondIndex, 0));
+    d->musicList.move(originalIndex, newIndex);
+    if (originalIndex == d->currentIndex) {
+        setCurrentIndex(newIndex);
+    } else if (originalIndex < d->currentIndex && newIndex >= d->currentIndex) {
+            setCurrentIndex(d->currentIndex-1);
+    } else if (originalIndex > d->currentIndex && newIndex <= d->currentIndex) {
+            setCurrentIndex(d->currentIndex+1);
+    }
+    if (originalIndex < newIndex) {
+       emit dataChanged(createIndex(originalIndex, 0), createIndex(newIndex, 0));
     } else {
-        emit dataChanged(createIndex(secondIndex, 0), createIndex(firstIndex, 0));
+        emit dataChanged(createIndex(newIndex, 0), createIndex(originalIndex, 0));
     }
 }
 
