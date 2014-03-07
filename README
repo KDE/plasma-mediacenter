@@ -24,3 +24,7 @@ Run PMC using "plasma-mediacenter" or by using the "Plasma Media Center" icon in
 
 (some of the old code can be found in the "old" branch, just in case somebody wants to browse)
 
+Licensing:
+========
+Please note that as a dependency on QxOrm, which is GPLv3, a compiled version of this project can only be distributed under GPLv3.
+
