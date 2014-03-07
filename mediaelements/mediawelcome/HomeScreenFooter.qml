@@ -28,29 +28,29 @@ Item {
         font.pointSize: 16
     }
 
-     Timer {
-         interval: 1000; running: true; repeat: true
-         onTriggered: {
-             var d = new Date();
-	     var minutes = d.getMinutes();
-	     var hours = d.getHours();
-	     var timeOfDay = hours > 12 ? 'PM' : 'AM';
+    Timer {
+        interval: 1000; running: true; repeat: true
+        onTriggered: {
+            var d = new Date();
+            var minutes = d.getMinutes();
+            var hours = d.getHours();
+            var timeOfDay = hours > 12 ? 'PM' : 'AM';
 
-	     if (minutes < 10)
-	     {
-		  minutes = '0' + minutes;
-	     }
+            if (minutes < 10)
+            {
+                minutes = '0' + minutes;
+            }
 
-	     hours = hours % 12;
+            hours = hours % 12;
 
-	     headerTimeText.text = hours + ':' + minutes + ' ' + timeOfDay;
-         }
-     }
+            footerTimeText.text = hours + ':' + minutes + ' ' + timeOfDay;
+        }
+    }
 
-     HomeScreenText {
-         id: headerTimeText
-         anchors.verticalCenter: parent.verticalCenter
-         anchors { right: parent.right; margins: 20 }
-         font.pointSize: 20
-     }
+    HomeScreenText {
+        id: footerTimeText
+        anchors.verticalCenter: parent.verticalCenter
+        anchors { right: parent.right; margins: 20 }
+        font.pointSize: 20
+    }
 }
