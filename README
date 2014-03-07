@@ -2,7 +2,10 @@ Required:
 ==========
 
 1) Dependencies as listed on http://community.kde.org/Plasma/Plasma_Media_Center/getting_started_with_PMC#Package_dependency
-2) You need QxOrm from http://qxorm.com/qxorm_en/download.html to build PMC. After downloading it, simply run qmake && make && make install.
+
+2) You need QxOrm from http://qxorm.com/qxorm_en/download.html to build PMC.
+Building QxOrm: After downloading it, simply run qmake && make && make install.
+
 3) Standard KDE Oxygen Plasma theme
 
 To know Plasma Media Center architecture and other related information browse through http://community.kde.org/Plasma/Plasma_Media_Center
