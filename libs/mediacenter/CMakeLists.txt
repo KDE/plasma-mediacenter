@@ -1,6 +1,5 @@
 find_package(Taglib REQUIRED)
 find_package(QxOrm REQUIRED)
-find_package(Boost REQUIRED COMPONENTS serialization)
 
 include_directories(
     ${TAGLIB_INCLUDES}
