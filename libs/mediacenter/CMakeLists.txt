@@ -4,6 +4,7 @@ find_package(Boost REQUIRED COMPONENTS serialization)
 
 include_directories(
     ${TAGLIB_INCLUDES}
+    ${QxOrm_INCLUDE_DIR}
 )
 
 add_definitions(-D_QX_SERIALIZE_BINARY_ENABLED -D_QX_SERIALIZE_XML_ENABLED -D_BUILDING_PMC)
