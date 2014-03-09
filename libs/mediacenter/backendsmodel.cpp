@@ -21,7 +21,7 @@
 
 #include <QDeclarativeEngine>
 
-#include <KDebug>
+#include <QDebug>
 
 bool pluginLessThan(const KPluginInfo &lh, const KPluginInfo &rh)
 {
@@ -62,7 +62,7 @@ void BackendsModel::loadBrowsingBackends()
     Q_FOREACH (KPluginInfo info, d->backendInfo) {
         KService::Ptr service = info.service();
         if (!service) {
-            kDebug() << "Could not get the service for the backend " << info.name();
+            qDebug() << "Could not get the service for the backend " << info.name();
             continue;
         }
 
@@ -75,7 +75,7 @@ void BackendsModel::loadBrowsingBackends()
 
         if (backend) {
             if (!backend->okToLoad()) {
-                kDebug() << "Backend " << info.name() << " doesn't want to be loaded";
+                qDebug() << "Backend " << info.name() << " doesn't want to be loaded";
                 continue;
             }
             backend->setName(info.pluginName());
@@ -86,7 +86,7 @@ void BackendsModel::loadBrowsingBackends()
             const_cast<BackendsModel *>(this)->d->backends.insert(key, backend);
             d->loadedBackendsInfo.append(info);
         } else {
-            kDebug() << "Could not create a instance for the backend " << info.name() << errorMessage;
+            qDebug() << "Could not create a instance for the backend " << info.name() << errorMessage;
         }
     }
 }

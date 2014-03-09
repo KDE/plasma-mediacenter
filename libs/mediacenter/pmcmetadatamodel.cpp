@@ -29,7 +29,7 @@
 #include "pmcartist.h"
 
 #include <KIO/PreviewJob>
-#include <KDebug>
+#include <QDebug>
 
 #include <QtCore/QTimer>
 
@@ -180,7 +180,7 @@ void PmcMetadataModel::handleNewAlbumsOrArtists(const QList< QSharedPointer< T >
 
     foreach (const QSharedPointer<T> &a, mediaData) {
         if (d->mediaByResourceId.contains(a->name())) {
-            kWarning() << "ALREADY HAS " << a->name();
+            qWarning() << "ALREADY HAS " << a->name();
             continue;
         }
         d->mediaByResourceId.insert(a->name(), QSharedPointer<QObject>(a));

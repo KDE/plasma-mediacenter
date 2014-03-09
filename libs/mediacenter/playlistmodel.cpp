@@ -18,7 +18,7 @@
 #include "playlistmodel.h"
 #include "playlistitem.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KDE/KStandardDirs>
 #include <KDE/KCmdLineArgs>
 #include <KUrl>

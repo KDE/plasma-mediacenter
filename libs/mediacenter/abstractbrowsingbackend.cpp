@@ -23,7 +23,7 @@
 #include <KGlobal>
 #include <KService>
 #include <KPluginInfo>
-#include <KDebug>
+#include <QDebug>
 #include <KServiceTypeTrader>
 
 #include <QAbstractItemModel>
@@ -121,7 +121,7 @@ KService::List AbstractBrowsingBackend::availableBackends()
 {
     KService::List plugins = KServiceTypeTrader::self()->query("Plasma/MediaCenter/BrowsingBackend");
     if (plugins.isEmpty()) {
-        kWarning() << "no available browsing backend";
+        qWarning() << "no available browsing backend";
     }
     return plugins;
 }

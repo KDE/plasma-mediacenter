@@ -24,7 +24,7 @@
 #include "singletonfactory.h"
 
 #include <KPluginInfo>
-#include <KDebug>
+#include <QDebug>
 
 MediaSourcesLoader::MediaSourcesLoader(QObject* parent): QObject(parent)
 {
@@ -44,7 +44,7 @@ void MediaSourcesLoader::load()
     Q_FOREACH (const KPluginInfo &info, pluginInfo) {
         KService::Ptr service = info.service();
         if (!service) {
-            kDebug() << "Could not get the service for media source " << info.name();
+            qDebug() << "Could not get the service for media source " << info.name();
             continue;
         }
         const QString key = service->library();
@@ -59,7 +59,7 @@ void MediaSourcesLoader::load()
             mediaSource->setMediaLibrary(SingletonFactory::instanceFor<MediaLibrary>());
             mediaSource->start();
         } else {
-            kDebug() << "Could not create a instance for the media source " << info.name() << errorMessage;
+            qDebug() << "Could not create a instance for the media source " << info.name() << errorMessage;
         }
     }
 

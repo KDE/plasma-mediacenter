@@ -18,7 +18,7 @@
 
 #include "filterplaylistmodel.h"
 #include "playlistmodel.h"
-#include <KDebug>
+#include <QDebug>
 
 
 FilterPlaylistModel::FilterPlaylistModel(QObject* parent)
