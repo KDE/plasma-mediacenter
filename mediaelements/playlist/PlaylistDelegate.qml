@@ -29,6 +29,7 @@ Item {
     property variant url: mediaUrl
 
     signal playRequested(string url)
+    signal removeRequested(int indexToRemove)
 
     Row {
         anchors.fill: parent
@@ -100,9 +101,7 @@ Item {
             width: height
             height: parent.height
             iconSource: "list-remove"
-            onClicked: {
-                playlistModel.removeFromPlaylist (index);
-            }
+            onClicked: removeRequested(index)
         }
     }
 

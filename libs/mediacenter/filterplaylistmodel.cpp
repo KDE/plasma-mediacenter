@@ -74,4 +74,10 @@ void FilterPlaylistModel::setCurrentIndex(int presentIndex)
     emit currentIndexChanged();
 }
 
+void FilterPlaylistModel::removeFromSourceModel(int indexInFilterModel)
+{
+    PlaylistModel *playlistmodel = static_cast<PlaylistModel*>(sourceModel());
+    playlistmodel->removeFromPlaylist(mapToSource(index(indexInFilterModel, 0)).row());
+}
+
 #include "filterplaylistmodel.moc"

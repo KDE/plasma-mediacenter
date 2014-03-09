@@ -38,6 +38,7 @@ public:
     void setSourcePlaylistModel(QObject *model);
     int currentIndex() const;
     void setCurrentIndex(int presentIndex);
+    Q_INVOKABLE void removeFromSourceModel(int indexInFilterModel);
 
 signals:
     void filterStringChanged();

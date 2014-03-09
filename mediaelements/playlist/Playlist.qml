@@ -95,6 +95,12 @@ FocusScope {
                 }
             }
 
+            MediaCenterElements.FilterPlaylistModel {
+                id: filterModel
+                sourcePlaylistModel : playlistModel
+                filterString: filterText.text
+            }
+
             ListView {
                 id: playlistList
                 property string currentlyPlayingUrl: playlistModel.currentUrl
@@ -103,10 +109,7 @@ FocusScope {
                 anchors.bottom: parent.bottom
                 anchors.margins: 5
 
-                model: MediaCenterElements.FilterPlaylistModel {
-                    sourcePlaylistModel : playlistModel
-                    filterString: filterText.text
-                }
+                model: filterModel
                 spacing: 3
                 clip: true
                 delegate: PlaylistDelegate {
@@ -115,6 +118,9 @@ FocusScope {
                         playlistList.currentIndex = index;
                         playlistModel.play(index);
                         playlistList.playCurrent();
+                    }
+                    onRemoveRequested: {
+                        filterModel.removeFromSourceModel(indexToRemove)
                     }
                 }
 
