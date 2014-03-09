@@ -22,9 +22,9 @@
 #include <QtDeclarative/QDeclarativeImageProvider>
 #include <QtCore/QHash>
 
-#include "mediacenter_export.h"
+#include <KImageCache>
 
-class KImageCache;
+#include "mediacenter_export.h"
 
 class MEDIACENTER_EXPORT PmcImageCache : public QObject
 {

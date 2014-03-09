@@ -19,18 +19,7 @@
 #include "medialibrarytest.h"
 #include "fakemediavalidator.h"
 
-#include <mediacenter/medialibrary.h>
-#include <mediacenter/mediacenter.h>
-
-#include <mediacenter/pmcmedia.h>
-#include <mediacenter/pmcalbum.h>
-#include <mediacenter/pmcartist.h>
-
-#include <qtest_kde.h>
-
 static const char* DB_FILENAME = "plasma-mediacenter.sqlite";
-
-QTEST_KDEMAIN(MediaLibraryTest, NoGUI);
 
 namespace {
     static const int TIMEOUT_FOR_SIGNALS = 3000;
@@ -309,4 +298,5 @@ void MediaLibraryTest::shouldCleanupEntriesForNonExistentMedia()
     delete mediaLibrary;
 }
 
+QTEST_MAIN(MediaLibraryTest)
 #include "medialibrarytest.moc"

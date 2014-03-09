@@ -19,7 +19,7 @@
 #ifndef FAKEMEDIAVALIDATOR_H
 #define FAKEMEDIAVALIDATOR_H
 
-#include <mediacenter/mediavalidator.h>
+#include "mediavalidator.h"
 
 class FakeMediaValidator : public MediaValidator
 {

@@ -18,13 +18,11 @@
  ***********************************************************************************/
 
 #include "lastfmimagefetchertest.h"
-#include <libs/mediacenter/lastfmimagefetcher.h>
-#include <mediacenter/pmcimagecache.h>
-#include <mediacenter/singletonfactory.h>
+#include "lastfmimagefetcher.h"
+#include "pmcimagecache.h"
+#include "singletonfactory.h"
 
-#include <qtest_kde.h>
-
-QTEST_KDEMAIN(LastFmImageFetcherTest, NoGUI);
+#include <qtest.h>
 
 void LastFmImageFetcherTest::initTestCase()
 {
@@ -71,5 +69,7 @@ bool LastFmImageFetcherTest::waitForSignal(QSignalSpy* spy, int timeout)
     }
     return !spy->isEmpty();
 }
+
+QTEST_MAIN(LastFmImageFetcherTest)
 
 #include "lastfmimagefetchertest.moc"

@@ -17,12 +17,11 @@
  ***********************************************************************************/
 
 #include "backendsmodel.h"
+#include "abstractbrowsingbackend.h"
 
 #include <QDeclarativeEngine>
 
 #include <KDebug>
-
-#include <libs/mediacenter/abstractbrowsingbackend.h>
 
 bool pluginLessThan(const KPluginInfo &lh, const KPluginInfo &rh)
 {

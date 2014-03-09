@@ -19,7 +19,7 @@
 #ifndef FILTEREDBACKENDSMODEL_H
 #define FILTEREDBACKENDSMODEL_H
 
-#include <QtGui/QSortFilterProxyModel>
+#include <QtCore/QSortFilterProxyModel>
 #include "mediacenter_export.h"
 
 class MEDIACENTER_EXPORT FilteredBackendsModel : public QSortFilterProxyModel

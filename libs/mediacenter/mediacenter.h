@@ -21,12 +21,9 @@
 
 #include "mediacenter_export.h"
 
+#include <Qt>
 #include <QPair>
 #include <QHash>
-
-namespace Phonon {
-class MediaSource;
-}
 
 namespace MediaCenter {
 

@@ -22,13 +22,17 @@
 #include <QObject>
 #include <QMetaType>
 #include <QSharedPointer>
-#include <mediacenter/mediavalidator.h>
+#include <qtest.h>
+#include <QSignalSpy>
 
-class PmcArtist;
-class PmcAlbum;
-class PmcMedia;
-class QSignalSpy;
-class MediaLibrary;
+#include "mediavalidator.h"
+
+#include "medialibrary.h"
+#include "mediacenter.h"
+
+#include "pmcmedia.h"
+#include "pmcalbum.h"
+#include "pmcartist.h"
 
 class MediaLibraryTest : public QObject
 {

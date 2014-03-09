@@ -28,7 +28,6 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QCoreApplication>
 #include <QtXml/QDomDocument>
-#include <QApplication>
 
 namespace {
     static const char DEFAULT_PLAYLIST_NAME[] = "Default";

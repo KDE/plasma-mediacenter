@@ -21,6 +21,7 @@
 #define LASTFMIMAGEFETCHERTEST_H
 
 #include <QObject>
+#include <QSignalSpy>
 
 namespace {
     static const int TIMEOUT_FOR_SIGNALS = 10000;

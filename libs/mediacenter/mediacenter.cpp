@@ -24,11 +24,10 @@
 #include <KUrl>
 #include <KCmdLineArgs>
 #include <KStandardDirs>
+#include <KGlobal>
 
 #include <Solid/Device>
 #include <Solid/OpticalDisc>
-
-#include <Phonon/MediaSource>
 
 namespace MediaCenter {
 

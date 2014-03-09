@@ -17,11 +17,9 @@
  ***********************************************************************************/
 
 #include "singletonfactorytest.h"
-#include <mediacenter/singletonfactory.h>
+#include "singletonfactory.h"
 
-#include <qtest_kde.h>
-
-QTEST_KDEMAIN(SingletonFactoryTest, NoGUI);
+#include <qtest.h>
 
 void SingletonFactoryTest::initTestCase()
 {
@@ -50,5 +48,7 @@ void SingletonFactoryTest::shouldReturnSameInstanceEveryTime()
 
     QVERIFY2(obj1 == obj2, "Objects returned are not equal");
 }
+
+QTEST_MAIN(SingletonFactoryTest)
 
 #include "singletonfactorytest.moc"

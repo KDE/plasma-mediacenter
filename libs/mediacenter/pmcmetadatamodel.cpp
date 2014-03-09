@@ -247,7 +247,7 @@ QVariant PmcMetadataModel::dataForMedia(const QModelIndex &index, int role) cons
     case Qt::DecorationRole:
         if (media->type() == "video") {
             const KUrl url(media->url());
-            if (d->mediaUrlWhichFailedThumbnailGeneration.contains(url.prettyUrl()))
+            if (d->mediaUrlWhichFailedThumbnailGeneration.contains(url.url()))
                 return "image-missing";
             return const_cast<PmcMetadataModel*>(this)->fetchPreview(url, index);
         } else {
@@ -329,7 +329,7 @@ int PmcMetadataModel::rowCount(const QModelIndex& parent) const
 
 QString PmcMetadataModel::fetchPreview(const KUrl &url, const QModelIndex& index)
 {
-    const QString prettyUrl = url.prettyUrl();
+    const QString prettyUrl = url.url();
     if (SingletonFactory::instanceFor<PmcImageCache>()->containsId(prettyUrl)) {
         return "image://" + QString(PmcImageProvider::identificationString) + "/" + prettyUrl;
     }
@@ -371,7 +371,7 @@ void PmcMetadataModel::showPreview(const KFileItem &item, const QPixmap &preview
     d->previewJobs.remove(item.url());
 
     if (index.isValid()) {
-        SingletonFactory::instanceFor<PmcImageCache>()->addImage(item.url().prettyUrl(), preview.toImage());
+        SingletonFactory::instanceFor<PmcImageCache>()->addImage(item.url().url(), preview.toImage());
         emit dataChanged(index, index);
     }
 }
@@ -381,7 +381,7 @@ void PmcMetadataModel::previewFailed(const KFileItem &item)
     QPersistentModelIndex index = d->previewJobs.value(item.url());
     d->previewJobs.remove(item.url());
     if (index.isValid()) {
-        d->mediaUrlWhichFailedThumbnailGeneration.append(item.url().prettyUrl());
+        d->mediaUrlWhichFailedThumbnailGeneration.append(item.url().url());
         emit dataChanged(index, index);
     }
 }

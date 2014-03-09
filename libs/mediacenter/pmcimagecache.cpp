@@ -18,8 +18,6 @@
 
 #include "pmcimagecache.h"
 
-#include <KDE/KImageCache>
-
 #include <QtCore/QCoreApplication>
 
 PmcImageCache::~PmcImageCache()

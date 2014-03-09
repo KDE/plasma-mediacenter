@@ -13,17 +13,14 @@ add_definitions(-D_QX_SERIALIZE_BINARY_ENABLED -D_QX_SERIALIZE_XML_ENABLED -D_BU
 SET(QT_USE_QTMAIN TRUE)
 SET(QT_USE_QTTEST TRUE)
 
-qt4_automoc(medialibrarytest.cpp fakemediavalidator.cpp)
 add_executable(medialibrarytest medialibrarytest.cpp fakemediavalidator.cpp)
 add_test(pmc-libs-medialibrarytest medialibrarytest)
-target_link_libraries(medialibrarytest plasmamediacenter ${KDE4_KDECORE_LIBRARY} ${QT_QTSQL_LIBRARIES} ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES} ${Boost_LIBRARIES} ${QxOrm_LIBRARIES})
+target_link_libraries(medialibrarytest plasmamediacenter Qt5::Test Qt5::Sql)
 
-qt4_automoc(singletonfactorytest.cpp fakemediavalidator.cpp)
 add_executable(singletonfactorytest singletonfactorytest.cpp fakemediavalidator.cpp)
 add_test(pmc-libs-singletonfactorytest singletonfactorytest)
-target_link_libraries(singletonfactorytest plasmamediacenter ${KDE4_KDECORE_LIBRARY} ${QT_QTSQL_LIBRARIES} ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES} ${Boost_LIBRARIES} ${QxOrm_LIBRARIES})
+target_link_libraries(singletonfactorytest plasmamediacenter Qt5::Test Qt5::Sql)
 
-qt4_automoc(lastfmimagefetchertest.cpp fakemediavalidator.cpp)
 add_executable(lastfmimagefetchertest lastfmimagefetchertest.cpp fakemediavalidator.cpp)
 add_test(pmc-libs-lastfmimagefetchertest lastfmimagefetchertest)
-target_link_libraries(lastfmimagefetchertest plasmamediacenter ${KDE4_KDECORE_LIBRARY} ${QT_QTSQL_LIBRARIES} ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES} ${Boost_LIBRARIES} ${QxOrm_LIBRARIES})
+target_link_libraries(lastfmimagefetchertest plasmamediacenter Qt5::Test Qt5::Sql)

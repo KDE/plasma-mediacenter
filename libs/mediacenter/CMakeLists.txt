@@ -7,7 +7,7 @@ include_directories(
 )
 
 add_definitions(-D_QX_SERIALIZE_BINARY_ENABLED -D_QX_SERIALIZE_XML_ENABLED -D_BUILDING_PMC)
-
+#
 set (plasmamediacenter_SRCS
     medialibrarywrappercache.cpp
     artist.cpp
@@ -44,35 +44,40 @@ set (plasmamediacenter_SRCS
     mediavalidator.cpp
 )
 
-kde4_add_library(plasmamediacenter SHARED
+add_library(plasmamediacenter SHARED
     ${plasmamediacenter_SRCS}
 )
-
+#
 target_link_libraries(plasmamediacenter
-    ${QT_QTDECLARATIVE_LIBRARIES}
-    ${QT_QTSQL_LIBRARIES}
-    ${KDE4_KDECORE_LIBRARY}
-    ${KDE4_KIO_LIBS}
-    ${KDE4_PLASMA_LIBS}
-    ${KDE4_SOLID_LIBS}
-    ${TAGLIB_LIBRARIES}
-    ${NEPOMUK_CORE_LIBRARY}
+    Qt5::Core
+    Qt5::Declarative
+    KF5::Solid
+    KF5::GuiAddons
+    KF5::CoreAddons
+    KF5::KDE4Support
     ${Boost_LIBRARIES}
     ${QxOrm_LIBRARIES}
+    ${TAGLIB_LIBRARIES}
+    ${PHONON_LIBRARIES}
 )
-
+#
 set_target_properties(plasmamediacenter PROPERTIES VERSION 1.2 SOVERSION 1.2)
-
+#
 install(TARGETS plasmamediacenter ${INSTALL_TARGETS_DEFAULT_ARGS})
-
+#
 set (plasmamediacenter_HDRS
     modelmetadata.h
     mediacenter.h
     abstractbrowsingbackend.h
     backendsmodel.h
     playlistmodel.h
+    mediavalidator.h
+    medialibrary.h
+    pmcalbum.h
+    pmcmedia.h
+    pmcartist.h
 )
-
+#
 install(FILES ${plasmamediacenter_HDRS} DESTINATION ${INCLUDE_INSTALL_DIR}/mediacenter COMPONENT Devel)
 install(FILES data/servicetypes/pmc_browsingbackend.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
 install(FILES data/servicetypes/pmc_mediasource.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
