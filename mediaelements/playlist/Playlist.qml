@@ -116,8 +116,9 @@ FocusScope {
                     width: playlistList.width - playlistScrollbar.width ; height: 32
                     onPlayRequested: {
                         playlistList.currentIndex = index;
-                        playlistModel.play(index);
+                        filterModel.playFromSourceModel(index);
                         playlistList.playCurrent();
+                        playlistList.positionViewAtIndex(playlistModel.currentIndex, ListView.Contain);
                     }
                     onRemoveRequested: {
                         filterModel.removeFromSourceModel(indexToRemove)

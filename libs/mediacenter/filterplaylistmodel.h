@@ -39,6 +39,7 @@ public:
     int currentIndex() const;
     void setCurrentIndex(int presentIndex);
     Q_INVOKABLE void removeFromSourceModel(int indexInFilterModel);
+    Q_INVOKABLE void playFromSourceModel(int indexInFilterModel);
 
 signals:
     void filterStringChanged();

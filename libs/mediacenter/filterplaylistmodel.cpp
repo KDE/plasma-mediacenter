@@ -80,4 +80,10 @@ void FilterPlaylistModel::removeFromSourceModel(int indexInFilterModel)
     playlistmodel->removeFromPlaylist(mapToSource(index(indexInFilterModel, 0)).row());
 }
 
+void FilterPlaylistModel::playFromSourceModel(int indexInFilterModel)
+{
+    PlaylistModel *playlistmodel = static_cast<PlaylistModel*>(sourceModel());
+    playlistmodel->play(mapToSource(index(indexInFilterModel, 0)).row());
+}
+
 #include "filterplaylistmodel.moc"
