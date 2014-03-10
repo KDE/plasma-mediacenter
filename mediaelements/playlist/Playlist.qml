@@ -150,6 +150,9 @@ FocusScope {
                 } else if (event.key != Qt.Key_Escape && event.text && filterText.visible) {
                     filterText.focus = true;
                     filterText.text = event.text;
+                } else if (event.key == Qt.Key_Escape && currentIndex) {
+                    currentIndex = 0;
+                    event.accepted = true;
                 }
 
                 function playCurrent()
