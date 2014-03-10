@@ -105,7 +105,7 @@ int PlaylistModel::addToPlaylist(const QStringList& urls)
     const int n = rowCount();
     if (urls.isEmpty()) return n-1;
 
-    beginInsertRows(QModelIndex(), n, n+urls.size());
+    beginInsertRows(QModelIndex(), n, n+urls.size()-1);
 
     Q_FOREACH(const QString &url, urls) {
         PlaylistItem *item = new PlaylistItem(url, this);
