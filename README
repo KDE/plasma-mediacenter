@@ -6,6 +6,10 @@ Required:
 2) You need QxOrm from http://qxorm.com/qxorm_en/download.html to build PMC.
 Building QxOrm: After downloading it, simply run qmake && make debug-install.
 
+If you get an error about missing libboost-serialization-mt, make sure you have the boost serialization libraries installed.
+If you are sure the libraries are there, edit the QxOrm.pri file and rename 'libboost-serialization-mt' and 'libboost-serialization-mt-d'
+to 'libboost-serialization'.
+
 3) Standard KDE Oxygen Plasma theme
 
 To know Plasma Media Center architecture and other related information browse through http://community.kde.org/Plasma/Plasma_Media_Center
