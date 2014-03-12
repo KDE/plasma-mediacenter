@@ -18,9 +18,23 @@
  ***************************************************************************/
 
 import QtQuick 1.1
+import org.kde.plasma.core 0.1 as PlasmaCore
+import org.kde.locale 0.1
 
 Item {
     property alias text: footerText.text
+
+    Locale {
+        id: locale
+    }
+
+    PlasmaCore.DataSource {
+        id: dataSource
+        engine: "time"
+        connectedSources: ["Local"]
+        interval: 10000
+    }
+
     HomeScreenText {
         id: footerText
         anchors.verticalCenter: parent.verticalCenter
@@ -28,29 +42,14 @@ Item {
         font.pointSize: 16
     }
 
-    Timer {
-        interval: 1000; running: true; repeat: true
-        onTriggered: {
-            var d = new Date();
-            var minutes = d.getMinutes();
-            var hours = d.getHours();
-            var timeOfDay = hours > 12 ? 'PM' : 'AM';
-
-            if (minutes < 10)
-            {
-                minutes = '0' + minutes;
-            }
-
-            hours = hours % 12;
-
-            footerTimeText.text = hours + ':' + minutes + ' ' + timeOfDay;
-        }
-    }
-
     HomeScreenText {
-        id: footerTimeText
         anchors.verticalCenter: parent.verticalCenter
         anchors { right: parent.right; margins: 20 }
+
         font.pointSize: 20
+        text : dataSource.valid ?
+                locale.formatLocaleTime(dataSource.data["Local"]["Time"],
+                                        Locale.TimeWithoutSeconds)
+                : ""
     }
 }
