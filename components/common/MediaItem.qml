@@ -28,6 +28,7 @@ Item {
 
     property bool horizontal: false
     property QtObject view
+    property variant displayProxy: display ? display : ""
 
     signal clicked(int index)
     signal pressAndHold(int index)
@@ -67,7 +68,7 @@ Item {
                     Component.onCompleted: checkAndLoad()
                 }
 
-                LabelOverlay {
+                MediaRow {
                     id: labelOverlay
                     anchors {
                         bottom: parent.bottom; margins: mediaItem.horizontal ? 1 : 5
@@ -76,13 +77,13 @@ Item {
                         verticalCenter: mediaItem.horizontal ? parent.verticalCenter : undefined
                     }
 
-                    text: display ? display : ""
-                    visible: !hideLabel && text
+                    displayProxy: mediaItem.displayProxy
+                    visible: !hideLabel && display != ""
                     opacity: 0.8
                     showOverlay: !isExpandable
                     width: parent.width
                     targetHeight: mediaItem.horizontal ? parent.height : 32
-                    expanded: mediaItem.view ? mediaItem.view.currentIndex == index : false
+                    expanded: mediaItem.view && !mediaItem.horizontal ? mediaItem.view.currentIndex == index : false
                     horizontalAlignment: mediaItem.horizontal ? Text.AlignLeft : Text.AlignHCenter
                 }
                 LabelOverlay {

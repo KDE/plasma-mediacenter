@@ -22,6 +22,7 @@
 
 #include "metadatamusicbackend.h"
 #include "alwaysexpandedmetadatamodel.h"
+#include "metadatamusicsongsmodel.h"
 #include "../metadatabackendcommonmodel.h"
 
 #include <libs/mediacenter/pmcmetadatamodel.h>
@@ -65,7 +66,7 @@ bool MetadataMusicBackend::initImpl()
     AbstractMetadataBackend::initImpl();
     m_albumsModel = new AlwaysExpandedMetadataModel(this);
     m_artistsModel = new AlwaysExpandedMetadataModel(this);
-    m_musicModel = new MetadataBackendCommonModel(this);
+    m_musicModel = new MetadataMusicSongsModel(this);
     m_artistsModel->setDefaultDecoration("user-identity");
     m_albumsModel->setDefaultDecoration("pmcnocover");
     connect(m_musicModel, SIGNAL(modelReset()), SLOT(musicModelReset()));
