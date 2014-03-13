@@ -43,13 +43,17 @@ Item {
     }
 
     HomeScreenText {
+        id: homeScreenClock
         anchors.verticalCenter: parent.verticalCenter
         anchors { right: parent.right; margins: 20 }
 
         font.pointSize: 20
-        text : dataSource.valid ?
-                locale.formatLocaleTime(dataSource.data["Local"]["Time"],
-                                        Locale.TimeWithoutSeconds)
-                : ""
+
+        Component.onCompleted: if (dataSource.valid) {
+            homeScreenClock.text = function() {
+                return locale.formatLocaleTime(dataSource.data["Local"]["Time"],
+                                               Locale.TimeWithoutSeconds)
+            }
+        }
     }
 }
