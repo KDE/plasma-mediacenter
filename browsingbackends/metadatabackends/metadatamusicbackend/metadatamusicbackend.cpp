@@ -153,7 +153,8 @@ void MetadataMusicBackend::addAllSongsToPlaylist (QObject* playlistModelObject)
     PlaylistModel* playlistModel = static_cast<PlaylistModel *> (playlistModelObject);
     for (int i=0; i<m_musicFilteredModel->rowCount(); ++i) {
         const QString url = m_musicFilteredModel->data(m_musicFilteredModel->index(i, 0), MediaCenter::MediaUrlRole).toString();
-        const QString name = m_musicFilteredModel->data(m_musicFilteredModel->index(i, 0), Qt::DisplayRole).toString();
+        const QVariantList songAndItsInfo = m_musicFilteredModel->data(m_musicFilteredModel->index(i, 0), Qt::DisplayRole).toList();
+        const QString name = songAndItsInfo.length() ? songAndItsInfo.at(0).toString() : QString();
         if (!url.isEmpty() && !name.isEmpty()) {
             playlistModel->addToPlaylist(url);
         }
