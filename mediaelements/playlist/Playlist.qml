@@ -133,7 +133,9 @@ FocusScope {
                 Timer {
                     id: positionViewAtIndexTimer
                     interval: 10
-                    onTriggered: playlistList.positionViewAtIndex(playlistList.currentIndex, ListView.Contain);
+                    onTriggered: if (!playlistList.moving) {
+                        playlistList.positionViewAtIndex(playlistList.currentIndex, ListView.Contain);
+                    }
                 }
 
                 onCurrentIndexChanged: {
