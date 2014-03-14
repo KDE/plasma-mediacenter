@@ -42,6 +42,9 @@ set (plasmamediacenter_SRCS
     mediasourcesloader.cpp
     singletonfactory.cpp
     mediavalidator.cpp
+    ../mpris2/mpris2.cpp
+    ../mpris2/mediaplayer2.cpp
+    ../mpris2/mediaplayer2player.cpp
 )
 
 kde4_add_library(plasmamediacenter SHARED
