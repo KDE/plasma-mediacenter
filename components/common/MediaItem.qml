@@ -97,7 +97,7 @@ Item {
                     text: mediaDuration ? Qt.formatTime(new Date(0, 0, 0, 0, 0, mediaDuration), "hh:mm:ss") : ""
                     visible: !hideLabel && text
                     opacity: 0.8
-                    showOverlay: !isExpandable
+                    showOverlay: !isExpandable && !mediaItem.horizontal
                     expanded: true
                     width: parent.width * 0.9
                 }
