@@ -50,7 +50,7 @@ private:
     bool areThereResultsToProcess() const;
     void fetchDataForRequest(quint64 requestNumber);
     quint64 nextRequestToProcess() const;
-    void updateAlbumCoverWithCoverArtProvider(const MediaInfoResult& result, TagLib::FileRef f) const;
+    void updateAlbumCoverWithCoverArtProvider(const MediaInfoResult& result, const QString &mediaPath) const;
 
     class Private;
     Private * const d;

@@ -280,7 +280,7 @@ bool MediaLibrary::mediaExists(const QString& sha) const
     return d->mediaBySha.contains(sha);
 }
 
-QSharedPointer< Media > MediaLibrary::mediaForSha(const QString& sha)
+QSharedPointer< Media > MediaLibrary::mediaForSha(const QString& sha) const
 {
     return d->mediaBySha.value(sha);
 }
@@ -450,4 +450,9 @@ QList< QSharedPointer< PmcArtist > > MediaLibrary::getArtists() const
 bool MediaLibrary::hasError(const QSqlError& sqlError)
 {
     return sqlError.isValid();
+}
+
+QSharedPointer< PmcMedia > MediaLibrary::mediaForUrl(const QString& url) const
+{
+    return QSharedPointer<PmcMedia>(new PmcMedia(mediaForSha(Media::calculateSha(url))));
 }

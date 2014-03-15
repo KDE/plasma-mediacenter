@@ -50,6 +50,8 @@ public:
     QList< QSharedPointer< PmcAlbum > > getAlbums() const;
     QList< QSharedPointer< PmcArtist > > getArtists() const;
 
+    QSharedPointer<PmcMedia> mediaForUrl(const QString &url) const;
+
 Q_SIGNALS:
     void initialized();
 
@@ -74,7 +76,7 @@ private:
     void updateLibrary();
     bool mediaExists(const QString &first) const;
     void addMedia(const QSharedPointer< Media > &m);
-    QSharedPointer<Media> mediaForSha(const QString &sha);
+    QSharedPointer<Media> mediaForSha(const QString &sha) const;
     void emitNewMedia();
     bool extractAndSaveAlbumInfo(const QPair< QString, QHash< int, QVariant > >& request, QSharedPointer< Media >& media);
     bool extractAndSaveArtistInfo(const QPair< QString, QHash< int, QVariant > >& request, QSharedPointer< Media >& media);

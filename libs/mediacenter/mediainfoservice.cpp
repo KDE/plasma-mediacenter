@@ -21,6 +21,9 @@
 #include "mediainforequest.h"
 #include "mediainforesult.h"
 #include "pmccoverartprovider.h"
+#include "pmcmedia.h"
+#include "singletonfactory.h"
+#include "medialibrary.h"
 
 #include <taglib/tag.h>
 #include <taglib/id3v2tag.h>
@@ -115,28 +118,25 @@ void MediaInfoService::fetchDataForRequest(quint64 requestNumber)
         return;
 
     MediaInfoResult result;
-    TagLib::FileRef f(QUrl(request->mediaPath()).toLocalFile().toUtf8().constData());
+    QSharedPointer<PmcMedia> media = SingletonFactory::instanceFor<MediaLibrary>()->mediaForUrl(request->mediaPath());
 
     while (request->hasFields()) {
         MediaInfoRequest::InformationField field = request->takeField();
-        if (f.isNull()) {
+        if (media.isNull()) {
             result.addData(field, QVariant());
         } else {
             switch (field) {
             case MediaInfoRequest::Title:
-                result.addData(field, f.tag() && !f.tag()->title().isEmpty() ?
-                    f.tag()->title().toCString() : QFileInfo(request->mediaPath()).fileName());
+                result.addData(field, media->title());
                 break;
             case MediaInfoRequest::Artist:
-                result.addData(field, f.tag() && !f.tag()->artist().isEmpty() ?
-                    f.tag()->artist().toCString() : i18n("Unknown artist"));
+                result.addData(field, media->artist());
                 break;
             case MediaInfoRequest::Length:
-                result.addData(field, f.audioProperties() ? f.audioProperties()->length() : 0);
+                result.addData(field, media->duration());
                 break;
             case MediaInfoRequest::Album:
-                result.addData(field, f.tag() && !f.tag()->album().isEmpty() ?
-                    f.tag()->album().toCString() : i18n("Unknown album"));
+                result.addData(field, media->album());
                 break;
             default:
                 qWarning() << "MediaInfoService does not know about " << field;
@@ -144,13 +144,14 @@ void MediaInfoService::fetchDataForRequest(quint64 requestNumber)
         }
     }
 
-    updateAlbumCoverWithCoverArtProvider(result, f);
+    updateAlbumCoverWithCoverArtProvider(result, request->mediaPath());
     emit info(requestNumber, result);
     delete request;
 }
 
-void MediaInfoService::updateAlbumCoverWithCoverArtProvider(const MediaInfoResult &result, TagLib::FileRef f) const
+void MediaInfoService::updateAlbumCoverWithCoverArtProvider(const MediaInfoResult &result, const QString &mediaPath) const
 {
+    TagLib::FileRef f(QUrl(mediaPath).toLocalFile().toUtf8().constData());
     if (!f.isNull() && result.availableFields().contains(MediaInfoRequest::Album)) {
 
         const QString albumName = result.data(MediaInfoRequest::Album).toString();
