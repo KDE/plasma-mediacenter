@@ -78,6 +78,7 @@ private:
     void emitNewMedia();
     bool extractAndSaveAlbumInfo(const QPair< QString, QHash< int, QVariant > >& request, QSharedPointer< Media >& media);
     bool extractAndSaveArtistInfo(const QPair< QString, QHash< int, QVariant > >& request, QSharedPointer< Media >& media);
+    bool extractAndSaveDurationInfo(const QPair< QString, QHash< int, QVariant > > request, QSharedPointer< Media >& media);
 
     template <class T> QSharedPointer<T> loadOrCreate (const QString &id);
 

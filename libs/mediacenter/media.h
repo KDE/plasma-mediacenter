@@ -38,16 +38,19 @@ public:
 
     const QString& sha() const;
 
-    const QString& title () const;
+    const QString& title() const;
     bool setTitle(const QString &title);
 
     const QString& url() const;
 
-    const QString& thumbnail () const;
+    const QString& thumbnail() const;
     bool setThumbnail(const QString &thumbnail);
 
     const QString& type() const;
     bool setType(const QString &type);
+
+    const int duration() const;
+    bool setDuration(int duration);
 
     bool setValueForRole(int role, const QVariant &value);
     static QString calculateSha(const QString& url);
@@ -63,6 +66,7 @@ public:
     QString m_url;
     QString m_thumbnail;
     QString m_type;
+    int m_duration;
     Album::Ptr m_album;
     Artist::Ptr m_artist;
 

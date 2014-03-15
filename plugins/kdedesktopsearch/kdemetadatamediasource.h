@@ -48,7 +48,6 @@ public:
     void setTerm(const Nepomuk2::Query::Term &term);
 
 signals:
-    void gotMetadata(int row, const QHash<int, QVariant> &values);
     void newResults(int count);
     void reset();
     void queryStarted();

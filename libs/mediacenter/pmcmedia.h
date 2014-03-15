@@ -40,6 +40,7 @@ public:
     const QString& type() const;
     QString album() const;
     QString artist() const;
+    int duration() const;
 
 signals:
     void updated();

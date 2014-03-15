@@ -148,6 +148,8 @@ void MediaLibrary::processNextRequest()
                 wasUpdated = wasUpdated || extractAndSaveAlbumInfo(request, media);
             } else if (role == MediaCenter::ArtistRole) {
                 wasUpdated = wasUpdated || extractAndSaveArtistInfo(request, media);
+            } else if (role == MediaCenter::DurationRole){
+                wasUpdated = wasUpdated || extractAndSaveDurationInfo(request, media);
             } else {
                 wasUpdated = wasUpdated || media->setValueForRole(role, request.second.value(role));
             }
@@ -165,6 +167,8 @@ void MediaLibrary::processNextRequest()
                     extractAndSaveAlbumInfo(request, media);
                 } else if(role == MediaCenter::ArtistRole) {
                     extractAndSaveArtistInfo(request, media);
+                } else if(role == MediaCenter::DurationRole) {
+                    extractAndSaveDurationInfo(request, media);
                 } else {
                     media->setValueForRole(role, request.second.value(role));
                 }
@@ -242,6 +246,15 @@ bool MediaLibrary::extractAndSaveAlbumInfo(
 
     media->setAlbum(album);
     return true;
+}
+
+bool MediaLibrary::extractAndSaveDurationInfo(
+    const QPair< QString, QHash< int, QVariant > > request,
+    QSharedPointer< Media >& media)
+{
+    const int duration = request.second.value(MediaCenter::DurationRole).toInt();
+
+    return duration < 0 ? false : media->setDuration(duration);
 }
 
 template <class T>

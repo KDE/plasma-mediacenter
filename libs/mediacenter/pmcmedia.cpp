@@ -73,3 +73,8 @@ QString PmcMedia::artist() const
 {
     return d->media->artist() ? d->media->artist()->name() : QString();
 }
+
+int PmcMedia::duration() const
+{
+    return d->media->duration();
+}

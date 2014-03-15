@@ -37,6 +37,7 @@ template <> void register_class(QxClass<Media> & m)
     m.data(& Media::m_url, "url");
     m.data(& Media::m_thumbnail, "thumbnail");
     m.data(& Media::m_type, "type");
+    m.data(& Media::m_duration, "duration");
 
     m.relationManyToOne(& Media::m_album, "album_id");
     m.relationManyToOne(& Media::m_artist, "artist_id");
@@ -177,4 +178,14 @@ const QSharedPointer< Artist >& Media::artist() const
 void Media::setArtist(const QSharedPointer< Artist >& artist)
 {
     updateIfChanged(m_artist, artist);
+}
+
+const int Media::duration() const
+{
+    return m_duration;
+}
+
+bool Media::setDuration(int duration)
+{
+    return updateIfChanged(m_duration, duration);
 }

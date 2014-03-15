@@ -50,7 +50,8 @@ KdeMetadataMediaSource::KdeMetadataMediaSource(QObject* parent, const QVariantLi
         << MediaCenter::MediaTypeRole
         << Qt::DecorationRole
         << MediaCenter::AlbumRole
-        << MediaCenter::ArtistRole;
+        << MediaCenter::ArtistRole
+        << MediaCenter::DurationRole;
 
     moveToThread(this);
 }
@@ -165,11 +166,17 @@ void KdeMetadataMediaSource::fetchValuesForResult(int i, const Nepomuk2::Query::
                 values.insert(role, artist.genericLabel());
             }
             break;
+        case MediaCenter::DurationRole:
+            if (values.value(MediaCenter::MediaTypeRole).toString() == "audio") {
+                const int duration = result.resource().property(
+                    Nepomuk2::Vocabulary::NFO::duration()).toInt();
+                values.insert(role, duration);
+            break;
+            }
         }
     }
 
     SingletonFactory::instanceFor<MediaLibrary>()->updateMedia(values);
-    emit gotMetadata(i, values);
 }
 
 QString KdeMetadataMediaSource::mimetypeForResource(const Nepomuk2::Resource& resource) const
