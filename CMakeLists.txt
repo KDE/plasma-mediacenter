@@ -19,16 +19,14 @@ include(KDECMakeSettings)
 include(ECMOptionalAddSubdirectory)
 include(ECMInstallIcons)
 
-find_package(Qt5 CONFIG REQUIRED COMPONENTS Core DBus Quick Widgets Concurrent Sql Test UiTools Declarative)
+find_package(Qt5 CONFIG REQUIRED COMPONENTS Core Quick Sql Test Declarative)
 
 add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
 
 # Load the frameworks we need
 find_package(KF5 CONFIG REQUIRED
-    IdleTime ItemModels WidgetsAddons WindowSystem Codecs Archive CoreAddons Solid ThreadWeaver
-    Config Auth JS JsEmbed Wallet DBusAddons Sonnet GlobalAccel
-    I18n GuiAddons Service ConfigWidgets ItemViews Notifications IconThemes FrameworkIntegration Completion JobWidgets TextWidgets XmlGui Crash
-    Bookmarks UnitConversion KIO KCMUtils Parts Kross NotifyConfig Su DocTools NewStuff KHtml Declarative Init Runner Activities Plasma)
+    CoreAddons Config I18n GuiAddons Service ConfigWidgets ItemViews IconThemes Crash
+    Bookmarks UnitConversion KIO KCMUtils Parts Kross NotifyConfig DocTools NewStuff KHtml Declarative Init Runner Activities Plasma)
 
 find_package(KF5PlasmaQuick REQUIRED NO_MODULE)
 
