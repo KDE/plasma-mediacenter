@@ -454,5 +454,7 @@ bool MediaLibrary::hasError(const QSqlError& sqlError)
 
 QSharedPointer< PmcMedia > MediaLibrary::mediaForUrl(const QString& url) const
 {
-    return QSharedPointer<PmcMedia>(new PmcMedia(mediaForSha(Media::calculateSha(url))));
+    QSharedPointer<Media> media = mediaForSha(Media::calculateSha(url));
+    return media.isNull() ? QSharedPointer<PmcMedia>()
+                            : QSharedPointer<PmcMedia>(new PmcMedia(media));
 }

@@ -30,6 +30,8 @@ PmcMedia::PmcMedia(const QSharedPointer< Media > &media, QObject* parent)
     : QObject(parent)
     , d(new Private())
 {
+    Q_ASSERT(!media.isNull());
+
     d->media = media;
     connect(d->media.data(), SIGNAL(updated()), SIGNAL(updated()));
 }
