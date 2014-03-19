@@ -29,13 +29,6 @@
 #include <libs/mediacenter/playlistmodel.h>
 #include <libs/mediacenter/filtermediamodel.h>
 
-#include <Nepomuk2/Vocabulary/NMM>
-#include <Nepomuk2/Vocabulary/NFO>
-#include <Nepomuk2/Query/AndTerm>
-#include <Nepomuk2/Query/ComparisonTerm>
-#include <Nepomuk2/Query/ResourceTypeTerm>
-#include <Nepomuk2/Query/ResourceTerm>
-
 #include <KDebug>
 
 #include <QDeclarativeEngine>
