@@ -25,8 +25,6 @@
 
 #include <libs/mediacenter/filtermediamodel.h>
 
-#include <Nepomuk2/Query/QueryParser>
-
 #include <QDebug>
 
 MEDIACENTER_EXPORT_BROWSINGBACKEND(MetadataVideoBackend)
