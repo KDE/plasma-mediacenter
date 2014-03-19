@@ -20,7 +20,8 @@
 #ifndef EXITBACKEND_H
 #define EXITBACKEND_H
 
-#include <libs/mediacenter/abstractbrowsingbackend.h>
+#include "mediacenter/abstractbrowsingbackend.h"
+#include <QAbstractItemModel>
 
 class ExitBackend : public MediaCenter::AbstractBrowsingBackend
 {

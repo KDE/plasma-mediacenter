@@ -17,8 +17,8 @@
 */
 
 #include "fullscreenbackend.h"
-#include <QtGui/QApplication>
-#include <QtGui/QMainWindow>
+#include <QApplication>
+#include <QMainWindow>
 #include <QtCore/QMetaObject>
 
 MEDIACENTER_EXPORT_BROWSINGBACKEND(FullscreenBackend)
