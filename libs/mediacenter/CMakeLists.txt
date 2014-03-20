@@ -3,7 +3,7 @@ find_package(QxOrm REQUIRED)
 
 include_directories(
     ${TAGLIB_INCLUDES}
-    ${QxOrm_INCLUDE_DIR}
+    ${QxOrm_INCLUDE_DIRS}
 )
 
 add_definitions(-D_QX_SERIALIZE_BINARY_ENABLED -D_QX_SERIALIZE_XML_ENABLED -D_BUILDING_PMC)
@@ -58,7 +58,7 @@ target_link_libraries(plasmamediacenter
     ${TAGLIB_LIBRARIES}
     ${NEPOMUK_CORE_LIBRARY}
     ${Boost_LIBRARIES}
-    ${QxOrm_LIBRARY}
+    ${QxOrm_LIBRARIES}
 )
 
 set_target_properties(plasmamediacenter PROPERTIES VERSION 1.2 SOVERSION 1.2)
