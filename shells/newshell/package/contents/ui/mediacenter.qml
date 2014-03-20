@@ -359,11 +359,7 @@ Image {
 
     function init() {
         pmcPageStack.pushAndFocus(getMediaWelcome());
-    }
-
-    //FIXME: Hack to play params passed from the command line
-    function play() {
-        getPlaylist().visible = false;
+        getPlaylist().visible=false;
     }
 
     function showController(itemToFocus)

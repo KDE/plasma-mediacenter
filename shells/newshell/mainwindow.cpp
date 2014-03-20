@@ -94,9 +94,7 @@ MainWindow::MainWindow(Application *parent)
     view->rootContext()->setContextProperty("backendsModel", backendsModel);
 
     playlistModel = new PlaylistModel(this);
-    if (playlistModel->processCommandLineArgs(args)) {
-        QTimer::singleShot(500, this, SLOT(playPlaylist()));
-    }
+    playlistModel->processCommandLineArgs(args);
     view->rootContext()->setContextProperty("playlistModel", playlistModel);
 
     view->rootContext()->setContextProperty("_pmc_mainwindow", this);
@@ -197,15 +195,8 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     return false;
 }
 
-void MainWindow::playPlaylist()
-{
-    view->rootObject()->metaObject()->invokeMethod(view->rootObject(), "play");
-}
-
 void MainWindow::addNewInstanceArgsPlaylist()
 {
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-    if (playlistModel->processCommandLineArgs(args)) {
-        QTimer::singleShot(500, this, SLOT(playPlaylist()));
-    }
+    playlistModel->processCommandLineArgs(args);
 }

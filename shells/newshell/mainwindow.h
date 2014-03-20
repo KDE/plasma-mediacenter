@@ -48,7 +48,6 @@ public Q_SLOTS:
     bool toggleFullScreen();
     void hideMousePointer();
     void showMousePointer();
-    void playPlaylist();
     void addNewInstanceArgsPlaylist();
 
 Q_SIGNALS:

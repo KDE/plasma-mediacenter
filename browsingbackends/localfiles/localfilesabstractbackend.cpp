@@ -149,7 +149,9 @@ void LocalFilesAbstractBackend::handleButtonClick(const QString& buttonName)
     if (buttonName == s_playAllButton) {
         PlaylistModel *model = qobject_cast<PlaylistModel*>(declarativeEngine()->rootContext()->contextProperty("playlistModel").value<QObject*>());
         if (model) {
+            const int n = model->rowCount();
             addAllSongsToPlaylist(model);
+            model->play(n);
         }
     }
 }
