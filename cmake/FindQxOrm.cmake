@@ -5,25 +5,21 @@
 #  QxOrm_INCLUDE_DIRS - the QxOrm include directories
 #  QxOrm_LIBRARIES - link these to use QxOrm
 
-include(LibFindMacros)
-
-# Use pkg-config to get hints about paths
-libfind_pkg_check_modules(QxOrm_PKGCONF QxOrm)
-
 # Include dir
-find_path(QxOrm_INCLUDE_DIR
+find_path(QxOrm_INCLUDE_DIRS
   NAMES QxOrm.h
-  PATHS ${QxOrm_PKGCONF_INCLUDE_DIRS}
 )
 
 # Finally the library itself
-find_library(QxOrm_LIBRARY
+find_library(QxOrm_LIBRARIES
   NAMES QxOrmd QxOrm
-  PATHS ${QxOrm_PKGCONF_LIBRARY_DIRS}
 )
 
-# Set the include dir variables and the libraries and let libfind_process do the rest.
-# NOTE: Singular variables for this library, plural for libraries this this lib depends on.
-set(QxOrm_PROCESS_INCLUDES QxOrm_INCLUDE_DIR QxOrm_INCLUDE_DIRS)
-set(QxOrm_PROCESS_LIBS QxOrm_LIBRARY QxOrm_LIBRARIES)
-libfind_process(QxOrm)
+include(FindPackageHandleStandardArgs)
+
+find_package_handle_standard_args(QxOrm DEFAULT_MSG
+                                                          QxOrm_LIBRARIES
+                                                          QxOrm_INCLUDE_DIRS
+)
+
+mark_as_advanced(QxOrm_INCLUDE_DIRS QxOrm_LIBRARIES)
