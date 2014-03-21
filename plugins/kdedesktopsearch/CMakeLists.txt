@@ -1,3 +1,5 @@
+find_package(NepomukCore REQUIRED)
+
 set(kdedesktopsearch_SRCS
     kdemetadatamediasource.cpp
 )

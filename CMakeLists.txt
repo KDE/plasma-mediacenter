@@ -6,8 +6,6 @@ find_package(KDE4 REQUIRED)
 include(KDE4Defaults)
 
 find_package(KDE4Workspace REQUIRED)
-find_package(NepomukCore REQUIRED)
-find_package(Soprano)
 
 add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS} ${KDE4_ENABLE_EXCEPTIONS})
 include_directories(
