@@ -1,13 +1,6 @@
 enable_testing()
 include(CTest)
 
-find_package(QxOrm REQUIRED)
-find_package(Boost REQUIRED COMPONENTS serialization)
-
-include_directories(
-   ${QxOrm_INCLUDE_DIRS}
-)
-
 add_definitions(-D_QX_SERIALIZE_BINARY_ENABLED -D_QX_SERIALIZE_XML_ENABLED -D_BUILDING_PMC)
 
 SET(QT_USE_QTMAIN TRUE)
