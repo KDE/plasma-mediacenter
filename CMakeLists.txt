@@ -51,7 +51,7 @@ add_subdirectory(browsingbackends)
 # add_subdirectory(components)
 add_subdirectory(libs)
 # add_subdirectory(shells)
-# add_subdirectory(images)
+add_subdirectory(images)
 #
 # include(MacroOptionalAddSubdirectory)
 # macro_optional_add_subdirectory( po )
