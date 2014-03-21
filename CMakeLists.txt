@@ -25,10 +25,7 @@ add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
 
 # Load the frameworks we need
 find_package(KF5 CONFIG REQUIRED
-    CoreAddons Config I18n GuiAddons Service ConfigWidgets ItemViews IconThemes Crash
-    Bookmarks UnitConversion KIO KCMUtils Parts Kross NotifyConfig DocTools NewStuff KHtml Declarative Init Runner Activities Plasma)
-
-find_package(KF5PlasmaQuick REQUIRED NO_MODULE)
+    CoreAddons Config I18n GuiAddons Service ConfigWidgets KIO Declarative Plasma)
 
 find_package(Taglib REQUIRED)
 find_package(QxOrm REQUIRED)
