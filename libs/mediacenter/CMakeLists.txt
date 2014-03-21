@@ -1,11 +1,3 @@
-find_package(Taglib REQUIRED)
-find_package(QxOrm REQUIRED)
-
-include_directories(
-    ${TAGLIB_INCLUDES}
-    ${QxOrm_INCLUDE_DIRS}
-)
-
 add_definitions(-D_QX_SERIALIZE_BINARY_ENABLED -D_QX_SERIALIZE_XML_ENABLED -D_BUILDING_PMC)
 #
 set (plasmamediacenter_SRCS

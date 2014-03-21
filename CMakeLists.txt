@@ -30,6 +30,16 @@ find_package(KF5 CONFIG REQUIRED
 
 find_package(KF5PlasmaQuick REQUIRED NO_MODULE)
 
+find_package(Taglib REQUIRED)
+find_package(QxOrm REQUIRED)
+
+find_package(Boost REQUIRED COMPONENTS serialization)
+
+include_directories(
+    ${TAGLIB_INCLUDES}
+    ${QxOrm_INCLUDE_DIRS}
+)
+
 # needed for backend export
 find_package(KF5KDE4Support REQUIRED NO_MODULE)
 find_package(Phonon4Qt5 REQUIRED)
