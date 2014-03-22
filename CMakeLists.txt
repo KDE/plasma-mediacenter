@@ -13,8 +13,6 @@ include_directories(
     ${CMAKE_BINARY_DIR}
     ${KDE4_INCLUDES}
     ${KDE4WORKSPACE_INCLUDE_DIR}
-    ${NEPOMUK_CORE_INCLUDE_DIR}
-    ${SOPRANO_INCLUDE_DIR}
     libs/
 )
 
