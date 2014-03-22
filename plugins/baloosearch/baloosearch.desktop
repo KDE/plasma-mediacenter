@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Service
+Icon=baloo
+Name=Baloo Search
+Comment=Get media from Baloo Search
+
+X-KDE-ServiceTypes=Plasma/MediaCenter/MediaSource
+
+X-KDE-PluginInfo-Author=Sinny Kumari
+X-KDE-PluginInfo-Email=ksinny@gmail.com
+X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
+X-KDE-Library=pmc_baloosearch
