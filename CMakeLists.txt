@@ -41,6 +41,12 @@ include_directories(
 find_package(KF5KDE4Support REQUIRED NO_MODULE)
 find_package(Phonon4Qt5 REQUIRED)
 
+include_directories(
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_BINARY_DIR}
+    libs/
+)
+
 # set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake )
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE_ENABLE_EXCEPTIONS}")
 set(CMAKE_AUTOMOC ON)
