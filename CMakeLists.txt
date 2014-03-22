@@ -12,7 +12,7 @@ include(WriteBasicConfigVersionFile)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(ECMMarkNonGuiExecutable)
 
-# include(KDEInstallDirs)
+include(KDEInstallDirs)
 include(KDECMakeSettings)
 # include(KDECompilerSettings)
 
