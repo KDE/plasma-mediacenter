@@ -2,6 +2,7 @@ find_package(NepomukCore REQUIRED)
 
 include_directories(
     ${NEPOMUK_CORE_INCLUDE_DIR}
+    ${SOPRANO_INCLUDE_DIR}
 )
 
 set(kdedesktopsearch_SRCS
