@@ -35,14 +35,11 @@ PmcMedia::PmcMedia(const QSharedPointer< Media > &media, QObject* parent)
 
 void PmcMedia::setMedia(const QSharedPointer< Media > &media)
 {
-    Q_ASSERT(d->media.isNull());
-
-    if (!media.isNull()) {
+    if (!media.isNull() && media != d->media) {
         d->media = media;
         connect(d->media.data(), SIGNAL(updated()), SIGNAL(updated()));
+        emit updated();
     }
-
-    emit updated();
 }
 
 QString PmcMedia::sha() const

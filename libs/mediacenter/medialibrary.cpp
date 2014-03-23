@@ -369,6 +369,7 @@ void MediaLibrary::addMedia(const QSharedPointer< Media >& m)
 
     d->mediaBySha.insert(m->sha(), m);
     QSharedPointer<PmcMedia> pmcMedia = mediaForUrl(m->url());
+    pmcMedia->setMedia(m);
 
     d->newMediaList.append(pmcMedia);
 

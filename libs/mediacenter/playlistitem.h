@@ -33,8 +33,6 @@ public:
     static const char *defaultArtist;
     static const int defaultLength;
     explicit PlaylistItem(const QString &url, QObject *parent);
-    explicit PlaylistItem(const QString &url, const QString &name,
-                          const QString &artist, int length, QObject* parent);
 
     QString mediaUrl() const;
     QString mediaName() const;
@@ -45,14 +43,7 @@ Q_SIGNALS:
     void updated();
 
 private:
-    QString m_mediaUrl;
-    QString m_mediaName;
-    QString m_mediaArtist;
-    int m_mediaLength;
-    quint64 m_serviceRequestNumber;
     QSharedPointer<PmcMedia> m_media;
-
-    void init(const QString& url);
 };
 
 #endif // PLAYLISTITEM_H

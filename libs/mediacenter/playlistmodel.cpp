@@ -260,7 +260,7 @@ void PlaylistModel::loadFromFile(const QString& path)
                 const QString artist = node.toElement().attribute("artist", PlaylistItem::defaultArtist);
                 const int length = node.toElement().attribute("length", QString::number(PlaylistItem::defaultLength)).toInt();
 
-                PlaylistItem *item = new PlaylistItem(url, name, artist, length, this);
+                PlaylistItem *item = new PlaylistItem(url, this);
                 connect(item, SIGNAL(updated()), SLOT(playlistItemUpdated()));
                 d->musicList.append(item);
             }

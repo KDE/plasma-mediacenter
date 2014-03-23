@@ -24,49 +24,31 @@
 const char *PlaylistItem::defaultArtist = "--";
 const int PlaylistItem::defaultLength = -1;
 
-void PlaylistItem::init(const QString& url)
-{
-    m_media = SingletonFactory::instanceFor<MediaLibrary>()->mediaForUrl(url);
-    m_mediaUrl = url;
-}
-
 PlaylistItem::PlaylistItem(const QString& url, QObject* parent)
     : QObject(parent)
-    , m_mediaLength(defaultLength)
 {
-    init(url);
-}
-
-PlaylistItem::PlaylistItem(const QString& url, const QString& name,
-                           const QString& artist, int length, QObject* parent)
-    : QObject(parent)
-{
-    init(url);
-
-    m_mediaName = name;
-    m_mediaArtist = artist;
-    m_mediaLength = length;
-
+    m_media = SingletonFactory::instanceFor<MediaLibrary>()->mediaForUrl(url);
+    connect(m_media.data(), SIGNAL(updated()), SIGNAL(updated()));
 }
 
 QString PlaylistItem::mediaUrl() const
 {
-    return m_mediaUrl;
+    return m_media->url();
 }
 
 QString PlaylistItem::mediaName() const
 {
-    return !m_media.isNull() ? m_media->title() : m_mediaName;
+    return m_media->title();
 }
 
 QString PlaylistItem::mediaArtist() const
 {
-    return !m_media.isNull() ? m_media->artist() : m_mediaArtist;
+    return m_media->artist();
 }
 
 int PlaylistItem::mediaLength() const
 {
-    return !m_media.isNull() ? m_media->duration() : m_mediaLength;
+    return m_media->duration();
 }
 
 #include "playlistitem.moc"
