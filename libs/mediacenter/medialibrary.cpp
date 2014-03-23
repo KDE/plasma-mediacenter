@@ -120,8 +120,6 @@ void MediaLibrary::processRemainingRequests()
 {
     Q_ASSERT(thread() == this);
 
-    bool hasProcessedAnyRequest = false;
-
     if (!areThereUpdateRequests()) {
         return;
     }

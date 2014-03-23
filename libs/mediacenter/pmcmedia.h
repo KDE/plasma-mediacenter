@@ -24,7 +24,7 @@
 
 #include "mediacenter_export.h"
 
-class Media;
+#include "media.h"
 
 class MEDIACENTER_EXPORT PmcMedia : public QObject
 {

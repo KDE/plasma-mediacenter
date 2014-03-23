@@ -49,7 +49,7 @@ public:
     const QString& type() const;
     bool setType(const QString &type);
 
-    const int duration() const;
+    int duration() const;
     bool setDuration(int duration);
 
     bool setValueForRole(int role, const QVariant &value);

@@ -72,7 +72,7 @@ private:
 
     QString mimetypeForResource(const Nepomuk2::Resource& resource) const;
     QString urlForResource(const Nepomuk2::Resource &resource) const;
-    void fetchValuesForResult(int i, const Nepomuk2::Query::Result& result);
+    void fetchValuesForResult(const Nepomuk2::Query::Result& result);
 };
 
 #endif // KDEMETADATAMEDIASOURCE_H

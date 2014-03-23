@@ -30,10 +30,9 @@ public:
     MediaLibrary* mediaLibrary;
 };
 
-AbstractMediaSource::AbstractMediaSource(QObject* parent, const QVariantList& args)
+AbstractMediaSource::AbstractMediaSource(QObject* parent, const QVariantList&)
     : QThread(parent), d(new Private)
 {
-
 }
 
 AbstractMediaSource::~AbstractMediaSource()

@@ -67,7 +67,7 @@ Media::Media(QObject* parent): QObject(parent), d(new Private())
 
 Media::~Media()
 {
-
+    delete d;
 }
 
 template <class T>
@@ -180,7 +180,7 @@ void Media::setArtist(const QSharedPointer< Artist >& artist)
     updateIfChanged(m_artist, artist);
 }
 
-const int Media::duration() const
+int Media::duration() const
 {
     return m_duration;
 }

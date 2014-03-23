@@ -18,11 +18,11 @@
 
 #include "medialibrarywrappercache.h"
 
-#include "medialibrary.h"
-
 #include "pmcmedia.h"
 #include "pmcalbum.h"
 #include "pmcartist.h"
+
+#include "medialibrary.h"
 
 class MediaLibraryWrapperCache::Private
 {

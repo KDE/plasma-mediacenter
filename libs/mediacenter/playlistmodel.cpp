@@ -97,6 +97,7 @@ QVariant PlaylistModel::data(const QModelIndex& index, int role) const
 
 int PlaylistModel::rowCount(const QModelIndex& parent) const
 {
+    Q_UNUSED(parent);
     return d->musicList.size();
 }
 
