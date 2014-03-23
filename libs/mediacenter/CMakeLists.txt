@@ -16,14 +16,10 @@ set (plasmamediacenter_SRCS
     lastfmimagefetcher.cpp
     modelmetadata.cpp
     objectpair.cpp
-    mediainfoserviceproxy.cpp
-    mediainforesult.cpp
-    mediainforequest.cpp
     filteredbackendsmodel.cpp
     mediacenter.cpp
     abstractbrowsingbackend.cpp
     backendsmodel.cpp
-    mediainfoservice.cpp
     playlistitem.cpp
     playlistmodel.cpp
     pmccoverartprovider.cpp

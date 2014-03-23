@@ -17,18 +17,9 @@
  ***********************************************************************************/
 
 #include "playlistitem.h"
-#include "mediainforequest.h"
-#include "mediainfoservice.h"
-#include "mediainfoserviceproxy.h"
 #include "singletonfactory.h"
 #include "medialibrary.h"
 #include "pmcmedia.h"
-
-#include <QtCore/QTimer>
-#include <QtCore/QFileInfo>
-#include <QtCore/QUrl>
-
-#include <QDebug>
 
 const char *PlaylistItem::defaultArtist = "--";
 const int PlaylistItem::defaultLength = -1;
