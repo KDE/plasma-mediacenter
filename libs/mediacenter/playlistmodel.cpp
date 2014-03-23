@@ -256,10 +256,6 @@ void PlaylistModel::loadFromFile(const QString& path)
                 const QString url = node.toElement().attribute("url");
                 if (url.isEmpty()) continue;
 
-                const QString name = node.toElement().attribute("name", url);
-                const QString artist = node.toElement().attribute("artist", PlaylistItem::defaultArtist);
-                const int length = node.toElement().attribute("length", QString::number(PlaylistItem::defaultLength)).toInt();
-
                 PlaylistItem *item = new PlaylistItem(url, this);
                 connect(item, SIGNAL(updated()), SLOT(playlistItemUpdated()));
                 d->musicList.append(item);
@@ -278,9 +274,6 @@ void PlaylistModel::saveToFile(const QString& path) const
         Q_FOREACH (const PlaylistItem *item, d->musicList) {
             QDomElement element = doc.createElement("item");
             element.setAttribute("url", item->mediaUrl());
-            element.setAttribute("name", item->mediaName());
-            element.setAttribute("artist", item->mediaArtist());
-            element.setAttribute("length", item->mediaLength());
             playlist.appendChild(element);
         }
 
