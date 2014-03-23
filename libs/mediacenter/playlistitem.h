@@ -21,8 +21,11 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QTimer>
+#include <QSharedPointer>
 
+class PmcMedia;
 class MediaInfoResult;
+
 class PlaylistItem : public QObject
 {
     Q_OBJECT
@@ -41,17 +44,13 @@ public:
 Q_SIGNALS:
     void updated();
 
-private Q_SLOTS:
-    void update();
-    void processMediaInfo(quint64 requestNumber, const MediaInfoResult &info);
-
 private:
-    mutable QTimer m_updateTimer;
     QString m_mediaUrl;
     QString m_mediaName;
     QString m_mediaArtist;
     int m_mediaLength;
     quint64 m_serviceRequestNumber;
+    QSharedPointer<PmcMedia> m_media;
 
     void init(const QString& url);
 };
