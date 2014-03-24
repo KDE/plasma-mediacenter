@@ -1,7 +1,5 @@
 project (plasma-mediacenter)
-find_package(KDE4 REQUIRED)
-include (KDE4Defaults)
-include (FindPkgConfig)
+
 include_directories(${KDE4_INCLUDES})
 
 set(QT_USE_QTOPENGL TRUE)
