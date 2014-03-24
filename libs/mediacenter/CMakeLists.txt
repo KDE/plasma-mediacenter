@@ -6,7 +6,11 @@ include_directories(
     ${QxOrm_INCLUDE_DIRS}
 )
 
-add_definitions(-D_QX_SERIALIZE_BINARY_ENABLED -D_QX_SERIALIZE_XML_ENABLED -D_BUILDING_PMC)
+add_definitions(
+    -D_QX_SERIALIZE_BINARY_ENABLED
+    -D_QX_SERIALIZE_XML_ENABLED
+    -D_BUILDING_PMC
+)
 
 set (plasmamediacenter_SRCS
     medialibrarywrappercache.cpp
@@ -62,11 +66,15 @@ set_target_properties(plasmamediacenter PROPERTIES VERSION 1.2 SOVERSION 1.2)
 install(TARGETS plasmamediacenter ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 set (plasmamediacenter_HDRS
+    abstractbrowsingbackend.h
+    abstractmediasource.h
     modelmetadata.h
     mediacenter.h
-    abstractbrowsingbackend.h
-    backendsmodel.h
-    playlistmodel.h
+    medialibrary.h
+    pmcmedia.h
+    pmcalbum.h
+    pmcartist.h
+    singletonfactory.h
 )
 
 install(FILES ${plasmamediacenter_HDRS} DESTINATION ${INCLUDE_INSTALL_DIR}/mediacenter COMPONENT Devel)
