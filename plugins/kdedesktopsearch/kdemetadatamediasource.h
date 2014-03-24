@@ -20,7 +20,7 @@
 #ifndef KDEMETADATAMEDIASOURCE_H
 #define KDEMETADATAMEDIASOURCE_H
 
-#include <libs/mediacenter/abstractmediasource.h>
+#include <mediacenter/abstractmediasource.h>
 
 #include <Nepomuk2/Query/Result>
 #include <Nepomuk2/Query/QueryServiceClient>

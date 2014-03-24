@@ -21,7 +21,7 @@
 #ifndef FULLSCREENBACKEND_H
 #define FULLSCREENBACKEND_H
 
-#include <libs/mediacenter/abstractbrowsingbackend.h>
+#include <mediacenter/abstractbrowsingbackend.h>
 
 class FullscreenBackend : public MediaCenter::AbstractBrowsingBackend
 {

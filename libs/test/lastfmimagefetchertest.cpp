@@ -18,7 +18,7 @@
  ***********************************************************************************/
 
 #include "lastfmimagefetchertest.h"
-#include <libs/mediacenter/lastfmimagefetcher.h>
+#include <mediacenter/lastfmimagefetcher.h>
 #include <mediacenter/pmcimagecache.h>
 #include <mediacenter/singletonfactory.h>
 

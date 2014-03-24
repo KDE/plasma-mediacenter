@@ -8,9 +8,8 @@ include(KDE4Defaults)
 find_package(KDE4Workspace REQUIRED)
 
 add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS} ${KDE4_ENABLE_EXCEPTIONS})
+
 include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_BINARY_DIR}
     ${KDE4_INCLUDES}
     ${KDE4WORKSPACE_INCLUDE_DIR}
     libs/

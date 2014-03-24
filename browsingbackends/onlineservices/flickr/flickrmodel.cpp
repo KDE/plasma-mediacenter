@@ -20,7 +20,7 @@
 
 #include "flickrmodel.h"
 
-#include <libs/mediacenter/mediacenter.h>
+#include <mediacenter/mediacenter.h>
 
 #include <KDE/KUrl>
 #include <KDE/KIO/Job>

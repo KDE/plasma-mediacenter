@@ -20,14 +20,12 @@
 #define ABSTRACTBROWSINGBACKEND_H
 
 #include <QObject>
-#include <QVariantList>
-#include <QFlags>
 
 #include <KDE/KConfigGroup>
 #include <KDE/KService>
 
 #include "mediacenter_export.h"
-#include "mediacenter/mediacenter.h"
+#include "mediacenter.h"
 
 class QDeclarativeEngine;
 class QAbstractItemModel;

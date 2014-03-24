@@ -19,8 +19,8 @@
 
 #include "kdemetadatamediasource.h"
 
-#include <libs/mediacenter/mediacenter.h>
-#include <libs/mediacenter/medialibrary.h>
+#include <mediacenter/mediacenter.h>
+#include <mediacenter/medialibrary.h>
 #include <mediacenter/singletonfactory.h>
 
 #include <Nepomuk2/Resource>
