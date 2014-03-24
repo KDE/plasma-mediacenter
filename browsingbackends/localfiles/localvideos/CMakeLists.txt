@@ -9,14 +9,14 @@ set(localvideosbackend_SRCS
 
 
 kde4_add_plugin(pmc_localvideos ${localvideosbackend_SRCS})
-target_link_libraries(pmc_localvideos 
-plasmamediacenter
-${KDE4_KDECORE_LIBS}
-${KDE4_KIO_LIBS}
-${KDE4_KFILE_LIBS}
-${QT_QTDECLARATIVE_LIBRARIES}
-${KDE4_SOLID_LIBS}
-${QT_QTDECLARATIVE_LIBRARIES}
+
+target_link_libraries(pmc_localvideos
+    plasmamediacenter
+    ${KDE4_KDECORE_LIBS}
+    ${KDE4_KIO_LIBS}
+    ${KDE4_KFILE_LIBS}
+    ${QT_QTDECLARATIVE_LIBRARIES}
+    ${KDE4_SOLID_LIBS}
 )
 
 install(TARGETS pmc_localvideos DESTINATION ${PLUGIN_INSTALL_DIR})

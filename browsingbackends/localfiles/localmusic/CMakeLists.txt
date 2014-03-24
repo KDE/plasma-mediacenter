@@ -11,7 +11,7 @@ set(localmusicbackend_SRCS
 
 kde4_add_plugin(pmc_localmusic ${localmusicbackend_SRCS})
 
-target_link_libraries(pmc_localmusic 
+target_link_libraries(pmc_localmusic
     plasmamediacenter
     ${KDE4_KDECORE_LIBS}
     ${KDE4_KIO_LIBS}

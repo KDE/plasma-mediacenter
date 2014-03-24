@@ -17,7 +17,6 @@ target_link_libraries(pmc_metadatamusicbackend
     ${KDE4_KIO_LIBS}
     ${KDE4_KFILE_LIBS}
     ${QT_QTDECLARATIVE_LIBRARIES}
-    ${NEPOMUK_CORE_LIBRARY}
 )
 
 install(TARGETS pmc_metadatamusicbackend DESTINATION ${PLUGIN_INSTALL_DIR})
