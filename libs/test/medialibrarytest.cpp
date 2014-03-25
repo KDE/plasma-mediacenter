@@ -18,6 +18,7 @@
 
 #include "medialibrarytest.h"
 #include "fakemediavalidator.h"
+#include "testhelpers.h"
 
 #include <mediacenter/medialibrary.h>
 #include <mediacenter/mediacenter.h>
@@ -31,10 +32,6 @@
 static const char* DB_FILENAME = "plasma-mediacenter.sqlite";
 
 QTEST_KDEMAIN(MediaLibraryTest, NoGUI);
-
-namespace {
-    static const int TIMEOUT_FOR_SIGNALS = 3000;
-}
 
 void MediaLibraryTest::initTestCase()
 {
@@ -53,18 +50,6 @@ void MediaLibraryTest::init()
 void MediaLibraryTest::cleanup()
 {
     QDir::current().remove(DB_FILENAME);
-}
-
-//from https://bugreports.qt-project.org/browse/QTBUG-2986
-bool MediaLibraryTest::waitForSignal(QSignalSpy* spy, int timeoutms)
-{
-    QTime timer;
-    timer.start();
-    while (spy->isEmpty() && timer.elapsed() < timeoutms)
-    {
-        QCoreApplication::processEvents();
-    }
-    return !spy->isEmpty();
 }
 
 QHash<int,QVariant> MediaLibraryTest::createTestMediaData() const
@@ -95,7 +80,7 @@ void MediaLibraryTest::createsDbWhenNotPresent()
     QVERIFY2(initializedSpy.isValid(), "Could not listen to signal initialized");
 
     mediaLibrary.start();
-    waitForSignal(&initializedSpy, TIMEOUT_FOR_SIGNALS);
+    waitForSignal(&initializedSpy);
 
     QVERIFY2(initializedSpy.size() == 1, "MediaLibrary did not emit initialized exactly 1 time");
     QVERIFY2(QDir::current().exists(DB_FILENAME), "The DB was not created");
@@ -118,9 +103,9 @@ void MediaLibraryTest::addsNewMediaAndItsAlbumArtist()
 
     mediaLibrary.updateMedia(data);
 
-    waitForSignal(&newMediaSpy, TIMEOUT_FOR_SIGNALS);
-    waitForSignal(&newAlbumSpy, TIMEOUT_FOR_SIGNALS);
-    waitForSignal(&newArtistSpy, TIMEOUT_FOR_SIGNALS);
+    waitForSignal(&newMediaSpy);
+    waitForSignal(&newAlbumSpy);
+    waitForSignal(&newArtistSpy);
 
     QCOMPARE(newMediaSpy.size(), 1);
     QList<QSharedPointer<PmcMedia> > returnedMedia = newMediaSpy.takeFirst().first().value< QList<QSharedPointer<PmcMedia> > >();
@@ -165,7 +150,7 @@ void MediaLibraryTest::shouldEmitUpdatedForMediaInsteadOfNewMediaWhenDataUpdated
 
     mediaLibrary.updateMedia(data);
 
-    waitForSignal(&newMediaSpy, TIMEOUT_FOR_SIGNALS);
+    waitForSignal(&newMediaSpy);
     QCOMPARE(newMediaSpy.size(), 1);
     QList<QSharedPointer<PmcMedia> > returnedMedia = newMediaSpy.takeFirst().first().value< QList<QSharedPointer<PmcMedia> > >();
     QCOMPARE(returnedMedia.size(), 1);
@@ -177,7 +162,7 @@ void MediaLibraryTest::shouldEmitUpdatedForMediaInsteadOfNewMediaWhenDataUpdated
     mediaLibrary.updateMedia(data);
 
     //Should not emit newMedia
-    waitForSignal(&newMediaSpy, TIMEOUT_FOR_SIGNALS);
+    waitForSignal(&newMediaSpy);
     QCOMPARE(newMediaSpy.size(), 0);
 
     //Should emit updated for the PmcMedia
@@ -197,7 +182,7 @@ void MediaLibraryTest::shouldNotEmitUpdatedWhenNothingUpdated()
 
     mediaLibrary.updateMedia(data);
 
-    waitForSignal(&newMediaSpy, TIMEOUT_FOR_SIGNALS);
+    waitForSignal(&newMediaSpy);
     QCOMPARE(newMediaSpy.size(), 1);
     QList<QSharedPointer<PmcMedia> > returnedMedia = newMediaSpy.takeFirst().first().value< QList<QSharedPointer<PmcMedia> > >();
     QCOMPARE(returnedMedia.size(), 1);
@@ -208,7 +193,7 @@ void MediaLibraryTest::shouldNotEmitUpdatedWhenNothingUpdated()
     mediaLibrary.updateMedia(data);
 
     //Should not emit newMedia
-    waitForSignal(&newMediaSpy, TIMEOUT_FOR_SIGNALS);
+    waitForSignal(&newMediaSpy);
     QCOMPARE(newMediaSpy.size(), 0);
 
     //Should not emit updated for the PmcMedia
@@ -228,7 +213,7 @@ void MediaLibraryTest::shouldEmitUpdatedWhenAlbumOrArtistChanged()
 
     mediaLibrary.updateMedia(data);
 
-    waitForSignal(&newMediaSpy, TIMEOUT_FOR_SIGNALS);
+    waitForSignal(&newMediaSpy);
     QCOMPARE(newMediaSpy.size(), 1);
     QList<QSharedPointer<PmcMedia> > returnedMedia = newMediaSpy.takeFirst().first().value< QList<QSharedPointer<PmcMedia> > >();
     QCOMPARE(returnedMedia.size(), 1);
@@ -240,7 +225,7 @@ void MediaLibraryTest::shouldEmitUpdatedWhenAlbumOrArtistChanged()
     mediaLibrary.updateMedia(data);
 
     //Should not emit newMedia
-    waitForSignal(&newMediaSpy, TIMEOUT_FOR_SIGNALS);
+    waitForSignal(&newMediaSpy);
     QCOMPARE(newMediaSpy.size(), 0);
 
     //Should emit updated for the PmcMedia
@@ -251,7 +236,7 @@ void MediaLibraryTest::shouldEmitUpdatedWhenAlbumOrArtistChanged()
     mediaLibrary.updateMedia(data);
 
     //Should not emit newMedia
-    waitForSignal(&newMediaSpy, TIMEOUT_FOR_SIGNALS);
+    waitForSignal(&newMediaSpy);
     QCOMPARE(newMediaSpy.size(), 0);
 
     //Should emit updated for the PmcMedia
@@ -270,7 +255,7 @@ void MediaLibraryTest::shouldNotAddMediaForNonExistentFile()
 
     mediaLibrary.updateMedia(data);
 
-    waitForSignal(&newMediaSpy, TIMEOUT_FOR_SIGNALS*2);
+    waitForSignal(&newMediaSpy, 6000);
 
     QCOMPARE(newMediaSpy.size(), 0);
 }
@@ -288,7 +273,7 @@ void MediaLibraryTest::shouldCleanupEntriesForNonExistentMedia()
 
     mediaLibrary->updateMedia(data);
 
-    waitForSignal(&newMediaSpy, TIMEOUT_FOR_SIGNALS);
+    waitForSignal(&newMediaSpy);
 
     QCOMPARE(newMediaSpy.size(), 1);
     QList<QSharedPointer<PmcMedia> > returnedMedia = newMediaSpy.takeFirst().first().value< QList<QSharedPointer<PmcMedia> > >();
@@ -303,7 +288,7 @@ void MediaLibraryTest::shouldCleanupEntriesForNonExistentMedia()
 
     mediaLibrary->start();
 
-    waitForSignal(&anotherNewMediaSpy, TIMEOUT_FOR_SIGNALS*2);
+    waitForSignal(&anotherNewMediaSpy);
     QCOMPARE(anotherNewMediaSpy.size(), 0);
 
     delete mediaLibrary;

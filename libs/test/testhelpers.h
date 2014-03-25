@@ -16,51 +16,22 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef MEDIALIBRARYTEST_H
-#define MEDIALIBRARYTEST_H
+#include <QCoreApplication>
+#include <QSignalSpy>
+#include <QTime>
 
-#include <QObject>
-#include <QMetaType>
-#include <QSharedPointer>
-#include <mediacenter/mediavalidator.h>
+namespace {
+    static const int TIMEOUT_FOR_SIGNALS = 3000;
+}
 
-class PmcArtist;
-class PmcAlbum;
-class PmcMedia;
-class QSignalSpy;
-class MediaLibrary;
-
-class MediaLibraryTest : public QObject
+//from https://bugreports.qt-project.org/browse/QTBUG-2986
+bool waitForSignal(QSignalSpy* spy, int timeoutms = TIMEOUT_FOR_SIGNALS)
 {
-    Q_OBJECT
-private slots:
-    void initTestCase();
-    void cleanupTestCase();
-
-    void init();
-    void cleanup();
-
-    void createsDbWhenNotPresent();
-
-    void addsNewMediaAndItsAlbumArtist();
-
-    void shouldEmitUpdatedForMediaInsteadOfNewMediaWhenDataUpdated();
-
-    void shouldNotEmitUpdatedWhenNothingUpdated();
-
-    void shouldEmitUpdatedWhenAlbumOrArtistChanged();
-
-    void shouldNotAddMediaForNonExistentFile();
-
-    void shouldCleanupEntriesForNonExistentMedia();
-
-private:
-    QHash< int, QVariant > createTestMediaData() const;
-    QHash< int, QVariant > createTestMediaDataWithAlbumArtist() const;
-};
-
-Q_DECLARE_METATYPE(QList<QSharedPointer<PmcMedia> >)
-Q_DECLARE_METATYPE(QList<QSharedPointer<PmcAlbum> >)
-Q_DECLARE_METATYPE(QList<QSharedPointer<PmcArtist> >)
-
-#endif // MEDIALIBRARYTEST_H
+    QTime timer;
+    timer.start();
+    while (spy->isEmpty() && timer.elapsed() < timeoutms)
+    {
+        QCoreApplication::processEvents();
+    }
+    return !spy->isEmpty();
+}
