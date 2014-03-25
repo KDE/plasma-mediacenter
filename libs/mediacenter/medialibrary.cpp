@@ -459,9 +459,11 @@ QSharedPointer< PmcMedia > MediaLibrary::mediaForUrl(const QString& url) const
         return d->pmcMediaByUrl.value(url);
     }
 
-    QSharedPointer<Media> media = mediaForSha(Media::calculateSha(url));
-    QSharedPointer<PmcMedia> pmcMedia(new PmcMedia(media));
+    QSharedPointer<PmcMedia> pmcMedia(new PmcMedia(url));
     d->pmcMediaByUrl.insert(url, pmcMedia);
+
+    QSharedPointer<Media> media = mediaForSha(Media::calculateSha(url));
+    pmcMedia->setMedia(media);
 
     return pmcMedia;
 }

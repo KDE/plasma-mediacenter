@@ -30,7 +30,7 @@ class MEDIACENTER_EXPORT PmcMedia : public QObject
 {
     Q_OBJECT
 public:
-    explicit PmcMedia(const QSharedPointer< Media >& media = QSharedPointer<Media>(), QObject* parent = 0);
+    explicit PmcMedia(const QString &url, QObject* parent = 0);
 
     void setMedia(const QSharedPointer< Media >& media);
 
@@ -49,6 +49,8 @@ signals:
 private:
     class Private;
     Private * const d;
+
+    QString fileName() const;
 };
 
 #endif // PMCMEDIA_H
