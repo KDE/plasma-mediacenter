@@ -24,20 +24,21 @@
 
 #include "mediacenter_export.h"
 
-class Media;
+#include "media.h"
 
 class MEDIACENTER_EXPORT PmcMedia : public QObject
 {
     Q_OBJECT
 public:
-    explicit PmcMedia(const QSharedPointer< Media >& media, QObject* parent = 0);
-    ~PmcMedia();
+    explicit PmcMedia(const QSharedPointer< Media >& media = QSharedPointer<Media>(), QObject* parent = 0);
 
-    const QString& sha() const;
-    const QString& title () const;
-    const QString& url() const;
-    const QString& thumbnail () const;
-    const QString& type() const;
+    void setMedia(const QSharedPointer< Media >& media);
+
+    QString sha() const;
+    QString title () const;
+    QString url() const;
+    QString thumbnail () const;
+    QString type() const;
     QString album() const;
     QString artist() const;
     int duration() const;

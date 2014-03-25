@@ -21,7 +21,7 @@
 #ifndef METADATAMUSICBACKEND_H
 #define METADATAMUSICBACKEND_H
 
-#include <libs/mediacenter/abstractbrowsingbackend.h>
+#include <mediacenter/abstractbrowsingbackend.h>
 
 #include "../abstractmetadatabackend.h"
 #include "categoriesmodel.h"

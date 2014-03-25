@@ -20,8 +20,8 @@
 
 #include "abstractmetadatabackend.h"
 
-#include <libs/mediacenter/modelmetadata.h>
-#include <libs/mediacenter/pmcmetadatamodel.h>
+#include <mediacenter/modelmetadata.h>
+#include <mediacenter/pmcmetadatamodel.h>
 
 AbstractMetadataBackend::AbstractMetadataBackend(QObject* parent, const QVariantList& args)
     : AbstractBrowsingBackend(parent, args)

@@ -22,7 +22,7 @@
 #include "localfilesabstractbackend.h"
 #include "localfilesabstractmodel.h"
 #include "localplacesmodel.h"
-#include <libs/mediacenter/playlistmodel.h>
+#include <mediacenter/playlistmodel.h>
 
 #include <KDE/KFilePlacesModel>
 #include <KDE/KUrl>

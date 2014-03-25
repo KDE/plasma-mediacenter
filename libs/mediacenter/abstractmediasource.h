@@ -32,7 +32,7 @@ class MEDIACENTER_EXPORT AbstractMediaSource : public QThread
 {
     Q_OBJECT
 public:
-    explicit AbstractMediaSource(QObject* parent = 0, const QVariantList &args = QVariantList());
+    explicit AbstractMediaSource(QObject* parent = 0, const QVariantList& = QVariantList());
     ~AbstractMediaSource();
 
     void setMediaLibrary(MediaLibrary *mediaLibrary);

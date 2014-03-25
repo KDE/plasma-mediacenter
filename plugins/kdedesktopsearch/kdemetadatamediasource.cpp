@@ -19,8 +19,8 @@
 
 #include "kdemetadatamediasource.h"
 
-#include <libs/mediacenter/mediacenter.h>
-#include <libs/mediacenter/medialibrary.h>
+#include <mediacenter/mediacenter.h>
+#include <mediacenter/medialibrary.h>
 #include <mediacenter/singletonfactory.h>
 
 #include <Nepomuk2/Resource>
@@ -114,14 +114,13 @@ void KdeMetadataMediaSource::runQuery()
 
 void KdeMetadataMediaSource::newEntries(const QList< Nepomuk2::Query::Result >& results)
 {
-    int i = 0;
     foreach (const Nepomuk2::Query::Result& r, results) {
-        fetchValuesForResult(i++, r);
+        fetchValuesForResult(r);
     }
     emit newResults(results.size());
 }
 
-void KdeMetadataMediaSource::fetchValuesForResult(int i, const Nepomuk2::Query::Result& result)
+void KdeMetadataMediaSource::fetchValuesForResult(const Nepomuk2::Query::Result& result)
 {
     QHash<int, QVariant> values;
     foreach(int role, m_rolesRequested) {

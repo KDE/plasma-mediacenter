@@ -30,53 +30,54 @@ PmcMedia::PmcMedia(const QSharedPointer< Media > &media, QObject* parent)
     : QObject(parent)
     , d(new Private())
 {
-    Q_ASSERT(!media.isNull());
-
-    d->media = media;
-    connect(d->media.data(), SIGNAL(updated()), SIGNAL(updated()));
+    setMedia(media);
 }
 
-PmcMedia::~PmcMedia()
+void PmcMedia::setMedia(const QSharedPointer< Media > &media)
 {
-
+    if (!media.isNull() && media != d->media) {
+        d->media = media;
+        connect(d->media.data(), SIGNAL(updated()), SIGNAL(updated()));
+        emit updated();
+    }
 }
 
-const QString& PmcMedia::sha() const
+QString PmcMedia::sha() const
 {
-    return d->media->sha();
+    return !d->media.isNull() ? d->media->sha() : QString();
 }
 
-const QString& PmcMedia::thumbnail() const
+QString PmcMedia::thumbnail() const
 {
-    return d->media->thumbnail();
+    return !d->media.isNull() ? d->media->thumbnail() : QString();
 }
 
-const QString& PmcMedia::title() const
+QString PmcMedia::title() const
 {
-    return d->media->title();
+    return !d->media.isNull() ? d->media->title() : QString();
 }
 
-const QString& PmcMedia::type() const
+QString PmcMedia::type() const
 {
-    return d->media->type();
+    return !d->media.isNull() ? d->media->type() : QString();
 }
 
-const QString& PmcMedia::url() const
+QString PmcMedia::url() const
 {
-    return d->media->url();
+    return !d->media.isNull() ? d->media->url() : QString();
 }
 
 QString PmcMedia::album() const
 {
-    return d->media->album() ? d->media->album()->name() : QString();
+    return !d->media.isNull() && d->media->album() ? d->media->album()->name() : QString();
 }
 
 QString PmcMedia::artist() const
 {
-    return d->media->artist() ? d->media->artist()->name() : QString();
+    return !d->media.isNull() && d->media->artist() ? d->media->artist()->name() : QString();
 }
 
 int PmcMedia::duration() const
 {
-    return d->media->duration();
+    return !d->media.isNull() ? d->media->duration() : -1;
 }

@@ -21,7 +21,7 @@
 #ifndef METADATAPICTUREBACKEND_H
 #define METADATAPICTUREBACKEND_H
 
-#include <libs/mediacenter/abstractbrowsingbackend.h>
+#include <mediacenter/abstractbrowsingbackend.h>
 
 #include "../abstractmetadatabackend.h"
 

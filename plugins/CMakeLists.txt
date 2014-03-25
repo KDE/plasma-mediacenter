@@ -1,2 +1,11 @@
+find_package(NepomukCore)
+if(NepomukCore_FOUND)
+    message(STATUS "********** Found Nepomuk, building Nepomuk Search plugin")
+    add_subdirectory(kdedesktopsearch)
+endif(NepomukCore_FOUND)
 
-add_subdirectory(kdedesktopsearch)
+find_package(Baloo)
+if(Baloo_FOUND)
+    message(STATUS "********** Found Baloo, building Baloo Search plugin")
+    add_subdirectory(baloosearch)
+endif(Baloo_FOUND)

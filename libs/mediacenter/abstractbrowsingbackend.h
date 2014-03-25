@@ -20,14 +20,12 @@
 #define ABSTRACTBROWSINGBACKEND_H
 
 #include <QObject>
-#include <QVariantList>
-#include <QFlags>
 
 #include <KDE/KConfigGroup>
 #include <KDE/KService>
 
 #include "mediacenter_export.h"
-#include "mediacenter/mediacenter.h"
+#include "mediacenter.h"
 
 class QDeclarativeEngine;
 class QAbstractItemModel;
@@ -200,7 +198,7 @@ public:
      *
      * @param buttonName the name of the button that was clicked
      */
-    Q_INVOKABLE virtual void handleButtonClick(const QString &buttonName);
+    Q_INVOKABLE virtual void handleButtonClick(const QString&);
 
     //FIXME: Bad, bad, bad.
     QObject* pmcRuntime();

@@ -212,7 +212,7 @@ QVariantList AbstractBrowsingBackend::buttons()
     return QVariantList();
 }
 
-void AbstractBrowsingBackend::handleButtonClick(const QString& buttonName)
+void AbstractBrowsingBackend::handleButtonClick(const QString&)
 {
 }
 

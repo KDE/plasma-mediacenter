@@ -1,0 +1,34 @@
+[Desktop Entry]
+Type=Service
+Icon=baloo
+Name=Baloo Search
+Name[da]=Søgning med Baloo
+Name[de]=Baloo-Suche
+Name[fi]=Baloo-haku
+Name[pl]=Wyszukiwarka Baloo
+Name[pt]=Pesquisa no Baloo
+Name[pt_BR]=Pesquisa do Baloo
+Name[sk]=Hľadanie Baloo
+Name[sv]=Baloo-sökning
+Name[uk]=Пошук Baloo
+Name[x-test]=xxBaloo Searchxx
+Comment=Get media from Baloo Search
+Comment[da]=Hent medier fra søgning med Baloo
+Comment[de]=Medien von der Baloo-Suche holen
+Comment[fi]=Hae mediaa Baloolla
+Comment[pl]=Pobierz multimedia z wyszukiwarki Baloo
+Comment[pt]=Obter conteúdos da pesquisa no Baloo
+Comment[pt_BR]=Obtém a mídia a partir da Pesquisa do Baloo
+Comment[sk]=Získať médiá z hľadania Baloo
+Comment[sv]=Hämta media från Baloo-sökning
+Comment[uk]=Отримати дані із засобу стільничного пошуку Baloo
+Comment[x-test]=xxGet media from Baloo Searchxx
+
+X-KDE-ServiceTypes=Plasma/MediaCenter/MediaSource
+
+X-KDE-PluginInfo-Author=Sinny Kumari
+X-KDE-PluginInfo-Email=ksinny@gmail.com
+X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
+X-KDE-Library=pmc_baloosearch

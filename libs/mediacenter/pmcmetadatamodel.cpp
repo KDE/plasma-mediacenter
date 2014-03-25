@@ -44,7 +44,6 @@ public:
         modeForMediaType["image"] = Picture;
         modeForMediaType["video"] = Video;
     }
-    bool isSearchTermValid;
 
     //Thumbnail stuff
     const QStringList *thumbnailerPlugins;
@@ -59,6 +58,8 @@ public:
     QStringList mediaUrlWhichFailedThumbnailGeneration;
     QVariant defaultDecoration;
     Mode currentMode;
+
+    bool isSearchTermValid;
 
     QStringList mediaResourceIds;
     QHash< QString, QSharedPointer<QObject> > mediaByResourceId;

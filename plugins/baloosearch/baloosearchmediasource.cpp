@@ -1,6 +1,5 @@
 /***********************************************************************************
- *   Copyright 2013 by Shantanu Tushar <shantanu@kde.org>                          *
- *                                                                                 *
+ *   Copyright 2014 Sinny Kumari <ksinny@gmail.com>          `                     *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
  *   modify it under the terms of the GNU Lesser General Public                    *
@@ -16,42 +15,47 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#include "mediainforesult.h"
+#include "baloosearchmediasource.h"
 
-#include "mediainforequest.h"
+#include <mediacenter/medialibrary.h>
+#include <mediacenter/singletonfactory.h>
+#include <mediacenter/mediacenter.h>
+#include <baloo/query.h>
+#include <baloo/result.h>
 
-#include <QtCore/QList>
-#include <QtCore/QHash>
-#include <QtCore/QVariant>
 
-class MediaInfoResult::Private
+MEDIACENTER_EXPORT_MEDIASOURCE(BalooSearchMediaSource)
+
+BalooSearchMediaSource::BalooSearchMediaSource(QObject* parent, const QVariantList& args)
+    : AbstractMediaSource(parent, args)
 {
-public:
-    QHash<MediaInfoRequest::InformationField, QVariant> data;
-};
-
-MediaInfoResult::MediaInfoResult()
-    : d(new Private())
-{
-    qRegisterMetaType<MediaInfoResult>("MediaInfoResult");
 }
 
-MediaInfoResult::~MediaInfoResult()
+BalooSearchMediaSource::~BalooSearchMediaSource()
 {
-
 }
 
-void MediaInfoResult::addData(MediaInfoRequest::InformationField field, QVariant data)
+void BalooSearchMediaSource::run()
 {
-    d->data.insert(field, data);
+    queryForMediaType("Audio");
+    queryForMediaType("Image");
+    queryForMediaType("Video");
 }
 
-QList< MediaInfoRequest::InformationField > MediaInfoResult::availableFields() const
+void BalooSearchMediaSource::queryForMediaType(const QString& type)
 {
-    return d->data.keys();
+    Baloo::Query query;
+    query.addType(type);
+
+    Baloo::ResultIterator it = query.exec();
+    while (it.next()) {
+        QHash<int, QVariant> values;
+        values.insert(MediaCenter::MediaUrlRole, it.url());
+        values.insert(MediaCenter::MediaTypeRole, type.toLower());
+        values.insert(Qt::DisplayRole, it.text());
+        values.insert(Qt::DecorationRole, it.icon());
+        SingletonFactory::instanceFor<MediaLibrary>()->updateMedia(values);
+    }
 }
 
-QVariant MediaInfoResult::data(MediaInfoRequest::InformationField field) const
-{
-    return d->data.value(field);
-}
+#include "baloosearchmediasource.moc"

@@ -8,14 +8,14 @@ set(localpicturesbackend_SRCS
 )
 
 kde4_add_plugin(pmc_localpictures ${localpicturesbackend_SRCS})
+
 target_link_libraries(pmc_localpictures
-plasmamediacenter
-${KDE4_KDECORE_LIBS}
-${KDE4_KIO_LIBS}
-${KDE4_KFILE_LIBS}
-${QT_QTDECLARATIVE_LIBRARIES}
-${KDE4_SOLID_LIBS}
-${QT_QTDECLARATIVE_LIBRARIES}
+    plasmamediacenter
+    ${KDE4_KDECORE_LIBS}
+    ${KDE4_KIO_LIBS}
+    ${KDE4_KFILE_LIBS}
+    ${QT_QTDECLARATIVE_LIBRARIES}
+    ${KDE4_SOLID_LIBS}
 )
 
 install(TARGETS pmc_localpictures DESTINATION ${PLUGIN_INSTALL_DIR})

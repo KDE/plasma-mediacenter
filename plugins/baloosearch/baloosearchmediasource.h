@@ -1,6 +1,5 @@
 /***********************************************************************************
- *   Copyright 2013 by Shantanu Tushar <shantanu@kde.org>                          *
- *                                                                                 *
+ *   Copyright 2014 Sinny Kumari <ksinny@gmail.com>          `                     *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
  *   modify it under the terms of the GNU Lesser General Public                    *
@@ -16,44 +15,24 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef MEDIAINFOSERVICE_H
-#define MEDIAINFOSERVICE_H
+#ifndef BALOOSEARCHMEDIASOURCE_H
+#define BALOOSEARCHMEDIASOURCE_H
 
-#include <QtCore/QThread>
-#include <QtGui/QImage>
+#include <mediacenter/abstractmediasource.h>
 
-#include "mediainforesult.h"
-
-#include <taglib/fileref.h>
-
-class MediaInfoRequest;
-
-class MediaInfoService : public QThread
+class BalooSearchMediaSource : public MediaCenter::AbstractMediaSource
 {
     Q_OBJECT
+
 public:
-    explicit MediaInfoService(QObject* parent = 0);
-    ~MediaInfoService();
-
-    quint64 processRequest(MediaInfoRequest* request);
-
-signals:
-    void info(quint64 requestNumber, MediaInfoResult result);
+    explicit BalooSearchMediaSource(QObject* parent = 0, const QVariantList& args = QVariantList());
+    ~BalooSearchMediaSource();
 
 protected:
     virtual void run();
 
-private slots:
-    void processPendingRequests();
-
 private:
-    bool areThereResultsToProcess() const;
-    void fetchDataForRequest(quint64 requestNumber);
-    quint64 nextRequestToProcess() const;
-    void updateAlbumCoverWithCoverArtProvider(const MediaInfoResult& result, const QString &mediaPath) const;
-
-    class Private;
-    Private * const d;
+    void queryForMediaType(const QString &type);
 };
 
-#endif // MEDIAINFOSERVICE_H
+#endif // BALOOSEARCHMEDIASOURCE_H

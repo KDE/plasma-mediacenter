@@ -75,6 +75,8 @@ public:
 
     MediaLibraryWrapperCache *wrapperCache;
     MediaValidator *mediaValidator;
+
+    QHash< QString, QSharedPointer<PmcMedia> > pmcMediaByUrl;
 };
 
 MediaLibrary::MediaLibrary(MediaValidator* mediaValidator, QObject* parent)
@@ -117,8 +119,6 @@ void MediaLibrary::run()
 void MediaLibrary::processRemainingRequests()
 {
     Q_ASSERT(thread() == this);
-
-    bool hasProcessedAnyRequest = false;
 
     if (!areThereUpdateRequests()) {
         return;
@@ -366,7 +366,8 @@ void MediaLibrary::addMedia(const QSharedPointer< Media >& m)
     QMutexLocker l(&d->mediaMutex);
 
     d->mediaBySha.insert(m->sha(), m);
-    QSharedPointer<PmcMedia> pmcMedia(new PmcMedia(m));
+    QSharedPointer<PmcMedia> pmcMedia = mediaForUrl(m->url());
+    pmcMedia->setMedia(m);
 
     d->newMediaList.append(pmcMedia);
 
@@ -454,7 +455,14 @@ bool MediaLibrary::hasError(const QSqlError& sqlError)
 
 QSharedPointer< PmcMedia > MediaLibrary::mediaForUrl(const QString& url) const
 {
+    if (d->pmcMediaByUrl.contains(url)) {
+        return d->pmcMediaByUrl.value(url);
+    }
+
     QSharedPointer<Media> media = mediaForSha(Media::calculateSha(url));
-    return media.isNull() ? QSharedPointer<PmcMedia>()
-                            : QSharedPointer<PmcMedia>(new PmcMedia(media));
+    QSharedPointer<PmcMedia> pmcMedia(new PmcMedia(media));
+    d->pmcMediaByUrl.insert(url, pmcMedia);
+
+    return pmcMedia;
 }
+

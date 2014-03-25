@@ -26,7 +26,7 @@
 
 #include <QDeclarativeView>
 #include <QtCore/QTimer>
-#include <libs/mediacenter/playlistmodel.h>
+#include <mediacenter/playlistmodel.h>
 #include "application.h"
 
 class QKeyEvent;

@@ -20,12 +20,12 @@
 #include "mainwindow.h"
 #include "settings.h"
 
-#include <libs/mediacenter/backendsmodel.h>
-#include <libs/mediacenter/filterplaylistmodel.h>
-#include <libs/mediacenter/filteredbackendsmodel.h>
-#include <libs/mediacenter/subtitleprovider.h>
-#include <libs/mediacenter/pmcimageprovider.h>
-#include <libs/mediacenter/pmccoverartprovider.h>
+#include <mediacenter/backendsmodel.h>
+#include <mediacenter/filterplaylistmodel.h>
+#include <mediacenter/filteredbackendsmodel.h>
+#include <mediacenter/subtitleprovider.h>
+#include <mediacenter/pmcimageprovider.h>
+#include <mediacenter/pmccoverartprovider.h>
 #include <mediacenter/objectpair.h>
 #include <mediacenter/filterplaylistmodel.h>
 #include <mediacenter/multipleplaylistmodel.h>

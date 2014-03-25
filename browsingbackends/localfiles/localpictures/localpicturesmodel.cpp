@@ -20,8 +20,8 @@
 
 #include "localpicturesmodel.h"
 
-#include <libs/mediacenter/mediacenter.h>
-#include <libs/mediacenter/abstractbrowsingbackend.h>
+#include <mediacenter/mediacenter.h>
+#include <mediacenter/abstractbrowsingbackend.h>
 
 #include <KDirModel>
 

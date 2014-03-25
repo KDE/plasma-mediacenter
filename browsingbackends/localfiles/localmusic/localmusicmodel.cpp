@@ -25,7 +25,7 @@
 #include "localmusicmodel.h"
 
 #include <KDE/KDirModel>
-#include <libs/mediacenter/mediacenter.h>
+#include <mediacenter/mediacenter.h>
 
 LocalMusicModel::LocalMusicModel (QObject* parent) : LocalFilesAbstractModel (parent, QString("audio/"))
 {

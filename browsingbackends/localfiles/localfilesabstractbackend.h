@@ -22,13 +22,14 @@
 #ifndef LOCALFILESABSTRACTBACKEND_H
 #define LOCALFILESABSTRACTBACKEND_H
 
-#include <libs/mediacenter/abstractbrowsingbackend.h>
+#include <mediacenter/abstractbrowsingbackend.h>
+
 #include <KDE/KFilePlacesModel>
 #include <Solid/Device>
 #include <Solid/StorageAccess>
 
 /**
- *Forward declarations to tell the compiler that an 
+ *Forward declarations to tell the compiler that an
  *instance will be declared of LocalPlacesModel and LocalFilesAbstractModel
  */
 
@@ -42,7 +43,7 @@ class LocalFilesAbstractModel;
  *
  * @description This class supports and handles LocalPlacesModel and LocalFilesModel and is useful for the
  * purpose of making changes to the mediabrowser functioning.
- * 
+ *
  * This class direclty inherit from AbstractBrowsingBackend which is an interface between an applet
  * and a custom provided model.
  */
