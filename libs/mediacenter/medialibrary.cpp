@@ -76,6 +76,7 @@ public:
     MediaLibraryWrapperCache *wrapperCache;
     MediaValidator *mediaValidator;
 
+    QMutex pmcMediaByUrlMutex;
     QHash< QString, QSharedPointer<PmcMedia> > pmcMediaByUrl;
 };
 
@@ -455,6 +456,8 @@ bool MediaLibrary::hasError(const QSqlError& sqlError)
 
 QSharedPointer< PmcMedia > MediaLibrary::mediaForUrl(const QString& url) const
 {
+    QMutexLocker l(&d->pmcMediaByUrlMutex);
+
     if (d->pmcMediaByUrl.contains(url)) {
         return d->pmcMediaByUrl.value(url);
     }
