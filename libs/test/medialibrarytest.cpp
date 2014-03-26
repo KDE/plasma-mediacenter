@@ -22,10 +22,6 @@
 
 static const char* DB_FILENAME = "plasma-mediacenter.sqlite";
 
-namespace {
-    static const int TIMEOUT_FOR_SIGNALS = 3000;
-}
-
 void MediaLibraryTest::initTestCase()
 {
 }
