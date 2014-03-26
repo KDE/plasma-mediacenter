@@ -23,20 +23,23 @@
 class PmcMedia::Private
 {
 public:
+    QString url;
     QSharedPointer<Media> media;
 };
 
-PmcMedia::PmcMedia(const QSharedPointer< Media > &media, QObject* parent)
+PmcMedia::PmcMedia(const QString& url, QObject* parent)
     : QObject(parent)
     , d(new Private())
 {
-    setMedia(media);
+    d->url = url;
 }
 
 void PmcMedia::setMedia(const QSharedPointer< Media > &media)
 {
     if (!media.isNull() && media != d->media) {
         d->media = media;
+        d->url = media->url();
+
         connect(d->media.data(), SIGNAL(updated()), SIGNAL(updated()));
         emit updated();
     }
@@ -54,7 +57,7 @@ QString PmcMedia::thumbnail() const
 
 QString PmcMedia::title() const
 {
-    return !d->media.isNull() ? d->media->title() : QString();
+    return !d->media.isNull() ? d->media->title() : fileName();
 }
 
 QString PmcMedia::type() const
@@ -64,7 +67,7 @@ QString PmcMedia::type() const
 
 QString PmcMedia::url() const
 {
-    return !d->media.isNull() ? d->media->url() : QString();
+    return !d->media.isNull() ? d->media->url() : d->url;
 }
 
 QString PmcMedia::album() const
@@ -80,4 +83,9 @@ QString PmcMedia::artist() const
 int PmcMedia::duration() const
 {
     return !d->media.isNull() ? d->media->duration() : -1;
+}
+
+QString PmcMedia::fileName() const
+{
+    return QFileInfo(QUrl(d->url).toLocalFile()).fileName();
 }

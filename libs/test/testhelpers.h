@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2014 Sinny Kumari <ksinny@gmail.com>                                *
+ *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,41 +16,22 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef PMCMEDIA_H
-#define PMCMEDIA_H
+#include <QCoreApplication>
+#include <QSignalSpy>
+#include <QTime>
 
-#include <QString>
-#include <QSharedPointer>
+namespace {
+    static const int TIMEOUT_FOR_SIGNALS = 3000;
+}
 
-#include "mediacenter_export.h"
-
-#include "media.h"
-
-class MEDIACENTER_EXPORT PmcMedia : public QObject
+//from https://bugreports.qt-project.org/browse/QTBUG-2986
+bool waitForSignal(QSignalSpy* spy, int timeoutms = TIMEOUT_FOR_SIGNALS)
 {
-    Q_OBJECT
-public:
-    explicit PmcMedia(const QString &url, QObject* parent = 0);
-
-    void setMedia(const QSharedPointer< Media >& media);
-
-    QString sha() const;
-    QString title () const;
-    QString url() const;
-    QString thumbnail () const;
-    QString type() const;
-    QString album() const;
-    QString artist() const;
-    int duration() const;
-
-signals:
-    void updated();
-
-private:
-    class Private;
-    Private * const d;
-
-    QString fileName() const;
-};
-
-#endif // PMCMEDIA_H
+    QTime timer;
+    timer.start();
+    while (spy->isEmpty() && timer.elapsed() < timeoutms)
+    {
+        QCoreApplication::processEvents();
+    }
+    return !spy->isEmpty();
+}
