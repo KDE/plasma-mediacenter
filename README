@@ -7,8 +7,9 @@ Required:
 Building QxOrm: After downloading it, simply run qmake && make debug-install.
 
 If you get an error about missing libboost-serialization-mt, make sure you have the boost serialization libraries installed.
-If you are sure the libraries are there, edit the QxOrm.pri file and rename 'libboost-serialization-mt' and 'libboost-serialization-mt-d'
-to 'libboost-serialization'.
+If you are sure the libraries are there, try running qmake like this-
+
+qmake QX_BOOST_LIB_SERIALIZATION_DEBUG=boost_serialization
 
 3) Standard KDE Oxygen Plasma theme
 
