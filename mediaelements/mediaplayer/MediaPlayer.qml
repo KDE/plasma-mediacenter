@@ -63,7 +63,7 @@ FocusScope {
 
         onStopped: mediaPlayerRootRect.mediaFinished()
         onStarted: mediaPlayerRootRect.mediaStarted()
-	Text {
+        Text {
             anchors {
                 bottom: parent.bottom
                 horizontalCenter: parent.horizontalCenter
@@ -135,4 +135,14 @@ FocusScope {
         case Qt.Key_Minus: video.playbackRate -= 0.1; return;
         case Qt.Key_0: video.playbackRate = 1.0; return;
     }}
+
+    function setRate(newRate)
+    {
+        video.playbackRate = newRate;
+    }
+
+    function getRate()
+    {
+        return video.playbackRate;
+    }
 }

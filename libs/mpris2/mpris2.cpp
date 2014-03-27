@@ -35,13 +35,6 @@ Mpris2::Mpris2(QObject* parent) : QObject(parent)
     // following:
     if (!success)
         success = QDBusConnection::sessionBus().registerService(mspris2Name + ".instance" + QString::number(getpid()));
-
-    if (success)
-    {
-        new MediaPlayer2(this);
-        new MediaPlayer2Player(this);
-        QDBusConnection::sessionBus().registerObject("/org/mpris/MediaPlayer2", this, QDBusConnection::ExportAdaptors);
-    }
 }
 
 Mpris2::~Mpris2()
