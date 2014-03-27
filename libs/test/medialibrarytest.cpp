@@ -48,6 +48,7 @@ QHash<int,QVariant> MediaLibraryTest::createTestMediaData() const
     data.insert(Qt::DisplayRole, "Title");
     data.insert(MediaCenter::MediaTypeRole, "audio");
     data.insert(Qt::DecorationRole, "smiley");
+    data.insert(MediaCenter::DurationRole, 100);
 
     return data;
 }
@@ -75,7 +76,7 @@ void MediaLibraryTest::createsDbWhenNotPresent()
     QVERIFY2(QDir::current().exists(DB_FILENAME), "The DB was not created");
 }
 
-void MediaLibraryTest::addsNewMediaAndItsAlbumArtist()
+void MediaLibraryTest::addsNewMediaAndItsMetadata()
 {
     FakeMediaValidator validator;
     MediaLibrary mediaLibrary(&validator);
@@ -107,6 +108,7 @@ void MediaLibraryTest::addsNewMediaAndItsAlbumArtist()
     QCOMPARE(media->thumbnail(), data.value(Qt::DecorationRole).toString());
     QCOMPARE(media->album(), data.value(MediaCenter::AlbumRole).toString());
     QCOMPARE(media->artist(), data.value(MediaCenter::ArtistRole).toString());
+    QCOMPARE(media->duration(), data.value(MediaCenter::DurationRole).toInt());
 
 
     QCOMPARE(newAlbumSpy.size(), 1);

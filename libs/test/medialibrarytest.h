@@ -46,7 +46,7 @@ private slots:
 
     void createsDbWhenNotPresent();
 
-    void addsNewMediaAndItsAlbumArtist();
+    void addsNewMediaAndItsMetadata();
 
     void shouldEmitUpdatedForMediaInsteadOfNewMediaWhenDataUpdated();
 
