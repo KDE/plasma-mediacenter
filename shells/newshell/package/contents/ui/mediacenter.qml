@@ -89,7 +89,12 @@ Image {
             onPlayerButtonClicked: pmcPageStack.pushAndFocus(getMediaPlayer())
             onPlayNext: playlistInstance.playNext()
             onPlayPrevious: playlistInstance.playPrevious()
-            onSeekRequested: if (mediaPlayerInstance) mediaPlayerInstance.currentTime = newPosition
+            onSeekRequested: {
+                if (mediaPlayerInstance) {
+                    mediaPlayerInstance.currentTime = newPosition
+                    mprisPlayerObject.emitSeeked(newPosition);
+                }
+            }
             onPlayPause: runtimeData.playPause()
             onStop: runtimeData.stop()
             onWantToLoseFocus: pmcPageStack.currentPage.focus = true
@@ -312,6 +317,31 @@ Image {
                      popupMenu.visible = false
                  }
              }
+        }
+    }
+
+    MediaCenterElements.MediaPlayer2Player {
+        id: mprisPlayerObject
+        rate: mediaPlayerInstance.getRate()
+        volume: runtimeData.volume
+        position: mediaPlayerInstance.currentTime
+        paused: runtimeData.paused
+        stopped: runtimeData.stopped
+        currentTrack: runtimeData.url
+        mediaPlayerPresent: mediaPlayerInstance ? true : false
+        onRateChanged: mediaPlayerInstance.setRate(newRate)
+        onVolumeChanged: runtimeData.volume = newVol
+        onNext: playlistInstance.playNext()
+        onPrevious: playlistInstance.playPrevious()
+        onPause: if (runtimeData.playing) runtimeData.playPause()
+        onPlayPause: runtimeData.playPause()
+        onStop: runtimeData.stop()
+        onPlay: if (!runtimeData.playing) runtimeData.playPause()
+        onSeek: {
+            if (mediaPlayerInstance) {
+                mediaPlayerInstance.currentTime += offset
+                mprisPlayerObject.emitSeeked(mediaPlayerInstance.currentTime)
+            }
         }
     }
 

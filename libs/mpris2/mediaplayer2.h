@@ -26,18 +26,19 @@ class MEDIACENTER_EXPORT MediaPlayer2 : public QDBusAbstractAdaptor
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.mpris.MediaPlayer2")
-    
+
     Q_PROPERTY(bool CanQuit READ CanQuit)
     Q_PROPERTY(bool CanSetFullscreen READ CanSetFullscreen)
     Q_PROPERTY(bool Fullscreen READ Fullscreen)
-    
+
     public:
         explicit MediaPlayer2(QObject* parent = 0);
         ~MediaPlayer2();
-        
-        Q_INVOKABLE bool CanQuit() const;
-        Q_INVOKABLE bool CanSetFullscreen() const;
-        Q_INVOKABLE bool Fullscreen() const;
+
+    public Q_SLOTS:
+        bool CanQuit() const;
+        bool CanSetFullscreen() const;
+        bool Fullscreen() const;
         QString Identity() const;
 
 };

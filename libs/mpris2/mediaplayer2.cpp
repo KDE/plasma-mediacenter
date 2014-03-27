@@ -28,6 +28,7 @@
 
 MediaPlayer2::MediaPlayer2(QObject* parent) : QDBusAbstractAdaptor(parent)
 {
+    QDBusConnection::sessionBus().registerObject("/org/mpris/MediaPlayer2", this, QDBusConnection::ExportAllSlots | QDBusConnection::ExportAllProperties | QDBusConnection::ExportAllSignals);
 }
 
 MediaPlayer2::~MediaPlayer2()

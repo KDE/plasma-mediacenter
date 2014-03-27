@@ -126,8 +126,8 @@ MainWindow::MainWindow(Application *parent)
 
     installEventFilter(this);
     centralWidget()->installEventFilter(this);
-    
-    Mpris2(this);
+
+    new Mpris2(this);
 
     m_mousePointerAutoHideTimer.setInterval(2000);
     connect(this, SIGNAL(mousePointerAutoHideChanged()), SLOT(enableMousePointerAutoHideIfNeeded()));
