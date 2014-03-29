@@ -1,6 +1,7 @@
 find_package(Baloo REQUIRED)
 
 include_directories(
+  ${KDE4_INCLUDES}
   ${BALOO_INCLUDE_DIR}
 )
 
