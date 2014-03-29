@@ -89,6 +89,9 @@ private:
     template <class X, class Y> void addAlbumOrArtist(
         const QSharedPointer< X >& value, QMutex& mutex, QList< QSharedPointer< X > >& valueList, QList< QSharedPointer< Y > >& updatesList);
     QString persistMedia(const QSharedPointer< Media >& media);
+    void emitNewAlbumOrArtistIfNeeded(QSharedPointer< Media > media);
+    void reloadAlbumObjectFromDb(QSharedPointer< Media > media);
+    void reloadArtistObjectFromDb(QSharedPointer< Media > media);
 };
 
 #endif // MEDIALIBRARY_H
