@@ -26,9 +26,11 @@
 
 class MEDIACENTER_EXPORT MediaSourcesLoader : public QObject
 {
+    Q_OBJECT
 public:
     explicit MediaSourcesLoader(QObject* parent = 0);
     ~MediaSourcesLoader();
+public slots:
     void load();
 };
 
