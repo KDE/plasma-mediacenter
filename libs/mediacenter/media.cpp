@@ -54,12 +54,16 @@ Media::Media(const QString& url, QObject* parent)
     : QObject(parent)
     , m_sha(calculateSha(url))
     , m_url(url)
+    , m_duration(0)
     , d(new Private())
 {
     initUpdateTimer();
 }
 
-Media::Media(QObject* parent): QObject(parent), d(new Private())
+Media::Media(QObject* parent)
+    : QObject(parent)
+    , m_duration(0)
+    , d(new Private())
 {
     initUpdateTimer();
 }
