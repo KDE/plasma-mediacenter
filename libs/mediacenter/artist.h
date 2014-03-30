@@ -31,7 +31,7 @@ class Artist
 {
 public:
     Artist();
-    Artist(const QString &name);
+    explicit Artist(const QString &name);
     virtual ~Artist();
 
     QString m_name;

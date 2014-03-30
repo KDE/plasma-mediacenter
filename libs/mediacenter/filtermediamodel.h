@@ -28,7 +28,7 @@ class MEDIACENTER_EXPORT FilterMediaModel: public QSortFilterProxyModel
 {
     Q_OBJECT
 public:
-    FilterMediaModel(QObject* parent = 0);
+    explicit FilterMediaModel(QObject* parent = 0);
     ~FilterMediaModel();
     virtual bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const;
 

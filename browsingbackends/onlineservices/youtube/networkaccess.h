@@ -30,7 +30,7 @@ class NetworkReply : public QObject {
     Q_OBJECT
 
 public:
-    NetworkReply(QNetworkReply* networkReply);
+    explicit NetworkReply(QNetworkReply* networkReply);
     QNetworkReply* getNetworkReply() { return networkReply; }
 
 signals:

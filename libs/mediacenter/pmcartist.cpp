@@ -35,7 +35,7 @@ PmcArtist::PmcArtist(const QSharedPointer< Artist >& artist, QObject* parent)
 
 PmcArtist::~PmcArtist()
 {
-
+    delete d;
 }
 
 const QString& PmcArtist::name() const

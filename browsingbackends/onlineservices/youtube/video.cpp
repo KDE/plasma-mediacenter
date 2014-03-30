@@ -167,11 +167,11 @@ void  Video::gotVideoInfo(QByteArray data) {
     int definitionCode = VideoDefinition::getDefinitionCode(definitionName);
 
     // qDebug() << "fmtUrlMap" << fmtUrlMap;
-    QStringList formatUrls = fmtUrlMap.split(",", QString::SkipEmptyParts);
+    QStringList formatUrls = fmtUrlMap.split(',', QString::SkipEmptyParts);
     QHash<int, QString> urlMap;
     foreach(QString formatUrl, formatUrls) {
         // qDebug() << "formatUrl" << formatUrl;
-        QStringList urlParams = formatUrl.split("&", QString::SkipEmptyParts);
+        QStringList urlParams = formatUrl.split('&', QString::SkipEmptyParts);
         // qDebug() << "urlParams" << urlParams;
 
         int format = -1;
