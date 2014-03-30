@@ -25,10 +25,12 @@
 #include <QSharedPointer>
 #include <QVariant>
 
+#include "mediacenter_export.h"
+
 #include "album.h"
 #include "artist.h"
 
-class Media : public QObject
+class MEDIACENTER_EXPORT Media : public QObject
 {
     Q_OBJECT
 public:

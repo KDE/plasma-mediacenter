@@ -34,7 +34,7 @@ private slots:
 
     void shouldReturnUrlEvenIfMediaIsNotSet();
     void shouldReturnTitleEvenIfMediaIsNotSet();
-//     void shouldEmitUpdatedWhenMediaSet();
+    void shouldEmitUpdatedWhenMediaSet();
 };
 
 #endif // PMCMEDIATEST_H

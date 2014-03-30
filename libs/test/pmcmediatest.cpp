@@ -61,21 +61,18 @@ void PmcMediaTest::shouldReturnTitleEvenIfMediaIsNotSet()
     QCOMPARE(QString("test.foo"), p.title());
 }
 
-//TODO: To be enabled after figuring out how to link to Media without exporting
-//      it to the public library
+void PmcMediaTest::shouldEmitUpdatedWhenMediaSet()
+{
+    Media m(testUrl);
+    PmcMedia p(testUrl);
 
-// void PmcMediaTest::shouldEmitUpdatedWhenMediaSet()
-// {
-//     Media m(testUrl);
-//     PmcMedia p(testUrl);
-//
-//     QSignalSpy updatedSpy(&p, SIGNAL(updated()));
-//     QVERIFY2(updatedSpy.isValid(), "Could not listen to signal updated");
-//
-//     p.setMedia(QSharedPointer<Media>(&m));
-//
-//     waitForSignal(&updatedSpy);
-//     QCOMPARE(updatedSpy.size(), 1);
-// }
+    QSignalSpy updatedSpy(&p, SIGNAL(updated()));
+    QVERIFY2(updatedSpy.isValid(), "Could not listen to signal updated");
+
+    p.setMedia(QSharedPointer<Media>(&m));
+
+    waitForSignal(&updatedSpy);
+    QCOMPARE(updatedSpy.size(), 1);
+}
 
 #include "pmcmediatest.moc"
