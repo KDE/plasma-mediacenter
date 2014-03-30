@@ -172,7 +172,7 @@ void  Video::gotVideoInfo(QByteArray data) {
     // qDebug() << "fmtUrlMap" << fmtUrlMap;
     QStringList formatUrls = fmtUrlMap.split(',', QString::SkipEmptyParts);
     QHash<int, QString> urlMap;
-    foreach(QString formatUrl, formatUrls) {
+    foreach(const QString &formatUrl, formatUrls) {
         // qDebug() << "formatUrl" << formatUrl;
         QStringList urlParams = formatUrl.split('&', QString::SkipEmptyParts);
         // qDebug() << "urlParams" << urlParams;
@@ -180,16 +180,16 @@ void  Video::gotVideoInfo(QByteArray data) {
         int format = -1;
         QString url;
         QString sig;
-        foreach(QString urlParam, urlParams) {
+        foreach(const QString &urlParam, urlParams) {
             if (urlParam.startsWith("itag=")) {
-                int separator = urlParam.indexOf("=");
+                int separator = urlParam.indexOf('=');
                 format = urlParam.mid(separator + 1).toInt();
             } else if (urlParam.startsWith("url=")) {
-                int separator = urlParam.indexOf("=");
+                int separator = urlParam.indexOf('=');
                 url = urlParam.mid(separator + 1);
                 url = QByteArray::fromPercentEncoding(url.toUtf8());
             } else if (urlParam.startsWith("sig=")) {
-                int separator = urlParam.indexOf("=");
+                int separator = urlParam.indexOf('=');
                 sig = urlParam.mid(separator + 1);
                 sig = QByteArray::fromPercentEncoding(sig.toUtf8());
             }

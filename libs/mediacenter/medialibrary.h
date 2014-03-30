@@ -92,6 +92,8 @@ private:
     void emitNewAlbumOrArtistIfNeeded(QSharedPointer< Media > media);
     void reloadAlbumObjectFromDb(QSharedPointer< Media > media);
     void reloadArtistObjectFromDb(QSharedPointer< Media > media);
+
+    static const QString DB_NAME;
 };
 
 #endif // MEDIALIBRARY_H

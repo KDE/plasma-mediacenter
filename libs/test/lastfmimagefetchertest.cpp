@@ -49,7 +49,7 @@ void LastFmImageFetcherTest::cleanup()
 void LastFmImageFetcherTest::shouldDownloadImageAndSaveToCache()
 {
     LastFmImageFetcher lastFmFetcher;
-    QSignalSpy spyInitialize(&lastFmFetcher, SIGNAL(imageFetched(QVariant, QString)));
+    QSignalSpy spyInitialize(&lastFmFetcher, SIGNAL(imageFetched(QVariant,QString)));
     QVERIFY2(spyInitialize.isValid(), "Can't listen to signal imageFetched");
     lastFmFetcher.fetchImage("artist", "Myfaveartist", "shaan");
 

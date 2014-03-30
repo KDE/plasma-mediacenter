@@ -45,7 +45,7 @@ public:
     QString headerText() const;
     void setHeaderText(const QString &text);
 
-signals:
+Q_SIGNALS:
     void nameChanged();
     void supportsSearchChanged();
     void modelChanged();

@@ -17,8 +17,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#ifndef METADATAMUSICMODEL_H
-#define METADATAMUSICMODEL_H
+#ifndef METADATABACKENDCOMMONMODEL_H
+#define METADATABACKENDCOMMONMODEL_H
 
 #include <mediacenter/pmcmetadatamodel.h>
 #include <mediacenter/modelmetadata.h>
@@ -30,4 +30,4 @@ public:
     explicit MetadataBackendCommonModel(QObject* parent = 0);
 };
 
-#endif // METADATAMUSICMODEL_H
+#endif // METADATABACKENDCOMMONMODEL_H

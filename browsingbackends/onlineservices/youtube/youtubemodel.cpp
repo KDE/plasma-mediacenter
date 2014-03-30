@@ -78,8 +78,8 @@ void YoutubeModel::query(const QString &searchTerm)
 
     KIO::TransferJob *job = KIO::get(query, KIO::NoReload, KIO::HideProgressInfo);
     m_queries[job] = searchTerm;
-    connect (job, SIGNAL(data(KIO::Job*, const QByteArray &)), this, SLOT(ytDataReady(KIO::Job*, const QByteArray &)));
-    connect (job, SIGNAL(result(KJob *)), this, SLOT(parseResults(KJob*)));
+    connect (job, SIGNAL(data(KIO::Job*,QByteArray)), this, SLOT(ytDataReady(KIO::Job*,QByteArray)));
+    connect (job, SIGNAL(result(KJob*)), this, SLOT(parseResults(KJob*)));
 }
 
 void YoutubeModel::ytDataReady(KIO::Job *job, const QByteArray &data)

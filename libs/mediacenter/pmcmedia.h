@@ -43,7 +43,7 @@ public:
     QString artist() const;
     int duration() const;
 
-signals:
+Q_SIGNALS:
     void updated();
 
 private:
