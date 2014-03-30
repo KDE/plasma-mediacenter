@@ -22,7 +22,6 @@
 
 #include <QCryptographicHash>
 #include <QTimer>
-#include <QDebug>
 
 #include <QxMemLeak.h>
 
