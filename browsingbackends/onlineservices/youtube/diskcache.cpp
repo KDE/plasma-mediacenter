@@ -16,7 +16,6 @@
  ***********************************************************************************/
 
 #include "diskcache.h"
-#include <QtNetwork>
 
 DiskCache::DiskCache(QObject *parent) : QNetworkDiskCache(parent) { }
 

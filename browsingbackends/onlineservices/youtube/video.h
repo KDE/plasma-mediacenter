@@ -18,8 +18,13 @@
 #ifndef VIDEO_H
 #define VIDEO_H
 
-#include <QtGui>
-#include <QtNetwork>
+#include <QUrl>
+#include <QString>
+#include <QPointer>
+#include <QDateTime>
+#include <QPixmap>
+
+class QNetworkReply;
 
 class Video : public QObject {
 
@@ -109,7 +114,7 @@ private:
     // current index for the elTypes list
     // needed to iterate on elTypes
     int elIndex;
-    
+
     bool loadingStreamUrl;
 };
 

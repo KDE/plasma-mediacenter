@@ -18,8 +18,8 @@
 #ifndef NETWORKACCESS_H
 #define NETWORKACCESS_H
 
-#include <QtCore>
-#include <QtNetwork>
+#include <QTimer>
+#include <QNetworkReply>
 
 namespace The {
     QNetworkAccessManager* networkAccessManager();

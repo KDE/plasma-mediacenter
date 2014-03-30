@@ -17,7 +17,8 @@
 
 #include "networkaccess.h"
 #include "constants.h"
-#include <QtGui>
+
+#include <QDebug>
 
 namespace The {
 NetworkAccess* http();

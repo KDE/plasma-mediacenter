@@ -15,9 +15,12 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
+#include <QNetworkReply>
+#include <QDebug>
+#include <QSettings>
+
 #include "video.h"
 #include "networkaccess.h"
-#include <QtNetwork>
 #include "videodefinition.h"
 
 namespace The {
