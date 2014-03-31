@@ -2,6 +2,7 @@
 Type=Service
 Icon=baloo
 Name=Baloo Search
+Name[ca]=Cerca del Baloo
 Name[da]=Søgning med Baloo
 Name[de]=Baloo-Suche
 Name[el]=Αναζήτηση Baloo
@@ -18,6 +19,7 @@ Name[sv]=Baloo-sökning
 Name[uk]=Пошук Baloo
 Name[x-test]=xxBaloo Searchxx
 Comment=Get media from Baloo Search
+Comment[ca]=Obté medis de la cerca del Baloo
 Comment[da]=Hent medier fra søgning med Baloo
 Comment[de]=Medien von der Baloo-Suche holen
 Comment[el]=Ανάκτηση πολυμέσων μέσω της αναζήτησης Baloo
