@@ -32,7 +32,7 @@ class Album
 {
 public:
     Album();
-    Album(const QString &name);
+    explicit Album(const QString &name);
     virtual ~Album();
 
     const QString& name() const;

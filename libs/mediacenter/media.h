@@ -25,15 +25,17 @@
 #include <QSharedPointer>
 #include <QVariant>
 
+#include "mediacenter_export.h"
+
 #include "album.h"
 #include "artist.h"
 
-class Media : public QObject
+class MEDIACENTER_EXPORT Media : public QObject
 {
     Q_OBJECT
 public:
     explicit Media(QObject* parent = 0);
-    Media(const QString &url, QObject* parent = 0);
+    explicit Media(const QString &url, QObject* parent = 0);
     virtual ~Media();
 
     const QString& sha() const;

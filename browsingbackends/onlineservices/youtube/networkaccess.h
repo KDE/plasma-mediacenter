@@ -18,8 +18,8 @@
 #ifndef NETWORKACCESS_H
 #define NETWORKACCESS_H
 
-#include <QtCore>
-#include <QtNetwork>
+#include <QTimer>
+#include <QNetworkReply>
 
 namespace The {
     QNetworkAccessManager* networkAccessManager();
@@ -30,7 +30,7 @@ class NetworkReply : public QObject {
     Q_OBJECT
 
 public:
-    NetworkReply(QNetworkReply* networkReply);
+    explicit NetworkReply(QNetworkReply* networkReply);
     QNetworkReply* getNetworkReply() { return networkReply; }
 
 signals:

@@ -1,7 +1,6 @@
 /***********************************************************************************
  *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
  *                                                                                 *
- *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
  *   modify it under the terms of the GNU Lesser General Public                    *
  *   License as published by the Free Software Foundation; either                  *
@@ -16,34 +15,43 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef ARTIST_H
-#define ARTIST_H
+#ifndef FILESYSTEMSEARCHMEDIASOURCE_H
+#define FILESYSTEMSEARCHMEDIASOURCE_H
 
-#include <QString>
-#include <QList>
-#include <QSharedPointer>
+#include <mediacenter/abstractmediasource.h>
 
-#include "precompiled.h"
+#include <QMutex>
 
-class Media;
+class QFileInfo;
+class QDir;
 
-class Artist
+/**
+ * \brief Goes through the user's home dir and searches for media
+ *
+ * This MediaSource is supposed to be used for a better-than-nothing scenario
+ * when none of Baloo or Nepomuk are installed. As such this MediaSource does
+ * not attempt 100% correctness and is not configurable at all.
+ */
+class FilesystemSearchMediaSource : public MediaCenter::AbstractMediaSource
 {
 public:
-    Artist();
-    explicit Artist(const QString &name);
-    virtual ~Artist();
+    explicit FilesystemSearchMediaSource(QObject* parent = 0, const QVariantList&  = QVariantList());
+    virtual ~FilesystemSearchMediaSource();
 
-    QString m_name;
-    const QString& name() const;
+protected:
+    virtual void run();
 
-    QList< QSharedPointer<Media> > m_media;
+private:
+    mutable QMutex m_quitMutex;
+    bool m_quit;
 
-    typedef QSharedPointer<Artist> Ptr;
-    typedef QList<Ptr> List;
+    QStringList m_allowedMimes;
+
+    bool shouldQuit() const;
+    bool recursiveSearch(const QDir& dir);
+    void stop();
+    bool checkAndAddFile(const QFileInfo &fileInfo);
+    void addFile(const QFileInfo &fileInfo, const QString &type);
 };
 
-QX_REGISTER_PRIMARY_KEY(Artist, QString)
-QX_REGISTER_HPP_PMC(Artist, qx::trait::no_base_class_defined, 0)
-
-#endif // ARTIST_H
+#endif // FILESYSTEMSEARCHMEDIASOURCE_H

@@ -16,34 +16,22 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef ARTIST_H
-#define ARTIST_H
+#ifndef MEDIATEST_H
+#define MEDIATEST_H
 
-#include <QString>
-#include <QList>
-#include <QSharedPointer>
+#include <QObject>
 
-#include "precompiled.h"
-
-class Media;
-
-class Artist
+class MediaTest : public QObject
 {
-public:
-    Artist();
-    explicit Artist(const QString &name);
-    virtual ~Artist();
+    Q_OBJECT
+private slots:
+    void initTestCase();
+    void cleanupTestCase();
 
-    QString m_name;
-    const QString& name() const;
+    void init();
+    void cleanup();
 
-    QList< QSharedPointer<Media> > m_media;
-
-    typedef QSharedPointer<Artist> Ptr;
-    typedef QList<Ptr> List;
+    void shouldSetDurationToZeroWhenNotSpecified();
 };
 
-QX_REGISTER_PRIMARY_KEY(Artist, QString)
-QX_REGISTER_HPP_PMC(Artist, qx::trait::no_base_class_defined, 0)
-
-#endif // ARTIST_H
+#endif // MEDIATEST_H

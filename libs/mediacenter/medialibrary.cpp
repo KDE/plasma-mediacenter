@@ -34,7 +34,7 @@
 #include "pmcalbum.h"
 #include "pmcartist.h"
 
-static const QString DB_NAME = "plasma-mediacenter.sqlite";
+const QString MediaLibrary::DB_NAME = "plasma-mediacenter.sqlite";
 
 class MediaLibrary::Private
 {

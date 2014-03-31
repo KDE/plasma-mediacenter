@@ -16,9 +16,9 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#include "album.h"
-
 #include "pmcalbum.h"
+
+#include "album.h"
 
 class PmcAlbum::Private
 {

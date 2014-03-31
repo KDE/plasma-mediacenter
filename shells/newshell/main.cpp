@@ -78,7 +78,10 @@ int main(int argc, char *argv[])
 
     qRegisterMetaType< QHash<int,QVariant> >("QHash<int,QVariant>");
     MediaSourcesLoader mediaSourcesLoader;
-    mediaSourcesLoader.load();
+    QObject::connect(SingletonFactory::instanceFor<MediaLibrary>(),
+            SIGNAL(initialized()),
+            &mediaSourcesLoader,
+            SLOT(load()));
 
     return app.exec();
 }

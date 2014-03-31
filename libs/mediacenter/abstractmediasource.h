@@ -21,7 +21,7 @@
 #define ABSTRACTMEDIASOURCE_H
 
 #include <QtCore/QThread>
-#include <KService>
+#include <KDE/KService>
 
 #include "mediacenter_export.h"
 

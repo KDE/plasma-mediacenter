@@ -61,8 +61,7 @@ class YoutubeModel : public QAbstractListModel
     Q_OBJECT
     Q_PROPERTY(QObject* metadata READ metadata)
 public:
-    YoutubeModel(QObject *parent = 0);
-    ~YoutubeModel();
+    explicit YoutubeModel(QObject* parent = 0);
 
     void query(const QString &searchTerm);
     virtual QVariant data (const QModelIndex& index, int role = Qt::DisplayRole) const;

@@ -33,7 +33,7 @@ class MEDIACENTER_EXPORT PmcArtist : public QObject
     Q_OBJECT
 public:
     explicit PmcArtist(const QSharedPointer< Artist >& artist, QObject* parent = 0);
-    ~PmcArtist();
+    virtual ~PmcArtist();
 
     const QString& name() const;
 
