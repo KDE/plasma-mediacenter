@@ -16,34 +16,37 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef ARTIST_H
-#define ARTIST_H
+#include "mediatest.h"
+#include <mediacenter/media.h>
 
-#include <QString>
-#include <QList>
-#include <QSharedPointer>
+#include <qtest_kde.h>
 
-#include "precompiled.h"
+QTEST_KDEMAIN(MediaTest, NoGUI);
 
-class Media;
-
-class Artist
+void MediaTest::initTestCase()
 {
-public:
-    Artist();
-    explicit Artist(const QString &name);
-    virtual ~Artist();
+    // Called before the first testfunction is executed
+}
 
-    QString m_name;
-    const QString& name() const;
+void MediaTest::cleanupTestCase()
+{
+    // Called after the last testfunction was executed
+}
 
-    QList< QSharedPointer<Media> > m_media;
+void MediaTest::init()
+{
+    // Called before each testfunction is executed
+}
 
-    typedef QSharedPointer<Artist> Ptr;
-    typedef QList<Ptr> List;
-};
+void MediaTest::cleanup()
+{
+    // Called after every testfunction
+}
 
-QX_REGISTER_PRIMARY_KEY(Artist, QString)
-QX_REGISTER_HPP_PMC(Artist, qx::trait::no_base_class_defined, 0)
+void MediaTest::shouldSetDurationToZeroWhenNotSpecified()
+{
+    Media m;
+    QCOMPARE(m.duration(), 0);
+}
 
-#endif // ARTIST_H
+#include "mediatest.moc"

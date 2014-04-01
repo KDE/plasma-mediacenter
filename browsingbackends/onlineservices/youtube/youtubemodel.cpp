@@ -34,11 +34,6 @@ YoutubeModel::YoutubeModel(QObject* parent): QAbstractListModel(parent)
     setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
 }
 
-YoutubeModel::~YoutubeModel()
-{
-
-}
-
 QVariant YoutubeModel::data(const QModelIndex& index, int role) const
 {
     switch (role) {
@@ -83,8 +78,8 @@ void YoutubeModel::query(const QString &searchTerm)
 
     KIO::TransferJob *job = KIO::get(query, KIO::NoReload, KIO::HideProgressInfo);
     m_queries[job] = searchTerm;
-    connect (job, SIGNAL(data(KIO::Job*, const QByteArray &)), this, SLOT(ytDataReady(KIO::Job*, const QByteArray &)));
-    connect (job, SIGNAL(result(KJob *)), this, SLOT(parseResults(KJob*)));
+    connect (job, SIGNAL(data(KIO::Job*,QByteArray)), this, SLOT(ytDataReady(KIO::Job*,QByteArray)));
+    connect (job, SIGNAL(result(KJob*)), this, SLOT(parseResults(KJob*)));
 }
 
 void YoutubeModel::ytDataReady(KIO::Job *job, const QByteArray &data)
@@ -108,7 +103,7 @@ void YoutubeModel::parseResults(KJob *job)
 
     QDomNodeList entries = document.elementsByTagName("entry");
     for (int i = 0; i < entries.count(); i++) {
-        QString id = entries.at(i).namedItem("id").toElement().text().split(":").last();
+        QString id = entries.at(i).namedItem("id").toElement().text().split(':').last();
         QString title = entries.at(i).namedItem("title").toElement().text();
         QDomNode mediaNode = entries.at(i).namedItem("media:group");
         QString description = mediaNode.namedItem("media:description").toElement().text();

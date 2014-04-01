@@ -1,0 +1,26 @@
+[Desktop Entry]
+Type=Service
+Icon=drive-harddisk
+Name=Filesystem Search
+Name[de]=Dateisystem-Suche
+Name[pt]=Pesquisa no Sistema de Ficheiros
+Name[pt_BR]=Pesquisa no sistema de arquivos
+Name[sv]=Sökning i filsystem
+Name[uk]=Пошук у файловій системі
+Name[x-test]=xxFilesystem Searchxx
+Comment=Get media from your local files
+Comment[de]=Medien von lokalen Dateien holen
+Comment[pt]=Obter conteúdos dos seus ficheiros locais
+Comment[pt_BR]=Obtém a mídia a partir dos seus arquivos locais
+Comment[sv]=Hämta media från lokala filer
+Comment[uk]=Отримати мультимедійні дані з локальних файлів
+Comment[x-test]=xxGet media from your local filesxx
+
+X-KDE-ServiceTypes=Plasma/MediaCenter/MediaSource
+
+X-KDE-PluginInfo-Author=Shantanu Tushar
+X-KDE-PluginInfo-Email=shantanu@kde.org
+X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
+X-KDE-Library=pmc_filesystemsearch

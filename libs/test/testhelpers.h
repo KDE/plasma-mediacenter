@@ -15,6 +15,8 @@
  *   You should have received a copy of the GNU Lesser General Public              *
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
+#ifndef TESTHELPERS_H
+#define TESTHELPERS_H
 
 #include <QCoreApplication>
 #include <QSignalSpy>
@@ -35,3 +37,5 @@ bool waitForSignal(QSignalSpy* spy, int timeoutms = TIMEOUT_FOR_SIGNALS)
     }
     return !spy->isEmpty();
 }
+
+#endif // TESTHELPERS_H

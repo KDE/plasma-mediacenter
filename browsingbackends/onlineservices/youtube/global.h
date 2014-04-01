@@ -18,12 +18,15 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-#include <QtGui>
-#include <QStringList>
 #include <QNetworkProxy>
 #include <QNetworkAccessManager>
 #include <QNetworkProxyFactory>
+#include <QMenu>
+#include <QStringList>
+#include <QDesktopServices>
+
 #include <cstdlib>
+
 #include "networkaccess.h"
 #include "diskcache.h"
 

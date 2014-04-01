@@ -29,7 +29,7 @@ class VideoDetailsModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    VideoDetailsModel(QObject *parent = 0);
+    explicit VideoDetailsModel(QObject* parent = 0);
     ~VideoDetailsModel();
     virtual QVariant data (const QModelIndex& index, int role = Qt::DisplayRole) const;
     virtual int rowCount (const QModelIndex& parent = QModelIndex()) const;

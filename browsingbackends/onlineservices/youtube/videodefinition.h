@@ -18,7 +18,8 @@
 #ifndef VIDEODEFINITION_H
 #define VIDEODEFINITION_H
 
-#include <QtCore>
+#include <QHash>
+#include <QStringList>
 
 class VideoDefinition {
 

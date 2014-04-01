@@ -1,6 +1,8 @@
 find_package(Baloo REQUIRED)
+find_package(KFileMetaData REQUIRED)
 
 include_directories(
+  ${KFILEMETADATA_INCLUDE_DIR}
   ${BALOO_INCLUDE_DIR}
 )
 

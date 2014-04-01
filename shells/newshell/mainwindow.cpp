@@ -27,7 +27,6 @@
 #include <mediacenter/pmcimageprovider.h>
 #include <mediacenter/pmccoverartprovider.h>
 #include <mediacenter/objectpair.h>
-#include <mediacenter/filterplaylistmodel.h>
 #include <mediacenter/multipleplaylistmodel.h>
 #include <mpris2/mediaplayer2.h>
 #include <mpris2/mediaplayer2player.h>

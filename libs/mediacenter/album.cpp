@@ -43,6 +43,7 @@ Album::Album()
 
 Album::~Album()
 {
+
 }
 
 const QString& Album::name() const

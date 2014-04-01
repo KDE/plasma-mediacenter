@@ -34,7 +34,7 @@
 #include "pmcalbum.h"
 #include "pmcartist.h"
 
-static const QString DB_NAME = "plasma-mediacenter.sqlite";
+const QString MediaLibrary::DB_NAME = "plasma-mediacenter.sqlite";
 
 class MediaLibrary::Private
 {
@@ -146,18 +146,19 @@ void MediaLibrary::processNextRequest()
         bool wasUpdated = false;
         foreach(int role, request.second.keys()) {
             if (role == MediaCenter::AlbumRole) {
-                wasUpdated = wasUpdated || extractAndSaveAlbumInfo(request, media);
+                wasUpdated = extractAndSaveAlbumInfo(request, media) || wasUpdated;
             } else if (role == MediaCenter::ArtistRole) {
-                wasUpdated = wasUpdated || extractAndSaveArtistInfo(request, media);
+                wasUpdated = extractAndSaveArtistInfo(request, media) || wasUpdated;
             } else if (role == MediaCenter::DurationRole){
-                wasUpdated = wasUpdated || extractAndSaveDurationInfo(request, media);
+                wasUpdated = extractAndSaveDurationInfo(request, media) || wasUpdated;
             } else {
-                wasUpdated = wasUpdated || media->setValueForRole(role, request.second.value(role));
+                wasUpdated = media->setValueForRole(role, request.second.value(role)) || wasUpdated;
             }
         }
 
         if (wasUpdated) {
             qx::dao::update(media);
+            emitNewAlbumOrArtistIfNeeded(media);
             qDebug() << "Updated " << media->url();
         }
     } else {
@@ -182,6 +183,12 @@ void MediaLibrary::processNextRequest()
     }
 }
 
+void MediaLibrary::emitNewAlbumOrArtistIfNeeded(QSharedPointer< Media > media)
+{
+    addArtist(media->artist());
+    addAlbum(media->album());
+}
+
 QString MediaLibrary::persistMedia(const QSharedPointer< Media > &media)
 {
     QSqlError daoError = qx::dao::insert(*media);
@@ -192,18 +199,28 @@ QString MediaLibrary::persistMedia(const QSharedPointer< Media > &media)
         return QString();
     }
 
+    reloadAlbumObjectFromDb(media);
+    reloadArtistObjectFromDb(media);
+
+    return sha;
+}
+
+void MediaLibrary::reloadAlbumObjectFromDb(QSharedPointer< Media > media)
+{
     if (media->album()) {
         QSharedPointer<Album> album(new Album(media->album()->name()));
         qx::dao::fetch_by_id_with_relation("*->*", album);
         media->setAlbum(album);
     }
+}
+
+void MediaLibrary::reloadArtistObjectFromDb(QSharedPointer< Media > media)
+{
     if (media->artist()) {
         QSharedPointer<Artist> artist(new Artist(media->artist()->name()));
         qx::dao::fetch_by_id_with_relation("*->*", artist);
         media->setArtist(artist);
     }
-
-    return sha;
 }
 
 bool MediaLibrary::extractAndSaveArtistInfo(
