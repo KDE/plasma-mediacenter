@@ -22,9 +22,8 @@
 #ifndef LOCALFILESABSTRACTBACKEND_H
 #define LOCALFILESABSTRACTBACKEND_H
 
-#include <mediacenter/abstractbrowsingbackend.h>
-
-#include <KDE/KFilePlacesModel>
+#include "mediacenter/abstractbrowsingbackend.h"
+#include <KFilePlacesModel>
 #include <Solid/Device>
 #include <Solid/StorageAccess>
 

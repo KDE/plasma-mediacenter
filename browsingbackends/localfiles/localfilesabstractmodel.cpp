@@ -19,10 +19,11 @@
 
 #include "localfilesabstractmodel.h"
 
-#include <mediacenter/mediacenter.h>
+#include "mediacenter/mediacenter.h"
 
-#include <KDE/KDirModel>
-#include <KDE/KDirLister>
+#include <KDirModel>
+#include <KDirLister>
+#include <KMimeType>
 
 #include <QStack>
 
@@ -67,7 +68,7 @@ QVariant LocalFilesAbstractModel::data (const QModelIndex& index, int role) cons
         case MediaCenter::IsExpandableRole:
             return data(index, KDirModel::FileItemRole).value<KFileItem>().isDir();
         case MediaCenter::MediaUrlRole:
-            return data(index, KDirModel::FileItemRole).value<KFileItem>().url().prettyUrl();
+            return data(index, KDirModel::FileItemRole).value<KFileItem>().url().url();
         case MediaCenter::MediaTypeRole:
             KFileItem fileItem = data(index, KDirModel::FileItemRole).value<KFileItem>();
             const QString mime = fileItem.mimetype().split('/').at(0);

@@ -42,7 +42,7 @@ QVariant LocalPlacesModel:: data(const QModelIndex& index , int role) const
         case MediaCenter::IsExpandableRole:
             return true;
         case MediaCenter::MediaUrlRole:
-            return data(index, KFilePlacesModel::UrlRole).value<KFileItem>().url().prettyUrl();
+            return data(index, KFilePlacesModel::UrlRole).value<KFileItem>().url().url();
     }
 
     return KFilePlacesModel::data (index, role);

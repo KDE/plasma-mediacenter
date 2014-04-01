@@ -22,8 +22,8 @@
 #ifndef LOCALFILESABSTRACTMODEL_H
 #define LOCALFILESABSTRACTMODEL_H
 
-#include <KDE/KDirSortFilterProxyModel>
-#include <KDE/KUrl>
+#include <KUrl>
+#include <KIOFileWidgets/KDirSortFilterProxyModel>
 
   /**
   * @class LocalFilesAbstractModel @author Shantanu Tushar @author Akshay Ratan
