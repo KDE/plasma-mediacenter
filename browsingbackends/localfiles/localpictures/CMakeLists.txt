@@ -11,11 +11,11 @@ kde4_add_plugin(pmc_localpictures ${localpicturesbackend_SRCS})
 
 target_link_libraries(pmc_localpictures
     plasmamediacenter
-    ${KDE4_KDECORE_LIBS}
-    ${KDE4_KIO_LIBS}
-    ${KDE4_KFILE_LIBS}
-    ${QT_QTDECLARATIVE_LIBRARIES}
-    ${KDE4_SOLID_LIBS}
+    Qt5::Core
+    Qt5::Gui
+    KF5::KIOWidgets
+    KF5::KIOFileWidgets
+    KF5::KDE4Support
 )
 
 install(TARGETS pmc_localpictures DESTINATION ${PLUGIN_INSTALL_DIR})

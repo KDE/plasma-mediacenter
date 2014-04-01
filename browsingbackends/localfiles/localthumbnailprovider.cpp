@@ -66,8 +66,8 @@ void ThumbnailProvider::loadThumbnail(const KUrl& file, const QSize& size)
 
 void ThumbnailProvider::processPreview(const KFileItem& file, const QPixmap& thumbnail)
 {
-    d->pixmapCache.insert(file.url().prettyUrl(), thumbnail);
-    emit gotThumbnail(file.url().prettyUrl());
+    d->pixmapCache.insert(file.url().url(), thumbnail);
+    emit gotThumbnail(file.url().url());
 }
 
 QPixmap ThumbnailProvider::requestPixmap(const QString& id, QSize* size, const QSize& requestedSize)
