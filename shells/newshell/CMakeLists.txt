@@ -18,7 +18,7 @@ target_link_libraries(plasma-mediacenter
     ${KDE4_KDEUI_LIBS}
     ${KDE4_PLASMA_LIBS}
     ${KDE4_KIO_LIBS}
-    ${QT_LIBRARIES}
+    ${QT_QTOPENGL_LIBRARIES}
     ${QT_QTDECLARATIVE_LIBRARIES}
     ${QT_MULTIMEDIAKIT_LIBRARIES}
     kdeclarative
