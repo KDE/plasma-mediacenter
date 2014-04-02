@@ -24,7 +24,7 @@
 
 #include "metadatapicturemodel.h"
 
-#include <mediacenter/modelmetadata.h>
+#include "mediacenter/modelmetadata.h"
 
 MEDIACENTER_EXPORT_BROWSINGBACKEND(MetadataPictureBackend)
 

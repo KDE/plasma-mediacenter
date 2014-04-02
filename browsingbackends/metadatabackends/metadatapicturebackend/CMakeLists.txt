@@ -4,14 +4,10 @@ set(metadatapicturebackend_SRCS
     metadatapicturebackend.cpp
 )
 
-qt4_automoc(${metadatapicturebackend_SRCS})
-
-kde4_add_plugin(pmc_metadatapicturebackend ${metadatapicturebackend_SRCS})
+add_library(pmc_metadatapicturebackend ${metadatapicturebackend_SRCS})
 
 target_link_libraries(pmc_metadatapicturebackend
     plasmamediacenter
-    ${KDE4_KDECORE_LIBS}
-    ${QT_QTCORE_LIBRARIES}
 )
 
 install(TARGETS pmc_metadatapicturebackend DESTINATION ${PLUGIN_INSTALL_DIR})

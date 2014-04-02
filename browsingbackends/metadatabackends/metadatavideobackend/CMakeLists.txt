@@ -5,14 +5,10 @@ set(metadatavideobackend_SRCS
     metadatavideobackend.cpp
 )
 
-qt4_automoc(${metadatavideobackend_SRCS})
-
-kde4_add_plugin(pmc_metadatavideobackend ${metadatavideobackend_SRCS})
+add_library(pmc_metadatavideobackend ${metadatavideobackend_SRCS})
 
 target_link_libraries(pmc_metadatavideobackend
     plasmamediacenter
-    ${KDE4_KDECORE_LIBS}
-    ${QT_QTCORE_LIBRARIES}
 )
 
 install(TARGETS pmc_metadatavideobackend DESTINATION ${PLUGIN_INSTALL_DIR})

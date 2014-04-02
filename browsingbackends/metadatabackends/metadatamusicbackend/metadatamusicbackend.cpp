@@ -25,9 +25,9 @@
 #include "metadatamusicsongsmodel.h"
 #include "../metadatabackendcommonmodel.h"
 
-#include <mediacenter/pmcmetadatamodel.h>
-#include <mediacenter/playlistmodel.h>
-#include <mediacenter/filtermediamodel.h>
+#include "mediacenter/pmcmetadatamodel.h"
+#include "mediacenter/playlistmodel.h"
+#include "mediacenter/filtermediamodel.h"
 
 #include <KDebug>
 

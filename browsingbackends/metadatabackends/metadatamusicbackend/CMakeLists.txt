@@ -7,16 +7,10 @@ set(metadatamusicbackend_SRCS
     metadatamusicbackend.cpp
 )
 
-qt4_automoc(${metadatamusicbackend_SRCS})
-
-kde4_add_plugin(pmc_metadatamusicbackend ${metadatamusicbackend_SRCS})
+add_library(pmc_metadatamusicbackend ${metadatamusicbackend_SRCS})
 
 target_link_libraries(pmc_metadatamusicbackend
     plasmamediacenter
-    ${KDE4_KDECORE_LIBS}
-    ${KDE4_KIO_LIBS}
-    ${KDE4_KFILE_LIBS}
-    ${QT_QTDECLARATIVE_LIBRARIES}
 )
 
 install(TARGETS pmc_metadatamusicbackend DESTINATION ${PLUGIN_INSTALL_DIR})
