@@ -22,6 +22,7 @@
 #include "picasamodel.h"
 
 #include <QTimer>
+#include <KLocalizedString>
 
 MEDIACENTER_EXPORT_BROWSINGBACKEND(PicasaBackend)
 

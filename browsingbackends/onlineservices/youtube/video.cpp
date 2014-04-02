@@ -62,7 +62,7 @@ void Video::setWebpage(QUrl webpage) {
     // QRegExp re("^((?:http://)?(?:\\w+\\.)?youtube\\.com/(?:(?:v/)|(?:(?:watch(?:\\.php)?)?\\?(?:.+&)?v=)))?([0-9A-Za-z_-]+)(?(1).+)?$");
     QRegExp re("^https?://www\\.youtube\\.com/watch\\?v=([0-9A-Za-z_-]+).*");
     bool match = re.exactMatch(m_webpage.toString());
-    if (!match || re.numCaptures() < 1) {
+    if (!match || re.captureCount() < 1) {
         qDebug() << QString("Cannot get video id for %1").arg(m_webpage.toString());
         // emit errorStreamUrl(QString("Cannot get video id for %1").arg(m_webpage.toString()));
         // loadingStreamUrl = false;
@@ -139,7 +139,7 @@ void  Video::gotVideoInfo(QByteArray data) {
     QRegExp re = QRegExp("^.*&token=([^&]+).*$");
     bool match = re.exactMatch(videoInfo);
     // handle regexp failure
-    if (!match || re.numCaptures() < 1) {
+    if (!match || re.captureCount() < 1) {
         // Don't panic! We're gonna try another magic "el" param
         elIndex++;
         getVideoInfo();
@@ -155,7 +155,7 @@ void  Video::gotVideoInfo(QByteArray data) {
     re = QRegExp("^.*&url_encoded_fmt_stream_map=([^&]+).*$");
     match = re.exactMatch(videoInfo);
     // handle regexp failure
-    if (!match || re.numCaptures() < 1) {
+    if (!match || re.captureCount() < 1) {
         // Don't panic! We're gonna try another magic "el" param
         elIndex++;
         getVideoInfo();
@@ -259,7 +259,7 @@ void Video::scrapeWebPage(QByteArray data) {
     bool match = re.exactMatch(videoHTML);
 
     // on regexp failure, stop and report error
-    if (!match || re.numCaptures() < 1) {
+    if (!match || re.captureCount() < 1) {
         emit errorStreamUrl("Error parsing video page");
         loadingStreamUrl = false;
         return;

@@ -20,7 +20,7 @@
 #include "videodetailsmodel.h"
 #include "video.h"
 
-#include <mediacenter/mediacenter.h>
+#include "mediacenter/mediacenter.h"
 
 
 VideoDetailsModel::VideoDetailsModel(QObject* parent): QAbstractListModel(parent),

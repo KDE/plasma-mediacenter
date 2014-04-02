@@ -9,14 +9,10 @@ set(youtubebackend_SRCS
     videodetailsmodel.cpp
 )
 
-qt4_automoc(${youtubebackend_SRCS})
+add_library(pmc_youtubebackend ${youtubebackend_SRCS})
 
-kde4_add_plugin(pmc_youtubebackend ${youtubebackend_SRCS})
 target_link_libraries(pmc_youtubebackend
     plasmamediacenter
-    ${KDE4_KDECORE_LIBS}
-    ${KDE4_KIO_LIBS}
-    ${QT_QTXML_LIBRARY}
 )
 
 install(TARGETS pmc_youtubebackend DESTINATION ${PLUGIN_INSTALL_DIR})

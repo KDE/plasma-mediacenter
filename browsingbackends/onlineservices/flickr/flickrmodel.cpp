@@ -23,8 +23,8 @@
 #include <mediacenter/mediacenter.h>
 
 #include <KDE/KUrl>
-#include <KDE/KIO/Job>
-#include <KDE/KJob>
+#include <KIO/Job>
+#include <KJob>
 
 #include <QtXml/QDomDocument>
 #include <QtXml/QDomNodeList>
