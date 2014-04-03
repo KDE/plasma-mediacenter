@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2009-2010 by Alessandro Diaferia <alediaferia@gmail.com>            *
+ *   Copyright 2014 by Sinny Kumari <ksinny@gmail.com>                             *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,43 +16,23 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#include "mediacenter.h"
+#ifndef MEDIACENTERTEST_H
+#define MEDIACENTERTEST_H
 
-#include <QFileInfo>
+#include <QObject>
 
-#include <KMimeType>
-#include <KUrl>
-#include <KCmdLineArgs>
-#include <KStandardDirs>
-
-#include <Solid/Device>
-#include <Solid/OpticalDisc>
-
-#include <Phonon/MediaSource>
-
-namespace MediaCenter {
-
-QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> &roles)
+class MediaCenterTest : public QObject
 {
-    QHash<int, QByteArray> newRoles(roles);
-    newRoles[MediaUrlRole] = "mediaUrl";
-    newRoles[IsExpandableRole] = "isExpandable";
-    newRoles[MediaTypeRole] = "mediaType";
-    newRoles[DecorationTypeRole] = "decorationType";
-    newRoles[HideLabelRole] = "hideLabel";
-    newRoles[ResourceIdRole] = "resourceId";
-    newRoles[DurationRole] = "mediaDuration";
-    newRoles[ArtistRole] = "mediaArtist";
-    newRoles[AlbumRole] = "mediaAlbum";
-    return newRoles;
-}
+    Q_OBJECT
+private slots:
+    void initTestCase();
+    void cleanupTestCase();
 
-QString dataDirForComponent(const QString& component)
-{
-    return KGlobal::dirs()->saveLocation("data")
-                                    + KCmdLineArgs::appName()
-                                    + (component.isEmpty() ?
-                                        QString() : QString("/%1").arg(component));
-}
+    void init();
+    void cleanup();
 
-} // MediaCenter namespace
+    void shouldReturnPathForComponent();
+    void shouldReturnPathWithoutComponent();
+};
+
+#endif // MEDIACENTERTEST_H

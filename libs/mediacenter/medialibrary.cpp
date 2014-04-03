@@ -333,11 +333,11 @@ void MediaLibrary::updateMedia(const QString& url, const QHash< int, QVariant >&
 
 void MediaLibrary::initDb()
 {
-    bool dbExists = QFile::exists(DB_NAME);
+    bool dbExists = QFile::exists(dbPath());
 
     d->db = qx::QxSqlDatabase::getSingleton();
     d->db->setDriverName("QSQLITE");
-    d->db->setDatabaseName("./plasma-mediacenter.sqlite");
+    d->db->setDatabaseName(dbPath());
 
     //TODO: Just the existence of the db file might not be enough proof that the
     // database in the file is in a usable state
@@ -486,5 +486,10 @@ QSharedPointer< PmcMedia > MediaLibrary::mediaForUrl(const QString& url) const
     pmcMedia->setMedia(media);
 
     return pmcMedia;
+}
+
+QString MediaLibrary::dbPath()
+{
+    return QDir(MediaCenter::dataDirForComponent()).absoluteFilePath(DB_NAME);
 }
 

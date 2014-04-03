@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2009-2010 by Alessandro Diaferia <alediaferia@gmail.com>            *
+ *   Copyright 2014 by Sinny Kumari <ksinny@gmail.com>                             *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,43 +16,57 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#include "mediacenter.h"
+#include "mediacentertest.h"
+#include <mediacenter/mediacenter.h>
 
-#include <QFileInfo>
-
-#include <KMimeType>
-#include <KUrl>
-#include <KCmdLineArgs>
+#include <qtest_kde.h>
 #include <KStandardDirs>
 
-#include <Solid/Device>
-#include <Solid/OpticalDisc>
+QTEST_KDEMAIN(MediaCenterTest, NoGUI);
 
-#include <Phonon/MediaSource>
-
-namespace MediaCenter {
-
-QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> &roles)
+void MediaCenterTest::initTestCase()
 {
-    QHash<int, QByteArray> newRoles(roles);
-    newRoles[MediaUrlRole] = "mediaUrl";
-    newRoles[IsExpandableRole] = "isExpandable";
-    newRoles[MediaTypeRole] = "mediaType";
-    newRoles[DecorationTypeRole] = "decorationType";
-    newRoles[HideLabelRole] = "hideLabel";
-    newRoles[ResourceIdRole] = "resourceId";
-    newRoles[DurationRole] = "mediaDuration";
-    newRoles[ArtistRole] = "mediaArtist";
-    newRoles[AlbumRole] = "mediaAlbum";
-    return newRoles;
+    // Called before the first testfunction is executed
 }
 
-QString dataDirForComponent(const QString& component)
+void MediaCenterTest::cleanupTestCase()
 {
-    return KGlobal::dirs()->saveLocation("data")
-                                    + KCmdLineArgs::appName()
-                                    + (component.isEmpty() ?
-                                        QString() : QString("/%1").arg(component));
+    // Called after the last testfunction was executed
 }
 
-} // MediaCenter namespace
+void MediaCenterTest::init()
+{
+    // Called before each testfunction is executed
+}
+
+void MediaCenterTest::cleanup()
+{
+    // Called after every testfunction
+}
+
+void MediaCenterTest::shouldReturnPathForComponent()
+{
+    const QString path = MediaCenter::dataDirForComponent("test");
+
+    const QString expectedPath = QString("%1%2/%3")
+        .arg(KGlobal::dirs()->saveLocation("data"))
+        .arg(KCmdLineArgs::appName())
+        .arg("test");
+
+    QCOMPARE(path, expectedPath);
+
+}
+
+void MediaCenterTest::shouldReturnPathWithoutComponent()
+{
+    const QString path = MediaCenter::dataDirForComponent();
+
+    const QString expectedPath = QString("%1%2")
+    .arg(KGlobal::dirs()->saveLocation("data"))
+    .arg(KCmdLineArgs::appName());
+
+    QCOMPARE(path, expectedPath);
+}
+
+
+#include "mediacentertest.moc"

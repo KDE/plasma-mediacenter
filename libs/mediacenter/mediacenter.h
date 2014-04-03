@@ -51,7 +51,7 @@ enum MediaType {
 };
 
 MEDIACENTER_EXPORT QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> &roles);
-MEDIACENTER_EXPORT QString dataDirForComponent (const QString &component);
+MEDIACENTER_EXPORT QString dataDirForComponent (const QString &component = QString());
 } // namespace MediaCenter
 
 #endif // MEDIACENTER_H
