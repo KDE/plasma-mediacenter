@@ -51,7 +51,8 @@ KdeMetadataMediaSource::KdeMetadataMediaSource(QObject* parent, const QVariantLi
         << Qt::DecorationRole
         << MediaCenter::AlbumRole
         << MediaCenter::ArtistRole
-        << MediaCenter::DurationRole;
+        << MediaCenter::DurationRole
+        << MediaCenter::CreatedAtRole;
 
     moveToThread(this);
 }
@@ -173,6 +174,12 @@ void KdeMetadataMediaSource::fetchValuesForResult(const Nepomuk2::Query::Result&
                     Nepomuk2::Vocabulary::NFO::duration()).toInt();
                 values.insert(role, duration);
             break;
+            }
+        case MediaCenter::CreatedAtRole:
+            const QDateTime createdDateTime = result.resource().property(
+                Nepomuk2::Vocabulary::NIE::created()).toDateTime();
+            if (createdDateTime.isValid()) {
+                values.insert(role, createdDateTime);
             }
         }
     }
