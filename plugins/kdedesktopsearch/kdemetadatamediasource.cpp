@@ -166,7 +166,9 @@ void KdeMetadataMediaSource::fetchValuesForResult(const Nepomuk2::Query::Result&
             }
             break;
         case MediaCenter::DurationRole:
-            if (values.value(MediaCenter::MediaTypeRole).toString() == "audio") {
+            if (values.value(MediaCenter::MediaTypeRole).toString() == "audio"
+                    || values.value(MediaCenter::MediaTypeRole).toString() == "video")
+            {
                 const int duration = result.resource().property(
                     Nepomuk2::Vocabulary::NFO::duration()).toInt();
                 values.insert(role, duration);
