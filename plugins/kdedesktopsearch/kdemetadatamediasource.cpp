@@ -29,6 +29,7 @@
 #include <Nepomuk2/Vocabulary/NFO>
 #include <Nepomuk2/Vocabulary/NCO>
 #include <Nepomuk2/Vocabulary/NMM>
+#include <Nepomuk2/Vocabulary/NEXIF>
 #include <Nepomuk2/Query/ResourceTypeTerm>
 #include <Nepomuk2/Query/OrTerm>
 
@@ -175,12 +176,23 @@ void KdeMetadataMediaSource::fetchValuesForResult(const Nepomuk2::Query::Result&
                 values.insert(role, duration);
             break;
             }
-        case MediaCenter::CreatedAtRole:
-            const QDateTime createdDateTime = result.resource().property(
-                Nepomuk2::Vocabulary::NIE::created()).toDateTime();
+        case MediaCenter::CreatedAtRole: {
+            QDateTime createdDateTime;
+
+            if (values.value(MediaCenter::MediaTypeRole).toString() == "image") {
+                createdDateTime = result.resource().property(
+                    Nepomuk2::Vocabulary::NEXIF::dateTimeOriginal()).toDateTime();
+            }
+
+            if (!createdDateTime.isValid()) {
+                createdDateTime = result.resource().property(
+                    Nepomuk2::Vocabulary::NIE::created()).toDateTime();
+            }
+
             if (createdDateTime.isValid()) {
                 values.insert(role, createdDateTime);
             }
+        }
         }
     }
 
