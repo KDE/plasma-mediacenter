@@ -57,6 +57,7 @@ private slots:
 private:
     QHash< int, QVariant > createTestMediaData() const;
     QHash< int, QVariant > createTestMediaDataWithAlbumArtist() const;
+    QString pathToDatabase() const;
 };
 
 Q_DECLARE_METATYPE(QList<QSharedPointer<PmcMedia> >)

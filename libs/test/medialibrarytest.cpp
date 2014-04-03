@@ -44,12 +44,12 @@ void MediaLibraryTest::cleanupTestCase()
 
 void MediaLibraryTest::init()
 {
-    QDir::current().remove(DB_FILENAME);
+    QDir::current().remove(pathToDatabase());
 }
 
 void MediaLibraryTest::cleanup()
 {
-    QDir::current().remove(DB_FILENAME);
+    QDir::current().remove(pathToDatabase());
 }
 
 QHash<int,QVariant> MediaLibraryTest::createTestMediaData() const
@@ -74,6 +74,11 @@ QHash< int, QVariant > MediaLibraryTest::createTestMediaDataWithAlbumArtist() co
     return data;
 }
 
+QString MediaLibraryTest::pathToDatabase() const
+{
+    return QDir(MediaCenter::dataDirForComponent()).absoluteFilePath(DB_FILENAME);
+}
+
 void MediaLibraryTest::createsDbWhenNotPresent()
 {
     MediaLibrary mediaLibrary;
@@ -85,7 +90,7 @@ void MediaLibraryTest::createsDbWhenNotPresent()
     waitForSignal(&initializedSpy);
 
     QVERIFY2(initializedSpy.size() == 1, "MediaLibrary did not emit initialized exactly 1 time");
-    QVERIFY2(QDir::current().exists(DB_FILENAME), "The DB was not created");
+    QVERIFY2(QDir::current().exists(pathToDatabase()), "The DB was not created");
 }
 
 void MediaLibraryTest::addsNewMediaAndItsMetadata()
