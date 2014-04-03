@@ -40,6 +40,7 @@ enum AdditionalMediaRoles {
     DurationRole,
     ArtistRole,
     AlbumRole,
+    CreatedAtRole,
     AdditionalRoles     //If additional roles are needed to be defined
 };
 

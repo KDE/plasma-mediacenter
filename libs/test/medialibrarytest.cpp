@@ -60,6 +60,7 @@ QHash<int,QVariant> MediaLibraryTest::createTestMediaData() const
     data.insert(MediaCenter::MediaTypeRole, "audio");
     data.insert(Qt::DecorationRole, "smiley");
     data.insert(MediaCenter::DurationRole, 100);
+    data.insert(MediaCenter::CreatedAtRole, QDateTime::currentDateTimeUtc());
 
     return data;
 }
@@ -120,7 +121,7 @@ void MediaLibraryTest::addsNewMediaAndItsMetadata()
     QCOMPARE(media->album(), data.value(MediaCenter::AlbumRole).toString());
     QCOMPARE(media->artist(), data.value(MediaCenter::ArtistRole).toString());
     QCOMPARE(media->duration(), data.value(MediaCenter::DurationRole).toInt());
-
+    QCOMPARE(media->createdAt(), data.value(MediaCenter::CreatedAtRole).toDateTime());
 
     QCOMPARE(newAlbumSpy.size(), 1);
     QList<QSharedPointer<PmcAlbum> > returnedAlbum = newAlbumSpy.takeFirst().first().value< QList<QSharedPointer<PmcAlbum> > >();
