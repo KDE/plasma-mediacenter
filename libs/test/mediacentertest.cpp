@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2014 Sinny Kumari <ksinny@gmail.com>                                *
+ *   Copyright 2014 by Sinny Kumari <ksinny@gmail.com>                             *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,42 +16,57 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef PMCMEDIA_H
-#define PMCMEDIA_H
+#include "mediacentertest.h"
+#include <mediacenter/mediacenter.h>
 
-#include <QString>
-#include <QSharedPointer>
+#include <qtest_kde.h>
+#include <KStandardDirs>
 
-#include "mediacenter_export.h"
+QTEST_KDEMAIN(MediaCenterTest, NoGUI);
 
-#include "media.h"
-
-class MEDIACENTER_EXPORT PmcMedia : public QObject
+void MediaCenterTest::initTestCase()
 {
-    Q_OBJECT
-public:
-    explicit PmcMedia(const QString &url, QObject* parent = 0);
+    // Called before the first testfunction is executed
+}
 
-    void setMedia(const QSharedPointer< Media >& media);
+void MediaCenterTest::cleanupTestCase()
+{
+    // Called after the last testfunction was executed
+}
 
-    QString sha() const;
-    QString title () const;
-    QString url() const;
-    QString thumbnail () const;
-    QString type() const;
-    QString album() const;
-    QString artist() const;
-    int duration() const;
-    QDateTime createdAt() const;
+void MediaCenterTest::init()
+{
+    // Called before each testfunction is executed
+}
 
-Q_SIGNALS:
-    void updated();
+void MediaCenterTest::cleanup()
+{
+    // Called after every testfunction
+}
 
-private:
-    class Private;
-    Private * const d;
+void MediaCenterTest::shouldReturnPathForComponent()
+{
+    const QString path = MediaCenter::dataDirForComponent("test");
 
-    QString fileName() const;
-};
+    const QString expectedPath = QString("%1%2/%3")
+        .arg(KGlobal::dirs()->saveLocation("data"))
+        .arg(KCmdLineArgs::appName())
+        .arg("test");
 
-#endif // PMCMEDIA_H
+    QCOMPARE(path, expectedPath);
+
+}
+
+void MediaCenterTest::shouldReturnPathWithoutComponent()
+{
+    const QString path = MediaCenter::dataDirForComponent();
+
+    const QString expectedPath = QString("%1%2")
+    .arg(KGlobal::dirs()->saveLocation("data"))
+    .arg(KCmdLineArgs::appName());
+
+    QCOMPARE(path, expectedPath);
+}
+
+
+#include "mediacentertest.moc"

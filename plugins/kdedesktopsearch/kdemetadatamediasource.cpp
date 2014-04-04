@@ -29,6 +29,7 @@
 #include <Nepomuk2/Vocabulary/NFO>
 #include <Nepomuk2/Vocabulary/NCO>
 #include <Nepomuk2/Vocabulary/NMM>
+#include <Nepomuk2/Vocabulary/NEXIF>
 #include <Nepomuk2/Query/ResourceTypeTerm>
 #include <Nepomuk2/Query/OrTerm>
 
@@ -51,7 +52,8 @@ KdeMetadataMediaSource::KdeMetadataMediaSource(QObject* parent, const QVariantLi
         << Qt::DecorationRole
         << MediaCenter::AlbumRole
         << MediaCenter::ArtistRole
-        << MediaCenter::DurationRole;
+        << MediaCenter::DurationRole
+        << MediaCenter::CreatedAtRole;
 
     moveToThread(this);
 }
@@ -166,12 +168,31 @@ void KdeMetadataMediaSource::fetchValuesForResult(const Nepomuk2::Query::Result&
             }
             break;
         case MediaCenter::DurationRole:
-            if (values.value(MediaCenter::MediaTypeRole).toString() == "audio") {
+            if (values.value(MediaCenter::MediaTypeRole).toString() == "audio"
+                    || values.value(MediaCenter::MediaTypeRole).toString() == "video")
+            {
                 const int duration = result.resource().property(
                     Nepomuk2::Vocabulary::NFO::duration()).toInt();
                 values.insert(role, duration);
             break;
             }
+        case MediaCenter::CreatedAtRole: {
+            QDateTime createdDateTime;
+
+            if (values.value(MediaCenter::MediaTypeRole).toString() == "image") {
+                createdDateTime = result.resource().property(
+                    Nepomuk2::Vocabulary::NEXIF::dateTimeOriginal()).toDateTime();
+            }
+
+            if (!createdDateTime.isValid()) {
+                createdDateTime = result.resource().property(
+                    Nepomuk2::Vocabulary::NIE::created()).toDateTime();
+            }
+
+            if (createdDateTime.isValid()) {
+                values.insert(role, createdDateTime);
+            }
+        }
         }
     }
 

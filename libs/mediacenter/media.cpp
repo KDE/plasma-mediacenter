@@ -37,6 +37,7 @@ template <> void register_class(QxClass<Media> & m)
     m.data(& Media::m_thumbnail, "thumbnail");
     m.data(& Media::m_type, "type");
     m.data(& Media::m_duration, "duration");
+    m.data(& Media::m_createdAt, "created_at");
 
     m.relationManyToOne(& Media::m_album, "album_id");
     m.relationManyToOne(& Media::m_artist, "artist_id");
@@ -157,6 +158,8 @@ bool Media::setValueForRole(int role, const QVariant& value)
             return false;
         case Qt::DecorationRole:
             return thumbnail().isEmpty() ? setThumbnail(value.toString()) : false;
+        case MediaCenter::CreatedAtRole:
+            return setCreatedAt(value.toDateTime());
         default:
             //qWarning() << "Unknown role " << role << " for value " << value;
             return false;
@@ -191,4 +194,14 @@ int Media::duration() const
 bool Media::setDuration(int duration)
 {
     return updateIfChanged(m_duration, duration);
+}
+
+QDateTime Media::createdAt() const
+{
+    return m_createdAt;
+}
+
+bool Media::setCreatedAt(const QDateTime& createdAt)
+{
+    return updateIfChanged(m_createdAt, createdAt);
 }

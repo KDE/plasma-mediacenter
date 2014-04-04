@@ -254,6 +254,8 @@ QVariant PmcMetadataModel::dataForMedia(const QModelIndex &index, int role) cons
         } else {
             return media->thumbnail();
         }
+    case MediaCenter::CreatedAtRole:
+        return media->createdAt();
     }
 
     return QVariant();

@@ -30,11 +30,11 @@ void MediaCenterPlugin::registerTypes(const char *uri)
 {
     Q_ASSERT(uri == QLatin1String("org.kde.plasma.mediacenter"));
 
-    qmlRegisterType<FilteredBackendsModel>(uri, 2, 0, "FilteredBackendsModel");
-    qmlRegisterType<SubtitleProvider>(uri, 2, 0, "SubtitleProvider");
-    qmlRegisterType<FilterPlaylistModel>(uri, 2, 0, "FilterPlaylistModel");
-    qmlRegisterType<MultiplePlaylistModel>(uri, 2, 0, "MultiplePlaylistModel");
-    qmlRegisterType<ObjectPair>(uri, 2, 0, "ObjectPair");
+//     qmlRegisterType<FilteredBackendsModel>(uri, 2, 0, "FilteredBackendsModel");
+//     qmlRegisterType<SubtitleProvider>(uri, 2, 0, "SubtitleProvider");
+//     qmlRegisterType<FilterPlaylistModel>(uri, 2, 0, "FilterPlaylistModel");
+//     qmlRegisterType<MultiplePlaylistModel>(uri, 2, 0, "MultiplePlaylistModel");
+//     qmlRegisterType<ObjectPair>(uri, 2, 0, "ObjectPair");
 
 }
 

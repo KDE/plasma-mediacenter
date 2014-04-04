@@ -25,6 +25,7 @@
 #include "metadatapicturemodel.h"
 
 #include "mediacenter/modelmetadata.h"
+#include "mediacenter/filtermediamodel.h"
 
 MEDIACENTER_EXPORT_BROWSINGBACKEND(MetadataPictureBackend)
 
@@ -40,7 +41,13 @@ MetadataPictureBackend::~MetadataPictureBackend()
 bool MetadataPictureBackend::initImpl()
 {
     PmcMetadataModel *pmcMetadataModel = new MetadataPictureModel(this);
-    ModelMetadata *metadata = new ModelMetadata(pmcMetadataModel, this);
+
+    FilterMediaModel *filteredModel = new FilterMediaModel(this);
+    filteredModel->setSourceModel(pmcMetadataModel);
+    filteredModel->setSortRole(MediaCenter::CreatedAtRole);
+    filteredModel->sort(0, Qt::DescendingOrder);
+
+    ModelMetadata *metadata = new ModelMetadata(filteredModel, this);
     handleBusySignals(pmcMetadataModel);
     setModel(metadata);
     return true;

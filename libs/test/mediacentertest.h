@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2014 Sinny Kumari <ksinny@gmail.com>                                *
+ *   Copyright 2014 by Sinny Kumari <ksinny@gmail.com>                             *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,42 +16,23 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef PMCMEDIA_H
-#define PMCMEDIA_H
+#ifndef MEDIACENTERTEST_H
+#define MEDIACENTERTEST_H
 
-#include <QString>
-#include <QSharedPointer>
+#include <QObject>
 
-#include "mediacenter_export.h"
-
-#include "media.h"
-
-class MEDIACENTER_EXPORT PmcMedia : public QObject
+class MediaCenterTest : public QObject
 {
     Q_OBJECT
-public:
-    explicit PmcMedia(const QString &url, QObject* parent = 0);
+private slots:
+    void initTestCase();
+    void cleanupTestCase();
 
-    void setMedia(const QSharedPointer< Media >& media);
+    void init();
+    void cleanup();
 
-    QString sha() const;
-    QString title () const;
-    QString url() const;
-    QString thumbnail () const;
-    QString type() const;
-    QString album() const;
-    QString artist() const;
-    int duration() const;
-    QDateTime createdAt() const;
-
-Q_SIGNALS:
-    void updated();
-
-private:
-    class Private;
-    Private * const d;
-
-    QString fileName() const;
+    void shouldReturnPathForComponent();
+    void shouldReturnPathWithoutComponent();
 };
 
-#endif // PMCMEDIA_H
+#endif // MEDIACENTERTEST_H

@@ -54,6 +54,9 @@ public:
     int duration() const;
     bool setDuration(int duration);
 
+    QDateTime createdAt() const;
+    bool setCreatedAt(const QDateTime &createdAt);
+
     bool setValueForRole(int role, const QVariant &value);
     static QString calculateSha(const QString& url);
 
@@ -69,6 +72,7 @@ public:
     QString m_thumbnail;
     QString m_type;
     int m_duration;
+    QDateTime m_createdAt;
     Album::Ptr m_album;
     Artist::Ptr m_artist;
 

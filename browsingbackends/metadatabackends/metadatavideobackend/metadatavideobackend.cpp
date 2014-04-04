@@ -45,6 +45,8 @@ bool MetadataVideoBackend::initImpl()
 
     FilterMediaModel *filteredModel = new FilterMediaModel(this);
     filteredModel->setSourceModel(model);
+    filteredModel->setSortRole(MediaCenter::CreatedAtRole);
+    filteredModel->sort(0, Qt::DescendingOrder);
     ModelMetadata *metadata = new ModelMetadata(filteredModel, this);
 
     metadata->setSupportsSearch(true);

@@ -24,6 +24,7 @@
 #include <Qt>
 #include <QPair>
 #include <QHash>
+#include <QString>
 
 namespace MediaCenter {
 
@@ -37,6 +38,7 @@ enum AdditionalMediaRoles {
     DurationRole,
     ArtistRole,
     AlbumRole,
+    CreatedAtRole,
     AdditionalRoles     //If additional roles are needed to be defined
 };
 
@@ -47,7 +49,7 @@ enum MediaType {
 };
 
 MEDIACENTER_EXPORT QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> &roles);
-MEDIACENTER_EXPORT QString dataDirForComponent (const QString &component);
+MEDIACENTER_EXPORT QString dataDirForComponent (const QString &component = QString());
 } // namespace MediaCenter
 
 #endif // MEDIACENTER_H

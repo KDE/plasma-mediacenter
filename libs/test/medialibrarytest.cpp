@@ -33,12 +33,12 @@ void MediaLibraryTest::cleanupTestCase()
 
 void MediaLibraryTest::init()
 {
-    QDir::current().remove(DB_FILENAME);
+    QDir::current().remove(pathToDatabase());
 }
 
 void MediaLibraryTest::cleanup()
 {
-    QDir::current().remove(DB_FILENAME);
+    QDir::current().remove(pathToDatabase());
 }
 
 QHash<int,QVariant> MediaLibraryTest::createTestMediaData() const
@@ -49,6 +49,7 @@ QHash<int,QVariant> MediaLibraryTest::createTestMediaData() const
     data.insert(MediaCenter::MediaTypeRole, "audio");
     data.insert(Qt::DecorationRole, "smiley");
     data.insert(MediaCenter::DurationRole, 100);
+    data.insert(MediaCenter::CreatedAtRole, QDateTime::currentDateTimeUtc());
 
     return data;
 }
@@ -62,6 +63,11 @@ QHash< int, QVariant > MediaLibraryTest::createTestMediaDataWithAlbumArtist() co
     return data;
 }
 
+QString MediaLibraryTest::pathToDatabase() const
+{
+    return QDir(MediaCenter::dataDirForComponent()).absoluteFilePath(DB_FILENAME);
+}
+
 void MediaLibraryTest::createsDbWhenNotPresent()
 {
     MediaLibrary mediaLibrary;
@@ -73,7 +79,7 @@ void MediaLibraryTest::createsDbWhenNotPresent()
     waitForSignal(&initializedSpy);
 
     QVERIFY2(initializedSpy.size() == 1, "MediaLibrary did not emit initialized exactly 1 time");
-    QVERIFY2(QDir::current().exists(DB_FILENAME), "The DB was not created");
+    QVERIFY2(QDir::current().exists(pathToDatabase()), "The DB was not created");
 }
 
 void MediaLibraryTest::addsNewMediaAndItsMetadata()
@@ -109,7 +115,7 @@ void MediaLibraryTest::addsNewMediaAndItsMetadata()
     QCOMPARE(media->album(), data.value(MediaCenter::AlbumRole).toString());
     QCOMPARE(media->artist(), data.value(MediaCenter::ArtistRole).toString());
     QCOMPARE(media->duration(), data.value(MediaCenter::DurationRole).toInt());
-
+    QCOMPARE(media->createdAt(), data.value(MediaCenter::CreatedAtRole).toDateTime());
 
     QCOMPARE(newAlbumSpy.size(), 1);
     QList<QSharedPointer<PmcAlbum> > returnedAlbum = newAlbumSpy.takeFirst().first().value< QList<QSharedPointer<PmcAlbum> > >();
