@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
+ *   Copyright 2014 by Sinny Kumari <ksinny@gmail.com>                             *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,21 +16,12 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef MEDIALIBRARYTEST_H
-#define MEDIALIBRARYTEST_H
+#ifndef MEDIACENTERTEST_H
+#define MEDIACENTERTEST_H
 
 #include <QObject>
-#include <QMetaType>
-#include <QSharedPointer>
-#include <mediacenter/mediavalidator.h>
 
-class PmcArtist;
-class PmcAlbum;
-class PmcMedia;
-class QSignalSpy;
-class MediaLibrary;
-
-class MediaLibraryTest : public QObject
+class MediaCenterTest : public QObject
 {
     Q_OBJECT
 private slots:
@@ -40,28 +31,8 @@ private slots:
     void init();
     void cleanup();
 
-    void createsDbWhenNotPresent();
-
-    void addsNewMediaAndItsMetadata();
-
-    void shouldEmitUpdatedForMediaInsteadOfNewMediaWhenDataUpdated();
-
-    void shouldNotEmitUpdatedWhenNothingUpdated();
-
-    void shouldEmitUpdatedWhenAlbumOrArtistChanged();
-
-    void shouldNotAddMediaForNonExistentFile();
-
-    void shouldCleanupEntriesForNonExistentMedia();
-
-private:
-    QHash< int, QVariant > createTestMediaData() const;
-    QHash< int, QVariant > createTestMediaDataWithAlbumArtist() const;
-    QString pathToDatabase() const;
+    void shouldReturnPathForComponent();
+    void shouldReturnPathWithoutComponent();
 };
 
-Q_DECLARE_METATYPE(QList<QSharedPointer<PmcMedia> >)
-Q_DECLARE_METATYPE(QList<QSharedPointer<PmcAlbum> >)
-Q_DECLARE_METATYPE(QList<QSharedPointer<PmcArtist> >)
-
-#endif // MEDIALIBRARYTEST_H
+#endif // MEDIACENTERTEST_H

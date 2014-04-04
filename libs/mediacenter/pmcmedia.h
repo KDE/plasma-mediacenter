@@ -42,6 +42,7 @@ public:
     QString album() const;
     QString artist() const;
     int duration() const;
+    QDateTime createdAt() const;
 
 Q_SIGNALS:
     void updated();

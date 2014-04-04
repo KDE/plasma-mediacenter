@@ -89,3 +89,8 @@ QString PmcMedia::fileName() const
 {
     return QFileInfo(QUrl(d->url).toLocalFile()).fileName();
 }
+
+QDateTime PmcMedia::createdAt() const
+{
+    return !d->media.isNull() ? d->media->createdAt() : QDateTime();
+}

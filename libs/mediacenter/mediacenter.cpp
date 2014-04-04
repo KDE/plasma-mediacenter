@@ -51,7 +51,8 @@ QString dataDirForComponent(const QString& component)
 {
     return KGlobal::dirs()->saveLocation("data")
                                     + KCmdLineArgs::appName()
-                                    + QString("/%1/").arg(component);
+                                    + (component.isEmpty() ?
+                                        QString() : QString("/%1").arg(component));
 }
 
 } // MediaCenter namespace

@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
+ *   Copyright 2014 by Sinny Kumari <ksinny@gmail.com>                             *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,52 +16,57 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef MEDIALIBRARYTEST_H
-#define MEDIALIBRARYTEST_H
+#include "mediacentertest.h"
+#include <mediacenter/mediacenter.h>
 
-#include <QObject>
-#include <QMetaType>
-#include <QSharedPointer>
-#include <mediacenter/mediavalidator.h>
+#include <qtest_kde.h>
+#include <KStandardDirs>
 
-class PmcArtist;
-class PmcAlbum;
-class PmcMedia;
-class QSignalSpy;
-class MediaLibrary;
+QTEST_KDEMAIN(MediaCenterTest, NoGUI);
 
-class MediaLibraryTest : public QObject
+void MediaCenterTest::initTestCase()
 {
-    Q_OBJECT
-private slots:
-    void initTestCase();
-    void cleanupTestCase();
+    // Called before the first testfunction is executed
+}
 
-    void init();
-    void cleanup();
+void MediaCenterTest::cleanupTestCase()
+{
+    // Called after the last testfunction was executed
+}
 
-    void createsDbWhenNotPresent();
+void MediaCenterTest::init()
+{
+    // Called before each testfunction is executed
+}
 
-    void addsNewMediaAndItsMetadata();
+void MediaCenterTest::cleanup()
+{
+    // Called after every testfunction
+}
 
-    void shouldEmitUpdatedForMediaInsteadOfNewMediaWhenDataUpdated();
+void MediaCenterTest::shouldReturnPathForComponent()
+{
+    const QString path = MediaCenter::dataDirForComponent("test");
 
-    void shouldNotEmitUpdatedWhenNothingUpdated();
+    const QString expectedPath = QString("%1%2/%3")
+        .arg(KGlobal::dirs()->saveLocation("data"))
+        .arg(KCmdLineArgs::appName())
+        .arg("test");
 
-    void shouldEmitUpdatedWhenAlbumOrArtistChanged();
+    QCOMPARE(path, expectedPath);
 
-    void shouldNotAddMediaForNonExistentFile();
+}
 
-    void shouldCleanupEntriesForNonExistentMedia();
+void MediaCenterTest::shouldReturnPathWithoutComponent()
+{
+    const QString path = MediaCenter::dataDirForComponent();
 
-private:
-    QHash< int, QVariant > createTestMediaData() const;
-    QHash< int, QVariant > createTestMediaDataWithAlbumArtist() const;
-    QString pathToDatabase() const;
-};
+    const QString expectedPath = QString("%1%2")
+    .arg(KGlobal::dirs()->saveLocation("data"))
+    .arg(KCmdLineArgs::appName());
 
-Q_DECLARE_METATYPE(QList<QSharedPointer<PmcMedia> >)
-Q_DECLARE_METATYPE(QList<QSharedPointer<PmcAlbum> >)
-Q_DECLARE_METATYPE(QList<QSharedPointer<PmcArtist> >)
+    QCOMPARE(path, expectedPath);
+}
 
-#endif // MEDIALIBRARYTEST_H
+
+#include "mediacentertest.moc"
