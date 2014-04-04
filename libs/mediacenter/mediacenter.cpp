@@ -50,11 +50,11 @@ QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> 
 
 QString dataDirForComponent(const QString& component)
 {
-  const QString pmc_path = KGlobal::dirs()->saveLocation("data") + KCmdLineArgs::appName();
-  if(!QDir(pmc_path).exists()){
-    QDir().mkpath(pmc_path);
+  static const QString pmcPath = KGlobal::dirs()->saveLocation("data") + KCmdLineArgs::appName();
+  if(!QDir(pmcPath).exists()) {
+    QDir().mkpath(pmcPath);
   }
-  return pmc_path + (component.isEmpty() ? QString() : QString("/%1").arg(component));
+  return pmcPath + (component.isEmpty() ? QString() : QString("/%1").arg(component));
 }
 
 } // MediaCenter namespace
