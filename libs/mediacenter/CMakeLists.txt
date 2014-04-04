@@ -65,6 +65,9 @@ set_target_properties(plasmamediacenter PROPERTIES VERSION 1.2 SOVERSION 1.2)
 #
 install(TARGETS plasmamediacenter ${INSTALL_TARGETS_DEFAULT_ARGS})
 #
+
+
+
 set (plasmamediacenter_HDRS
     abstractbrowsingbackend.h
     abstractmediasource.h
@@ -80,3 +83,5 @@ set (plasmamediacenter_HDRS
 install(FILES ${plasmamediacenter_HDRS} DESTINATION ${INCLUDE_INSTALL_DIR}/mediacenter COMPONENT Devel)
 install(FILES data/servicetypes/pmc_browsingbackend.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
 install(FILES data/servicetypes/pmc_mediasource.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
+
+add_subdirectory(plugin)
