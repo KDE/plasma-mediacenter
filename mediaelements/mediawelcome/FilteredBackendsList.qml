@@ -19,7 +19,7 @@
 
 import QtQuick 1.1
 import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
-import org.kde.plasma.components 0.1 as PlasmaComponents
+import org.kde.plasma.components 2.0 as PlasmaComponents
 
 ListView {
     id: listView

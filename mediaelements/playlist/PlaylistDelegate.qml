@@ -20,7 +20,7 @@
  ***************************************************************************/
 
 import QtQuick 1.1
-import org.kde.plasma.components 0.1 as PlasmaComponents
+import org.kde.plasma.components 2.0 as PlasmaComponents
 import "PlaylistDelegateLogic.js" as Logic
 
 Item {

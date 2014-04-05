@@ -20,7 +20,7 @@
 import QtQuick 1.1
 import QtMultimediaKit 1.1 as QtMultimediaKit
 import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
-import org.kde.plasma.components 0.1 as PlasmaComponents
+import org.kde.plasma.components 2.0 as PlasmaComponents
 
 FocusScope {
     id: mediaPlayerRootRect
