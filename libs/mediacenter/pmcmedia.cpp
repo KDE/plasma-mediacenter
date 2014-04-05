@@ -85,6 +85,11 @@ int PmcMedia::duration() const
     return !d->media.isNull() ? d->media->duration() : -1;
 }
 
+QString PmcMedia::genre() const
+{
+    return !d->media.isNull() ? d->media->genre() : QString();
+}
+
 QString PmcMedia::fileName() const
 {
     return QFileInfo(QUrl(d->url).toLocalFile()).fileName();

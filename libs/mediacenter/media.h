@@ -54,6 +54,9 @@ public:
     int duration() const;
     bool setDuration(int duration);
 
+    QString genre() const;
+    bool setGenre(const QString &genre);
+
     QDateTime createdAt() const;
     bool setCreatedAt(const QDateTime &createdAt);
 
@@ -72,6 +75,7 @@ public:
     QString m_thumbnail;
     QString m_type;
     int m_duration;
+    QString m_genre;
     QDateTime m_createdAt;
     Album::Ptr m_album;
     Artist::Ptr m_artist;

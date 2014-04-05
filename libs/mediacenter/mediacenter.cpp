@@ -18,6 +18,7 @@
 
 #include "mediacenter.h"
 
+#include <QDir>
 #include <QFileInfo>
 
 #include <KMimeType>
@@ -44,15 +45,17 @@ QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> 
     newRoles[DurationRole] = "mediaDuration";
     newRoles[ArtistRole] = "mediaArtist";
     newRoles[AlbumRole] = "mediaAlbum";
+    newRoles[GenreRole] = "mediaGenre";
     return newRoles;
 }
 
 QString dataDirForComponent(const QString& component)
 {
-    return KGlobal::dirs()->saveLocation("data")
-                                    + KCmdLineArgs::appName()
-                                    + (component.isEmpty() ?
-                                        QString() : QString("/%1").arg(component));
+  static const QString pmcPath = KGlobal::dirs()->saveLocation("data") + KCmdLineArgs::appName();
+  if(!QDir(pmcPath).exists()) {
+    QDir().mkpath(pmcPath);
+  }
+  return pmcPath + (component.isEmpty() ? QString() : QString("/%1").arg(component));
 }
 
 } // MediaCenter namespace
