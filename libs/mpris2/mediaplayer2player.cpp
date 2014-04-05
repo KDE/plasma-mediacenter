@@ -170,7 +170,7 @@ qlonglong MediaPlayer2Player::Position() const
 
 void MediaPlayer2Player::setPropertyPosition(int newPositionInMs)
 {
-    m_position = newPositionInMs*1000;
+    m_position = qlonglong(newPositionInMs)*1000;
     //PMC stores postion in milli-seconds, Mpris likes it in micro-seconds
 }
 
@@ -217,7 +217,7 @@ void MediaPlayer2Player::Seek(qlonglong Offset) const
 
 void MediaPlayer2Player::emitSeeked(int pos)
 {
-    emit Seeked(pos*1000);
+    emit Seeked(qlonglong(pos)*1000);
 }
 
 void MediaPlayer2Player::SetPosition(const QDBusObjectPath& trackId, qlonglong pos)
@@ -275,12 +275,14 @@ void MediaPlayer2Player::loadMetadata()
     if (media)
     {
         m_metadata["mpris:trackid"] = QVariant::fromValue<QDBusObjectPath>(QDBusObjectPath(getTrackID()));
-        m_metadata["mpris:length"] = qlonglong(media->duration()*1000000);
+        m_metadata["mpris:length"] = qlonglong(media->duration())*1000000;
         //convert seconds into micro-seconds
         m_metadata["xesam:title"] = media->title();
         m_metadata["xesam:url"] = media->url();
         m_metadata["xesam:album"] = media->album();
         m_metadata["xesam:artist"] = QStringList(media->artist());
+        m_metadata["xesam:genre"] = QStringList(media->genre());
+
     }
 }
 
