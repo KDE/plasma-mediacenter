@@ -20,7 +20,8 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
-#include <KDE/KConfigGroup>
+#include <KConfigGroup>
+#include <KGlobal>
 
 #include <QtCore/QObject>
 #include <QtCore/QVariant>
