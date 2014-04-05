@@ -38,6 +38,7 @@ template <> void register_class(QxClass<Media> & m)
     m.data(& Media::m_type, "type");
     m.data(& Media::m_duration, "duration");
     m.data(& Media::m_createdAt, "created_at");
+    m.data(& Media::m_genre, "genre");
 
     m.relationManyToOne(& Media::m_album, "album_id");
     m.relationManyToOne(& Media::m_artist, "artist_id");
@@ -160,6 +161,8 @@ bool Media::setValueForRole(int role, const QVariant& value)
             return thumbnail().isEmpty() ? setThumbnail(value.toString()) : false;
         case MediaCenter::CreatedAtRole:
             return setCreatedAt(value.toDateTime());
+        case MediaCenter::GenreRole:
+            return setGenre(value.toString());
         default:
             //qWarning() << "Unknown role " << role << " for value " << value;
             return false;
@@ -194,6 +197,17 @@ int Media::duration() const
 bool Media::setDuration(int duration)
 {
     return updateIfChanged(m_duration, duration);
+}
+
+
+QString Media::genre() const
+{
+    return m_genre;
+}
+
+bool Media::setGenre(const QString &genre)
+{
+    return updateIfChanged(m_genre, genre);
 }
 
 QDateTime Media::createdAt() const

@@ -245,6 +245,8 @@ QVariant PmcMetadataModel::dataForMedia(const QModelIndex &index, int role) cons
         return media->artist();
     case MediaCenter::DurationRole:
         return media->duration();
+    case MediaCenter::GenreRole:
+        return media->genre();
     case Qt::DecorationRole:
         if (media->type() == "video") {
             const KUrl url(media->url());

@@ -37,11 +37,12 @@ public:
     QString sha() const;
     QString title () const;
     QString url() const;
-    QString thumbnail () const;
+    QString thumbnail() const;
     QString type() const;
     QString album() const;
     QString artist() const;
     int duration() const;
+    QString genre() const;
     QDateTime createdAt() const;
 
 Q_SIGNALS:
