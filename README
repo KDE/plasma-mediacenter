@@ -11,6 +11,8 @@ If you are sure the libraries are there, try running qmake like this-
 
 qmake QX_BOOST_LIB_SERIALIZATION_DEBUG=boost_serialization
 
+and then run make debug-install.
+
 3) Standard KDE Oxygen Plasma theme
 
 To know Plasma Media Center architecture and other related information browse through http://community.kde.org/Plasma/Plasma_Media_Center

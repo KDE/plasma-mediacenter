@@ -53,7 +53,8 @@ KdeMetadataMediaSource::KdeMetadataMediaSource(QObject* parent, const QVariantLi
         << MediaCenter::AlbumRole
         << MediaCenter::ArtistRole
         << MediaCenter::DurationRole
-        << MediaCenter::CreatedAtRole;
+        << MediaCenter::CreatedAtRole
+        << MediaCenter::GenreRole;
 
     moveToThread(this);
 }
@@ -176,6 +177,13 @@ void KdeMetadataMediaSource::fetchValuesForResult(const Nepomuk2::Query::Result&
                 values.insert(role, duration);
             break;
             }
+        case MediaCenter::GenreRole:
+            if (values.value(MediaCenter::MediaTypeRole).toString() == "audio") {
+                QString genre = result.resource().property(
+                            Nepomuk2::Vocabulary::NMM::genre()).toString();
+                values.insert(role, genre);
+            }
+            break;
         case MediaCenter::CreatedAtRole: {
             QDateTime createdDateTime;
 
