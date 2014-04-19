@@ -163,6 +163,8 @@ bool Media::setValueForRole(int role, const QVariant& value)
             return setCreatedAt(value.toDateTime());
         case MediaCenter::GenreRole:
             return setGenre(value.toString());
+        case MediaCenter::DurationRole :
+            return setDuration(value.toInt());
         default:
             //qWarning() << "Unknown role " << role << " for value " << value;
             return false;
