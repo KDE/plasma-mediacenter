@@ -38,7 +38,7 @@ include_directories(
 )
 
 # needed for backend export
-find_package(KF5KDE4Support REQUIRED NO_MODULE)
+find_package(KF5KDELibs4Support REQUIRED NO_MODULE)
 find_package(Phonon4Qt5 REQUIRED)
 
 include_directories(

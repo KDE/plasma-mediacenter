@@ -15,7 +15,7 @@ target_link_libraries(pmc_localpictures
     Qt5::Gui
     KF5::KIOWidgets
     KF5::KIOFileWidgets
-    KF5::KDE4Support
+    KF5::KDELibs4Support
 )
 
 install(TARGETS pmc_localpictures DESTINATION ${PLUGIN_INSTALL_DIR})

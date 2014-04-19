@@ -54,7 +54,7 @@ target_link_libraries(plasmamediacenter
     KF5::Solid
     KF5::GuiAddons
     KF5::CoreAddons
-    KF5::KDE4Support
+    KF5::KDELibs4Support
     ${Boost_LIBRARIES}
     ${QxOrm_LIBRARIES}
     ${TAGLIB_LIBRARIES}

@@ -17,7 +17,7 @@ target_link_libraries(pmc_localmusic
     Qt5::Gui
     KF5::KIOWidgets
     KF5::KIOFileWidgets
-    KF5::KDE4Support
+    KF5::KDELibs4Support
     ${TAGLIB_LIBRARIES}
 )
 
