@@ -20,6 +20,7 @@ Name[pt_BR]=Pesquisa no Desktop do KDE
 Name[sk]=KDE hľadanie na ploche
 Name[sl]=Namizno iskanje KDE
 Name[sv]=KDE skrivbordssökning
+Name[tr]=KDE Masaüstü Araması
 Name[uk]=Стільничний пошук KDE
 Name[x-test]=xxKDE Desktop Searchxx
 Comment=Get media from KDE Desktop Search
@@ -41,6 +42,7 @@ Comment[pt_BR]=Obtém a mídia a partir do Pesquisa no Desktop do KDE
 Comment[sk]=Získať médiá z KDE hľadania na ploche
 Comment[sl]=Pridobite predstavnostne datoteke iz Namiznega iskanja KDE
 Comment[sv]=Hämta media från KDE skrivbordssökning
+Comment[tr]=KDE Masaüstü Aramasından ortam al
 Comment[uk]=Отримати дані із засобу стільничного пошуку KDE
 Comment[x-test]=xxGet media from KDE Desktop Searchxx
 

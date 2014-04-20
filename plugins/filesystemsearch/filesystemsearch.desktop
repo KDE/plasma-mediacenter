@@ -16,6 +16,7 @@ Name[pt]=Pesquisa no Sistema de Ficheiros
 Name[pt_BR]=Pesquisa no sistema de arquivos
 Name[sk]=Hľadanie v súborovom systéme
 Name[sv]=Sökning i filsystem
+Name[tr]=Dosya Sistemi Araması
 Name[uk]=Пошук у файловій системі
 Name[x-test]=xxFilesystem Searchxx
 Comment=Get media from your local files
@@ -33,6 +34,7 @@ Comment[pt]=Obter conteúdos dos seus ficheiros locais
 Comment[pt_BR]=Obtém a mídia a partir dos seus arquivos locais
 Comment[sk]=Získať médiá z vašich miestnych súborov
 Comment[sv]=Hämta media från lokala filer
+Comment[tr]=Yerel dosyalarınızdan ortam alın
 Comment[uk]=Отримати мультимедійні дані з локальних файлів
 Comment[x-test]=xxGet media from your local filesxx
 
