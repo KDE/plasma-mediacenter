@@ -18,7 +18,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#include "mpris2/mediaplayer2player.h"
+#include "mpris2/interfacetoplayer.h"
 #include "../mediacenter/medialibrary.h"
 #include "../mediacenter/pmcmedia.h"
 #include "../mediacenter/singletonfactory.h"
@@ -36,7 +36,7 @@
 static const double MAX_RATE = 32.0;
 static const double MIN_RATE = 0.0;
 
-MediaPlayer2Player::MediaPlayer2Player(QObject* parent)
+InterfaceToPlayer::InterfaceToPlayer(QObject* parent)
     : QObject(parent),
       m_paused(false),
       m_stopped(true)
@@ -47,11 +47,11 @@ MediaPlayer2Player::MediaPlayer2Player(QObject* parent)
                                                  QDBusConnection::ExportAllSignals);
 }
 
-MediaPlayer2Player::~MediaPlayer2Player()
+InterfaceToPlayer::~InterfaceToPlayer()
 {
 }
 
-QString MediaPlayer2Player::PlaybackStatus() const
+QString InterfaceToPlayer::PlaybackStatus() const
 {
     if (stopped()) {
         return QLatin1String("Stopped");
@@ -61,172 +61,172 @@ QString MediaPlayer2Player::PlaybackStatus() const
         return QLatin1String("Playing");
 }
 
-bool MediaPlayer2Player::CanGoNext() const
+bool InterfaceToPlayer::CanGoNext() const
 {
     return (mediaPlayerPresent()) ? true : false;
 }
 
-void MediaPlayer2Player::Next() const
+void InterfaceToPlayer::Next() const
 {
     emit next();
 }
 
-bool MediaPlayer2Player::CanGoPrevious() const
+bool InterfaceToPlayer::CanGoPrevious() const
 {
     return (mediaPlayerPresent()) ? true : false;
 }
 
-void MediaPlayer2Player::Previous() const
+void InterfaceToPlayer::Previous() const
 {
     emit previous();
 }
 
-bool MediaPlayer2Player::CanPause() const
+bool InterfaceToPlayer::CanPause() const
 {
     return (mediaPlayerPresent()) ? true : false;
 }
 
-void MediaPlayer2Player::Pause() const
+void InterfaceToPlayer::Pause() const
 {
     emit pause();
 }
 
-void MediaPlayer2Player::PlayPause()
+void InterfaceToPlayer::PlayPause()
 {
     emit playPause();
 }
 
-bool MediaPlayer2Player::stopped() const
+bool InterfaceToPlayer::stopped() const
 {
     return m_stopped;
 }
 
-void MediaPlayer2Player::setStopped(bool newVal)
+void InterfaceToPlayer::setStopped(bool newVal)
 {
     if (mediaPlayerPresent()) {
         m_stopped = newVal;
 
         QVariantMap properties;
         properties["PlaybackStatus"] = PlaybackStatus();
-        MediaPlayer2Player::signalPropertiesChange(properties);
+        InterfaceToPlayer::signalPropertiesChange(properties);
     }
 }
 
-bool MediaPlayer2Player::paused() const
+bool InterfaceToPlayer::paused() const
 {
     return m_paused;
 }
 
-void MediaPlayer2Player::setPaused(bool newVal)
+void InterfaceToPlayer::setPaused(bool newVal)
 {
     if (mediaPlayerPresent()) {
         m_paused = newVal;
 
         QVariantMap properties;
         properties["PlaybackStatus"] = PlaybackStatus();
-        MediaPlayer2Player::signalPropertiesChange(properties);
+        InterfaceToPlayer::signalPropertiesChange(properties);
     }
 }
 
-void MediaPlayer2Player::Stop() const
+void InterfaceToPlayer::Stop() const
 {
     emit stop();
 }
 
-bool MediaPlayer2Player::CanPlay() const
+bool InterfaceToPlayer::CanPlay() const
 {
     return (mediaPlayerPresent()) ? true : false;
 }
 
-void MediaPlayer2Player::Play() const
+void InterfaceToPlayer::Play() const
 {
     emit play();
 }
 
-double MediaPlayer2Player::Volume() const
+double InterfaceToPlayer::Volume() const
 {
     return m_volume;
 }
 
-void MediaPlayer2Player::setVolume(double volume)
+void InterfaceToPlayer::setVolume(double volume)
 {
     m_volume= qBound(0.0, volume, 1.0);
     emit volumeChanged(m_volume);
 
     QVariantMap properties;
     properties["Volume"] = Volume();
-    MediaPlayer2Player::signalPropertiesChange(properties);
+    InterfaceToPlayer::signalPropertiesChange(properties);
 }
 
-QVariantMap MediaPlayer2Player::Metadata() const
+QVariantMap InterfaceToPlayer::Metadata() const
 {
     return m_metadata;
 }
 
-qlonglong MediaPlayer2Player::Position() const
+qlonglong InterfaceToPlayer::Position() const
 {
     return m_position;
 }
 
-void MediaPlayer2Player::setPropertyPosition(int newPositionInMs)
+void InterfaceToPlayer::setPropertyPosition(int newPositionInMs)
 {
     m_position = qlonglong(newPositionInMs)*1000;
     //PMC stores postion in milli-seconds, Mpris likes it in micro-seconds
 }
 
-double MediaPlayer2Player::Rate() const
+double InterfaceToPlayer::Rate() const
 {
     return m_rate;
 }
 
-void MediaPlayer2Player::setRate(double newRate)
+void InterfaceToPlayer::setRate(double newRate)
 {
     m_rate = qBound(MinimumRate(), newRate, MaximumRate());
     emit rateChanged(newRate);
 
     QVariantMap properties;
     properties["Rate"] = Rate();
-    MediaPlayer2Player::signalPropertiesChange(properties);
+    InterfaceToPlayer::signalPropertiesChange(properties);
 }
 
-double MediaPlayer2Player::MinimumRate() const
+double InterfaceToPlayer::MinimumRate() const
 {
     return double(MIN_RATE);
 }
 
-double MediaPlayer2Player::MaximumRate() const
+double InterfaceToPlayer::MaximumRate() const
 {
     return double(MAX_RATE);
 }
 
-bool MediaPlayer2Player::CanSeek() const
+bool InterfaceToPlayer::CanSeek() const
 {
     return (mediaPlayerPresent()) ? true : false;
 }
 
-bool MediaPlayer2Player::CanControl() const
+bool InterfaceToPlayer::CanControl() const
 {
     return true;
 }
 
-void MediaPlayer2Player::Seek(qlonglong Offset) const
+void InterfaceToPlayer::Seek(qlonglong Offset) const
 {
     int offset = Offset/1000;
     emit seek(offset);
 }
 
-void MediaPlayer2Player::emitSeeked(int pos)
+void InterfaceToPlayer::emitSeeked(int pos)
 {
     emit Seeked(qlonglong(pos)*1000);
 }
 
-void MediaPlayer2Player::SetPosition(const QDBusObjectPath& trackId, qlonglong pos)
+void InterfaceToPlayer::SetPosition(const QDBusObjectPath& trackId, qlonglong pos)
 {
     if (trackId.path() == getTrackID())
         seek((pos - m_position)/1000);
 }
 
-void MediaPlayer2Player::OpenUri(QString uri) const
+void InterfaceToPlayer::OpenUri(QString uri) const
 {
     KUrl url(uri);
     if (url.isLocalFile()) {
@@ -234,27 +234,27 @@ void MediaPlayer2Player::OpenUri(QString uri) const
     }
 }
 
-QUrl MediaPlayer2Player::currentTrack() const
+QUrl InterfaceToPlayer::currentTrack() const
 {
     return m_currentTrack;
 }
 
-void MediaPlayer2Player::setCurrentTrack(QUrl newTrack)
+void InterfaceToPlayer::setCurrentTrack(QUrl newTrack)
 {
     m_currentTrack = newTrack;
     loadMetadata();
 
     QVariantMap properties;
     properties["Metadata"] = Metadata();
-    MediaPlayer2Player::signalPropertiesChange(properties);
+    InterfaceToPlayer::signalPropertiesChange(properties);
 }
 
-bool MediaPlayer2Player::mediaPlayerPresent() const
+bool InterfaceToPlayer::mediaPlayerPresent() const
 {
     return m_mediaPlayerPresent;
 }
 
-void MediaPlayer2Player::setMediaPlayerPresent(bool status)
+void InterfaceToPlayer::setMediaPlayerPresent(bool status)
 {
     if (m_mediaPlayerPresent != status) {
         m_mediaPlayerPresent = status;
@@ -265,11 +265,11 @@ void MediaPlayer2Player::setMediaPlayerPresent(bool status)
         properties["CanPause"] = CanPause();
         properties["CanPlay"] = CanPlay();
         properties["CanSeek"] = CanSeek();
-        MediaPlayer2Player::signalPropertiesChange(properties);
+        InterfaceToPlayer::signalPropertiesChange(properties);
     }
 }
 
-void MediaPlayer2Player::loadMetadata()
+void InterfaceToPlayer::loadMetadata()
 {
     QSharedPointer<PmcMedia> media = SingletonFactory::instanceFor<MediaLibrary>()->mediaForUrl(m_currentTrack.toString());
     if (media)
@@ -286,7 +286,7 @@ void MediaPlayer2Player::loadMetadata()
     }
 }
 
-QString MediaPlayer2Player::getTrackID()
+QString InterfaceToPlayer::getTrackID()
 {
     QSharedPointer<PmcMedia> media = SingletonFactory::instanceFor<MediaLibrary>()->mediaForUrl(m_currentTrack.toString());
     if (media) {
@@ -298,7 +298,7 @@ QString MediaPlayer2Player::getTrackID()
     //consider the playlist postion also in assigning the TrackID
 }
 
-void MediaPlayer2Player::signalPropertiesChange(const QVariantMap& properties) const
+void InterfaceToPlayer::signalPropertiesChange(const QVariantMap& properties) const
 {
     const int ifaceIndex = metaObject()->indexOfClassInfo("D-Bus Interface");
     QDBusMessage msg = QDBusMessage::createSignal("/org/mpris/MediaPlayer2",

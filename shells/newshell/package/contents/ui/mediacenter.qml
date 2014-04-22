@@ -320,7 +320,7 @@ Image {
         }
     }
 
-    MediaCenterElements.MediaPlayer2Player {
+    MediaCenterElements.InterfaceToPlayer {
         id: mprisPlayerObject
         rate: mediaPlayerInstance.getRate()
         volume: runtimeData.volume

@@ -18,8 +18,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#ifndef MEDIAPLAYER2PLAYER_H
-#define MEDIAPLAYER2PLAYER_H
+#ifndef INTERFACETOPLAYER_H
+#define INTERFACETOPLAYER_H
 
 #include "mediacenter/mediacenter_export.h"
 
@@ -29,7 +29,7 @@
 
 #include <Phonon/MediaSource>
 
-class MEDIACENTER_EXPORT MediaPlayer2Player : public QObject
+class MEDIACENTER_EXPORT InterfaceToPlayer : public QObject
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.mpris.MediaPlayer2.Player") // Docs: http://www.mpris.org/2.1/spec/Player_Node.html
@@ -59,8 +59,8 @@ class MEDIACENTER_EXPORT MediaPlayer2Player : public QObject
     // QML does not allow a property starting with a capital letter.
 
 public:
-    explicit MediaPlayer2Player(QObject* parent = 0);
-    ~MediaPlayer2Player();
+    explicit InterfaceToPlayer(QObject* parent = 0);
+    ~InterfaceToPlayer();
 
     QString PlaybackStatus() const;
     double Rate() const;
@@ -132,4 +132,4 @@ private:
     qlonglong m_position;
 };
 
-#endif // MEDIAPLAYER2PLAYER_H
+#endif // INTERFACETOPLAYER_H

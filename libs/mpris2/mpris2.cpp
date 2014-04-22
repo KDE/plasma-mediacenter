@@ -20,7 +20,7 @@
 #include <QDBusConnection>
 #include <boost/iterator/iterator_concepts.hpp>
 #include "mpris2/mediaplayer2.h"
-#include "mpris2/mediaplayer2player.h"
+#include "mpris2/interfacetoplayer.h"
 #include "mpris2/mpris2.h"
 #include <unistd.h>
 
