@@ -21,6 +21,7 @@ Name[sv]=Baloo-sökning
 Name[tr]=Baloo Araması
 Name[uk]=Пошук Baloo
 Name[x-test]=xxBaloo Searchxx
+Name[zh_TW]=Baloo 搜尋
 Comment=Get media from Baloo Search
 Comment[ca]=Obté medis de la cerca del Baloo
 Comment[ca@valencia]=Obté medis de la cerca del Baloo
@@ -41,6 +42,7 @@ Comment[sv]=Hämta media från Baloo-sökning
 Comment[tr]=Baloo Aramasından ortam al
 Comment[uk]=Отримати дані із засобу стільничного пошуку Baloo
 Comment[x-test]=xxGet media from Baloo Searchxx
+Comment[zh_TW]=從 Baloo 搜尋取得媒體
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/MediaSource
 
