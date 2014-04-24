@@ -19,6 +19,7 @@
 #define VIDEO_H
 
 #include <QUrl>
+#include <QtGui>
 #include <QString>
 #include <QPointer>
 #include <QDateTime>

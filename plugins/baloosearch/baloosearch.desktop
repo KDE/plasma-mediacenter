@@ -18,6 +18,7 @@ Name[pt_BR]=Pesquisa do Baloo
 Name[sk]=Hľadanie Baloo
 Name[sl]=Iskanje Baloo
 Name[sv]=Baloo-sökning
+Name[tr]=Baloo Araması
 Name[uk]=Пошук Baloo
 Name[x-test]=xxBaloo Searchxx
 Comment=Get media from Baloo Search
@@ -37,6 +38,7 @@ Comment[pt_BR]=Obtém a mídia a partir da Pesquisa do Baloo
 Comment[sk]=Získať médiá z hľadania Baloo
 Comment[sl]=Pridobite predstavnostne datoteke iz Iskanja Baloo
 Comment[sv]=Hämta media från Baloo-sökning
+Comment[tr]=Baloo Aramasından ortam al
 Comment[uk]=Отримати дані із засобу стільничного пошуку Baloo
 Comment[x-test]=xxGet media from Baloo Searchxx
 
