@@ -54,7 +54,6 @@ target_link_libraries(plasmamediacenter
     ${QT_QTSQL_LIBRARIES}
     ${KDE4_KDECORE_LIBRARY}
     ${KDE4_KIO_LIBS}
-    ${KDE4_PLASMA_LIBS}
     ${KDE4_SOLID_LIBS}
     ${TAGLIB_LIBRARIES}
     ${NEPOMUK_CORE_LIBRARY}
