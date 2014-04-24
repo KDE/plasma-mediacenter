@@ -42,6 +42,7 @@ set (plasmamediacenter_SRCS
     mediasourcesloader.cpp
     singletonfactory.cpp
     mediavalidator.cpp
+    settings.cpp
 )
 
 kde4_add_library(plasmamediacenter SHARED

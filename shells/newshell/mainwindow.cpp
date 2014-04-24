@@ -18,7 +18,6 @@
  ***************************************************************************/
 
 #include "mainwindow.h"
-#include "settings.h"
 
 #include <mediacenter/backendsmodel.h>
 #include <mediacenter/filterplaylistmodel.h>
@@ -27,6 +26,7 @@
 #include <mediacenter/pmcimageprovider.h>
 #include <mediacenter/pmccoverartprovider.h>
 #include <mediacenter/objectpair.h>
+#include <mediacenter/settings.h>
 #include <mediacenter/multipleplaylistmodel.h>
 
 #include <Plasma/Package>
