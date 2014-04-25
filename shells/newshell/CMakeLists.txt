@@ -6,7 +6,6 @@ set(QT_USE_QTOPENGL TRUE)
 include(${QT_USE_FILE})
 
 set(plasma-mediacenter_SRCS
-    settings.cpp
     main.cpp
     mainwindow.cpp
     application.cpp

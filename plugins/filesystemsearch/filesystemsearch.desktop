@@ -19,6 +19,7 @@ Name[sv]=Sökning i filsystem
 Name[tr]=Dosya Sistemi Araması
 Name[uk]=Пошук у файловій системі
 Name[x-test]=xxFilesystem Searchxx
+Name[zh_TW]=檔案系統搜尋
 Comment=Get media from your local files
 Comment[ca]=Obté medis de la cerca als fitxers locals
 Comment[ca@valencia]=Obté medis de la cerca als fitxers locals
@@ -37,6 +38,7 @@ Comment[sv]=Hämta media från lokala filer
 Comment[tr]=Yerel dosyalarınızdan ortam alın
 Comment[uk]=Отримати мультимедійні дані з локальних файлів
 Comment[x-test]=xxGet media from your local filesxx
+Comment[zh_TW]=從您的本地端檔案取得媒體
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/MediaSource
 

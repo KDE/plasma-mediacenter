@@ -20,13 +20,13 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
-#include <KConfigGroup>
-#include <KGlobal>
+#include "mediacenter_export.h"
+#include <KDE/KConfigGroup>
 
 #include <QtCore/QObject>
 #include <QtCore/QVariant>
 
-class Settings : public QObject
+class MEDIACENTER_EXPORT Settings : public QObject
 {
     Q_OBJECT
 public:
