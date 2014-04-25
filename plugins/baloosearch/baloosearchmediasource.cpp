@@ -68,12 +68,14 @@ void BalooSearchMediaSource::queryForMediaType(const QString& type)
 
         if (type == "Audio"){
             fetchUrlDetails(it.url());
+        } else {
+            values.insert(Qt::DisplayRole, it.text());
         }
 
-        values.insert(MediaCenter::MediaUrlRole, it.url());
-        values.insert(MediaCenter::MediaTypeRole, type.toLower());
-        values.insert(Qt::DisplayRole, it.text());
         values.insert(Qt::DecorationRole, it.icon());
+        values.insert(MediaCenter::MediaTypeRole, type.toLower());
+        values.insert(MediaCenter::MediaUrlRole, it.url());
+
         SingletonFactory::instanceFor<MediaLibrary>()->updateMedia(values);
     }
 }
@@ -94,9 +96,12 @@ void BalooSearchMediaSource::slotFileReceived(const Baloo::File& file)
     //file.url() provides a local path, convert that to file:// url
     const QString fileUrl = QUrl::fromLocalFile(file.url()).toString();
     values.insert(MediaCenter::MediaUrlRole, fileUrl);
+
+    const QString title = file.property(KFileMetaData::Property::Title).toString();
+    values.insert(Qt::DisplayRole, title);
+
     values.insert(MediaCenter::ArtistRole, file.property(KFileMetaData::Property::Artist).toString());
     values.insert(MediaCenter::AlbumRole, file.property(KFileMetaData::Property::Album).toString());
-    values.insert(Qt::DisplayRole, file.property(KFileMetaData::Property::Title).toString());
     values.insert(MediaCenter::DurationRole, file.property(KFileMetaData::Property::Duration).toInt());
 
     SingletonFactory::instanceFor<MediaLibrary>()->updateMedia(values);
