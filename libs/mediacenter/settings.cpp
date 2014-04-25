@@ -21,6 +21,7 @@
 
 //Why is this include required for KSharedConfigGlobalPtr in the ctor?
 #include <KDE/KApplication>
+#include <KGlobal>
 
 Settings::Settings(QObject *parent) : QObject(parent)
 {
