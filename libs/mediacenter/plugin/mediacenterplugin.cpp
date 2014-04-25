@@ -25,7 +25,7 @@
 #include "mediacenter/filterplaylistmodel.h"
 #include "mediacenter/multipleplaylistmodel.h"
 #include "mediacenter/objectpair.h"
-#include "settings.h"
+#include "mediacenter/settings.h"
 
 void MediaCenterPlugin::registerTypes(const char *uri)
 {

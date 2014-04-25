@@ -1,5 +1,4 @@
 set (mediacenterplugin_SRCS
-    settings.cpp
     mediacenterplugin.cpp
 )
 
