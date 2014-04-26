@@ -25,7 +25,7 @@ add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
 
 # Load the frameworks we need
 find_package(KF5 CONFIG REQUIRED
-    CoreAddons Config I18n GuiAddons Service ConfigWidgets KIO Declarative Plasma)
+    CoreAddons Config I18n GuiAddons Service ConfigWidgets KIO Declarative)
 
 find_package(Taglib REQUIRED)
 find_package(QxOrm REQUIRED)
