@@ -58,7 +58,7 @@ private Q_SLOTS:
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event);
-    virtual bool queryExit();
+    void closeEvent(QCloseEvent *event);
 
 private:
     bool loadThemeAndPopulateMainscriptAndImagesPath(QString &mainscriptPath, QString &imagesPath);
