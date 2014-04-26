@@ -29,7 +29,7 @@
 #include <mediacenter/objectpair.h>
 #include <mediacenter/multipleplaylistmodel.h>
 #include <mpris2/mediaplayer2.h>
-#include <mpris2/interfacetoplayer.h>
+#include <mpris2/mediaplayer2player.h>
 #include <mpris2/mpris2.h>
 
 #include <Plasma/Package>
@@ -91,7 +91,7 @@ MainWindow::MainWindow(Application *parent)
     qmlRegisterType<MultiplePlaylistModel>("org.kde.plasma.mediacenter.elements", 0, 1, "MultiplePlaylistModel");
     qmlRegisterType<Settings>("org.kde.plasma.mediacenter.elements", 0, 1, "Settings");
     qmlRegisterType<MediaPlayer2>("org.kde.plasma.mediacenter.elements",0,1,"MediaPlayer2");
-    qmlRegisterType<InterfaceToPlayer>("org.kde.plasma.mediacenter.elements",0,1,"InterfaceToPlayer");
+    qmlRegisterType<MediaPlayer2Player>("org.kde.plasma.mediacenter.elements",0,1,"MediaPlayer2Player");
     qmlRegisterInterface<ObjectPair>("ObjectPair");
 
     BackendsModel *backendsModel = new BackendsModel(view->engine(), this);
