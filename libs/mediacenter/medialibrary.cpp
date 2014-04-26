@@ -36,6 +36,10 @@
 
 const QString MediaLibrary::DB_NAME = "plasma-mediacenter.sqlite";
 
+namespace {
+    int DELAY_BEFORE_EMITTING_NEW_ITEMS = 1000;
+}
+
 class MediaLibrary::Private
 {
 public:
@@ -97,7 +101,7 @@ MediaLibrary::MediaLibrary(MediaValidator* mediaValidator, QObject* parent)
 void MediaLibrary::init()
 {
     d->newMediaTimer = new QTimer(this);
-    d->newMediaTimer->setInterval(1000);
+    d->newMediaTimer->setInterval(DELAY_BEFORE_EMITTING_NEW_ITEMS);
     d->newMediaTimer->setSingleShot(true);
     connect(d->newMediaTimer.data(), SIGNAL(timeout()), SLOT(emitNewMediaWithMediaList()));
 }
@@ -360,7 +364,7 @@ void MediaLibrary::updateLibrary()
         }
 
         d->db->getDatabase().commit();
-        emit initialized();
+        QTimer::singleShot(DELAY_BEFORE_EMITTING_NEW_ITEMS*2, this, SIGNAL(initialized()));
     } else {
         qFatal("Failed to create a transaction");
     }
