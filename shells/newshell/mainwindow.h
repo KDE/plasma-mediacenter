@@ -61,7 +61,8 @@ protected:
     virtual bool queryExit();
 
 private:
-    Plasma::PackageStructure::Ptr m_structure;
+    bool loadThemeAndPopulateMainscriptAndImagesPath(QString &mainscriptPath, QString &imagesPath);
+
     KDeclarative m_kdeclarative;
 
     bool m_mousePointerAutoHide;
