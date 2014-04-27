@@ -122,5 +122,3 @@ int BackendsModel::rowCount(const QModelIndex &) const
 {
     return d->loadedBackendsInfo.count();
 }
-
-#include "backendsmodel.moc"

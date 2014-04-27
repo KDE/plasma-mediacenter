@@ -66,5 +66,3 @@ QObject* FilteredBackendsModel::sourceBackendsModel()
 {
     return static_cast<QObject*>(sourceModel());
 }
-
-#include "filteredbackendsmodel.moc"
