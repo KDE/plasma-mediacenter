@@ -71,6 +71,7 @@ public:
     int stopped() const;
     int paused() const;
     QUrl currentTrack() const;
+    int mediaPlayerPresent() const;
 
 signals:
     void Seeked(qlonglong Position) const;
@@ -103,9 +104,8 @@ private:
     void signalPropertiesChange(const QString &property, const QVariant &value);
     void loadMetadata();
     QString getTrackID();
-    int mediaPlayerPresent() const;
-    void setMediaPlayerPresent(int status);
 
+    void setMediaPlayerPresent(int status);
     void setRate(double newRate);
     void setVolume(double volume);
     void setPropertyPosition(int newPositionInMs);
