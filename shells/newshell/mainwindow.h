@@ -55,6 +55,7 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void enableMousePointerAutoHideIfNeeded();
+    void raiseAndFocusPMC();
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event);

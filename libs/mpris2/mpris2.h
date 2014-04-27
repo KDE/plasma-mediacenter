@@ -21,7 +21,6 @@
 #include "mediacenter/mediacenter_export.h"
 
 #include <QObject>
-#include <QMainWindow>
 
 class MediaPlayer2;
 class MediaPlayer2Player;
@@ -35,6 +34,9 @@ public:
     ~Mpris2();
 
     MediaPlayer2Player* getMediaPlayer2Player();
+
+signals:
+    void raisePMC() const;
 
 private:
     MediaPlayer2 *m_mp2;

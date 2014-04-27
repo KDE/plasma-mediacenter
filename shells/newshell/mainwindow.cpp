@@ -38,6 +38,7 @@
 
 #include <KDE/KCmdLineArgs>
 #include <KDE/KApplication>
+#include <KDE/KWindowSystem>
 
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/QDeclarativeView>
@@ -104,8 +105,9 @@ MainWindow::MainWindow(Application *parent)
     view->rootContext()->setContextProperty("playlistModel", playlistModel);
 
     Mpris2 *mprisObject = new Mpris2(this);
-    MediaPlayer2Player *mp2p = mprisObject->getMediaPlayer2Player();
+    connect(mprisObject, SIGNAL(raisePMC()), this, SLOT(raiseAndFocusPMC()));
 
+    MediaPlayer2Player *mp2p = mprisObject->getMediaPlayer2Player();
     view->rootContext()->setContextProperty("mprisPlayerObject", mp2p);
 
     view->rootContext()->setContextProperty("_pmc_mainwindow", this);
@@ -256,4 +258,10 @@ bool MainWindow::loadThemeAndPopulateMainscriptAndImagesPath(QString& mainscript
     imagesPath = package->filePath("images");
 #endif
     return true;
+}
+
+void MainWindow::raiseAndFocusPMC()
+{
+    raise();
+    KWindowSystem::forceActiveWindow(winId());
 }

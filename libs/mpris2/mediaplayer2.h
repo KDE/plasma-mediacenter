@@ -21,7 +21,6 @@
 #include "mediacenter/mediacenter_export.h"
 
 #include <QDBusAbstractAdaptor>
-#include <QMainWindow>
 #include <QStringList>
 
 
@@ -41,7 +40,7 @@ class MEDIACENTER_EXPORT MediaPlayer2 : public QDBusAbstractAdaptor
     Q_PROPERTY(QStringList SupportedMimeTypes READ SupportedMimeTypes)
 
 public:
-    explicit MediaPlayer2(QMainWindow *mainWindow, QObject* parent = 0);
+    explicit MediaPlayer2(QObject* parent = 0);
     ~MediaPlayer2();
 
     bool CanQuit() const;
@@ -58,7 +57,7 @@ public Q_SLOTS:
     void Quit() const;
     void Raise() const;
 
-private:
-    QMainWindow *m_mainWindow;
+signals:
+    void raisePMC() const;
 
 };

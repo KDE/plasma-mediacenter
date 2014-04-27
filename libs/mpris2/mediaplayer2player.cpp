@@ -56,7 +56,7 @@ QString MediaPlayer2Player::PlaybackStatus() const
 
 bool MediaPlayer2Player::CanGoNext() const
 {
-    return (mediaPlayerPresent()) ? true : false;
+    return mediaPlayerPresent();
 }
 
 void MediaPlayer2Player::Next() const
@@ -66,7 +66,7 @@ void MediaPlayer2Player::Next() const
 
 bool MediaPlayer2Player::CanGoPrevious() const
 {
-    return (mediaPlayerPresent()) ? true : false;
+    return mediaPlayerPresent();
 }
 
 void MediaPlayer2Player::Previous() const
@@ -76,7 +76,7 @@ void MediaPlayer2Player::Previous() const
 
 bool MediaPlayer2Player::CanPause() const
 {
-    return (mediaPlayerPresent()) ? true : false;
+    return mediaPlayerPresent();
 }
 
 void MediaPlayer2Player::Pause() const
@@ -99,9 +99,7 @@ void MediaPlayer2Player::setStopped(int newVal)
     if (mediaPlayerPresent()) {
         m_stopped = newVal;
 
-        QVariantMap properties;
-        properties["PlaybackStatus"] = PlaybackStatus();
-        signalPropertiesChange(properties);
+        signalPropertiesChange("PlaybackStatus", PlaybackStatus());
     }
 }
 
@@ -115,9 +113,7 @@ void MediaPlayer2Player::setPaused(int newVal)
     if (mediaPlayerPresent()) {
         m_paused = newVal;
 
-        QVariantMap properties;
-        properties["PlaybackStatus"] = PlaybackStatus();
-        signalPropertiesChange(properties);
+        signalPropertiesChange("PlaybackStatus", PlaybackStatus());
     }
 }
 
@@ -128,7 +124,7 @@ void MediaPlayer2Player::Stop() const
 
 bool MediaPlayer2Player::CanPlay() const
 {
-    return (mediaPlayerPresent()) ? true : false;
+    return mediaPlayerPresent();
 }
 
 void MediaPlayer2Player::Play() const
@@ -146,9 +142,7 @@ void MediaPlayer2Player::setVolume(double volume)
     m_volume= qBound(0.0, volume, 1.0);
     emit volumeChanged(m_volume);
 
-    QVariantMap properties;
-    properties["Volume"] = Volume();
-    signalPropertiesChange(properties);
+    signalPropertiesChange("Volume", Volume());
 }
 
 QVariantMap MediaPlayer2Player::Metadata() const
@@ -180,9 +174,7 @@ void MediaPlayer2Player::setRate(double newRate)
         m_rate = qBound(MinimumRate(), newRate, MaximumRate());
         emit rateChanged(m_rate);
 
-        QVariantMap properties;
-        properties["Rate"] = Rate();
-        signalPropertiesChange(properties);
+        signalPropertiesChange("Rate", Rate());
     }
 }
 
@@ -198,7 +190,7 @@ double MediaPlayer2Player::MaximumRate() const
 
 bool MediaPlayer2Player::CanSeek() const
 {
-    return (mediaPlayerPresent()) ? true : false;
+    return mediaPlayerPresent();
 }
 
 bool MediaPlayer2Player::CanControl() const
@@ -244,9 +236,7 @@ void MediaPlayer2Player::setCurrentTrack(QUrl newTrack)
     m_currentTrack = newTrack;
     loadMetadata();
 
-    QVariantMap properties;
-    properties["Metadata"] = Metadata();
-    signalPropertiesChange(properties);
+    signalPropertiesChange("Metadata", Metadata());
 }
 
 int MediaPlayer2Player::mediaPlayerPresent() const
@@ -259,21 +249,18 @@ void MediaPlayer2Player::setMediaPlayerPresent(int status)
     if (m_mediaPlayerPresent != status) {
         m_mediaPlayerPresent = status;
 
-        QVariantMap properties;
-        properties["CanGoNext"] = CanGoNext();
-        properties["CanGoPrevious"] = CanGoPrevious();
-        properties["CanPause"] = CanPause();
-        properties["CanPlay"] = CanPlay();
-        properties["CanSeek"] = CanSeek();
-        signalPropertiesChange(properties);
+        signalPropertiesChange("CanGoNext", CanGoNext());
+        signalPropertiesChange("CanGoPrevious", CanGoPrevious());
+        signalPropertiesChange("CanPause", CanPause());
+        signalPropertiesChange("CanPlay", CanPlay());
+        signalPropertiesChange("CanSeek", CanSeek());
     }
 }
 
 void MediaPlayer2Player::loadMetadata()
 {
     QSharedPointer<PmcMedia> media = SingletonFactory::instanceFor<MediaLibrary>()->mediaForUrl(m_currentTrack.toString());
-    if (media)
-    {
+    if (media) {
         m_metadata["mpris:trackid"] = QVariant::fromValue<QDBusObjectPath>(QDBusObjectPath(getTrackID()));
         m_metadata["mpris:length"] = qlonglong(media->duration())*1000000;
         //convert seconds into micro-seconds
@@ -298,8 +285,10 @@ QString MediaPlayer2Player::getTrackID()
     //consider the playlist postion also in assigning the TrackID
 }
 
-void MediaPlayer2Player::signalPropertiesChange(const QVariantMap &properties)
+void MediaPlayer2Player::signalPropertiesChange(const QString &property, const QVariant &value)
 {
+    QVariantMap properties;
+    properties[property] = value;
     const int ifaceIndex = metaObject()->indexOfClassInfo("D-Bus Interface");
     QDBusMessage msg = QDBusMessage::createSignal("/org/mpris/MediaPlayer2",
         "org.freedesktop.DBus.Properties", "PropertiesChanged");

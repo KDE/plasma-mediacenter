@@ -27,9 +27,8 @@
 #include <KCmdLineArgs>
 #include <KService>
 
-MediaPlayer2::MediaPlayer2(QMainWindow *mainWindow, QObject* parent)
-    : QDBusAbstractAdaptor(parent),
-      m_mainWindow(mainWindow)
+MediaPlayer2::MediaPlayer2(QObject* parent)
+    : QDBusAbstractAdaptor(parent)
 {
 }
 
@@ -58,8 +57,7 @@ void MediaPlayer2::Quit() const
 
 void MediaPlayer2::Raise() const
 {
-    m_mainWindow->raise();
-    KWindowSystem::forceActiveWindow(m_mainWindow->winId());
+    emit raisePMC();
 }
 
 QString MediaPlayer2::Identity() const

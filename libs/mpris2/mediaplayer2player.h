@@ -100,7 +100,7 @@ public Q_SLOTS:
     void OpenUri(QString uri) const;
 
 private:
-    void signalPropertiesChange(const QVariantMap &properties);
+    void signalPropertiesChange(const QString &property, const QVariant &value);
     void loadMetadata();
     QString getTrackID();
     int mediaPlayerPresent() const;

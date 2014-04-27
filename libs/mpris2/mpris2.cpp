@@ -39,10 +39,12 @@ Mpris2::Mpris2(QObject* parent) : QObject(parent)
     }
 
     if (success) {
-        m_mp2 = new MediaPlayer2(qobject_cast<QMainWindow*>(parent), this);
+        m_mp2 = new MediaPlayer2(this);
         m_mp2p = new MediaPlayer2Player(this);
 
         QDBusConnection::sessionBus().registerObject("/org/mpris/MediaPlayer2", this, QDBusConnection::ExportAdaptors);
+
+        connect(m_mp2, SIGNAL(raisePMC()), this, SIGNAL(raisePMC()));
     }
 }
 
