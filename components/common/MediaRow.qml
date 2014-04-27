@@ -40,7 +40,7 @@ Row {
         model: numberOfItemsInDisplay
         LabelOverlay {
             text: typeof(displayProxy) == "object" ? displayProxy[index] : displayProxy
-            visible: !hideLabel && text
+            visible: !hideLabel
             opacity: 0.8
             showOverlay: mediaRowRoot.showOverlay
             width: parent.width/mediaRowRoot.numberOfItemsInDisplay
