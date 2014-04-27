@@ -406,5 +406,3 @@ void PmcMetadataModel::signalUpdate(const QVariant& resourceId, const QString& d
     const QModelIndex changedIndex = index(rowForResource);
     emit dataChanged(changedIndex, changedIndex);
 }
-
-#include "pmcmetadatamodel.moc"

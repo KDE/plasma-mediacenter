@@ -50,5 +50,3 @@ int PlaylistItem::mediaLength() const
 {
     return m_media->duration();
 }
-
-#include "playlistitem.moc"
