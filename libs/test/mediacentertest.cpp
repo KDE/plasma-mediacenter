@@ -20,7 +20,6 @@
 #include <mediacenter/mediacenter.h>
 
 #include <qtest_kde.h>
-#include <KStandardDirs>
 
 QTEST_KDEMAIN(MediaCenterTest, NoGUI);
 
@@ -49,7 +48,7 @@ void MediaCenterTest::shouldReturnPathForComponent()
     const QString path = MediaCenter::dataDirForComponent("test");
 
     const QString expectedPath = QString("%1%2/%3")
-        .arg(KGlobal::dirs()->saveLocation("data"))
+        .arg(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation))
         .arg(KCmdLineArgs::appName())
         .arg("test");
 
@@ -62,7 +61,7 @@ void MediaCenterTest::shouldReturnPathWithoutComponent()
     const QString path = MediaCenter::dataDirForComponent();
 
     const QString expectedPath = QString("%1%2")
-    .arg(KGlobal::dirs()->saveLocation("data"))
+    .arg(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation))
     .arg(KCmdLineArgs::appName());
 
     QCOMPARE(path, expectedPath);

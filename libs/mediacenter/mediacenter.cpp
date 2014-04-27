@@ -20,12 +20,11 @@
 
 #include <QDir>
 #include <QFileInfo>
+#include <QStandardPaths>
 
 #include <KMimeType>
 #include <KUrl>
 #include <KCmdLineArgs>
-#include <KStandardDirs>
-#include <KGlobal>
 
 #include <Solid/Device>
 #include <Solid/OpticalDisc>
@@ -50,7 +49,7 @@ QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> 
 
 QString dataDirForComponent(const QString& component)
 {
-  static const QString pmcPath = KGlobal::dirs()->saveLocation("data") + KCmdLineArgs::appName();
+  static const QString pmcPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + KCmdLineArgs::appName();
   if(!QDir(pmcPath).exists()) {
     QDir().mkpath(pmcPath);
   }
