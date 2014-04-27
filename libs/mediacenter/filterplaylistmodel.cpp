@@ -85,5 +85,3 @@ void FilterPlaylistModel::playFromSourceModel(int indexInFilterModel)
     PlaylistModel *playlistmodel = static_cast<PlaylistModel*>(sourceModel());
     playlistmodel->play(mapToSource(index(indexInFilterModel, 0)).row());
 }
-
-#include "filterplaylistmodel.moc"

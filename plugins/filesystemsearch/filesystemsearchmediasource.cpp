@@ -84,7 +84,7 @@ bool FilesystemSearchMediaSource::checkAndAddFile(const QFileInfo& fileInfo)
     const QString mimeType = KMimeType::findByUrl(
         KUrl::fromLocalFile(fileInfo.absoluteFilePath()))->name();
 
-    const QString topLevelTypeName = mimeType.split("/").at(0);
+    const QString topLevelTypeName = mimeType.split('/').at(0);
 
     if (!topLevelTypeName.isEmpty() && m_allowedMimes.contains(topLevelTypeName)) {
         addFile(fileInfo, topLevelTypeName);

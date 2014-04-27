@@ -12,6 +12,33 @@ add_definitions(
     -D_BUILDING_PMC
 )
 
+# we have both version available
+if(QxOrm_RELEASE_FOUND AND QxOrm_DEBUG_FOUND)
+    # We are building in debug mode
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_BUILD_TYPE STREQUAL "DebugFull")
+        add_definitions(
+            -D_QX_MODE_DEBUG
+        )
+    else()
+    # We are building in release mode
+        add_definitions(
+            -D_QX_MODE_RELEASE
+        )
+    endif()
+
+# We found only release version
+elseif(QxOrm_RELEASE_FOUND)
+    add_definitions(
+        -D_QX_MODE_RELEASE
+    )
+
+# We found only debug version
+elseif(QxOrm_DEBUG_FOUND)
+    add_definitions(
+        -D_QX_MODE_DEBUG
+    )
+endif()
+
 set (plasmamediacenter_SRCS
     medialibrarywrappercache.cpp
     artist.cpp

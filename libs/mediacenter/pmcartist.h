@@ -42,5 +42,4 @@ private:
     Private * const d;
 };
 
-
 #endif // PMCARTIST_H

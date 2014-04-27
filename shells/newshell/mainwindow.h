@@ -58,10 +58,11 @@ private Q_SLOTS:
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event);
-    virtual bool queryExit();
+    void closeEvent(QCloseEvent *event);
 
 private:
-    Plasma::PackageStructure::Ptr m_structure;
+    bool loadThemeAndPopulateMainscriptAndImagesPath(QString &mainscriptPath, QString &imagesPath);
+
     KDeclarative m_kdeclarative;
 
     bool m_mousePointerAutoHide;

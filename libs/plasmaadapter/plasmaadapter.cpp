@@ -1,5 +1,4 @@
 /***********************************************************************************
- *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
  *   Copyright 2014 Sinny Kumari <ksinny@gmail.com>                                *
  *                                                                                 *
  *                                                                                 *
@@ -17,44 +16,30 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#include "abstractmediasource.h"
-#include <KServiceTypeTrader>
-#include <KDebug>
+#include "../mediacenter/mediacenter_export.h"
+#include <Plasma/Package>
+#include <Plasma/Theme>
 
-using namespace MediaCenter;
+#include <QString>
 
-class AbstractMediaSource::Private
-{
-public:
-    Private() : mediaLibrary(0) {}
-    MediaLibrary* mediaLibrary;
-};
+extern "C"{
+    void MEDIACENTER_EXPORT loadPlasmaTheme(){
+        Plasma::Theme::defaultTheme()->setUseGlobalSettings(false);
+        Plasma::Theme::defaultTheme()->setThemeName("oxygen");
 
-AbstractMediaSource::AbstractMediaSource(QObject* parent, const QVariantList&)
-    : QThread(parent), d(new Private)
-{
-}
-
-AbstractMediaSource::~AbstractMediaSource()
-{
-
-}
-
-KService::List AbstractMediaSource::availableMediaSourcePlugins()
-{
-    KService::List plugins = KServiceTypeTrader::self()->query("Plasma/MediaCenter/MediaSource");
-    if (plugins.isEmpty()) {
-        kWarning() << "no available media sources";
     }
-    return plugins;
-}
 
-void AbstractMediaSource::setMediaLibrary(MediaLibrary* mediaLibrary)
-{
-    d->mediaLibrary = mediaLibrary;
-}
+    QString MEDIACENTER_EXPORT getMainscriptPath() {
+        Plasma::PackageStructure::Ptr structure = Plasma::PackageStructure::load("Plasma/Generic");
+        Plasma::Package *package = new Plasma::Package(QString(), "org.kde.plasma.mediacenter", structure);
 
-MediaLibrary* AbstractMediaSource::mediaLibrary() const
-{
-    return d->mediaLibrary;
+        return package->filePath("mainscript");
+    }
+
+    QString MEDIACENTER_EXPORT getImagesPath() {
+        Plasma::PackageStructure::Ptr structure = Plasma::PackageStructure::load("Plasma/Generic");
+        Plasma::Package *package = new Plasma::Package(QString(), "org.kde.plasma.mediacenter", structure);
+
+        return package->filePath("images");
+    }
 }

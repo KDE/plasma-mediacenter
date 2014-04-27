@@ -31,8 +31,11 @@
 #include <mpris2/mediaplayer2player.h>
 #include <mpris2/mpris2.h>
 
+#ifndef NO_LINK_TO_PLASMA
 #include <Plasma/Package>
 #include <Plasma/Theme>
+#endif
+
 #include <KDE/KCmdLineArgs>
 #include <KDE/KApplication>
 
@@ -42,11 +45,13 @@
 #include <QDeclarativeProperty>
 #include <qdeclarative.h>
 
+#include <QLibrary>
 #include <QtOpenGL/QGLWidget>
 #include <QtGui/QApplication>
 #include <QtGui/QKeyEvent>
 #include <QDebug>
 #include <QTimer>
+#include <QDir>
 
 MainWindow::MainWindow(Application *parent)
     : KMainWindow(dynamic_cast <QWidget *> (parent))
@@ -109,19 +114,20 @@ MainWindow::MainWindow(Application *parent)
     view->engine()->addImageProvider(PmcImageProvider::identificationString, new PmcImageProvider());
     view->engine()->addImageProvider(PmcCoverArtProvider::identificationString, new PmcCoverArtProvider());
 
-    Plasma::Theme::defaultTheme()->setUseGlobalSettings(false);
-    Plasma::Theme::defaultTheme()->setThemeName("oxygen");
+    QString imagesPath;
+    QString mainscriptPath;
 
-    m_structure = Plasma::PackageStructure::load("Plasma/Generic");
-    Plasma::Package *package = new Plasma::Package(QString(), "org.kde.plasma.mediacenter", m_structure);
+    if (!loadThemeAndPopulateMainscriptAndImagesPath(mainscriptPath, imagesPath)) {
+        qFatal("Failed to load Plasma Libraries, cannot continue.");
+    }
 
-    view->rootContext()->setContextProperty("_pmc_background_image_path", QUrl(package->filePath("images", "noiselight.png")));
-    view->rootContext()->setContextProperty("_pmc_gradient_image_path", QUrl(package->filePath("images", "gradient.png")));
-    view->rootContext()->setContextProperty("_pmc_shadow_image_path", QUrl(package->filePath("images", "shadow.png")));
+    view->rootContext()->setContextProperty("_pmc_background_image_path", QUrl(QDir(imagesPath).absoluteFilePath("noiselight.png")));
+    view->rootContext()->setContextProperty("_pmc_gradient_image_path", QUrl(QDir(imagesPath).absoluteFilePath("gradient.png")));
+    view->rootContext()->setContextProperty("_pmc_shadow_image_path", QUrl(QDir(imagesPath).absoluteFilePath("shadow.png")));
 
     view->rootContext()->setContextProperty("_pmc_is_desktop", Settings().value("isDesktop",false));
 
-    view->setSource(QUrl(package->filePath("mainscript")));
+    view->setSource(QUrl(mainscriptPath));
 
     resize(1366, 768);
 
@@ -143,12 +149,12 @@ bool MainWindow::toggleFullScreen()
     return (windowState() & Qt::WindowFullScreen);
 }
 
-bool MainWindow::queryExit()
+void MainWindow::closeEvent(QCloseEvent *event)
 {
     Settings s;
-    windowState() & Qt::WindowFullScreen ? s.setValue("fullscreen", true) : s.setValue("fullscreen", false);
+    s.setValue("fullscreen", (windowState() & Qt::WindowFullScreen) != 0);
     s.sync();
-    return KMainWindow::queryExit();
+    KMainWindow::closeEvent(event);
 }
 
 void MainWindow::closeMediaCenter()
@@ -205,4 +211,49 @@ void MainWindow::addNewInstanceArgsPlaylist()
 {
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
     playlistModel->processCommandLineArgs(args);
+}
+
+bool MainWindow::loadThemeAndPopulateMainscriptAndImagesPath(QString& mainscriptPath, QString& imagesPath)
+{
+#ifdef NO_LINK_TO_PLASMA
+    qDebug() << "PLASMA_ADAPTER: Setting Oxygen Plasma theme and loading resources...";
+    typedef void (*MyPrototype)();
+    typedef QString (*QStringPrototype)();
+
+    QLibrary plasmaAdapterLib("plasmaadapter.so");
+    MyPrototype loadPlasmaTheme = (MyPrototype) plasmaAdapterLib.resolve("loadPlasmaTheme");
+    QStringPrototype getMainscriptPath = (QStringPrototype) plasmaAdapterLib.resolve("getMainscriptPath");
+    QStringPrototype getImagesPath = (QStringPrototype) plasmaAdapterLib.resolve("getImagesPath");
+
+    if (!plasmaAdapterLib.isLoaded()) {
+        return false;
+    }
+
+    if (loadPlasmaTheme) {
+        loadPlasmaTheme();
+    }
+
+    if (getMainscriptPath) {
+        mainscriptPath = getMainscriptPath();
+    }
+
+    if (getImagesPath) {
+        imagesPath = getImagesPath();
+    }
+
+    plasmaAdapterLib.unload();
+
+#else
+    qDebug() << "Setting Oxygen Plasma theme and loading resources...";
+    Plasma::Theme::defaultTheme()->setUseGlobalSettings(false);
+    Plasma::Theme::defaultTheme()->setThemeName("oxygen");
+
+    Plasma::PackageStructure::Ptr structure = Plasma::PackageStructure::load("Plasma/Generic");
+    Plasma::Package *package = new Plasma::Package(QString(), "org.kde.plasma.mediacenter", structure);
+
+    mainscriptPath = package->filePath("mainscript");
+
+    imagesPath = package->filePath("images");
+#endif
+    return true;
 }
