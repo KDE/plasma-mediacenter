@@ -23,8 +23,6 @@
 #include "mediacenter_export.h"
 #include "mediacenter.h"
 
-#include <KUrl>
-
 #include <QtCore/QAbstractItemModel>
 #include <QSharedPointer>
 #include <QList>
@@ -65,7 +63,7 @@ protected Q_SLOTS:
     void delayedPreview();
 
 protected:
-    QString fetchPreview(const KUrl& url, const QModelIndex& index);
+    QString fetchPreview(const QUrl& url, const QModelIndex& index);
 
 private Q_SLOTS:
     void showPreview(const KFileItem &item, const QPixmap &preview);

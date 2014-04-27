@@ -47,9 +47,9 @@ public:
 
     //Thumbnail stuff
     const QStringList *thumbnailerPlugins;
-    QHash<KUrl, QPersistentModelIndex> filesToPreview;
+    QHash<QUrl, QPersistentModelIndex> filesToPreview;
     QSize thumbnailSize;
-    QHash<KUrl, QPersistentModelIndex> previewJobs;
+    QHash<QUrl, QPersistentModelIndex> previewJobs;
     QTimer previewTimer;
     QTimer updateTimer;
     QTimer metadataFetchTimer;
@@ -249,7 +249,7 @@ QVariant PmcMetadataModel::dataForMedia(const QModelIndex &index, int role) cons
         return media->genre();
     case Qt::DecorationRole:
         if (media->type() == "video") {
-            const KUrl url(media->url());
+            const QUrl url(media->url());
             if (d->mediaUrlWhichFailedThumbnailGeneration.contains(url.url()))
                 return "image-missing";
             return const_cast<PmcMetadataModel*>(this)->fetchPreview(url, index);
@@ -332,7 +332,7 @@ int PmcMetadataModel::rowCount(const QModelIndex& parent) const
     return d->mediaResourceIds.size();
 }
 
-QString PmcMetadataModel::fetchPreview(const KUrl &url, const QModelIndex& index)
+QString PmcMetadataModel::fetchPreview(const QUrl &url, const QModelIndex& index)
 {
     const QString prettyUrl = url.url();
     if (SingletonFactory::instanceFor<PmcImageCache>()->containsId(prettyUrl)) {
@@ -346,12 +346,12 @@ QString PmcMetadataModel::fetchPreview(const KUrl &url, const QModelIndex& index
 
 void PmcMetadataModel::delayedPreview()
 {
-    QHash<KUrl, QPersistentModelIndex>::const_iterator i = d->filesToPreview.constBegin();
+    QHash<QUrl, QPersistentModelIndex>::const_iterator i = d->filesToPreview.constBegin();
 
     KFileItemList list;
 
     while (i != d->filesToPreview.constEnd()) {
-        KUrl file = i.key();
+        QUrl file = i.key();
         QPersistentModelIndex index = i.value();
 
         if (!d->previewJobs.contains(file) && file.isValid()) {
