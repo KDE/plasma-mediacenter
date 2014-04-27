@@ -27,7 +27,7 @@
 
 #include "mediacenter_export.h"
 
-class MEDIACENTER_EXPORT LastFmImageFetcher : public QObject
+class LastFmImageFetcher : public QObject
 {
     Q_OBJECT
 public:

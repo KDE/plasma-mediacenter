@@ -301,5 +301,3 @@ void MediaLibraryTest::shouldCleanupEntriesForNonExistentMedia()
 
     delete mediaLibrary;
 }
-
-#include "medialibrarytest.moc"

@@ -74,5 +74,3 @@ void PmcMediaTest::shouldEmitUpdatedWhenMediaSet()
     waitForSignal(&updatedSpy);
     QCOMPARE(updatedSpy.size(), 1);
 }
-
-#include "pmcmediatest.moc"

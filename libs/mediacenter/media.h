@@ -30,7 +30,7 @@
 #include "album.h"
 #include "artist.h"
 
-class MEDIACENTER_EXPORT Media : public QObject
+class Media : public QObject
 {
     Q_OBJECT
 public:

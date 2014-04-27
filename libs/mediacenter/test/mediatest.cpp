@@ -1,6 +1,5 @@
 /***********************************************************************************
  *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
- *   Copyright 2014 Sinny Kumari <ksinny@gmail.com>                                *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -17,59 +16,35 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#include "lastfmimagefetchertest.h"
-#include <mediacenter/lastfmimagefetcher.h>
-#include <mediacenter/pmcimagecache.h>
-#include <mediacenter/singletonfactory.h>
+#include "mediatest.h"
+#include <mediacenter/media.h>
 
 #include <qtest_kde.h>
 
-QTEST_KDEMAIN(LastFmImageFetcherTest, NoGUI);
+QTEST_KDEMAIN(MediaTest, NoGUI);
 
-void LastFmImageFetcherTest::initTestCase()
+void MediaTest::initTestCase()
 {
     // Called before the first testfunction is executed
 }
 
-void LastFmImageFetcherTest::cleanupTestCase()
+void MediaTest::cleanupTestCase()
 {
     // Called after the last testfunction was executed
 }
 
-void LastFmImageFetcherTest::init()
+void MediaTest::init()
 {
     // Called before each testfunction is executed
 }
 
-void LastFmImageFetcherTest::cleanup()
+void MediaTest::cleanup()
 {
     // Called after every testfunction
 }
 
-void LastFmImageFetcherTest::shouldDownloadImageAndSaveToCache()
+void MediaTest::shouldSetDurationToZeroWhenNotSpecified()
 {
-    LastFmImageFetcher lastFmFetcher;
-    QSignalSpy spyInitialize(&lastFmFetcher, SIGNAL(imageFetched(QVariant,QString)));
-    QVERIFY2(spyInitialize.isValid(), "Can't listen to signal imageFetched");
-    lastFmFetcher.fetchImage("artist", "Myfaveartist", "shaan");
-
-    waitForSignal(&spyInitialize, TIMEOUT_FOR_SIGNALS);
-    QCOMPARE(spyInitialize.size(), 1);
-    QList<QVariant> arguments = spyInitialize.takeFirst();
-    QCOMPARE(arguments.at(0).value<QVariant>().toString(), QString("Myfaveartist"));
-    QCOMPARE(arguments.at(1).toString(), QString("shaan"));
-    QVERIFY2(SingletonFactory::instanceFor<PmcImageCache>()->containsId("artist:shaan"), "Cache did not contain image");
+    Media m;
+    QCOMPARE(m.duration(), 0);
 }
-
-bool LastFmImageFetcherTest::waitForSignal(QSignalSpy* spy, int timeout)
-{
-    QTime timer;
-    timer.start();
-    while (spy->isEmpty() && timer.elapsed() < timeout)
-    {
-        QCoreApplication::processEvents();
-    }
-    return !spy->isEmpty();
-}
-
-#include "lastfmimagefetchertest.moc"

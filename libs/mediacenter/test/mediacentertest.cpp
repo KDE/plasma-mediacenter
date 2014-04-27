@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
+ *   Copyright 2014 by Sinny Kumari <ksinny@gmail.com>                             *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,39 +16,54 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#include "singletonfactorytest.h"
-#include <mediacenter/singletonfactory.h>
+#include "mediacentertest.h"
+#include <mediacenter/mediacenter.h>
 
 #include <qtest_kde.h>
+#include <KStandardDirs>
 
-QTEST_KDEMAIN(SingletonFactoryTest, NoGUI);
+QTEST_KDEMAIN(MediaCenterTest, NoGUI);
 
-void SingletonFactoryTest::initTestCase()
+void MediaCenterTest::initTestCase()
 {
     // Called before the first testfunction is executed
 }
 
-void SingletonFactoryTest::cleanupTestCase()
+void MediaCenterTest::cleanupTestCase()
 {
     // Called after the last testfunction was executed
 }
 
-void SingletonFactoryTest::init()
+void MediaCenterTest::init()
 {
     // Called before each testfunction is executed
 }
 
-void SingletonFactoryTest::cleanup()
+void MediaCenterTest::cleanup()
 {
     // Called after every testfunction
 }
 
-void SingletonFactoryTest::shouldReturnSameInstanceEveryTime()
+void MediaCenterTest::shouldReturnPathForComponent()
 {
-    QObject *obj1 = SingletonFactory::instanceFor<QObject>();
-    QObject *obj2 = SingletonFactory::instanceFor<QObject>();
+    const QString path = MediaCenter::dataDirForComponent("test");
 
-    QVERIFY2(obj1 == obj2, "Objects returned are not equal");
+    const QString expectedPath = QString("%1%2/%3")
+        .arg(KGlobal::dirs()->saveLocation("data"))
+        .arg(KCmdLineArgs::appName())
+        .arg("test");
+
+    QCOMPARE(path, expectedPath);
+
 }
 
-#include "singletonfactorytest.moc"
+void MediaCenterTest::shouldReturnPathWithoutComponent()
+{
+    const QString path = MediaCenter::dataDirForComponent();
+
+    const QString expectedPath = QString("%1%2")
+    .arg(KGlobal::dirs()->saveLocation("data"))
+    .arg(KCmdLineArgs::appName());
+
+    QCOMPARE(path, expectedPath);
+}

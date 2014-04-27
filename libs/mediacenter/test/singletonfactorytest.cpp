@@ -16,37 +16,37 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#include "mediatest.h"
-#include <mediacenter/media.h>
+#include "singletonfactorytest.h"
+#include <mediacenter/singletonfactory.h>
 
 #include <qtest_kde.h>
 
-QTEST_KDEMAIN(MediaTest, NoGUI);
+QTEST_KDEMAIN(SingletonFactoryTest, NoGUI);
 
-void MediaTest::initTestCase()
+void SingletonFactoryTest::initTestCase()
 {
     // Called before the first testfunction is executed
 }
 
-void MediaTest::cleanupTestCase()
+void SingletonFactoryTest::cleanupTestCase()
 {
     // Called after the last testfunction was executed
 }
 
-void MediaTest::init()
+void SingletonFactoryTest::init()
 {
     // Called before each testfunction is executed
 }
 
-void MediaTest::cleanup()
+void SingletonFactoryTest::cleanup()
 {
     // Called after every testfunction
 }
 
-void MediaTest::shouldSetDurationToZeroWhenNotSpecified()
+void SingletonFactoryTest::shouldReturnSameInstanceEveryTime()
 {
-    Media m;
-    QCOMPARE(m.duration(), 0);
-}
+    QObject *obj1 = SingletonFactory::instanceFor<QObject>();
+    QObject *obj2 = SingletonFactory::instanceFor<QObject>();
 
-#include "mediatest.moc"
+    QVERIFY2(obj1 == obj2, "Objects returned are not equal");
+}
