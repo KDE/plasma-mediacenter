@@ -28,7 +28,6 @@
 #include <mediacenter/pmccoverartprovider.h>
 #include <mediacenter/objectpair.h>
 #include <mediacenter/multipleplaylistmodel.h>
-#include <mpris2/mediaplayer2.h>
 #include <mpris2/mediaplayer2player.h>
 #include <mpris2/mpris2.h>
 
@@ -90,8 +89,6 @@ MainWindow::MainWindow(Application *parent)
     qmlRegisterType<FilterPlaylistModel>("org.kde.plasma.mediacenter.elements", 0, 1, "FilterPlaylistModel");
     qmlRegisterType<MultiplePlaylistModel>("org.kde.plasma.mediacenter.elements", 0, 1, "MultiplePlaylistModel");
     qmlRegisterType<Settings>("org.kde.plasma.mediacenter.elements", 0, 1, "Settings");
-    qmlRegisterType<MediaPlayer2>("org.kde.plasma.mediacenter.elements",0,1,"MediaPlayer2");
-    qmlRegisterType<MediaPlayer2Player>("org.kde.plasma.mediacenter.elements",0,1,"MediaPlayer2Player");
     qmlRegisterInterface<ObjectPair>("ObjectPair");
 
     BackendsModel *backendsModel = new BackendsModel(view->engine(), this);
@@ -100,6 +97,11 @@ MainWindow::MainWindow(Application *parent)
     playlistModel = new PlaylistModel(this);
     playlistModel->processCommandLineArgs(args);
     view->rootContext()->setContextProperty("playlistModel", playlistModel);
+
+    Mpris2 *mprisObject = new Mpris2(this);
+    MediaPlayer2Player *mp2p = mprisObject->getMediaPlayer2Player();
+
+    view->rootContext()->setContextProperty("mprisPlayerObject", mp2p);
 
     view->rootContext()->setContextProperty("_pmc_mainwindow", this);
     view->rootContext()->setContextProperty("startedFullScreen", isFullScreen());
@@ -125,8 +127,6 @@ MainWindow::MainWindow(Application *parent)
 
     installEventFilter(this);
     centralWidget()->installEventFilter(this);
-
-    new Mpris2(this);
 
     m_mousePointerAutoHideTimer.setInterval(2000);
     connect(this, SIGNAL(mousePointerAutoHideChanged()), SLOT(enableMousePointerAutoHideIfNeeded()));

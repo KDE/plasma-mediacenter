@@ -26,22 +26,18 @@
 #include <QDBusAbstractAdaptor>
 #include <QDBusObjectPath>
 #include <QPointer>
+#include <QUrl>
 
-#include <Phonon/MediaSource>
-
-class MEDIACENTER_EXPORT MediaPlayer2Player : public QObject
+class MEDIACENTER_EXPORT MediaPlayer2Player : public QDBusAbstractAdaptor
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "org.mpris.MediaPlayer2.Player") // Docs: http://www.mpris.org/2.1/spec/Player_Node.html
+    Q_CLASSINFO("D-Bus Interface", "org.mpris.MediaPlayer2.Player") // Docs: http://specifications.freedesktop.org/mpris-spec/latest/Player_Interface.html
 
     Q_PROPERTY(QString PlaybackStatus READ PlaybackStatus)
-    Q_PROPERTY(double rate READ Rate WRITE setRate NOTIFY rateChanged)
-    Q_PROPERTY(double Rate READ Rate WRITE setRate)
+    Q_PROPERTY(double Rate READ Rate WRITE setRate NOTIFY rateChanged)
     Q_PROPERTY(QVariantMap Metadata READ Metadata)
-    Q_PROPERTY(double volume READ Volume WRITE setVolume NOTIFY volumeChanged)
-    Q_PROPERTY(double Volume READ Volume WRITE setVolume)
-    Q_PROPERTY(qlonglong position READ Position WRITE setPropertyPosition)
-    Q_PROPERTY(qlonglong Position READ Position)
+    Q_PROPERTY(double Volume READ Volume WRITE setVolume NOTIFY volumeChanged)
+    Q_PROPERTY(qlonglong Position READ Position WRITE setPropertyPosition)
     Q_PROPERTY(double MinimumRate READ MinimumRate)
     Q_PROPERTY(double MaximumRate READ MaximumRate)
     Q_PROPERTY(bool CanGoNext READ CanGoNext)
@@ -50,13 +46,10 @@ class MEDIACENTER_EXPORT MediaPlayer2Player : public QObject
     Q_PROPERTY(bool CanPause READ CanPause)
     Q_PROPERTY(bool CanControl READ CanControl)
     Q_PROPERTY(bool CanSeek READ CanSeek)
-    Q_PROPERTY(bool paused READ paused WRITE setPaused)
-    Q_PROPERTY(bool stopped READ stopped WRITE setStopped)
+    Q_PROPERTY(int paused READ paused WRITE setPaused)
+    Q_PROPERTY(int stopped READ stopped WRITE setStopped)
     Q_PROPERTY(QUrl currentTrack READ currentTrack WRITE setCurrentTrack)
-    Q_PROPERTY(bool mediaPlayerPresent READ mediaPlayerPresent WRITE setMediaPlayerPresent)
-
-    // Many properties need a duplicate starting with a small letter because
-    // QML does not allow a property starting with a capital letter.
+    Q_PROPERTY(int mediaPlayerPresent READ mediaPlayerPresent WRITE setMediaPlayerPresent)
 
 public:
     explicit MediaPlayer2Player(QObject* parent = 0);
@@ -75,12 +68,9 @@ public:
     bool CanPause() const;
     bool CanSeek() const;
     bool CanControl() const;
-    bool stopped() const;
-    bool paused() const;
+    int stopped() const;
+    int paused() const;
     QUrl currentTrack() const;
-
-protected:
-    Q_INVOKABLE void emitSeeked(int pos);
 
 signals:
     void Seeked(qlonglong Position) const;
@@ -90,12 +80,15 @@ signals:
     void next() const;
     void previous() const;
     void pause() const;
-    void playPause() const;
+    void playPause();
     void stop() const;
     void play() const;
     void seek(int offset) const;
+    void playUrl(QUrl url) const;
 
 public Q_SLOTS:
+    void emitSeeked(int pos);
+
     void Next() const;
     void Previous() const;
     void Pause() const;
@@ -107,19 +100,17 @@ public Q_SLOTS:
     void OpenUri(QString uri) const;
 
 private:
-    void signalPropertiesChange(const QVariantMap& properties) const;
+    void signalPropertiesChange(const QVariantMap &properties);
     void loadMetadata();
     QString getTrackID();
-    bool mediaPlayerPresent() const;
-    void setMediaPlayerPresent(bool status);
+    int mediaPlayerPresent() const;
+    void setMediaPlayerPresent(int status);
 
     void setRate(double newRate);
     void setVolume(double volume);
     void setPropertyPosition(int newPositionInMs);
-    void setCanPlay(bool newVal);
-    void setCanPause(bool newVal);
-    void setStopped(bool newVal);
-    void setPaused(bool newVal);
+    void setStopped(int newVal);
+    void setPaused(int newVal);
     void setCurrentTrack(QUrl newTrack);
 
     QVariantMap m_metadata;
@@ -128,7 +119,7 @@ private:
     double m_volume;
     bool m_paused;
     bool m_stopped;
-    bool m_mediaPlayerPresent;
+    int m_mediaPlayerPresent;
     qlonglong m_position;
 };
 

@@ -1,5 +1,6 @@
 /***************************************************************************
  *   Copyright 2014 Sujith Haridasan <sujith.haridasan@kdemail.net>        *
+ *   Copyright 2014 Ashish Madeti <ashishmadeti@gmail.com>                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -19,16 +20,17 @@
 
 #include "mpris2/mediaplayer2.h"
 
-#include <QDBusConnection>
-#include <QDBusMessage>
+#include <QCoreApplication>
 
 #include <KAboutData>
-#include <KApplication>
+#include <KWindowSystem>
 #include <KCmdLineArgs>
+#include <KService>
 
-MediaPlayer2::MediaPlayer2(QObject* parent) : QDBusAbstractAdaptor(parent)
+MediaPlayer2::MediaPlayer2(QMainWindow *mainWindow, QObject* parent)
+    : QDBusAbstractAdaptor(parent),
+      m_mainWindow(mainWindow)
 {
-    QDBusConnection::sessionBus().registerObject("/org/mpris/MediaPlayer2", this, QDBusConnection::ExportAllSlots | QDBusConnection::ExportAllProperties | QDBusConnection::ExportAllSignals);
 }
 
 MediaPlayer2::~MediaPlayer2()
@@ -40,17 +42,54 @@ bool MediaPlayer2::CanQuit() const
     return true;
 }
 
-bool MediaPlayer2::CanSetFullscreen() const
+bool MediaPlayer2::CanRaise() const
 {
     return true;
 }
-
-bool MediaPlayer2::Fullscreen() const
+bool MediaPlayer2::HasTrackList() const
 {
-    return true;
+    return false;
+}
+
+void MediaPlayer2::Quit() const
+{
+    QCoreApplication::quit();
+}
+
+void MediaPlayer2::Raise() const
+{
+    m_mainWindow->raise();
+    KWindowSystem::forceActiveWindow(m_mainWindow->winId());
 }
 
 QString MediaPlayer2::Identity() const
 {
     return KCmdLineArgs::aboutData()->programName();
+}
+
+QString MediaPlayer2::DesktopEntry() const
+{
+    KService::Ptr app = KService::serviceByDesktopName(KCmdLineArgs::aboutData()->appName());
+
+    if (app) {
+        return app->desktopEntryName();
+    }
+
+    return QString();
+}
+
+QStringList MediaPlayer2::SupportedUriSchemes() const
+{
+    return QStringList() << "file";
+}
+
+QStringList MediaPlayer2::SupportedMimeTypes() const
+{
+    KService::Ptr app = KService::serviceByDesktopName(KCmdLineArgs::aboutData()->appName());
+
+    if (app) {
+        return app->mimeTypes();
+    }
+
+    return QStringList();
 }

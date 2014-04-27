@@ -24,27 +24,20 @@
 #include "../mediacenter/singletonfactory.h"
 
 #include <QCryptographicHash>
-#include <QDBusConnection>
+#include <QStringList>
 #include <QMetaClassInfo>
 #include <QDBusMessage>
-#include <QStringList>
-#include <QVariant>
-
-#include <KUrl>
-#include <KStandardDirs>
+#include <QDBusConnection>
 
 static const double MAX_RATE = 32.0;
 static const double MIN_RATE = 0.0;
 
 MediaPlayer2Player::MediaPlayer2Player(QObject* parent)
-    : QObject(parent),
+    : QDBusAbstractAdaptor(parent),
+      m_rate(0),
       m_paused(false),
       m_stopped(true)
 {
-    QDBusConnection::sessionBus().registerObject("/org/mpris/MediaPlayer2", this,
-                                                 QDBusConnection::ExportAllSlots |
-                                                 QDBusConnection::ExportAllProperties |
-                                                 QDBusConnection::ExportAllSignals);
 }
 
 MediaPlayer2Player::~MediaPlayer2Player()
@@ -96,35 +89,35 @@ void MediaPlayer2Player::PlayPause()
     emit playPause();
 }
 
-bool MediaPlayer2Player::stopped() const
+int MediaPlayer2Player::stopped() const
 {
     return m_stopped;
 }
 
-void MediaPlayer2Player::setStopped(bool newVal)
+void MediaPlayer2Player::setStopped(int newVal)
 {
     if (mediaPlayerPresent()) {
         m_stopped = newVal;
 
         QVariantMap properties;
         properties["PlaybackStatus"] = PlaybackStatus();
-        MediaPlayer2Player::signalPropertiesChange(properties);
+        signalPropertiesChange(properties);
     }
 }
 
-bool MediaPlayer2Player::paused() const
+int MediaPlayer2Player::paused() const
 {
     return m_paused;
 }
 
-void MediaPlayer2Player::setPaused(bool newVal)
+void MediaPlayer2Player::setPaused(int newVal)
 {
     if (mediaPlayerPresent()) {
         m_paused = newVal;
 
         QVariantMap properties;
         properties["PlaybackStatus"] = PlaybackStatus();
-        MediaPlayer2Player::signalPropertiesChange(properties);
+        signalPropertiesChange(properties);
     }
 }
 
@@ -155,7 +148,7 @@ void MediaPlayer2Player::setVolume(double volume)
 
     QVariantMap properties;
     properties["Volume"] = Volume();
-    MediaPlayer2Player::signalPropertiesChange(properties);
+    signalPropertiesChange(properties);
 }
 
 QVariantMap MediaPlayer2Player::Metadata() const
@@ -181,22 +174,26 @@ double MediaPlayer2Player::Rate() const
 
 void MediaPlayer2Player::setRate(double newRate)
 {
-    m_rate = qBound(MinimumRate(), newRate, MaximumRate());
-    emit rateChanged(newRate);
+    if (newRate == 0) {
+        Pause();
+    } else {
+        m_rate = qBound(MinimumRate(), newRate, MaximumRate());
+        emit rateChanged(m_rate);
 
-    QVariantMap properties;
-    properties["Rate"] = Rate();
-    MediaPlayer2Player::signalPropertiesChange(properties);
+        QVariantMap properties;
+        properties["Rate"] = Rate();
+        signalPropertiesChange(properties);
+    }
 }
 
 double MediaPlayer2Player::MinimumRate() const
 {
-    return double(MIN_RATE);
+    return MIN_RATE;
 }
 
 double MediaPlayer2Player::MaximumRate() const
 {
-    return double(MAX_RATE);
+    return MAX_RATE;
 }
 
 bool MediaPlayer2Player::CanSeek() const
@@ -211,8 +208,11 @@ bool MediaPlayer2Player::CanControl() const
 
 void MediaPlayer2Player::Seek(qlonglong Offset) const
 {
-    int offset = Offset/1000;
-    emit seek(offset);
+    if (mediaPlayerPresent()) {
+        //The seekBy function (to which this signal is linked to) accepts offset in seconds
+        int offset = Offset/1000000;
+        emit seek(offset);
+    }
 }
 
 void MediaPlayer2Player::emitSeeked(int pos)
@@ -223,14 +223,14 @@ void MediaPlayer2Player::emitSeeked(int pos)
 void MediaPlayer2Player::SetPosition(const QDBusObjectPath& trackId, qlonglong pos)
 {
     if (trackId.path() == getTrackID())
-        seek((pos - m_position)/1000);
+        seek((pos - Position())/1000000);
 }
 
 void MediaPlayer2Player::OpenUri(QString uri) const
 {
-    KUrl url(uri);
+    QUrl url(uri);
     if (url.isLocalFile()) {
-        //TODO: Play the url
+        emit playUrl(uri);
     }
 }
 
@@ -246,15 +246,15 @@ void MediaPlayer2Player::setCurrentTrack(QUrl newTrack)
 
     QVariantMap properties;
     properties["Metadata"] = Metadata();
-    MediaPlayer2Player::signalPropertiesChange(properties);
+    signalPropertiesChange(properties);
 }
 
-bool MediaPlayer2Player::mediaPlayerPresent() const
+int MediaPlayer2Player::mediaPlayerPresent() const
 {
     return m_mediaPlayerPresent;
 }
 
-void MediaPlayer2Player::setMediaPlayerPresent(bool status)
+void MediaPlayer2Player::setMediaPlayerPresent(int status)
 {
     if (m_mediaPlayerPresent != status) {
         m_mediaPlayerPresent = status;
@@ -265,7 +265,7 @@ void MediaPlayer2Player::setMediaPlayerPresent(bool status)
         properties["CanPause"] = CanPause();
         properties["CanPlay"] = CanPlay();
         properties["CanSeek"] = CanSeek();
-        MediaPlayer2Player::signalPropertiesChange(properties);
+        signalPropertiesChange(properties);
     }
 }
 
@@ -298,7 +298,7 @@ QString MediaPlayer2Player::getTrackID()
     //consider the playlist postion also in assigning the TrackID
 }
 
-void MediaPlayer2Player::signalPropertiesChange(const QVariantMap& properties) const
+void MediaPlayer2Player::signalPropertiesChange(const QVariantMap &properties)
 {
     const int ifaceIndex = metaObject()->indexOfClassInfo("D-Bus Interface");
     QDBusMessage msg = QDBusMessage::createSignal("/org/mpris/MediaPlayer2",

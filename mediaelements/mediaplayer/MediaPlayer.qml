@@ -109,6 +109,7 @@ FocusScope {
     function seekBy(value)
     {
         video.position += value*1000;
+        mprisPlayerObject.emitSeeked(video.position);
     }
 
     MouseArea {

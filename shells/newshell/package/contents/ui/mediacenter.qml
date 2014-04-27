@@ -320,29 +320,29 @@ Image {
         }
     }
 
-    MediaCenterElements.MediaPlayer2Player {
-        id: mprisPlayerObject
-        rate: mediaPlayerInstance.getRate()
-        volume: runtimeData.volume
-        position: mediaPlayerInstance.currentTime
-        paused: runtimeData.paused
-        stopped: runtimeData.stopped
-        currentTrack: runtimeData.url
-        mediaPlayerPresent: mediaPlayerInstance ? true : false
-        onRateChanged: mediaPlayerInstance.setRate(newRate)
-        onVolumeChanged: runtimeData.volume = newVol
-        onNext: playlistInstance.playNext()
-        onPrevious: playlistInstance.playPrevious()
-        onPause: if (runtimeData.playing) runtimeData.playPause()
-        onPlayPause: runtimeData.playPause()
-        onStop: runtimeData.stop()
-        onPlay: if (!runtimeData.playing) runtimeData.playPause()
-        onSeek: {
-            if (mediaPlayerInstance) {
-                mediaPlayerInstance.currentTime += offset
-                mprisPlayerObject.emitSeeked(mediaPlayerInstance.currentTime)
-            }
-        }
+    //Bindings for MediaPlayer2Player adaptor
+    Binding { target: mprisPlayerObject; property: "Volume"; value: runtimeData.volume }
+    Binding { target: mprisPlayerObject; property: "Rate"; value: mediaPlayerInstance.getRate() }
+    Binding { target: mprisPlayerObject; property: "Position"; value: mediaPlayerInstance.currentTime }
+    Binding { target: mprisPlayerObject; property: "mediaPlayerPresent"; value: mediaPlayerInstance ? true : false }
+    Binding { target: mprisPlayerObject; property: "currentTrack"; value: runtimeData.url }
+    Binding { target: mprisPlayerObject; property: "stopped"; value: runtimeData.stopped }
+    Binding { target: mprisPlayerObject; property: "paused"; value: runtimeData.paused }
+
+    function setupMprisPlayer() {
+        mprisPlayerObject.next.connect(playlistInstance.playNext);
+        mprisPlayerObject.previous.connect(playlistInstance.playPrevious);
+        mprisPlayerObject.playPause.connect(runtimeData.playPause);
+        mprisPlayerObject.stop.connect(runtimeData.stop);
+        mprisPlayerObject.pause.connect(function() { if (runtimeData.playing) runtimeData.playPause() });
+        mprisPlayerObject.play.connect(function() { if (!runtimeData.playing) runtimeData.playPause() });
+        mprisPlayerObject.volumeChanged.connect(function(newVol) { runtimeData.volume = newVol });
+        mprisPlayerObject.rateChanged.connect(function(newRate) { mediaPlayerInstance.setRate(newRate) });
+        mprisPlayerObject.seek.connect(function(offset) {
+            mediaPlayerInstance.seekBy(offset);
+            mprisPlayerObject.emitSeeked(mediaPlayerInstance.currentTime);
+        });
+        mprisPlayerObject.playUrl.connect(runtimeData.playUrl);
     }
 
     function getMediaWelcome() {
@@ -390,6 +390,7 @@ Image {
     function init() {
         pmcPageStack.pushAndFocus(getMediaWelcome());
         getPlaylist().visible=false;
+        setupMprisPlayer()
     }
 
     function showController(itemToFocus)

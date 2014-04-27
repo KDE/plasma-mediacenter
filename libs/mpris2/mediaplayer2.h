@@ -1,5 +1,6 @@
 /***************************************************************************
  *   Copyright 2014 Sujith Haridasan <sujith.haridasan@kdemail.net>        *
+ *   Copyright 2014 Ashish Madeti <ashishmadeti@gmail.com>                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,25 +21,44 @@
 #include "mediacenter/mediacenter_export.h"
 
 #include <QDBusAbstractAdaptor>
+#include <QMainWindow>
 #include <QStringList>
+
 
 class MEDIACENTER_EXPORT MediaPlayer2 : public QDBusAbstractAdaptor
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "org.mpris.MediaPlayer2")
+    Q_CLASSINFO("D-Bus Interface", "org.mpris.MediaPlayer2") // Docs: http://specifications.freedesktop.org/mpris-spec/latest/Media_Player.html
 
     Q_PROPERTY(bool CanQuit READ CanQuit)
-    Q_PROPERTY(bool CanSetFullscreen READ CanSetFullscreen)
-    Q_PROPERTY(bool Fullscreen READ Fullscreen)
+    Q_PROPERTY(bool CanRaise READ CanRaise)
+    Q_PROPERTY(bool HasTrackList READ HasTrackList)
 
-    public:
-        explicit MediaPlayer2(QObject* parent = 0);
-        ~MediaPlayer2();
+    Q_PROPERTY(QString Identity READ Identity)
+    Q_PROPERTY(QString DesktopEntry READ DesktopEntry)
 
-    public Q_SLOTS:
-        bool CanQuit() const;
-        bool CanSetFullscreen() const;
-        bool Fullscreen() const;
-        QString Identity() const;
+    Q_PROPERTY(QStringList SupportedUriSchemes READ SupportedUriSchemes)
+    Q_PROPERTY(QStringList SupportedMimeTypes READ SupportedMimeTypes)
+
+public:
+    explicit MediaPlayer2(QMainWindow *mainWindow, QObject* parent = 0);
+    ~MediaPlayer2();
+
+    bool CanQuit() const;
+    bool CanRaise() const;
+    bool HasTrackList() const;
+
+    QString Identity() const;
+    QString DesktopEntry() const;
+
+    QStringList SupportedUriSchemes() const;
+    QStringList SupportedMimeTypes() const;
+
+public Q_SLOTS:
+    void Quit() const;
+    void Raise() const;
+
+private:
+    QMainWindow *m_mainWindow;
 
 };

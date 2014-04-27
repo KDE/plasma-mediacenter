@@ -1,5 +1,6 @@
 /***************************************************************************
  *   Copyright 2014 Sujith Haridasan <sujith.haridasan@kdemail.net>        *
+ *   Copyright 2014 Ashish Madeti <ashishmadeti@gmail.com>                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,15 +18,25 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#include <QObject>
-
 #include "mediacenter/mediacenter_export.h"
+
+#include <QObject>
+#include <QMainWindow>
+
+class MediaPlayer2;
+class MediaPlayer2Player;
 
 class MEDIACENTER_EXPORT Mpris2 : public QObject
 {
     Q_OBJECT
 
-    public:
-        explicit Mpris2(QObject* parent = 0);
-        ~Mpris2();
+public:
+    explicit Mpris2(QObject* parent = 0);
+    ~Mpris2();
+
+    MediaPlayer2Player* getMediaPlayer2Player();
+
+private:
+    MediaPlayer2 *m_mp2;
+    MediaPlayer2Player *m_mp2p;
 };
