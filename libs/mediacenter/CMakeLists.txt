@@ -42,6 +42,7 @@ set (plasmamediacenter_SRCS
     mediasourcesloader.cpp
     singletonfactory.cpp
     mediavalidator.cpp
+    settings.cpp
     ../mpris2/mpris2.cpp
     ../mpris2/mediaplayer2.cpp
     ../mpris2/mediaplayer2player.cpp
@@ -56,7 +57,6 @@ target_link_libraries(plasmamediacenter
     ${QT_QTSQL_LIBRARIES}
     ${KDE4_KDECORE_LIBRARY}
     ${KDE4_KIO_LIBS}
-    ${KDE4_PLASMA_LIBS}
     ${KDE4_SOLID_LIBS}
     ${TAGLIB_LIBRARIES}
     ${NEPOMUK_CORE_LIBRARY}
