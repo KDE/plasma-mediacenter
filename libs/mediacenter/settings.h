@@ -21,7 +21,7 @@
 #define SETTINGS_H
 
 #include "mediacenter_export.h"
-#include <KDE/KConfigGroup>
+#include <KConfigGroup>
 
 #include <QtCore/QObject>
 #include <QtCore/QVariant>

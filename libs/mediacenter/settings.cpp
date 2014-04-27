@@ -19,13 +19,11 @@
 
 #include "settings.h"
 
-//Why is this include required for KSharedConfigGlobalPtr in the ctor?
-#include <KDE/KApplication>
-#include <KGlobal>
+#include <KSharedConfig>
 
 Settings::Settings(QObject *parent) : QObject(parent)
 {
-    configGroup = KGlobal::config()->group("General");
+    configGroup = KSharedConfig::openConfig()->group("General");
 }
 
 void Settings::setValue(const QString &key, const QVariant &value)
