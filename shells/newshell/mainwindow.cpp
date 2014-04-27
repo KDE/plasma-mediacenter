@@ -28,8 +28,8 @@
 #include <mediacenter/objectpair.h>
 #include <mediacenter/settings.h>
 #include <mediacenter/multipleplaylistmodel.h>
-#include <mpris2/mediaplayer2player.h>
-#include <mpris2/mpris2.h>
+#include <mediacenter/mpris2/mediaplayer2player.h>
+#include <mediacenter/mpris2/mpris2.h>
 
 #ifndef NO_LINK_TO_PLASMA
 #include <Plasma/Package>

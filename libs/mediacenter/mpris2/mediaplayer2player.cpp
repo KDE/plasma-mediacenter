@@ -18,10 +18,10 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#include "mpris2/mediaplayer2player.h"
-#include "../mediacenter/medialibrary.h"
-#include "../mediacenter/pmcmedia.h"
-#include "../mediacenter/singletonfactory.h"
+#include "mediaplayer2player.h"
+#include "../medialibrary.h"
+#include "../pmcmedia.h"
+#include "../singletonfactory.h"
 
 #include <QCryptographicHash>
 #include <QStringList>

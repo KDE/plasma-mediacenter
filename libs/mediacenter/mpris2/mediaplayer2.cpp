@@ -18,7 +18,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#include "mpris2/mediaplayer2.h"
+#include "mediaplayer2.h"
 
 #include <QCoreApplication>
 
