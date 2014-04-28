@@ -57,7 +57,7 @@ public:
     bool random() const;
     Q_INVOKABLE void shuffle();
     bool removeCurrentPlaylist (const QString& playlistToSwitchToAfterDeletion);
-    bool processCommandLineArgs(const KCmdLineArgs *args);
+    bool processCommandLineArgs(const QStringList *urls);
     void play(int index);
 
     QString playlistName() const;

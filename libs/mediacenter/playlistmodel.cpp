@@ -20,7 +20,6 @@
 
 #include <QDebug>
 #include <KDE/KStandardDirs>
-#include <KDE/KCmdLineArgs>
 #include <KUrl>
 
 #include <QtCore/QDir>
@@ -335,17 +334,8 @@ QString PlaylistModel::getPlaylistPath() const
     return d->playlistsDirectoryPath;
 }
 
-bool PlaylistModel::processCommandLineArgs(const KCmdLineArgs* args)
+bool PlaylistModel::processCommandLineArgs(const QStringList* urls)
 {
-    QStringList urls;
-
-    for (int i=0; i<args->count(); ++i) {
-        const KUrl url = args->url(i);
-        if (url.isValid()) {
-            urls.append(url.toLocalFile(KUrl::RemoveTrailingSlash));
-        }
-    }
-
     if (urls.size()) {
         setPlaylistName(DEFAULT_PLAYLIST_NAME);
         const int indexOfFirstMedia = addToPlaylist(urls);
