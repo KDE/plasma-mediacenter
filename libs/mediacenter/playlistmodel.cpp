@@ -336,9 +336,9 @@ QString PlaylistModel::getPlaylistPath() const
 
 bool PlaylistModel::processCommandLineArgs(const QStringList* urls)
 {
-    if (urls.size()) {
+    if (urls->size()) {
         setPlaylistName(DEFAULT_PLAYLIST_NAME);
-        const int indexOfFirstMedia = addToPlaylist(urls);
+        const int indexOfFirstMedia = addToPlaylist(*urls);
 
         setCurrentIndex(indexOfFirstMedia);
         return true;

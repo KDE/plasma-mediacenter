@@ -62,7 +62,7 @@ void FlickrModel::query (const QString& searchTerm)
     query.addQueryItem("text", searchTerm);
     query.addQueryItem("extras", "url_o,url_b");
 
-    queryUrl.setQuery(query)
+    queryUrl.setQuery(query);
 
     KIO::TransferJob *job = KIO::get(queryUrl, KIO::NoReload, KIO::HideProgressInfo);
 
