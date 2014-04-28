@@ -94,7 +94,7 @@ void PicasaModel::query(const QString &username, const QString &request)
     }
     //url.append("?kind=" + m_request);
 
-    KUrl query(url);
+    QUrl query(url);
 
     KIO::TransferJob *job = KIO::get(query, KIO::NoReload, KIO::HideProgressInfo);
 

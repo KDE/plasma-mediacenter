@@ -22,7 +22,8 @@
 
 #include <mediacenter/mediacenter.h>
 
-#include <KDE/KUrl>
+#include <QUrl>
+#include <QUrlQuery>
 #include <KIO/Job>
 #include <KJob>
 
@@ -54,13 +55,16 @@ void FlickrModel::query (const QString& searchTerm)
     if ( searchTerm.isEmpty() )
     return;
 
-    KUrl query(s_flickr_rest);
+    QUrl queryUrl(s_flickr_rest);
+    QUrlQuery query;
     query.addQueryItem("method", "flickr.photos.search");
     query.addQueryItem("api_key", s_apikey);
     query.addQueryItem("text", searchTerm);
     query.addQueryItem("extras", "url_o,url_b");
 
-    KIO::TransferJob *job = KIO::get(query, KIO::NoReload, KIO::HideProgressInfo);
+    queryUrl.setQuery(query)
+
+    KIO::TransferJob *job = KIO::get(queryUrl, KIO::NoReload, KIO::HideProgressInfo);
 
     m_queries[job] = searchTerm;
     connect ( job, SIGNAL(data(KIO::Job*,QByteArray)), this,
