@@ -48,7 +48,7 @@ QVariant LocalVideosModel::data (const QModelIndex& index, int role) const
         if (m_thumbProvider->hasThumbnail(url)) {
             return "image://localvideothumbnail/" + url;
         } else {
-            m_thumbProvider->loadThumbnail(KUrl(url), QSize(600, 600));
+            m_thumbProvider->loadThumbnail(QUrl(url), QSize(600, 600));
             m_pendingThumbs.insert(url, index);
         }
     }

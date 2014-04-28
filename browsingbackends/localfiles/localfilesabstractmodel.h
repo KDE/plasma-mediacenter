@@ -22,7 +22,7 @@
 #ifndef LOCALFILESABSTRACTMODEL_H
 #define LOCALFILESABSTRACTMODEL_H
 
-#include <KUrl>
+#include <QUrl>
 #include <KIOFileWidgets/KDirSortFilterProxyModel>
 
   /**
@@ -70,10 +70,10 @@ public:
     
     /**
      * Browses to the url passed
-     * @param url is of KUrl type which is an address of the current file user wants to browse
+     * @param url is of QUrl type which is an address of the current file user wants to browse
      */
     
-    virtual bool browseToUrl(const KUrl& url);
+    virtual bool browseToUrl(const QUrl& url);
 
 private:
     class Private;

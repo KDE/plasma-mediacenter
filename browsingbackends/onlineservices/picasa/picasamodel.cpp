@@ -27,8 +27,7 @@
 
 // KDE
 #include <kio/job.h>
-#include <KUrl>
-#include <KDebug>
+#include <QUrl>
 
 PicasaModel::PicasaModel(QObject* parent, const QString& username, const QString& password): QAbstractListModel(parent)
 {
@@ -246,7 +245,7 @@ void PicasaModel::getTokenAndQuery(const QString &username, const QString &passw
     m_request = request;
     m_username = username;
 
-    KUrl url("https://www.google.com/accounts/ClientLogin");
+    QUrl url("https://www.google.com/accounts/ClientLogin");
     QString accountType = "GOOGLE";
     QStringList qsl;
     qsl.append("Email="+username);

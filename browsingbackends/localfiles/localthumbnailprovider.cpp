@@ -42,11 +42,11 @@ ThumbnailProvider::~ThumbnailProvider()
     delete d;
 }
 
-void ThumbnailProvider::loadThumbnails(const KUrl::List& fileList, const QSize& size)
+void ThumbnailProvider::loadThumbnails(const QList<QUrl>& fileList, const QSize& size)
 {
     //FIXME: Why is size unused?
     KFileItemList fileItems;
-    for(KUrl::List::ConstIterator it = fileList.begin(); it != fileList.end(); ++it) {
+    for(QList<QUrl>::const_iterator it = fileList.begin(); it != fileList.end(); ++it) {
         if (!(*it).isValid())
             return;
         fileItems.append(KFileItem(KFileItem::Unknown, KFileItem::Unknown, *it, true));
@@ -59,9 +59,9 @@ void ThumbnailProvider::loadThumbnails(const KUrl::List& fileList, const QSize& 
     connect(job, SIGNAL(gotPreview(KFileItem,QPixmap)), SLOT(processPreview(KFileItem,QPixmap)));
 }
 
-void ThumbnailProvider::loadThumbnail(const KUrl& file, const QSize& size)
+void ThumbnailProvider::loadThumbnail(const QUrl& file, const QSize& size)
 {
-    loadThumbnails(KUrl::List() << file, size);
+    loadThumbnails(QList<QUrl>() << file, size);
 }
 
 void ThumbnailProvider::processPreview(const KFileItem& file, const QPixmap& thumbnail)

@@ -23,7 +23,7 @@
 #include <QDomNodeList>
 // KDE
 #include <kio/job.h>
-#include <KUrl>
+#include <QUrl>
 #include <QDebug>
 #include <QDate>
 
@@ -74,7 +74,7 @@ void YoutubeModel::query(const QString &searchTerm)
     const QString url = "http://gdata.youtube.com/feeds/api/videos?q="
                + searchString
                + "&v=2";
-    KUrl query(url);
+    QUrl query(url);
 
     KIO::TransferJob *job = KIO::get(query, KIO::NoReload, KIO::HideProgressInfo);
     m_queries[job] = searchTerm;

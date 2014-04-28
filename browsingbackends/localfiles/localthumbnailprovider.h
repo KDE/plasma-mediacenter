@@ -22,7 +22,7 @@
 
 #include <QtDeclarative/QDeclarativeImageProvider>
 
-#include <KUrl>
+#include <QUrl>
 
 namespace KIO
 {
@@ -66,14 +66,14 @@ public:
      * @param fileList which is a KUrl List type
      * @param size is fileList size
      */
-    void loadThumbnails(const KUrl::List& fileList, const QSize& size);
+    void loadThumbnails(const QList<QUrl>& fileList, const QSize& size);
     
     /**
      * Calls loadThumbnails function with appropriate file url and size
-     * @param file a KUrl of the file for which thumbnail has there.    
+     * @param file a QUrl of the file for which thumbnail has there.
      * @param size is the list size
      */
-    void loadThumbnail(const KUrl& file, const QSize& size);
+    void loadThumbnail(const QUrl& file, const QSize& size);
     
     /**
      * It uses QPixmapCatche::Key which can be used for efficient access to the QPixmapCache

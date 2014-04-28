@@ -33,7 +33,7 @@ public:
 
     QStringList mimeTypes;
     KDirModel dirModel;
-    QStack<KUrl> stack;
+    QStack<QUrl> stack;
 
 };
 
@@ -86,7 +86,7 @@ bool LocalFilesAbstractModel::goOneLevelUp()
         return false;
     }
     else {
-    KUrl url = d->dirModel.dirLister()->url();
+    QUrl url = d->dirModel.dirLister()->url();
     url.setPath((d->stack.top()).toLocalFile());
     return d->dirModel.dirLister()->openUrl(url);
     }
@@ -94,12 +94,13 @@ bool LocalFilesAbstractModel::goOneLevelUp()
 
 bool LocalFilesAbstractModel::browseTo (int row)
 {
-    KUrl url = d->dirModel.dirLister()->url();
-    url.addPath(data(index(row, 0)).toString());
+    QUrl url = d->dirModel.dirLister()->url();
+    url = url.adjusted(QUrl::StripTrailingSlash);
+    url.setPath(url.path() + '/' + data(index(row, 0)).toString());
     return browseToUrl(url);
 }
 
-bool LocalFilesAbstractModel::browseToUrl(const KUrl& url)
+bool LocalFilesAbstractModel::browseToUrl(const QUrl& url)
 {
     d->stack.push(url);
     return d->dirModel.dirLister()->openUrl(url);

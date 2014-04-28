@@ -26,10 +26,10 @@
 
 #include <KSharedConfig>
 #include <KDE/KFilePlacesModel>
-#include <KDE/KUrl>
 
 #include <QDeclarativeEngine>
 #include <QDeclarativeContext>
+#include <QUrl>
 
 namespace {
     static const char *s_playAllButton = "Play All";
@@ -79,7 +79,7 @@ bool LocalFilesAbstractBackend::goOneLevelUp()
 bool LocalFilesAbstractBackend::expand (int row)
 {
     const QModelIndex m_index = m_placesModel->index(row,0);
-    const KUrl url =  m_placesModel->url(m_index);
+    const QUrl url =  m_placesModel->url(m_index);
 
     if (m_isShowingPlacesModel)
     {
