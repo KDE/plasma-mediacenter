@@ -181,14 +181,14 @@ void  Video::gotVideoInfo(QByteArray data) {
         QString url;
         QString sig;
         foreach(const QString &urlParam, urlParams) {
-            if (urlParam.startsWith("itag=")) {
+            if (urlParam.startsWith(QLatin1String("itag="))) {
                 int separator = urlParam.indexOf('=');
                 format = urlParam.mid(separator + 1).toInt();
-            } else if (urlParam.startsWith("url=")) {
+            } else if (urlParam.startsWith(QLatin1String("url="))) {
                 int separator = urlParam.indexOf('=');
                 url = urlParam.mid(separator + 1);
                 url = QByteArray::fromPercentEncoding(url.toUtf8());
-            } else if (urlParam.startsWith("sig=")) {
+            } else if (urlParam.startsWith(QLatin1String("sig="))) {
                 int separator = urlParam.indexOf('=');
                 sig = urlParam.mid(separator + 1);
                 sig = QByteArray::fromPercentEncoding(sig.toUtf8());
