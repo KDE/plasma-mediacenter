@@ -44,8 +44,7 @@ QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> 
 
 QString dataDirForComponent(const QString& component)
 {
-  //TODO: get name from QApplication
-  static const QString pmcPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + "plasma-mediacenter";
+  static const QString pmcPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation);
   if(!QDir(pmcPath).exists()) {
     QDir().mkpath(pmcPath);
   }
