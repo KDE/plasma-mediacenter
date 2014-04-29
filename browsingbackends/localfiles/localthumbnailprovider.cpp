@@ -46,10 +46,10 @@ void ThumbnailProvider::loadThumbnails(const QList<QUrl>& fileList, const QSize&
 {
     //FIXME: Why is size unused?
     KFileItemList fileItems;
-    for(QList<QUrl>::const_iterator it = fileList.begin(); it != fileList.end(); ++it) {
-        if (!(*it).isValid())
-            return;
-        fileItems.append(KFileItem(KFileItem::Unknown, KFileItem::Unknown, *it, true));
+    for(auto file : fileItems) {
+        //TODO: REMIND: if necessary setDelayedMimeTypes(true)
+        //      REMIND: removed isValid() add if required
+        fileItems.append(KFileItem(file));
     }
 
     QStringList* plugins = new QStringList;
