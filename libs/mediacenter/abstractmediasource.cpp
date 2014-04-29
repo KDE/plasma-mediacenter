@@ -18,7 +18,6 @@
  ***********************************************************************************/
 
 #include "abstractmediasource.h"
-#include <KServiceTypeTrader>
 #include <QDebug>
 
 using namespace MediaCenter;
@@ -40,9 +39,9 @@ AbstractMediaSource::~AbstractMediaSource()
 
 }
 
-KService::List AbstractMediaSource::availableMediaSourcePlugins()
+KPluginInfo::List AbstractMediaSource::availableMediaSourcePlugins()
 {
-    KService::List plugins = KServiceTypeTrader::self()->query("Plasma/MediaCenter/MediaSource");
+    KPluginInfo::List plugins = KPluginTrader::self()->query("Plasma/MediaCenter/MediaSource");
     if (plugins.isEmpty()) {
         qWarning() << "no available media sources";
     }

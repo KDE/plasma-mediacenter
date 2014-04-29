@@ -22,7 +22,7 @@
 #include <QObject>
 
 #include <KDE/KConfigGroup>
-#include <KDE/KService>
+#include <KPluginInfo>
 
 #include "mediacenter_export.h"
 #include "mediacenter.h"
@@ -107,7 +107,7 @@ public:
      * Convenience function that returns the list of
      * available browsing backends found.
      */
-    static KService::List availableBackends();
+    static KPluginInfo::List availableBackends();
 
     /**
      * This function is used by Media Browser to go to one level
