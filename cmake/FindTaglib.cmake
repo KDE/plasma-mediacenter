@@ -48,24 +48,16 @@ if(TAGLIBCONFIG_EXECUTABLE)
 
 else(TAGLIBCONFIG_EXECUTABLE)
 
-  include(FindLibraryWithDebug)
   include(FindPackageHandleStandardArgs)
 
   find_path(TAGLIB_INCLUDES
     NAMES
     tag.h
     PATH_SUFFIXES taglib
-    PATHS
-    ${KDE4_INCLUDE_DIR}
-    ${INCLUDE_INSTALL_DIR}
   )
 
-  find_library_with_debug(TAGLIB_LIBRARIES
-    WIN32_DEBUG_POSTFIX d
+  find_library(TAGLIB_LIBRARIES
     NAMES tag
-    PATHS
-    ${KDE4_LIB_DIR}
-    ${LIB_INSTALL_DIR}
   )
   
   find_package_handle_standard_args(Taglib DEFAULT_MSG 
