@@ -19,8 +19,6 @@
 #include "playlistitem.h"
 
 #include <QDebug>
-#include <KDE/KStandardDirs>
-#include <KUrl>
 
 #include <QtCore/QDir>
 #include <QtCore/QStringList>

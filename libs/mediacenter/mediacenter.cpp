@@ -23,11 +23,6 @@
 #include <QStandardPaths>
 
 #include <KMimeType>
-#include <KUrl>
-#include <KCmdLineArgs>
-
-#include <Solid/Device>
-#include <Solid/OpticalDisc>
 
 namespace MediaCenter {
 
@@ -49,7 +44,8 @@ QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> 
 
 QString dataDirForComponent(const QString& component)
 {
-  static const QString pmcPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + KCmdLineArgs::appName();
+  //TODO: get name from QApplication
+  static const QString pmcPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + "plasma-mediacenter";
   if(!QDir(pmcPath).exists()) {
     QDir().mkpath(pmcPath);
   }

@@ -20,7 +20,6 @@
 #include "objectpair.h"
 #include "modelmetadata.h"
 
-#include <KGlobal>
 #include <KService>
 #include <KPluginInfo>
 #include <QDebug>

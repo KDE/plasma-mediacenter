@@ -21,7 +21,7 @@
 
 #include <QObject>
 
-#include <KDE/KConfigGroup>
+#include <KConfigGroup>
 #include <KPluginInfo>
 
 #include "mediacenter_export.h"

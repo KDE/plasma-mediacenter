@@ -17,8 +17,6 @@
 
 #include "multipleplaylistmodel.h"
 
-#include <KDE/KStandardDirs>
-#include <KDE/KCmdLineArgs>
 #include <QDebug>
 #include <QDir>
 #include <QCoreApplication>

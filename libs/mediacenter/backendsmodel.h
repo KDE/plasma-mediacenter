@@ -24,7 +24,7 @@
 #include <QAbstractItemModel>
 #include <QWeakPointer>
 
-#include <KDE/KPluginInfo>
+#include <KPluginInfo>
 
 class QDeclarativeEngine;
 
