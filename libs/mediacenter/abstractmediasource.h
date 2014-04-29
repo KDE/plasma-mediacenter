@@ -21,8 +21,7 @@
 #define ABSTRACTMEDIASOURCE_H
 
 #include <QtCore/QThread>
-#include <KPluginInfo>
-#include <KPluginTrader>
+#include <KDE/KService>
 
 #include "mediacenter_export.h"
 
@@ -37,7 +36,7 @@ public:
     ~AbstractMediaSource();
 
     void setMediaLibrary(MediaLibrary *mediaLibrary);
-    static KPluginInfo::List availableMediaSourcePlugins();
+    static KService::List availableMediaSourcePlugins();
 
 protected:
     MediaLibrary *mediaLibrary() const;

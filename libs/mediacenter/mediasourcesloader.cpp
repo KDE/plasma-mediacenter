@@ -38,7 +38,8 @@ MediaSourcesLoader::~MediaSourcesLoader()
 
 void MediaSourcesLoader::load()
 {
-    KPluginInfo::List pluginInfo = MediaCenter::AbstractMediaSource::availableMediaSourcePlugins();
+    KService::List services = MediaCenter::AbstractMediaSource::availableMediaSourcePlugins();
+    KPluginInfo::List pluginInfo = KPluginInfo::fromServices(services);
 
     Q_FOREACH (const KPluginInfo &info, pluginInfo) {
         KService::Ptr service = info.service();
