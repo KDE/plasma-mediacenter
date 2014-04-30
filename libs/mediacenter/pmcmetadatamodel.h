@@ -72,6 +72,7 @@ private Q_SLOTS:
     void previewFailed(const KFileItem &item);
     void fetchMetadata();
     void signalUpdate(const QVariant& resourceId, const QString& displayString = QString());
+    void mediaUpdated();
 
 private:
     enum Mode { Music, Picture, Video, Album, Artist };
