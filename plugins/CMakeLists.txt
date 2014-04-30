@@ -1,4 +1,4 @@
-find_package(Baloo QUIET)
+find_package(Baloo)
 if(Baloo_FOUND)
     add_subdirectory(baloosearch)
 else()
