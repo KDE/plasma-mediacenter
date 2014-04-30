@@ -196,7 +196,6 @@ void PmcMetadataModel::handleNewAlbumsOrArtists(const QList< QSharedPointer< T >
     endInsertRows();
 }
 
-
 QVariant PmcMetadataModel::metadataValueForRole(const QModelIndex& index, int role) const
 {
     //FIXME: If the logic is correct elsewhere, this check should not be required

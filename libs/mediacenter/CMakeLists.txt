@@ -1,43 +1,8 @@
 find_package(Taglib REQUIRED)
-find_package(QxOrm REQUIRED)
 
 include_directories(
     ${TAGLIB_INCLUDES}
-    ${QxOrm_INCLUDE_DIRS}
 )
-
-add_definitions(
-    -D_QX_SERIALIZE_BINARY_ENABLED
-    -D_QX_SERIALIZE_XML_ENABLED
-    -D_BUILDING_PMC
-)
-
-# we have both version available
-if(QxOrm_RELEASE_FOUND AND QxOrm_DEBUG_FOUND)
-    # We are building in debug mode
-    if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_BUILD_TYPE STREQUAL "DebugFull")
-        add_definitions(
-            -D_QX_MODE_DEBUG
-        )
-    else()
-    # We are building in release mode
-        add_definitions(
-            -D_QX_MODE_RELEASE
-        )
-    endif()
-
-# We found only release version
-elseif(QxOrm_RELEASE_FOUND)
-    add_definitions(
-        -D_QX_MODE_RELEASE
-    )
-
-# We found only debug version
-elseif(QxOrm_DEBUG_FOUND)
-    add_definitions(
-        -D_QX_MODE_DEBUG
-    )
-endif()
 
 set (plasmamediacenter_SRCS
     medialibrarywrappercache.cpp
@@ -78,14 +43,11 @@ kde4_add_library(plasmamediacenter SHARED
 
 target_link_libraries(plasmamediacenter
     ${QT_QTDECLARATIVE_LIBRARIES}
-    ${QT_QTSQL_LIBRARIES}
     ${KDE4_KDECORE_LIBRARY}
     ${KDE4_KIO_LIBS}
     ${KDE4_SOLID_LIBS}
     ${TAGLIB_LIBRARIES}
     ${NEPOMUK_CORE_LIBRARY}
-    ${Boost_LIBRARIES}
-    ${QxOrm_LIBRARIES}
 )
 
 set_target_properties(plasmamediacenter PROPERTIES VERSION 1.2 SOVERSION 1.2)
@@ -118,8 +80,8 @@ if (KDE4_BUILD_TESTS)
         add_test(pmc-libs-${TESTNAME} ${TESTNAME})
         target_link_libraries(${TESTNAME}
             ${KDE4_KDECORE_LIBRARY} ${KDE4_KIO_LIBS}
-            ${QT_QTSQL_LIBRARIES} ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES} ${QT_QTNETWORK_LIBRARIES} ${QT_QTXML_LIBRARIES}  ${QT_QTDECLARATIVE_LIBRARIES}
-            ${Boost_LIBRARIES} ${QxOrm_LIBRARIES} ${TAGLIB_LIBRARIES}
+            ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES} ${QT_QTNETWORK_LIBRARIES} ${QT_QTXML_LIBRARIES}  ${QT_QTDECLARATIVE_LIBRARIES}
+            ${TAGLIB_LIBRARIES}
         )
     endfunction(pmc_test)
 

@@ -18,31 +18,16 @@
  ***********************************************************************************/
 
 #include "media.h"
+
+#include "album.h"
+#include "artist.h"
+
 #include "mediacenter.h"
 
 #include <QCryptographicHash>
 #include <QTimer>
 
-#include <QxMemLeak.h>
-
-QX_REGISTER_CPP_PMC(Media)
-
-namespace qx {
-template <> void register_class(QxClass<Media> & m)
-{
-    m.id(& Media::m_sha, "sha");
-
-    m.data(& Media::m_title, "title");
-    m.data(& Media::m_url, "url");
-    m.data(& Media::m_thumbnail, "thumbnail");
-    m.data(& Media::m_type, "type");
-    m.data(& Media::m_duration, "duration");
-    m.data(& Media::m_createdAt, "created_at");
-    m.data(& Media::m_genre, "genre");
-
-    m.relationManyToOne(& Media::m_album, "album_id");
-    m.relationManyToOne(& Media::m_artist, "artist_id");
-}}
+#include <QDebug>
 
 class Media::Private
 {
@@ -50,23 +35,26 @@ public:
     //This timer is used to emit the updated() signal only once after more than
     //one property has been updateds
     QTimer updateTimer;
+
+    QString sha;
+    QString title;
+    QString url;
+    QString thumbnail;
+    QString type;
+    int duration;
+    QString genre;
+    QDateTime createdAt;
+    QSharedPointer<Album> album;
+    QSharedPointer<Artist> artist;
 };
 
 Media::Media(const QString& url, QObject* parent)
     : QObject(parent)
-    , m_sha(calculateSha(url))
-    , m_url(url)
-    , m_duration(0)
     , d(new Private())
 {
-    initUpdateTimer();
-}
-
-Media::Media(QObject* parent)
-    : QObject(parent)
-    , m_duration(0)
-    , d(new Private())
-{
+    d->url = url;
+    d->sha = calculateSha(url);
+    d->duration = 0;
     initUpdateTimer();
 }
 
@@ -107,42 +95,42 @@ QString Media::calculateSha(const QString& url)
 
 const QString& Media::title() const
 {
-    return m_title;
+    return d->title;
 }
 
 bool Media::setTitle(const QString& title)
 {
-    return updateIfChanged(m_title, title);
+    return updateIfChanged(d->title, title);
 }
 
 const QString& Media::url() const
 {
-    return m_url;
+    return d->url;
 }
 
 const QString& Media::thumbnail() const
 {
-    return m_thumbnail;
+    return d->thumbnail;
 }
 
 bool Media::setThumbnail(const QString& thumbnail)
 {
-    return updateIfChanged(m_thumbnail, thumbnail);
+    return updateIfChanged(d->thumbnail, thumbnail);
 }
 
 const QString& Media::sha() const
 {
-    return m_sha;
+    return d->sha;
 }
 
 bool Media::setType(const QString& type)
 {
-    return updateIfChanged(m_type, type);
+    return updateIfChanged(d->type, type);
 }
 
 const QString& Media::type() const
 {
-    return m_type;
+    return d->type;
 }
 
 bool Media::setValueForRole(int role, const QVariant& value)
@@ -153,8 +141,8 @@ bool Media::setValueForRole(int role, const QVariant& value)
         case Qt::DisplayRole:
             return setTitle(value.toString());
         case MediaCenter::MediaUrlRole:
-            if (m_url != value.toString()) {
-                qWarning() << "Media URLs CANNOT be changed";
+            if (d->url != value.toString()) {
+                qFatal("Media URLs CANNOT be changed");
             }
             return false;
         case Qt::DecorationRole:
@@ -171,53 +159,75 @@ bool Media::setValueForRole(int role, const QVariant& value)
     }
 }
 
-const QSharedPointer< Album >& Media::album() const
+QSharedPointer<Album> Media::album() const
 {
-    return m_album;
+    return d->album;
 }
 
-void Media::setAlbum(const QSharedPointer< Album >& album)
+bool Media::setAlbum(const QSharedPointer< Album >& album)
 {
-    updateIfChanged(m_album, album);
+    return updateIfChanged(d->album, album);
 }
 
-const QSharedPointer< Artist >& Media::artist() const
+QSharedPointer<Artist> Media::artist() const
 {
-    return m_artist;
+    return d->artist;
 }
 
-void Media::setArtist(const QSharedPointer< Artist >& artist)
+bool Media::setArtist(const QSharedPointer< Artist >& artist)
 {
-    updateIfChanged(m_artist, artist);
+    return updateIfChanged(d->artist, artist);
 }
 
 int Media::duration() const
 {
-    return m_duration;
+    return d->duration;
 }
 
 bool Media::setDuration(int duration)
 {
-    return updateIfChanged(m_duration, duration);
+    return updateIfChanged(d->duration, duration);
 }
-
 
 QString Media::genre() const
 {
-    return m_genre;
+    return d->genre;
 }
 
 bool Media::setGenre(const QString &genre)
 {
-    return updateIfChanged(m_genre, genre);
+    return updateIfChanged(d->genre, genre);
 }
 
 QDateTime Media::createdAt() const
 {
-    return m_createdAt;
+    return d->createdAt;
 }
 
 bool Media::setCreatedAt(const QDateTime& createdAt)
 {
-    return updateIfChanged(m_createdAt, createdAt);
+    return updateIfChanged(d->createdAt, createdAt);
+}
+
+void Media::setAlbumAndUpdateRelations(const QSharedPointer<Media>& media, const QSharedPointer<Album>& album)
+{
+    QSharedPointer<Album> originalAlbum = media->album();
+    if (setAlbum(album)) {
+        if (originalAlbum) {
+            originalAlbum->removeMedia(media);
+        }
+        album->addMedia(media);
+    }
+}
+
+void Media::setArtistAndUpdateRelations(const QSharedPointer< Media >& media,
+                                        const QSharedPointer< Artist >& artist)
+{
+    QSharedPointer<Artist> originalArtist = media->artist();
+    if (setArtist(artist)) {
+        if (originalArtist) {
+            originalArtist->removeMedia(media);
+        }
+        artist->addMedia(media);
+    }
 }

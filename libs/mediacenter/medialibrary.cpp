@@ -20,9 +20,11 @@
 
 #include <QVariant>
 #include <QTimer>
-#include <QDebug>
 #include <QApplication>
 #include <QPointer>
+#include <QDir>
+
+#include <QDebug>
 
 #include "media.h"
 
@@ -34,7 +36,8 @@
 #include "pmcalbum.h"
 #include "pmcartist.h"
 
-const QString MediaLibrary::DB_NAME = "plasma-mediacenter.sqlite";
+#include "artist.h"
+#include "album.h"
 
 namespace {
     int DELAY_BEFORE_EMITTING_NEW_ITEMS = 1000;
@@ -43,20 +46,6 @@ namespace {
 class MediaLibrary::Private
 {
 public:
-    Private() : db(0)/*, session(0)*/ { }
-
-    ~Private()
-    {
-//         if (session) {
-//             delete session;
-//         }
-//
-        if (db) {
-            db->deleteSingleton();
-        }
-    }
-    qx::QxSqlDatabase *db;
-
     QList< QPair <QString, QHash<int, QVariant> > > updateRequests;
     QMutex updateRequestsMutex;
 
@@ -75,7 +64,7 @@ public:
     QList< QSharedPointer<Album> > albumList;
 
     QMutex artistListMutex;
-    QList<QSharedPointer<Artist> > artistList;
+    QList< QSharedPointer<Artist> > artistList;
 
     MediaLibraryWrapperCache *wrapperCache;
     MediaValidator *mediaValidator;
@@ -104,6 +93,8 @@ void MediaLibrary::init()
     d->newMediaTimer->setInterval(DELAY_BEFORE_EMITTING_NEW_ITEMS);
     d->newMediaTimer->setSingleShot(true);
     connect(d->newMediaTimer.data(), SIGNAL(timeout()), SLOT(emitNewMediaWithMediaList()));
+
+    emit initialized();
 }
 
 MediaLibrary::~MediaLibrary()
@@ -117,7 +108,6 @@ MediaLibrary::~MediaLibrary()
 void MediaLibrary::run()
 {
     init();
-    initDb();
     exec();
 }
 
@@ -129,13 +119,9 @@ void MediaLibrary::processRemainingRequests()
         return;
     }
 
-    d->db->getDatabase().transaction();
-
     while (areThereUpdateRequests()) {
         processNextRequest();
     }
-
-    d->db->getDatabase().commit();
 }
 
 void MediaLibrary::processNextRequest()
@@ -159,9 +145,8 @@ void MediaLibrary::processNextRequest()
         }
 
         if (wasUpdated) {
-            qx::dao::update(media);
             emitNewAlbumOrArtistIfNeeded(media);
-            qDebug() << "Updated " << media->url();
+//             qDebug() << "Updated " << media->url();
         }
     } else {
         if (d->mediaValidator->fileWithUrlExists(request.first)) {
@@ -178,7 +163,7 @@ void MediaLibrary::processNextRequest()
 
             const QString sha = persistMedia(media);
             addMedia(media);
-            qDebug() << "Saved " << sha;
+//             qDebug() << "Saved " << sha;
         }
     }
 }
@@ -191,36 +176,8 @@ void MediaLibrary::emitNewAlbumOrArtistIfNeeded(QSharedPointer< Media > media)
 
 QString MediaLibrary::persistMedia(const QSharedPointer< Media > &media)
 {
-    QSqlError daoError = qx::dao::insert(*media);
     const QString sha = media->sha();
-
-    if (hasError(daoError)) {
-        qWarning() << "Could not insert " << sha;
-        return QString();
-    }
-
-    reloadAlbumObjectFromDb(media);
-    reloadArtistObjectFromDb(media);
-
     return sha;
-}
-
-void MediaLibrary::reloadAlbumObjectFromDb(QSharedPointer< Media > media)
-{
-    if (media->album()) {
-        QSharedPointer<Album> album(new Album(media->album()->name()));
-        qx::dao::fetch_by_id_with_relation("*->*", album);
-        media->setAlbum(album);
-    }
-}
-
-void MediaLibrary::reloadArtistObjectFromDb(QSharedPointer< Media > media)
-{
-    if (media->artist()) {
-        QSharedPointer<Artist> artist(new Artist(media->artist()->name()));
-        qx::dao::fetch_by_id_with_relation("*->*", artist);
-        media->setArtist(artist);
-    }
 }
 
 bool MediaLibrary::extractAndSaveArtistInfo(
@@ -238,7 +195,7 @@ bool MediaLibrary::extractAndSaveArtistInfo(
 
     QSharedPointer<Artist> artist = loadOrCreate<Artist>(artistName);
 
-    media->setArtist(artist);
+    media->setArtistAndUpdateRelations(media, artist);
     return true;
 }
 
@@ -262,7 +219,7 @@ bool MediaLibrary::extractAndSaveAlbumInfo(
 
     QSharedPointer<Album> album = loadOrCreate<Album>(albumName);
 
-    media->setAlbum(album);
+    media->setAlbumAndUpdateRelations(media, album);
     return true;
 }
 
@@ -270,17 +227,6 @@ template <class T>
 QSharedPointer< T > MediaLibrary::loadOrCreate(const QString& id)
 {
     QSharedPointer<T> object(new T(id));
-    QSqlError daoError = qx::dao::fetch_by_id(object);
-
-    if (hasError(daoError)) {
-        daoError = qx::dao::insert(object);
-
-        if (hasError(daoError)) {
-            qWarning() << "Error inserting " << id << ": " << daoError.text();
-            qFatal("Failed while inserting into DB, see above for error");
-        }
-    }
-
     return object;
 }
 
@@ -320,54 +266,6 @@ void MediaLibrary::updateMedia(const QString& url, const QHash< int, QVariant >&
     d->updateRequests.append(QPair<QString, QHash< int, QVariant> >(url, data));
 
     QTimer::singleShot(0, this, SLOT(processRemainingRequests()));
-}
-
-void MediaLibrary::initDb()
-{
-    bool dbExists = QFile::exists(dbPath());
-
-    d->db = qx::QxSqlDatabase::getSingleton();
-    d->db->setDriverName("QSQLITE");
-    d->db->setDatabaseName(dbPath());
-
-    //TODO: Just the existence of the db file might not be enough proof that the
-    // database in the file is in a usable state
-    if (!dbExists) {
-        qDebug() << "Creating database tables";
-        bool error = false;
-        error = error || hasError(qx::dao::create_table<Artist>());
-        error = error || hasError(qx::dao::create_table<Album>());
-        error = error || hasError(qx::dao::create_table<Media>());
-
-        if (error) {
-            qFatal("Failed to create necessary tables");
-        }
-    }
-
-    updateLibrary();
-//     QTimer::singleShot(0, this, SLOT(processRemainingRequests()));
-}
-
-void MediaLibrary::updateLibrary()
-{
-    if (d->db->getDatabase().transaction()) {
-        Media::List mediaList;
-        qx::dao::fetch_all_with_all_relation(mediaList);
-
-        for (Media::List::iterator i=mediaList.begin(); i!=mediaList.end(); ++i) {
-            Media::Ptr m = *i;
-            if (d->mediaValidator->fileWithUrlExists(m->url())) {
-                addMedia(m);
-            } else {
-                qx::dao::delete_by_id(m);
-            }
-        }
-
-        d->db->getDatabase().commit();
-        QTimer::singleShot(DELAY_BEFORE_EMITTING_NEW_ITEMS*2, this, SIGNAL(initialized()));
-    } else {
-        qFatal("Failed to create a transaction");
-    }
 }
 
 void MediaLibrary::addMedia(const QSharedPointer< Media >& m)
@@ -457,11 +355,6 @@ QList< QSharedPointer< PmcArtist > > MediaLibrary::getArtists() const
     return d->wrapperCache->getArtists();
 }
 
-bool MediaLibrary::hasError(const QSqlError& sqlError)
-{
-    return sqlError.isValid();
-}
-
 QSharedPointer< PmcMedia > MediaLibrary::mediaForUrl(const QString& url) const
 {
     QMutexLocker l(&d->pmcMediaByUrlMutex);
@@ -478,9 +371,3 @@ QSharedPointer< PmcMedia > MediaLibrary::mediaForUrl(const QString& url) const
 
     return pmcMedia;
 }
-
-QString MediaLibrary::dbPath()
-{
-    return QDir(MediaCenter::dataDirForComponent()).absoluteFilePath(DB_NAME);
-}
-
