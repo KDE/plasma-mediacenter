@@ -18,7 +18,7 @@
  ***************************************************************************/
 
 import QtQuick 1.1
-import org.kde.qtextracomponents 2.0 as QtExtraComponents
+import org.kde.qtextracomponents 0.1 as QtExtraComponents
 
 Item {
     id: root
