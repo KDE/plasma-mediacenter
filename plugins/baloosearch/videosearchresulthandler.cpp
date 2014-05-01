@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2014 Sinny Kumari <ksinny@gmail.com>          `                     *
+ *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
  *   modify it under the terms of the GNU Lesser General Public                    *
@@ -15,35 +15,46 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef BALOOSEARCHMEDIASOURCE_H
-#define BALOOSEARCHMEDIASOURCE_H
+#include "videosearchresulthandler.h"
 
-#include <mediacenter/abstractmediasource.h>
+#include <mediacenter/medialibrary.h>
+#include <mediacenter/mediacenter.h>
 
-class SearchResultHandler;
-namespace Baloo {
-class File;
+#include <baloo/filefetchjob.h>
+#include <baloo/file.h>
+#include <baloo/resultiterator.h>
+
+#include <QHash>
+
+VideoSearchResultHandler::VideoSearchResultHandler(MediaLibrary* mediaLibrary,
+                                                   QObject* parent)
+    : SearchResultHandler(mediaLibrary, parent)
+{
+
 }
 
-class BalooSearchMediaSource : public MediaCenter::AbstractMediaSource
+QString VideoSearchResultHandler::supportedMediaType() const
 {
-    Q_OBJECT
-public:
-    explicit BalooSearchMediaSource(QObject* parent = 0, const QVariantList& args = QVariantList());
-    ~BalooSearchMediaSource();
+    return "Video";
+}
 
-protected:
-    virtual void run();
+void VideoSearchResultHandler::handleResultImpl(const Baloo::ResultIterator& resultIterator)
+{
+    Baloo::FileFetchJob* job = new Baloo::FileFetchJob(resultIterator.url().toLocalFile());
+    connect(job, SIGNAL(fileReceived(Baloo::File)),
+            this, SLOT(slotFileReceived(Baloo::File)));
 
-private Q_SLOTS:
-    void startQuerying();
-    void slotFileReceived(const Baloo::File &file);
+    job->start();
+}
 
-private:
-    QHash<QString, SearchResultHandler*> m_searchResultHandlers;
+void VideoSearchResultHandler::slotFileReceived(const Baloo::File& file)
+{
+    QHash<int, QVariant> values;
 
-    void queryForMediaType(const QString &type);
-    void fetchUrlDetails(const QUrl &url);
-};
+    const int duration = file.property(KFileMetaData::Property::Duration).toInt();
+    if (duration) {
+        values.insert(MediaCenter::DurationRole, duration);
+    }
 
-#endif // BALOOSEARCHMEDIASOURCE_H
+    m_mediaLibrary->updateMedia(QUrl::fromLocalFile(file.url()).toString(), values);
+}
