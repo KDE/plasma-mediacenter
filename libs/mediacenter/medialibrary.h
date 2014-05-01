@@ -26,7 +26,6 @@
 #include <QSharedPointer>
 #include <QMutex>
 
-class QSqlError;
 class Artist;
 class Album;
 class Media;
@@ -62,18 +61,15 @@ Q_SIGNALS:
 private Q_SLOTS:
     void init();
     void processRemainingRequests();
-    void initDb();
     void emitNewMediaWithMediaList();
 
 private:
     class Private;
     Private * const d;
 
-    inline bool hasError(const QSqlError &sqlError);
     bool areThereUpdateRequests();
     void processNextRequest();
     QPair<QString, QHash<int, QVariant> > takeRequest();
-    void updateLibrary();
     bool mediaExists(const QString &first) const;
     void addMedia(const QSharedPointer< Media > &m);
     QSharedPointer<Media> mediaForSha(const QString &sha) const;
@@ -89,11 +85,6 @@ private:
         const QSharedPointer< X >& value, QMutex& mutex, QList< QSharedPointer< X > >& valueList, QList< QSharedPointer< Y > >& updatesList);
     QString persistMedia(const QSharedPointer< Media >& media);
     void emitNewAlbumOrArtistIfNeeded(QSharedPointer< Media > media);
-    void reloadAlbumObjectFromDb(QSharedPointer< Media > media);
-    void reloadArtistObjectFromDb(QSharedPointer< Media > media);
-    QString dbPath();
-
-    static const QString DB_NAME;
 };
 
 #endif // MEDIALIBRARY_H

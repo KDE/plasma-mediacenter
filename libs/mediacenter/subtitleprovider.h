@@ -49,8 +49,8 @@ struct Subtitle {
   * @class SubtitleProvider @author Deepak Mittal
   * @brief Subtitle Provider for video files
   *
-  * @description  This class is a basis to provide the srt subtitles to a video file. 
-  * 
+  * @description  This class is a basis to provide the srt subtitles to a video file.
+  *
   */
 class MEDIACENTER_EXPORT SubtitleProvider : public QObject
 {

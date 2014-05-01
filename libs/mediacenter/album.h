@@ -23,29 +23,24 @@
 #include <QList>
 #include <QWeakPointer>
 
-#include "precompiled.h"
-
 class Media;
 
-//TODO: Album should also know its artist
 class Album
 {
 public:
-    Album();
     explicit Album(const QString &name);
-    virtual ~Album();
 
     const QString& name() const;
+
     QString albumArtist() const;
 
+    void addMedia(const QSharedPointer<Media> &media);
+    void removeMedia(const QSharedPointer<Media> &media);
+    QList< QSharedPointer<Media> > media() const;
+
+private:
     QString m_name;
     QList< QSharedPointer<Media> > m_media;
-
-    typedef QSharedPointer<Album> Ptr;
-    typedef QList<Ptr> List;
 };
-
-QX_REGISTER_PRIMARY_KEY(Album, QString)
-QX_REGISTER_HPP_PMC(Album, qx::trait::no_base_class_defined, 0)
 
 #endif // ALBUM_H

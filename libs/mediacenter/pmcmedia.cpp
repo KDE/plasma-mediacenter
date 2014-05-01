@@ -19,6 +19,11 @@
 #include "pmcmedia.h"
 
 #include "media.h"
+#include "album.h"
+#include "artist.h"
+
+#include <QUrl>
+#include <QFileInfo>
 
 class PmcMedia::Private
 {

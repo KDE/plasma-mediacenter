@@ -1,43 +1,8 @@
 find_package(Taglib REQUIRED)
-find_package(QxOrm REQUIRED)
 
 include_directories(
     ${TAGLIB_INCLUDES}
-    ${QxOrm_INCLUDE_DIRS}
 )
-
-add_definitions(
-    -D_QX_SERIALIZE_BINARY_ENABLED
-    -D_QX_SERIALIZE_XML_ENABLED
-    -D_BUILDING_PMC
-)
-
-# we have both version available
-if(QxOrm_RELEASE_FOUND AND QxOrm_DEBUG_FOUND)
-    # We are building in debug mode
-    if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_BUILD_TYPE STREQUAL "DebugFull")
-        add_definitions(
-            -D_QX_MODE_DEBUG
-        )
-    else()
-    # We are building in release mode
-        add_definitions(
-            -D_QX_MODE_RELEASE
-        )
-    endif()
-
-# We found only release version
-elseif(QxOrm_RELEASE_FOUND)
-    add_definitions(
-        -D_QX_MODE_RELEASE
-    )
-
-# We found only debug version
-elseif(QxOrm_DEBUG_FOUND)
-    add_definitions(
-        -D_QX_MODE_DEBUG
-    )
-endif()
 
 set (plasmamediacenter_SRCS
     medialibrarywrappercache.cpp
@@ -83,8 +48,6 @@ target_link_libraries(plasmamediacenter
     KF5::GuiAddons
     KF5::CoreAddons
     KF5::KDELibs4Support
-    ${Boost_LIBRARIES}
-    ${QxOrm_LIBRARIES}
     ${TAGLIB_LIBRARIES}
 )
 
@@ -108,3 +71,24 @@ install(FILES data/servicetypes/pmc_browsingbackend.desktop DESTINATION ${SERVIC
 install(FILES data/servicetypes/pmc_mediasource.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
 
 add_subdirectory(plugin)
+##############################          TESTS           ##############################
+if (KDE_BUILD_TESTS)
+
+    function(pmc_test TESTNAME)
+        add_executable(${TESTNAME} ${plasmamediacenter_SRCS} test/${TESTNAME}.cpp test/fakemediavalidator.cpp)
+        add_test(pmc-libs-${TESTNAME} ${TESTNAME})
+        target_link_libraries(${TESTNAME}
+            Qt5::Core
+            Qt5::Declarative
+            Qt5::Test
+        )
+    endfunction(pmc_test)
+
+    pmc_test(medialibrarytest)
+    pmc_test(singletonfactorytest)
+    pmc_test(lastfmimagefetchertest)
+    pmc_test(pmcmediatest)
+    pmc_test(mediatest)
+    pmc_test(mediacentertest)
+endif (KDE_BUILD_TESTS)
+######################################################################################

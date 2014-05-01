@@ -26,7 +26,7 @@
 
 #include "mediacenter_export.h"
 
-class MEDIACENTER_EXPORT PmcImageCache : public QObject
+class PmcImageCache : public QObject
 {
     Q_OBJECT
 public:

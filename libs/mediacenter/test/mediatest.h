@@ -31,7 +31,8 @@ private slots:
     void init();
     void cleanup();
 
-    void shouldSetDurationToZeroWhenNotSpecified();
+    void shouldSetAlbumAndUpdateRelationsCorrectly();
+    void shouldSetArtistAndUpdateRelationsCorrectly();
 };
 
 #endif // MEDIATEST_H

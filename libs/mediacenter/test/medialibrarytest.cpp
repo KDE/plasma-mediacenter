@@ -20,7 +20,15 @@
 #include "fakemediavalidator.h"
 #include "testhelpers.h"
 
-static const char* DB_FILENAME = "plasma-mediacenter.sqlite";
+#include <mediacenter/medialibrary.h>
+#include <mediacenter/mediacenter.h>
+
+#include <mediacenter/pmcmedia.h>
+#include <mediacenter/pmcalbum.h>
+#include <mediacenter/pmcartist.h>
+
+#include <qtest.h>
+
 
 void MediaLibraryTest::initTestCase()
 {
@@ -33,12 +41,10 @@ void MediaLibraryTest::cleanupTestCase()
 
 void MediaLibraryTest::init()
 {
-    QDir::current().remove(pathToDatabase());
 }
 
 void MediaLibraryTest::cleanup()
 {
-    QDir::current().remove(pathToDatabase());
 }
 
 QHash<int,QVariant> MediaLibraryTest::createTestMediaData() const
@@ -61,25 +67,6 @@ QHash< int, QVariant > MediaLibraryTest::createTestMediaDataWithAlbumArtist() co
     data.insert(MediaCenter::ArtistRole, "artist");
 
     return data;
-}
-
-QString MediaLibraryTest::pathToDatabase() const
-{
-    return QDir(MediaCenter::dataDirForComponent()).absoluteFilePath(DB_FILENAME);
-}
-
-void MediaLibraryTest::createsDbWhenNotPresent()
-{
-    MediaLibrary mediaLibrary;
-
-    QSignalSpy initializedSpy(&mediaLibrary, SIGNAL(initialized()));
-    QVERIFY2(initializedSpy.isValid(), "Could not listen to signal initialized");
-
-    mediaLibrary.start();
-    waitForSignal(&initializedSpy);
-
-    QVERIFY2(initializedSpy.size() == 1, "MediaLibrary did not emit initialized exactly 1 time");
-    QVERIFY2(QDir::current().exists(pathToDatabase()), "The DB was not created");
 }
 
 void MediaLibraryTest::addsNewMediaAndItsMetadata()

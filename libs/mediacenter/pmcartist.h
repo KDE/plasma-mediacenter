@@ -20,13 +20,12 @@
 #ifndef PMCARTIST_H
 #define PMCARTIST_H
 
-#include "precompiled.h"
+#include "mediacenter_export.h"
+
 #include "artist.h"
 
 #include <QObject>
 #include <QSharedPointer>
-
-#include "mediacenter_export.h"
 
 class MEDIACENTER_EXPORT PmcArtist : public QObject
 {

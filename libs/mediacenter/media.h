@@ -24,17 +24,17 @@
 #include <QObject>
 #include <QSharedPointer>
 #include <QVariant>
+#include <QDateTime>
 
 #include "mediacenter_export.h"
 
-#include "album.h"
-#include "artist.h"
+class Album;
+class Artist;
 
-class MEDIACENTER_EXPORT Media : public QObject
+class Media : public QObject
 {
     Q_OBJECT
 public:
-    explicit Media(QObject* parent = 0);
     explicit Media(const QString &url, QObject* parent = 0);
     virtual ~Media();
 
@@ -63,25 +63,15 @@ public:
     bool setValueForRole(int role, const QVariant &value);
     static QString calculateSha(const QString& url);
 
-    const QSharedPointer<Album>& album() const;
-    void setAlbum(const QSharedPointer<Album> &album);
+    QSharedPointer<Album> album() const;
+    //FIXME: remove the first arg when this is fixed: https://bugreports.qt-project.org/browse/QTBUG-7287
+    void setAlbumAndUpdateRelations(const QSharedPointer<Media> &media,
+                                    const QSharedPointer<Album> &album);
 
-    const QSharedPointer<Artist>& artist() const;
-    void setArtist(const QSharedPointer<Artist> &artist);
-
-    QString m_sha;
-    QString m_title;
-    QString m_url;
-    QString m_thumbnail;
-    QString m_type;
-    int m_duration;
-    QString m_genre;
-    QDateTime m_createdAt;
-    Album::Ptr m_album;
-    Artist::Ptr m_artist;
-
-    typedef QSharedPointer<Media> Ptr;
-    typedef QList<Ptr> List;
+    QSharedPointer<Artist> artist() const;
+    //FIXME: remove the first arg when this is fixed: https://bugreports.qt-project.org/browse/QTBUG-7287
+    void setArtistAndUpdateRelations(const QSharedPointer<Media> &media,
+                                     const QSharedPointer<Artist> &artist);
 
 signals:
     void updated();
@@ -94,9 +84,9 @@ private:
     void initUpdateTimer();
 
     template <class T> bool updateIfChanged(T &variable, const T &newValue);
-};
 
-QX_REGISTER_PRIMARY_KEY(Media, QString)
-QX_REGISTER_HPP_PMC(Media, QObject, 1)
+    bool setAlbum(const QSharedPointer<Album> &album);
+    bool setArtist(const QSharedPointer<Artist> &artist);
+};
 
 #endif // MEDIA_H

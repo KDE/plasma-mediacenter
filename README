@@ -2,25 +2,12 @@ Required:
 ==========
 
 1) Dependencies as listed on http://community.kde.org/Plasma/Plasma_Media_Center/getting_started_with_PMC#Package_dependency
-
-2) You need QxOrm 1.2.5 from http://www.qxorm.com/version/QxOrm_1.2.5.zip to build PMC.
-Building QxOrm: After downloading it, simply run qmake && make debug-install.
-
-If you get an error about missing libboost-serialization-mt, make sure you have the boost serialization libraries installed.
-If you are sure the libraries are there, try running qmake like this-
-
-qmake QX_BOOST_LIB_SERIALIZATION_DEBUG=boost_serialization
-
-and then run make debug-install.
-
-3) Standard KDE Oxygen Plasma theme
+2) Standard KDE Oxygen Plasma theme
 
 To know Plasma Media Center architecture and other related information browse through http://community.kde.org/Plasma/Plasma_Media_Center
 
 Installation:
 =========
-Once you are done installing QxOrm, just do the usual cmake stuff-
-
 mkdir build
 cd build
 cmake .. -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix`
@@ -39,8 +26,4 @@ cmake .. -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` -DNO_LINK_TO_PLASMA
 and then run make and make install.
 
 (some of the old code can be found in the "old" branch, just in case somebody wants to browse)
-
-Licensing:
-========
-Please note that as a dependency on QxOrm, which is GPLv3, a compiled version of this project can only be distributed under GPLv3.
 

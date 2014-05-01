@@ -16,37 +16,10 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#include "mediatest.h"
-#include <mediacenter/media.h>
+#include "fakemediavalidator.h"
 
-#include <qtest_kde.h>
-
-QTEST_KDEMAIN(MediaTest, NoGUI);
-
-void MediaTest::initTestCase()
+bool FakeMediaValidator::fileWithUrlExists(const QString& url)
 {
-    // Called before the first testfunction is executed
+    Q_UNUSED(url)
+    return true;
 }
-
-void MediaTest::cleanupTestCase()
-{
-    // Called after the last testfunction was executed
-}
-
-void MediaTest::init()
-{
-    // Called before each testfunction is executed
-}
-
-void MediaTest::cleanup()
-{
-    // Called after every testfunction
-}
-
-void MediaTest::shouldSetDurationToZeroWhenNotSpecified()
-{
-    Media m;
-    QCOMPARE(m.duration(), 0);
-}
-
-#include "mediatest.moc"

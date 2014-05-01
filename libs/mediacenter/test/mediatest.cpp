@@ -16,63 +16,68 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#include "pmcmediatest.h"
-#include "testhelpers.h"
+#include "mediatest.h"
 
-#include <mediacenter/pmcmedia.h>
+#include <album.h>
+#include <artist.h>
+#include <media.h>
 
 #include <qtest_kde.h>
 
-QTEST_KDEMAIN(PmcMediaTest, NoGUI);
+QTEST_KDEMAIN(MediaTest, NoGUI);
 
-const QString testUrl = "file:///tmp/test.foo";
+const QString TEST_URL = "uri://test.123";
 
-void PmcMediaTest::initTestCase()
+void MediaTest::initTestCase()
 {
     // Called before the first testfunction is executed
 }
 
-void PmcMediaTest::cleanupTestCase()
+void MediaTest::cleanupTestCase()
 {
     // Called after the last testfunction was executed
 }
 
-void PmcMediaTest::init()
+void MediaTest::init()
 {
     // Called before each testfunction is executed
 }
 
-void PmcMediaTest::cleanup()
+void MediaTest::cleanup()
 {
     // Called after every testfunction
 }
 
-void PmcMediaTest::shouldReturnUrlEvenIfMediaIsNotSet()
+void MediaTest::shouldSetAlbumAndUpdateRelationsCorrectly()
 {
-    PmcMedia p(testUrl);
+    QSharedPointer<Album> oldAlbum(new Album("GNOME"));
+    QSharedPointer<Album> newAlbum(new Album("KDE"));
 
-    QCOMPARE(testUrl, p.url());
+    QSharedPointer<Media> media = QSharedPointer<Media>(new Media(TEST_URL));
+    media->setAlbumAndUpdateRelations(media, oldAlbum);
+
+    QCOMPARE(media->album(), oldAlbum);
+    QCOMPARE(oldAlbum->media().at(0), media);
+
+    media->setAlbumAndUpdateRelations(media, newAlbum);
+    QCOMPARE(media->album(), newAlbum);
+    QCOMPARE(newAlbum->media().at(0), media);
+    QCOMPARE(oldAlbum->media().size(), 0);
 }
 
-void PmcMediaTest::shouldReturnTitleEvenIfMediaIsNotSet()
+void MediaTest::shouldSetArtistAndUpdateRelationsCorrectly()
 {
-    PmcMedia p(testUrl);
+    QSharedPointer<Artist> oldArtist(new Artist("Foo"));
+    QSharedPointer<Artist> newArtist(new Artist("Bar"));
 
-    QCOMPARE(QString("test.foo"), p.title());
+    QSharedPointer<Media> media = QSharedPointer<Media>(new Media(TEST_URL));
+    media->setArtistAndUpdateRelations(media, oldArtist);
+
+    QCOMPARE(media->artist(), oldArtist);
+    QCOMPARE(oldArtist->media().at(0), media);
+
+    media->setArtistAndUpdateRelations(media, newArtist);
+    QCOMPARE(media->artist(), newArtist);
+    QCOMPARE(newArtist->media().at(0), media);
+    QCOMPARE(oldArtist->media().size(), 0);
 }
-
-void PmcMediaTest::shouldEmitUpdatedWhenMediaSet()
-{
-    Media m(testUrl);
-    PmcMedia p(testUrl);
-
-    QSignalSpy updatedSpy(&p, SIGNAL(updated()));
-    QVERIFY2(updatedSpy.isValid(), "Could not listen to signal updated");
-
-    p.setMedia(QSharedPointer<Media>(&m));
-
-    waitForSignal(&updatedSpy);
-    QCOMPARE(updatedSpy.size(), 1);
-}
-
-#include "pmcmediatest.moc"

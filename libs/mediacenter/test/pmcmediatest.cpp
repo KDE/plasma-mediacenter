@@ -16,25 +16,61 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef PMC_LIBS_QXORM_EXPORT_H_
-#define PMC_LIBS_QXORM_EXPORT_H_
+#include "pmcmediatest.h"
+#include "testhelpers.h"
 
-#ifdef _BUILDING_PMC
-#define PMC_DLL_EXPORT QX_DLL_EXPORT_HELPER
-#else // _BUILDING_PMC
-#define PMC_DLL_EXPORT QX_DLL_IMPORT_HELPER
-#endif // _BUILDING_PMC
+#include <mediacenter/pmcmedia.h>
 
-#ifdef _BUILDING_PMC
-#define QX_REGISTER_HPP_PMC QX_REGISTER_HPP_EXPORT_DLL
-#define QX_REGISTER_CPP_PMC QX_REGISTER_CPP_EXPORT_DLL
-#define QX_REGISTER_COMPLEX_CLASS_NAME_HPP_PMC QX_REGISTER_COMPLEX_CLASS_NAME_HPP_EXPORT_DLL
-#define QX_REGISTER_COMPLEX_CLASS_NAME_CPP_PMC QX_REGISTER_COMPLEX_CLASS_NAME_CPP_EXPORT_DLL
-#else
-#define QX_REGISTER_HPP_PMC QX_REGISTER_HPP_IMPORT_DLL
-#define QX_REGISTER_CPP_PMC QX_REGISTER_CPP_IMPORT_DLL
-#define QX_REGISTER_COMPLEX_CLASS_NAME_HPP_PMC QX_REGISTER_COMPLEX_CLASS_NAME_HPP_IMPORT_DLL
-#define QX_REGISTER_COMPLEX_CLASS_NAME_CPP_PMC QX_REGISTER_COMPLEX_CLASS_NAME_CPP_IMPORT_DLL
-#endif // _BUILDING_PMC
+#include <qtest_kde.h>
 
-#endif // PMC_LIBS_QXORM_EXPORT_H_
+QTEST_KDEMAIN(PmcMediaTest, NoGUI);
+
+const QString testUrl = "file:///tmp/test.foo";
+
+void PmcMediaTest::initTestCase()
+{
+    // Called before the first testfunction is executed
+}
+
+void PmcMediaTest::cleanupTestCase()
+{
+    // Called after the last testfunction was executed
+}
+
+void PmcMediaTest::init()
+{
+    // Called before each testfunction is executed
+}
+
+void PmcMediaTest::cleanup()
+{
+    // Called after every testfunction
+}
+
+void PmcMediaTest::shouldReturnUrlEvenIfMediaIsNotSet()
+{
+    PmcMedia p(testUrl);
+
+    QCOMPARE(testUrl, p.url());
+}
+
+void PmcMediaTest::shouldReturnTitleEvenIfMediaIsNotSet()
+{
+    PmcMedia p(testUrl);
+
+    QCOMPARE(QString("test.foo"), p.title());
+}
+
+void PmcMediaTest::shouldEmitUpdatedWhenMediaSet()
+{
+    Media m(testUrl);
+    PmcMedia p(testUrl);
+
+    QSignalSpy updatedSpy(&p, SIGNAL(updated()));
+    QVERIFY2(updatedSpy.isValid(), "Could not listen to signal updated");
+
+    p.setMedia(QSharedPointer<Media>(&m));
+
+    waitForSignal(&updatedSpy);
+    QCOMPARE(updatedSpy.size(), 1);
+}
