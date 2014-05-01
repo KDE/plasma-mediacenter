@@ -20,7 +20,6 @@
 
 #include <mediacenter/abstractmediasource.h>
 
-class SearchResultHandler;
 namespace Baloo {
 class File;
 }
@@ -35,13 +34,11 @@ public:
 protected:
     virtual void run();
 
-private Q_SLOTS:
+private slots:
     void startQuerying();
     void slotFileReceived(const Baloo::File &file);
 
 private:
-    QHash<QString, SearchResultHandler*> m_searchResultHandlers;
-
     void queryForMediaType(const QString &type);
     void fetchUrlDetails(const QUrl &url);
 };

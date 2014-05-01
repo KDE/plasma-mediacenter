@@ -7,10 +7,6 @@ include_directories(
 )
 
 set(baloosearch_SRCS
-    audiosearchresulthandler.cpp
-    videosearchresulthandler.cpp
-    imagesearchresulthandler.cpp
-    searchresulthandler.cpp
     baloosearchmediasource.cpp
 )
 
