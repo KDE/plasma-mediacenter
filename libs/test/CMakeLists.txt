@@ -9,6 +9,7 @@ function(pmc_test TESTNAME)
     add_test(pmc-libs-${TESTNAME} ${TESTNAME})
     target_link_libraries(${TESTNAME}
         plasmamediacentertest
+        Qt5::Test
     )
 endfunction(pmc_test)
 
