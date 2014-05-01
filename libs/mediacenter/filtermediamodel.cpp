@@ -18,6 +18,8 @@
 
 #include "filtermediamodel.h"
 
+#include <QStringList>
+
 FilterMediaModel::FilterMediaModel(QObject* parent): QSortFilterProxyModel(parent)
 {
     setSortCaseSensitivity(Qt::CaseInsensitive);
@@ -45,7 +47,11 @@ bool FilterMediaModel::filterAcceptsRow(int source_row, const QModelIndex& sourc
     Q_FOREACH (int role, m_filters.keys()) {
         const QVariant value = m_filters.value(role);
         if (value.canConvert(QVariant::String)) {
-            if (!sourceModel()->data(index, role).toString().contains(
+            const QVariant rowData = sourceModel()->data(index, role);
+            if (rowData.canConvert<QString>() && !rowData.toString().contains(
+                value.toString(), sortCaseSensitivity())) {
+                return false;
+            } else if (rowData.canConvert<QStringList>() && !rowData.toStringList().join(" ").contains(
                 value.toString(), sortCaseSensitivity())) {
                 return false;
             }

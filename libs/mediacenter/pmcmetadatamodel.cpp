@@ -153,6 +153,7 @@ void PmcMetadataModel::handleNewMedia(const QList< QSharedPointer< PmcMedia > >&
         if (d->modeForMediaType.value(m->type()) == d->currentMode) {
             d->mediaByResourceId.insert(m->sha(), QSharedPointer<QObject>(m));
             resourceIdsToBeInserted.append(m->sha());
+            connect(m.data(), SIGNAL(updated()), SLOT(mediaUpdated()));
         }
     }
 
@@ -195,7 +196,6 @@ void PmcMetadataModel::handleNewAlbumsOrArtists(const QList< QSharedPointer< T >
     Q_ASSERT(d->mediaByResourceId.keys().size() == d->mediaResourceIds.size());
     endInsertRows();
 }
-
 
 QVariant PmcMetadataModel::metadataValueForRole(const QModelIndex& index, int role) const
 {
@@ -404,5 +404,15 @@ void PmcMetadataModel::signalUpdate(const QVariant& resourceId, const QString& d
 
     const int rowForResource = d->mediaResourceIds.indexOf(resourceId.toString());
     const QModelIndex changedIndex = index(rowForResource);
+    emit dataChanged(changedIndex, changedIndex);
+}
+
+void PmcMetadataModel::mediaUpdated()
+{
+    PmcMedia *media = static_cast<PmcMedia*>(sender());
+    const QString resourceId = media->sha();
+
+    const int mediaIndex = d->mediaResourceIds.indexOf(resourceId);
+    const QModelIndex changedIndex = index(mediaIndex);
     emit dataChanged(changedIndex, changedIndex);
 }

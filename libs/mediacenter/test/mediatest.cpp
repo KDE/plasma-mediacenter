@@ -17,11 +17,16 @@
  ***********************************************************************************/
 
 #include "mediatest.h"
-#include <mediacenter/media.h>
+
+#include <album.h>
+#include <artist.h>
+#include <media.h>
 
 #include <qtest_kde.h>
 
 QTEST_KDEMAIN(MediaTest, NoGUI);
+
+const QString TEST_URL = "uri://test.123";
 
 void MediaTest::initTestCase()
 {
@@ -43,10 +48,36 @@ void MediaTest::cleanup()
     // Called after every testfunction
 }
 
-void MediaTest::shouldSetDurationToZeroWhenNotSpecified()
+void MediaTest::shouldSetAlbumAndUpdateRelationsCorrectly()
 {
-    Media m;
-    QCOMPARE(m.duration(), 0);
+    QSharedPointer<Album> oldAlbum(new Album("GNOME"));
+    QSharedPointer<Album> newAlbum(new Album("KDE"));
+
+    QSharedPointer<Media> media = QSharedPointer<Media>(new Media(TEST_URL));
+    media->setAlbumAndUpdateRelations(media, oldAlbum);
+
+    QCOMPARE(media->album(), oldAlbum);
+    QCOMPARE(oldAlbum->media().at(0), media);
+
+    media->setAlbumAndUpdateRelations(media, newAlbum);
+    QCOMPARE(media->album(), newAlbum);
+    QCOMPARE(newAlbum->media().at(0), media);
+    QCOMPARE(oldAlbum->media().size(), 0);
 }
 
-#include "mediatest.moc"
+void MediaTest::shouldSetArtistAndUpdateRelationsCorrectly()
+{
+    QSharedPointer<Artist> oldArtist(new Artist("Foo"));
+    QSharedPointer<Artist> newArtist(new Artist("Bar"));
+
+    QSharedPointer<Media> media = QSharedPointer<Media>(new Media(TEST_URL));
+    media->setArtistAndUpdateRelations(media, oldArtist);
+
+    QCOMPARE(media->artist(), oldArtist);
+    QCOMPARE(oldArtist->media().at(0), media);
+
+    media->setArtistAndUpdateRelations(media, newArtist);
+    QCOMPARE(media->artist(), newArtist);
+    QCOMPARE(newArtist->media().at(0), media);
+    QCOMPARE(oldArtist->media().size(), 0);
+}

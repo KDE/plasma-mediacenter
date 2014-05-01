@@ -16,22 +16,10 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef MEDIATEST_H
-#define MEDIATEST_H
+#include "fakemediavalidator.h"
 
-#include <QObject>
-
-class MediaTest : public QObject
+bool FakeMediaValidator::fileWithUrlExists(const QString& url)
 {
-    Q_OBJECT
-private slots:
-    void initTestCase();
-    void cleanupTestCase();
-
-    void init();
-    void cleanup();
-
-    void shouldSetDurationToZeroWhenNotSpecified();
-};
-
-#endif // MEDIATEST_H
+    Q_UNUSED(url)
+    return true;
+}

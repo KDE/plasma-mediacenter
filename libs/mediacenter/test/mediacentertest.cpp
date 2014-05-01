@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
+ *   Copyright 2014 by Sinny Kumari <ksinny@gmail.com>                             *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,13 +16,54 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef PMC_LIBS_PRECOMPILED_HEADER_H_
-#define PMC_LIBS_PRECOMPILED_HEADER_H_
+#include "mediacentertest.h"
+#include <mediacenter/mediacenter.h>
 
-#ifndef Q_MOC_RUN
-#include <QxOrm.h>
-#endif  //Q_MOC_RUN
+#include <qtest_kde.h>
+#include <KStandardDirs>
 
-#include "qxorm_export.h"
+QTEST_KDEMAIN(MediaCenterTest, NoGUI);
 
-#endif // PMC_LIBS_PRECOMPILED_HEADER_H_
+void MediaCenterTest::initTestCase()
+{
+    // Called before the first testfunction is executed
+}
+
+void MediaCenterTest::cleanupTestCase()
+{
+    // Called after the last testfunction was executed
+}
+
+void MediaCenterTest::init()
+{
+    // Called before each testfunction is executed
+}
+
+void MediaCenterTest::cleanup()
+{
+    // Called after every testfunction
+}
+
+void MediaCenterTest::shouldReturnPathForComponent()
+{
+    const QString path = MediaCenter::dataDirForComponent("test");
+
+    const QString expectedPath = QString("%1%2/%3")
+        .arg(KGlobal::dirs()->saveLocation("data"))
+        .arg(KCmdLineArgs::appName())
+        .arg("test");
+
+    QCOMPARE(path, expectedPath);
+
+}
+
+void MediaCenterTest::shouldReturnPathWithoutComponent()
+{
+    const QString path = MediaCenter::dataDirForComponent();
+
+    const QString expectedPath = QString("%1%2")
+    .arg(KGlobal::dirs()->saveLocation("data"))
+    .arg(KCmdLineArgs::appName());
+
+    QCOMPARE(path, expectedPath);
+}

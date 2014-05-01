@@ -20,32 +20,27 @@
 
 #include "media.h"
 
-#include <QxMemLeak.h>
-
-QX_REGISTER_CPP_PMC(Artist)
-
-namespace qx {
-template <> void register_class(QxClass<Artist> & a)
-{
-    a.id(& Artist::m_name, "name");
-
-    a.relationOneToMany(& Artist::m_media, "media", "artist_id");
-}}
-
 Artist::Artist(const QString& name)
     : m_name(name)
-{
-}
-
-Artist::Artist()
-{
-}
-
-Artist::~Artist()
 {
 }
 
 const QString& Artist::name() const
 {
     return m_name;
+}
+
+void Artist::addMedia(const QSharedPointer<Media>& media)
+{
+    m_media.append(media);
+}
+
+void Artist::removeMedia(const QSharedPointer<Media>& media)
+{
+    m_media.removeOne(media);
+}
+
+QList< QSharedPointer<Media> > Artist::media() const
+{
+    return m_media;
 }

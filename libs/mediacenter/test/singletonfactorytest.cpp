@@ -16,25 +16,37 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef PMC_LIBS_QXORM_EXPORT_H_
-#define PMC_LIBS_QXORM_EXPORT_H_
+#include "singletonfactorytest.h"
+#include <mediacenter/singletonfactory.h>
 
-#ifdef _BUILDING_PMC
-#define PMC_DLL_EXPORT QX_DLL_EXPORT_HELPER
-#else // _BUILDING_PMC
-#define PMC_DLL_EXPORT QX_DLL_IMPORT_HELPER
-#endif // _BUILDING_PMC
+#include <qtest_kde.h>
 
-#ifdef _BUILDING_PMC
-#define QX_REGISTER_HPP_PMC QX_REGISTER_HPP_EXPORT_DLL
-#define QX_REGISTER_CPP_PMC QX_REGISTER_CPP_EXPORT_DLL
-#define QX_REGISTER_COMPLEX_CLASS_NAME_HPP_PMC QX_REGISTER_COMPLEX_CLASS_NAME_HPP_EXPORT_DLL
-#define QX_REGISTER_COMPLEX_CLASS_NAME_CPP_PMC QX_REGISTER_COMPLEX_CLASS_NAME_CPP_EXPORT_DLL
-#else
-#define QX_REGISTER_HPP_PMC QX_REGISTER_HPP_IMPORT_DLL
-#define QX_REGISTER_CPP_PMC QX_REGISTER_CPP_IMPORT_DLL
-#define QX_REGISTER_COMPLEX_CLASS_NAME_HPP_PMC QX_REGISTER_COMPLEX_CLASS_NAME_HPP_IMPORT_DLL
-#define QX_REGISTER_COMPLEX_CLASS_NAME_CPP_PMC QX_REGISTER_COMPLEX_CLASS_NAME_CPP_IMPORT_DLL
-#endif // _BUILDING_PMC
+QTEST_KDEMAIN(SingletonFactoryTest, NoGUI);
 
-#endif // PMC_LIBS_QXORM_EXPORT_H_
+void SingletonFactoryTest::initTestCase()
+{
+    // Called before the first testfunction is executed
+}
+
+void SingletonFactoryTest::cleanupTestCase()
+{
+    // Called after the last testfunction was executed
+}
+
+void SingletonFactoryTest::init()
+{
+    // Called before each testfunction is executed
+}
+
+void SingletonFactoryTest::cleanup()
+{
+    // Called after every testfunction
+}
+
+void SingletonFactoryTest::shouldReturnSameInstanceEveryTime()
+{
+    QObject *obj1 = SingletonFactory::instanceFor<QObject>();
+    QObject *obj2 = SingletonFactory::instanceFor<QObject>();
+
+    QVERIFY2(obj1 == obj2, "Objects returned are not equal");
+}

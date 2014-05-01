@@ -19,12 +19,12 @@
 #ifndef PMCALBUM_H
 #define PMCALBUM_H
 
+#include "mediacenter_export.h"
+
 #include <QObject>
 #include <QSharedPointer>
 
 class Album;
-
-#include "mediacenter_export.h"
 
 class MEDIACENTER_EXPORT PmcAlbum : public QObject
 {

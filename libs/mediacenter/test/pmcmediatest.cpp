@@ -16,52 +16,61 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef MEDIALIBRARYTEST_H
-#define MEDIALIBRARYTEST_H
+#include "pmcmediatest.h"
+#include "testhelpers.h"
 
-#include <QObject>
-#include <QMetaType>
-#include <QSharedPointer>
-#include <mediacenter/mediavalidator.h>
+#include <mediacenter/pmcmedia.h>
 
-class PmcArtist;
-class PmcAlbum;
-class PmcMedia;
-class QSignalSpy;
-class MediaLibrary;
+#include <qtest_kde.h>
 
-class MediaLibraryTest : public QObject
+QTEST_KDEMAIN(PmcMediaTest, NoGUI);
+
+const QString testUrl = "file:///tmp/test.foo";
+
+void PmcMediaTest::initTestCase()
 {
-    Q_OBJECT
-private slots:
-    void initTestCase();
-    void cleanupTestCase();
+    // Called before the first testfunction is executed
+}
 
-    void init();
-    void cleanup();
+void PmcMediaTest::cleanupTestCase()
+{
+    // Called after the last testfunction was executed
+}
 
-    void createsDbWhenNotPresent();
+void PmcMediaTest::init()
+{
+    // Called before each testfunction is executed
+}
 
-    void addsNewMediaAndItsMetadata();
+void PmcMediaTest::cleanup()
+{
+    // Called after every testfunction
+}
 
-    void shouldEmitUpdatedForMediaInsteadOfNewMediaWhenDataUpdated();
+void PmcMediaTest::shouldReturnUrlEvenIfMediaIsNotSet()
+{
+    PmcMedia p(testUrl);
 
-    void shouldNotEmitUpdatedWhenNothingUpdated();
+    QCOMPARE(testUrl, p.url());
+}
 
-    void shouldEmitUpdatedWhenAlbumOrArtistChanged();
+void PmcMediaTest::shouldReturnTitleEvenIfMediaIsNotSet()
+{
+    PmcMedia p(testUrl);
 
-    void shouldNotAddMediaForNonExistentFile();
+    QCOMPARE(QString("test.foo"), p.title());
+}
 
-    void shouldCleanupEntriesForNonExistentMedia();
+void PmcMediaTest::shouldEmitUpdatedWhenMediaSet()
+{
+    Media m(testUrl);
+    PmcMedia p(testUrl);
 
-private:
-    QHash< int, QVariant > createTestMediaData() const;
-    QHash< int, QVariant > createTestMediaDataWithAlbumArtist() const;
-    QString pathToDatabase() const;
-};
+    QSignalSpy updatedSpy(&p, SIGNAL(updated()));
+    QVERIFY2(updatedSpy.isValid(), "Could not listen to signal updated");
 
-Q_DECLARE_METATYPE(QList<QSharedPointer<PmcMedia> >)
-Q_DECLARE_METATYPE(QList<QSharedPointer<PmcAlbum> >)
-Q_DECLARE_METATYPE(QList<QSharedPointer<PmcArtist> >)
+    p.setMedia(QSharedPointer<Media>(&m));
 
-#endif // MEDIALIBRARYTEST_H
+    waitForSignal(&updatedSpy);
+    QCOMPARE(updatedSpy.size(), 1);
+}

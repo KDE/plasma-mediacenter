@@ -23,27 +23,22 @@
 #include <QList>
 #include <QSharedPointer>
 
-#include "precompiled.h"
-
 class Media;
 
 class Artist
 {
 public:
-    Artist();
     explicit Artist(const QString &name);
-    virtual ~Artist();
 
-    QString m_name;
     const QString& name() const;
 
+    void addMedia(const QSharedPointer<Media> &media);
+    void removeMedia(const QSharedPointer<Media> &media);
+    QList< QSharedPointer<Media> > media() const;
+
+private:
+    QString m_name;
     QList< QSharedPointer<Media> > m_media;
-
-    typedef QSharedPointer<Artist> Ptr;
-    typedef QList<Ptr> List;
 };
-
-QX_REGISTER_PRIMARY_KEY(Artist, QString)
-QX_REGISTER_HPP_PMC(Artist, qx::trait::no_base_class_defined, 0)
 
 #endif // ARTIST_H

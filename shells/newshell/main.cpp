@@ -27,8 +27,10 @@
 #include <KDE/KUniqueApplication>
 
 #include <Plasma/Theme>
-#include "application.h"
 
+#include <QTimer>
+
+#include "application.h"
 
 int main(int argc, char *argv[])
 {
@@ -78,10 +80,7 @@ int main(int argc, char *argv[])
 
     qRegisterMetaType< QHash<int,QVariant> >("QHash<int,QVariant>");
     MediaSourcesLoader mediaSourcesLoader;
-    QObject::connect(SingletonFactory::instanceFor<MediaLibrary>(),
-            SIGNAL(initialized()),
-            &mediaSourcesLoader,
-            SLOT(load()));
+    QTimer::singleShot(0, &mediaSourcesLoader, SLOT(load()));
 
     return app.exec();
 }
