@@ -1,5 +1,7 @@
 project(PlasmaMediaCenter)
 
+option(NO_LINK_TO_PLASMA  "Do not link to Plasma at compile-time" OFF)
+
 set(CMAKE_MODULE_PATH
     ${CMAKE_MODULE_PATH}
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake)

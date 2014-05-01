@@ -21,9 +21,9 @@ target_link_libraries(plasma-mediacenter
     kdeclarative
 )
 
-if (DEFINED NO_LINK_TO_PLASMA)
+if (NO_LINK_TO_PLASMA)
     add_definitions(-DNO_LINK_TO_PLASMA)
-else (DEFINED NO_LINK_TO_PLASMA)
+else (NO_LINK_TO_PLASMA)
     target_link_libraries(plasma-mediacenter
         ${KDE4_PLASMA_LIBS}
     )
