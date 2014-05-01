@@ -39,13 +39,9 @@ find_package(KF5 CONFIG REQUIRED
     CoreAddons Config I18n GuiAddons Service ConfigWidgets KIO Declarative)
 
 find_package(Taglib REQUIRED)
-find_package(QxOrm REQUIRED)
-
-find_package(Boost REQUIRED COMPONENTS serialization)
 
 include_directories(
     ${TAGLIB_INCLUDES}
-    ${QxOrm_INCLUDE_DIRS}
 )
 
 # needed for backend export
