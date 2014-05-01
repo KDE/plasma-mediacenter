@@ -72,7 +72,6 @@ install(FILES data/servicetypes/pmc_mediasource.desktop DESTINATION ${SERVICETYP
 
 add_subdirectory(plugin)
 ##############################          TESTS           ##############################
-if (KDE_BUILD_TESTS)
 
     function(pmc_test TESTNAME)
         add_executable(${TESTNAME} ${plasmamediacenter_SRCS} test/${TESTNAME}.cpp test/fakemediavalidator.cpp)
@@ -90,5 +89,5 @@ if (KDE_BUILD_TESTS)
     pmc_test(pmcmediatest)
     pmc_test(mediatest)
     pmc_test(mediacentertest)
-endif (KDE_BUILD_TESTS)
+
 ######################################################################################
