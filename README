@@ -21,7 +21,7 @@ Troubleshooting
 
 If you are having trouble playing audio and video files in latest Linux distributions, this is due to PMC is linking with both libplasma and QtMultimediaKit. libplasma links with libgstreamer1.0 while QtMultimediaKit links with libgstreamer0.10. If you are getting this problem. Please add option -DNO_LINK_TO_PLASMA to cmake as below,
 
-cmake .. -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` -DNO_LINK_TO_PLASMA
+cmake .. -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` -DNO_LINK_TO_PLASMA=ON
 
 and then run make and make install.
 
