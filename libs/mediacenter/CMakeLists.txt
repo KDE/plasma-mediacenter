@@ -80,6 +80,7 @@ add_subdirectory(plugin)
             Qt5::Declarative
             Qt5::Test
             KF5::KDELibs4Support
+            ${TAGLIB_LIBRARIES}
         )
     endfunction(pmc_test)
 
