@@ -3,7 +3,6 @@ find_package(Taglib REQUIRED)
 include_directories(
     ${TAGLIB_INCLUDES}
 )
-
 set (plasmamediacenter_SRCS
     medialibrarywrappercache.cpp
     artist.cpp
@@ -35,6 +34,9 @@ set (plasmamediacenter_SRCS
     singletonfactory.cpp
     mediavalidator.cpp
     settings.cpp
+    mpris2/mpris2.cpp
+    mpris2/mediaplayer2.cpp
+    mpris2/mediaplayer2player.cpp
 )
 
 add_library(plasmamediacenter SHARED
@@ -51,6 +53,23 @@ target_link_libraries(plasmamediacenter
     ${TAGLIB_LIBRARIES}
 )
 
+add_library(plasmamediacentertest SHARED
+    ${plasmamediacenter_SRCS}
+)
+
+set_target_properties(plasmamediacentertest
+PROPERTIES COMPILE_FLAGS  -fvisibility=default
+)
+
+target_link_libraries(plasmamediacentertest
+    Qt5::Core
+    Qt5::Declarative
+    KF5::Solid
+    KF5::GuiAddons
+    KF5::CoreAddons
+    KF5::KDELibs4Support
+    ${TAGLIB_LIBRARIES}
+)
 set_target_properties(plasmamediacenter PROPERTIES VERSION 1.2 SOVERSION 1.2)
 install(TARGETS plasmamediacenter ${INSTALL_TARGETS_DEFAULT_ARGS})
 
@@ -71,23 +90,3 @@ install(FILES data/servicetypes/pmc_browsingbackend.desktop DESTINATION ${SERVIC
 install(FILES data/servicetypes/pmc_mediasource.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
 
 add_subdirectory(plugin)
-##############################          TESTS           ##############################
-    function(pmc_test TESTNAME)
-        add_executable(${TESTNAME} ${plasmamediacenter_SRCS} test/${TESTNAME}.cpp test/fakemediavalidator.cpp)
-        add_test(pmc-libs-${TESTNAME} ${TESTNAME})
-        target_link_libraries(${TESTNAME}
-            Qt5::Core
-            Qt5::Declarative
-            Qt5::Test
-            KF5::KDELibs4Support
-            ${TAGLIB_LIBRARIES}
-        )
-    endfunction(pmc_test)
-
-    pmc_test(medialibrarytest)
-    pmc_test(singletonfactorytest)
-    pmc_test(lastfmimagefetchertest)
-    pmc_test(pmcmediatest)
-    pmc_test(mediatest)
-    pmc_test(mediacentertest)
-######################################################################################

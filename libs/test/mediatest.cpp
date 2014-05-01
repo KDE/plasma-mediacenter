@@ -18,9 +18,9 @@
 
 #include "mediatest.h"
 
-#include <album.h>
-#include <artist.h>
-#include <media.h>
+#include <mediacenter/album.h>
+#include <mediacenter/artist.h>
+#include <mediacenter/media.h>
 
 #include <qtest_kde.h>
 
