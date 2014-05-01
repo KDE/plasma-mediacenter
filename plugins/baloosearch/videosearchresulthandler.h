@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2014 Sinny Kumari <ksinny@gmail.com>          `                     *
+ *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
  *   modify it under the terms of the GNU Lesser General Public                    *
@@ -15,35 +15,26 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef BALOOSEARCHMEDIASOURCE_H
-#define BALOOSEARCHMEDIASOURCE_H
+#ifndef VIDEOSEARCHRESULTHANDLER_H
+#define VIDEOSEARCHRESULTHANDLER_H
+#include "searchresulthandler.h"
 
-#include <mediacenter/abstractmediasource.h>
-
-class SearchResultHandler;
 namespace Baloo {
 class File;
 }
 
-class BalooSearchMediaSource : public MediaCenter::AbstractMediaSource
+class VideoSearchResultHandler : public SearchResultHandler
 {
     Q_OBJECT
 public:
-    explicit BalooSearchMediaSource(QObject* parent = 0, const QVariantList& args = QVariantList());
-    ~BalooSearchMediaSource();
+    VideoSearchResultHandler(MediaLibrary* mediaLibrary, QObject* parent);
+    virtual QString supportedMediaType() const;
 
 protected:
-    virtual void run();
+    virtual void handleResultImpl(const Baloo::ResultIterator& resultIterator);
 
 private Q_SLOTS:
-    void startQuerying();
     void slotFileReceived(const Baloo::File &file);
-
-private:
-    QHash<QString, SearchResultHandler*> m_searchResultHandlers;
-
-    void queryForMediaType(const QString &type);
-    void fetchUrlDetails(const QUrl &url);
 };
 
-#endif // BALOOSEARCHMEDIASOURCE_H
+#endif // VIDEOSEARCHRESULTHANDLER_H

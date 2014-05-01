@@ -17,9 +17,14 @@
 
 #include "baloosearchmediasource.h"
 
+#include "imagesearchresulthandler.h"
+#include "videosearchresulthandler.h"
+#include "audiosearchresulthandler.h"
+
 #include <mediacenter/medialibrary.h>
 #include <mediacenter/singletonfactory.h>
 #include <mediacenter/mediacenter.h>
+
 #include <baloo/query.h>
 #include <baloo/result.h>
 #include <baloo/filefetchjob.h>
@@ -34,6 +39,16 @@ MEDIACENTER_EXPORT_MEDIASOURCE(BalooSearchMediaSource)
 BalooSearchMediaSource::BalooSearchMediaSource(QObject* parent, const QVariantList& args)
     : AbstractMediaSource(parent, args)
 {
+    MediaLibrary *mediaLibrary = SingletonFactory::instanceFor<MediaLibrary>();
+
+    QList<SearchResultHandler*> searchResultHandlerList;
+    searchResultHandlerList << new ImageSearchResultHandler(mediaLibrary, this)
+                            << new VideoSearchResultHandler(mediaLibrary, this)
+                            << new AudioSearchResultHandler(mediaLibrary, this);
+
+    Q_FOREACH(SearchResultHandler* searchResultHandler, searchResultHandlerList) {
+        m_searchResultHandlers.insert(searchResultHandler->supportedMediaType(), searchResultHandler);
+    }
 }
 
 BalooSearchMediaSource::~BalooSearchMediaSource()
@@ -52,9 +67,9 @@ void BalooSearchMediaSource::run()
 
 void BalooSearchMediaSource::startQuerying()
 {
-    queryForMediaType("Audio");
-    queryForMediaType("Image");
-    queryForMediaType("Video");
+    Q_FOREACH(const QString &type, m_searchResultHandlers.keys()) {
+        queryForMediaType(type);
+    }
 }
 
 void BalooSearchMediaSource::queryForMediaType(const QString& type)
@@ -63,21 +78,8 @@ void BalooSearchMediaSource::queryForMediaType(const QString& type)
     query.addType(type);
 
     Baloo::ResultIterator it = query.exec();
-    while (it.next()) {
-        QHash<int, QVariant> values;
-
-        if (type == "Audio"){
-            fetchUrlDetails(it.url());
-        } else {
-            values.insert(Qt::DisplayRole, it.text());
-        }
-
-        values.insert(Qt::DecorationRole, it.icon());
-        values.insert(MediaCenter::MediaTypeRole, type.toLower());
-        values.insert(MediaCenter::MediaUrlRole, it.url());
-
-        SingletonFactory::instanceFor<MediaLibrary>()->updateMedia(values);
-    }
+    SearchResultHandler *handler = m_searchResultHandlers.value(type);
+    handler->handleResult(it);
 }
 
 void BalooSearchMediaSource::fetchUrlDetails(const QUrl& url)
@@ -106,6 +108,5 @@ void BalooSearchMediaSource::slotFileReceived(const Baloo::File& file)
 
     SingletonFactory::instanceFor<MediaLibrary>()->updateMedia(values);
 }
-
 
 #include "baloosearchmediasource.moc"
