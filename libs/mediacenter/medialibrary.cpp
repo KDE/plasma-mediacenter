@@ -38,6 +38,7 @@
 
 #include "artist.h"
 #include "album.h"
+#include "itemcache.h"
 
 namespace {
     int DELAY_BEFORE_EMITTING_NEW_ITEMS = 1000;
@@ -71,6 +72,9 @@ public:
 
     QMutex pmcMediaByUrlMutex;
     QHash< QString, QSharedPointer<PmcMedia> > pmcMediaByUrl;
+
+    ItemCache<Album> albumCache;
+    ItemCache<Artist> artistCache;
 };
 
 MediaLibrary::MediaLibrary(MediaValidator* mediaValidator, QObject* parent)
@@ -197,7 +201,7 @@ bool MediaLibrary::extractAndSaveArtistInfo(
         return false;
     }
 
-    QSharedPointer<Artist> artist = loadOrCreate<Artist>(artistName);
+    QSharedPointer<Artist> artist = d->artistCache.getById(artistName, true);
 
     media->setArtistAndUpdateRelations(media, artist);
     return true;
@@ -221,17 +225,10 @@ bool MediaLibrary::extractAndSaveAlbumInfo(
         return false;
     }
 
-    QSharedPointer<Album> album = loadOrCreate<Album>(albumName);
+    QSharedPointer<Album> album = d->albumCache.getById(albumName, true);
 
     media->setAlbumAndUpdateRelations(media, album);
     return true;
-}
-
-template <class T>
-QSharedPointer< T > MediaLibrary::loadOrCreate(const QString& id)
-{
-    QSharedPointer<T> object(new T(id));
-    return object;
 }
 
 bool MediaLibrary::mediaExists(const QString& sha) const

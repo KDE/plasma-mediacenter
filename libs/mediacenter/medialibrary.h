@@ -77,8 +77,6 @@ private:
     bool extractAndSaveAlbumInfo(const QPair< QString, QHash< int, QVariant > >& request, QSharedPointer< Media >& media);
     bool extractAndSaveArtistInfo(const QPair< QString, QHash< int, QVariant > >& request, QSharedPointer< Media >& media);
 
-    template <class T> QSharedPointer<T> loadOrCreate (const QString &id);
-
     inline void addAlbum(const QSharedPointer< Album >& album);
     inline void addArtist(const QSharedPointer<Artist>& artist);
     template <class X, class Y> void addAlbumOrArtist(
