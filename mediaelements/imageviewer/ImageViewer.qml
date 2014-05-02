@@ -55,7 +55,9 @@ FocusScope {
         Image {
             id: mainImage
             anchors.fill: parent
+
             fillMode: Image.PreserveAspectFit
+            sourceSize.width: width
         }
 
         MouseArea {

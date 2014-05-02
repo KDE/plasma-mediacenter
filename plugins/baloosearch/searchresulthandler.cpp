@@ -1,7 +1,5 @@
 /***********************************************************************************
  *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
- *   Copyright 2014 Sinny Kumari <ksinny@gmail.com>                                *
- *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
  *   modify it under the terms of the GNU Lesser General Public                    *
@@ -17,45 +15,41 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#include "abstractmediasource.h"
-#include <KServiceTypeTrader>
-#include <QDebug>
+#include "searchresulthandler.h"
 
-using namespace MediaCenter;
+#include <mediacenter/medialibrary.h>
+#include <mediacenter/mediacenter.h>
 
-class AbstractMediaSource::Private
+#include <baloo/resultiterator.h>
+
+#include <QFileInfo>
+#include <QDateTime>
+
+SearchResultHandler::SearchResultHandler(MediaLibrary *mediaLibrary, QObject* parent)
+    : QObject(parent)
+    , m_mediaLibrary(mediaLibrary)
 {
-public:
-    Private() : mediaLibrary(0) {}
-    MediaLibrary* mediaLibrary;
-};
-
-AbstractMediaSource::AbstractMediaSource(QObject* parent, const QVariantList&)
-    : QThread(parent), d(new Private)
-{
-    moveToThread(this);
 }
 
-AbstractMediaSource::~AbstractMediaSource()
+void SearchResultHandler::handleResult(Baloo::ResultIterator& resultIterator)
 {
+    while (resultIterator.next()) {
+        //First collect common information
+        QHash<int, QVariant> values;
 
-}
+        values.insert(Qt::DisplayRole, resultIterator.text());
+        values.insert(Qt::DecorationRole, resultIterator.icon());
+        values.insert(MediaCenter::MediaTypeRole, supportedMediaType().toLower());
+        values.insert(MediaCenter::MediaUrlRole, resultIterator.url());
 
-KService::List AbstractMediaSource::availableMediaSourcePlugins()
-{
-    KService::List plugins = KServiceTypeTrader::self()->query("Plasma/MediaCenter/MediaSource");
-    if (plugins.isEmpty()) {
-        qWarning() << "no available media sources";
+        //HACK: This is a workaround as Baloo does not provide creation or
+        // modification date/time through KFileMetaData::Property
+        values.insert(MediaCenter::CreatedAtRole,
+                      QFileInfo(resultIterator.url().toLocalFile()).created());
+
+        m_mediaLibrary->updateMedia(values);
+
+        //Now collect information specific to this media type
+        handleResultImpl(resultIterator);
     }
-    return plugins;
-}
-
-void AbstractMediaSource::setMediaLibrary(MediaLibrary* mediaLibrary)
-{
-    d->mediaLibrary = mediaLibrary;
-}
-
-MediaLibrary* AbstractMediaSource::mediaLibrary() const
-{
-    return d->mediaLibrary;
 }

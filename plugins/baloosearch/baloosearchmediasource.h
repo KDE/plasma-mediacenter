@@ -20,6 +20,7 @@
 
 #include <mediacenter/abstractmediasource.h>
 
+class SearchResultHandler;
 namespace Baloo {
 class File;
 }
@@ -29,16 +30,17 @@ class BalooSearchMediaSource : public MediaCenter::AbstractMediaSource
     Q_OBJECT
 public:
     explicit BalooSearchMediaSource(QObject* parent = 0, const QVariantList& args = QVariantList());
-    ~BalooSearchMediaSource();
 
 protected:
     virtual void run();
 
-private slots:
+private Q_SLOTS:
     void startQuerying();
     void slotFileReceived(const Baloo::File &file);
 
 private:
+    QHash<QString, SearchResultHandler*> m_searchResultHandlers;
+
     void queryForMediaType(const QString &type);
     void fetchUrlDetails(const QUrl &url);
 };

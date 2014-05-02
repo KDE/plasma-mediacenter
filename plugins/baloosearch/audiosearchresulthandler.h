@@ -1,7 +1,5 @@
 /***********************************************************************************
  *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
- *   Copyright 2014 Sinny Kumari <ksinny@gmail.com>                                *
- *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
  *   modify it under the terms of the GNU Lesser General Public                    *
@@ -17,45 +15,29 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#include "abstractmediasource.h"
-#include <KServiceTypeTrader>
-#include <QDebug>
+#ifndef AUDIOSEARCHRESULTHANDLER_H
+#define AUDIOSEARCHRESULTHANDLER_H
 
-using namespace MediaCenter;
+#include "searchresulthandler.h"
 
-class AbstractMediaSource::Private
+namespace Baloo {
+class File;
+}
+
+class MediaLibrary;
+
+class AudioSearchResultHandler : public SearchResultHandler
 {
+    Q_OBJECT
 public:
-    Private() : mediaLibrary(0) {}
-    MediaLibrary* mediaLibrary;
+    AudioSearchResultHandler(MediaLibrary* mediaLibrary, QObject* parent);
+    virtual QString supportedMediaType() const;
+
+protected:
+    virtual void handleResultImpl(const Baloo::ResultIterator& resultIterator);
+
+private Q_SLOTS:
+    void slotFileReceived(const Baloo::File& file);
 };
 
-AbstractMediaSource::AbstractMediaSource(QObject* parent, const QVariantList&)
-    : QThread(parent), d(new Private)
-{
-    moveToThread(this);
-}
-
-AbstractMediaSource::~AbstractMediaSource()
-{
-
-}
-
-KService::List AbstractMediaSource::availableMediaSourcePlugins()
-{
-    KService::List plugins = KServiceTypeTrader::self()->query("Plasma/MediaCenter/MediaSource");
-    if (plugins.isEmpty()) {
-        qWarning() << "no available media sources";
-    }
-    return plugins;
-}
-
-void AbstractMediaSource::setMediaLibrary(MediaLibrary* mediaLibrary)
-{
-    d->mediaLibrary = mediaLibrary;
-}
-
-MediaLibrary* AbstractMediaSource::mediaLibrary() const
-{
-    return d->mediaLibrary;
-}
+#endif // AUDIOSEARCHRESULTHANDLER_H

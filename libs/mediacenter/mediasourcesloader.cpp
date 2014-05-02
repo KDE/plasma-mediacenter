@@ -25,13 +25,9 @@
 
 #include <KPluginInfo>
 #include <QDebug>
+#include <QApplication>
 
 MediaSourcesLoader::MediaSourcesLoader(QObject* parent): QObject(parent)
-{
-
-}
-
-MediaSourcesLoader::~MediaSourcesLoader()
 {
 
 }
@@ -55,12 +51,11 @@ void MediaSourcesLoader::load()
             0, QVariantList() << service->storageId(), &errorMessage);
 
         if (mediaSource) {
-            mediaSource->setParent(this);
             mediaSource->setMediaLibrary(SingletonFactory::instanceFor<MediaLibrary>());
             mediaSource->start();
+            connect(QApplication::instance(), SIGNAL(destroyed(QObject*)), mediaSource, SLOT(quit()));
         } else {
             qDebug() << "Could not create a instance for the media source " << info.name() << errorMessage;
         }
     }
-
 }

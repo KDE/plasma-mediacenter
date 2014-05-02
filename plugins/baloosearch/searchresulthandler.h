@@ -1,7 +1,5 @@
 /***********************************************************************************
  *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
- *   Copyright 2014 Sinny Kumari <ksinny@gmail.com>                                *
- *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
  *   modify it under the terms of the GNU Lesser General Public                    *
@@ -17,45 +15,31 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#include "abstractmediasource.h"
-#include <KServiceTypeTrader>
-#include <QDebug>
+#ifndef SEARCHRESULTHANDLER_H
+#define SEARCHRESULTHANDLER_H
 
-using namespace MediaCenter;
+#include <QObject>
+#include <QString>
 
-class AbstractMediaSource::Private
+namespace Baloo {
+class ResultIterator;
+}
+
+class MediaLibrary;
+
+class SearchResultHandler : public QObject
 {
+    Q_OBJECT
 public:
-    Private() : mediaLibrary(0) {}
-    MediaLibrary* mediaLibrary;
+    SearchResultHandler(MediaLibrary *mediaLibrary, QObject* parent);
+    virtual QString supportedMediaType() const = 0;
+
+    virtual void handleResult(Baloo::ResultIterator &resultIterator);
+
+protected:
+    MediaLibrary *m_mediaLibrary;
+
+    virtual void handleResultImpl(const Baloo::ResultIterator &resultIterator) = 0;
 };
 
-AbstractMediaSource::AbstractMediaSource(QObject* parent, const QVariantList&)
-    : QThread(parent), d(new Private)
-{
-    moveToThread(this);
-}
-
-AbstractMediaSource::~AbstractMediaSource()
-{
-
-}
-
-KService::List AbstractMediaSource::availableMediaSourcePlugins()
-{
-    KService::List plugins = KServiceTypeTrader::self()->query("Plasma/MediaCenter/MediaSource");
-    if (plugins.isEmpty()) {
-        qWarning() << "no available media sources";
-    }
-    return plugins;
-}
-
-void AbstractMediaSource::setMediaLibrary(MediaLibrary* mediaLibrary)
-{
-    d->mediaLibrary = mediaLibrary;
-}
-
-MediaLibrary* AbstractMediaSource::mediaLibrary() const
-{
-    return d->mediaLibrary;
-}
+#endif // SEARCHRESULTHANDLER_H

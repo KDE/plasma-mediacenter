@@ -1,7 +1,5 @@
 /***********************************************************************************
  *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
- *   Copyright 2014 Sinny Kumari <ksinny@gmail.com>                                *
- *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
  *   modify it under the terms of the GNU Lesser General Public                    *
@@ -17,45 +15,46 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#include "abstractmediasource.h"
-#include <KServiceTypeTrader>
-#include <QDebug>
+#include "videosearchresulthandler.h"
 
-using namespace MediaCenter;
+#include <mediacenter/medialibrary.h>
+#include <mediacenter/mediacenter.h>
 
-class AbstractMediaSource::Private
-{
-public:
-    Private() : mediaLibrary(0) {}
-    MediaLibrary* mediaLibrary;
-};
+#include <baloo/filefetchjob.h>
+#include <baloo/file.h>
+#include <baloo/resultiterator.h>
 
-AbstractMediaSource::AbstractMediaSource(QObject* parent, const QVariantList&)
-    : QThread(parent), d(new Private)
-{
-    moveToThread(this);
-}
+#include <QHash>
 
-AbstractMediaSource::~AbstractMediaSource()
+VideoSearchResultHandler::VideoSearchResultHandler(MediaLibrary* mediaLibrary,
+                                                   QObject* parent)
+    : SearchResultHandler(mediaLibrary, parent)
 {
 
 }
 
-KService::List AbstractMediaSource::availableMediaSourcePlugins()
+QString VideoSearchResultHandler::supportedMediaType() const
 {
-    KService::List plugins = KServiceTypeTrader::self()->query("Plasma/MediaCenter/MediaSource");
-    if (plugins.isEmpty()) {
-        qWarning() << "no available media sources";
+    return "Video";
+}
+
+void VideoSearchResultHandler::handleResultImpl(const Baloo::ResultIterator& resultIterator)
+{
+    Baloo::FileFetchJob* job = new Baloo::FileFetchJob(resultIterator.url().toLocalFile());
+    connect(job, SIGNAL(fileReceived(Baloo::File)),
+            this, SLOT(slotFileReceived(Baloo::File)));
+
+    job->start();
+}
+
+void VideoSearchResultHandler::slotFileReceived(const Baloo::File& file)
+{
+    QHash<int, QVariant> values;
+
+    const int duration = file.property(KFileMetaData::Property::Duration).toInt();
+    if (duration) {
+        values.insert(MediaCenter::DurationRole, duration);
     }
-    return plugins;
-}
 
-void AbstractMediaSource::setMediaLibrary(MediaLibrary* mediaLibrary)
-{
-    d->mediaLibrary = mediaLibrary;
-}
-
-MediaLibrary* AbstractMediaSource::mediaLibrary() const
-{
-    return d->mediaLibrary;
+    m_mediaLibrary->updateMedia(QUrl::fromLocalFile(file.url()).toString(), values);
 }
