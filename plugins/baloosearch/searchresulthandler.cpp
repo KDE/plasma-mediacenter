@@ -24,6 +24,7 @@
 
 #include <QFileInfo>
 #include <QDateTime>
+#include <QVariant>
 
 SearchResultHandler::SearchResultHandler(MediaLibrary *mediaLibrary, QObject* parent)
     : QObject(parent)
@@ -37,15 +38,15 @@ void SearchResultHandler::handleResult(Baloo::ResultIterator& resultIterator)
         //First collect common information
         QHash<int, QVariant> values;
 
-        values.insert(Qt::DisplayRole, resultIterator.text());
-        values.insert(Qt::DecorationRole, resultIterator.icon());
-        values.insert(MediaCenter::MediaTypeRole, supportedMediaType().toLower());
-        values.insert(MediaCenter::MediaUrlRole, resultIterator.url());
+        values.insert(Qt::DisplayRole, QVariant(resultIterator.text()));
+        values.insert(Qt::DecorationRole, QVariant(resultIterator.icon()));
+        values.insert(MediaCenter::MediaTypeRole, QVariant(supportedMediaType().toLower()));
+        values.insert(MediaCenter::MediaUrlRole, QVariant(resultIterator.url()));
 
         //HACK: This is a workaround as Baloo does not provide creation or
         // modification date/time through KFileMetaData::Property
         values.insert(MediaCenter::CreatedAtRole,
-                      QFileInfo(resultIterator.url().toLocalFile()).created());
+                      QVariant(QFileInfo(resultIterator.url().toLocalFile()).created()));
 
         m_mediaLibrary->updateMedia(values);
 
