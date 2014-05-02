@@ -39,23 +39,6 @@ MEDIACENTER_EXPORT_MEDIASOURCE(BalooSearchMediaSource)
 BalooSearchMediaSource::BalooSearchMediaSource(QObject* parent, const QVariantList& args)
     : AbstractMediaSource(parent, args)
 {
-    MediaLibrary *mediaLibrary = SingletonFactory::instanceFor<MediaLibrary>();
-
-    QList<SearchResultHandler*> searchResultHandlerList;
-    searchResultHandlerList << new ImageSearchResultHandler(mediaLibrary, this)
-                            << new VideoSearchResultHandler(mediaLibrary, this)
-                            << new AudioSearchResultHandler(mediaLibrary, this);
-
-    Q_FOREACH(SearchResultHandler* searchResultHandler, searchResultHandlerList) {
-        m_searchResultHandlers.insert(searchResultHandler->supportedMediaType(), searchResultHandler);
-    }
-}
-
-BalooSearchMediaSource::~BalooSearchMediaSource()
-{
-    qDebug() << "Waiting for Baloo Search to quit...";
-    quit();
-    wait();
 }
 
 void BalooSearchMediaSource::run()
@@ -67,6 +50,17 @@ void BalooSearchMediaSource::run()
 
 void BalooSearchMediaSource::startQuerying()
 {
+    MediaLibrary *mediaLibrary = SingletonFactory::instanceFor<MediaLibrary>();
+
+    QList<SearchResultHandler*> searchResultHandlerList;
+    searchResultHandlerList << new ImageSearchResultHandler(mediaLibrary, this)
+                            << new VideoSearchResultHandler(mediaLibrary, this)
+                            << new AudioSearchResultHandler(mediaLibrary, this);
+
+    Q_FOREACH(SearchResultHandler* searchResultHandler, searchResultHandlerList) {
+        m_searchResultHandlers.insert(searchResultHandler->supportedMediaType(), searchResultHandler);
+    }
+
     Q_FOREACH(const QString &type, m_searchResultHandlers.keys()) {
         queryForMediaType(type);
     }

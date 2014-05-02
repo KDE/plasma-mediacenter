@@ -42,7 +42,7 @@ class KdeMetadataMediaSource : public MediaCenter::AbstractMediaSource
     Q_OBJECT
 public:
     explicit KdeMetadataMediaSource(QObject* parent = 0, const QVariantList& args = QVariantList());
-    virtual ~KdeMetadataMediaSource();
+
     void fetchMetadata(int row);
     void fetchMetadata(const QList<int> &rows);
     void setTerm(const Nepomuk2::Query::Term &term);

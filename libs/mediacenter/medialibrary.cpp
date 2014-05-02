@@ -81,14 +81,18 @@ MediaLibrary::MediaLibrary(MediaValidator* mediaValidator, QObject* parent)
     qRegisterMetaType< QList< QSharedPointer<PmcMedia> > >("QList< QSharedPointer<PmcAlbum> >");
     qRegisterMetaType< QList< QSharedPointer<PmcMedia> > >("QList< QSharedPointer<PmcArtist> >");
 
-    moveToThread(this);
+    d->mediaValidator = mediaValidator;
 
-    d->wrapperCache = new MediaLibraryWrapperCache(this);
-    d->mediaValidator = mediaValidator ? mediaValidator : new MediaValidator(this);
+    moveToThread(this);
 }
 
 void MediaLibrary::init()
 {
+    d->wrapperCache = new MediaLibraryWrapperCache(this);
+    if (!d->mediaValidator) {
+        d->mediaValidator = new MediaValidator(this);
+    }
+
     d->newMediaTimer = new QTimer(this);
     d->newMediaTimer->setInterval(DELAY_BEFORE_EMITTING_NEW_ITEMS);
     d->newMediaTimer->setSingleShot(true);

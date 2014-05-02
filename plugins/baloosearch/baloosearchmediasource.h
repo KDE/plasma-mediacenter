@@ -30,7 +30,6 @@ class BalooSearchMediaSource : public MediaCenter::AbstractMediaSource
     Q_OBJECT
 public:
     explicit BalooSearchMediaSource(QObject* parent = 0, const QVariantList& args = QVariantList());
-    ~BalooSearchMediaSource();
 
 protected:
     virtual void run();

@@ -55,15 +55,6 @@ KdeMetadataMediaSource::KdeMetadataMediaSource(QObject* parent, const QVariantLi
         << MediaCenter::DurationRole
         << MediaCenter::CreatedAtRole
         << MediaCenter::GenreRole;
-
-    moveToThread(this);
-}
-
-KdeMetadataMediaSource::~KdeMetadataMediaSource()
-{
-    kDebug() << "Waiting for metadata updater to quit...";
-    quit();
-    wait();
 }
 
 void KdeMetadataMediaSource::run()
