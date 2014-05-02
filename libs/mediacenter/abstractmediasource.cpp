@@ -33,6 +33,7 @@ public:
 AbstractMediaSource::AbstractMediaSource(QObject* parent, const QVariantList&)
     : QThread(parent), d(new Private)
 {
+    moveToThread(this);
 }
 
 AbstractMediaSource::~AbstractMediaSource()
