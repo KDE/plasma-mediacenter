@@ -4,7 +4,6 @@ cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 set(QT_MIN_VERSION "5.2.0")
 
 find_package(ECM 0.0.8 REQUIRED NO_MODULE)
-
 include(FeatureSummary)
 include(WriteBasicConfigVersionFile)
 
@@ -53,7 +52,6 @@ include_directories(
     libs/
 )
 
-# set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake )
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE_ENABLE_EXCEPTIONS}")
 set(CMAKE_AUTOMOC ON)
 
