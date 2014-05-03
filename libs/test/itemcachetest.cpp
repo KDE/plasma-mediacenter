@@ -29,7 +29,19 @@ void ItemCacheTest::shouldInsertAndReturnTheSameObjectNextTime()
 {
     ItemCache<Artist> artists;
 
-    artists.getById("Shaan", true);
+    auto artist = artists.getById("Shaan", true);
+
+    QCOMPARE(artist, artists.getById("Shaan"));
+    QCOMPARE(artist, artists.getById("Shaan", true));
+}
+
+void ItemCacheTest::shouldNotInsertWhenNotAskedTo()
+{
+    ItemCache<Artist> artists;
+
+    auto artist = artists.getById("Shaan");
+
+    QVERIFY2(artist.isNull(), "Was expecting a null artist");
 }
 
 #include "itemcachetest.moc"

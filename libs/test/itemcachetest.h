@@ -26,6 +26,7 @@ class ItemCacheTest : public QObject
     Q_OBJECT
 private Q_SLOTS:
     void shouldInsertAndReturnTheSameObjectNextTime();
+    void shouldNotInsertWhenNotAskedTo();
 };
 
 #endif // ITEMCACHETEST_H
