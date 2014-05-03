@@ -24,7 +24,7 @@
 
 const char *PmcImageProvider::identificationString = "pmcimage";
 
-PmcImageProvider::PmcImageProvider(): QDeclarativeImageProvider(Image)
+PmcImageProvider::PmcImageProvider(): QQuickImageProvider(QQuickImageProvider::Image)
 {
 
 }

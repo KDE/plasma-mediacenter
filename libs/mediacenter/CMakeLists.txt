@@ -45,6 +45,7 @@ add_library(plasmamediacenter SHARED
 
 target_link_libraries(plasmamediacenter
     Qt5::Core
+    Qt5::Quick
     Qt5::Declarative
     KF5::Solid
     KF5::GuiAddons
@@ -64,6 +65,7 @@ PROPERTIES COMPILE_FLAGS  -fvisibility=default
 target_link_libraries(plasmamediacentertest
     Qt5::Core
     Qt5::Declarative
+    Qt5::Quick
     KF5::Solid
     KF5::GuiAddons
     KF5::CoreAddons

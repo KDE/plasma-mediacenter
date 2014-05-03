@@ -19,11 +19,11 @@
 #ifndef PMCIMAGEPROVIDER_H
 #define PMCIMAGEPROVIDER_H
 
-#include <QtDeclarative/QDeclarativeImageProvider>
+#include <QtQuick/QQuickImageProvider>
 
 #include "mediacenter_export.h"
 
-class MEDIACENTER_EXPORT PmcImageProvider : public QDeclarativeImageProvider
+class MEDIACENTER_EXPORT PmcImageProvider : public QQuickImageProvider
 {
 public:
     static const char *identificationString;

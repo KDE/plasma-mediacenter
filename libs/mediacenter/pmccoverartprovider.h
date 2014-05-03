@@ -19,7 +19,7 @@
 #ifndef PMCCOVERARTPROVIDER_H
 #define PMCCOVERARTPROVIDER_H
 
-#include <QtDeclarative/QDeclarativeImageProvider>
+#include <QtQuick/QQuickImageProvider>
 
 #include "mediacenter_export.h"
 
@@ -29,7 +29,7 @@ namespace TagLib {
     }
 }
 
-class MEDIACENTER_EXPORT PmcCoverArtProvider : public QDeclarativeImageProvider
+class MEDIACENTER_EXPORT PmcCoverArtProvider : public QQuickImageProvider
 {
 public:
     static const char *identificationString;
