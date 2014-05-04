@@ -32,8 +32,10 @@
 #include <Nepomuk2/Vocabulary/NEXIF>
 #include <Nepomuk2/Query/ResourceTypeTerm>
 #include <Nepomuk2/Query/OrTerm>
+#include <mediacenter/settings.h>
 
 #include <KDebug>
+#include <QImageReader>
 
 #include <QtCore/QTimer>
 
@@ -42,7 +44,9 @@ MEDIACENTER_EXPORT_MEDIASOURCE(KdeMetadataMediaSource)
 static const int s_queryLimit = 2000;
 
 KdeMetadataMediaSource::KdeMetadataMediaSource(QObject* parent, const QVariantList& args)
-    : AbstractMediaSource(parent, args), m_queryServiceClient(0)
+    : AbstractMediaSource(parent, args)
+    , m_queryServiceClient(0)
+    , m_minimumImageSize(Settings().value("minImageWidth", 500).toInt())
 {
     //MediaTypeRole MUST be before AlbumRole
     m_rolesRequested << Qt::DisplayRole
@@ -116,6 +120,22 @@ void KdeMetadataMediaSource::newEntries(const QList< Nepomuk2::Query::Result >& 
 
 void KdeMetadataMediaSource::fetchValuesForResult(const Nepomuk2::Query::Result& result)
 {
+    const QString mimetype = mimetypeForResource(result.resource());
+    QString fileType;
+    if (mimetype.isEmpty() || !mimetype.contains('/')) {
+        fileType = mimetype;
+    } else {
+        fileType = mimetype.split('/').at(0);
+    }
+    if (fileType == "image") {
+        const QUrl imageUrl = urlForResource(result.resource());
+
+        QImageReader image(imageUrl.toLocalFile());
+        if (image.size().width() < m_minimumImageSize) {
+            return;
+        }
+    }
+
     QHash<int, QVariant> values;
     foreach(int role, m_rolesRequested) {
         switch(role) {
@@ -137,12 +157,7 @@ void KdeMetadataMediaSource::fetchValuesForResult(const Nepomuk2::Query::Result&
             values.insert(role, urlForResource(result.resource()));
             break;
         case MediaCenter::MediaTypeRole: {
-            const QString mimetype = mimetypeForResource(result.resource());
-            if (mimetype.isEmpty() || !mimetype.contains('/')) {
-                values.insert(role, mimetype);
-            } else {
-                values.insert(role, mimetype.split('/').at(0));
-            }
+            values.insert(role, fileType);
             break;
         }
         case MediaCenter::AlbumRole:

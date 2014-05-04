@@ -69,6 +69,7 @@ private:
     Nepomuk2::Query::Term m_term;
     QMutex m_termMutex;
     Nepomuk2::Query::QueryServiceClient *m_queryServiceClient;
+    int m_minimumImageSize;
 
     QString mimetypeForResource(const Nepomuk2::Resource& resource) const;
     QString urlForResource(const Nepomuk2::Resource &resource) const;

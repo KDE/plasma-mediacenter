@@ -18,6 +18,7 @@ target_link_libraries(pmc_kdedesktopsearch
     plasmamediacenter
     ${KDE4_KDECORE_LIBS}
     ${QT_QTCORE_LIBRARIES}
+    ${QT_QTGUI_LIBRARIES}
     ${NEPOMUK_CORE_LIBRARY}
 )
 
