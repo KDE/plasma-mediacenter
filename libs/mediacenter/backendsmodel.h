@@ -26,8 +26,6 @@
 
 #include <KPluginInfo>
 
-class QDeclarativeEngine;
-
 namespace MediaCenter {
     class AbstractBrowsingBackend;
 }
@@ -41,7 +39,7 @@ public:
         BackendCategoryRole
     };
 
-    explicit BackendsModel (QDeclarativeEngine *engine, QObject* parent = 0);
+    explicit BackendsModel (QObject* parent = 0);
     virtual QVariant data (const QModelIndex& index, int role = Qt::DisplayRole) const;
     virtual int rowCount (const QModelIndex& parent = QModelIndex()) const;
 

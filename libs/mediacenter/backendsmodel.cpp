@@ -19,8 +19,6 @@
 #include "backendsmodel.h"
 #include "abstractbrowsingbackend.h"
 
-#include <QDeclarativeEngine>
-
 #include <QDebug>
 
 bool pluginLessThan(const KPluginInfo &lh, const KPluginInfo &rh)
@@ -31,17 +29,15 @@ bool pluginLessThan(const KPluginInfo &lh, const KPluginInfo &rh)
 class BackendsModel::Private
 {
 public:
-    QWeakPointer<QDeclarativeEngine> declarativeEngine;
     QHash<QString, MediaCenter::AbstractBrowsingBackend*> backends;
     KPluginInfo::List backendInfo;
     KPluginInfo::List loadedBackendsInfo;
 };
 
-BackendsModel::BackendsModel(QDeclarativeEngine *engine, QObject* parent)
+BackendsModel::BackendsModel(QObject* parent)
     : QAbstractListModel(parent)
     , d(new Private)
 {
-    d->declarativeEngine = engine;
     KService::List services = MediaCenter::AbstractBrowsingBackend::availableBackends();
     d->backendInfo = KPluginInfo::fromServices(services);
     qStableSort(d->backendInfo.begin(), d->backendInfo.end(), pluginLessThan);
@@ -80,9 +76,6 @@ void BackendsModel::loadBrowsingBackends()
             }
             backend->setName(info.pluginName());
             backend->setParent(const_cast<BackendsModel *>(this));
-            if (d->declarativeEngine) {
-                backend->setDeclarativeEngine(d->declarativeEngine.data());
-            }
             const_cast<BackendsModel *>(this)->d->backends.insert(key, backend);
             d->loadedBackendsInfo.append(info);
         } else {
