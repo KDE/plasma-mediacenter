@@ -1,8 +1,3 @@
-find_package(Taglib REQUIRED)
-
-include_directories(
-    ${TAGLIB_INCLUDES}
-)
 set (plasmamediacenter_SRCS
     medialibrarywrappercache.cpp
     artist.cpp
