@@ -26,7 +26,6 @@
 #include <KServiceTypeTrader>
 
 #include <QAbstractItemModel>
-#include <QDeclarativeEngine>
 
 using namespace MediaCenter;
 
@@ -36,13 +35,11 @@ public:
     AbstractBrowsingBackendPrivate(AbstractBrowsingBackend *q) :
     q(q),
     cfInterface(false),
-    declarativeEngine(0),
     hasInitialized(false)
     {}
 
     AbstractBrowsingBackend *q;
     bool cfInterface;
-    QDeclarativeEngine *declarativeEngine;
     bool hasInitialized;
     QString name;
     QString mediaBrowserSidePanelText;
@@ -138,16 +135,6 @@ bool AbstractBrowsingBackend::expand(int row, QAbstractItemModel* model)
 bool AbstractBrowsingBackend::expand(int row)
 {
     return false;
-}
-
-QDeclarativeEngine *AbstractBrowsingBackend::declarativeEngine() const
-{
-    return d->declarativeEngine;
-}
-
-void AbstractBrowsingBackend::setDeclarativeEngine(QDeclarativeEngine *declarativeEngine)
-{
-    d->declarativeEngine = declarativeEngine;
 }
 
 QString AbstractBrowsingBackend::constructQmlSource(const QString& componentDirName, const QString &versionString,

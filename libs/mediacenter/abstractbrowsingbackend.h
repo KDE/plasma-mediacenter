@@ -27,7 +27,6 @@
 #include "mediacenter_export.h"
 #include "mediacenter.h"
 
-class QDeclarativeEngine;
 class QAbstractItemModel;
 class KConfigDialog;
 class ModelMetadata;
@@ -142,22 +141,6 @@ public:
      * @return false if operation was unsuccessful
      */
     Q_INVOKABLE virtual bool expand(int row);
-
-    /**
-     * This slot must be called by the MediaCenter UI to set a declarive engine
-     * which can then be used by the backend to set up needed values at runtime
-     *
-     * @param declarativeEngine pointer to the declarative engine
-     */
-    void setDeclarativeEngine(QDeclarativeEngine *declarativeEngine);
-
-    /**
-     * Use this method to get access to the declarative engine.
-     * This is useful for backends to provide their own image providers and so on
-     *
-     * @return the declarative engine
-     */
-    QDeclarativeEngine *declarativeEngine() const;
 
     /**
      * Override this method if you want your backend to show a custom media browser
