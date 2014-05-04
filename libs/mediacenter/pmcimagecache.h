@@ -30,11 +30,30 @@ class PmcImageCache : public QObject
 {
     Q_OBJECT
 public:
+    static const char *fileIdentification;
+    static const char *albumIdentification;
+    static const char *artistIdentification;
+
     PmcImageCache();
-    ~PmcImageCache();
+
     void addImage(const QString& id, const QImage &image);
-    bool containsId(const QString &id) const;
     QImage getImage(const QString &id) const;
+    bool containsImageWithId(const QString &id) const;
+
+    void addAlbumCover(const QString &albumName,
+                               const QImage &image);
+    void addArtistCover(const QString &artistName,
+                               const QImage &image);
+    void addMediaFileCover(const QString &mediaFileUrl, const QImage &image);
+
+    bool containsAlbumCover(const QString &albumName) const;
+    bool containsArtistCover(const QString &artistName) const;
+    bool containsMediaFileCover(const QString& mediaFileUrl) const;
+
+    static QString imageIdForAlbumCover(const QString& albumOrArtistName);
+    static QString imageIdForArtistCover(const QString& albumOrArtistName);
+    static QString imageIdForMediaFileCover(const QString &mediaFileUrl);
+
 private:
     KImageCache *m_imageCache;
 };

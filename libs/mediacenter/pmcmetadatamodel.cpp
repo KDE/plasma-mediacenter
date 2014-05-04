@@ -19,7 +19,6 @@
 
 #include "pmcmetadatamodel.h"
 #include "pmcimagecache.h"
-#include "pmcimageprovider.h"
 #include "lastfmimagefetcher.h"
 #include "media.h"
 #include "medialibrary.h"
@@ -27,6 +26,7 @@
 #include "singletonfactory.h"
 #include "pmcalbum.h"
 #include "pmcartist.h"
+#include "pmccoverartprovider.h"
 
 #include <KIO/PreviewJob>
 #include <KDebug>
@@ -297,10 +297,10 @@ QVariant PmcMetadataModel::dataForArtist(int row, int role) const
 
 QVariant PmcMetadataModel::getAlbumArt(const QString& albumName, const QString& albumArtist, const QString &resourceId) const
 {
-    const QString albumUri = QString("album:%1").arg(albumName);
+    PmcImageCache *imageCache = SingletonFactory::instanceFor<PmcImageCache>();
 
-    if (SingletonFactory::instanceFor<PmcImageCache>()->containsId(albumUri)) {
-        return QString("image://%1/%2").arg(PmcImageProvider::identificationString, albumUri);
+    if (imageCache->containsAlbumCover(albumName)) {
+        return PmcCoverArtProvider::qmlImageUriForAlbumCover(albumName);
     } else {
         SingletonFactory::instanceFor<LastFmImageFetcher>()->fetchImage("album", resourceId, albumArtist, albumName);
     }
@@ -310,9 +310,10 @@ QVariant PmcMetadataModel::getAlbumArt(const QString& albumName, const QString& 
 
 QVariant PmcMetadataModel::getArtistImage(const QString& artistName, const QString& resourceId) const
 {
-    const QString artistUri = QString("artist:%1").arg(artistName);
-    if (SingletonFactory::instanceFor<PmcImageCache>()->containsId(artistUri)) {
-        return QString("image://%1/%2").arg(PmcImageProvider::identificationString, artistUri);
+    PmcImageCache *imageCache = SingletonFactory::instanceFor<PmcImageCache>();
+
+    if (imageCache->containsArtistCover(artistName)) {
+        return PmcCoverArtProvider::qmlImageUriForArtistCover(artistName);
     } else {
         SingletonFactory::instanceFor<LastFmImageFetcher>()->fetchImage("artist", resourceId, artistName);
     }
@@ -334,9 +335,11 @@ int PmcMetadataModel::rowCount(const QModelIndex& parent) const
 
 QString PmcMetadataModel::fetchPreview(const KUrl &url, const QModelIndex& index)
 {
+    PmcImageCache *imageCache = SingletonFactory::instanceFor<PmcImageCache>();
     const QString prettyUrl = url.prettyUrl();
-    if (SingletonFactory::instanceFor<PmcImageCache>()->containsId(prettyUrl)) {
-        return "image://" + QString(PmcImageProvider::identificationString) + "/" + prettyUrl;
+
+    if (imageCache->containsMediaFileCover(prettyUrl)) {
+        return PmcCoverArtProvider::qmlImageUriForMediaFileCover(prettyUrl);
     }
 
     d->filesToPreview.insert(url, QPersistentModelIndex(index));
@@ -376,7 +379,7 @@ void PmcMetadataModel::showPreview(const KFileItem &item, const QPixmap &preview
     d->previewJobs.remove(item.url());
 
     if (index.isValid()) {
-        SingletonFactory::instanceFor<PmcImageCache>()->addImage(item.url().prettyUrl(), preview.toImage());
+        SingletonFactory::instanceFor<PmcImageCache>()->addMediaFileCover(item.url().prettyUrl(), preview.toImage());
         emit dataChanged(index, index);
     }
 }

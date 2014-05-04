@@ -23,7 +23,6 @@
 #include <mediacenter/filterplaylistmodel.h>
 #include <mediacenter/filteredbackendsmodel.h>
 #include <mediacenter/subtitleprovider.h>
-#include <mediacenter/pmcimageprovider.h>
 #include <mediacenter/pmccoverartprovider.h>
 #include <mediacenter/objectpair.h>
 #include <mediacenter/settings.h>
@@ -113,7 +112,6 @@ MainWindow::MainWindow(Application *parent)
     view->rootContext()->setContextProperty("_pmc_mainwindow", this);
     view->rootContext()->setContextProperty("startedFullScreen", isFullScreen());
 
-    view->engine()->addImageProvider(PmcImageProvider::identificationString, new PmcImageProvider());
     view->engine()->addImageProvider(PmcCoverArtProvider::identificationString, new PmcCoverArtProvider());
 
     QString imagesPath;
