@@ -31,8 +31,6 @@
 #include <QtCore/QUrl>
 
 const char *PmcCoverArtProvider::identificationString = "coverart";
-const char *PmcCoverArtProvider::albumIdentification = "album:";
-
 
 PmcCoverArtProvider::PmcCoverArtProvider()
     : QQuickImageProvider(QQuickImageProvider::Image)
@@ -41,8 +39,19 @@ PmcCoverArtProvider::PmcCoverArtProvider()
 
 QImage PmcCoverArtProvider::requestImage(const QString& id, QSize* size, const QSize& requestedSize)
 {
-    const QUrl url = id;
-    const QString file = url.toLocalFile();
+    const QString identification = id.split(':').at(0);
+    const QString url = id.section(':', 1);
+
+    if (!id.startsWith("file:")) {
+        return SingletonFactory::instanceFor<PmcImageCache>()->getImage(id);
+    }
+
+    //Usually, that ^ is the job of PmcCoverArtProvider, to just get the image
+    //from the cache and return it. However, MusicStats.qml also wants a cover
+    //from the real music file, and that is when it uses "file:"
+    //TODO: This is cover extraction code and should be moved out of this. Or,
+    //nuked altogether.
+    const QString file = QUrl(url).toLocalFile();
     TagLib::MPEG::File f(file.toUtf8().constData());
 
     if(!f.isValid() || !f.ID3v2Tag())
@@ -61,29 +70,33 @@ QImage PmcCoverArtProvider::requestImage(const QString& id, QSize* size, const Q
         *size = image.size();
     }
 
-    addAlbumCoverToCache(f, image);
+    addAlbumCoverToCacheIfMissing(f, image);
     return image;
 }
 
-bool PmcCoverArtProvider::containsAlbum(const QString& albumName)
+void PmcCoverArtProvider::addAlbumCoverToCacheIfMissing(TagLib::MPEG::File& f, const QImage& image) const
 {
-    return SingletonFactory::instanceFor<PmcImageCache>()->containsId(QString(albumName).prepend("album:"));
-}
+    QString albumName(f.ID3v2Tag()->album().toCString());
+    PmcImageCache *imageCache = SingletonFactory::instanceFor<PmcImageCache>();
 
-void PmcCoverArtProvider::addCoverArtImage(const QString& albumOrArtistName, const QImage& image)
-{
-    if (!image.isNull()) {
-        SingletonFactory::instanceFor<PmcImageCache>()->addImage(QString(albumOrArtistName).prepend(albumIdentification), image);
+    if(!imageCache->containsAlbumCover(albumName)) {
+        imageCache->addAlbumCover(albumName, image);
     }
 }
 
-void PmcCoverArtProvider::addAlbumCoverToCache(TagLib::MPEG::File& f, const QImage& image) const
+QString PmcCoverArtProvider::qmlImageUriForAlbumCover(const QString& albumName)
 {
-    QString albumName(f.ID3v2Tag()->album().toCString());
-    SingletonFactory::instanceFor<PmcImageCache>()->addImage(albumName.prepend(albumIdentification), image);
+    return QString("image://%1/%2").arg(identificationString,
+                                        PmcImageCache::imageIdForAlbumCover(albumName));
 }
 
-bool PmcCoverArtProvider::containsArtist(const QString& artistName)
+QString PmcCoverArtProvider::qmlImageUriForArtistCover(const QString& artistName)
 {
-    return SingletonFactory::instanceFor<PmcImageCache>()->containsId(QString(artistName).prepend("artist:"));
+    return QString("image://%1/%2").arg(identificationString,
+                                        PmcImageCache::imageIdForArtistCover(artistName));
+}
+
+QString PmcCoverArtProvider::qmlImageUriForMediaFileCover(const QString& mediaFileUrl)
+{
+    return QString("image://%1/%2").arg(identificationString, PmcImageCache::imageIdForMediaFileCover(mediaFileUrl));
 }

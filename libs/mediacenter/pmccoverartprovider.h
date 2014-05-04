@@ -33,18 +33,21 @@ class MEDIACENTER_EXPORT PmcCoverArtProvider : public QQuickImageProvider
 {
 public:
     static const char *identificationString;
-    static const char *albumIdentification;
+
     PmcCoverArtProvider ();
+    virtual QImage requestImage ( const QString& id, QSize* size,
+                                  const QSize& requestedSize );
 
-    virtual QImage requestImage ( const QString& id, QSize* size, const QSize& requestedSize );
-
-    static bool containsAlbum(const QString& albumName);
-    static void addCoverArtImage(const QString &albumOrArtistName, const QImage &image);
-
-    static bool containsArtist(const QString& artistName);
+    static QString qmlImageUriForAlbumCover(const QString &albumName);
+    static QString qmlImageUriForArtistCover(const QString &artistName);
+    static QString qmlImageUriForMediaFileCover(const QString &mediaFileUrl);
 
 private:
-    void addAlbumCoverToCache(TagLib::MPEG::File& f, const QImage& image) const;
+    /**
+     * If the cache doesn't yet have an image for this album, add the one we just read
+     * from the file
+     */
+    void addAlbumCoverToCacheIfMissing(TagLib::MPEG::File& f, const QImage& image) const;
 };
 
 #endif // PMCCOVERARTPROVIDER_H

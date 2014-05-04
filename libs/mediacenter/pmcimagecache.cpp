@@ -20,9 +20,9 @@
 
 #include <QtCore/QCoreApplication>
 
-PmcImageCache::~PmcImageCache()
-{
-}
+const char *PmcImageCache::fileIdentification = "mediafile:";
+const char *PmcImageCache::albumIdentification = "album:";
+const char *PmcImageCache::artistIdentification = "artist:";
 
 PmcImageCache::PmcImageCache()
 {
@@ -34,7 +34,7 @@ void PmcImageCache::addImage(const QString& id, const QImage& image)
     m_imageCache->insertImage(id, image);
 }
 
-bool PmcImageCache::containsId(const QString& id) const
+bool PmcImageCache::containsImageWithId(const QString& id) const
 {
     return m_imageCache->contains(id);
 }
@@ -44,4 +44,55 @@ QImage PmcImageCache::getImage(const QString& id) const
     QImage image;
     m_imageCache->findImage(id, &image);
     return image;
+}
+
+void PmcImageCache::addAlbumCover(const QString& albumName, const QImage& image)
+{
+    if (!image.isNull()) {
+        addImage(imageIdForAlbumCover(albumName), image);
+    }
+}
+
+void PmcImageCache::addArtistCover(const QString& artistName, const QImage& image)
+{
+    if (!image.isNull()) {
+        addImage(imageIdForArtistCover(artistName), image);
+    }
+}
+
+void PmcImageCache::addMediaFileCover(const QString& mediaFileUrl, const QImage& image)
+{
+    if (!image.isNull()) {
+        addImage(imageIdForMediaFileCover(mediaFileUrl), image);
+    }
+}
+
+QString PmcImageCache::imageIdForAlbumCover(const QString& albumOrArtistName)
+{
+    return QString(albumOrArtistName).prepend(albumIdentification);
+}
+
+QString PmcImageCache::imageIdForArtistCover(const QString& albumOrArtistName)
+{
+    return QString(albumOrArtistName).prepend(artistIdentification);
+}
+
+QString PmcImageCache::imageIdForMediaFileCover(const QString& mediaFileUrl)
+{
+    return QString(mediaFileUrl).prepend(fileIdentification);
+}
+
+bool PmcImageCache::containsAlbumCover(const QString& albumName) const
+{
+    return containsImageWithId(imageIdForAlbumCover(albumName));
+}
+
+bool PmcImageCache::containsArtistCover(const QString& artistName) const
+{
+    return containsImageWithId(imageIdForArtistCover(artistName));
+}
+
+bool PmcImageCache::containsMediaFileCover(const QString& mediaFileUrl) const
+{
+    return containsImageWithId(imageIdForMediaFileCover(mediaFileUrl));
 }

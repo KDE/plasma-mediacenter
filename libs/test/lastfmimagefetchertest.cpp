@@ -56,7 +56,7 @@ void LastFmImageFetcherTest::shouldDownloadImageAndSaveToCache()
     QList<QVariant> arguments = spyInitialize.takeFirst();
     QCOMPARE(arguments.at(0).value<QVariant>().toString(), QString("Myfaveartist"));
     QCOMPARE(arguments.at(1).toString(), QString("shaan"));
-    QVERIFY2(SingletonFactory::instanceFor<PmcImageCache>()->containsId("artist:shaan"), "Cache did not contain image");
+    QVERIFY2(SingletonFactory::instanceFor<PmcImageCache>()->containsImageWithId("artist:shaan"), "Cache did not contain image");
 }
 
 bool LastFmImageFetcherTest::waitForSignal(QSignalSpy* spy, int timeout)

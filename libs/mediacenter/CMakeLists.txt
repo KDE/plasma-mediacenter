@@ -20,7 +20,6 @@ set (plasmamediacenter_SRCS
     pmccoverartprovider.cpp
     pmcmetadatamodel.cpp
     pmcimagecache.cpp
-    pmcimageprovider.cpp
     subtitleprovider.cpp
     filterplaylistmodel.cpp
     multipleplaylistmodel.cpp

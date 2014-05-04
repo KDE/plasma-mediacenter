@@ -53,7 +53,7 @@ FocusScope {
             Image {
                 id: musicStatsAlbumCoverImage
                 anchors.centerIn: parent
-                source: "image://coverart/" + popupMenu.mediaUrl
+                source: "image://coverart/file:" + popupMenu.mediaUrl
                 smooth: true
                 width: Math.min(sourceSize.width, popupMenu.width*0.9)
                 height: sourceSize.height*width/sourceSize.width
