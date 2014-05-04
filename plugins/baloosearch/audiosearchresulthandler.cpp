@@ -34,8 +34,12 @@ QString AudioSearchResultHandler::supportedMediaType() const
     return "Audio";
 }
 
-void AudioSearchResultHandler::handleResultImpl(const Baloo::ResultIterator& resultIterator)
+void AudioSearchResultHandler::handleResultImpl(
+    const Baloo::ResultIterator& resultIterator,
+    const QHash< int, QVariant >& values)
 {
+    m_mediaLibrary->updateMedia(values);
+
     Baloo::FileFetchJob* job = new Baloo::FileFetchJob(resultIterator.url().toLocalFile());
     connect(job, SIGNAL(fileReceived(Baloo::File)),
             this, SLOT(slotFileReceived(Baloo::File)));

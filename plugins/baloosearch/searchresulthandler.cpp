@@ -47,9 +47,7 @@ void SearchResultHandler::handleResult(Baloo::ResultIterator& resultIterator)
         values.insert(MediaCenter::CreatedAtRole,
                       QFileInfo(resultIterator.url().toLocalFile()).created());
 
-        m_mediaLibrary->updateMedia(values);
-
         //Now collect information specific to this media type
-        handleResultImpl(resultIterator);
+        handleResultImpl(resultIterator, values);
     }
 }

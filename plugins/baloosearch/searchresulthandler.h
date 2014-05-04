@@ -20,6 +20,7 @@
 
 #include <QObject>
 #include <QString>
+#include <QHash>
 
 namespace Baloo {
 class ResultIterator;
@@ -39,7 +40,8 @@ public:
 protected:
     MediaLibrary *m_mediaLibrary;
 
-    virtual void handleResultImpl(const Baloo::ResultIterator &resultIterator) = 0;
+    virtual void handleResultImpl(const Baloo::ResultIterator &resultIterator,
+                                  const QHash<int, QVariant> &values) = 0;
 };
 
 #endif // SEARCHRESULTHANDLER_H

@@ -20,6 +20,8 @@
 
 #include "searchresulthandler.h"
 
+#include <QHash>
+
 namespace Baloo {
     class File;
 }
@@ -32,10 +34,15 @@ public:
     virtual QString supportedMediaType() const;
 
 protected:
-    virtual void handleResultImpl(const Baloo::ResultIterator& resultIterator);
+    virtual void handleResultImpl(const Baloo::ResultIterator& resultIterator,
+                                  const QHash< int, QVariant >& values);
 
 private Q_SLOTS:
     void slotFileReceived(const Baloo::File& file);
+
+private:
+    int m_minimumImageSize;
+    QHash<QString, QHash<int, QVariant>> m_initialValuesByUrl;
 };
 
 #endif // IMAGESEARCHRESULTHANDLER_H

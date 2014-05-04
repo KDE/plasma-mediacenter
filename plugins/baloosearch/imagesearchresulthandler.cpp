@@ -16,6 +16,7 @@
  ***********************************************************************************/
 
 #include "imagesearchresulthandler.h"
+#include <mediacenter/settings.h>
 
 #include <mediacenter/medialibrary.h>
 #include <mediacenter/mediacenter.h>
@@ -25,9 +26,11 @@
 #include <baloo/file.h>
 
 #include <QDateTime>
+#include <QDebug>
 
 ImageSearchResultHandler::ImageSearchResultHandler(MediaLibrary* mediaLibrary, QObject* parent)
     : SearchResultHandler(mediaLibrary, parent)
+    , m_minimumImageSize(Settings().value("minImageWidth", 500).toInt())
 {
 }
 
@@ -36,8 +39,18 @@ QString ImageSearchResultHandler::supportedMediaType() const
     return "Image";
 }
 
-void ImageSearchResultHandler::handleResultImpl(const Baloo::ResultIterator& resultIterator)
+void ImageSearchResultHandler::handleResultImpl(
+    const Baloo::ResultIterator& resultIterator,
+    const QHash< int, QVariant >& values)
 {
+    const QString fileUrl = values.value(MediaCenter::MediaUrlRole).toUrl().toLocalFile();
+    m_initialValuesByUrl.insert(fileUrl, values);
+
+    //We remove the create date as we want to fill it only for images taken with
+    //a camera or similar in slotFileReceived(). This is to make sure such
+    //photos appear before junk images in the browser.
+    m_initialValuesByUrl[fileUrl].remove(MediaCenter::CreatedAtRole);
+
     Baloo::FileFetchJob* job = new Baloo::FileFetchJob(resultIterator.url().toLocalFile());
     connect(job, SIGNAL(fileReceived(Baloo::File)),
             this, SLOT(slotFileReceived(Baloo::File)));
@@ -47,11 +60,19 @@ void ImageSearchResultHandler::handleResultImpl(const Baloo::ResultIterator& res
 
 void ImageSearchResultHandler::slotFileReceived(const Baloo::File &file)
 {
+    const QString fileUrl = QUrl(file.url()).toLocalFile();
     //Properties that signify the actual date/time the image was taken by the
     //camera
     QList<KFileMetaData::Property::Property> properties;
     properties << KFileMetaData::Property::PhotoDateTimeOriginal
                << KFileMetaData::Property::ImageDateTime;
+
+    auto photoWidth = file.property(KFileMetaData::Property::Width).toULongLong();
+
+    if (!photoWidth || photoWidth < m_minimumImageSize) {
+        m_initialValuesByUrl.remove(fileUrl);
+        return;
+    }
 
     QDateTime created;
     Q_FOREACH(KFileMetaData::Property::Property property, properties) {
@@ -66,5 +87,8 @@ void ImageSearchResultHandler::slotFileReceived(const Baloo::File &file)
         values.insert(MediaCenter::CreatedAtRole, created);
     }
 
-    m_mediaLibrary->updateMedia(QUrl::fromLocalFile(file.url()).toString(), values);
+    values.unite(m_initialValuesByUrl.take(fileUrl));
+
+    m_mediaLibrary->updateMedia(QUrl::fromLocalFile(file.url()).toString(),
+                                values);
 }
