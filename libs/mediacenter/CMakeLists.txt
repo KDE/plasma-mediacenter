@@ -28,6 +28,7 @@ set (plasmamediacenter_SRCS
     singletonfactory.cpp
     mediavalidator.cpp
     settings.cpp
+    localthumbnailprovider.cpp
     mpris2/mpris2.cpp
     mpris2/mediaplayer2.cpp
     mpris2/mediaplayer2player.cpp

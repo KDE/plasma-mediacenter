@@ -31,7 +31,7 @@ public:
 
 ThumbnailProvider::ThumbnailProvider(QObject* parent)
     : QObject(parent)
-    , QDeclarativeImageProvider(QDeclarativeImageProvider::Pixmap)
+    , QQuickImageProvider(QQuickImageProvider::Pixmap)
     , d(new Private())
 {
 

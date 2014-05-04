@@ -20,7 +20,7 @@
 #ifndef THUMBNAILPROVIDER_H
 #define THUMBNAILPROVIDER_H
 
-#include <QtDeclarative/QDeclarativeImageProvider>
+#include <QtQuick/QQuickImageProvider>
 
 #include <QUrl>
 
@@ -39,10 +39,11 @@ class KFileItem;
  * @class ThumbnailProvider @author Shantanu Tushar
  * @brief A useful class to provide for thumbnails of the content images/videos in a folder view
  * 
- * This class inherit from QDeclarativeImageProvider
+ * This class inherit from QQuickImageProvider
  */
-class ThumbnailProvider : public QObject, public QDeclarativeImageProvider
+class ThumbnailProvider : public QObject, public QQuickImageProvider
 {
+
     Q_OBJECT
 public:
   
