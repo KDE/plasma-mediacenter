@@ -27,8 +27,8 @@
 #include <KSharedConfig>
 #include <KDE/KFilePlacesModel>
 
-#include <QDeclarativeEngine>
-#include <QDeclarativeContext>
+#include <QQmlEngine>
+#include <QQmlContext>
 #include <QUrl>
 
 namespace {
@@ -147,6 +147,8 @@ QVariantList LocalFilesAbstractBackend::buttons()
 
 void LocalFilesAbstractBackend::handleButtonClick(const QString& buttonName)
 {
+    /****
+     * TODO revisit this logic
     if (buttonName == s_playAllButton) {
         PlaylistModel *model = qobject_cast<PlaylistModel*>(declarativeEngine()->rootContext()->contextProperty("playlistModel").value<QObject*>());
         if (model) {
@@ -154,7 +156,7 @@ void LocalFilesAbstractBackend::handleButtonClick(const QString& buttonName)
             addAllSongsToPlaylist(model);
             model->play(n);
         }
-    }
+    }**/
 }
 
 void LocalFilesAbstractBackend::addAllSongsToPlaylist(PlaylistModel* playlistModel)

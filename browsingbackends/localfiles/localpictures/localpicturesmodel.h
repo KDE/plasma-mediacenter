@@ -23,7 +23,7 @@
 
 #include "../localfilesabstractmodel.h"
 
-#include "../localthumbnailprovider.h"
+#include "mediacenter/localthumbnailprovider.h"
 
 /**
   * @class LocalPicturesModel @author Shantanu Tushar @author Akshay Ratan

@@ -31,8 +31,7 @@
 
 #include <KDebug>
 
-#include <QDeclarativeEngine>
-#include <QDeclarativeContext>
+#include <QQmlEngine>
 #include <QTimer>
 
 MEDIACENTER_EXPORT_BROWSINGBACKEND(MetadataMusicBackend)
@@ -185,6 +184,8 @@ void MetadataMusicBackend::handleButtonClick(const QString& buttonName)
         updateModelAccordingToFilters();
     } else if (buttonName == s_playAllButton) {
         //FIXME: This is a horrible hack to get a ref to the playlist model
+        /***
+         * TODO Revisit this logic
         PlaylistModel *model = qobject_cast<PlaylistModel*>(declarativeEngine()->rootContext()->contextProperty("playlistModel").value<QObject*>());
         if (model) {
             addAllSongsToPlaylist(model);
@@ -194,7 +195,7 @@ void MetadataMusicBackend::handleButtonClick(const QString& buttonName)
             }
         } else {
             kWarning() << "Failed to get a reference to playlist model";
-        }
+        }*/
     }
 }
 

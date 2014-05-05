@@ -24,14 +24,15 @@
 
 #include <KDirModel>
 
-#include <QtDeclarative/QDeclarativeEngine>
+#include <QtQml/QQmlEngine>
 
 LocalVideosModel::LocalVideosModel (QObject* parent)
     : LocalFilesAbstractModel (parent, QString("video/")),
     m_thumbProvider(new ThumbnailProvider(this))
 {
     MediaCenter::AbstractBrowsingBackend *backend = qobject_cast<MediaCenter::AbstractBrowsingBackend*>(parent);
-    backend->declarativeEngine()->addImageProvider("localvideothumbnail", m_thumbProvider);
+   //TODO Move
+   //backend->declarativeEngine()->addImageProvider("localvideothumbnail", m_thumbProvider);
 
     connect(m_thumbProvider, SIGNAL(gotThumbnail(QString)), SLOT(processThumbnail(QString)));
 }

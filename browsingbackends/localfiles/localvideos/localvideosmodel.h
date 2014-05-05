@@ -22,7 +22,7 @@
 
 #include "../localfilesabstractmodel.h"
 
-#include "../localthumbnailprovider.h"
+#include "mediacenter/localthumbnailprovider.h"
 
 /**
   * @class LocalVideosModel @author Shantanu Tushar 
