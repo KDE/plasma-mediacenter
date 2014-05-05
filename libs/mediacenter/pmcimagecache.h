@@ -19,7 +19,6 @@
 #ifndef PMCIMAGECACHE_H
 #define PMCIMAGECACHE_H
 
-#include <QtDeclarative/QDeclarativeImageProvider>
 #include <QtCore/QHash>
 
 #include <KImageCache>
