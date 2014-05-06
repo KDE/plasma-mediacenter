@@ -18,6 +18,7 @@
 
 
 #include "localvideosmodel.h"
+#include "../localthumbnailprovider.h"
 
 #include <mediacenter/mediacenter.h>
 #include <mediacenter/abstractbrowsingbackend.h>
@@ -26,13 +27,10 @@
 
 #include <QtDeclarative/QDeclarativeEngine>
 
-LocalVideosModel::LocalVideosModel (QObject* parent)
+LocalVideosModel::LocalVideosModel (ThumbnailProvider *thumbnailProvider, QObject* parent)
     : LocalFilesAbstractModel (parent, QString("video/")),
-    m_thumbProvider(new ThumbnailProvider(this))
+    m_thumbProvider(thumbnailProvider)
 {
-    MediaCenter::AbstractBrowsingBackend *backend = qobject_cast<MediaCenter::AbstractBrowsingBackend*>(parent);
-    backend->declarativeEngine()->addImageProvider("localvideothumbnail", m_thumbProvider);
-
     connect(m_thumbProvider, SIGNAL(gotThumbnail(QString)), SLOT(processThumbnail(QString)));
 }
 

@@ -4,6 +4,7 @@ include_directories(
     ${TAGLIB_INCLUDES}
 )
 set (plasmamediacenter_SRCS
+    pmcruntime.cpp
     medialibrarywrappercache.cpp
     artist.cpp
     album.cpp

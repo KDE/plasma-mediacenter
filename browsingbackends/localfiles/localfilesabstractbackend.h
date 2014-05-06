@@ -100,7 +100,7 @@ public:
 
     virtual QVariantList buttons();
     virtual void handleButtonClick(const QString& buttonName);
-    void addAllSongsToPlaylist( PlaylistModel* playlistModel);
+    void addAllSongsToPlaylist( const QSharedPointer< PlaylistModel >& playlistModel);
 
 protected:
 

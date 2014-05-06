@@ -23,7 +23,7 @@
 
 #include "../localfilesabstractmodel.h"
 
-#include "../localthumbnailprovider.h"
+class ThumbnailProvider;
 
 /**
   * @class LocalPicturesModel @author Shantanu Tushar @author Akshay Ratan
@@ -46,8 +46,8 @@ public:
      * 
      * @param parent is a QObject pointer
      */
-    explicit LocalPicturesModel (QObject* parent);
-    
+    explicit LocalPicturesModel (ThumbnailProvider *thumbnailProvider, QObject* parent);
+
     /**
      * Returns the data stored under the given role for the item referred to by the index.
      * Also thumbnail loading for the folders is here

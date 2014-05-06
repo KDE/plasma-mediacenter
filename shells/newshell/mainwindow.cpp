@@ -29,6 +29,7 @@
 #include <mediacenter/multipleplaylistmodel.h>
 #include <mediacenter/mpris2/mediaplayer2player.h>
 #include <mediacenter/mpris2/mpris2.h>
+#include <mediacenter/pmcruntime.h>
 
 #ifndef NO_LINK_TO_PLASMA
 #include <Plasma/Package>
@@ -96,12 +97,12 @@ MainWindow::MainWindow(Application *parent)
     qmlRegisterType<Settings>("org.kde.plasma.mediacenter.elements", 0, 1, "Settings");
     qmlRegisterInterface<ObjectPair>("ObjectPair");
 
-    BackendsModel *backendsModel = new BackendsModel(view->engine(), this);
-    view->rootContext()->setContextProperty("backendsModel", backendsModel);
-
-    playlistModel = new PlaylistModel(this);
+    playlistModel = QSharedPointer<PlaylistModel>(new PlaylistModel(this));
     playlistModel->processCommandLineArgs(args);
-    view->rootContext()->setContextProperty("playlistModel", playlistModel);
+    view->rootContext()->setContextProperty("playlistModel", playlistModel.data());
+
+    BackendsModel *backendsModel = new BackendsModel(createPmcRuntime(view->engine(), playlistModel), this);
+    view->rootContext()->setContextProperty("backendsModel", backendsModel);
 
     Mpris2 *mprisObject = new Mpris2(this);
     connect(mprisObject, SIGNAL(raisePMC()), this, SLOT(raiseAndFocusPMC()));
@@ -262,4 +263,13 @@ void MainWindow::raiseAndFocusPMC()
 {
     raise();
     KWindowSystem::forceActiveWindow(winId());
+}
+
+QSharedPointer<PmcRuntime> MainWindow::createPmcRuntime(QDeclarativeEngine* engine,
+                                         const QSharedPointer<PlaylistModel> &playlistModel)
+{
+    QHash< PmcRuntime::RuntimeObjectType, QSharedPointer< QObject > > runtimeObjects;
+    runtimeObjects.insert(PmcRuntime::PlaylistModel, playlistModel);
+
+    return QSharedPointer<PmcRuntime>(new PmcRuntime(runtimeObjects, engine, this));
 }

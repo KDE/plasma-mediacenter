@@ -21,8 +21,6 @@
 #ifndef METADATAMUSICBACKEND_H
 #define METADATAMUSICBACKEND_H
 
-#include <mediacenter/abstractbrowsingbackend.h>
-
 #include "../abstractmetadatabackend.h"
 #include "categoriesmodel.h"
 
@@ -51,7 +49,7 @@ public:
     void setArtistFilter(const QString &filter);
     void setAlbumFilter(const QString &filter);
 
-    void addAllSongsToPlaylist( QObject* playlistModelObject );
+    void addAllSongsToPlaylist( const QSharedPointer< PlaylistModel >& playlistModel );
 
     virtual bool expand(int row, QAbstractItemModel* model);
 

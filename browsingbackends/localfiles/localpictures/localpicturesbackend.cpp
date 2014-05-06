@@ -16,8 +16,13 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
+
 #include "localpicturesbackend.h"
 #include "localpicturesmodel.h"
+
+#include "../localthumbnailprovider.h"
+
+#include <mediacenter/pmcruntime.h>
 
 MEDIACENTER_EXPORT_BROWSINGBACKEND(LocalPicturesBackend)
 
@@ -34,12 +39,10 @@ LocalPicturesBackend::~LocalPicturesBackend()
 void LocalPicturesBackend::initModel()
 {
     if (!m_model) {
-        m_model = new LocalPicturesModel(this);
+        ThumbnailProvider *thumbnailProvider = new ThumbnailProvider(this);
+        pmcRuntime()->addImageProvider("localpicturesthumbnail", thumbnailProvider);
+
+        m_model = new LocalPicturesModel(thumbnailProvider, this);
     }
     setModel(m_model);
-}
-
-QVariantList LocalPicturesBackend::buttons()
-{
-    return QVariantList();
 }

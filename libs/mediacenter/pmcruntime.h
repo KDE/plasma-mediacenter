@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2012 Sinny Kumari <ksinny@gmail.com>                                *
+ *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,41 +16,54 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef BACKENDSMODEL_H
-#define BACKENDSMODEL_H
+#ifndef PMCRUNTIME_H
+#define PMCRUNTIME_H
+
+#include <QObject>
+#include <QHash>
+#include <QWeakPointer>
 
 #include "mediacenter_export.h"
 
-#include <QAbstractItemModel>
-#include <QWeakPointer>
-
-#include <KDE/KPluginInfo>
-
-class PmcRuntime;
 class QDeclarativeEngine;
+class QDeclarativeImageProvider;
+class PlaylistModel;
 
-namespace MediaCenter {
-    class AbstractBrowsingBackend;
-}
-
-class MEDIACENTER_EXPORT BackendsModel : public QAbstractListModel
+class MEDIACENTER_EXPORT PmcRuntime : public QObject
 {
     Q_OBJECT
 public:
-    enum Roles {
-        ModelObjectRole = Qt::UserRole + 1,
-        BackendCategoryRole
-    };
+    enum RuntimeObjectType { PlaylistModel };
+    explicit PmcRuntime(QHash< PmcRuntime::RuntimeObjectType, QSharedPointer< QObject > > runtimeObjects, QDeclarativeEngine* engine, QObject* parent = 0);
 
-    explicit BackendsModel (QWeakPointer< PmcRuntime > pmcRuntime, QObject* parent = 0);
-    virtual QVariant data (const QModelIndex& index, int role = Qt::DisplayRole) const;
-    virtual int rowCount (const QModelIndex& parent = QModelIndex()) const;
+    /**
+     * Use this method to get an instance of a particular type of PMC runtime
+     * object (such as PlaylistModel).
+     *
+     * @param type type of the RuntimeObject you want to access
+     * @return QSharedPointer to the selected runtime object
+     */
+    template <class T>
+    QSharedPointer<T> runtimeObjectAs(PmcRuntime::RuntimeObjectType type)
+    {
+        return qSharedPointerObjectCast<T>(runtimeObject(type));
+    }
+
+    /**
+     * Call this method from a subclass to register an image provider with QML
+     *
+     * @param providerId ID of the image provider. For example, if its ID is
+     * "foo", images with URI "image://foo/" will use this provider
+     * @param imageProvider the QDeclarativeImageProvider you want to register
+     */
+    void addImageProvider(const QString &providerId,
+                          QDeclarativeImageProvider * provider);
 
 private:
     class Private;
     Private * const d;
 
-    void loadBrowsingBackends();
+    QSharedPointer< QObject > runtimeObject(PmcRuntime::RuntimeObjectType type);
 };
 
-#endif // BACKENDSMODEL_H
+#endif // PMCRUNTIME_H

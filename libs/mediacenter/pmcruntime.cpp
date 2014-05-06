@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2012 Sinny Kumari <ksinny@gmail.com>                                *
+ *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,41 +16,33 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef BACKENDSMODEL_H
-#define BACKENDSMODEL_H
+#include "pmcruntime.h"
 
-#include "mediacenter_export.h"
+#include <QDeclarativeEngine>
 
-#include <QAbstractItemModel>
-#include <QWeakPointer>
-
-#include <KDE/KPluginInfo>
-
-class PmcRuntime;
-class QDeclarativeEngine;
-
-namespace MediaCenter {
-    class AbstractBrowsingBackend;
-}
-
-class MEDIACENTER_EXPORT BackendsModel : public QAbstractListModel
+class PmcRuntime::Private
 {
-    Q_OBJECT
 public:
-    enum Roles {
-        ModelObjectRole = Qt::UserRole + 1,
-        BackendCategoryRole
-    };
-
-    explicit BackendsModel (QWeakPointer< PmcRuntime > pmcRuntime, QObject* parent = 0);
-    virtual QVariant data (const QModelIndex& index, int role = Qt::DisplayRole) const;
-    virtual int rowCount (const QModelIndex& parent = QModelIndex()) const;
-
-private:
-    class Private;
-    Private * const d;
-
-    void loadBrowsingBackends();
+    QHash<RuntimeObjectType, QSharedPointer<QObject>> runtimeObjects;
+    QDeclarativeEngine *declarativeEngine;
 };
 
-#endif // BACKENDSMODEL_H
+PmcRuntime::PmcRuntime(QHash<PmcRuntime::RuntimeObjectType,QSharedPointer<QObject>> runtimeObjects,
+                       QDeclarativeEngine *engine,
+                       QObject* parent)
+    : QObject(parent)
+    , d(new Private())
+{
+    d->runtimeObjects = runtimeObjects;
+    d->declarativeEngine = engine;
+}
+
+QSharedPointer< QObject > PmcRuntime::runtimeObject(PmcRuntime::RuntimeObjectType type)
+{
+    return d->runtimeObjects.value(type);
+}
+
+void PmcRuntime::addImageProvider(const QString& providerId, QDeclarativeImageProvider* provider)
+{
+    d->declarativeEngine->addImageProvider(providerId, provider);
+}

@@ -37,7 +37,7 @@ public:
     AbstractBrowsingBackendPrivate(AbstractBrowsingBackend *q) :
     q(q),
     cfInterface(false),
-    declarativeEngine(0),
+    declarativeEngine(nullptr),
     hasInitialized(false)
     {}
 
@@ -49,7 +49,7 @@ public:
     QString mediaBrowserSidePanelText;
     QList<QObject*> models;
     QString searchTerm;
-    QObject* pmcRuntime;
+    QSharedPointer<PmcRuntime> pmcRuntime;
 };
 
 AbstractBrowsingBackend::AbstractBrowsingBackend(QObject *parent, const QVariantList &args)
@@ -141,16 +141,6 @@ bool AbstractBrowsingBackend::expand(int row)
     return false;
 }
 
-QDeclarativeEngine *AbstractBrowsingBackend::declarativeEngine() const
-{
-    return d->declarativeEngine;
-}
-
-void AbstractBrowsingBackend::setDeclarativeEngine(QDeclarativeEngine *declarativeEngine)
-{
-    d->declarativeEngine = declarativeEngine;
-}
-
 QString AbstractBrowsingBackend::constructQmlSource(const QString& componentDirName, const QString &versionString,
                                                     const QString& itemName) const
 {
@@ -216,15 +206,12 @@ void AbstractBrowsingBackend::handleButtonClick(const QString&)
 {
 }
 
-QObject* AbstractBrowsingBackend::pmcRuntime()
+void AbstractBrowsingBackend::setPmcRuntime(const QSharedPointer<PmcRuntime> &pmcRuntime)
 {
-    return d->pmcRuntime;
+    d->pmcRuntime = pmcRuntime;
 }
 
-void AbstractBrowsingBackend::setPmcRuntime(QObject* pmcRuntime)
+QSharedPointer<PmcRuntime> AbstractBrowsingBackend::pmcRuntime() const
 {
-    if (d->pmcRuntime != pmcRuntime) {
-        d->pmcRuntime = pmcRuntime;
-        emit pmcRuntimeChanged();
-    }
+    return d->pmcRuntime;
 }

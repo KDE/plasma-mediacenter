@@ -27,10 +27,11 @@
 #include "mediacenter_export.h"
 #include "mediacenter.h"
 
-class QDeclarativeEngine;
+class QDeclarativeImageProvider;
 class QAbstractItemModel;
 class KConfigDialog;
 class ModelMetadata;
+class PmcRuntime;
 
 namespace MediaCenter {
 
@@ -53,7 +54,6 @@ class MEDIACENTER_EXPORT AbstractBrowsingBackend : public QObject
     Q_PROPERTY(QString mediaBrowserSidePanel READ mediaBrowserSidePanel NOTIFY mediaBrowserSidePanelChanged)
     Q_PROPERTY(QVariantList models READ models NOTIFY modelsChanged)
     Q_PROPERTY(QVariantList buttons READ buttons NOTIFY buttonsChanged)
-    Q_PROPERTY(QObject* pmcRuntime READ pmcRuntime WRITE setPmcRuntime NOTIFY pmcRuntimeChanged)
 
 public:
     /**
@@ -144,22 +144,6 @@ public:
     Q_INVOKABLE virtual bool expand(int row);
 
     /**
-     * This slot must be called by the MediaCenter UI to set a declarive engine
-     * which can then be used by the backend to set up needed values at runtime
-     *
-     * @param declarativeEngine pointer to the declarative engine
-     */
-    void setDeclarativeEngine(QDeclarativeEngine *declarativeEngine);
-
-    /**
-     * Use this method to get access to the declarative engine.
-     * This is useful for backends to provide their own image providers and so on
-     *
-     * @return the declarative engine
-     */
-    QDeclarativeEngine *declarativeEngine() const;
-
-    /**
      * Override this method if you want your backend to show a custom media browser
      * instead of the standard PMC MediaBrowser.
      *
@@ -200,9 +184,10 @@ public:
      */
     Q_INVOKABLE virtual void handleButtonClick(const QString&);
 
-    //FIXME: Bad, bad, bad.
-    QObject* pmcRuntime();
-    void setPmcRuntime(QObject* pmcRuntime);
+    /**
+     * @internal
+     */
+    void setPmcRuntime(const QSharedPointer<PmcRuntime> &pmcRuntime);
 
 Q_SIGNALS:
     void busyChanged();
@@ -279,10 +264,17 @@ protected:
      */
     Q_INVOKABLE virtual void searchModel(const QString &searchTerm, QAbstractItemModel *model);
 
+    /**
+     * Subclasses can call this method to access the PmcRuntime which can be
+     * then used to access PMC runtime objects.
+     *
+     * @return QSharedPointer to the PmcRuntime object
+     */
+    QSharedPointer< PmcRuntime > pmcRuntime() const;
+
 private:
     class AbstractBrowsingBackendPrivate;
     AbstractBrowsingBackendPrivate * const d;
-
 };
 
 } // MediaCenter namespace

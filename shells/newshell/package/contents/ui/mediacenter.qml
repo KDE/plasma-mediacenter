@@ -38,12 +38,6 @@ Image {
     source: _pmc_background_image_path
     fillMode: Image.Tile
 
-    QtObject {
-        id: pmcRuntime
-        property QtObject mediaPlayer: root.mediaPlayerInstance
-        property QtObject playlist: root.playlistInstance
-    }
-
     Image {
         anchors.fill: parent
         source: _pmc_gradient_image_path
@@ -57,9 +51,6 @@ Image {
         MediaCenterElements.RuntimeData {
             id: runtimeData
             objectName: "runtimeData"
-            onCurrentBrowsingBackendChanged: if (currentBrowsingBackend) {
-                currentBrowsingBackend.pmcRuntime = pmcRuntime;
-            }
         }
 
         PlasmaExtraComponents.ResourceInstance {
