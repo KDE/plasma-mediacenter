@@ -35,7 +35,7 @@ add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
 
 # Load the frameworks we need
 find_package(KF5 CONFIG REQUIRED
-    CoreAddons Config I18n GuiAddons Service ConfigWidgets KIO Declarative)
+    CoreAddons Config I18n GuiAddons Service ConfigWidgets KIO Declarative Plasma)
 
 find_package(Taglib REQUIRED)
 
@@ -60,8 +60,9 @@ add_subdirectory(plugins)
 # add_subdirectory(mediaelements)
 # add_subdirectory(components)
 add_subdirectory(libs)
-# add_subdirectory(shells)
+add_subdirectory(shells)
 add_subdirectory(images)
+add_subdirectory(tests)
 #
 # include(MacroOptionalAddSubdirectory)
 # macro_optional_add_subdirectory( po )
