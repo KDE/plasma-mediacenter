@@ -273,7 +273,5 @@ private:
 Q_DECLARE_METATYPE(QAbstractItemModel*)
 
 #define MEDIACENTER_EXPORT_BROWSINGBACKEND( c ) \
-        K_PLUGIN_FACTORY( MediaBrowserFactory, registerPlugin< c >(); ) \
-        K_EXPORT_PLUGIN( MediaBrowserFactory("c") )
-
+        K_PLUGIN_FACTORY( MediaBrowserFactory, registerPlugin< c >(); )
 #endif // ABSTRACTBROWSINGBACKEND_H

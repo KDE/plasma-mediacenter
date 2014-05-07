@@ -48,7 +48,5 @@ private:
 }
 
 #define MEDIACENTER_EXPORT_MEDIASOURCE( c ) \
-    K_PLUGIN_FACTORY( MediaSourceFactory, registerPlugin< c >(); ) \
-    K_EXPORT_PLUGIN( MediaSourceFactory("c") )
-
+    K_PLUGIN_FACTORY( MediaSourceFactory, registerPlugin< c >(); )
 #endif // ABSTRACTMEDIASOURCE_H
