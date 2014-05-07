@@ -6,7 +6,7 @@ set(localpicturesbackend_SRCS
     localpicturesbackend.cpp
 )
 
-kde4_add_plugin(pmc_localpictures ${localpicturesbackend_SRCS})
+add_library(pmc_localpictures ${localpicturesbackend_SRCS})
 
 target_link_libraries(pmc_localpictures
     plasmamediacenter

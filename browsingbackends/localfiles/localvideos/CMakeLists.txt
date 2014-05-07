@@ -7,7 +7,7 @@ set(localvideosbackend_SRCS
 )
 
 
-kde4_add_plugin(pmc_localvideos ${localvideosbackend_SRCS})
+add_library(pmc_localvideos ${localvideosbackend_SRCS})
 
 target_link_libraries(pmc_localvideos
     plasmamediacenter
