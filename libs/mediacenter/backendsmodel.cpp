@@ -38,8 +38,7 @@ BackendsModel::BackendsModel(QObject* parent)
     : QAbstractListModel(parent)
     , d(new Private)
 {
-    KService::List services = MediaCenter::AbstractBrowsingBackend::availableBackends();
-    d->backendInfo = KPluginInfo::fromServices(services);
+    d->backendInfo = MediaCenter::AbstractBrowsingBackend::availableBackends();
     qStableSort(d->backendInfo.begin(), d->backendInfo.end(), pluginLessThan);
 
     QHash<int, QByteArray> roles = roleNames();

@@ -106,7 +106,7 @@ public:
      * Convenience function that returns the list of
      * available browsing backends found.
      */
-    static KService::List availableBackends();
+    static KPluginInfo::List availableBackends();
 
     /**
      * This function is used by Media Browser to go to one level
