@@ -115,7 +115,7 @@ QAbstractItemModel* AbstractBrowsingBackend::model()
 
 KPluginInfo::List AbstractBrowsingBackend::availableBackends()
 {
-    KPluginInfo::List plugins = KPluginTrader::self()->query("Plasma/MediaCenter/BrowsingBackend");
+    KPluginInfo::List plugins = KPluginTrader::self()->query("plasma/mediacenter/browsingbackends");
     if (plugins.isEmpty()) {
         qWarning() << "no available browsing backend";
     }

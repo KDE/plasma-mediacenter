@@ -21,5 +21,5 @@ target_link_libraries(pmc_localmusic
 
 kservice_desktop_to_json(pmc_localmusic localmusic.desktop)
 
-install(TARGETS pmc_localmusic DESTINATION ${PLUGIN_INSTALL_DIR})
+install(TARGETS pmc_localmusic DESTINATION ${PLUGIN_INSTALL_DIR}/plasma/mediacenter/browsingbackends)
 install(FILES localmusic.desktop DESTINATION ${SERVICES_INSTALL_DIR})
