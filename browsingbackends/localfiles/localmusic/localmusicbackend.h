@@ -22,6 +22,7 @@
 
 #include "../localfilesabstractbackend.h"
 
+
 class LocalMusicModel;
 class LocalMusicBackend : public LocalFilesAbstractBackend
 {
@@ -36,5 +37,7 @@ protected:
 private:
     LocalMusicModel *m_model;
 };
+
+
 
 #endif // LOCALMUSICBACKEND_H

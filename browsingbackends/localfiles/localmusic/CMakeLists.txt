@@ -6,7 +6,8 @@ set(localmusicbackend_SRCS
   localmusicbackend.cpp
 )
 
-add_library(pmc_localmusic ${localmusicbackend_SRCS})
+add_library(pmc_localmusic MODULE ${localmusicbackend_SRCS})
+set_target_properties(pmc_localmusic PROPERTIES PREFIX "")
 
 target_link_libraries(pmc_localmusic
     plasmamediacenter
@@ -17,6 +18,8 @@ target_link_libraries(pmc_localmusic
     KF5::KDELibs4Support
     ${TAGLIB_LIBRARIES}
 )
+
+kservice_desktop_to_json(pmc_localmusic localmusic.desktop)
 
 install(TARGETS pmc_localmusic DESTINATION ${PLUGIN_INSTALL_DIR})
 install(FILES localmusic.desktop DESTINATION ${SERVICES_INSTALL_DIR})

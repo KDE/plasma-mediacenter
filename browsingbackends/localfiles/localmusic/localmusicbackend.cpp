@@ -20,7 +20,7 @@
 #include "localmusicbackend.h"
 #include "localmusicmodel.h"
 
-MEDIACENTER_EXPORT_BROWSINGBACKEND(LocalMusicBackend)
+MEDIACENTER_EXPORT_BROWSINGBACKEND2(LocalMusicBackend, "localmusic.json")
 
 LocalMusicBackend::LocalMusicBackend (QObject* parent, const QVariantList& args)
     : LocalFilesAbstractBackend (parent, args)
@@ -40,3 +40,4 @@ void LocalMusicBackend::initModel()
     setModel(m_model);
 }
 
+#include "localmusicbackend.moc"
