@@ -19,7 +19,7 @@
 #include "localpicturesbackend.h"
 #include "localpicturesmodel.h"
 
-MEDIACENTER_EXPORT_BROWSINGBACKEND(LocalPicturesBackend)
+MEDIACENTER_EXPORT_BROWSINGBACKEND2(LocalPicturesBackend, "localpictures.json")
 
 LocalPicturesBackend::LocalPicturesBackend (QObject* parent, const QVariantList& args)
     : LocalFilesAbstractBackend (parent, args)
@@ -43,3 +43,5 @@ QVariantList LocalPicturesBackend::buttons()
 {
     return QVariantList();
 }
+
+#include "localpicturesbackend.moc"

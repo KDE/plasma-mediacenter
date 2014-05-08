@@ -6,7 +6,8 @@ set(localpicturesbackend_SRCS
     localpicturesbackend.cpp
 )
 
-add_library(pmc_localpictures ${localpicturesbackend_SRCS})
+add_library(pmc_localpictures MODULE ${localpicturesbackend_SRCS})
+set_target_properties(pmc_localpictures PROPERTIES PREFIX "") 
 
 target_link_libraries(pmc_localpictures
     plasmamediacenter
@@ -17,5 +18,7 @@ target_link_libraries(pmc_localpictures
     KF5::KDELibs4Support
 )
 
-install(TARGETS pmc_localpictures DESTINATION ${PLUGIN_INSTALL_DIR})
+kservice_desktop_to_json(pmc_localpictures localpictures.desktop)
+
+install(TARGETS pmc_localpictures DESTINATION ${PLUGIN_INSTALL_DIR}/plasma/mediacenter/browsingbackends)
 install(FILES localpictures.desktop DESTINATION ${SERVICES_INSTALL_DIR})
