@@ -27,7 +27,7 @@
 
 #include <QDebug>
 
-MEDIACENTER_EXPORT_BROWSINGBACKEND2(MetadataVideoBackend, "metadatavideobackend.json")
+MEDIACENTER_EXPORT_BROWSINGBACKEND(MetadataVideoBackend, "metadatavideobackend.json")
 
 MetadataVideoBackend::MetadataVideoBackend(QObject* parent, const QVariantList& args)
     : AbstractMetadataBackend(parent, args)

@@ -21,7 +21,7 @@
 #include "flickrbackend.h"
 #include "flickrmodel.h"
 
-MEDIACENTER_EXPORT_BROWSINGBACKEND2(FlickrBackend, "flickrbackend.json")
+MEDIACENTER_EXPORT_BROWSINGBACKEND(FlickrBackend, "flickrbackend.json")
 
 FlickrBackend::FlickrBackend(QObject* parent, const QVariantList& args)
     : MediaCenter::AbstractBrowsingBackend(parent, args)

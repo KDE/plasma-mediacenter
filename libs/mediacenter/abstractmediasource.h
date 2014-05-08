@@ -48,7 +48,7 @@ private:
 };
 }
 
-#define MEDIACENTER_EXPORT_MEDIASOURCE2(classname, jsonfile) \
+#define MEDIACENTER_EXPORT_MEDIASOURCE(classname, jsonfile) \
     K_PLUGIN_FACTORY_WITH_JSON( MediaSourceFactory, jsonfile, registerPlugin< classname >(); )
 
 #endif // ABSTRACTMEDIASOURCE_H

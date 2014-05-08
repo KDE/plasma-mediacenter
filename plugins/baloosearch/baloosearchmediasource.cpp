@@ -34,7 +34,7 @@
 #include <QTimer>
 
 
-MEDIACENTER_EXPORT_MEDIASOURCE2(BalooSearchMediaSource, "baloosearch.json")
+MEDIACENTER_EXPORT_MEDIASOURCE(BalooSearchMediaSource, "baloosearch.json")
 
 BalooSearchMediaSource::BalooSearchMediaSource(QObject* parent, const QVariantList& args)
     : AbstractMediaSource(parent, args)

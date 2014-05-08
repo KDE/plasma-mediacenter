@@ -272,7 +272,7 @@ private:
 
 Q_DECLARE_METATYPE(QAbstractItemModel*)
 
-#define MEDIACENTER_EXPORT_BROWSINGBACKEND2(classname, jsonfile) \
+#define MEDIACENTER_EXPORT_BROWSINGBACKEND(classname, jsonfile) \
         K_PLUGIN_FACTORY_WITH_JSON(MediaBrowserFactory, jsonfile, registerPlugin<classname>();)
 
 #endif // ABSTRACTBROWSINGBACKEND_H

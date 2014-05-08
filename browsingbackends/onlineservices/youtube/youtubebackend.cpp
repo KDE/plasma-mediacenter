@@ -23,7 +23,7 @@
 
 #include "global.h"
 
-MEDIACENTER_EXPORT_BROWSINGBACKEND2(YoutubeBackend, "youtubebackend.json")
+MEDIACENTER_EXPORT_BROWSINGBACKEND(YoutubeBackend, "youtubebackend.json")
 
 YoutubeBackend::YoutubeBackend(QObject* parent, const QVariantList& args):
                                MediaCenter::AbstractBrowsingBackend(parent, args)
