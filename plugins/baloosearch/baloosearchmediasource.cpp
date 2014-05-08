@@ -76,31 +76,5 @@ void BalooSearchMediaSource::queryForMediaType(const QString& type)
     handler->handleResult(it);
 }
 
-void BalooSearchMediaSource::fetchUrlDetails(const QUrl& url)
-{
-    Baloo::FileFetchJob* job = new Baloo::FileFetchJob(url.toLocalFile());
-    connect(job, SIGNAL(fileReceived(Baloo::File)),
-            this, SLOT(slotFileReceived(Baloo::File)));
-
-    job->start();
-}
-
-void BalooSearchMediaSource::slotFileReceived(const Baloo::File& file)
-{
-    QHash<int, QVariant> values;
-
-    //file.url() provides a local path, convert that to file:// url
-    const QString fileUrl = QUrl::fromLocalFile(file.url()).toString();
-    values.insert(MediaCenter::MediaUrlRole, fileUrl);
-
-    const QString title = file.property(KFileMetaData::Property::Title).toString();
-    values.insert(Qt::DisplayRole, title);
-
-    values.insert(MediaCenter::ArtistRole, file.property(KFileMetaData::Property::Artist).toString());
-    values.insert(MediaCenter::AlbumRole, file.property(KFileMetaData::Property::Album).toString());
-    values.insert(MediaCenter::DurationRole, file.property(KFileMetaData::Property::Duration).toInt());
-
-    SingletonFactory::instanceFor<MediaLibrary>()->updateMedia(values);
-}
 
 #include "baloosearchmediasource.moc"

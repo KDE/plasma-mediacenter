@@ -24,7 +24,7 @@ import org.kde.plasma.mediacenter 2.0 as PMC
 
 ListView {
     id: listModel
-    model: PMC.BackendsModel {
+    model: PMC.FilteredBackendsModel {
         id: backendsModel
     }
     delegate: Text {

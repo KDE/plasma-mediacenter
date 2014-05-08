@@ -1,6 +1,7 @@
 /***********************************************************************************
  *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
  *                                                                                 *
+ *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
  *   modify it under the terms of the GNU Lesser General Public                    *
  *   License as published by the Free Software Foundation; either                  *
@@ -15,40 +16,44 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#include "searchresulthandler.h"
+#ifndef PMCRUNTIME_H
+#define PMCRUNTIME_H
 
-#include <mediacenter/medialibrary.h>
-#include <mediacenter/mediacenter.h>
+#include <QObject>
+#include <QHash>
+#include <QWeakPointer>
 
-#include <baloo/resultiterator.h>
+#include "mediacenter_export.h"
 
-#include <QFileInfo>
-#include <QDateTime>
-#include <QVariant>
+class QQmlEngine;
+class QQuickImageProvider;
+class PlaylistModel;
 
-SearchResultHandler::SearchResultHandler(MediaLibrary *mediaLibrary, QObject* parent)
-    : QObject(parent)
-    , m_mediaLibrary(mediaLibrary)
+class MEDIACENTER_EXPORT PmcRuntime : public QObject
 {
-}
+    Q_OBJECT
+public:
+    enum RuntimeObjectType { PlaylistModel };
+    explicit PmcRuntime(QHash< PmcRuntime::RuntimeObjectType, QSharedPointer< QObject > > runtimeObjects, QQmlEngine* engine, QObject* parent = 0);
 
-void SearchResultHandler::handleResult(Baloo::ResultIterator& resultIterator)
-{
-    while (resultIterator.next()) {
-        //First collect common information
-        QHash<int, QVariant> values;
-
-        values.insert(Qt::DisplayRole, QVariant(resultIterator.text()));
-        values.insert(Qt::DecorationRole, QVariant(resultIterator.icon()));
-        values.insert(MediaCenter::MediaTypeRole, QVariant(supportedMediaType().toLower()));
-        values.insert(MediaCenter::MediaUrlRole, QVariant(resultIterator.url()));
-
-        //HACK: This is a workaround as Baloo does not provide creation or
-        // modification date/time through KFileMetaData::Property
-        values.insert(MediaCenter::CreatedAtRole,
-                      QVariant(QFileInfo(resultIterator.url().toLocalFile()).created()));
-
-        //Now collect information specific to this media type
-        handleResultImpl(resultIterator, values);
+    /**
+     * Use this method to get an instance of a particular type of PMC runtime
+     * object (such as PlaylistModel).
+     *
+     * @param type type of the RuntimeObject you want to access
+     * @return QSharedPointer to the selected runtime object
+     */
+    template <class T>
+    QSharedPointer<T> runtimeObjectAs(PmcRuntime::RuntimeObjectType type)
+    {
+        return qSharedPointerObjectCast<T>(runtimeObject(type));
     }
-}
+
+private:
+    class Private;
+    Private * const d;
+
+    QSharedPointer< QObject > runtimeObject(PmcRuntime::RuntimeObjectType type);
+};
+
+#endif // PMCRUNTIME_H

@@ -20,7 +20,7 @@
 
 #include "mediacenterplugin.h"
 
-#include "mediacenter/backendsmodel.h"
+#include "mediacenter/filteredbackendsmodel.h"
 #include "mediacenter/subtitleprovider.h"
 #include "mediacenter/filterplaylistmodel.h"
 #include "mediacenter/multipleplaylistmodel.h"
@@ -31,7 +31,7 @@ void MediaCenterPlugin::registerTypes(const char *uri)
 {
     Q_ASSERT(uri == QLatin1String("org.kde.plasma.mediacenter"));
 
-    qmlRegisterType<BackendsModel>(uri, 2, 0, "BackendsModel");
+    qmlRegisterType<FilteredBackendsModel>(uri, 2, 0, "FilteredBackendsModel");
     qmlRegisterType<SubtitleProvider>(uri, 2, 0, "SubtitleProvider");
     qmlRegisterType<FilterPlaylistModel>(uri, 2, 0, "FilterPlaylistModel");
     qmlRegisterType<MultiplePlaylistModel>(uri, 2, 0, "MultiplePlaylistModel");

@@ -28,6 +28,7 @@
 #include "mediacenter/pmcmetadatamodel.h"
 #include "mediacenter/playlistmodel.h"
 #include "mediacenter/filtermediamodel.h"
+#include "mediacenter/pmcruntime.h"
 
 #include <KDebug>
 
@@ -140,9 +141,8 @@ void MetadataMusicBackend::updateModelAccordingToFilters()
     }
 }
 
-void MetadataMusicBackend::addAllSongsToPlaylist (QObject* playlistModelObject)
+void MetadataMusicBackend::addAllSongsToPlaylist (const QSharedPointer<PlaylistModel> &playlistModel)
 {
-    PlaylistModel* playlistModel = static_cast<PlaylistModel *> (playlistModelObject);
     for (int i=0; i<m_musicFilteredModel->rowCount(); ++i) {
         const QString url = m_musicFilteredModel->data(m_musicFilteredModel->index(i, 0), MediaCenter::MediaUrlRole).toString();
         const QVariantList songAndItsInfo = m_musicFilteredModel->data(m_musicFilteredModel->index(i, 0), Qt::DisplayRole).toList();
@@ -183,10 +183,8 @@ void MetadataMusicBackend::handleButtonClick(const QString& buttonName)
         m_albumFilter = m_artistFilter = "";
         updateModelAccordingToFilters();
     } else if (buttonName == s_playAllButton) {
-        //FIXME: This is a horrible hack to get a ref to the playlist model
-        /***
-         * TODO Revisit this logic
-        PlaylistModel *model = qobject_cast<PlaylistModel*>(declarativeEngine()->rootContext()->contextProperty("playlistModel").value<QObject*>());
+
+        auto model = pmcRuntime()->runtimeObjectAs<PlaylistModel>(PmcRuntime::PlaylistModel);
         if (model) {
             addAllSongsToPlaylist(model);
             if (pmcRuntime()) {
@@ -195,7 +193,7 @@ void MetadataMusicBackend::handleButtonClick(const QString& buttonName)
             }
         } else {
             kWarning() << "Failed to get a reference to playlist model";
-        }*/
+        }
     }
 }
 

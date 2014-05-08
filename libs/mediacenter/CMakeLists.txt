@@ -1,4 +1,5 @@
 set (plasmamediacenter_SRCS
+    pmcruntime.cpp
     medialibrarywrappercache.cpp
     artist.cpp
     album.cpp

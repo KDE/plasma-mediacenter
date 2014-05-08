@@ -32,12 +32,14 @@ public:
     QHash<QString, MediaCenter::AbstractBrowsingBackend*> backends;
     KPluginInfo::List backendInfo;
     KPluginInfo::List loadedBackendsInfo;
+    QWeakPointer<PmcRuntime> pmcRuntime;
 };
 
-BackendsModel::BackendsModel(QObject* parent)
+BackendsModel::BackendsModel(QWeakPointer<PmcRuntime> pmcRuntime, QObject* parent)
     : QAbstractListModel(parent)
     , d(new Private)
 {
+    d->pmcRuntime = pmcRuntime;
     d->backendInfo = MediaCenter::AbstractBrowsingBackend::availableBackends();
     qStableSort(d->backendInfo.begin(), d->backendInfo.end(), pluginLessThan);
 
@@ -72,8 +74,9 @@ void BackendsModel::loadBrowsingBackends()
                 }
                 backend->setName(info.pluginName());
                 backend->setParent(const_cast<BackendsModel *>(this));
+                backend->setPmcRuntime(d->pmcRuntime);
                 d->loadedBackendsInfo.append(info);
-
+                qDebug() << "Loaded backend : " << info.name() << " from : " << info.libraryPath();
             } else {
                 qDebug() << "Could not create a instance for the backend " << info.name();
             }

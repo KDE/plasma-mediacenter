@@ -29,6 +29,7 @@
 #include <mediacenter/playlistmodel.h>
 #include "application.h"
 
+class PmcRuntime;
 class QKeyEvent;
 class QMouseEvent;
 
@@ -63,6 +64,7 @@ protected:
 
 private:
     bool loadThemeAndPopulateMainscriptAndImagesPath(QString &mainscriptPath, QString &imagesPath);
+    QSharedPointer<PmcRuntime> createPmcRuntime(QDeclarativeEngine* engine, const QSharedPointer< PlaylistModel >& playlistModel);
 
     KDeclarative m_kdeclarative;
 
@@ -71,7 +73,7 @@ private:
     QTimer m_mousePointerAutoHideTimer;
 
     QDeclarativeView *view;
-    PlaylistModel *playlistModel;
+    QSharedPointer<PlaylistModel> playlistModel;
 };
 
 #endif // MAINWINDOW_H

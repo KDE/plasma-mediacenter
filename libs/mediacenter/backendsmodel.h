@@ -26,6 +26,8 @@
 
 #include <KPluginInfo>
 
+class PmcRuntime;
+
 namespace MediaCenter {
     class AbstractBrowsingBackend;
 }
@@ -38,8 +40,7 @@ public:
         ModelObjectRole = Qt::UserRole + 1,
         BackendCategoryRole
     };
-
-    explicit BackendsModel (QObject* parent = 0);
+    explicit BackendsModel (QWeakPointer< PmcRuntime > pmcRuntime, QObject* parent = 0);
     virtual QVariant data (const QModelIndex& index, int role = Qt::DisplayRole) const;
     virtual int rowCount (const QModelIndex& parent = QModelIndex()) const;
 

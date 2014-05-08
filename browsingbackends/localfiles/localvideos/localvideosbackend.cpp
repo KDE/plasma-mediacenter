@@ -19,6 +19,8 @@
 #include "localvideosbackend.h"
 #include "localvideosmodel.h"
 
+#include <mediacenter/pmcruntime.h>
+
 MEDIACENTER_EXPORT_BROWSINGBACKEND(LocalVideosBackend, "localvideos.json")
 
 LocalVideosBackend::LocalVideosBackend (QObject* parent, const QVariantList& args)
@@ -34,7 +36,8 @@ LocalVideosBackend::~LocalVideosBackend()
 void LocalVideosBackend::initModel()
 {
     if (!m_model) {
-        m_model = new LocalVideosModel(this);
+        ThumbnailProvider *thumbnailProvider = new ThumbnailProvider(this);
+        m_model = new LocalVideosModel(thumbnailProvider, this);
     }
     setModel(m_model);
 }

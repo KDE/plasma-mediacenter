@@ -49,8 +49,6 @@ public:
      */
     ~LocalPicturesBackend();
 
-    virtual QVariantList buttons();
-
 protected:
   
     /**

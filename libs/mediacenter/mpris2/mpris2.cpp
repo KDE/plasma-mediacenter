@@ -27,7 +27,7 @@
 
 Mpris2::Mpris2(QObject* parent) : QObject(parent)
 {
-    QString mspris2Name("org.mpris.MediaPlayer2." + QLatin1String("plasmamediacenter"));
+    QString mspris2Name("org.mpris.MediaPlayer2." + QLatin1String("plasma-mediacenter"));
 
     bool success = QDBusConnection::sessionBus().registerService(mspris2Name);
 

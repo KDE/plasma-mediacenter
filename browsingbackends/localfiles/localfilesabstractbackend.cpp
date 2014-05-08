@@ -23,6 +23,7 @@
 #include "localfilesabstractmodel.h"
 #include "localplacesmodel.h"
 #include "mediacenter/playlistmodel.h"
+#include "mediacenter/pmcruntime.h"
 
 #include <KSharedConfig>
 #include <KDE/KFilePlacesModel>
@@ -150,7 +151,7 @@ void LocalFilesAbstractBackend::handleButtonClick(const QString& buttonName)
     /****
      * TODO revisit this logic
     if (buttonName == s_playAllButton) {
-        PlaylistModel *model = qobject_cast<PlaylistModel*>(declarativeEngine()->rootContext()->contextProperty("playlistModel").value<QObject*>());
+        auto model = pmcRuntime()->runtimeObjectAs<PlaylistModel>(PmcRuntime::PlaylistModel);
         if (model) {
             const int n = model->rowCount();
             addAllSongsToPlaylist(model);
@@ -159,7 +160,7 @@ void LocalFilesAbstractBackend::handleButtonClick(const QString& buttonName)
     }**/
 }
 
-void LocalFilesAbstractBackend::addAllSongsToPlaylist(PlaylistModel* playlistModel)
+void LocalFilesAbstractBackend::addAllSongsToPlaylist(const QSharedPointer<PlaylistModel> &playlistModel)
 {
     LocalFilesAbstractModel *model = qobject_cast<LocalFilesAbstractModel*>(this->model());
     for (int i=0; i<model->rowCount(); ++i) {

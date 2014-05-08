@@ -20,6 +20,8 @@
 
 #include "searchresulthandler.h"
 
+#include <QVariant>
+
 namespace Baloo {
 class File;
 }
@@ -34,7 +36,8 @@ public:
     virtual QString supportedMediaType() const;
 
 protected:
-    virtual void handleResultImpl(const Baloo::ResultIterator& resultIterator);
+    virtual void handleResultImpl(const Baloo::ResultIterator& resultIterator,
+                                  const QHash< int, QVariant >& values);
 
 private Q_SLOTS:
     void slotFileReceived(const Baloo::File& file);

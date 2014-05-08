@@ -27,12 +27,11 @@
 
 #include <QtQml/QQmlEngine>
 
-LocalPicturesModel::LocalPicturesModel (QObject* parent) : LocalFilesAbstractModel (parent, QString("image/")),  m_thumbProvider(new ThumbnailProvider(this))
+LocalPicturesModel::LocalPicturesModel (ThumbnailProvider* thumbnailProvider,
+                                        QObject* parent)
+    : LocalFilesAbstractModel (parent, QString("image/"))
+    , m_thumbProvider(thumbnailProvider)
 {
-    MediaCenter::AbstractBrowsingBackend *backend = qobject_cast<MediaCenter::AbstractBrowsingBackend*>(parent);
-    //TODO move
-    //backend->declarativeEngine()->addImageProvider("localpicturesthumbnail", m_thumbProvider);
-
     connect(m_thumbProvider, SIGNAL(gotThumbnail(QString)), SLOT(processThumbnail(QString)));
 }
 
