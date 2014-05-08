@@ -34,7 +34,7 @@
 #include <QQmlEngine>
 #include <QTimer>
 
-MEDIACENTER_EXPORT_BROWSINGBACKEND(MetadataMusicBackend)
+MEDIACENTER_EXPORT_BROWSINGBACKEND2(MetadataMusicBackend, "metadatamusicbackend.json")
 
 namespace {
     static const char *s_showAllButton = "Show All";

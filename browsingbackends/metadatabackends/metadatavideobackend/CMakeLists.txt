@@ -5,11 +5,14 @@ set(metadatavideobackend_SRCS
     metadatavideobackend.cpp
 )
 
-add_library(pmc_metadatavideobackend ${metadatavideobackend_SRCS})
+add_library(pmc_metadatavideobackend MODULE ${metadatavideobackend_SRCS})
+set_target_properties(pmc_metadatavideobackend PROPERTIES PREFIX "")
 
 target_link_libraries(pmc_metadatavideobackend
     plasmamediacenter
 )
 
-install(TARGETS pmc_metadatavideobackend DESTINATION ${PLUGIN_INSTALL_DIR})
+kservice_desktop_to_json(pmc_metadatavideobackend metadatavideobackend.desktop)
+
+install(TARGETS pmc_metadatavideobackend DESTINATION ${PLUGIN_INSTALL_DIR}/plasma/mediacenter/browsingbackends)
 install(FILES metadatavideobackend.desktop DESTINATION ${SERVICES_INSTALL_DIR})

@@ -27,7 +27,7 @@
 #include "mediacenter/modelmetadata.h"
 #include "mediacenter/filtermediamodel.h"
 
-MEDIACENTER_EXPORT_BROWSINGBACKEND(MetadataPictureBackend)
+MEDIACENTER_EXPORT_BROWSINGBACKEND2(MetadataPictureBackend, "metadatapicturebackend.json")
 
 MetadataPictureBackend::MetadataPictureBackend(QObject* parent, const QVariantList& args)
     : AbstractMetadataBackend(parent, args)
