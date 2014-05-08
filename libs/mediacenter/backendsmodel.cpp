@@ -55,31 +55,30 @@ void BackendsModel::loadBrowsingBackends()
         return;
 
     Q_FOREACH (KPluginInfo info, d->backendInfo) {
-        KService::Ptr service = info.service();
-        if (!service) {
-            qDebug() << "Could not get the service for the backend " << info.name();
-            continue;
-        }
 
-        const QString key = service->library();
-        QString errorMessage;
+        KPluginLoader loader(info.libraryPath());
+        KPluginFactory* factory = loader.factory();
 
-        MediaCenter::AbstractBrowsingBackend *backend =
-            service->createInstance<MediaCenter::AbstractBrowsingBackend>(
-                0, QVariantList() << service->storageId(), &errorMessage);
+        const QVariantList args = QVariantList() << loader.metaData().toVariantMap();
 
-        if (backend) {
-            if (!backend->okToLoad()) {
-                qDebug() << "Backend " << info.name() << " doesn't want to be loaded";
-                continue;
+        if(factory)
+        {
+            MediaCenter::AbstractBrowsingBackend *backend = factory->create<MediaCenter::AbstractBrowsingBackend>(0, args); 
+            if (backend) {
+
+                if (!backend->okToLoad()) {
+                    qDebug() << "Backend " << info.name() << " doesn't want to be loaded";
+                    continue;
+                }
+                backend->setName(info.pluginName());
+                backend->setParent(const_cast<BackendsModel *>(this));
+                d->loadedBackendsInfo.append(info);
+
+            } else {
+                qDebug() << "Could not create a instance for the backend " << info.name();
             }
-            backend->setName(info.pluginName());
-            backend->setParent(const_cast<BackendsModel *>(this));
-            const_cast<BackendsModel *>(this)->d->backends.insert(key, backend);
-            d->loadedBackendsInfo.append(info);
-        } else {
-            qDebug() << "Could not create a instance for the backend " << info.name() << errorMessage;
         }
+
     }
 }
 
