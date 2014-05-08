@@ -42,7 +42,7 @@ AbstractMediaSource::~AbstractMediaSource()
 
 KPluginInfo::List AbstractMediaSource::availableMediaSourcePlugins()
 {
-    KPluginInfo::List plugins = KPluginTrader::self()->query("Plasma/MediaCenter/MediaSource");
+    KPluginInfo::List plugins = KPluginTrader::self()->query("plasma/mediaCenter/mediasources");
     if (plugins.isEmpty()) {
         qWarning() << "no available media sources";
     }

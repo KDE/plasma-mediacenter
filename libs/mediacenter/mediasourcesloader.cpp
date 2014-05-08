@@ -37,6 +37,7 @@ void MediaSourcesLoader::load()
     KPluginInfo::List pluginInfo = MediaCenter::AbstractMediaSource::availableMediaSourcePlugins();
 
     Q_FOREACH (const KPluginInfo &info, pluginInfo) {
+        /**
         KService::Ptr service = info.service();
         if (!service) {
             qDebug() << "Could not get the service for media source " << info.name();
@@ -56,6 +57,23 @@ void MediaSourcesLoader::load()
             qDebug() << "created instance for media source" << info.name();
         } else {
             qDebug() << "Could not create a instance for the media source " << info.name() << errorMessage;
+        }*/
+        KPluginLoader loader(info.libraryPath());
+        KPluginFactory* factory = loader.factory();
+
+        const QVariantList args = QVariantList() << loader.metaData().toVariantMap();
+        if(factory)
+        {
+            MediaCenter::AbstractMediaSource *mediaSource = factory->create<MediaCenter::AbstractMediaSource>(0, args);
+            if (mediaSource) {
+                mediaSource->setMediaLibrary(SingletonFactory::instanceFor<MediaLibrary>());
+                mediaSource->start();
+                connect(QApplication::instance(), SIGNAL(destroyed(QObject*)), mediaSource, SLOT(quit()));
+                qDebug() << "created instance for media source" << info.name();
+            } else {
+                qDebug() << "Could not create a instance for the media source " << info.name();
+            }
         }
+
     }
 }

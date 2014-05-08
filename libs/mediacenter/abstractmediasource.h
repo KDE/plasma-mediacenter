@@ -50,4 +50,8 @@ private:
 
 #define MEDIACENTER_EXPORT_MEDIASOURCE( c ) \
     K_PLUGIN_FACTORY( MediaSourceFactory, registerPlugin< c >(); )
+
+#define MEDIACENTER_EXPORT_MEDIASOURCE2(classname, jsonfile) \
+    K_PLUGIN_FACTORY_WITH_JSON( MediaSourceFactory, jsonfile, registerPlugin< classname >(); )
+
 #endif // ABSTRACTMEDIASOURCE_H
