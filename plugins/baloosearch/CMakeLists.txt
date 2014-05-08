@@ -13,7 +13,8 @@ set(baloosearch_SRCS
     baloosearchmediasource.cpp
 )
 
-add_library(pmc_baloosearch ${baloosearch_SRCS})
+add_library(pmc_baloosearch MODULE ${baloosearch_SRCS})
+set_target_properties(pmc_baloosearch PROPERTIES PREFIX "")
 
 target_link_libraries(pmc_baloosearch
     plasmamediacenter
@@ -21,5 +22,7 @@ target_link_libraries(pmc_baloosearch
     KF5::FileMetaData
 )
 
-install(TARGETS pmc_baloosearch DESTINATION ${PLUGIN_INSTALL_DIR})
+kservice_desktop_to_json(pmc_baloosearch baloosearch.desktop)
+
+install(TARGETS pmc_baloosearch DESTINATION ${PLUGIN_INSTALL_DIR}/plasma/mediaCenter/mediasources)
 install(FILES baloosearch.desktop DESTINATION ${SERVICES_INSTALL_DIR})
