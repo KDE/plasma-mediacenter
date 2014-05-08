@@ -19,7 +19,7 @@
 #include "localvideosbackend.h"
 #include "localvideosmodel.h"
 
-MEDIACENTER_EXPORT_BROWSINGBACKEND(LocalVideosBackend)
+MEDIACENTER_EXPORT_BROWSINGBACKEND2(LocalVideosBackend, "localvideos.json")
 
 LocalVideosBackend::LocalVideosBackend (QObject* parent, const QVariantList& args)
     : LocalFilesAbstractBackend (parent, args)
@@ -39,3 +39,4 @@ void LocalVideosBackend::initModel()
     setModel(m_model);
 }
 
+#include "localvideosbackend.moc"

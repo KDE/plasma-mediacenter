@@ -7,7 +7,8 @@ set(localvideosbackend_SRCS
 )
 
 
-add_library(pmc_localvideos ${localvideosbackend_SRCS})
+add_library(pmc_localvideos MODULE ${localvideosbackend_SRCS})
+set_target_properties(pmc_localvideos PROPERTIES PREFIX "")
 
 target_link_libraries(pmc_localvideos
     plasmamediacenter
@@ -18,5 +19,7 @@ target_link_libraries(pmc_localvideos
     KF5::KDELibs4Support
 )
 
-install(TARGETS pmc_localvideos DESTINATION ${PLUGIN_INSTALL_DIR})
+kservice_desktop_to_json(pmc_localvideos localvideos.desktop)
+
+install(TARGETS pmc_localvideos DESTINATION ${PLUGIN_INSTALL_DIR}/plasma/mediacenter/browsingbackends)
 install(FILES localvideos.desktop DESTINATION ${SERVICES_INSTALL_DIR})
