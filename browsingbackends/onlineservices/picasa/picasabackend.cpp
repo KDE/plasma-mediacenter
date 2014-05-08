@@ -24,7 +24,7 @@
 #include <QTimer>
 #include <KLocalizedString>
 
-MEDIACENTER_EXPORT_BROWSINGBACKEND(PicasaBackend)
+MEDIACENTER_EXPORT_BROWSINGBACKEND2(PicasaBackend, "picasabackend.json")
 
 namespace {
     static const QString loginButtonText = i18n("Select Account");
@@ -119,3 +119,5 @@ void PicasaBackend::hideLoginScreen()
 {
     setLoginText(QString());
 }
+
+#include "picasabackend.moc"

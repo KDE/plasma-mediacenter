@@ -21,7 +21,7 @@
 #include "flickrbackend.h"
 #include "flickrmodel.h"
 
-MEDIACENTER_EXPORT_BROWSINGBACKEND(FlickrBackend)
+MEDIACENTER_EXPORT_BROWSINGBACKEND2(FlickrBackend, "flickrbackend.json")
 
 FlickrBackend::FlickrBackend(QObject* parent, const QVariantList& args)
     : MediaCenter::AbstractBrowsingBackend(parent, args)
@@ -58,3 +58,5 @@ void FlickrBackend::search(const QString& searchTerm)
 {
     qobject_cast<FlickrModel*>(model())->query(searchTerm);
 }
+
+#include "flickrbackend.moc"
