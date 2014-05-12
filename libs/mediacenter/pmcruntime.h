@@ -34,7 +34,7 @@ class MEDIACENTER_EXPORT PmcRuntime : public QObject
     Q_OBJECT
 public:
     enum RuntimeObjectType { PlaylistModel };
-    explicit PmcRuntime(QHash< PmcRuntime::RuntimeObjectType, QSharedPointer< QObject > > runtimeObjects, QQmlEngine* engine, QObject* parent = 0);
+    explicit PmcRuntime(QHash< PmcRuntime::RuntimeObjectType, QSharedPointer< QObject > > runtimeObjects, QObject* parent = 0);
 
     /**
      * Use this method to get an instance of a particular type of PMC runtime

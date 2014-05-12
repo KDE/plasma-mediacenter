@@ -28,13 +28,12 @@ public:
 };
 
 PmcRuntime::PmcRuntime(QHash<PmcRuntime::RuntimeObjectType,QSharedPointer<QObject>> runtimeObjects,
-                       QQmlEngine *engine,
                        QObject* parent)
     : QObject(parent)
     , d(new Private())
 {
     d->runtimeObjects = runtimeObjects;
-    d->declarativeEngine = engine;
+    //d->declarativeEngine = engine;
 }
 
 QSharedPointer< QObject > PmcRuntime::runtimeObject(PmcRuntime::RuntimeObjectType type)
