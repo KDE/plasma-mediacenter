@@ -9,10 +9,11 @@ panel.addWidget("org.kde.plasma.systemtray")
 panel.addWidget("org.kde.plasma.digitalclock")
 
 for (var i = 0; i < screenCount; ++i) {
-    var desktop = new Activity
-    desktop.name = i18n("Pmc")
-    desktop.screen = i
-    desktop.wallpaperPlugin = 'org.kde.image'
-    print("IN PLASMA MEDIACENTER SHELLLLL ******************************************************");
-    //var clock = desktop.addWidget("org.kde.analogclock");
+    var id = createActivity("Plasma mediacenter");
+    var desktopsArray = desktopsForActivity(id);
+    print(desktopsArray.length);
+    for( var j = 0; j < desktopsArray.length; j++) {
+        desktopsArray[j].wallpaperPlugin = 'org.kde.image';
+        //var clock = desktopsArray[j].addWidget("org.kde.plasma.analogclock");
+    }
 }
