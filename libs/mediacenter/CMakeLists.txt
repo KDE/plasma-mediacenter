@@ -67,7 +67,7 @@ target_link_libraries(plasmamediacentertest
     ${TAGLIB_LIBRARIES}
 )
 
-set_target_properties(plasmamediacenter PROPERTIES VERSION 1.2 SOVERSION 1.2)
+set_target_properties(plasmamediacenter PROPERTIES VERSION 1.3 SOVERSION 1.3)
 
 install(TARGETS plasmamediacenter ${INSTALL_TARGETS_DEFAULT_ARGS})
 
