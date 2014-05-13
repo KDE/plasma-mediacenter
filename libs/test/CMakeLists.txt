@@ -9,9 +9,10 @@ set(CMAKE_MODULE_PATH
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 find_package(mockcpp REQUIRED)
-if (mockcpp_FOUND)
-    message(STATUS "Found mockcpp")
-endif (mockcpp_FOUND)
+
+include_directories(
+    ${mockcpp_INCLUDE_DIRS}
+)
 
 function(pmc_test TESTNAME)
     kde4_add_executable(${TESTNAME} ${TESTNAME}.cpp)
