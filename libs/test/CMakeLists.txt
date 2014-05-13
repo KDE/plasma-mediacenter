@@ -8,7 +8,7 @@ set(CMAKE_MODULE_PATH
     ${CMAKE_MODULE_PATH}
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
-find_package(mockcpp)
+find_package(mockcpp REQUIRED)
 if (mockcpp_FOUND)
     message(STATUS "Found mockcpp")
 endif (mockcpp_FOUND)
