@@ -28,9 +28,7 @@
 
 #include <qtest_kde.h>
 
-#include <mockcpp/mokc.h>
 #include <mockcpp/mockcpp.hpp>
-#include <mockcpp/MockObjectHelper.h>
 
 QTEST_KDEMAIN(MediaLibraryTest, NoGUI);
 
