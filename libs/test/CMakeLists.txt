@@ -4,6 +4,15 @@ include(CTest)
 SET(QT_USE_QTMAIN TRUE)
 SET(QT_USE_QTTEST TRUE)
 
+set(CMAKE_MODULE_PATH
+    ${CMAKE_MODULE_PATH}
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+
+find_package(mockcpp)
+if (mockcpp_FOUND)
+    message(STATUS "Found mockcpp")
+endif (mockcpp_FOUND)
+
 function(pmc_test TESTNAME)
     kde4_add_executable(${TESTNAME} ${TESTNAME}.cpp fakemediavalidator.cpp)
     add_test(pmc-libs-${TESTNAME} ${TESTNAME})
