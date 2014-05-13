@@ -19,7 +19,7 @@ function(pmc_test TESTNAME)
     target_link_libraries(${TESTNAME}
     plasmamediacentertest ${KDE4_KDECORE_LIBRARY} ${KDE4_KIO_LIBS}
     ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES} ${QT_QTNETWORK_LIBRARIES} ${QT_QTXML_LIBRARIES}  ${QT_QTDECLARATIVE_LIBRARIES}
-    ${TAGLIB_LIBRARIES} -lmockcpp
+    ${TAGLIB_LIBRARIES} ${mockcpp_LIBRARIES}
     )
 endfunction(pmc_test)
 
