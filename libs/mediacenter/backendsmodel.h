@@ -51,4 +51,6 @@ private:
     void loadBrowsingBackends();
 };
 
+Q_DECLARE_METATYPE(BackendsModel*)
+
 #endif // BACKENDSMODEL_H

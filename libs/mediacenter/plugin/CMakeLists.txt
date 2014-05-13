@@ -1,4 +1,5 @@
 set (mediacenterplugin_SRCS
+    qmlaccess.cpp
     mediacenterplugin.cpp
 )
 

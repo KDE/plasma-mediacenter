@@ -26,6 +26,7 @@
 #include "mediacenter/multipleplaylistmodel.h"
 #include "mediacenter/objectpair.h"
 #include "mediacenter/settings.h"
+#include "qmlaccess.h"
 
 void MediaCenterPlugin::registerTypes(const char *uri)
 {
@@ -36,9 +37,9 @@ void MediaCenterPlugin::registerTypes(const char *uri)
     qmlRegisterType<FilterPlaylistModel>(uri, 2, 0, "FilterPlaylistModel");
     qmlRegisterType<MultiplePlaylistModel>(uri, 2, 0, "MultiplePlaylistModel");
     qmlRegisterType<ObjectPair>(uri, 2, 0, "ObjectPair");
-
+    qmlRegisterType<QMLAccess>(uri, 2, 0, "QMLAccess");
     qmlRegisterType<Settings>(uri, 2, 0, "Settings");
-
+    qRegisterMetaType<BackendsModel*>("BackendsModel*");
 }
 
 #include "moc_mediacenterplugin.cpp"
