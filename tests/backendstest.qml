@@ -22,18 +22,30 @@
 import QtQuick 2.0
 import org.kde.plasma.mediacenter 2.0 as PMC
 Item {
+    width: 200
+    height: 200
     PMC.QMLAccess {
         id: pmcinterface
     }
     ListView {
         id: listModel
-        model: PMC.FilteredBackendsModel {
-            sourceBackendsModel : pmcinterface.backendsModel
-            backendCategory : "image"
-        }
+        anchors.fill: parent
+        model: filterModel
         delegate: Text {
             text: display
-            Component.onCompleted: print(text)
         }
     }
+    PMC.FilteredBackendsModel {
+        id: filterModel
+            sourceBackendsModel : pmcinterface.backendsModel
+            backendCategory : "audio"
+    }
+    Timer {
+        id: timer
+        interval: 1000
+        running: true
+        repeat: false
+        onTriggered: filterModel.backendCategory = "image"
+    }
+
 }
