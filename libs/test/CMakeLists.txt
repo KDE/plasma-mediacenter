@@ -24,8 +24,7 @@ function(pmc_test TESTNAME)
     )
 endfunction(pmc_test)
 
-#Enable after fixing http://build.kde.org/job/plasma-mediacenter_master/369/console
-#pmc_test(medialibrarytest)
+pmc_test(medialibrarytest)
 pmc_test(singletonfactorytest)
 pmc_test(lastfmimagefetchertest)
 pmc_test(pmcmediatest)
