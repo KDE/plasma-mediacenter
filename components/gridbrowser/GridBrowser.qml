@@ -86,6 +86,7 @@ FocusScope {
             top: searchField.bottom; bottom: parent.bottom
             left: parent.left; right: parent.right
         }
+        onCountChanged: currentIndex = -1
         model: modelMetadata ? modelMetadata.model : undefined
         clip: true
         cellWidth: cellHeight

@@ -17,7 +17,6 @@
  ***********************************************************************************/
 
 #include "medialibrarytest.h"
-#include "fakemediavalidator.h"
 #include "testhelpers.h"
 
 #include <mediacenter/medialibrary.h>
@@ -29,6 +28,7 @@
 
 #include <qtest.h>
 
+#include <mockcpp/mockcpp.hpp>
 
 void MediaLibraryTest::initTestCase()
 {
@@ -71,8 +71,10 @@ QHash< int, QVariant > MediaLibraryTest::createTestMediaDataWithAlbumArtist() co
 
 void MediaLibraryTest::addsNewMediaAndItsMetadata()
 {
-    FakeMediaValidator validator;
-    MediaLibrary mediaLibrary(&validator);
+    MockObject<MediaValidator> validator;
+    MOCK_METHOD(validator, fileWithUrlExists).stubs().will(returnValue(true));
+
+    MediaLibrary mediaLibrary(validator);
     mediaLibrary.start();
 
     QSignalSpy newMediaSpy(&mediaLibrary, SIGNAL(newMedia(QList< QSharedPointer<PmcMedia> >)));
@@ -123,8 +125,10 @@ void MediaLibraryTest::addsNewMediaAndItsMetadata()
 
 void MediaLibraryTest::shouldEmitUpdatedForMediaInsteadOfNewMediaWhenDataUpdated()
 {
-    FakeMediaValidator validator;
-    MediaLibrary mediaLibrary(&validator);
+    MockObject<MediaValidator> validator;
+    MOCK_METHOD(validator, fileWithUrlExists).stubs().will(returnValue(true));
+
+    MediaLibrary mediaLibrary(validator);
     mediaLibrary.start();
 
     QHash<int,QVariant> data = createTestMediaDataWithAlbumArtist();
@@ -155,8 +159,10 @@ void MediaLibraryTest::shouldEmitUpdatedForMediaInsteadOfNewMediaWhenDataUpdated
 
 void MediaLibraryTest::shouldNotEmitUpdatedWhenNothingUpdated()
 {
-    FakeMediaValidator validator;
-    MediaLibrary mediaLibrary(&validator);
+    MockObject<MediaValidator> validator;
+    MOCK_METHOD(validator, fileWithUrlExists).stubs().will(returnValue(true));
+
+    MediaLibrary mediaLibrary(validator);
     mediaLibrary.start();
 
     QHash<int,QVariant> data = createTestMediaDataWithAlbumArtist();
@@ -186,8 +192,10 @@ void MediaLibraryTest::shouldNotEmitUpdatedWhenNothingUpdated()
 
 void MediaLibraryTest::shouldEmitUpdatedWhenAlbumOrArtistChanged()
 {
-    FakeMediaValidator validator;
-    MediaLibrary mediaLibrary(&validator);
+    MockObject<MediaValidator> validator;
+    MOCK_METHOD(validator, fileWithUrlExists).stubs().will(returnValue(true));
+
+    MediaLibrary mediaLibrary(validator);
     mediaLibrary.start();
 
     QHash<int,QVariant> data = createTestMediaDataWithAlbumArtist();
@@ -246,8 +254,10 @@ void MediaLibraryTest::shouldNotAddMediaForNonExistentFile()
 
 void MediaLibraryTest::shouldCleanupEntriesForNonExistentMedia()
 {
-    FakeMediaValidator validator;
-    MediaLibrary *mediaLibrary = new MediaLibrary(&validator);
+    MockObject<MediaValidator> validator;
+    MOCK_METHOD(validator, fileWithUrlExists).stubs().will(returnValue(true));
+
+    MediaLibrary *mediaLibrary = new MediaLibrary(validator);
     mediaLibrary->start();
 
     QSignalSpy newMediaSpy(mediaLibrary, SIGNAL(newMedia(QList< QSharedPointer<PmcMedia> >)));

@@ -1,3 +1,6 @@
 add_subdirectory(mediacenter)
-add_subdirectory(test)
+
+if (KDE4_BUILD_TESTS)
+    add_subdirectory(test)
+endif (KDE4_BUILD_TESTS)
 

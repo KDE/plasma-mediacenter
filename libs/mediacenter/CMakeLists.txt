@@ -66,7 +66,9 @@ target_link_libraries(plasmamediacentertest
     KF5::KDELibs4Support
     ${TAGLIB_LIBRARIES}
 )
-set_target_properties(plasmamediacenter PROPERTIES VERSION 1.2 SOVERSION 1.2)
+
+set_target_properties(plasmamediacenter PROPERTIES VERSION 1.3 SOVERSION 1.3)
+
 install(TARGETS plasmamediacenter ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 set (plasmamediacenter_HDRS
