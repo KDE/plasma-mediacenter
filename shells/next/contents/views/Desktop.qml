@@ -21,8 +21,9 @@ import QtQuick 2.0
 
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.plasma.mediacenter 2.0 as PMC
+import org.kde.plasma.mediacenter.elements 2.0 as MediaCenterElements
 import "../explorer"
-
 
 Rectangle {
     id: root
@@ -30,6 +31,9 @@ Rectangle {
     width: 1024
     height: 768
 
+    property QtObject mediaWelcomeInstance
+
+    // Shell stuff
     property Item containment
 
     function toggleWidgetExplorer(containment) {
@@ -41,6 +45,13 @@ Rectangle {
             sidePanelStack.setSource(Qt.resolvedUrl("../explorer/WidgetExplorer.qml"), {"containment": containment})
             sidePanelStack.state = "widgetExplorer";
         }
+    }
+
+    function getMediaWelcome() {
+        if (!mediaWelcomeInstance) {
+            mediaWelcomeInstance = pmcMediaWelcomeComponent.createObject(pmcPageStack);
+        }
+        return mediaWelcomeInstance;
     }
 
     PlasmaCore.Dialog {
@@ -98,7 +109,7 @@ Rectangle {
         internal.newContainment = containment;
 
         if (containment != null) {
-            containment.visible = true;
+            containment.visible = false;
         }
         if (containment != null) {
             if (internal.oldContainment != null && internal.oldContainment != containment) {
@@ -181,5 +192,82 @@ Rectangle {
         //configure the view behavior
         desktop.stayBehind = true;
         desktop.fillScreen = true;
+        pmcPageStack.pushAndFocus(getMediaWelcome());
     }
+
+    // End : shell stuff
+
+    // Start: Plasma mediacenter
+
+    PMC.QMLAccess {
+        id: pmcInterface
+    }
+
+    PlasmaComponents.PageStack {
+        id: pmcPageStack
+        anchors.fill: parent
+
+        function pushAndFocus(page) {
+            push(page);
+            focusCurrentPage();
+        }
+
+        function popAndFocus(immediate) {
+            var page = pop(undefined, immediate);
+            //If this is not done, QML's garbage collector will remove the page object
+            page.visible = false;
+            page.parent = pmcPageStack;
+            focusCurrentPage();
+        }
+
+        function focusCurrentPage() {
+            currentPage.focus = true;
+        }
+    }
+
+    Component {
+        id: pmcMediaWelcomeComponent
+        MediaCenterElements.MediaWelcome {
+            property bool hideMediaController: true
+            model: pmcInterface.backendsModel
+            //TODO: reenable when mediaplayer is ported
+            /**
+            onBackendSelected: {
+            if (!selectedBackend.init())
+                return;
+                //pmcPageStack.pushAndFocus(getMediaBrowser());
+                //runtimeData.currentBrowsingBackend = selectedBackend;
+            }
+            //onEmptyAreaClicked: pmcPageStack.pushAndFocus(mediaPlayerInstance ? getMediaPlayer() : getPlaylist())
+            onStatusChanged: {
+                switch (status) {
+                    case PlasmaComponents.PageStatus.Active:
+                        if (mediaPlayerInstance && mediaPlayerInstance.hasVideo) {
+                            videoBackdropTimer.start();
+                        }
+                    case PlasmaComponents.PageStatus.Deactivating:
+                        if (mediaPlayerInstance) {
+                            if (pmcPageStack.currentPage != mediaPlayerInstance) {
+                                mediaPlayerInstance.visible = false;
+                            }
+                            mediaPlayerInstance.z = 0;
+                            mediaPlayerInstance.dimVideo = false;
+                        }
+                    }
+            }
+
+            Timer {
+                id: videoBackdropTimer; interval: 250
+                onTriggered: {
+                    mediaPlayerInstance.parent = pmcPageStackParentItem;
+                    mediaPlayerInstance.visible = true;
+                    mediaPlayerInstance.z = -1;
+                    mediaPlayerInstance.height = pmcPageStackParentItem.height;
+                    mediaPlayerInstance.dimVideo = true;
+                }
+            }**/
+        }
+    }
+
+    // End plasma mediacenter
 }
