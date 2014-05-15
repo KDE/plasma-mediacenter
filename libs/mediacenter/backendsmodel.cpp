@@ -102,7 +102,7 @@ QVariant BackendsModel::data (const QModelIndex& index, int role) const
         case BackendCategoryRole:
             return info.category();
         case ModelObjectRole:
-            QObject *backend = d->backends.value(info.service()->library());
+            QObject *backend = d->backends.value(info.libraryPath());
             QVariant ptr;
             ptr.setValue(backend);
             return ptr;
