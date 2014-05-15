@@ -17,43 +17,16 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-import QtQuick 1.1
-import org.kde.plasma.core 0.1 as PlasmaCore
-import org.kde.locale 0.1
+import QtQuick 2.1
+import org.kde.plasma.core 2.0 as PlasmaCore
 
 Item {
     property alias text: footerText.text
-
-    Locale {
-        id: locale
-    }
-
-    PlasmaCore.DataSource {
-        id: dataSource
-        engine: "time"
-        connectedSources: ["Local"]
-        interval: 10000
-    }
 
     HomeScreenText {
         id: footerText
         anchors.verticalCenter: parent.verticalCenter
         anchors { left: parent.left; margins: 20 }
         font.pointSize: 16
-    }
-
-    HomeScreenText {
-        id: homeScreenClock
-        anchors.verticalCenter: parent.verticalCenter
-        anchors { right: parent.right; margins: 20 }
-
-        font.pointSize: 20
-
-        Component.onCompleted: if (dataSource.valid) {
-            homeScreenClock.text = function() {
-                return locale.formatLocaleTime(dataSource.data["Local"]["Time"],
-                                               Locale.TimeWithoutSeconds)
-            }
-        }
     }
 }

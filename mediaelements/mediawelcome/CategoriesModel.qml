@@ -17,7 +17,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-import QtQuick 1.1
+import QtQuick 2.1
 
 ListModel {
     property int defaultIndex: 1
@@ -35,15 +35,5 @@ ListModel {
         display: "Pictures"
         decoration: "camera-photo"
         category: "image"
-    }
-//     ListElement {
-//         display: "Others"
-//         decoration: "plasma"
-//         category: "other"
-//     }
-    ListElement {
-        display: "Settings"
-        decoration: "configure"
-        category: "settings"
     }
 }

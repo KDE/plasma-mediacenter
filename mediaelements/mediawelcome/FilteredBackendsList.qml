@@ -17,9 +17,9 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-import QtQuick 1.1
-import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
-import org.kde.plasma.components 0.1 as PlasmaComponents
+import QtQuick 2.1
+import org.kde.plasma.mediacenter 2.0 as PMC
+import org.kde.plasma.components 2.0 as PlasmaComponents
 
 ListView {
     id: listView
@@ -36,7 +36,7 @@ ListView {
     Keys.onReturnPressed: { currentItem.launch() }
     Keys.onEnterPressed: { currentItem.launch() }
 
-    model: MediaCenterElements.FilteredBackendsModel {
+    model: PMC.FilteredBackendsModel {
         id: filteredModel
     }
 

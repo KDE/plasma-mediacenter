@@ -1,8 +1,1 @@
-MediaBrowser 0.1 mediabrowser/MediaBrowser.qml
-MediaController 0.1 mediacontroller/MediaController.qml
-MediaPlayer 0.1 mediaplayer/MediaPlayer.qml
-MediaWelcome 0.1 mediawelcome/MediaWelcome.qml
-RuntimeData 0.1 runtimedata/RuntimeData.qml
-Playlist 0.1 playlist/Playlist.qml
-ImageViewer 0.1 imageviewer/ImageViewer.qml
-PopupMenu 0.1 popupmenu/PopupMenu.qml
+MediaWelcome 2.0 mediawelcome/MediaWelcome.qml

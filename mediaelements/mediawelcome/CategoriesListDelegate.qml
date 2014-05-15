@@ -17,19 +17,13 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-import QtQuick 1.1
-import org.kde.qtextracomponents 0.1 as QtExtraComponents
+import QtQuick 2.1
+import org.kde.plasma.core 2.0 as PlasmaCore
 
 Item {
     id: root
-    property alias currentCategory: workaround.text
+    property string currentCategory: category 
     opacity: ListView.isCurrentItem ? 1 : 0.4
-
-    Text {
-        id: workaround
-        visible: false
-        text: category
-    }
 
     Column {
         anchors {
@@ -38,9 +32,9 @@ Item {
         }
         spacing: 10
 
-        QtExtraComponents.QIconItem {
+        PlasmaCore.IconItem {
             id: backendIcon
-            icon: decoration
+            source: decoration
             height: width
             width: parent.width
         }

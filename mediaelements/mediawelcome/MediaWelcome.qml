@@ -18,9 +18,9 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-import QtQuick 1.1
-import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
-import org.kde.plasma.components 0.1 as PlasmaComponents
+import QtQuick 2.1
+import org.kde.plasma.mediacenter.elements 2.0 as MediaCenterElements
+import org.kde.plasma.components 2.0 as PlasmaComponents
 
 PlasmaComponents.Page {
     id: homeScreenRootItem
@@ -64,7 +64,7 @@ PlasmaComponents.Page {
             backendsModel: homeScreenRootItem.model
             categoryFilter: categoriesList.currentCategory
         }
-
+ 
         HomeScreenFooter {
             id: homeScreenFooter
             width: parent.width
