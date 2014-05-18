@@ -22,14 +22,8 @@ import org.kde.qtextracomponents 0.1 as QtExtraComponents
 
 Item {
     id: root
-    property alias currentCategory: workaround.text
+    property string currentCategory: category
     opacity: ListView.isCurrentItem ? 1 : 0.4
-
-    Text {
-        id: workaround
-        visible: false
-        text: category
-    }
 
     Column {
         anchors {
