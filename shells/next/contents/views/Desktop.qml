@@ -25,11 +25,12 @@ import org.kde.plasma.mediacenter 2.0 as PMC
 import org.kde.plasma.mediacenter.elements 2.0 as MediaCenterElements
 import "../explorer"
 
-Rectangle {
+Image {
     id: root
-    color: Qt.rgba(0, 0, 0, 0.2)
     width: 1024
     height: 768
+    fillMode: Image.Tile
+    source: "../images/noiselight.png"
 
     property QtObject mediaWelcomeInstance
 
@@ -52,6 +53,11 @@ Rectangle {
             mediaWelcomeInstance = pmcMediaWelcomeComponent.createObject(pmcPageStack);
         }
         return mediaWelcomeInstance;
+    }
+    Image {
+        id: grad
+        source: "../images/gradient.png"
+        anchors.fill: parent
     }
 
     PlasmaCore.Dialog {
