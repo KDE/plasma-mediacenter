@@ -133,6 +133,24 @@ FocusScope {
             } else if (event.key == Qt.Key_Escape && currentIndex) {
                 currentIndex = 0;
                 event.accepted = true;
+            } else if (event.key == Qt.Key_Right) {
+		//This button will take to Albums.
+                var buttons = listBrowserRoot.topSibling.buttons;
+                if (buttons) {
+                    listBrowserRoot.topSibling.focus = true;
+                    var tabButton = listBrowserRoot.topSibling.buttons.get(1).button;
+                    tabButton.clicked();
+                    event.accepted = true;
+		}
+            } else if (event.key == Qt.Key_Left) {
+		//This button will take to Artists.
+                var buttons = listBrowserRoot.topSibling.buttons;
+                if (buttons) {
+                    listBrowserRoot.topSibling.focus = true;
+                    var tabButton = listBrowserRoot.topSibling.buttons.get(2).button;
+                    tabButton.clicked();
+                    event.accepted = true;
+		}
             }
         }
     }
