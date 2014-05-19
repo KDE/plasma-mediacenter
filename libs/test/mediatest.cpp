@@ -22,9 +22,9 @@
 #include <mediacenter/artist.h>
 #include <mediacenter/media.h>
 
-#include <qtest_kde.h>
+#include <qtest.h>
 
-QTEST_KDEMAIN(MediaTest, NoGUI);
+QTEST_MAIN(MediaTest);
 
 const QString TEST_URL = "uri://test.123";
 

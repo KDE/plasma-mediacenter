@@ -21,9 +21,9 @@
 #include <mediacenter/itemcache.h>
 #include <mediacenter/artist.h>
 
-#include <qtest_kde.h>
+#include <qtest.h>
 
-QTEST_KDEMAIN(ItemCacheTest, NoGUI);
+QTEST_MAIN(ItemCacheTest);
 
 void ItemCacheTest::shouldInsertAndReturnTheSameObjectNextTime()
 {

@@ -21,9 +21,9 @@
 
 #include <mediacenter/pmcmedia.h>
 
-#include <qtest_kde.h>
+#include <qtest.h>
 
-QTEST_KDEMAIN(PmcMediaTest, NoGUI);
+QTEST_MAIN(PmcMediaTest);
 
 const QString testUrl = "file:///tmp/test.foo";
 

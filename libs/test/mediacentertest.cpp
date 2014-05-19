@@ -19,9 +19,11 @@
 #include "mediacentertest.h"
 #include <mediacenter/mediacenter.h>
 
-#include <qtest_kde.h>
+#include <qtest.h>
+#include <QStandardPaths>
+#include <KCmdLineArgs>
 
-QTEST_KDEMAIN(MediaCenterTest, NoGUI);
+QTEST_MAIN(MediaCenterTest);
 
 void MediaCenterTest::initTestCase()
 {

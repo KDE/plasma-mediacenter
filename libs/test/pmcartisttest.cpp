@@ -20,9 +20,9 @@
 #include <mediacenter/artist.h>
 #include <mediacenter/pmcartist.h>
 
-#include <qtest_kde.h>
+#include <qtest.h>
 
-QTEST_KDEMAIN(PmcArtistTest, NoGUI);
+QTEST_MAIN(PmcArtistTest);
 
 void PmcArtistTest::initTestCase()
 {

@@ -22,9 +22,9 @@
 #include <mediacenter/media.h>
 #include <mediacenter/artist.h>
 
-#include <qtest_kde.h>
+#include <qtest.h>
 
-QTEST_KDEMAIN(PmcAlbumTest, NoGUI);
+QTEST_MAIN(PmcAlbumTest);
 
 void PmcAlbumTest::initTestCase()
 {
