@@ -288,5 +288,5 @@ void MediaLibraryTest::shouldCleanupEntriesForNonExistentMedia()
     delete mediaLibrary;
 }
 
-QTEST_MAIN(MediaLibraryTest)
+QTEST_GUILESS_MAIN(MediaLibraryTest)
 #include "medialibrarytest.moc"

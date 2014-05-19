@@ -24,7 +24,7 @@
 
 #include <qtest.h>
 
-QTEST_MAIN(PmcAlbumTest);
+QTEST_GUILESS_MAIN(PmcAlbumTest);
 
 void PmcAlbumTest::initTestCase()
 {

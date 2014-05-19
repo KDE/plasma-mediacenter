@@ -23,7 +23,7 @@
 
 #include <qtest.h>
 
-QTEST_MAIN(PmcMediaTest);
+QTEST_GUILESS_MAIN(PmcMediaTest);
 
 const QString testUrl = "file:///tmp/test.foo";
 

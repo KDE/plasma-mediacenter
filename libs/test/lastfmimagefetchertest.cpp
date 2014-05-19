@@ -70,6 +70,6 @@ bool LastFmImageFetcherTest::waitForSignal(QSignalSpy* spy, int timeout)
     return !spy->isEmpty();
 }
 
-QTEST_MAIN(LastFmImageFetcherTest)
+QTEST_GUILESS_MAIN(LastFmImageFetcherTest)
 
 #include "lastfmimagefetchertest.moc"

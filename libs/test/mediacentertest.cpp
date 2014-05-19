@@ -23,7 +23,7 @@
 #include <QStandardPaths>
 #include <KCmdLineArgs>
 
-QTEST_MAIN(MediaCenterTest);
+QTEST_GUILESS_MAIN(MediaCenterTest);
 
 void MediaCenterTest::initTestCase()
 {

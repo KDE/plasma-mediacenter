@@ -22,7 +22,7 @@
 
 #include <qtest.h>
 
-QTEST_MAIN(PmcArtistTest);
+QTEST_GUILESS_MAIN(PmcArtistTest);
 
 void PmcArtistTest::initTestCase()
 {

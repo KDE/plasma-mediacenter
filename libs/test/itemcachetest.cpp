@@ -23,7 +23,7 @@
 
 #include <qtest.h>
 
-QTEST_MAIN(ItemCacheTest);
+QTEST_GUILESS_MAIN(ItemCacheTest);
 
 void ItemCacheTest::shouldInsertAndReturnTheSameObjectNextTime()
 {

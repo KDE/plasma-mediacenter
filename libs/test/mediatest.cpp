@@ -24,7 +24,7 @@
 
 #include <qtest.h>
 
-QTEST_MAIN(MediaTest);
+QTEST_GUILESS_MAIN(MediaTest);
 
 const QString TEST_URL = "uri://test.123";
 

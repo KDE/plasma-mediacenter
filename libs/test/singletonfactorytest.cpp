@@ -49,6 +49,6 @@ void SingletonFactoryTest::shouldReturnSameInstanceEveryTime()
     QVERIFY2(obj1 == obj2, "Objects returned are not equal");
 }
 
-QTEST_MAIN(SingletonFactoryTest)
+QTEST_GUILESS_MAIN(SingletonFactoryTest)
 
 #include "singletonfactorytest.moc"
