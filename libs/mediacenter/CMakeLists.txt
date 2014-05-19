@@ -1,3 +1,5 @@
+include(ECMMarkAsTest)
+
 set (plasmamediacenter_SRCS
     pmcruntime.cpp
     medialibrarywrappercache.cpp
@@ -52,6 +54,8 @@ target_link_libraries(plasmamediacenter
 add_library(plasmamediacentertest SHARED
     ${plasmamediacenter_SRCS}
 )
+
+ecm_mark_as_test(plasmamediacentertest)
 
 set_target_properties(plasmamediacentertest
 PROPERTIES COMPILE_FLAGS  -fvisibility=default
