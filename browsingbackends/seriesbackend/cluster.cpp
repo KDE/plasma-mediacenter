@@ -1,10 +1,12 @@
 #include "cluster.h"
 #include <QtCore/qmath.h>
+#include <QDebug>
 
 #define COS_SIM_THRESHOLD 0.49
 
 Cluster::Cluster() {
     m_empty = true;
+    m_merged = false;
 }
 
 Cluster::Cluster(QString label, int level) {
@@ -13,7 +15,7 @@ Cluster::Cluster(QString label, int level) {
     this->fuzzifyLabel();
 }
 
-QList< Cluster > Cluster::children() {
+QList< Cluster* > Cluster::children() {
     return m_children;
 }
 
@@ -74,14 +76,15 @@ QStringList Cluster::fuzzyString() {
 }
 
 
-Cluster Cluster::insertChild(QString& label) {
-    Q_FOREACH(Cluster child, m_children) {
-        if(child.label() == label) {
+Cluster* Cluster::insertChild(QString& label) {
+    Q_FOREACH(Cluster *child, m_children) {
+        if(child->label() == label) {
             return child;
         }
     }
-    Cluster child(label, m_level + 1);
+    auto child = new Cluster (label, m_level + 1);
     this->m_children.append(child);
+    qDebug() << "New child: " << label << "<-" << m_label;
 
     return child;
 }
@@ -98,13 +101,13 @@ bool Cluster::merged() {
     return m_merged;
 }
 
-QList< Cluster > Cluster::mergedNodes() {
+QList< Cluster* > Cluster::mergedNodes() {
     return m_mergedNodes;
 }
 
-bool Cluster::mergeCompatible(Cluster& cluster) {
+bool Cluster::mergeCompatible(Cluster* cluster) {
     bool compatible = false;
-    double cosSimilarity = cosineSimilarity(m_fuzzyString, cluster.m_fuzzyString);
+    double cosSimilarity = cosineSimilarity(m_fuzzyString, cluster->m_fuzzyString);
 
     //TODO: Implement word-wise cosineSimilarity
 
@@ -114,11 +117,11 @@ bool Cluster::mergeCompatible(Cluster& cluster) {
     return compatible;
 }
 
-bool Cluster::mergeNode(Cluster& cluster) {
+bool Cluster::mergeNode(Cluster *cluster) {
     if(mergeCompatible(cluster)) {
-        if(cluster.merged()) {
-            cluster.setMerged(false);
-            m_mergedNodes.append(cluster.mergedNodes());
+        if(cluster->merged()) {
+            cluster->setMerged(false);
+            m_mergedNodes.append(cluster->mergedNodes());
         }
         m_merged = true;
         m_mergedNodes.append(cluster);

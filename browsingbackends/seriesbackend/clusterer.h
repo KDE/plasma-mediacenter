@@ -3,7 +3,8 @@
 #include "cluster.h"
 #include <mediacenter/pmcmedia.h>
 
-class Clusterer {
+class Clusterer: public QObject {
+    Q_OBJECT
 public:
     Clusterer();
     void buildCluster(QList<PmcMedia::Ptr> &mediaList);
@@ -11,13 +12,16 @@ public:
 
     QString label(int index) const;
 
+signals:
+    void sizeChanged(int size);
+
 private:
     Cluster m_cluster;
-    QList<Cluster> m_clusters;
+    QList<Cluster*> m_clusters;
 
-    Cluster findAndInsert(Cluster &root, QStringList &labels);
+    Cluster* findAndInsert(Cluster &root, QStringList &labels);
     void makeListOfClusters();
-    void mergeTree(Cluster &cluster);
+    void mergeTree(Cluster *cluster);
     void populate(QList<PmcMedia::Ptr> &mediaList);
 };
 

@@ -4,11 +4,13 @@
 #include <mediacenter/medialibrary.h>
 #include <mediacenter/mediacenter.h>
 
-SeriesModel::SeriesModel(QObject* parent): QAbstractListModel(parent) {
+SeriesModel::SeriesModel(QObject* parent): QAbstractListModel(parent)
+{
     mediaData = SingletonFactory::instanceFor<MediaLibrary>()->getMedia("video");
     setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
 
     clusterer.buildCluster(mediaData);
+    connect(&clusterer, SIGNAL(sizeChanged(int)), SLOT(clusterSizeUpdated(int)));
 }
 
 QVariant SeriesModel::data(const QModelIndex& index, int role) const {
@@ -28,5 +30,10 @@ QVariant SeriesModel::data(const QModelIndex& index, int role) const {
 int SeriesModel::rowCount(const QModelIndex& parent) const {
     return clusterer.size();
 }
+
+void SeriesModel::clusterSizeUpdated(int) {
+    reset();
+}
+
 
 #include "seriesmodel.moc"

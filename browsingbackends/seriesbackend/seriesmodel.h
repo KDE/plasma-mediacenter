@@ -16,6 +16,8 @@ private:
     Clusterer clusterer;
     QList <QSharedPointer<PmcMedia> > mediaData;
     QList <QString> clusters;
+private slots:
+    void clusterSizeUpdated(int);
 };
 
 #endif // SERIESMODEL_H
