@@ -30,6 +30,7 @@ class MEDIACENTER_EXPORT PmcMedia : public QObject
 {
     Q_OBJECT
 public:
+    typedef QSharedPointer<PmcMedia> Ptr;
     explicit PmcMedia(const QString &url, QObject* parent = 0);
 
     void setMedia(const QSharedPointer< Media >& media);

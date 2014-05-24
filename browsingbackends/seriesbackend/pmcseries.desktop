@@ -1,0 +1,15 @@
+[Desktop Entry]
+Type=Service
+Icon=kde
+Name=Series
+Comment=Series grouper thingy
+
+X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
+
+X-KDE-PluginInfo-Author=Vinay Rao
+X-KDE-PluginInfo-Email=sr.vinay@gmail.com
+X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-Category=video
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
+X-KDE-Library=pmc_series

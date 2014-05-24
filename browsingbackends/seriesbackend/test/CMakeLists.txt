@@ -11,7 +11,7 @@ include_directories(
 )
 
 function(pmc_test TESTNAME)
-    kde4_add_executable(${TESTNAME} ${TESTNAME}.cpp)
+    kde4_add_executable(${TESTNAME} ${TESTNAME}.cpp ../cluster.cpp)
     add_test(pmc-libs-${TESTNAME} ${TESTNAME})
     target_link_libraries(${TESTNAME}
     plasmamediacentertest ${KDE4_KDECORE_LIBRARY} ${KDE4_KIO_LIBS}
@@ -20,12 +20,4 @@ function(pmc_test TESTNAME)
     )
 endfunction(pmc_test)
 
-pmc_test(medialibrarytest)
-pmc_test(singletonfactorytest)
-pmc_test(lastfmimagefetchertest)
-pmc_test(pmcmediatest)
-pmc_test(mediatest)
-pmc_test(mediacentertest)
-pmc_test(itemcachetest)
-pmc_test(pmcalbumtest)
-pmc_test(pmcartisttest)
+pmc_test(clustertest)

@@ -1,0 +1,142 @@
+#include "cluster.h"
+#include <QtCore/qmath.h>
+
+#define COS_SIM_THRESHOLD 0.49
+
+Cluster::Cluster() {
+    m_empty = true;
+}
+
+Cluster::Cluster(QString label, int level) {
+    this->m_label = label;
+    this->m_level = level;
+    this->fuzzifyLabel();
+}
+
+QList< Cluster > Cluster::children() {
+    return m_children;
+}
+
+bool Cluster::empty() {
+    return m_empty;
+}
+
+
+double Cluster::cosineSimilarity(QStringList &fs1, QStringList &fs2) {
+    auto charCount1 = charCount(fs1);
+    auto charCount2 = charCount(fs2);
+
+    double numerator = 0;
+    Q_FOREACH(auto key, charCount1.keys()) {
+        if(charCount2.contains(key)) {
+            numerator += (charCount1[key] * charCount2[key]);
+        }
+    }
+    double sumCounts1 = 0, sumCounts2 = 0;
+    Q_FOREACH(auto value, charCount1.values()) {
+        sumCounts1 += (value * value);
+    }
+    Q_FOREACH(auto value, charCount2.values()) {
+        sumCounts2 += (value * value);
+    }
+    double denominator = sqrt(sumCounts1) * sqrt(sumCounts2);
+
+    return denominator == 0? 0: (numerator / denominator);
+}
+
+QHash<QString, int> Cluster::charCount(QStringList word) {
+    QHash<QString, int> charCounts;
+
+    Q_FOREACH(QString ch, word) {
+        if(!charCounts.contains(ch)) {
+            charCounts[ch] = 0;
+        }
+        charCounts[ch]++;
+    }
+
+    return charCounts;
+}
+
+void Cluster::fuzzifyLabel() {
+    QStringList fuzzyLabel;
+
+    Q_FOREACH(QChar ch, m_label) {
+        if(ch.isLetterOrNumber()) {
+            fuzzyLabel.append(ch.toLower());
+        }
+    }
+
+    this->m_fuzzyString = fuzzyLabel;
+}
+
+QStringList Cluster::fuzzyString() {
+    return this->m_fuzzyString;
+}
+
+
+Cluster Cluster::insertChild(QString& label) {
+    Q_FOREACH(Cluster child, m_children) {
+        if(child.label() == label) {
+            return child;
+        }
+    }
+    Cluster child(label, m_level + 1);
+    this->m_children.append(child);
+
+    return child;
+}
+
+QString Cluster::label() const {
+    return this->m_label;
+}
+
+int Cluster::level() {
+    return this->m_level;
+}
+
+bool Cluster::merged() {
+    return m_merged;
+}
+
+QList< Cluster > Cluster::mergedNodes() {
+    return m_mergedNodes;
+}
+
+bool Cluster::mergeCompatible(Cluster& cluster) {
+    bool compatible = false;
+    double cosSimilarity = cosineSimilarity(m_fuzzyString, cluster.m_fuzzyString);
+
+    //TODO: Implement word-wise cosineSimilarity
+
+    if(cosSimilarity <= COS_SIM_THRESHOLD) {
+        compatible = true;
+    }
+    return compatible;
+}
+
+bool Cluster::mergeNode(Cluster& cluster) {
+    if(mergeCompatible(cluster)) {
+        if(cluster.merged()) {
+            cluster.setMerged(false);
+            m_mergedNodes.append(cluster.mergedNodes());
+        }
+        m_merged = true;
+        m_mergedNodes.append(cluster);
+        resetLabels();
+        return true;
+    }
+    return false;
+}
+
+void Cluster::resetLabels() {
+    //TODO: Choose better label/fuzzy string to have
+}
+
+
+void Cluster::setMerged(bool merged) {
+    m_merged = merged;
+    if(!merged) {
+        m_mergedNodes.clear();
+    }
+}
+
