@@ -21,14 +21,15 @@ import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
 
-
 Rectangle {
+    id: root
     property alias text: mediaTitleLabel.text
     property alias horizontalAlignment: mediaTitleLabel.horizontalAlignment
 
     property bool showOverlay: false
     property bool expanded: false
     property int targetHeight: 0
+    property bool autoWidth: false
 
     clip: true
     height: expanded ? mediaTitleLabel.height : targetHeight
@@ -40,7 +41,6 @@ Rectangle {
             verticalCenter: parent.verticalCenter;
             left: parent.left; margins: 1
         }
-        width: parent.width
 
         clip: true
         font.pointSize: 11
@@ -50,5 +50,15 @@ Rectangle {
 
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
+    }
+
+    Binding {
+        target: mediaTitleLabel; property: 'width'
+        value: root.width; when: !autoWidth
+    }
+
+    Binding {
+        target: root; property: 'width'
+       value: mediaTitleLabel.width; when: autoWidth
     }
 }
