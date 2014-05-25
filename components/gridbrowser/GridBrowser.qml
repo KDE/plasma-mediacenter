@@ -94,7 +94,6 @@ FocusScope {
         delegate: Common.MediaItemDelegate {
             width: GridView.view.cellWidth
             height: GridView.view.cellHeight
-            scale: (GridView.isCurrentItem ? 1.1 : 1)
             clip: !GridView.isCurrentItem
             z: GridView.isCurrentItem ? 1 : 0
             view: gridBrowserGridView
@@ -103,6 +102,8 @@ FocusScope {
             onPlayRequested: gridBrowserRoot.mediaSelected(index, url, currentMediaType)
             onPopupMenuRequested: gridBrowserRoot.popupRequested(index,mediaUrl,mediaType, display)
         }
+        highlight: PlasmaComponents.Highlight { z: 1 }
+        highlightFollowsCurrentItem: true
         flow: _pmc_is_desktop ? GridView.LeftToRight : GridView.TopToBottom
         cacheBuffer: width*2
         focus: true
