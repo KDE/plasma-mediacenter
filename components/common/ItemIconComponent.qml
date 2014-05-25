@@ -17,7 +17,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-import QtQuick 1.1
+import QtQuick 2.1
 
 import org.kde.qtextracomponents 0.1 as QtExtraComponents
 
@@ -26,10 +26,10 @@ QtExtraComponents.QIconItem {
     anchors.horizontalCenter: parent ? parent.horizontalCenter : undefined
     icon: {
         if (typeof iconImageLoader.source == "string")
-            QIcon(iconImageLoader.source);
+            iconImageLoader.source
         else
             if (typeof decorationType !== 'undefined' && decorationType == "qimage")
-                QIcon(iconImageLoader.source);
+                iconImageLoader.source
             else
                 iconImageLoader.source
     }

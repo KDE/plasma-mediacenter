@@ -17,16 +17,15 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-import QtQuick 1.1
-import org.kde.qtextracomponents 0.1 as QtExtraComponents
-import org.kde.plasma.components 0.1 as PlasmaComponents
-import org.kde.plasma.core 0.1 as PlasmaCore
-import org.kde.plasma.mediacenter.components 0.1 as MediaCenterComponents
+import QtQuick 2.1
+import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.mediacenter.components 2.0 as MediaCenterComponents
 
 FocusScope {
     id: tabBrowser
     anchors.fill: parent
-    anchors.margins: __theme.margin
+    anchors.margins: theme.margin
     property QtObject backend
 
     signal mediaSelected(int index, string url, string mediaType)
