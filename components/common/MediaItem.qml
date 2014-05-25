@@ -51,7 +51,7 @@ Item {
                     property variant source
 
                     anchors {
-                        left: parent.left; top: parent.top; margins: 2
+                        left: parent.left; top: parent.top
                         right: mediaItem.horizontal ? undefined : parent.right
                         bottom: mediaItem.horizontal
                             ? parent.bottom
@@ -71,7 +71,7 @@ Item {
                 MediaRow {
                     id: labelOverlay
                     anchors {
-                        bottom: parent.bottom; margins: mediaItem.horizontal ? 1 : 5
+                        bottom: parent.bottom; margins: 2
                         left: mediaItem.horizontal ? iconImageLoader.right : parent.left
                         right: parent.right
                         verticalCenter: mediaItem.horizontal ? parent.verticalCenter : undefined
@@ -79,7 +79,7 @@ Item {
 
                     displayProxy: mediaItem.displayProxy
                     visible: !hideLabel && display != ""
-                    opacity: 0.8
+                    opacity: 0.9
                     showOverlay: !isExpandable
                     width: parent.width
                     targetHeight: mediaItem.horizontal ? parent.height : 32
@@ -88,18 +88,15 @@ Item {
                 }
                 LabelOverlay {
                     id: labelduration
-                    anchors {
-                        top: parent.top
-                        horizontalCenter: parent.horizontalCenter
-                    }
+                    anchors { bottom: labelOverlay.top; right: parent.right; rightMargin: 2 }
 
                     horizontalAlignment: Text.AlignRight
                     text: mediaDuration ? Qt.formatTime(new Date(0, 0, 0, 0, 0, mediaDuration), "hh:mm:ss") : ""
-                    visible: !hideLabel && text
-                    opacity: 0.8
+                    visible: !hideLabel && text && !mediaItem.horizontal
+                    opacity: 0.9
                     showOverlay: !isExpandable && !mediaItem.horizontal
                     expanded: true
-                    width: parent.width * 0.9
+                    autoWidth: true
                 }
 	    }
 

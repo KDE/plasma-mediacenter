@@ -23,6 +23,7 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 Item {
     id: root
     property string currentCategory: category 
+
     opacity: ListView.isCurrentItem ? 1 : 0.4
 
     Column {
