@@ -49,11 +49,6 @@ Item {
             }
         }
     }
-    Behavior on scale {
-        NumberAnimation {
-            duration: 100
-        }
-    }
 
     Keys.onReturnPressed: {
         if (isExpandable) {
