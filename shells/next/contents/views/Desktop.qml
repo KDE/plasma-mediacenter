@@ -33,6 +33,7 @@ Image {
     source: "../images/noiselight.png"
 
     property QtObject mediaWelcomeInstance
+    property QtObject mediaBrowserInstance
 
     // Shell stuff
     property Item containment
@@ -54,6 +55,14 @@ Image {
         }
         return mediaWelcomeInstance;
     }
+
+    function getMediaBrowser() {
+        if (!mediaBrowserInstance) {
+            mediaBrowserInstance = pmcMediaBrowserComponent.createObject(pmcPageStack);
+        }
+        return mediaBrowserInstance;
+    }
+
     Image {
         id: grad
         source: "../images/gradient.png"
@@ -236,14 +245,17 @@ Image {
         MediaCenterElements.MediaWelcome {
             property bool hideMediaController: true
             model: pmcInterface.backendsModel
-            //TODO: reenable when mediaplayer is ported
-            /**
             onBackendSelected: {
-            if (!selectedBackend.init())
-                return;
-                //pmcPageStack.pushAndFocus(getMediaBrowser());
-                //runtimeData.currentBrowsingBackend = selectedBackend;
+                print("###############1");
+                if (!selectedBackend.init())
+                    return;
+                print("###############2");
+                pmcInterface.currentBrowsingBackend = selectedBackend;
+                print("###############3");
+                pmcPageStack.pushAndFocus(getMediaBrowser());
+                print("###############4");
             }
+            /** TODO: Reenable
             //onEmptyAreaClicked: pmcPageStack.pushAndFocus(mediaPlayerInstance ? getMediaPlayer() : getPlaylist())
             onStatusChanged: {
                 switch (status) {
@@ -274,6 +286,45 @@ Image {
             }**/
         }
     }
+
+    Component {
+        id: pmcMediaBrowserComponent
+        MediaCenterElements.MediaBrowser {
+            currentBrowsingBackend: pmcInterface.currentBrowsingBackend
+            /**
+            onPlayRequested: {
+                if (currentMediaType == "image") {
+                    var mediaImageViewer = getMediaImageViewer();
+                    mediaImageViewer.stripModel = pmcInterface.currentBrowsingBackend.models[0].model;
+                    mediaImageViewer.stripCurrentIndex = index;
+                    mediaImageViewer.source = url;
+                    pmcPageStack.pushAndFocus(mediaImageViewer);
+                } else {
+                    pmcPageStack.pushAndFocus(getMediaPlayer());
+                    if (playlistInstance) playlistInstance.active = false;
+                    pmcInterface.playUrl(url);
+                }
+            }
+            onBackRequested: pmcPageStack.popAndFocus()
+            onPopupMenuRequested: {
+                popupMenuInstance = getPopupMenu();
+                popupMenuInstance.visible = true;
+                popupMenuInstance.mediaUrl = mediaUrl;
+                popupMenuInstance.display = display;
+                popupMenuInstance.mediaType = mediaType;
+                popupMenuInstance.currentMediaDelegateIndex = index;
+                pmcPageStack.pushAndFocus(popupMenuInstance);
+            }
+            onBackendOverlayChanged: {
+                if (backendOverlay) {
+                    pmcPageStack.pushAndFocus(backendOverlay);
+                } else if (pmcPageStack.currentPage != mediaBrowserInstance) {
+                    root.goBack();
+                }
+            }*/
+        }
+    }
+
 
     // End plasma mediacenter
 }
