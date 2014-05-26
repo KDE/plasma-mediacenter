@@ -19,9 +19,9 @@
 
 import QtQuick 2.1
 
-import org.kde.qtextracomponents 0.1 as QtExtraComponents
+import org.kde.kquickcontrolsaddons 2.0 as KQuickControlsAddons
 
-QtExtraComponents.QIconItem {
+KQuickControlsAddons.QIconItem {
     id: delegateItemIcon
     anchors.horizontalCenter: parent ? parent.horizontalCenter : undefined
     icon: {

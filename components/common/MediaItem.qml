@@ -38,10 +38,6 @@ Item {
         Item {
             anchors { fill: parent; margins: 2 }
 
-            PlasmaCore.Theme {
-                id:theme
-            }
-
             Item {
                 anchors.fill: parent
 

@@ -17,7 +17,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-import QtQuick 1.1
+import QtQuick 2.1
 import org.kde.kquickcontrolsaddons 2.0 as KQuickControlAddons
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.core 2.0 as PlasmaCore
@@ -104,12 +104,12 @@ FocusScope {
         }
         highlight: PlasmaComponents.Highlight { z: 1 }
         highlightFollowsCurrentItem: true
-        flow: _pmc_is_desktop ? GridView.LeftToRight : GridView.TopToBottom
+        flow: GridView.LeftToRight 
         cacheBuffer: width*2
         focus: true
 
         PlasmaComponents.ScrollBar {
-            orientation: _pmc_is_desktop ? Qt.Vertical : Qt.Horizontal
+            orientation: Qt.Horizontal
             flickableItem: gridBrowserGridView
         }
 

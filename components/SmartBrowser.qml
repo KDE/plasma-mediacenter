@@ -62,7 +62,7 @@ FocusScope {
                     console.log("******* Error loading SplitBrowser " + splitBrowserComponent.errorString())
                 }
             } else if (modelLabel.split("#").length == 2 && modelLabel.split("#")[1] == "list") {
-                listBrowserComponent = Qt.createComponent("listbrowser/ListBrowser.qml");
+                var listBrowserComponent = Qt.createComponent("listbrowser/ListBrowser.qml");
                 if (listBrowserComponent.status == Component.Ready) {
                     root.browser = listBrowserComponent.createObject(root);
                     connectSignals(root.browser);
@@ -74,16 +74,20 @@ FocusScope {
                     console.log("******* Error loading ListBrowser " + listBrowserComponent.errorString())
                 }
             } else {
-                gridBrowserComponent = Qt.createComponent("gridbrowser/GridBrowser.qml");
-                root.browser = gridBrowserComponent.createObject(root);
-                connectSignals(root.browser);
-                setSiblings(root.browser);
-                root.browser.currentBrowsingBackend = function() { return root.backend };
-                root.browser.modelMetadata = function() { return modelMetadata };
-                root.browser.focus = true;
+                var gridBrowserComponent = Qt.createComponent("gridbrowser/GridBrowser.qml");
+                if(gridBrowserComponent.status == Component.Ready) {
+                    root.browser = gridBrowserComponent.createObject(root);
+                    connectSignals(root.browser);
+                    setSiblings(root.browser);
+                    root.browser.currentBrowsingBackend = root.backend;
+                    root.browser.modelMetadata = modelMetadata;
+                    root.browser.focus = true;
+                } else {
+                    console.log("******* Error loading GridBrowser " + gridBrowserComponent.errorString())
+                }
             }
         } else if (models && models.length) {
-            tabBrowserComponent = Qt.createComponent("tabbrowser/TabBrowser.qml");
+            var tabBrowserComponent = Qt.createComponent("tabbrowser/TabBrowser.qml");
             root.browser = tabBrowserComponent.createObject(root);
             root.browser.backend = function() { return root.backend };
             connectSignals(root.browser);
@@ -100,8 +104,8 @@ FocusScope {
             console.log("SIBLINGS: WARNING: BROWSER IS NULL!");
             return;
         }
-        browser.topSibling = function() { return root.topSibling; }
-        browser.bottomSibling = function() { return root.bottomSibling; }
+        browser.topSibling = root.topSibling;
+        browser.bottomSibling = root.bottomSibling;
     }
 
     function connectSignals(browser) {
