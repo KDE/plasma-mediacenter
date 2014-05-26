@@ -28,6 +28,7 @@ Item {
 
     function launch() {
         homeScreenRootItem.selectedBackend = modelObject;
+        print(modelObject);
         homeScreenRootItem.backendSelected();
     }
 
