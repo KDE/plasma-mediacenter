@@ -24,16 +24,19 @@
 #include "mediacenter/playlistmodel.h"
 #include "mediacenter/backendsmodel.h"
 #include "mediacenter/pmcruntime.h"
+#include "mediacenter/abstractbrowsingbackend.h"
 
 class QMLAccess : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(PlaylistModel *playlistModel READ playlistModel NOTIFY playlistModelChanged)
     Q_PROPERTY(BackendsModel *backendsModel READ backendsModel NOTIFY backendsModelChanged)
+    Q_PROPERTY(QObject *currentBrowsingBackend MEMBER m_currentBrowsingBackend NOTIFY currentBrowsingBackendChanged)
 
 Q_SIGNALS:
     void playlistModelChanged();
     void backendsModelChanged();
+    void currentBrowsingBackendChanged();
 
 public:
     explicit QMLAccess(QObject *parent = 0);
@@ -48,6 +51,7 @@ private:
 
     QSharedPointer<PlaylistModel> m_playlistModel;
     BackendsModel* m_backendsModel;
+    QObject* m_currentBrowsingBackend;
 };
 
 #endif // QMLACCESS_H
