@@ -75,6 +75,7 @@ void BackendsModel::loadBrowsingBackends()
                 backend->setName(info.pluginName());
                 backend->setParent(const_cast<BackendsModel *>(this));
                 backend->setPmcRuntime(d->pmcRuntime);
+                const_cast<BackendsModel *>(this)->d->backends.insert(info.libraryPath(), backend);
                 d->loadedBackendsInfo.append(info);
                 qDebug() << "Loaded backend : " << info.name() << " from : " << info.libraryPath();
             } else {
@@ -103,6 +104,8 @@ QVariant BackendsModel::data (const QModelIndex& index, int role) const
             return info.category();
         case ModelObjectRole:
             QObject *backend = d->backends.value(info.libraryPath());
+            qDebug() << info.libraryPath();
+            qDebug() << backend;
             QVariant ptr;
             ptr.setValue(backend);
             return ptr;
