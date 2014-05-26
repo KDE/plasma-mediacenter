@@ -34,7 +34,7 @@ find_package(Qt5 CONFIG REQUIRED COMPONENTS Core Quick Sql Test Declarative)
 add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
 
 # Load the frameworks we need
-find_package(KF5 CONFIG REQUIRED
+find_package(KF5 COMPONENTS REQUIRED
     CoreAddons Config I18n GuiAddons Service ConfigWidgets KIO Declarative Plasma)
 
 find_package(Taglib REQUIRED)
