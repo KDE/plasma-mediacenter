@@ -230,7 +230,7 @@ Image {
                         playlistInstance.playNext();
                     } else {
                         runtimeData.stopped = true;
-                        if (!runtimeData.userTrigerredStop) {
+                        if (!runtimeData.userTrigerredStop && pmcPageStack.currentPage == mediaPlayerInstance) {
                             root.goBack()
                             //FIXME:This breaks playback from runtimeData.playUrl
                             //pmcPageStack.pushAndFocus(getMediaBrowser())
