@@ -1,3 +1,25 @@
+2014 -06-02 Sinny Kumari <ksinny@gmail.com> - v1.3.0-beta
+    * Adding left and right arrow key support in All Music
+      to switch between Artist, Album and All Songs
+    *  Try to prioritize photos taken by a camera-like device
+    *  Filter out images with image width lesser than 500 pixel
+    *  Enable C++11
+    * Restrict image sourceSize to screen size in order to avoid loading
+      full versions of images with resolutions more than the screen size
+    * Added MPRIS  support
+    * Implemented Baloo support
+    * PMC is now single instance only
+    * Created MediaLibrary to handle media from multiple sources
+    * Added a feature that shows duration of youtube video.
+    * Bind +,-,0 keys to Increase, Decrease or Normal the playback speed
+
+    * Bug fix:
+     - Hack around linking with older version of gstreamer in Kubuntu 14.04 (and similar)
+    * Notes:
+     - Experimented with using a DB to cache MediaLibrary. Was reverted as it did not
+       give enough performance improvments.
+     - Added tests for libraries and started using mockcpp
+
 2013 -12-18 Sinny Kumari <ksinny@gmail.com> - v1.2.0
     * Plasma-mediacenter version-1.2.0 stable release
     * Adding keyboard navigation support for popupmenu
