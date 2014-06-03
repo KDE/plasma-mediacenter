@@ -54,9 +54,9 @@ FocusScope {
                 if (splitBrowserComponent.status == Component.Ready) {
                     connectSignals(root.browser);
                     setSiblings(root.browser);
-                    root.browser.backend = function() { return root.backend };
-                    root.browser.firstModel = function() { return modelMetadata.first };
-                    root.browser.secondModel = function() { return modelMetadata.second };
+                    root.browser.backend = root.backend; 
+                    root.browser.firstModel = modelMetadata.first;
+                    root.browser.secondModel = modelMetadata.second;
                     root.browser.focus = true;
                 } else {
                     console.log("******* Error loading SplitBrowser " + splitBrowserComponent.errorString())
@@ -67,8 +67,8 @@ FocusScope {
                     root.browser = listBrowserComponent.createObject(root);
                     connectSignals(root.browser);
                     setSiblings(root.browser);
-                    root.browser.currentBrowsingBackend = function() { return root.backend };
-                    root.browser.modelMetadata = function() { return modelMetadata };
+                    root.browser.currentBrowsingBackend = root.backend;
+                    root.browser.modelMetadata = modelMetadata;
                     root.browser.focus = true;
                 } else {
                     console.log("******* Error loading ListBrowser " + listBrowserComponent.errorString())
@@ -88,11 +88,15 @@ FocusScope {
             }
         } else if (models && models.length) {
             var tabBrowserComponent = Qt.createComponent("tabbrowser/TabBrowser.qml");
-            root.browser = tabBrowserComponent.createObject(root);
-            root.browser.backend = function() { return root.backend };
-            connectSignals(root.browser);
-            setSiblings(root.browser);
-            root.browser.focus = true;
+            if(tabBrowserComponent.status == Component.Ready) {
+                root.browser = tabBrowserComponent.createObject(root);
+                root.browser.backend = root.backend;
+                connectSignals(root.browser);
+                setSiblings(root.browser);
+                root.browser.focus = true;
+            } else {
+                console.log("****** Error loading tabbrowser " + tabBrowserComponent.errorString())
+            }
         }
         if (previousBrowser && root.browser != previousBrowser) {
             previousBrowser.destroy();

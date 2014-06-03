@@ -25,7 +25,6 @@ import org.kde.plasma.mediacenter.components 2.0 as MediaCenterComponents
 FocusScope {
     id: tabBrowser
     anchors.fill: parent
-    anchors.margins: theme.margin
     property QtObject backend
 
     signal mediaSelected(int index, string url, string mediaType)
@@ -37,7 +36,7 @@ FocusScope {
     onBackendChanged: {
         var models = tabBrowser.backend.models;
         mediaTabBar.populateButtons();
-        for (i=0; i < models.length ;i++) {
+        for (var i=0; i < models.length ;i++) {
             var modelMetadata = models[i];
             console.log("CREATING SMART FOR " + modelMetadata);
             var browser = mediaBrowserSmartComponent.createObject(mediaTabGroup);
@@ -144,7 +143,6 @@ FocusScope {
         anchors {
             left: parent.left; top: mediaTabBar.bottom;
             right: parent.right; bottom: parent.bottom;
-            topMargin: __theme.margin
         }
     }
 
