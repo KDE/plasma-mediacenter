@@ -23,10 +23,11 @@
 
 #include <KMimeType>
 
+#include <QUrl>
 #include <QDir>
 #include <QDebug>
 
-MEDIACENTER_EXPORT_MEDIASOURCE(FilesystemSearchMediaSource)
+MEDIACENTER_EXPORT_MEDIASOURCE(FilesystemSearchMediaSource, "filesystemsearch.json")
 
 FilesystemSearchMediaSource::FilesystemSearchMediaSource(QObject* parent, const QVariantList&)
     : m_quit(false)
@@ -82,7 +83,7 @@ void FilesystemSearchMediaSource::stop()
 bool FilesystemSearchMediaSource::checkAndAddFile(const QFileInfo& fileInfo)
 {
     const QString mimeType = KMimeType::findByUrl(
-        KUrl::fromLocalFile(fileInfo.absoluteFilePath()))->name();
+        QUrl::fromLocalFile(fileInfo.absoluteFilePath()))->name();
 
     const QString topLevelTypeName = mimeType.split('/').at(0);
 
