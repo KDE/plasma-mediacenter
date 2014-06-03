@@ -39,19 +39,19 @@ QVariant LocalPicturesModel::data (const QModelIndex& index, int role) const
 {
     if(role == Qt::DecorationRole) {
         const QString url = data(index, MediaCenter::MediaUrlRole).toString();
-	if (!LocalPicturesModel::data(index, MediaCenter::IsExpandableRole).toBool()) {
-	    return LocalFilesAbstractModel::data (index, MediaCenter::MediaUrlRole);
-	} else {
+	    if (!LocalPicturesModel::data(index, MediaCenter::IsExpandableRole).toBool()) {
+	            return LocalFilesAbstractModel::data (index, MediaCenter::MediaUrlRole);
+	        } else {
             if (m_thumbProvider->hasThumbnail(url)) {
-	       return "image://localpicturesthumbnail/" + url;
-	    } else {
+	            return "image://localpicturesthumbnail/" + url;
+	        } else {
                 m_thumbProvider->loadThumbnail(QUrl(url), QSize(600, 600));
-	        m_pendingThumbs.insert(url, index);
-	    }
+	            m_pendingThumbs.insert(url, index);
+	        }
         }
     } else if(role == MediaCenter::HideLabelRole) {
-            return !LocalPicturesModel::data(index, MediaCenter::IsExpandableRole).toBool();
-        }
+        return !LocalPicturesModel::data(index, MediaCenter::IsExpandableRole).toBool();
+    }
     return LocalFilesAbstractModel::data (index, role);
 }
 
