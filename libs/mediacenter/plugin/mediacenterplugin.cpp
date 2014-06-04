@@ -26,6 +26,9 @@
 #include "mediacenter/multipleplaylistmodel.h"
 #include "mediacenter/objectpair.h"
 #include "mediacenter/settings.h"
+#include "mediacenter/mediasourcesloader.h"
+#include "mediacenter/medialibrary.h"
+
 #include "qmlaccess.h"
 
 void MediaCenterPlugin::registerTypes(const char *uri)
@@ -40,6 +43,18 @@ void MediaCenterPlugin::registerTypes(const char *uri)
     qmlRegisterType<QMLAccess>(uri, 2, 0, "QMLAccess");
     qmlRegisterType<Settings>(uri, 2, 0, "Settings");
     qRegisterMetaType<BackendsModel*>("BackendsModel*");
+
+}
+
+void MediaCenterPlugin::initializeEngine(QQmlEngine *engine, const char *uri)
+{
+    Q_ASSERT(uri == QLatin1String("org.kde.plasma.mediacenter"));
+
+    SingletonFactory::instanceFor<MediaLibrary>()->start();
+    MediaSourcesLoader mediasourceLoader;
+    QTimer::singleShot(0, &mediasourceLoader, SLOT(load()));
+
+    qDebug() << "one time";
 }
 
 #include "moc_mediacenterplugin.cpp"
