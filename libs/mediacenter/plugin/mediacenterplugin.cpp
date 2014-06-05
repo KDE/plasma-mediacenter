@@ -28,6 +28,7 @@
 #include "mediacenter/settings.h"
 #include "mediacenter/mediasourcesloader.h"
 #include "mediacenter/medialibrary.h"
+#include "runtimedata.h"
 
 #include "qmlaccess.h"
 
@@ -42,6 +43,7 @@ void MediaCenterPlugin::registerTypes(const char *uri)
     qmlRegisterType<ObjectPair>(uri, 2, 0, "ObjectPair");
     qmlRegisterType<QMLAccess>(uri, 2, 0, "QMLAccess");
     qmlRegisterType<Settings>(uri, 2, 0, "Settings");
+    qmlRegisterType<RuntimeData>(uri, 2, 0, "RuntimeData");
     qRegisterMetaType<BackendsModel*>("BackendsModel*");
 
 }
