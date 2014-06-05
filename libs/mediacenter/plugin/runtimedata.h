@@ -29,12 +29,12 @@ class RuntimeData : public QObject
     Q_OBJECT
     Q_ENUMS(PmcStatus)
     
-    Q_PROPERTY(bool userTrigerredStop READ userTrigerredStop WRITE setUserTrigerredStop)
-    Q_PROPERTY(qreal volume READ volume WRITE setVolume)
-    Q_PROPERTY(int currentTime READ currentTime WRITE setCurrentTime)
-    Q_PROPERTY(int totalTime READ totalTime WRITE setTotalTime)
-    Q_PROPERTY(int position READ position WRITE setPosition)
-    Q_PROPERTY(PmcStatus status READ status WRITE setStatus)
+    Q_PROPERTY(bool userTrigerredStop MEMBER m_userTrigerredStop NOTIFY userTrigerredStopChanged)
+    Q_PROPERTY(qreal volume MEMBER m_volume NOTIFY volumeChanged)
+    Q_PROPERTY(int currentTime MEMBER m_currentTime NOTIFY currentTimeChanged)
+    Q_PROPERTY(int totalTime MEMBER m_totalTime NOTIFY totalTimeChanged)
+    Q_PROPERTY(int position MEMBER m_position NOTIFY positionChanged)
+    Q_PROPERTY(PmcStatus status MEMBER m_status NOTIFY statusChanged)
 
 public:
     RuntimeData();
@@ -45,21 +45,14 @@ public:
         Stopped,
         Paused
     };
-    
-    bool userTrigerredStop() const;
-    qreal volume() const;
-    int currentTime() const;
-    int totalTime() const;
-    int position() const;
-    PmcStatus status() const;
 
-public Q_SLOTS:
-    void setUserTrigerredStop(bool userTrigerredStop);
-    void setVolume(qreal volume);
-    void setCurrentTime(int currentTime);
-    void setTotalTime(int totalTime);
-    void setPosition(int position);
-    void setStatus(PmcStatus status);
+Q_SIGNALS:
+    void userTrigerredStopChanged();
+    void volumeChanged(qreal volume);
+    void currentTimeChanged(int currentTime);
+    void totalTimeChanged(int totalTime);
+    void positionChanged(int position);
+    void statusChanged(PmcStatus status);
 
 private:
     bool m_userTrigerredStop;
