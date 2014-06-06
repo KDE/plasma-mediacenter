@@ -29,4 +29,15 @@ RuntimeData::~RuntimeData()
 {
 }
 
+void RuntimeData::toggleMute() {
+   if(m_volume == 0) {
+       m_volume = m_lastVolume;
+       emit volumeChanged(m_volume);
+   } else {
+       m_lastVolume = m_volume;
+       m_volume = 0.0;
+       emit volumeChanged(m_volume);
+   }
+}
+
 #include "runtimedata.moc"

@@ -35,6 +35,7 @@ class RuntimeData : public QObject
     Q_PROPERTY(int totalTime MEMBER m_totalTime NOTIFY totalTimeChanged)
     Q_PROPERTY(int position MEMBER m_position NOTIFY positionChanged)
     Q_PROPERTY(PmcStatus status MEMBER m_status NOTIFY statusChanged)
+    Q_INVOKABLE void toggleMute();
 
 public:
     RuntimeData();
@@ -60,6 +61,7 @@ private:
     int m_currentTime;
     int m_totalTime;
     int m_position;
+    qreal m_lastVolume;
     PmcStatus m_status;
 };
 
