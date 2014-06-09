@@ -26,29 +26,68 @@ import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
 Item {
     id: mediaItemDelegateItem
 
-    property alias horizontal: mediaItem.horizontal
-    property alias view: mediaItem.view
+    property bool horizontal
+    property QtObject view
     property QtObject backend
     signal popupMenuRequested(int index, string mediaUrl, string mediaType, string display)
     signal playRequested(int index, string url, string currentMediaType)
 
-    MediaItem {
-        id: mediaItem
-        anchors.fill: parent
+    Component.onCompleted: init()
+    onHorizontalChanged: init()
 
-        onClicked: {
-            if (isExpandable) {
-                backend.expand(index, view.model);
-            } else {
-                mediaItemDelegateItem.playRequested(index, mediaUrl, mediaType)
+    function init() {
+        theLoader.sourceComponent = horizontal ? listMediaItem : gridMediaItem
+    }
+
+    Loader {
+        id: theLoader
+        anchors.fill: parent
+    }
+
+    Component {
+        id: gridMediaItem
+
+        MediaItem {
+            id: mediaItem
+            view: mediaItemDelegateItem.view
+
+            onClicked: {
+                if (isExpandable) {
+                    backend.expand(index, view.model);
+                } else {
+                    mediaItemDelegateItem.playRequested(index, mediaUrl, mediaType)
+                }
             }
-        }
-        onPressAndHold: {
-            if( mediaType == "audio" || mediaType == "video") {
-                mediaItemDelegateItem.popupMenuRequested(index, mediaUrl, mediaType, display);
+            onPressAndHold: {
+                if( mediaType == "audio" || mediaType == "video") {
+                    mediaItemDelegateItem.popupMenuRequested(index, mediaUrl, mediaType, display);
+                }
             }
         }
     }
+
+    Component {
+        id: listMediaItem
+
+        ListMediaItem {
+            id: mediaItem
+            view: mediaItemDelegateItem.view
+
+            onClicked: {
+                if (isExpandable) {
+                    backend.expand(index, view.model);
+                } else {
+                    mediaItemDelegateItem.playRequested(index, mediaUrl, mediaType)
+                }
+            }
+            onPressAndHold: {
+                if( mediaType == "audio" || mediaType == "video") {
+                    mediaItemDelegateItem.popupMenuRequested(index, mediaUrl, mediaType, display);
+                }
+            }
+        }
+    }
+
 
     Keys.onReturnPressed: {
         if (isExpandable) {
