@@ -33,7 +33,7 @@ Item {
     signal pressAndHold(int index)
 
     Item {
-        anchors { fill: parent; margins: 20 }
+        anchors { fill: parent; margins: 1 }
 
         Item {
             anchors { fill: parent; margins: 2 }
@@ -51,9 +51,10 @@ Item {
 
                     anchors {
                         left: parent.left; top: parent.top
-                        right: parent.right
-                        bottom: isExpandable ? labelOverlay.top : parent.bottom
+                        bottom: parent.bottom
                     }
+
+                    width: height
 
                     function checkAndLoad()
                     {
@@ -67,8 +68,9 @@ Item {
                     id: labelOverlay
                     anchors {
                         bottom: parent.bottom; margins: 2
-                        left: parent.left
+                        left:iconImageLoader.right
                         right: parent.right
+                        verticalCenter: parent.verticalCenter
                     }
 
                     displayProxy: mediaItem.displayProxy
@@ -76,9 +78,8 @@ Item {
                     opacity: 0.9
                     showOverlay: !isExpandable
                     width: parent.width
-                    targetHeight: 32
-                    expanded: mediaItem.view && mediaItem.view.currentIndex == index
-                    horizontalAlignment: Text.AlignHCenter
+                    targetHeight: parent.height
+                    horizontalAlignment: Text.AlignLeft
                 }
                 LabelOverlay {
                     id: labelduration
@@ -86,9 +87,9 @@ Item {
 
                     horizontalAlignment: Text.AlignRight
                     text: mediaDuration ? Qt.formatTime(new Date(0, 0, 0, 0, 0, mediaDuration), "hh:mm:ss") : ""
-                    visible: !hideLabel && text
+                    visible: false
                     opacity: 0.9
-                    showOverlay: !isExpandable
+                    showOverlay: false
                     expanded: true
                     autoWidth: true
                 }
@@ -133,11 +134,10 @@ Item {
         PlasmaComponents.ToolButton {
             id: addToPlaylistButton
             iconSource: "list-add"
-            height: parent.height * 0.2
+            height: parent.height
             width: height
             anchors {
-                right: parent.right; top: parent.top;
-                margins: 5
+                right: parent.right; top: parent.top
             }
             visible: !isExpandable && mediaType != "image" &&  index == mediaItem.view.currentIndex
             onClicked: {
