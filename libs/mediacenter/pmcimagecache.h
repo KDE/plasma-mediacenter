@@ -26,7 +26,7 @@
 
 class KImageCache;
 
-class PmcImageCache : public QObject
+class MEDIACENTER_EXPORT PmcImageCache : public QObject
 {
     Q_OBJECT
 public:
