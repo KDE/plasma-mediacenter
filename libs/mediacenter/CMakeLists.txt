@@ -77,6 +77,7 @@ set (plasmamediacenter_HDRS
     modelmetadata.h
     mediacenter.h
     medialibrary.h
+    pmcimagecache.h
     pmcmedia.h
     pmcalbum.h
     pmcartist.h

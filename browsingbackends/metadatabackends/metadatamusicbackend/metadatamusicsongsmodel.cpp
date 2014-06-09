@@ -19,6 +19,12 @@
 
 #include "metadatamusicsongsmodel.h"
 
+#include <mediacenter/pmcimagecache.h>
+#include <mediacenter/pmccoverartprovider.h>
+#include <mediacenter/singletonfactory.h>
+
+#include <QTime>
+
 MetadataMusicSongsModel::MetadataMusicSongsModel(QObject* parent): MetadataBackendCommonModel(parent)
 {
 
@@ -36,9 +42,22 @@ QVariant MetadataMusicSongsModel::data(const QModelIndex& index, int role) const
         const QString artistName = MetadataBackendCommonModel::data(index, MediaCenter::ArtistRole).toString();
         const QString albumName = MetadataBackendCommonModel::data(index, MediaCenter::AlbumRole).toString();
 
+        const int duration = MetadataBackendCommonModel::data(index, MediaCenter::DurationRole).toInt();
+
         QVariantList list;
         list << songName << albumName << artistName;
+        if (duration > 0) {
+            list << QTime(0,0).addSecs(duration).toString("hh:mm:ss");
+        }
+
         return list;
+    } else if (role == Qt::DecorationRole) {
+        PmcImageCache *imageCache = SingletonFactory::instanceFor<PmcImageCache>();
+        const QString albumName = MetadataBackendCommonModel::data(index, MediaCenter::AlbumRole).toString();
+
+        if (imageCache->containsAlbumCover(albumName)) {
+            return PmcCoverArtProvider::qmlImageUriForAlbumCover(albumName);
+        }
     }
 
     return MetadataBackendCommonModel::data(index, role).toString();
