@@ -21,6 +21,8 @@ import QtQuick 1.1
 
 Row {
     id: mediaRowRoot
+    property int fontPixelSize
+
     property variant displayProxy
     property bool showOverlay: false
     property variant horizontalAlignment
@@ -39,6 +41,8 @@ Row {
     Repeater {
         model: numberOfItemsInDisplay
         LabelOverlay {
+            id: numberOfItemsInDisplayLabelOverlay
+            fontPixelSize: mediaRowRoot.fontPixelSize
             text: typeof(displayProxy) == "object" ? displayProxy[index] : displayProxy
             visible: !hideLabel
             opacity: 0.8

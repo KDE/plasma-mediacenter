@@ -73,6 +73,7 @@ Item {
                         verticalCenter: parent.verticalCenter
                     }
 
+                    fontPixelSize: height * 0.4
                     displayProxy: mediaItem.displayProxy
                     visible: !hideLabel && display != ""
                     opacity: 0.9
