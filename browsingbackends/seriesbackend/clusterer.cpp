@@ -27,6 +27,11 @@ QString Clusterer::label(int index) const {
     return m_clusters.at(index)->label();
 }
 
+Cluster* Clusterer::cluster(int index) const
+{
+    return m_clusters.at(index);
+}
+
 void Clusterer::makeListOfClusters() {
     if(m_cluster.empty()) {
         return;
@@ -86,7 +91,8 @@ void Clusterer::populate(QList< PmcMedia::Ptr >& mediaList) {
         if(labels.first() == "") {
             labels.removeFirst();
         }
-        findAndInsert(m_cluster, labels);
+        auto node = findAndInsert(m_cluster, labels);
+        node->setUrl(fullLabel);
     }
 }
 

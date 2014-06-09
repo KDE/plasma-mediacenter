@@ -11,6 +11,7 @@ public:
     int size() const;
 
     QString label(int index) const;
+    Cluster* cluster(int index) const;
 
 signals:
     void sizeChanged(int size);

@@ -143,3 +143,12 @@ void Cluster::setMerged(bool merged) {
     }
 }
 
+void Cluster::setUrl(const QString& url)
+{
+    m_url = url;
+}
+
+QString Cluster::url() const
+{
+    return m_url;
+}

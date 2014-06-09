@@ -12,4 +12,10 @@ bool SeriesBackend::initImpl() {
     return true;
 }
 
+bool SeriesBackend::expand(int row)
+{
+    static_cast<SeriesModel*>(model())->setCurrentCluster(row);
+    return true;
+}
+
 #include "seriesbackend.moc"

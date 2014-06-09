@@ -20,6 +20,8 @@ public:
     QStringList fuzzyString();
 
     void setMerged(bool merged);
+    void setUrl(const QString &url);
+    QString url() const;
 
     static double cosineSimilarity(QStringList& fs1, QStringList& fs2);
 
@@ -31,6 +33,7 @@ private:
     QList<Cluster*> m_children;
     bool m_merged;
     QList<Cluster*> m_mergedNodes;
+    QString m_url;
 
     void fuzzifyLabel();
     bool mergeCompatible(Cluster *cluster);
