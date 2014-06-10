@@ -126,12 +126,12 @@ void PlaylistModel::addToPlaylist(const QString& url)
 
 void PlaylistModel::removeFromPlaylist(const int& index)
 {
-    beginResetModel();
+    beginRemoveRows(QModelIndex(), index, index);
     d->musicList.takeAt(index)->deleteLater();
     if (index <= d->currentIndex) {
         d->currentIndex -= 1;
     }
-    endResetModel();
+    endRemoveRows();
 }
 
 void PlaylistModel::moveItem(int originalIndex, int newIndex)
