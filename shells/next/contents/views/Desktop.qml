@@ -34,6 +34,7 @@ Image {
 
     property QtObject mediaWelcomeInstance
     property QtObject mediaBrowserInstance
+    property QtObject mediaPlayerInstance
 
     // Shell stuff
     property Item containment
@@ -61,6 +62,21 @@ Image {
             mediaBrowserInstance = pmcMediaBrowserComponent.createObject(pmcPageStack);
         }
         return mediaBrowserInstance;
+    }
+
+    function getMediaPlayer() {
+        if (!mediaPlayerInstance) {
+            mediaPlayerInstance = pmcMediaPlayerComponent.createObject(pmcPageStack);
+        }
+        return mediaPlayerInstance;
+    }
+
+    function goBack()
+    {
+        if (pmcPageStack.currentPage.goBack && pmcPageStack.currentPage.goBack()) {
+            return;
+        }
+        pmcPageStack.popAndFocus();
     }
 
     Image {
@@ -218,6 +234,10 @@ Image {
         id: pmcInterface
     }
 
+    PMC.RuntimeData {
+        id: runtimeData
+    }
+
     PlasmaComponents.PageStack {
         id: pmcPageStack
         anchors.fill: parent
@@ -238,6 +258,49 @@ Image {
         function focusCurrentPage() {
             currentPage.focus = true;
         }
+    }
+
+    MediaCenterElements.MediaController {
+        id: mediaController
+        property bool hideFlag: false
+        anchors {
+            top: parent.top; right: parent.right; left: parent.left
+        }
+        height: visible ? parent.height * 0.08 : 0
+        runtimeDataObject: runtimeData
+        z: 1; opacity: 0.8
+        visible: pmcPageStack.currentPage.hideMediaController ? false : true
+        state: hideFlag && ((mediaPlayerInstance && mediaPlayerInstance.visible) || (imageViewerInstance && imageViewerInstance.visible)) ? "hidden"  : ""
+
+        currentMediaTime: runtimeData.currentTime
+        totalMediaTime: runtimeData.totalTime
+
+        //onPlaylistButtonClicked: pmcPageStack.pushAndFocus(getPlaylist())
+        onBackButtonClicked: root.goBack()
+        //onPlayerButtonClicked: pmcPageStack.pushAndFocus(getMediaPlayer())
+        //onPlayNext: playlistInstance.playNext()
+        //onPlayPrevious: playlistInstance.playPrevious()
+        /*onSeekRequested: {
+            if (mediaPlayerInstance) {
+                mediaPlayerInstance.currentTime = newPosition
+                mprisPlayerObject.emitSeeked(newPosition);
+            }
+        }*/
+        onPlayPause: runtimeData.playPause()
+        onStop: runtimeData.stop()
+        onWantToLoseFocus: pmcPageStack.currentPage.focus = true
+
+        //playlistButtonVisible : pmcPageStack.currentPage != playlistInstance
+        playerButtonVisible: mediaPlayerInstance != null && mediaPlayerInstance.url && (pmcPageStack.currentPage != mediaPlayerInstance)
+
+        states: [
+            State {
+                name: "hidden"
+                AnchorChanges { target: mediaController; anchors.top: undefined; anchors.bottom: parent.top }
+            }
+        ]
+
+        transitions: [ Transition { AnchorAnimation { duration: 200 } } ]
     }
 
     Component {
@@ -291,8 +354,9 @@ Image {
         id: pmcMediaBrowserComponent
         MediaCenterElements.MediaBrowser {
             currentBrowsingBackend: pmcInterface.currentBrowsingBackend
-            /**
+
             onPlayRequested: {
+                print("want to play "+url);
                 if (currentMediaType == "image") {
                     var mediaImageViewer = getMediaImageViewer();
                     mediaImageViewer.stripModel = pmcInterface.currentBrowsingBackend.models[0].model;
@@ -301,11 +365,12 @@ Image {
                     pmcPageStack.pushAndFocus(mediaImageViewer);
                 } else {
                     pmcPageStack.pushAndFocus(getMediaPlayer());
-                    if (playlistInstance) playlistInstance.active = false;
-                    pmcInterface.playUrl(url);
+                    //if (playlistInstance) playlistInstance.active = false;
+                    runtimeData.url = url;
+                    mediaPlayerInstance.url = url;
                 }
             }
-            onBackRequested: pmcPageStack.popAndFocus()
+/**            onBackRequested: pmcPageStack.popAndFocus()
             onPopupMenuRequested: {
                 popupMenuInstance = getPopupMenu();
                 popupMenuInstance.visible = true;
@@ -320,6 +385,33 @@ Image {
                     pmcPageStack.pushAndFocus(backendOverlay);
                 } else if (pmcPageStack.currentPage != mediaBrowserInstance) {
                     root.goBack();
+                }
+            }*/
+        }
+    }
+    Component {
+        id: pmcMediaPlayerComponent
+        MediaCenterElements.MediaPlayer {
+            runtimeDataObject: runtimeData
+            /*url: runtimeData.url
+            volume: runtimeData.volume
+            onClicked: toggleController(mediaPlayerInstance)
+            onMediaStarted: _pmc_mainwindow.mousePointerAutoHide = hasVideo
+            onVolumeUp: runtimeData.volume += 0.1
+            onVolumeDown: runtimeData.volume -= 0.1
+            onMuteToggle: runtimeData.muteToggle()
+            onPreviousMedia: playlistInstance.playPrevious()
+            onNextMedia: playlistInstance.playNext()
+            onMediaFinished: {
+                if (playlistInstance && playlistInstance.active && totalTime != -1 && !runtimeData.userTrigerredStop) {
+                    playlistInstance.playNext();
+                } else {
+                    runtimeData.stopped = true;
+                    if (!runtimeData.userTrigerredStop && pmcPageStack.currentPage == mediaPlayerInstance) {
+                        root.goBack()
+                        //FIXME:This breaks playback from runtimeData.playUrl
+                        //pmcPageStack.pushAndFocus(getMediaBrowser())
+                    }
                 }
             }*/
         }
