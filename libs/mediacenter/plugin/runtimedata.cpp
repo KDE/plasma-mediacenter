@@ -40,4 +40,8 @@ void RuntimeData::toggleMute() {
    }
 }
 
+void RuntimeData::playUrl(QUrl url) {
+    m_url = url;
+    emit urlChanged(m_url);
+}
 #include "runtimedata.moc"

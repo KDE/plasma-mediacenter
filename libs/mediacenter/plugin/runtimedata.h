@@ -23,6 +23,7 @@
 #define RUNTIMEDATA_H
 
 #include <QObject>
+#include <QUrl>
 
 class RuntimeData : public QObject
 {
@@ -34,8 +35,10 @@ class RuntimeData : public QObject
     Q_PROPERTY(int currentTime MEMBER m_currentTime NOTIFY currentTimeChanged)
     Q_PROPERTY(int totalTime MEMBER m_totalTime NOTIFY totalTimeChanged)
     Q_PROPERTY(int position MEMBER m_position NOTIFY positionChanged)
+    Q_PROPERTY(QUrl url MEMBER m_url NOTIFY urlChanged)
     Q_PROPERTY(PmcStatus status MEMBER m_status NOTIFY statusChanged)
     Q_INVOKABLE void toggleMute();
+    Q_INVOKABLE void playUrl(QUrl url);
 
 public:
     RuntimeData();
@@ -54,6 +57,7 @@ Q_SIGNALS:
     void totalTimeChanged(int totalTime);
     void positionChanged(int position);
     void statusChanged(PmcStatus status);
+    void urlChanged(QUrl url);
 
 private:
     bool m_userTrigerredStop;
@@ -61,6 +65,7 @@ private:
     int m_currentTime;
     int m_totalTime;
     int m_position;
+    QUrl m_url;
     qreal m_lastVolume;
     PmcStatus m_status;
 };
