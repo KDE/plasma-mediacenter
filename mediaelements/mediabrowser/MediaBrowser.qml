@@ -32,6 +32,7 @@ FocusScope {
     signal backRequested
     signal playRequested(int index, string url, string currentMediaType)
     signal popupMenuRequested(int index, string mediaUrl, string mediaType, string display)
+    anchors.topMargin: 50
 
     Component {
         id: mediaBrowserSidePanelComponent

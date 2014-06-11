@@ -47,7 +47,7 @@ FocusScope {
 
     PlasmaCore.FrameSvgItem {
         id: controlBarFrameSvg
-        imagePath: "widgets/background"
+        imagePath: "widgets/toolbar"
         enabledBorders: "LeftBorder|RightBorder|BottomBorder"
         anchors.fill: parent
 

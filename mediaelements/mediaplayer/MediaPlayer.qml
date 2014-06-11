@@ -1,4 +1,5 @@
 /***************************************************************************
+ *   Copyright 2014 Bhushan Shah <bhush94@gmail.com>
  *   Copyright 2012 Sinny Kumari <ksinny@gmail.com>                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -17,17 +18,36 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-import QtQuick 1.1
-import QtMultimediaKit 1.1 as QtMultimediaKit
-import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
-import org.kde.plasma.components 0.1 as PlasmaComponents
+import QtQuick 2.1
+import QtMultimedia 5.0 as QtMultimedia
+//import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
+import org.kde.plasma.components 2.0 as PlasmaComponents
 
 FocusScope {
     id: mediaPlayerRootRect
 
     property QtObject runtimeDataObject
+    property string url
 
-    property bool playing: runtimeDataObject.playing
+    QtMultimedia.MediaPlayer {
+        id: mediaplayer
+        source: url
+        autoPlay: true
+    }
+
+    QtMultimedia.VideoOutput {
+        id: video
+        source: mediaplayer
+        visible: mediaplayer.hasVideo
+        anchors {
+            fill: parent
+            bottomMargin: 20
+            topMargin: 20
+        }
+        Component.onCompleted: print(runtimeDataObject.url)
+    }
+
+/*    property bool playing: runtimeDataObject.playing
     property bool paused: runtimeDataObject.paused
     property bool stopped: runtimeDataObject.stopped
     property bool showMusicStats: true
@@ -145,5 +165,5 @@ FocusScope {
     function getRate()
     {
         return video.playbackRate;
-    }
+    }*/
 }
