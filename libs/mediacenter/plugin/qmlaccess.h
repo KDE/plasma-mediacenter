@@ -26,6 +26,7 @@
 #include "mediacenter/pmcruntime.h"
 #include "mediacenter/abstractbrowsingbackend.h"
 #include "mediacenter/singletonfactory.h"
+#include "mediacenter/mediasourcesloader.h"
 
 class QMLAccess : public QObject
 {

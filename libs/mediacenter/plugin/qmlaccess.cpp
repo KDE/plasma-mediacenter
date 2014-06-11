@@ -20,11 +20,15 @@
 
 #include "qmlaccess.h"
 #include <QWeakPointer>
+#include "mediacenter/medialibrary.h"
 
 #include <QTimer>
 
 QMLAccess::QMLAccess(QObject *parent) : QObject(parent)
 {
+    SingletonFactory::instanceFor<MediaLibrary>()->start();
+    MediaSourcesLoader mediasourceLoader;
+    mediasourceLoader.load();
     m_playlistModel = QSharedPointer<PlaylistModel>(new PlaylistModel(this));
     //TODO; insert the commandline args here.
     QHash< PmcRuntime::RuntimeObjectType, QSharedPointer< QObject > > runtimeObjects;

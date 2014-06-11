@@ -51,11 +51,6 @@ void MediaCenterPlugin::registerTypes(const char *uri)
 void MediaCenterPlugin::initializeEngine(QQmlEngine *engine, const char *uri)
 {
     Q_ASSERT(uri == QLatin1String("org.kde.plasma.mediacenter"));
-
-    SingletonFactory::instanceFor<MediaLibrary>()->start();
-    MediaSourcesLoader mediasourceLoader;
-    QTimer::singleShot(0, &mediasourceLoader, SLOT(load()));
-
     qDebug() << "one time";
 }
 
