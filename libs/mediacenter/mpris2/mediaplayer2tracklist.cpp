@@ -22,6 +22,7 @@
 #include <QDebug>
 
 static const QString playlistTidPrefix("/org/kde/plasmamediacenter/playlist/");
+static const QDBusObjectPath mprisNoTrack("/org/mpris/MediaPlayer2/TrackList/NoTrack");
 
 MediaPlayer2Tracklist::MediaPlayer2Tracklist(QSharedPointer<PlaylistModel> playlistModel, QObject *parent)
     : QDBusAbstractAdaptor(parent),
@@ -89,6 +90,10 @@ void MediaPlayer2Tracklist::resetTrackIds()
     for (int i = 0; i < m_playlistModel->rowCount(); i++) {
         m_orderedTrackIds << QDBusObjectPath(playlistTidPrefix + QString::number(tidCounter++));
     }
+
+    int currentIndex = m_playlistModel->currentIndex();
+    QDBusObjectPath currentTrack = (currentIndex == -1) ? mprisNoTrack : m_orderedTrackIds.at(currentIndex);
+    emit TrackListReplaced(Tracks(), currentTrack);
 }
 
 void MediaPlayer2Tracklist::AddTrack(const QString &uri, const QDBusObjectPath &afterTrack, bool setAsCurrent)
