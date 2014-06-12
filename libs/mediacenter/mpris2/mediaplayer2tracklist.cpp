@@ -81,7 +81,7 @@ void MediaPlayer2Tracklist::rowsRemovedFromModel(const QModelIndex &parent, int 
     Q_UNUSED(parent);
 
     for (int i = start; i <= end; i++) {
-        m_orderedTrackIds.takeAt(i);
+        emit TrackRemoved(m_orderedTrackIds.takeAt(i));
     }
 }
 

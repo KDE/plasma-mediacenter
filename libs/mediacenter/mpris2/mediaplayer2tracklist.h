@@ -61,6 +61,7 @@ public Q_SLOTS:
 
 signals:
     void TrackListReplaced(QList<QDBusObjectPath> newTracks, QDBusObjectPath currentTrack) const;
+    void TrackRemoved(QDBusObjectPath trackId);
     void TrackMetadataChanged(QDBusObjectPath trackId, QVariantMap metadata);
 
 private:
