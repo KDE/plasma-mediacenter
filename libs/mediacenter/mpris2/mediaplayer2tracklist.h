@@ -21,6 +21,7 @@
 #define MEDIAPLAYER2TRACKLIST_H
 
 #include "mediacenter/mediacenter_export.h"
+#include "mediacenter/singletonfactory.h"
 #include "playlistmodel.h"
 
 #include <QDBusAbstractAdaptor>
@@ -43,6 +44,9 @@ public:
 
     bool CanEditTracks() const;
     QList<QDBusObjectPath> Tracks() const;
+
+    int currentIndex() const;
+    QDBusObjectPath currentTrackId() const;
 
 private slots:
     void rowsInsertedInModel(const QModelIndex &parent, int start, int end);

@@ -22,6 +22,8 @@
 #include "mediaplayer2.h"
 #include "mediaplayer2player.h"
 #include "mediaplayer2tracklist.h"
+#include "mediacenter/medialibrary.h"
+#include "mediacenter/pmcmedia.h"
 
 #include <QDBusConnection>
 #include <unistd.h>
@@ -58,4 +60,36 @@ Mpris2::~Mpris2()
 MediaPlayer2Player* Mpris2::getMediaPlayer2Player()
 {
     return m_mp2p;
+}
+
+QString Mpris2::getCurrentTrackId()
+{
+    if (m_mp2tl->currentIndex() != -1) {
+        return m_mp2tl->currentTrackId().path();
+    }
+
+    QSharedPointer<PmcMedia> media = SingletonFactory::instanceFor<MediaLibrary>()->mediaForUrl(m_mp2p->currentTrack().toString());
+    if (media) {
+        return QString("/org/kde/plasmamediacenter/tid_") + media->sha();
+    }
+
+    return QString("/org/mpris/MediaPlayer2/TrackList/NoTrack");
+}
+
+QVariantMap Mpris2::getMetadataOf(const QString &url)
+{
+    QVariantMap metadata;
+    QSharedPointer<PmcMedia> media = SingletonFactory::instanceFor<MediaLibrary>()->mediaForUrl(url);
+    if (media) {
+        metadata["mpris:trackid"] = QVariant::fromValue<QDBusObjectPath>(QDBusObjectPath(getCurrentTrackId()));
+        metadata["mpris:length"] = qlonglong(media->duration())*1000000;
+        //convert seconds into micro-seconds
+        metadata["xesam:title"] = media->title();
+        metadata["xesam:url"] = media->url();
+        metadata["xesam:album"] = media->album();
+        metadata["xesam:artist"] = QStringList(media->artist());
+        metadata["xesam:genre"] = QStringList(media->genre());
+    }
+
+    return metadata;
 }

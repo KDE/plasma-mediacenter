@@ -23,6 +23,7 @@
 
 #include <QObject>
 #include <QSharedPointer>
+#include <QVariantMap>
 
 class MediaPlayer2;
 class MediaPlayer2Player;
@@ -37,6 +38,8 @@ public:
     ~Mpris2();
 
     MediaPlayer2Player* getMediaPlayer2Player();
+    QString getCurrentTrackId();
+    QVariantMap getMetadataOf(const QString& url);
 
 signals:
     void raisePMC() const;

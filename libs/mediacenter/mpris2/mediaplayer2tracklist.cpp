@@ -54,6 +54,19 @@ QList<QDBusObjectPath> MediaPlayer2Tracklist::Tracks() const
     return m_orderedTrackIds;
 }
 
+int MediaPlayer2Tracklist::currentIndex() const
+{
+    return m_playlistModel->currentIndex();
+}
+
+QDBusObjectPath MediaPlayer2Tracklist::currentTrackId() const
+{
+    if (currentIndex() == -1) {
+        return mprisNoTrack;
+    }
+    return m_orderedTrackIds.at(currentIndex());
+}
+
 void MediaPlayer2Tracklist::rowsInsertedInModel(const QModelIndex &parent, int start, int end)
 {
     Q_UNUSED(parent);
@@ -91,9 +104,7 @@ void MediaPlayer2Tracklist::resetTrackIds()
         m_orderedTrackIds << QDBusObjectPath(playlistTidPrefix + QString::number(tidCounter++));
     }
 
-    int currentIndex = m_playlistModel->currentIndex();
-    QDBusObjectPath currentTrack = (currentIndex == -1) ? mprisNoTrack : m_orderedTrackIds.at(currentIndex);
-    emit TrackListReplaced(Tracks(), currentTrack);
+    emit TrackListReplaced(Tracks(), currentTrackId());
 }
 
 void MediaPlayer2Tracklist::AddTrack(const QString &uri, const QDBusObjectPath &afterTrack, bool setAsCurrent)

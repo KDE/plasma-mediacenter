@@ -19,9 +19,7 @@
  ***************************************************************************/
 
 #include "mediaplayer2player.h"
-#include "../medialibrary.h"
-#include "../pmcmedia.h"
-#include "../singletonfactory.h"
+#include "mpris2.h"
 
 #include <QCryptographicHash>
 #include <QStringList>
@@ -214,7 +212,7 @@ void MediaPlayer2Player::emitSeeked(int pos)
 
 void MediaPlayer2Player::SetPosition(const QDBusObjectPath& trackId, qlonglong pos)
 {
-    if (trackId.path() == getTrackID())
+    if (trackId.path() == static_cast<Mpris2*>(parent())->getCurrentTrackId())
         seek((pos - Position())/1000000);
 }
 
@@ -234,7 +232,7 @@ QUrl MediaPlayer2Player::currentTrack() const
 void MediaPlayer2Player::setCurrentTrack(QUrl newTrack)
 {
     m_currentTrack = newTrack;
-    loadMetadata();
+    m_metadata = static_cast<Mpris2*>(parent())->getMetadataOf(m_currentTrack.toString());
 
     signalPropertiesChange("Metadata", Metadata());
 }
@@ -255,34 +253,6 @@ void MediaPlayer2Player::setMediaPlayerPresent(int status)
         signalPropertiesChange("CanPlay", CanPlay());
         signalPropertiesChange("CanSeek", CanSeek());
     }
-}
-
-void MediaPlayer2Player::loadMetadata()
-{
-    QSharedPointer<PmcMedia> media = SingletonFactory::instanceFor<MediaLibrary>()->mediaForUrl(m_currentTrack.toString());
-    if (media) {
-        m_metadata["mpris:trackid"] = QVariant::fromValue<QDBusObjectPath>(QDBusObjectPath(getTrackID()));
-        m_metadata["mpris:length"] = qlonglong(media->duration())*1000000;
-        //convert seconds into micro-seconds
-        m_metadata["xesam:title"] = media->title();
-        m_metadata["xesam:url"] = media->url();
-        m_metadata["xesam:album"] = media->album();
-        m_metadata["xesam:artist"] = QStringList(media->artist());
-        m_metadata["xesam:genre"] = QStringList(media->genre());
-
-    }
-}
-
-QString MediaPlayer2Player::getTrackID()
-{
-    QSharedPointer<PmcMedia> media = SingletonFactory::instanceFor<MediaLibrary>()->mediaForUrl(m_currentTrack.toString());
-    if (media) {
-        return QString("/org/kde/plasmamediacenter/tid_") + media->sha();
-    } else {
-        return QString("/org/mpris/MediaPlayer2/TrackList/NoTrack");
-    }
-    //TODO: In future if "Tracklist" interface is implemented,
-    //consider the playlist postion also in assigning the TrackID
 }
 
 void MediaPlayer2Player::signalPropertiesChange(const QString &property, const QVariant &value)
