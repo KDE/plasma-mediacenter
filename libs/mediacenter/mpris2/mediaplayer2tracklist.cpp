@@ -18,6 +18,7 @@
  ***************************************************************************/
 
 #include "mediaplayer2tracklist.h"
+#include "mpris2.h"
 
 #include <QDebug>
 
@@ -67,18 +68,23 @@ QDBusObjectPath MediaPlayer2Tracklist::currentTrackId() const
     return m_orderedTrackIds.at(currentIndex());
 }
 
-void MediaPlayer2Tracklist::rowsInsertedInModel(const QModelIndex &parent, int start, int end)
+void MediaPlayer2Tracklist::rowsInsertedInModel(const QModelIndex &parentModel, int start, int end)
 {
-    Q_UNUSED(parent);
+    Q_UNUSED(parentModel);
 
+    QVariantMap metadata;
+    QDBusObjectPath afterTrack;
     for (int i = start; i <= end; i++) {
         m_orderedTrackIds.insert(i, QDBusObjectPath(playlistTidPrefix + QString::number(tidCounter++)));
+        metadata = static_cast<Mpris2*>(parent())->getMetadataOf(urlOfIndex(i));
+        afterTrack = (i > 0) ? m_orderedTrackIds.at(i-1) : mprisNoTrack;
+        emit TrackAdded(metadata, afterTrack);
     }
 }
 
-void MediaPlayer2Tracklist::rowsRemovedFromModel(const QModelIndex &parent, int start, int end)
+void MediaPlayer2Tracklist::rowsRemovedFromModel(const QModelIndex &parentModel, int start, int end)
 {
-    Q_UNUSED(parent);
+    Q_UNUSED(parentModel);
 
     for (int i = start; i <= end; i++) {
         emit TrackRemoved(m_orderedTrackIds.takeAt(i));
@@ -119,4 +125,10 @@ void MediaPlayer2Tracklist::RemoveTrack(const QDBusObjectPath &trackId)
 {
     Q_UNUSED(trackId)
     //As CanEditTracks is False, do nothing
+}
+
+QString MediaPlayer2Tracklist::urlOfIndex(int index) const
+{
+    return m_playlistModel->data(m_playlistModel->index(index, 0),
+                                 MediaCenter::MediaUrlRole).toString();
 }
