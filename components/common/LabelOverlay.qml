@@ -24,6 +24,7 @@ Rectangle {
     id: root
     property alias text: mediaTitleLabel.text
     property alias horizontalAlignment: mediaTitleLabel.horizontalAlignment
+    property alias fontPixelSize: mediaTitleLabel.font.pixelSize
 
     property bool showOverlay: false
     property bool expanded: false
@@ -38,7 +39,7 @@ Rectangle {
         id: mediaTitleLabel
         anchors {
             verticalCenter: parent.verticalCenter;
-            left: parent.left; margins: 1
+            left: parent.left; margins: 10
         }
 
         clip: true

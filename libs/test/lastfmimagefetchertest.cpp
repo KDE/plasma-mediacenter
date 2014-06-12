@@ -44,20 +44,20 @@ void LastFmImageFetcherTest::cleanup()
     // Called after every testfunction
 }
 
-void LastFmImageFetcherTest::shouldDownloadImageAndSaveToCache()
-{
-    LastFmImageFetcher lastFmFetcher;
-    QSignalSpy spyInitialize(&lastFmFetcher, SIGNAL(imageFetched(QVariant,QString)));
-    QVERIFY2(spyInitialize.isValid(), "Can't listen to signal imageFetched");
-    lastFmFetcher.fetchImage("artist", "Myfaveartist", "shaan");
-
-    waitForSignal(&spyInitialize, TIMEOUT_FOR_SIGNALS);
-    QCOMPARE(spyInitialize.size(), 1);
-    QList<QVariant> arguments = spyInitialize.takeFirst();
-    QCOMPARE(arguments.at(0).value<QVariant>().toString(), QString("Myfaveartist"));
-    QCOMPARE(arguments.at(1).toString(), QString("shaan"));
-    QVERIFY2(SingletonFactory::instanceFor<PmcImageCache>()->containsImageWithId("artist:shaan"), "Cache did not contain image");
-}
+// void LastFmImageFetcherTest::shouldDownloadImageAndSaveToCache()
+// {
+//     LastFmImageFetcher lastFmFetcher;
+//     QSignalSpy spyInitialize(&lastFmFetcher, SIGNAL(imageFetched(QVariant,QString)));
+//     QVERIFY2(spyInitialize.isValid(), "Can't listen to signal imageFetched");
+//     lastFmFetcher.fetchImage("artist", "Myfaveartist", "shaan");
+//
+//     waitForSignal(&spyInitialize, TIMEOUT_FOR_SIGNALS);
+//     QCOMPARE(spyInitialize.size(), 1);
+//     QList<QVariant> arguments = spyInitialize.takeFirst();
+//     QCOMPARE(arguments.at(0).value<QVariant>().toString(), QString("Myfaveartist"));
+//     QCOMPARE(arguments.at(1).toString(), QString("shaan"));
+//     QVERIFY2(SingletonFactory::instanceFor<PmcImageCache>()->containsImageWithId("artist:shaan"), "Cache did not contain image");
+// }
 
 bool LastFmImageFetcherTest::waitForSignal(QSignalSpy* spy, int timeout)
 {

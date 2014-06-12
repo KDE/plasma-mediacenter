@@ -40,7 +40,9 @@ private slots:
     void init();
     void cleanup();
 
-    void shouldDownloadImageAndSaveToCache();
+//TODO: Enable back when ws.audioscrobbler.com is back online
+//      or when we can stub the network call
+//     void shouldDownloadImageAndSaveToCache();
 
 private:
     bool waitForSignal(QSignalSpy *spy, int timeout);

@@ -17,10 +17,11 @@
 *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
 ***************************************************************************/
 
-import QtQuick 2.1
-import org.kde.plasma.components 2.0 as PlasmaComponents
-import org.kde.plasma.core 2.0 as PlasmaCore
+import QtQuick 1.1
+import org.kde.plasma.components 0.1 as PlasmaComponents
+import org.kde.plasma.core 0.1 as PlasmaCore
 import "MediaItemDelegateLogic.js" as Logic
+import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
 
 Item {
     id: mediaItem
@@ -32,10 +33,14 @@ Item {
     signal pressAndHold(int index)
 
     Item {
-        anchors { fill: parent; margins: 20 }
+        anchors { fill: parent; margins: 1 }
 
         Item {
             anchors { fill: parent; margins: 2 }
+
+            PlasmaCore.Theme {
+                id:theme
+            }
 
             Item {
                 anchors.fill: parent
@@ -46,9 +51,10 @@ Item {
 
                     anchors {
                         left: parent.left; top: parent.top
-                        right: parent.right
-                        bottom: isExpandable ? labelOverlay.top : parent.bottom
+                        bottom: parent.bottom
                     }
+
+                    width: height
 
                     function checkAndLoad()
                     {
@@ -62,18 +68,19 @@ Item {
                     id: labelOverlay
                     anchors {
                         bottom: parent.bottom; margins: 2
-                        left: parent.left
+                        left:iconImageLoader.right
                         right: parent.right
+                        verticalCenter: parent.verticalCenter
                     }
 
+                    fontPixelSize: height * 0.4
                     displayProxy: mediaItem.displayProxy
                     visible: !hideLabel && display != ""
                     opacity: 0.9
                     showOverlay: !isExpandable
                     width: parent.width
-                    targetHeight: 32
-                    expanded: mediaItem.view && mediaItem.view.currentIndex == index
-                    horizontalAlignment: Text.AlignHCenter
+                    targetHeight: parent.height
+                    horizontalAlignment: Text.AlignLeft
                 }
                 LabelOverlay {
                     id: labelduration
@@ -81,9 +88,9 @@ Item {
 
                     horizontalAlignment: Text.AlignRight
                     text: mediaDuration ? Qt.formatTime(new Date(0, 0, 0, 0, 0, mediaDuration), "hh:mm:ss") : ""
-                    visible: !hideLabel && text
+                    visible: false
                     opacity: 0.9
-                    showOverlay: !isExpandable
+                    showOverlay: false
                     expanded: true
                     autoWidth: true
                 }
@@ -128,11 +135,10 @@ Item {
         PlasmaComponents.ToolButton {
             id: addToPlaylistButton
             iconSource: "list-add"
-            height: parent.height * 0.2
+            height: parent.height
             width: height
             anchors {
-                right: parent.right; top: parent.top;
-                margins: 5
+                right: parent.right; top: parent.top
             }
             visible: !isExpandable && mediaType != "image" &&  index == mediaItem.view.currentIndex
             onClicked: {

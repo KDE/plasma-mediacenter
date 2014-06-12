@@ -97,6 +97,7 @@ FocusScope {
             clip: !GridView.isCurrentItem
             z: GridView.isCurrentItem ? 1 : 0
             view: gridBrowserGridView
+            horizontal: false
 
             backend: gridBrowserRoot.currentBrowsingBackend
             onPlayRequested: gridBrowserRoot.mediaSelected(index, url, currentMediaType)
