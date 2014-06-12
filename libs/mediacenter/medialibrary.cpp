@@ -218,7 +218,11 @@ bool MediaLibrary::extractAndSaveAlbumInfo(
         albumName = "Unknown Album";
     }
     if (artistName.isEmpty()) {
-        artistName = media->artist()->name();
+        if(!media->artist().isNull()) {
+            artistName = media->artist()->name();
+        } else {
+            artistName = "Unknown Artist";
+        }
     }
     if (!media->album().isNull() && media->album()->name() == albumName
         && media->album()->albumArtist() == artistName) {
