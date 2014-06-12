@@ -49,8 +49,8 @@ public:
     QDBusObjectPath currentTrackId() const;
 
 private slots:
-    void rowsInsertedInModel(const QModelIndex &parent, int start, int end);
-    void rowsRemovedFromModel(const QModelIndex &parent, int start, int end);
+    void rowsInsertedInModel(const QModelIndex &parentModel, int start, int end);
+    void rowsRemovedFromModel(const QModelIndex &parentModel, int start, int end);
     void rowsMovedInModel(const QModelIndex &sourceParent, int sourceStart, int sourceEnd,
                           const QModelIndex &destinationParent, int movedBeforeRow);
     void resetTrackIds();
@@ -61,10 +61,13 @@ public Q_SLOTS:
 
 signals:
     void TrackListReplaced(QList<QDBusObjectPath> newTracks, QDBusObjectPath currentTrack) const;
+    void TrackAdded(QVariantMap metadata, QDBusObjectPath afterTrack);
     void TrackRemoved(QDBusObjectPath trackId);
     void TrackMetadataChanged(QDBusObjectPath trackId, QVariantMap metadata);
 
 private:
+    QString urlOfIndex(int index) const;
+
     QSharedPointer<PlaylistModel> m_playlistModel;
     QList<QDBusObjectPath> m_orderedTrackIds;
 
