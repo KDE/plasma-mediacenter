@@ -21,11 +21,13 @@
 #include "mpris2.h"
 #include "mediaplayer2.h"
 #include "mediaplayer2player.h"
+#include "mediaplayer2tracklist.h"
 
 #include <QDBusConnection>
 #include <unistd.h>
 
-Mpris2::Mpris2(QObject* parent) : QObject(parent)
+Mpris2::Mpris2(QSharedPointer<PlaylistModel> playlistModel, QObject* parent)
+    : QObject(parent)
 {
     QString mspris2Name("org.mpris.MediaPlayer2." + QLatin1String("plasma-mediacenter"));
 
@@ -41,6 +43,7 @@ Mpris2::Mpris2(QObject* parent) : QObject(parent)
     if (success) {
         m_mp2 = new MediaPlayer2(this);
         m_mp2p = new MediaPlayer2Player(this);
+        m_mp2tl = new MediaPlayer2Tracklist(playlistModel, this);
 
         QDBusConnection::sessionBus().registerObject("/org/mpris/MediaPlayer2", this, QDBusConnection::ExportAdaptors);
 
