@@ -20,12 +20,12 @@ QVariant SeriesModel::data(const QModelIndex& index, int role) const {
             return currentCluster >= 0 ? clusterer.cluster(currentCluster)->children().at(index.row())->label() : clusterer.label(index.row());
         case Qt::DecorationRole: {
             QString url = currentCluster >= 0 ? clusterer.cluster(currentCluster)->children().at(index.row())->url() : clusterer.cluster(index.row())->url();
-            return PmcCoverArtProvider::qmlImageUriForMediaFileCover(url.prepend("file://"));
+            return data(index, MediaCenter::IsExpandableRole).toBool() ? "folder-video" : PmcCoverArtProvider::qmlImageUriForMediaFileCover(url.prepend("file://"));
         }
         case MediaCenter::HideLabelRole:
             return false;
         case MediaCenter::IsExpandableRole:
-            return true;
+            return currentCluster >= 0 ? false : clusterer.cluster(index.row())->children().size() > 0;
     }
     return QVariant();
 }
@@ -38,10 +38,14 @@ void SeriesModel::clusterSizeUpdated(int) {
     reset();
 }
 
-void SeriesModel::setCurrentCluster(int row)
+bool SeriesModel::setCurrentCluster(int row)
 {
+    if (row == currentCluster) {
+        return false;
+    }
     currentCluster = row;
     reset();
+    return true;
 }
 
 

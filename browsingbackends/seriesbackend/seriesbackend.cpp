@@ -1,5 +1,6 @@
 #include "seriesbackend.h"
 #include "seriesmodel.h"
+#include <QSortFilterProxyModel>
 
 MEDIACENTER_EXPORT_BROWSINGBACKEND(SeriesBackend)
 
@@ -8,14 +9,28 @@ SeriesBackend::SeriesBackend(QObject* parent, const QVariantList& args): Abstrac
 }
 
 bool SeriesBackend::initImpl() {
-    setModel(new SeriesModel());
+    QSortFilterProxyModel *model = new QSortFilterProxyModel(this);
+    model->setSourceModel(new SeriesModel());
+    model->setFilterRole(MediaCenter::IsExpandableRole);
+    model->setFilterFixedString("true");
+
+    setModel(model);
     return true;
 }
 
 bool SeriesBackend::expand(int row)
 {
-    static_cast<SeriesModel*>(model())->setCurrentCluster(row);
+    auto filterModel = static_cast<QSortFilterProxyModel*>(model());
+    static_cast<SeriesModel*>(filterModel->sourceModel())->setCurrentCluster(row);
+    filterModel->setFilterFixedString("false");
     return true;
+}
+
+bool SeriesBackend::goOneLevelUp()
+{
+    auto filterModel = static_cast<QSortFilterProxyModel*>(model());
+    filterModel->setFilterFixedString("true");
+    return static_cast<SeriesModel*>(filterModel->sourceModel())->setCurrentCluster(-1);
 }
 
 #include "seriesbackend.moc"

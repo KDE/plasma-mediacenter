@@ -11,7 +11,7 @@ public:
     explicit SeriesModel(QObject* parent = 0);
     virtual QVariant data(const QModelIndex& index, int role) const;
     virtual int rowCount(const QModelIndex& parent) const;
-    void setCurrentCluster(int row);
+    bool setCurrentCluster(int row);
 
 private:
     int currentCluster = -1;

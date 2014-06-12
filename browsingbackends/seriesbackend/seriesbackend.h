@@ -8,6 +8,7 @@ class SeriesBackend : public MediaCenter::AbstractBrowsingBackend {
 public:
     explicit SeriesBackend(QObject* parent, const QVariantList& args = QVariantList());
     virtual bool expand(int row);
+    virtual bool goOneLevelUp();
 protected:
     virtual bool initImpl();
 };
