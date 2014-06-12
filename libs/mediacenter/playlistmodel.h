@@ -73,6 +73,7 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void savePlaylist();
+    void resetCurrentIndex();
 
 private Q_SLOTS:
     void playlistItemUpdated();
