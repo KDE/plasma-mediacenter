@@ -136,18 +136,18 @@ void PlaylistModel::removeFromPlaylist(const int& index)
 
 void PlaylistModel::moveItem(int originalIndex, int newIndex)
 {
+    int moveBeforeRow = (newIndex > originalIndex) ? newIndex + 1 : newIndex;
+
+    beginMoveRows(QModelIndex(), originalIndex, originalIndex, QModelIndex(), moveBeforeRow);
     d->musicList.move(originalIndex, newIndex);
+    endMoveRows();
+
     if (originalIndex == d->currentIndex) {
         setCurrentIndex(newIndex);
     } else if (originalIndex < d->currentIndex && newIndex >= d->currentIndex) {
-            setCurrentIndex(d->currentIndex-1);
+        setCurrentIndex(d->currentIndex-1);
     } else if (originalIndex > d->currentIndex && newIndex <= d->currentIndex) {
-            setCurrentIndex(d->currentIndex+1);
-    }
-    if (originalIndex < newIndex) {
-       emit dataChanged(createIndex(originalIndex, 0), createIndex(newIndex, 0));
-    } else {
-        emit dataChanged(createIndex(newIndex, 0), createIndex(originalIndex, 0));
+        setCurrentIndex(d->currentIndex+1);
     }
 }
 
