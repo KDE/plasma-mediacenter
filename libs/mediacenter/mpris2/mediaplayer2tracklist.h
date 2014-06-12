@@ -1,5 +1,4 @@
 /***************************************************************************
- *   Copyright 2014 Sujith Haridasan <sujith.haridasan@kdemail.net>        *
  *   Copyright 2014 Ashish Madeti <ashishmadeti@gmail.com>                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,31 +17,44 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
+#ifndef MEDIAPLAYER2TRACKLIST_H
+#define MEDIAPLAYER2TRACKLIST_H
+
 #include "mediacenter/mediacenter_export.h"
-#include "mediacenter/playlistmodel.h"
+#include "playlistmodel.h"
 
-#include <QObject>
+#include <QDBusAbstractAdaptor>
+#include <QDBusObjectPath>
 #include <QSharedPointer>
+#include <QStringList>
 
-class MediaPlayer2;
-class MediaPlayer2Player;
-class MediaPlayer2Tracklist;
-
-class MEDIACENTER_EXPORT Mpris2 : public QObject
+class MEDIACENTER_EXPORT MediaPlayer2Tracklist : public QDBusAbstractAdaptor
 {
     Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.mpris.MediaPlayer2.TrackList") // Docs: http://specifications.freedesktop.org/mpris-spec/latest/Track_List_Interface.html
+
+    Q_PROPERTY(QList<QDBusObjectPath> Tracks READ Tracks)
+    Q_PROPERTY(bool CanEditTracks READ CanEditTracks)
 
 public:
-    explicit Mpris2(QSharedPointer<PlaylistModel> playlistModel, QObject* parent = 0);
-    ~Mpris2();
+    explicit MediaPlayer2Tracklist(QSharedPointer<PlaylistModel> playlistModel, QObject* parent = 0);
+    ~MediaPlayer2Tracklist();
 
-    MediaPlayer2Player* getMediaPlayer2Player();
+    bool CanEditTracks() const;
+    QList<QDBusObjectPath> Tracks() const;
 
-signals:
-    void raisePMC() const;
+private slots:
+    void rowsInsertedInModel(const QModelIndex &parent, int start, int end);
+    void rowsRemovedFromModel(const QModelIndex &parent, int start, int end);
+    void rowsMovedInModel(const QModelIndex &sourceParent, int sourceStart, int sourceEnd,
+                          const QModelIndex &destinationParent, int movedBeforeRow);
+    void resetTrackIds();
 
 private:
-    MediaPlayer2 *m_mp2;
-    MediaPlayer2Player *m_mp2p;
-    MediaPlayer2Tracklist *m_mp2tl;
+    QSharedPointer<PlaylistModel> m_playlistModel;
+    QList<QDBusObjectPath> m_orderedTrackIds;
+
+    int tidCounter;
 };
+
+#endif // MEDIAPLAYER2TRACKLIST_H

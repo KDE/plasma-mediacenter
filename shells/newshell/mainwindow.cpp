@@ -104,7 +104,7 @@ MainWindow::MainWindow(Application *parent)
     BackendsModel *backendsModel = new BackendsModel(createPmcRuntime(view->engine(), playlistModel), this);
     view->rootContext()->setContextProperty("backendsModel", backendsModel);
 
-    Mpris2 *mprisObject = new Mpris2(this);
+    Mpris2 *mprisObject = new Mpris2(playlistModel, this);
     connect(mprisObject, SIGNAL(raisePMC()), this, SLOT(raiseAndFocusPMC()));
 
     MediaPlayer2Player *mp2p = mprisObject->getMediaPlayer2Player();

@@ -37,6 +37,7 @@ set (plasmamediacenter_SRCS
     mpris2/mpris2.cpp
     mpris2/mediaplayer2.cpp
     mpris2/mediaplayer2player.cpp
+    mpris2/mediaplayer2tracklist.cpp
 )
 
 kde4_add_library(plasmamediacenter SHARED
