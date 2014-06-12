@@ -27,6 +27,7 @@
 #include <QDBusObjectPath>
 #include <QSharedPointer>
 #include <QStringList>
+#include <QVariantMap>
 
 class MEDIACENTER_EXPORT MediaPlayer2Tracklist : public QDBusAbstractAdaptor
 {
@@ -53,6 +54,10 @@ private slots:
 public Q_SLOTS:
     void AddTrack(const QString& uri, const QDBusObjectPath& afterTrack, bool setAsCurrent);
     void RemoveTrack(const QDBusObjectPath& trackId);
+
+signals:
+    void TrackListReplaced(QList<QDBusObjectPath> newTracks, QDBusObjectPath currentTrack) const;
+    void TrackMetadataChanged(QDBusObjectPath trackId, QVariantMap metadata);
 
 private:
     QSharedPointer<PlaylistModel> m_playlistModel;
