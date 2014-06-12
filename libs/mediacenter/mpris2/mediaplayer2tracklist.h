@@ -50,6 +50,10 @@ private slots:
                           const QModelIndex &destinationParent, int movedBeforeRow);
     void resetTrackIds();
 
+public Q_SLOTS:
+    void AddTrack(const QString& uri, const QDBusObjectPath& afterTrack, bool setAsCurrent);
+    void RemoveTrack(const QDBusObjectPath& trackId);
+
 private:
     QSharedPointer<PlaylistModel> m_playlistModel;
     QList<QDBusObjectPath> m_orderedTrackIds;

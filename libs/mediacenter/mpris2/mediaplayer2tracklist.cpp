@@ -44,6 +44,7 @@ MediaPlayer2Tracklist::~MediaPlayer2Tracklist()
 
 bool MediaPlayer2Tracklist::CanEditTracks() const
 {
+    //TODO: Allow adding/removing tracks from playlist via D-Bus
     return false;
 }
 
@@ -88,4 +89,18 @@ void MediaPlayer2Tracklist::resetTrackIds()
     for (int i = 0; i < m_playlistModel->rowCount(); i++) {
         m_orderedTrackIds << QDBusObjectPath(playlistTidPrefix + QString::number(tidCounter++));
     }
+}
+
+void MediaPlayer2Tracklist::AddTrack(const QString &uri, const QDBusObjectPath &afterTrack, bool setAsCurrent)
+{
+    Q_UNUSED(uri)
+    Q_UNUSED(afterTrack)
+    Q_UNUSED(setAsCurrent)
+    //As CanEditTracks is False, do nothing
+}
+
+void MediaPlayer2Tracklist::RemoveTrack(const QDBusObjectPath &trackId)
+{
+    Q_UNUSED(trackId)
+    //As CanEditTracks is False, do nothing
 }
