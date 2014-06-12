@@ -290,6 +290,11 @@ void PlaylistModel::savePlaylist()
     saveToFile(playlistFilePath());
 }
 
+void PlaylistModel::resetCurrentIndex()
+{
+    setCurrentIndex(-1);
+}
+
 bool PlaylistModel::removeCurrentPlaylist(const QString &playlistToSwitchToAfterDeletion)
 {
     if (d->playlistName == DEFAULT_PLAYLIST_NAME) {
