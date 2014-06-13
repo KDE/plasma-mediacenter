@@ -127,6 +127,14 @@ void MediaPlayer2Tracklist::RemoveTrack(const QDBusObjectPath &trackId)
     //As CanEditTracks is False, do nothing
 }
 
+void MediaPlayer2Tracklist::GoTo(const QDBusObjectPath &trackId)
+{
+    int newIndex = m_orderedTrackIds.indexOf(trackId);
+    if (newIndex != -1) {
+        m_playlistModel->setCurrentIndex(newIndex);
+    }
+}
+
 QString MediaPlayer2Tracklist::urlOfIndex(int index) const
 {
     return m_playlistModel->data(m_playlistModel->index(index, 0),

@@ -58,6 +58,7 @@ private slots:
 public Q_SLOTS:
     void AddTrack(const QString& uri, const QDBusObjectPath& afterTrack, bool setAsCurrent);
     void RemoveTrack(const QDBusObjectPath& trackId);
+    void GoTo(const QDBusObjectPath& trackId);
 
 signals:
     void TrackListReplaced(QList<QDBusObjectPath> newTracks, QDBusObjectPath currentTrack) const;
