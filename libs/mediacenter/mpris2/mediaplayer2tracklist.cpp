@@ -30,6 +30,8 @@ MediaPlayer2Tracklist::MediaPlayer2Tracklist(QSharedPointer<PlaylistModel> playl
       m_playlistModel(playlistModel),
       tidCounter(0)
 {
+    qDBusRegisterMetaType< QList<QVariantMap> >();
+
     connect(m_playlistModel.data(), SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(rowsInsertedInModel(QModelIndex,int,int)));
     connect(m_playlistModel.data(), SIGNAL(rowsRemoved(QModelIndex,int,int)), this, SLOT(rowsRemovedFromModel(QModelIndex,int,int)));
     connect(m_playlistModel.data(), SIGNAL(modelReset()), this, SLOT(resetTrackIds()));
@@ -111,6 +113,21 @@ void MediaPlayer2Tracklist::resetTrackIds()
     }
 
     emit TrackListReplaced(Tracks(), currentTrackId());
+}
+
+QList<QVariantMap> MediaPlayer2Tracklist::GetTracksMetadata(const QList<QDBusObjectPath> &trackIds)
+{
+    QList<QVariantMap> metadataList;
+    int index;
+
+    foreach (const QDBusObjectPath& trackId, trackIds) {
+        index = m_orderedTrackIds.indexOf(trackId);
+        if (index != -1) {
+            metadataList << static_cast<Mpris2*>(parent())->getMetadataOf(urlOfIndex(index));
+        }
+    }
+
+    return metadataList;
 }
 
 void MediaPlayer2Tracklist::AddTrack(const QString &uri, const QDBusObjectPath &afterTrack, bool setAsCurrent)
