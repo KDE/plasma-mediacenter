@@ -27,8 +27,7 @@ static const QDBusObjectPath mprisNoTrack("/org/mpris/MediaPlayer2/TrackList/NoT
 
 MediaPlayer2Tracklist::MediaPlayer2Tracklist(QSharedPointer<PlaylistModel> playlistModel, QObject *parent)
     : QDBusAbstractAdaptor(parent),
-      m_playlistModel(playlistModel),
-      tidCounter(0)
+      m_playlistModel(playlistModel)
 {
     qDBusRegisterMetaType< QList<QVariantMap> >();
 

@@ -212,8 +212,9 @@ void MediaPlayer2Player::emitSeeked(int pos)
 
 void MediaPlayer2Player::SetPosition(const QDBusObjectPath& trackId, qlonglong pos)
 {
-    if (trackId.path() == static_cast<Mpris2*>(parent())->getCurrentTrackId())
+    if (trackId.path() == static_cast<Mpris2*>(parent())->getCurrentTrackId()) {
         seek((pos - Position())/1000000);
+    }
 }
 
 void MediaPlayer2Player::OpenUri(QString uri) const

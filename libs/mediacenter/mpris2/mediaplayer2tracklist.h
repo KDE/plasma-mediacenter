@@ -76,7 +76,7 @@ private:
     QSharedPointer<PlaylistModel> m_playlistModel;
     QList<QDBusObjectPath> m_orderedTrackIds;
 
-    int tidCounter;
+    int tidCounter = 0;
 };
 
 #endif // MEDIAPLAYER2TRACKLIST_H
