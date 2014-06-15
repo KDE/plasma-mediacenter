@@ -236,7 +236,7 @@ void PlaylistModel::playlistItemUpdated()
 
 QString PlaylistModel::playlistFilePath() const
 {
-    return  getPlaylistPath() + d->playlistName;
+    return QDir(getPlaylistPath()).absoluteFilePath(d->playlistName);
 }
 
 void PlaylistModel::loadFromFile(const QString& path)
