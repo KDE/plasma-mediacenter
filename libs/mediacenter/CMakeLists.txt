@@ -1,6 +1,7 @@
 include(ECMMarkAsTest)
 
 set (plasmamediacenter_SRCS
+    runtimedata.cpp
     pmcruntime.cpp
     medialibrarywrappercache.cpp
     artist.cpp

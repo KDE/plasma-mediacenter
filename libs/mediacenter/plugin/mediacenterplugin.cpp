@@ -28,7 +28,7 @@
 #include "mediacenter/settings.h"
 #include "mediacenter/mediasourcesloader.h"
 #include "mediacenter/medialibrary.h"
-#include "runtimedata.h"
+#include "mediacenter/runtimedata.h"
 
 #include "qmlaccess.h"
 

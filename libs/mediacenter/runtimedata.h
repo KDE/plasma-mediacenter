@@ -31,24 +31,28 @@ class RuntimeData : public QObject
     Q_ENUMS(PmcStatus)
     
     Q_PROPERTY(bool userTrigerredStop MEMBER m_userTrigerredStop NOTIFY userTrigerredStopChanged)
-    Q_PROPERTY(qreal volume MEMBER m_volume NOTIFY volumeChanged)
+    Q_PROPERTY(qreal volume MEMBER m_volume WRITE setVolume NOTIFY volumeChanged)
     Q_PROPERTY(int currentTime MEMBER m_currentTime NOTIFY currentTimeChanged)
     Q_PROPERTY(int totalTime MEMBER m_totalTime NOTIFY totalTimeChanged)
     Q_PROPERTY(int position MEMBER m_position NOTIFY positionChanged)
+    Q_PROPERTY(bool mute MEMBER m_mute NOTIFY muteChanged)
     Q_PROPERTY(QUrl url MEMBER m_url NOTIFY urlChanged)
     Q_PROPERTY(PmcStatus status MEMBER m_status NOTIFY statusChanged)
-    Q_INVOKABLE void toggleMute();
-    Q_INVOKABLE void playUrl(QUrl url);
 
 public:
     RuntimeData();
     ~RuntimeData();
-    
+
+    Q_INVOKABLE void toggleMute();
+    Q_INVOKABLE void playUrl(QUrl url);
+
     enum PmcStatus {
         Playing,
         Stopped,
         Paused
     };
+
+    void setVolume(qreal volume);
 
 Q_SIGNALS:
     void userTrigerredStopChanged();
@@ -57,6 +61,7 @@ Q_SIGNALS:
     void totalTimeChanged(int totalTime);
     void positionChanged(int position);
     void statusChanged(PmcStatus status);
+    void muteChanged(bool muted);
     void urlChanged(QUrl url);
 
 private:
@@ -66,6 +71,7 @@ private:
     int m_totalTime;
     int m_position;
     QUrl m_url;
+    bool m_mute;
     qreal m_lastVolume;
     PmcStatus m_status;
 };

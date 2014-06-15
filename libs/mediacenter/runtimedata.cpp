@@ -30,18 +30,37 @@ RuntimeData::~RuntimeData()
 }
 
 void RuntimeData::toggleMute() {
-   if(m_volume == 0) {
-       m_volume = m_lastVolume;
-       emit volumeChanged(m_volume);
-   } else {
-       m_lastVolume = m_volume;
-       m_volume = 0.0;
-       emit volumeChanged(m_volume);
-   }
+    if(m_mute && m_volume == 0) {
+        m_volume = m_lastVolume;
+        emit volumeChanged(m_volume);
+    } else {
+        m_volume = 0;
+        emit volumeChanged(m_volume);
+    }
+    m_mute = !m_mute;
+    emit muteChanged(m_mute);
 }
 
 void RuntimeData::playUrl(QUrl url) {
     m_url = url;
     emit urlChanged(m_url);
 }
+
+void RuntimeData::setVolume(qreal volume) {
+    if (m_mute && volume > 0) {
+        m_mute = false;
+        m_lastVolume = m_volume;
+        emit muteChanged(m_mute);
+    }
+
+    if (!m_mute && volume == 0) {
+        m_mute = true;
+        m_lastVolume = m_volume;
+        emit muteChanged(m_mute);
+    }
+
+    m_volume = volume;
+    emit volumeChanged(m_volume);
+}
+
 #include "runtimedata.moc"
