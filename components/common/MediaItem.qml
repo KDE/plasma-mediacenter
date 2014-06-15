@@ -92,7 +92,7 @@ Item {
                     expanded: true
                     autoWidth: true
                 }
-	    }
+            }
 
             Component {
                 id: delegateItemImageComponent
