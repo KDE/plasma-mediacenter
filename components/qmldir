@@ -4,3 +4,4 @@ TabBrowser 0.1 tabbrowser/TabBrowser.qml
 SmartBrowser 0.1 SmartBrowser.qml
 SplitBrowser 0.1 SplitBrowser.qml
 Search 0.1 Search.qml
+FocusIndicator 0.1 common/FocusIndicator.qml
