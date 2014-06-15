@@ -44,7 +44,6 @@ FocusScope {
             bottomMargin: 20
             topMargin: 20
         }
-        Component.onCompleted: print(runtimeDataObject.url)
     }
 
 /*    property bool playing: runtimeDataObject.playing
