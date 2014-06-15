@@ -55,7 +55,7 @@ Rectangle {
 
     Binding {
         target: mediaTitleLabel; property: 'width'
-        value: root.width; when: !autoWidth
+        value: root.width*0.95; when: !autoWidth
     }
 
     Binding {
