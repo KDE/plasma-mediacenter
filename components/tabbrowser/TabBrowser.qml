@@ -139,6 +139,10 @@ FocusScope {
         }
     }
 
+    MediaCenterComponents.FocusIndicator {
+        target: mediaTabBar
+    }
+
     PlasmaComponents.TabGroup {
         id: mediaTabGroup
         width: parent.width;
