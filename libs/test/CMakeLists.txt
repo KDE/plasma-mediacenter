@@ -25,6 +25,7 @@ set(pmc_test_SRCS
     itemcachetest.cpp
     pmcalbumtest.cpp
     pmcartisttest.cpp
+    runtimedatatest.cpp
 )
 
 ecm_add_tests(
