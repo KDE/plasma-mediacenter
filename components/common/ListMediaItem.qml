@@ -17,11 +17,11 @@
 *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
 ***************************************************************************/
 
-import QtQuick 1.1
-import org.kde.plasma.components 0.1 as PlasmaComponents
-import org.kde.plasma.core 0.1 as PlasmaCore
+import QtQuick 2.1
+import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.plasma.core 2.0 as PlasmaCore
 import "MediaItemDelegateLogic.js" as Logic
-import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
+import org.kde.plasma.mediacenter.elements 2.0 as MediaCenterElements
 
 Item {
     id: mediaItem
@@ -37,10 +37,6 @@ Item {
 
         Item {
             anchors { fill: parent; margins: 2 }
-
-            PlasmaCore.Theme {
-                id:theme
-            }
 
             Item {
                 anchors.fill: parent
