@@ -27,11 +27,10 @@ FocusScope {
     id: mediaPlayerRootRect
 
     property QtObject runtimeDataObject
-    property string url
 
     QtMultimedia.MediaPlayer {
         id: mediaplayer
-        source: url
+        source: runtimeDataObject.url
         autoPlay: true
     }
 

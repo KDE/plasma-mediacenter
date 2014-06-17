@@ -277,7 +277,7 @@ Image {
 
         //onPlaylistButtonClicked: pmcPageStack.pushAndFocus(getPlaylist())
         onBackButtonClicked: root.goBack()
-        //onPlayerButtonClicked: pmcPageStack.pushAndFocus(getMediaPlayer())
+        onPlayerButtonClicked: pmcPageStack.pushAndFocus(getMediaPlayer())
         //onPlayNext: playlistInstance.playNext()
         //onPlayPrevious: playlistInstance.playPrevious()
         /*onSeekRequested: {
@@ -364,9 +364,10 @@ Image {
                     mediaImageViewer.source = url;
                     pmcPageStack.pushAndFocus(mediaImageViewer);
                 } else {
-                    pmcPageStack.pushAndFocus(getMediaPlayer());
                     //if (playlistInstance) playlistInstance.active = false;
-                    runtimeData.url = url;
+                    runtimeData.playUrl(url);
+                    pmcPageStack.pushAndFocus(getMediaPlayer());
+                    mediaPlayerInstance.runtimeDataObject = runtimeData;
                     mediaPlayerInstance.url = url;
                 }
             }
