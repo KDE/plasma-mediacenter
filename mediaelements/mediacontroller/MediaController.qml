@@ -21,6 +21,7 @@ import QtQuick 2.1
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.kquickcontrolsaddons 2.0 as KQuickControlsAddons
+import org.kde.plasma.mediacenter 2.0
 
 FocusScope {
     id: controlBarFrame
@@ -87,7 +88,7 @@ FocusScope {
                 height: parent.height
                 width: height
 
-                iconSource: runtimeDataObject.playing ? "pmc-pause" : "pmc-play"
+                iconSource: (runtimeDataObject.status == RuntimeData.Playing) ? "pmc-pause" : "pmc-play"
                 onClicked: controlBarFrame.playPause()
             }
 

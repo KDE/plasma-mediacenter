@@ -19,8 +19,8 @@
  ***************************************************************************/
 
 import QtQuick 2.1
-import QtMultimedia 5.0 as QtMultimedia
-//import org.kde.plasma.mediacenter.elements 0.1 as MediaCenterElements
+import QtMultimedia 5.0
+import org.kde.plasma.mediacenter 2.0
 import org.kde.plasma.components 2.0 as PlasmaComponents
 
 FocusScope {
@@ -28,13 +28,29 @@ FocusScope {
 
     property QtObject runtimeDataObject
 
-    QtMultimedia.MediaPlayer {
+    Connections {
+        target: runtimeDataObject
+        onStatusChanged: {
+            if(status == RuntimeData.Paused)
+                mediaplayer.pause();
+            else if(status == RuntimeData.Playing)
+                mediaplayer.play();
+        }
+    }
+
+    MediaPlayer {
         id: mediaplayer
         source: runtimeDataObject.url
         autoPlay: true
+        onStatusChanged: {
+            if(status == MediaPlayer.EndOfMedia) {
+                print("Media finished");
+                runtimeDataObject.mediaFinished();
+            }
+        }
     }
 
-    QtMultimedia.VideoOutput {
+    VideoOutput {
         id: video
         source: mediaplayer
         visible: mediaplayer.hasVideo

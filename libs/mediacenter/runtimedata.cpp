@@ -43,7 +43,19 @@ void RuntimeData::toggleMute() {
 
 void RuntimeData::playUrl(QUrl url) {
     m_url = url;
+    m_status = PmcStatus::Playing;
     emit urlChanged(m_url);
+    emit statusChanged(m_status);
+}
+
+void RuntimeData::playPause() {
+    if (m_status == RuntimeData::PmcStatus::Playing) {
+        m_status = PmcStatus::Paused;
+        emit statusChanged(m_status);
+    } else {
+        m_status = PmcStatus::Playing;
+        emit statusChanged(m_status);
+    }
 }
 
 void RuntimeData::setVolume(qreal volume) {

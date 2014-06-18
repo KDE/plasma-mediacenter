@@ -45,6 +45,7 @@ public:
 
     Q_INVOKABLE void toggleMute();
     Q_INVOKABLE void playUrl(QUrl url);
+    Q_INVOKABLE void playPause();
 
     enum PmcStatus {
         Playing,

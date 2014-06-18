@@ -368,7 +368,6 @@ Image {
                     runtimeData.playUrl(url);
                     pmcPageStack.pushAndFocus(getMediaPlayer());
                     mediaPlayerInstance.runtimeDataObject = runtimeData;
-                    mediaPlayerInstance.url = url;
                 }
             }
 /**            onBackRequested: pmcPageStack.popAndFocus()
