@@ -17,6 +17,7 @@
 
 #include "playlistmodel.h"
 #include "playlistitem.h"
+#include "settings.h"
 
 #include <KDebug>
 #include <KDE/KStandardDirs>
@@ -51,7 +52,8 @@ PlaylistModel::PlaylistModel(QObject* parent):
     QAbstractListModel(parent),
     d(new Private)
 {
-    d->playlistName = DEFAULT_PLAYLIST_NAME;
+    Settings s;
+    d->playlistName = s.value("lastPlaylist", DEFAULT_PLAYLIST_NAME).toString();
     loadFromFile(playlistFilePath());
 
     resetCurrentIndex();
@@ -72,6 +74,9 @@ PlaylistModel::PlaylistModel(QObject* parent):
 
 PlaylistModel::~PlaylistModel()
 {
+    Settings s;
+    s.setValue("lastPlaylist", d->playlistName);
+    s.sync();
     savePlaylist();
 }
 
