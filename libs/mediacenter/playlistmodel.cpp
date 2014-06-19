@@ -32,6 +32,7 @@
 
 namespace {
     static const char DEFAULT_PLAYLIST_NAME[] = "Default";
+    static int INVALID_INDEX = -1;
 }
 
 class PlaylistModel::Private
@@ -53,7 +54,7 @@ PlaylistModel::PlaylistModel(QObject* parent):
     d->playlistName = DEFAULT_PLAYLIST_NAME;
     loadFromFile(playlistFilePath());
 
-    d->currentIndex = -1;
+    resetCurrentIndex();
     setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
 
     QHash<int, QByteArray> newRoles(roleNames());
@@ -153,6 +154,10 @@ void PlaylistModel::moveItem(int originalIndex, int newIndex)
 
 void PlaylistModel::playNext()
 {
+    if (d->currentIndex == INVALID_INDEX) {
+        return;
+    }
+
     if (d->currentIndex == d->musicList.count() - 1) {
         setCurrentIndex(0);
     } else {
@@ -164,6 +169,10 @@ void PlaylistModel::playNext()
 
 void PlaylistModel::playPrevious()
 {
+    if (d->currentIndex == INVALID_INDEX) {
+        return;
+    }
+
     if (d->currentIndex == 0) {
         setCurrentIndex(d->musicList.count() - 1);
     } else {
@@ -192,7 +201,7 @@ void PlaylistModel::clearPlaylistWithoutModelReset()
     }
 
     d->musicList.clear();
-    d->currentIndex = -1;
+    resetCurrentIndex();
 }
 
 int PlaylistModel::currentIndex() const
@@ -212,7 +221,7 @@ void PlaylistModel::shuffle()
         return;
 
     QList<PlaylistItem*> musicListShuffle;
-    if( d->currentIndex == -1 )
+    if( d->currentIndex == INVALID_INDEX )
         d->currentIndex = 0;
     musicListShuffle.append(d->musicList.takeAt(d->currentIndex));
 
@@ -250,7 +259,7 @@ void PlaylistModel::loadFromFile(const QString& path)
 
             QDomNodeList itemList = doc.elementsByTagName("item");
             d->musicList.clear();
-            setCurrentIndex(-1);
+            resetCurrentIndex();
             for (int i=0; i<itemList.count(); i++) {
                 QDomNode node = itemList.at(i);
                 if (node.isNull()) continue;
@@ -292,7 +301,7 @@ void PlaylistModel::savePlaylist()
 
 void PlaylistModel::resetCurrentIndex()
 {
-    setCurrentIndex(-1);
+    setCurrentIndex(INVALID_INDEX);
 }
 
 bool PlaylistModel::removeCurrentPlaylist(const QString &playlistToSwitchToAfterDeletion)
