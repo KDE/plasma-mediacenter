@@ -280,12 +280,12 @@ Image {
         onPlayerButtonClicked: pmcPageStack.pushAndFocus(getMediaPlayer())
         //onPlayNext: playlistInstance.playNext()
         //onPlayPrevious: playlistInstance.playPrevious()
-        /*onSeekRequested: {
+        onSeekRequested: {
             if (mediaPlayerInstance) {
-                mediaPlayerInstance.currentTime = newPosition
-                mprisPlayerObject.emitSeeked(newPosition);
+                mediaPlayerInstance.seekTo(newPosition)
+                //mprisPlayerObject.emitSeeked(newPosition);
             }
-        }*/
+        }
         onPlayPause: runtimeData.playPause()
         onStop: runtimeData.stop()
         onWantToLoseFocus: pmcPageStack.currentPage.focus = true

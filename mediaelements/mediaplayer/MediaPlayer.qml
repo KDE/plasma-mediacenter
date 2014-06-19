@@ -33,6 +33,10 @@ FocusScope {
 
     signal mediaFinished();
 
+    function seekTo(newTime) {
+        mediaplayer.seek(newTime);
+    }
+
     Connections {
         target: runtimeDataObject
         onStatusChanged: {
@@ -161,10 +165,10 @@ FocusScope {
         visible: running
         running: !video.bufferProgress
     }
-
+*/
     Keys.onSpacePressed: runtimeDataObject.playPause()
-    Keys.onLeftPressed: seekBy(-5)
-    Keys.onRightPressed: seekBy(5)
+    Keys.onLeftPressed: mediaplayer.seek(mediaplayer.position - 5000)
+    Keys.onRightPressed: mediaplayer.seek(mediaplayer.position + 5000)
     Keys.onUpPressed: mediaPlayerRootRect.volumeUp()
     Keys.onDownPressed: mediaPlayerRootRect.volumeDown()
     Keys.onPressed: { switch (event.key) {
@@ -184,5 +188,5 @@ FocusScope {
     function getRate()
     {
         return video.playbackRate;
-    }*/
+    }
 }
