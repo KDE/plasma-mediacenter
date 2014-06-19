@@ -49,11 +49,18 @@ void RuntimeData::playUrl(QUrl url) {
 }
 
 void RuntimeData::playPause() {
-    if (m_status == RuntimeData::PmcStatus::Playing) {
+    if (m_status == PmcStatus::Playing) {
         m_status = PmcStatus::Paused;
         emit statusChanged(m_status);
     } else {
         m_status = PmcStatus::Playing;
+        emit statusChanged(m_status);
+    }
+}
+
+void RuntimeData::stop() {
+    if(m_status != PmcStatus::Stopped) {
+        m_status = PmcStatus::Stopped;
         emit statusChanged(m_status);
     }
 }

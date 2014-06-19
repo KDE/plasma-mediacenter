@@ -46,6 +46,7 @@ public:
     Q_INVOKABLE void toggleMute();
     Q_INVOKABLE void playUrl(QUrl url);
     Q_INVOKABLE void playPause();
+    Q_INVOKABLE void stop();
 
     enum PmcStatus {
         Playing,
@@ -67,7 +68,7 @@ Q_SIGNALS:
 
 private:
     bool m_userTrigerredStop;
-    qreal m_volume;
+    qreal m_volume = 0.7;
     int m_currentTime;
     int m_totalTime;
     int m_position;

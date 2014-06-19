@@ -272,8 +272,8 @@ Image {
         visible: pmcPageStack.currentPage.hideMediaController ? false : true
         state: hideFlag && ((mediaPlayerInstance && mediaPlayerInstance.visible) || (imageViewerInstance && imageViewerInstance.visible)) ? "hidden"  : ""
 
-        currentMediaTime: runtimeData.currentTime
-        totalMediaTime: runtimeData.totalTime
+        currentMediaTime: mediaPlayerInstance.currentTime
+        totalMediaTime: mediaPlayerInstance.totalTime
 
         //onPlaylistButtonClicked: pmcPageStack.pushAndFocus(getPlaylist())
         onBackButtonClicked: root.goBack()
@@ -393,27 +393,25 @@ Image {
         id: pmcMediaPlayerComponent
         MediaCenterElements.MediaPlayer {
             runtimeDataObject: runtimeData
-            /*url: runtimeData.url
             volume: runtimeData.volume
-            onClicked: toggleController(mediaPlayerInstance)
+            /*onClicked: toggleController(mediaPlayerInstance)
             onMediaStarted: _pmc_mainwindow.mousePointerAutoHide = hasVideo
             onVolumeUp: runtimeData.volume += 0.1
             onVolumeDown: runtimeData.volume -= 0.1
             onMuteToggle: runtimeData.muteToggle()
             onPreviousMedia: playlistInstance.playPrevious()
-            onNextMedia: playlistInstance.playNext()
+            onNextMedia: playlistInstance.playNext()*/
             onMediaFinished: {
                 if (playlistInstance && playlistInstance.active && totalTime != -1 && !runtimeData.userTrigerredStop) {
                     playlistInstance.playNext();
                 } else {
-                    runtimeData.stopped = true;
                     if (!runtimeData.userTrigerredStop && pmcPageStack.currentPage == mediaPlayerInstance) {
                         root.goBack()
                         //FIXME:This breaks playback from runtimeData.playUrl
                         //pmcPageStack.pushAndFocus(getMediaBrowser())
                     }
                 }
-            }*/
+            }
         }
     }
 

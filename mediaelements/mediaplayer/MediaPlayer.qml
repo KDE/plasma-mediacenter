@@ -27,6 +27,11 @@ FocusScope {
     id: mediaPlayerRootRect
 
     property QtObject runtimeDataObject
+    property alias currentTime: mediaplayer.position
+    property alias totalTime: mediaplayer.duration
+    property alias volume: mediaplayer.volume
+
+    signal mediaFinished();
 
     Connections {
         target: runtimeDataObject
@@ -35,6 +40,8 @@ FocusScope {
                 mediaplayer.pause();
             else if(status == RuntimeData.Playing)
                 mediaplayer.play();
+            else if(status == RuntimeData.Stopped)
+                mediaplayer.stop();
         }
     }
 
@@ -43,9 +50,8 @@ FocusScope {
         source: runtimeDataObject.url
         autoPlay: true
         onStatusChanged: {
-            if(status == MediaPlayer.EndOfMedia) {
-                print("Media finished");
-                runtimeDataObject.mediaFinished();
+            if(status == MediaPlayer.EndOfMedia || status == MediaPlayer.Stopped) {
+                mediaPlayerRootRect.mediaFinished();
             }
         }
     }
@@ -69,7 +75,6 @@ FocusScope {
 
     property alias totalTime: video.duration
     property alias url: video.source
-    property alias currentTime: video.position
     property alias volume: video.volume
     property alias metaData: video.metaData
     property alias hasVideo: video.hasVideo
