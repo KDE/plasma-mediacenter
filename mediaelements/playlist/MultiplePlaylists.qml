@@ -112,7 +112,6 @@ FocusScope {
             function click() {
                 if (createPlaylistTextField.text != "") {
                     multiplePlaylistList.model.createNewPlaylist (createPlaylistTextField.text)
-                    multiplePlaylistList.currentIndex = multiplePlaylistList.count - 1
                     createPlaylistTextField.text = ""
                 }
                 if (createPlaylistTextField.visible) {
@@ -130,12 +129,7 @@ FocusScope {
             visible: !createPlaylistTextField.visible
 
             iconSource: "list-remove"
-            onClicked: {
-                multiplePlaylistList.model.removeCurrentPlaylist ()
-                if (multiplePlaylistList.currentIndex > 0) {
-                    multiplePlaylistList.currentIndex = multiplePlaylistList.currentIndex-1;
-                }
-            }
+            onClicked: multiplePlaylistList.model.removeCurrentPlaylist ()
         }
     }
 }
