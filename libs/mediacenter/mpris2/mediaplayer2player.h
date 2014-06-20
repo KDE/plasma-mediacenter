@@ -102,8 +102,6 @@ public Q_SLOTS:
 
 private:
     void signalPropertiesChange(const QString &property, const QVariant &value);
-    void loadMetadata();
-    QString getTrackID();
 
     void setMediaPlayerPresent(int status);
     void setRate(double newRate);

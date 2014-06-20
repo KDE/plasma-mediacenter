@@ -19,21 +19,27 @@
  ***************************************************************************/
 
 #include "mediacenter/mediacenter_export.h"
+#include "mediacenter/playlistmodel.h"
 
 #include <QObject>
+#include <QSharedPointer>
+#include <QVariantMap>
 
 class MediaPlayer2;
 class MediaPlayer2Player;
+class MediaPlayer2Tracklist;
 
 class MEDIACENTER_EXPORT Mpris2 : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit Mpris2(QObject* parent = 0);
+    explicit Mpris2(QSharedPointer<PlaylistModel> playlistModel, QObject* parent = 0);
     ~Mpris2();
 
     MediaPlayer2Player* getMediaPlayer2Player();
+    QString getCurrentTrackId();
+    QVariantMap getMetadataOf(const QString& url);
 
 signals:
     void raisePMC() const;
@@ -41,4 +47,5 @@ signals:
 private:
     MediaPlayer2 *m_mp2;
     MediaPlayer2Player *m_mp2p;
+    MediaPlayer2Tracklist *m_mp2tl;
 };
