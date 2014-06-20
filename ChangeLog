@@ -1,3 +1,16 @@
+2014 -06-20 Sinny Kumari <ksinny@gmail.com> - v1.3.0
+    * Plasma-mediacenter version-1.3.0 stable release
+    * Show album cover and duration for all music
+    * Spacebar key to play/pause a media from the homescreen
+    * Change currentIndex of playlistModel to -1 when media
+      played is not from playlist
+    * Remember the playlist I was using when I closed PMC last time
+
+    * Bug fix:
+    336414: Fixed highlight not following the current playlist
+      after a playlist have been removed or added
+    335904: Also bump soversion of plasmaadapter.so
+
 2014 -06-02 Sinny Kumari <ksinny@gmail.com> - v1.3.0-beta
     * Adding left and right arrow key support in All Music
       to switch between Artist, Album and All Songs

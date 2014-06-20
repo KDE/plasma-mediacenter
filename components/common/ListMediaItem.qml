@@ -33,10 +33,10 @@ Item {
     signal pressAndHold(int index)
 
     Item {
-        anchors { fill: parent; margins: 1 }
+        anchors.fill: parent
 
         Item {
-            anchors { fill: parent; margins: 2 }
+            anchors.fill: parent
 
             PlasmaCore.Theme {
                 id:theme
@@ -68,15 +68,14 @@ Item {
                     id: labelOverlay
                     anchors {
                         bottom: parent.bottom; margins: 2
-                        left:iconImageLoader.right
+                        left: iconImageLoader.right
                         right: parent.right
                         verticalCenter: parent.verticalCenter
                     }
 
-                    fontPixelSize: height * 0.4
+                    fontPixelSize: height * 0.35
                     displayProxy: mediaItem.displayProxy
                     visible: !hideLabel && display != ""
-                    opacity: 0.9
                     showOverlay: !isExpandable
                     width: parent.width
                     targetHeight: parent.height
@@ -89,7 +88,6 @@ Item {
                     horizontalAlignment: Text.AlignRight
                     text: mediaDuration ? Qt.formatTime(new Date(0, 0, 0, 0, 0, mediaDuration), "hh:mm:ss") : ""
                     visible: false
-                    opacity: 0.9
                     showOverlay: false
                     expanded: true
                     autoWidth: true

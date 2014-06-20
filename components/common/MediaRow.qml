@@ -31,13 +31,6 @@ Row {
 
     property int numberOfItemsInDisplay: typeof(displayProxy) == "object" ? displayProxy.length : 1
 
-    anchors {
-        bottom: parent.bottom; margins: mediaItem.horizontal ? 1 : 5
-        left: mediaItem.horizontal ? iconImageLoader.right : parent.left
-        right: parent.right
-        verticalCenter: mediaItem.horizontal ? parent.verticalCenter : undefined
-    }
-
     Repeater {
         model: numberOfItemsInDisplay
         LabelOverlay {

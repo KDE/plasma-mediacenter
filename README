@@ -19,9 +19,14 @@ Run PMC using "plasma-mediacenter" or by using the "Plasma Media Center" icon in
 Troubleshooting
 ===============
 
-If you are having trouble playing audio and video files in latest Linux distributions, this is due to PMC is linking with both libplasma and QtMultimediaKit. libplasma links with libgstreamer1.0 while QtMultimediaKit links with libgstreamer0.10. If you are getting this problem. Please add option -DNO_LINK_TO_PLASMA to cmake as below,
+1. If you are having trouble playing audio and video files in latest Linux distributions, this is due to PMC is linking with
+both libplasma and QtMultimediaKit. libplasma links with libgstreamer1.0 while QtMultimediaKit links with libgstreamer0.10.
+If you are getting this problem. Please add option -DNO_LINK_TO_PLASMA to cmake as below,
 
 cmake .. -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` -DNO_LINK_TO_PLASMA=ON
+
+2. If you find any error related to mockcpp and don't want to build test, pass -DKDE4_BUILD_TESTS=OFF to cmake as below,
+cmake .. -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` -DKDE4_BUILD_TESTS=OFF
 
 and then run make and make install.
 

@@ -19,6 +19,7 @@
 
 import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
+import org.kde.plasma.mediacenter.components 0.1 as MediaCenterComponents
 
 FocusScope {
     id: root
@@ -52,6 +53,11 @@ FocusScope {
                 }
             }
         }
+    }
+
+    MediaCenterComponents.FocusIndicator {
+        target: repeaterRow
+        opacity: root.activeFocus ? 1 : 0
     }
 
     onActiveFocusChanged: repeater.itemAt(0).focus = true;
