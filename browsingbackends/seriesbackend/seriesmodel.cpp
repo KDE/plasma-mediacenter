@@ -5,6 +5,8 @@
 #include <mediacenter/medialibrary.h>
 #include <mediacenter/mediacenter.h>
 
+#include <QDebug>
+
 SeriesModel::SeriesModel(QObject* parent): QAbstractListModel(parent)
 {
     mediaData = SingletonFactory::instanceFor<MediaLibrary>()->getMedia("video");
@@ -16,22 +18,24 @@ SeriesModel::SeriesModel(QObject* parent): QAbstractListModel(parent)
 
 QVariant SeriesModel::data(const QModelIndex& index, int role) const {
     switch(role) {
-        case Qt::DisplayRole:
-            return currentCluster >= 0 ? clusterer.cluster(currentCluster)->children().at(index.row())->label() : clusterer.label(index.row());
+        case Qt::DisplayRole: {
+            const QString display = currentCluster >= 0 ? clusterer.cluster(currentCluster)->mergedNodes().at(index.row())->label() : clusterer.label(index.row());
+            return QString("%1 (%2)").arg(display).arg(currentCluster >= 0 ? 0 : clusterer.cluster(index.row())->mergedNodes().count());
+        }
         case Qt::DecorationRole: {
-            QString url = currentCluster >= 0 ? clusterer.cluster(currentCluster)->children().at(index.row())->url() : clusterer.cluster(index.row())->url();
+            QString url = currentCluster >= 0 ? clusterer.cluster(currentCluster)->mergedNodes().at(index.row())->url() : clusterer.cluster(index.row())->url();
             return data(index, MediaCenter::IsExpandableRole).toBool() ? "folder-video" : PmcCoverArtProvider::qmlImageUriForMediaFileCover(url.prepend("file://"));
         }
         case MediaCenter::HideLabelRole:
             return false;
         case MediaCenter::IsExpandableRole:
-            return currentCluster >= 0 ? false : clusterer.cluster(index.row())->children().size() > 0;
+            return currentCluster >= 0 ? false : clusterer.cluster(index.row())->mergedNodes().size() > 0;
     }
     return QVariant();
 }
 
 int SeriesModel::rowCount(const QModelIndex& parent) const {
-    return currentCluster >= 0 ? clusterer.cluster(currentCluster)->children().size() : clusterer.size();
+    return currentCluster >= 0 ? clusterer.cluster(currentCluster)->mergedNodes().size() : clusterer.size();
 }
 
 void SeriesModel::clusterSizeUpdated(int) {
@@ -43,8 +47,9 @@ bool SeriesModel::setCurrentCluster(int row)
     if (row == currentCluster) {
         return false;
     }
+    beginResetModel();
     currentCluster = row;
-    reset();
+    endResetModel();
     return true;
 }
 

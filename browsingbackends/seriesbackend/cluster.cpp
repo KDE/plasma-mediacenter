@@ -2,11 +2,9 @@
 #include <QtCore/qmath.h>
 #include <QDebug>
 
-#define COS_SIM_THRESHOLD 0.49
+#define COS_SIM_THRESHOLD 0.65
 
 Cluster::Cluster() {
-    m_empty = true;
-    m_merged = false;
 }
 
 Cluster::Cluster(QString label, int level) {
@@ -15,7 +13,7 @@ Cluster::Cluster(QString label, int level) {
     this->fuzzifyLabel();
 }
 
-QList< Cluster* > Cluster::children() {
+QList< Cluster* >& Cluster::children() {
     return m_children;
 }
 
@@ -24,7 +22,7 @@ bool Cluster::empty() {
 }
 
 
-double Cluster::cosineSimilarity(QStringList &fs1, QStringList &fs2) {
+double Cluster::cosineSimilarity(QStringList fs1, QStringList fs2) {
     auto charCount1 = charCount(fs1);
     auto charCount2 = charCount(fs2);
 
@@ -59,6 +57,14 @@ QHash<QString, int> Cluster::charCount(QStringList word) {
     return charCounts;
 }
 
+// Folder -> blah1, blah2
+// file3, file4
+//
+// blah1, blah2
+// file3, file4
+//
+// cluster(blah1), cluster(file3)
+
 void Cluster::fuzzifyLabel() {
     QStringList fuzzyLabel;
 
@@ -68,7 +74,9 @@ void Cluster::fuzzifyLabel() {
         }
     }
 
-    this->m_fuzzyString = fuzzyLabel;
+    this->m_fuzzyString = m_label.split(QRegExp("[^A-Za-z0-9]+"), QString::SkipEmptyParts);
+
+    // this->m_fuzzyString = fuzzyLabel;
 }
 
 QStringList Cluster::fuzzyString() {
@@ -101,7 +109,7 @@ bool Cluster::merged() {
     return m_merged;
 }
 
-QList< Cluster* > Cluster::mergedNodes() {
+QList< Cluster* >& Cluster::mergedNodes() {
     return m_mergedNodes;
 }
 
@@ -111,17 +119,31 @@ bool Cluster::mergeCompatible(Cluster* cluster) {
 
     //TODO: Implement word-wise cosineSimilarity
 
-    if(cosSimilarity <= COS_SIM_THRESHOLD) {
+    if(cosSimilarity >= COS_SIM_THRESHOLD) {
         compatible = true;
     }
     return compatible;
 }
 
+/**
+ * A -> C, D
+ * B (this)
+ * if(A is mergeable with B) {B->merged_nodes = (A, C, D), A->merged_nodes = {}}
+ */
 bool Cluster::mergeNode(Cluster *cluster) {
+    if (cluster == this) {
+        return false;
+    }
+
     if(mergeCompatible(cluster)) {
+        qDebug() << cluster << cluster->label();
         if(cluster->merged()) {
+            Q_FOREACH(auto mergedNode, cluster->mergedNodes()) {
+                if(!m_mergedNodes.contains(mergedNode)) {
+                    m_mergedNodes.append(mergedNode);
+                }
+            }
             cluster->setMerged(false);
-            m_mergedNodes.append(cluster->mergedNodes());
         }
         m_merged = true;
         m_mergedNodes.append(cluster);

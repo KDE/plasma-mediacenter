@@ -22,8 +22,10 @@ private:
 
     Cluster* findAndInsert(Cluster &root, QStringList &labels);
     void makeListOfClusters();
+    void mergeNodesAtSameLevel(Cluster* cluster);
     void mergeTree(Cluster *cluster);
     void populate(QList<PmcMedia::Ptr> &mediaList);
+    void displayTree(Cluster *node);
 };
 
 #endif // CLUSTERER_H

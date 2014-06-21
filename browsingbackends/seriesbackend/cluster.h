@@ -9,29 +9,29 @@ public:
     Cluster();
     Cluster(QString label, int level=0);
 
-    QList<Cluster*> children();
+    QList<Cluster*>& children();
     bool empty();
     Cluster* insertChild(QString &label);
     QString label() const;
     int level();
     bool merged();
     bool mergeNode(Cluster *cluster);
-    QList<Cluster*> mergedNodes();
+    QList<Cluster*>& mergedNodes();
     QStringList fuzzyString();
 
     void setMerged(bool merged);
     void setUrl(const QString &url);
     QString url() const;
 
-    static double cosineSimilarity(QStringList& fs1, QStringList& fs2);
+    static double cosineSimilarity(QStringList fs1, QStringList fs2);
 
 private:
     bool m_empty = false;
     QStringList m_fuzzyString;
     QString m_label;
-    int m_level;
+    int m_level = 0;
     QList<Cluster*> m_children;
-    bool m_merged;
+    bool m_merged = false;
     QList<Cluster*> m_mergedNodes;
     QString m_url;
 

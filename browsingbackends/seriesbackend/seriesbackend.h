@@ -9,6 +9,8 @@ public:
     explicit SeriesBackend(QObject* parent, const QVariantList& args = QVariantList());
     virtual bool expand(int row);
     virtual bool goOneLevelUp();
+
+    virtual void search(const QString& searchTerm);
 protected:
     virtual bool initImpl();
 };
