@@ -3,7 +3,8 @@
 
 #include <mediacenter/abstractbrowsingbackend.h>
 
-class SeriesBackend : public MediaCenter::AbstractBrowsingBackend {
+class SeriesBackend : public MediaCenter::AbstractBrowsingBackend
+{
     Q_OBJECT
 public:
     explicit SeriesBackend(QObject* parent, const QVariantList& args = QVariantList());

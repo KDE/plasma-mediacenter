@@ -4,23 +4,24 @@
 #include <QHash>
 #include <QStringList>
 
-class Cluster {
+class Cluster
+{
 public:
     Cluster();
-    Cluster(QString label, int level=0);
+    Cluster(QString label, int level = 0);
 
     QList<Cluster*>& children();
     bool empty();
-    Cluster* insertChild(QString &label);
+    Cluster* insertChild(QString& label);
     QString label() const;
     int level();
     bool merged();
-    bool mergeNode(Cluster *cluster);
+    bool mergeNode(Cluster* cluster);
     QList<Cluster*>& mergedNodes();
     QStringList fuzzyString();
 
     void setMerged(bool merged);
-    void setUrl(const QString &url);
+    void setUrl(const QString& url);
     QString url() const;
 
     static double cosineSimilarity(QStringList fs1, QStringList fs2);
@@ -36,7 +37,7 @@ private:
     QString m_url;
 
     void fuzzifyLabel();
-    bool mergeCompatible(Cluster *cluster);
+    bool mergeCompatible(Cluster* cluster);
     void resetLabels();
 
     static QHash< QString, int > charCount(QStringList word);

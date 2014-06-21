@@ -5,7 +5,8 @@
 #include <mediacenter/pmcmedia.h>
 #include "clusterer.h"
 
-class SeriesModel : public QAbstractListModel {
+class SeriesModel : public QAbstractListModel
+{
     Q_OBJECT
 public:
     explicit SeriesModel(QObject* parent = 0);

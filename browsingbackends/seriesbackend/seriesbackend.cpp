@@ -5,17 +5,19 @@
 
 MEDIACENTER_EXPORT_BROWSINGBACKEND(SeriesBackend)
 
-SeriesBackend::SeriesBackend(QObject* parent, const QVariantList& args): AbstractBrowsingBackend(parent, args) {
+SeriesBackend::SeriesBackend(QObject* parent, const QVariantList& args): AbstractBrowsingBackend(parent, args)
+{
 
 }
 
-bool SeriesBackend::initImpl() {
-    QSortFilterProxyModel *model = new QSortFilterProxyModel(this);
+bool SeriesBackend::initImpl()
+{
+    QSortFilterProxyModel* model = new QSortFilterProxyModel(this);
     model->setSourceModel(new SeriesModel());
 //     model->setFilterRole(MediaCenter::IsExpandableRole);
 //     model->setFilterFixedString("true");
 
-    ModelMetadata *metadata = new ModelMetadata(this);
+    ModelMetadata* metadata = new ModelMetadata(this);
     metadata->setModel(model);
     metadata->setSupportsSearch(true);
 
