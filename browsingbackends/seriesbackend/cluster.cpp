@@ -1,18 +1,14 @@
 #include "cluster.h"
+
 #include <QtCore/qmath.h>
-#include <QDebug>
 
-#define COS_SIM_THRESHOLD 0.65
-
-Cluster::Cluster()
-{
-}
+#define COS_SIM_THRESHOLD 0.4
 
 Cluster::Cluster(QString label, int level)
+    : m_label(label)
+    , m_level(level)
 {
-    this->m_label = label;
-    this->m_level = level;
-    this->fuzzifyLabel();
+    fuzzifyLabel();
 }
 
 QList< Cluster* >& Cluster::children()
@@ -73,17 +69,7 @@ QHash<QString, int> Cluster::charCount(QStringList word)
 
 void Cluster::fuzzifyLabel()
 {
-    QStringList fuzzyLabel;
-
-    Q_FOREACH(QChar ch, m_label) {
-        if (ch.isLetterOrNumber()) {
-            fuzzyLabel.append(ch.toLower());
-        }
-    }
-
-    this->m_fuzzyString = m_label.split(QRegExp("[^A-Za-z0-9]+"), QString::SkipEmptyParts);
-
-    // this->m_fuzzyString = fuzzyLabel;
+    m_fuzzyString = m_label.split(QRegExp("[^A-Za-z0-9]+"), QString::SkipEmptyParts);
 }
 
 QStringList Cluster::fuzzyString()
@@ -94,26 +80,26 @@ QStringList Cluster::fuzzyString()
 
 Cluster* Cluster::insertChild(QString& label)
 {
-    Q_FOREACH(Cluster * child, m_children) {
+    Q_FOREACH(Cluster* child, m_children) {
         if (child->label() == label) {
             return child;
         }
     }
+
     auto child = new Cluster(label, m_level + 1);
-    this->m_children.append(child);
-    qDebug() << "New child: " << label << "<-" << m_label;
+    m_children.append(child);
 
     return child;
 }
 
 QString Cluster::label() const
 {
-    return this->m_label;
+    return m_label;
 }
 
 int Cluster::level()
 {
-    return this->m_level;
+    return m_level;
 }
 
 bool Cluster::merged()
@@ -128,15 +114,9 @@ QList< Cluster* >& Cluster::mergedNodes()
 
 bool Cluster::mergeCompatible(Cluster* cluster)
 {
-    bool compatible = false;
     double cosSimilarity = cosineSimilarity(m_fuzzyString, cluster->m_fuzzyString);
 
-    //TODO: Implement word-wise cosineSimilarity
-
-    if (cosSimilarity >= COS_SIM_THRESHOLD) {
-        compatible = true;
-    }
-    return compatible;
+    return cosSimilarity >= COS_SIM_THRESHOLD;
 }
 
 /**
@@ -151,7 +131,6 @@ bool Cluster::mergeNode(Cluster* cluster)
     }
 
     if (mergeCompatible(cluster)) {
-        qDebug() << cluster << cluster->label();
         if (cluster->merged()) {
             Q_FOREACH(auto mergedNode, cluster->mergedNodes()) {
                 if (!m_mergedNodes.contains(mergedNode)) {
@@ -160,11 +139,12 @@ bool Cluster::mergeNode(Cluster* cluster)
             }
             cluster->setMerged(false);
         }
-        m_merged = true;
         m_mergedNodes.append(cluster);
+        setMerged(true);
         resetLabels();
         return true;
     }
+
     return false;
 }
 

@@ -7,7 +7,6 @@
 class Cluster
 {
 public:
-    Cluster();
     Cluster(QString label, int level = 0);
 
     QList<Cluster*>& children();

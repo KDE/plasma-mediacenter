@@ -16,6 +16,7 @@ private slots:
     void cleanup();
 
     void testCosineSimilarity();
+    void shouldFuzzifyLabel();
 };
 
 #endif // CLUSTERTEST_H

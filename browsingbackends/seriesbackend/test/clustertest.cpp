@@ -35,5 +35,13 @@ void ClusterTest::testCosineSimilarity()
     QVERIFY(Cluster::cosineSimilarity(fs1, fs2) - 0.888889 < 0.0001);
 }
 
+void ClusterTest::shouldFuzzifyLabel()
+{
+    Cluster c("Movie[1234]Media.FileFormat[Lang]-Credits.avi");
+
+    QStringList expectedLabels;
+    expectedLabels << "Movie" << "1234" << "Media" << "FileFormat" << "Lang" << "Credits" << "avi";
+    QCOMPARE(c.fuzzyString(),expectedLabels);
+}
 
 #include "clustertest.moc"

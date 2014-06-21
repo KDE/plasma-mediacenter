@@ -21,7 +21,7 @@ QVariant SeriesModel::data(const QModelIndex& index, int role) const
     switch (role) {
     case Qt::DisplayRole: {
         const QString display = currentCluster >= 0 ? clusterer.cluster(currentCluster)->mergedNodes().at(index.row())->label() : clusterer.label(index.row());
-        return QString("%1 (%2)").arg(display).arg(currentCluster >= 0 ? 0 : clusterer.cluster(index.row())->mergedNodes().count());
+        return QString("(%1) %2").arg(currentCluster >= 0 ? 0 : clusterer.cluster(index.row())->mergedNodes().count()).arg(display);
     }
     case Qt::DecorationRole: {
         QString url = currentCluster >= 0 ? clusterer.cluster(currentCluster)->mergedNodes().at(index.row())->url() : clusterer.cluster(index.row())->url();
@@ -37,7 +37,7 @@ QVariant SeriesModel::data(const QModelIndex& index, int role) const
 
 int SeriesModel::rowCount(const QModelIndex& parent) const
 {
-    return currentCluster >= 0 ? clusterer.cluster(currentCluster)->mergedNodes().size() : clusterer.size();
+    return currentCluster >= 0 ? clusterer.cluster(currentCluster)->mergedNodes().size() : clusterer.clusterSize();
 }
 
 void SeriesModel::clusterSizeUpdated(int)
