@@ -52,9 +52,11 @@ private slots:
 
     void shouldCleanupEntriesForNonExistentMedia();
 
+    void shouldAddDifferentAlbumsWhenArtistsAreDifferent();
+
 private:
     QHash< int, QVariant > createTestMediaData() const;
-    QHash< int, QVariant > createTestMediaDataWithAlbumArtist() const;
+    QHash< int, QVariant > createTestMediaDataWithAlbumArtist(const QString& albumName = "album", const QString& artistName = "artist") const;
 };
 
 Q_DECLARE_METATYPE(QList<QSharedPointer<PmcMedia> >)

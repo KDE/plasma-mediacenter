@@ -48,9 +48,9 @@ void PmcAlbumTest::cleanup()
 
 void PmcAlbumTest::shouldReturnAlbumArtist()
 {
-    auto album = QSharedPointer<Album>(new Album("Album"));
-    auto media = QSharedPointer<Media>(new Media("Media"));
     auto artist = QSharedPointer<Artist>(new Artist("Artist"));
+    auto album = QSharedPointer<Album>(new Album("Album", artist));
+    auto media = QSharedPointer<Media>(new Media("Media"));
     media->setArtistAndUpdateRelations(media, artist);
 
     album->addMedia(media);
@@ -62,7 +62,8 @@ void PmcAlbumTest::shouldReturnAlbumArtist()
 
 void PmcAlbumTest::shouldReturnNameOfAlbum()
 {
-    auto album = QSharedPointer<Album>(new Album("Album"));
+    auto artist = QSharedPointer<Artist>(new Artist("Artist"));
+    auto album = QSharedPointer<Album>(new Album("Album", artist));
     PmcAlbum pmcAlbum(album);
 
     QCOMPARE(pmcAlbum.name(), QString("Album"));

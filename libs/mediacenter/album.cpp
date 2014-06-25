@@ -21,8 +21,9 @@
 #include "artist.h"
 #include "album.h"
 
-Album::Album(const QString& name)
-    : m_name(name)
+Album::Album(const QString& name, const QSharedPointer<Artist>& artist)
+    : m_artist(artist)
+    , m_name(name)
 {
 }
 
@@ -33,15 +34,7 @@ const QString& Album::name() const
 
 QString Album::albumArtist() const
 {
-    //Return the first non-empty artist name
-    Q_FOREACH (const QSharedPointer<Media> &m, m_media) {
-        const QString artistName = m->artist()->name();
-        if (!artistName.isEmpty()) {
-            return artistName;
-        }
-    }
-
-    return QString();
+    return m_artist->name();
 }
 
 void Album::addMedia(const QSharedPointer<Media>& media)

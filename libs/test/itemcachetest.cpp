@@ -25,23 +25,29 @@
 
 QTEST_KDEMAIN(ItemCacheTest, NoGUI);
 
-void ItemCacheTest::shouldInsertAndReturnTheSameObjectNextTime()
+void ItemCacheTest::shouldInsertAndReturnTheSameArtistNextTime()
 {
-    ItemCache<Artist> artists;
+    ItemCache cache;
 
-    auto artist = artists.getById("Shaan", true);
-
-    QCOMPARE(artist, artists.getById("Shaan"));
-    QCOMPARE(artist, artists.getById("Shaan", true));
+    auto artist = cache.getArtistByName("Shaan");
+    QCOMPARE(artist, cache.getArtistByName("Shaan"));
 }
 
-void ItemCacheTest::shouldNotInsertWhenNotAskedTo()
+void ItemCacheTest::shouldInsertAndReturnTheSameAlbumNextTime()
 {
-    ItemCache<Artist> artists;
+    ItemCache cache;
 
-    auto artist = artists.getById("Shaan");
+    auto album = cache.getAlbumByName("Ghost Stories", "Coldplay");
+    QCOMPARE(album, cache.getAlbumByName("Ghost Stories", "Coldplay"));
+}
 
-    QVERIFY2(artist.isNull(), "Was expecting a null artist");
+void ItemCacheTest::shouldCreateArtistIfNotPresentWhenCreatingAlbum()
+{
+    ItemCache cache;
+
+    auto album = cache.getAlbumByName("Ghost Stories", "Coldplay");
+    auto artist = cache.getArtistByName("Coldplay", false);
+    QVERIFY2(!artist.isNull(), "Artist should be created when creating album");
 }
 
 #include "itemcachetest.moc"
