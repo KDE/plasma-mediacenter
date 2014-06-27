@@ -30,6 +30,7 @@ FocusScope {
     property alias currentTime: mediaplayer.position
     property alias totalTime: mediaplayer.duration
     property alias volume: mediaplayer.volume
+    property bool showMusicStats: true
 
     signal mediaFinished();
 
@@ -74,7 +75,6 @@ FocusScope {
 /*    property bool playing: runtimeDataObject.playing
     property bool paused: runtimeDataObject.paused
     property bool stopped: runtimeDataObject.stopped
-    property bool showMusicStats: true
     property bool dimVideo: false
 
     property alias totalTime: video.duration
@@ -130,42 +130,29 @@ FocusScope {
             opacity: video.hasVideo ? 0.5 : 0
             visible: mediaPlayerRootRect.dimVideo
         }
-
-        Component.onCompleted: {
-          runtimeDataObject.volume = video.volume
-        }
     }
-
+*/
     MusicStats {
         anchors.fill: parent
-        visible: video.hasAudio && !video.hasVideo && showMusicStats
+        visible: mediaplayer.hasAudio && !mediaplayer.hasVideo && showMusicStats
         minimized: mediaPlayerRootRect.state == "minimize"
 
-        metaData: video.metaData
-        path: video.source
+        metaData: mediaplayer.metaData
+        path: mediaplayer.source
     }
 
-    onPlayingChanged: if (playing) video.play();
-    onPausedChanged: if (paused) video.pause();
-    onStoppedChanged: if (stopped) video.stop();
-
-    function seekBy(value)
-    {
-        video.position += value*1000;
-        mprisPlayerObject.emitSeeked(video.position);
-    }
-
+/*
     MouseArea {
         anchors.fill: parent
         onClicked: mediaPlayerRootRect.clicked()
     }
-
+*/
     PlasmaComponents.BusyIndicator {
         anchors { horizontalCenter: parent.horizontalCenter; bottom: parent.bottom; margins: 10 }
         visible: running
-        running: !video.bufferProgress
+        running: (mediaplayer.status == MediaPlayer.Buffering)
     }
-*/
+
     Keys.onSpacePressed: runtimeDataObject.playPause()
     Keys.onLeftPressed: mediaplayer.seek(mediaplayer.position - 5000)
     Keys.onRightPressed: mediaplayer.seek(mediaplayer.position + 5000)

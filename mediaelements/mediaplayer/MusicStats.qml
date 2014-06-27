@@ -17,8 +17,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-import QtQuick 1.1
-import org.kde.qtextracomponents 0.1 as QtExtraComponents
+import QtQuick 2.1
+import org.kde.plasma.core 2.0 as PlasmaCore
 
 Row {
     id: root
@@ -46,8 +46,8 @@ Row {
             smooth: true
             width: Math.min(sourceSize.width, parent.width*0.9)
             height: sourceSize.height*width/sourceSize.width
-            QtExtraComponents.QIconItem {
-                icon: metaData ? "media-optical-audio" : ""
+            PlasmaCore.IconItem {
+                source: metaData ? "media-optical-audio" : ""
                 anchors.centerIn: parent
                 width: 256
                 height: width
