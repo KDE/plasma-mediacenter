@@ -1,6 +1,5 @@
 /***************************************************************************
- *   Copyright 2014 Sujith Haridasan <sujith.haridasan@kdemail.net>        *
- *   Copyright 2014 Ashish Madeti <ashishmadeti@gmail.com>                 *
+ *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,34 +17,20 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#include "mediacenter/mediacenter_export.h"
-#include "mediacenter/playlistmodel.h"
+import QtQuick 2.1
 
-#include <QObject>
-#include <QSharedPointer>
-#include <QVariantMap>
+Rectangle {
+    property QtObject target
+    property QtObject focusTarget: target
 
-class MediaPlayer2;
-class MediaPlayer2Player;
-class MediaPlayer2Tracklist;
+    anchors {
+        fill: target; margins: -2
+    }
+    color: "transparent"; radius: 10
+    border { color: theme.textColor; width: 2 }
+    opacity: focusTarget.activeFocus ? 1 : 0
 
-class MEDIACENTER_EXPORT Mpris2 : public QObject
-{
-    Q_OBJECT
-
-public:
-    explicit Mpris2(QSharedPointer<PlaylistModel> playlistModel, QObject* parent = 0);
-    ~Mpris2();
-
-    MediaPlayer2Player* getMediaPlayer2Player();
-    QString getCurrentTrackId();
-    QVariantMap getMetadataOf(const QString& url);
-
-signals:
-    void raisePMC() const;
-
-private:
-    MediaPlayer2 *m_mp2;
-    MediaPlayer2Player *m_mp2p;
-    MediaPlayer2Tracklist *m_mp2tl;
-};
+    Behavior on opacity {
+        NumberAnimation { duration: 200 }
+    }
+}

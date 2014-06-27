@@ -38,8 +38,8 @@ Rectangle {
     PlasmaComponents.Label {
         id: mediaTitleLabel
         anchors {
-            verticalCenter: parent.verticalCenter;
-            left: parent.left; margins: 10
+            verticalCenter: parent.verticalCenter
+            horizontalCenter: parent.horizontalCenter
         }
 
         clip: true
@@ -54,11 +54,11 @@ Rectangle {
 
     Binding {
         target: mediaTitleLabel; property: 'width'
-        value: root.width; when: !autoWidth
+        value: root.width*0.95; when: !autoWidth
     }
 
     Binding {
         target: root; property: 'width'
-       value: mediaTitleLabel.width; when: autoWidth
+        value: mediaTitleLabel.width*1.1; when: autoWidth
     }
 }

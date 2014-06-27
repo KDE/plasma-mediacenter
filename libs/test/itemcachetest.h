@@ -25,8 +25,9 @@ class ItemCacheTest : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
-    void shouldInsertAndReturnTheSameObjectNextTime();
-    void shouldNotInsertWhenNotAskedTo();
+    void shouldInsertAndReturnTheSameArtistNextTime();
+    void shouldInsertAndReturnTheSameAlbumNextTime();
+    void shouldCreateArtistIfNotPresentWhenCreatingAlbum();
 };
 
 #endif // ITEMCACHETEST_H

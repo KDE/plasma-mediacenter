@@ -23,12 +23,13 @@
 #include <QList>
 #include <QWeakPointer>
 
+class Artist;
 class Media;
 
 class Album
 {
 public:
-    explicit Album(const QString &name);
+    explicit Album(const QString &name, const QSharedPointer<Artist> &artist);
 
     const QString& name() const;
 
@@ -39,6 +40,7 @@ public:
     QList< QSharedPointer<Media> > media() const;
 
 private:
+    QSharedPointer<Artist> m_artist;
     QString m_name;
     QList< QSharedPointer<Media> > m_media;
 };

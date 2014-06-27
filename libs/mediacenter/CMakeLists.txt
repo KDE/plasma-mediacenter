@@ -2,6 +2,7 @@ include(ECMMarkAsTest)
 
 set (plasmamediacenter_SRCS
     runtimedata.cpp
+    itemcache.cpp
     pmcruntime.cpp
     medialibrarywrappercache.cpp
     artist.cpp
@@ -36,6 +37,7 @@ set (plasmamediacenter_SRCS
     mpris2/mpris2.cpp
     mpris2/mediaplayer2.cpp
     mpris2/mediaplayer2player.cpp
+    mpris2/mediaplayer2tracklist.cpp
 )
 
 add_library(plasmamediacenter SHARED

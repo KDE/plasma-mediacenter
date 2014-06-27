@@ -73,6 +73,7 @@ FocusScope {
                 height: parent.height
                 width: height
                 visible: true
+                enabled: playlistModel.currentIndex != -1
 
                 iconSource: "pmc-previous"
 
@@ -87,6 +88,7 @@ FocusScope {
                 id: playPauseButton
                 height: parent.height
                 width: height
+                enabled: runtimeData.url
 
                 iconSource: (runtimeDataObject.status == RuntimeData.Playing) ? "pmc-pause" : "pmc-play"
                 onClicked: controlBarFrame.playPause()
@@ -96,6 +98,7 @@ FocusScope {
                 id: stopButton
                 height: parent.height
                 width: height
+                enabled: runtimeData.playing || runtimeData.paused
 
                 iconSource: "pmc-stop"
                 onClicked: controlBarFrame.stop()
@@ -106,6 +109,7 @@ FocusScope {
                 height: parent.height
                 width: height
                 visible: true
+                enabled: playlistModel.currentIndex != -1
 
                 iconSource: "pmc-next"
 
@@ -122,6 +126,7 @@ FocusScope {
                     - stopButton.width - forwardButton.width - volumeButton.width - volumeSlider.width
                     - playlistButton.width - curMediaTime.width) * 0.8
                 height: parent.height
+                enabled: runtimeData.url
 
                 Binding {
                     when: !progressSlider.pressed
@@ -139,6 +144,7 @@ FocusScope {
                 id: curMediaTime
                 property bool checked: false
 
+                enabled: runtimeData.url
                 text: checked ? '- ' + getTimeString(controlBarFrame.remainingMediaTime) : getTimeString(controlBarFrame.currentMediaTime)
                 height: parent.height
                 font.pixelSize: height*0.5

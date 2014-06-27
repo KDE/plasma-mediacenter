@@ -54,5 +54,10 @@ FocusScope {
         }
     }
 
+    MediaCenterComponents.FocusIndicator {
+        target: repeaterRow
+        opacity: root.activeFocus ? 1 : 0
+    }
+
     onActiveFocusChanged: repeater.itemAt(0).focus = true;
 }

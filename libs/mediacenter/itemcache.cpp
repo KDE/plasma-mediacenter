@@ -16,38 +16,29 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#include "itemcachetest.h"
+#include "itemcache.h"
+#include "artist.h"
+#include "album.h"
 
-#include <mediacenter/itemcache.h>
-#include <mediacenter/artist.h>
-
-#include <qtest.h>
-
-QTEST_GUILESS_MAIN(ItemCacheTest);
-
-void ItemCacheTest::shouldInsertAndReturnTheSameArtistNextTime()
+QSharedPointer< Album > ItemCache::getAlbumByName(const QString& albumName,
+                                                  const QString& artistName,
+                                                  bool create)
 {
-    ItemCache cache;
+    auto albumArtistPair = QPair<QString,QString>(albumName, artistName);
 
-    auto artist = cache.getArtistByName("Shaan");
-    QCOMPARE(artist, cache.getArtistByName("Shaan"));
+    if (!m_albums.contains(albumArtistPair) && create) {
+        m_albums.insert(QPair<QString,QString>(albumName, artistName),
+                        QSharedPointer<Album>(new Album(albumName, getArtistByName(artistName))));
+    }
+
+    return m_albums.value(albumArtistPair);
 }
 
-void ItemCacheTest::shouldInsertAndReturnTheSameAlbumNextTime()
+QSharedPointer< Artist > ItemCache::getArtistByName(const QString& name, bool create)
 {
-    ItemCache cache;
+    if (!m_artists.contains(name) && create) {
+        m_artists.insert(name, QSharedPointer<Artist>(new Artist(name)));
+    }
 
-    auto album = cache.getAlbumByName("Ghost Stories", "Coldplay");
-    QCOMPARE(album, cache.getAlbumByName("Ghost Stories", "Coldplay"));
+    return m_artists.value(name);
 }
-
-void ItemCacheTest::shouldCreateArtistIfNotPresentWhenCreatingAlbum()
-{
-    ItemCache cache;
-
-    auto album = cache.getAlbumByName("Ghost Stories", "Coldplay");
-    auto artist = cache.getArtistByName("Coldplay", false);
-    QVERIFY2(!artist.isNull(), "Artist should be created when creating album");
-}
-
-#include "itemcachetest.moc"

@@ -21,23 +21,20 @@
 
 #include <QSharedPointer>
 #include <QHash>
-#include <QVariant>
 
-template <class T>
+class Album;
+class Artist;
+
 class ItemCache
 {
 public:
-    QSharedPointer<T> getById(const QString &id, bool create = false)
-    {
-        if (create && !m_items.contains(id)) {
-            m_items.insert(id, QSharedPointer<T>(new T(id)));
-        }
-
-        return m_items.value(id);
-    }
-
+    QSharedPointer<Artist> getArtistByName(const QString &name, bool create = true);
+    QSharedPointer<Album> getAlbumByName(const QString &albumName,
+                                         const QString &artistName,
+                                         bool create = true);
 private:
-    QHash< QString, QSharedPointer<T> > m_items;
+    QHash<QString, QSharedPointer<Artist>> m_artists;
+    QHash<QPair<QString,QString>, QSharedPointer<Album>> m_albums;
 };
 
 #endif // ITEMCACHE_H

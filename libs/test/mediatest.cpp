@@ -50,8 +50,9 @@ void MediaTest::cleanup()
 
 void MediaTest::shouldSetAlbumAndUpdateRelationsCorrectly()
 {
-    QSharedPointer<Album> oldAlbum(new Album("GNOME"));
-    QSharedPointer<Album> newAlbum(new Album("KDE"));
+    QSharedPointer<Artist> artist(new Artist("Artist"));
+    QSharedPointer<Album> oldAlbum(new Album("GNOME", artist));
+    QSharedPointer<Album> newAlbum(new Album("KDE", artist));
 
     QSharedPointer<Media> media = QSharedPointer<Media>(new Media(TEST_URL));
     media->setAlbumAndUpdateRelations(media, oldAlbum);

@@ -17,6 +17,7 @@
 
 #include "playlistmodel.h"
 #include "playlistitem.h"
+#include "settings.h"
 
 #include <QDebug>
 
@@ -28,6 +29,7 @@
 
 namespace {
     static const char DEFAULT_PLAYLIST_NAME[] = "Default";
+    static int INVALID_INDEX = -1;
 }
 
 class PlaylistModel::Private
@@ -46,10 +48,11 @@ PlaylistModel::PlaylistModel(QObject* parent):
     QAbstractListModel(parent),
     d(new Private)
 {
-    d->playlistName = DEFAULT_PLAYLIST_NAME;
+    Settings s;
+    d->playlistName = s.value("lastPlaylist", DEFAULT_PLAYLIST_NAME).toString();
     loadFromFile(playlistFilePath());
 
-    d->currentIndex = -1;
+    resetCurrentIndex();
     setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
 
     QHash<int, QByteArray> newRoles(roleNames());
@@ -67,6 +70,9 @@ PlaylistModel::PlaylistModel(QObject* parent):
 
 PlaylistModel::~PlaylistModel()
 {
+    Settings s;
+    s.setValue("lastPlaylist", d->playlistName);
+    s.sync();
     savePlaylist();
 }
 
@@ -149,6 +155,10 @@ void PlaylistModel::moveItem(int originalIndex, int newIndex)
 
 void PlaylistModel::playNext()
 {
+    if (d->currentIndex == INVALID_INDEX) {
+        return;
+    }
+
     if (d->currentIndex == d->musicList.count() - 1) {
         setCurrentIndex(0);
     } else {
@@ -160,6 +170,10 @@ void PlaylistModel::playNext()
 
 void PlaylistModel::playPrevious()
 {
+    if (d->currentIndex == INVALID_INDEX) {
+        return;
+    }
+
     if (d->currentIndex == 0) {
         setCurrentIndex(d->musicList.count() - 1);
     } else {
@@ -188,7 +202,7 @@ void PlaylistModel::clearPlaylistWithoutModelReset()
     }
 
     d->musicList.clear();
-    d->currentIndex = -1;
+    resetCurrentIndex();
 }
 
 int PlaylistModel::currentIndex() const
@@ -208,7 +222,7 @@ void PlaylistModel::shuffle()
         return;
 
     QList<PlaylistItem*> musicListShuffle;
-    if( d->currentIndex == -1 )
+    if( d->currentIndex == INVALID_INDEX )
         d->currentIndex = 0;
     musicListShuffle.append(d->musicList.takeAt(d->currentIndex));
 
@@ -232,7 +246,7 @@ void PlaylistModel::playlistItemUpdated()
 
 QString PlaylistModel::playlistFilePath() const
 {
-    return  getPlaylistPath() + d->playlistName;
+    return QDir(getPlaylistPath()).absoluteFilePath(d->playlistName);
 }
 
 void PlaylistModel::loadFromFile(const QString& path)
@@ -246,7 +260,7 @@ void PlaylistModel::loadFromFile(const QString& path)
 
             QDomNodeList itemList = doc.elementsByTagName("item");
             d->musicList.clear();
-            setCurrentIndex(-1);
+            resetCurrentIndex();
             for (int i=0; i<itemList.count(); i++) {
                 QDomNode node = itemList.at(i);
                 if (node.isNull()) continue;
@@ -284,6 +298,11 @@ void PlaylistModel::saveToFile(const QString& path) const
 void PlaylistModel::savePlaylist()
 {
     saveToFile(playlistFilePath());
+}
+
+void PlaylistModel::resetCurrentIndex()
+{
+    setCurrentIndex(INVALID_INDEX);
 }
 
 bool PlaylistModel::removeCurrentPlaylist(const QString &playlistToSwitchToAfterDeletion)

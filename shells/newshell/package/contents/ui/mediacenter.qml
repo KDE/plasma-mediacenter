@@ -188,7 +188,10 @@ Image {
                         pmcPageStack.pushAndFocus(mediaImageViewer);
                     } else {
                         pmcPageStack.pushAndFocus(getMediaPlayer());
-                        if (playlistInstance) playlistInstance.active = false;
+                        if (playlistInstance) {
+                            playlistInstance.active = false;
+                            playlistModel.resetCurrentIndex();
+                        }
                         runtimeData.playUrl(url);
                     }
                 }

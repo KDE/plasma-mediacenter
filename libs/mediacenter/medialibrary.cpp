@@ -73,8 +73,7 @@ public:
     QMutex pmcMediaByUrlMutex;
     QHash< QString, QSharedPointer<PmcMedia> > pmcMediaByUrl;
 
-    ItemCache<Album> albumCache;
-    ItemCache<Artist> artistCache;
+    ItemCache itemCache;
 };
 
 MediaLibrary::MediaLibrary(MediaValidator* mediaValidator, QObject* parent)
@@ -201,7 +200,7 @@ bool MediaLibrary::extractAndSaveArtistInfo(
         return false;
     }
 
-    QSharedPointer<Artist> artist = d->artistCache.getById(artistName, true);
+    QSharedPointer<Artist> artist = d->itemCache.getArtistByName(artistName);
 
     media->setArtistAndUpdateRelations(media, artist);
     return true;
@@ -229,7 +228,7 @@ bool MediaLibrary::extractAndSaveAlbumInfo(
         return false;
     }
 
-    QSharedPointer<Album> album = d->albumCache.getById(albumName, true);
+    QSharedPointer<Album> album = d->itemCache.getAlbumByName(albumName, artistName);
 
     media->setAlbumAndUpdateRelations(media, album);
     return true;
@@ -283,8 +282,7 @@ void MediaLibrary::addMedia(const QSharedPointer< Media >& m)
 
     d->newMediaList.append(pmcMedia);
 
-    addAlbum(m->album());
-    addArtist(m->artist());
+    emitNewAlbumOrArtistIfNeeded(m);
     emitNewMedia();
 }
 

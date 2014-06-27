@@ -66,6 +66,7 @@ void MultiplePlaylistModel::createNewPlaylist(const QString& name)
     endInsertRows();
 
     m_playlistModel->setPlaylistName(name);
+    emit currentIndexChanged();
 }
 
 void MultiplePlaylistModel::setPlaylistModelAddress(QObject* model)
@@ -115,6 +116,8 @@ void MultiplePlaylistModel::removeCurrentPlaylist()
         }
     }
     endResetModel();
+
+    emit currentIndexChanged();
 }
 
 int MultiplePlaylistModel::currentIndex() const
