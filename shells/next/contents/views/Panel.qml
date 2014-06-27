@@ -24,8 +24,8 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 
 PlasmaCore.FrameSvgItem {
     id: root
-    width: 640
-    height: 32
+    width: containment && containment.formFactor == PlasmaCore.Types.Vertical ? panel.thickness : panel.length
+    height: containment && containment.formFactor == PlasmaCore.Types.Vertical ? panel.length : panel.thickness
     imagePath: "widgets/panel-background"
     prefix: {
         if (!containment) {
@@ -60,17 +60,8 @@ PlasmaCore.FrameSvgItem {
     property Item containment
 
     function adjustBorders() {
-        //print("PANEL ADJUST BORDERS");
         var borders = PlasmaCore.FrameSvg.AllBorders;
         if (!containment) {
-            // Containment seems to never be set
-            // (or not reachable from here at least)
-            // FIXME: investigate why containment is null
-            print("FIXME Panel borders hardcoded in Panel.qml");
-            borders = borders & ~PlasmaCore.FrameSvg.BottomBorder;
-            borders = borders & ~PlasmaCore.FrameSvg.LeftBorder;
-            borders = borders & ~PlasmaCore.FrameSvg.RightBorder;
-            root.enabledBorders = borders;
             return;
         }
 
@@ -134,34 +125,34 @@ PlasmaCore.FrameSvgItem {
     }
 
     function minimumWidthChanged() {
-        if (containment.formFactor === PlasmaCore.Types.Horizontal) {
-            panel.width = Math.max(panel.width, containment.Layout.minimumWidth);
+        if (!containment.userConfiguring && containment.formFactor === PlasmaCore.Types.Horizontal) {
+            panel.length = Math.max(panel.width, containment.Layout.minimumWidth);
         }
     }
     function maximumWidthChanged() {
-        if (containment.formFactor === PlasmaCore.Types.Horizontal) {
-            panel.width = Math.min(panel.width, containment.Layout.maximumWidth);
+        if (!containment.userConfiguring && containment.formFactor === PlasmaCore.Types.Horizontal) {
+            panel.length = Math.min(panel.width, containment.Layout.maximumWidth);
         }
     }
     function preferredWidthChanged() {
-        if (containment.formFactor === PlasmaCore.Types.Horizontal) {
-            panel.width = Math.min(panel.maximumLength, Math.max(containment.Layout.preferredWidth, panel.minimumLength));
+        if (!containment.userConfiguring && containment.formFactor === PlasmaCore.Types.Horizontal) {
+            panel.length = Math.min(panel.maximumLength, Math.max(containment.Layout.preferredWidth, panel.minimumLength));
         }
     }
 
     function minimumHeightChanged() {
-        if (containment.formFactor === PlasmaCore.Types.Vertical) {
-            panel.height = Math.max(panel.height, containment.Layout.minimumWidth);
+        if (!containment.userConfiguring && containment.formFactor === PlasmaCore.Types.Vertical) {
+            panel.length = Math.max(panel.height, containment.Layout.minimumWidth);
         }
     }
     function maximumHeightChanged() {
-        if (containment.formFactor === PlasmaCore.Types.Vertical) {
-            panel.height = Math.min(panel.height, containment.Layout.maximumWidth);
+        if (!containment.userConfiguring && containment.formFactor === PlasmaCore.Types.Vertical) {
+            panel.length = Math.min(panel.height, containment.Layout.maximumWidth);
         }
     }
     function preferredHeightChanged() {
-        if (containment.formFactor === PlasmaCore.Types.Vertical) {
-            panel.height = Math.min(panel.maximumLength, Math.max(containment.Layout.preferredHeight, panel.minimumLength));
+        if (!containment.userConfiguring && containment.formFactor === PlasmaCore.Types.Vertical) {
+            panel.length = Math.min(panel.maximumLength, Math.max(containment.Layout.preferredHeight, panel.minimumLength));
         }
     }
 
@@ -196,6 +187,20 @@ PlasmaCore.FrameSvgItem {
         target: panel.screen
         onGeometryChanged: {
             adjustBorders();
+        }
+    }
+
+    Connections {
+        target: containment
+        onUserConfiguringChanged: {
+            if (!containment.userConfiguring) {
+                minimumWidthChanged();
+                maximumWidthChanged();
+                preferredWidthChanged();
+                minimumHeightChanged();
+                maximumHeightChanged();
+                preferredHeightChanged();
+            }
         }
     }
 

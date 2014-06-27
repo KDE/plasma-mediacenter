@@ -25,9 +25,9 @@ import org.kde.plasma.platformcomponents 2.0 as Platform
 Item {
     id: main
 
-    property string shell  : "org.kde.plasma.mediacenter"
+    property string shell  : "org.kde.plasma.desktop"
     property bool willing  : true
-    property int  priority : 1 
+    property int  priority : 1
 
     // This is not needed, but allows the
     // handler to know whether its shell is loaded
@@ -43,9 +43,5 @@ Item {
         query: "IS Keyboard"
     }
     */
-    Platform.Application {
-        application: "krunner"
-        running: main.loaded
-    }
 }
 

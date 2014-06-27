@@ -28,8 +28,9 @@ MouseArea {
         right: parent.right
     }
 //BEGIN properties
+    y: units.smallSpacing *2
     width: childrenRect.width
-    height: delegateContents.height + 4
+    height: delegateContents.height + units.smallSpacing * 4
     property bool current: model.source == main.sourceFile
     property string name: model.name
 //END properties
@@ -37,6 +38,7 @@ MouseArea {
 //BEGIN functions
     function openCategory() {
         if (typeof(categoriesView.currentItem) !== "undefined") {
+            main.invertAnimations = (categoriesView.currentItem.y > delegate.y);
             categoriesView.currentItem = delegate;
         }
         main.sourceFile = model.source
@@ -69,7 +71,7 @@ MouseArea {
 //BEGIN UI components
     Column {
         id: delegateContents
-        spacing: 4
+        spacing: units.smallSpacing
         anchors {
             verticalCenter: parent.verticalCenter
             left: parent.left

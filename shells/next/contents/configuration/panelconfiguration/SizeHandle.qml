@@ -24,7 +24,7 @@ import org.kde.plasma.configuration 2.0
 import org.kde.kquickcontrolsaddons 2.0 as KQuickControlsAddons
 
 PlasmaComponents.Button {
-    text: panel.location == PlasmaCore.Types.LeftEdge || panel.location == PlasmaCore.Types.RightEdge ? i18n("Width") : i18n("Height")
+    text: panel.location == PlasmaCore.Types.LeftEdge || panel.location == PlasmaCore.Types.RightEdge ? i18nd("org.kde.plasma.desktop", "Width") : i18nd("org.kde.plasma.desktop", "Height")
     KQuickControlsAddons.MouseEventListener {
         anchors.fill: parent
         property int startMouseX
@@ -45,12 +45,12 @@ PlasmaComponents.Button {
                 break;
             case PlasmaCore.Types.RightEdge:
                 configDialog.x = mouse.screenX - mapToItem(dialogRoot, startMouseX, 0).x
-                panel.thickness = (panel.x + panel.width) - (configDialog.x + configDialog.width)
+                panel.thickness = panel.screen.geometry.x + panel.screen.geometry.width - (configDialog.x + configDialog.width)
                 break;
             case PlasmaCore.Types.BottomEdge:
             default:
                 configDialog.y = mouse.screenY - mapToItem(dialogRoot, 0, startMouseY).y
-                panel.thickness = (panel.y + panel.height) - (configDialog.y + configDialog.height)
+                panel.thickness = panel.screen.geometry.y + panel.screen.geometry.height - (configDialog.y + configDialog.height)
             }
         }
     }

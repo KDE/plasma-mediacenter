@@ -23,21 +23,22 @@ import QtQuick.Layouts 1.0
 Item {
     id: root
 
+    signal configurationChanged
     implicitWidth: childrenRect.width
     implicitHeight: childrenRect.height
 
     property var prettyStrings: {
-        "LeftButton": i18n("Left-Button"),
-        "RightButton": i18n("Right-Button"),
-        "MidButton": i18n("Middle-Button"),
+        "LeftButton": i18nd("org.kde.plasma.desktop", "Left-Button"),
+        "RightButton": i18nd("org.kde.plasma.desktop", "Right-Button"),
+        "MidButton": i18nd("org.kde.plasma.desktop", "Middle-Button"),
 
-        "wheel:Vertical": i18n("Vertical-Scroll"),
-        "wheel:Horizontal": i18n("Horizontal-Scroll"),
+        "wheel:Vertical": i18nd("org.kde.plasma.desktop", "Vertical-Scroll"),
+        "wheel:Horizontal": i18nd("org.kde.plasma.desktop", "Horizontal-Scroll"),
 
-        "ShiftModifier": i18n("Shift"),
-        "ControlModifier": i18n("Ctrl"),
-        "AltModifier": i18n("Alt"),
-        "MetaModifier": i18n("Meta")
+        "ShiftModifier": i18nd("org.kde.plasma.desktop", "Shift"),
+        "ControlModifier": i18nd("org.kde.plasma.desktop", "Ctrl"),
+        "AltModifier": i18nd("org.kde.plasma.desktop", "Alt"),
+        "MetaModifier": i18nd("org.kde.plasma.desktop", "Meta")
     }
 
     function saveConfig() {
@@ -81,6 +82,7 @@ Item {
                     onCurrentIndexChanged: {
                         if (initialized && configDialog.containmentActionConfigModel.get(currentIndex).pluginName != pluginName) {
                             configDialog.currentContainmentActionsModel.update(index, action, configDialog.containmentActionConfigModel.get(currentIndex).pluginName);
+                            root.configurationChanged();
                         }
                     }
                 }
@@ -104,14 +106,16 @@ Item {
                     width: height
                     onClicked: {
                         configDialog.currentContainmentActionsModel.remove(index);
+                        root.configurationChanged();
                     }
                 }
             }
         }
         MouseEventInputButton {
-            defaultText: i18n("Add Action");
+            defaultText: i18nd("org.kde.plasma.desktop", "Add Action");
             onEventStringChanged: {
                 configDialog.currentContainmentActionsModel.append(eventString, "org.kde.contextmenu");
+                root.configurationChanged();
             }
         }
     }

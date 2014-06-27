@@ -22,19 +22,21 @@ import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.extras 2.0 as PlasmaExtras
 import org.kde.kquickcontrolsaddons 2.0
+
 import QtQuick.Window 2.1
+import QtQuick.Layouts 1.1
+
 import org.kde.plasma.private.shell 2.0
 
 Item {
     id: main
 
-    width: 240
+    width: minimumWidth
     height: 800//Screen.height
-    //this is used to perfectly align the filter field and delegates
-    property int cellWidth: theme.mSize(theme.defaultFont).width * 10
 
-    property int minimumWidth: theme.mSize(theme.defaultFont).width * 12
-    property int minimumHeight: 800//topBar.height + list.delegateHeight + (widgetExplorer.orientation == Qt.Horizontal ? scrollBar.height : 0) + 4
+    // The +4 is for the gap and cross button
+    property int minimumWidth: theme.mSize(heading.font).width * (heading.text.length + 6)
+    property int minimumHeight: 800//width will be set by the dialog anyway
 
     property alias containment: widgetExplorer.containment
 
@@ -132,11 +134,9 @@ Item {
     }
     */
 
-    Loader {
-        id: topBar
-        property Item categoryButton
 
-        sourceComponent: verticalTopBarComponent
+    GridLayout {
+        id: topBar
         anchors {
             top: parent.top
             left: parent.left
@@ -145,53 +145,55 @@ Item {
             leftMargin: units.smallSpacing
             rightMargin: units.smallSpacing
         }
-    }
-    Component {
-        id: verticalTopBarComponent
+        columns: 2
 
-        Column {
-            anchors.top: parent.top
-            anchors.left:parent.left
-            anchors.right: parent.right
-            spacing: 4
+        PlasmaExtras.Title {
+            id: heading
+            text: "Widgets"
+            elide: Text.ElideRight
+            Layout.fillWidth: true
+        }
 
-            PlasmaComponents.ToolButton {
-                anchors.right: parent.right
-                iconSource: "window-close"
-                onClicked: main.closed()
+        PlasmaComponents.ToolButton {
+            id: closeButton
+            anchors {
+                right: parent.right
+                verticalCenter: heading.verticalCenter
             }
-            PlasmaComponents.TextField {
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                }
-                clearButtonShown: true
-                placeholderText: i18n("Enter search term...")
-                onTextChanged: {
-                    list.contentX = 0
-                    list.contentY = 0
-                    widgetExplorer.widgetsModel.searchTerm = text
-                }
-                Component.onCompleted: forceActiveFocus()
+            iconSource: "window-close"
+            onClicked: main.closed()
+        }
+
+        PlasmaComponents.TextField {
+            clearButtonShown: true
+            placeholderText: i18n("Search...")
+            onTextChanged: {
+                list.contentX = 0
+                list.contentY = 0
+                widgetExplorer.widgetsModel.searchTerm = text
             }
-            PlasmaComponents.Button {
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                }
-                id: categoryButton
-                text: i18n("Categories")
-                onClicked: {
-                    main.preventWindowHide = true;
-                    categoriesDialog.open(0, categoryButton.height)
-                }
+            Component.onCompleted: forceActiveFocus()
+            Layout.columnSpan: 2
+            Layout.fillWidth: true
+        }
+        PlasmaComponents.Button {
+            id: categoryButton
+            text: i18n("Categories")
+            onClicked: {
+                main.preventWindowHide = true;
+                categoriesDialog.open(0, categoryButton.height)
             }
-            Component.onCompleted: {
-                main.categoryButton = categoryButton
-            }
+            Layout.columnSpan: 2
+            Layout.fillWidth: true
         }
     }
 
+    PlasmaCore.FrameSvgItem {
+        id: backgroundHint
+        imagePath: "widgets/viewitem"
+        prefix: "normal"
+        visible: false
+    }
     PlasmaExtras.ScrollArea {
         anchors {
             top: topBar.bottom
@@ -202,16 +204,17 @@ Item {
             leftMargin: units.smallSpacing
             bottomMargin: units.smallSpacing
         }
-        flickableItem: ListView {
+        ListView {
             id: list
 
             property int delegateWidth: list.width
-            property int delegateHeight: theme.defaultFont.pixelSize * 7 - 4
+            property int delegateHeight: units.iconSizes.huge + backgroundHint.margins.top + backgroundHint.margins.bottom
 
             snapMode: ListView.SnapToItem
             model: widgetExplorer.widgetsModel
 
             clip: true //TODO work out why this is this needed
+            cacheBuffer: delegateHeight * 5 // keep 5 delegates either side
 
             delegate: AppletDelegate {}
 
@@ -250,10 +253,8 @@ Item {
         }
     }
 
-    Loader {
+    Column {
         id: bottomBar
-
-        sourceComponent: verticalBottomBarComponent
         anchors {
             left: parent.left
             right: parent.right
@@ -262,52 +263,42 @@ Item {
             rightMargin: units.smallSpacing
             bottomMargin: units.smallSpacing
         }
-    }
 
-    Component {
-        id: verticalBottomBarComponent
-        Column {
+        spacing: units.smallSpacing
+
+        PlasmaComponents.Button {
             anchors {
                 left: parent.left
                 right: parent.right
-                bottom: parent.bottom
             }
+            id: getWidgetsButton
+            iconSource: "get-hot-new-stuff"
+            text: i18n("Get new widgets")
+            onClicked: {
+                main.preventWindowHide = true;
+                getWidgetsDialog.open()
+            }
+        }
 
-            spacing: units.smallSpacing
-
+        Repeater {
+            model: widgetExplorer.extraActions.length
             PlasmaComponents.Button {
                 anchors {
                     left: parent.left
                     right: parent.right
                 }
-                id: getWidgetsButton
-                iconSource: "get-hot-new-stuff"
-                text: i18n("Get new widgets")
+                iconSource: widgetExplorer.extraActions[modelData].icon
+                text: widgetExplorer.extraActions[modelData].text
                 onClicked: {
-                    main.preventWindowHide = true;
-                    getWidgetsDialog.open()
+                    widgetExplorer.extraActions[modelData].trigger()
                 }
-            }
-
-            Repeater {
-                model: widgetExplorer.extraActions.length
-                PlasmaComponents.Button {
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                    }
-                    iconSource: widgetExplorer.extraActions[modelData].icon
-                    text: widgetExplorer.extraActions[modelData].text
-                    onClicked: {
-                        widgetExplorer.extraActions[modelData].trigger()
-                    }
-                }
-            }
-
-            Component.onCompleted: {
-                main.getWidgetsButton = getWidgetsButton
             }
         }
+    }
+
+    Component.onCompleted: {
+        main.getWidgetsButton = getWidgetsButton
+        main.categoryButton = categoryButton
     }
 }
 

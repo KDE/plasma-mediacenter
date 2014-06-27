@@ -19,7 +19,7 @@
 import QtQuick 2.0
 import org.kde.plasma.configuration 2.0
 import QtQuick.Controls 1.0 as QtControls
-import QtQuick.Layouts 1.0
+import QtQuick.Layouts 1.1
 
 ColumnLayout {
     id: root
@@ -27,6 +27,7 @@ ColumnLayout {
     property int formAlignment: wallpaperComboBox.x + (units.largeSpacing/2)
     property string currentWallpaper: ""
     property string containmentPlugin: ""
+    signal configurationChanged
 
 //BEGIN functions
     function saveConfig() {
@@ -44,6 +45,10 @@ ColumnLayout {
         for (var key in configDialog.wallpaperConfiguration) {
             if (main.currentItem["cfg_"+key] !== undefined) {
                 main.currentItem["cfg_"+key] = configDialog.wallpaperConfiguration[key]
+            }
+           
+            if (main.currentItem["cfg_"+key+"Changed"]) {
+                main.currentItem["cfg_"+key+"Changed"].connect(root.configurationChanged)
             }
         }
     }
@@ -78,10 +83,11 @@ ColumnLayout {
         }
         QtControls.Label {
             anchors.verticalCenter: pluginComboBox.verticalCenter
-            text: i18n("Layout:")
+            text: i18nd("org.kde.plasma.desktop", "Layout:")
         }
         QtControls.ComboBox {
             id: pluginComboBox
+            enabled: !plasmoid.immutable
             model: configDialog.containmentPluginsConfigModel
             width: theme.mSize(theme.defaultFont).width * 24
             textRole: "name"
@@ -101,7 +107,7 @@ ColumnLayout {
         }
         QtControls.Label {
             anchors.verticalCenter: wallpaperComboBox.verticalCenter
-            text: i18n("Wallpaper Type:")
+            text: i18nd("org.kde.plasma.desktop", "Wallpaper Type:")
         }
         QtControls.ComboBox {
             id: wallpaperComboBox
@@ -114,6 +120,7 @@ ColumnLayout {
                 main.sourceFile = model.source
                 configDialog.currentWallpaper = model.pluginName
                 root.restoreConfig()
+                root.configurationChanged()
             }
         }
     }
