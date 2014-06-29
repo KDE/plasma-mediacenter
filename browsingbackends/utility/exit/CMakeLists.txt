@@ -10,6 +10,7 @@ target_link_libraries(pmc_exit
     plasmamediacenter
     ${KDE4_KDECORE_LIBS}
     ${QT_QTCORE_LIBRARIES}
+    ${QT_QTGUI_LIBRARIES}
 )
 
 install(TARGETS pmc_exit DESTINATION ${PLUGIN_INSTALL_DIR})
