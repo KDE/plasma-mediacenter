@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2014 Sinny Kumari <ksinny@gmail.com>                                *
+ *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,30 +16,49 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef FILTERMEDIAMODEL_H
-#define FILTERMEDIAMODEL_H
+#include "eventsmodel.h"
+#include <mediacenter/mediacenter.h>
 
-#include <QString>
-#include <QSortFilterProxyModel>
+#include <QDebug>
 
-#include "mediacenter_export.h"
-
-class MEDIACENTER_EXPORT FilterMediaModel: public QSortFilterProxyModel
+EventsModel::EventsModel(QObject* parent): QAbstractListModel(parent)
 {
-    Q_OBJECT
-public:
-    explicit FilterMediaModel(QObject* parent = 0);
-    ~FilterMediaModel();
+    setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
+}
 
-    void setFilter(int role, const QVariant &filterValue);
-    void addFilter(int role, const QVariant &filterValue);
-    void clearFilters(bool invalidate = true);
+QVariant EventsModel::data(const QModelIndex& index, int role) const
+{
+    switch (role) {
+    case Qt::DisplayRole:
+        return m_eventNames.at(index.row());
+    case MediaCenter::IsExpandableRole:
+        return true;
+    case Qt::DecorationRole:
+        return "folder-image";
+    }
 
-protected:
-    virtual bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const;
+    return QVariant();
+}
 
-private:
-    QHash<int, QVariant> m_filters;
-};
+int EventsModel::rowCount(const QModelIndex& parent) const
+{
+    Q_UNUSED(parent);
+    return m_eventNames.size();
+}
 
-#endif // FILTERMEDIAMODEL_H
+void EventsModel::addEvent(const QString& eventName, const QDate& startDate, const QDate& endDate)
+{
+    qDebug() << "ADD " << startDate << endDate;
+    beginInsertRows(QModelIndex(), rowCount(), rowCount());
+
+    m_eventNames.append(eventName);
+    m_events.insert(eventName, QPair<QDate,QDate>(startDate, endDate));
+
+    endInsertRows();
+}
+
+QPair< QDate, QDate > EventsModel::dateRangeForEvent(const QString& eventName) const
+{
+    qDebug() << "FOR " << eventName << m_events.value(eventName);
+    return m_events.value(eventName);
+}

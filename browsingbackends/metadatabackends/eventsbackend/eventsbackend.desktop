@@ -1,0 +1,15 @@
+[Desktop Entry]
+Type=Service
+Icon=image-x-generic
+Name=Events and Trips
+Comment=Organize your photos for events and trips you have taken
+
+X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
+
+X-KDE-PluginInfo-Author=Shantanu Tushar
+X-KDE-PluginInfo-Email=shantanu@kde.org
+X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-Category=image
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
+X-KDE-Library=pmc_eventsbackend

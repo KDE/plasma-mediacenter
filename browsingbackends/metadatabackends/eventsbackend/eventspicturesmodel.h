@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2014 Sinny Kumari <ksinny@gmail.com>                                *
+ *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,30 +16,16 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef FILTERMEDIAMODEL_H
-#define FILTERMEDIAMODEL_H
+#ifndef EVENTSPICTURESMODEL_H
+#define EVENTSPICTURESMODEL_H
 
-#include <QString>
-#include <QSortFilterProxyModel>
+#include <mediacenter/pmcmetadatamodel.h>
 
-#include "mediacenter_export.h"
-
-class MEDIACENTER_EXPORT FilterMediaModel: public QSortFilterProxyModel
+class EventsPicturesModel : public PmcMetadataModel
 {
-    Q_OBJECT
 public:
-    explicit FilterMediaModel(QObject* parent = 0);
-    ~FilterMediaModel();
-
-    void setFilter(int role, const QVariant &filterValue);
-    void addFilter(int role, const QVariant &filterValue);
-    void clearFilters(bool invalidate = true);
-
-protected:
-    virtual bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const;
-
-private:
-    QHash<int, QVariant> m_filters;
+    explicit EventsPicturesModel(QObject* parent = 0, MediaLibrary* mediaLibrary = 0);
+    virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 };
 
-#endif // FILTERMEDIAMODEL_H
+#endif // EVENTSPICTURESMODEL_H

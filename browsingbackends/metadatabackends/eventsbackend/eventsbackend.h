@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2014 Sinny Kumari <ksinny@gmail.com>                                *
+ *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,30 +16,46 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef FILTERMEDIAMODEL_H
-#define FILTERMEDIAMODEL_H
+#ifndef EVENTSBACKEND_H
+#define EVENTSBACKEND_H
 
-#include <QString>
-#include <QSortFilterProxyModel>
+#include "../abstractmetadatabackend.h"
 
-#include "mediacenter_export.h"
-
-class MEDIACENTER_EXPORT FilterMediaModel: public QSortFilterProxyModel
+class ModelMetadata;
+class EventsFilterModel;
+class EventsPicturesModel;
+class EventsModel;
+class EventsBackend : public AbstractMetadataBackend
 {
     Q_OBJECT
 public:
-    explicit FilterMediaModel(QObject* parent = 0);
-    ~FilterMediaModel();
+    EventsBackend(QObject* parent, const QVariantList& args);
+    virtual QString mediaBrowserSidePanel() const;
+    virtual QVariantList buttons();
+    virtual void handleButtonClick(const QString& button);
+    virtual bool expand(int row);
+    virtual bool goOneLevelUp();
 
-    void setFilter(int role, const QVariant &filterValue);
-    void addFilter(int role, const QVariant &filterValue);
-    void clearFilters(bool invalidate = true);
+public Q_SLOTS:
+    void addEvent(int dayStart, int monthStart, int yearStart,
+                  int dayEnd, int monthEnd, int yearEnd,
+                  const QString &eventName);
 
 protected:
-    virtual bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const;
+    virtual bool initImpl();
+
+private Q_SLOTS:
+    void showConfiguration();
 
 private:
-    QHash<int, QVariant> m_filters;
+    QString m_loginText;
+    ModelMetadata *m_eventsModelMetadata = nullptr;
+    EventsModel *m_eventsModel = nullptr;
+    EventsPicturesModel *m_eventsPicturesModel = nullptr;
+    EventsFilterModel *m_eventsFilterModel = nullptr;
+    ModelMetadata *m_eventsFilterModelMetadata = nullptr;
+
+    void setLoginText(const QString &loginText);
 };
 
-#endif // FILTERMEDIAMODEL_H
+#endif // EVENTSBACKEND_H
