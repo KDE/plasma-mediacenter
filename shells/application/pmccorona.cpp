@@ -59,6 +59,7 @@ void PmcCorona::load()
         qDebug() << "here we are!";
         if (c->containmentType() == Plasma::Types::DesktopContainment) {
             m_view = new PmcView(this);
+            setView(m_view);
             m_view->setContainment(c);
             m_view->show();
             break;
