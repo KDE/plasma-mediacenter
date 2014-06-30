@@ -22,6 +22,7 @@
 #include <QQmlEngine>
 #include <QQmlContext>
 
+#include <QDebug>
 #include <Plasma/Package>
 
 #include "pmcview.h"
@@ -32,6 +33,12 @@ PmcView::PmcView(PmcCorona *pmccorona, QWindow *parent)
     pmccorona->setView(this);
     engine()->rootContext()->setContextProperty("desktop", this);
     setSource(QUrl::fromLocalFile(pmccorona->package().filePath("views", "Desktop.qml")));
+    auto containmentlist = pmccorona->containments();
+    for(auto c : containmentlist) {
+        qDebug() << "here we are!";
+        setContainment(c);
+    }
+
 }
 
 PmcView::~PmcView()

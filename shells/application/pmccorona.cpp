@@ -55,7 +55,7 @@ void PmcCorona::setView(PlasmaQuick::View *view)
 
 void PmcCorona::loadDefaultLayout()
 {
-    createContainment("org.kde.desktopcontainment");
+    createContainment("org.kde.desktopcontainment"); 
 }
 
 #include "pmccorona.moc"
