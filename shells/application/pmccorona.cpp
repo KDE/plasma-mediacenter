@@ -21,7 +21,9 @@
 #include "pmccorona.h"
 #include "pmcview.h"
 #include <QDebug>
+#include <QAction>
 
+#include <KActionCollection>
 #include <Plasma/Package>
 #include <Plasma/PluginLoader>
 
@@ -68,6 +70,10 @@ void PmcCorona::load()
         qDebug() << "here we are!";
         if (c->containmentType() == Plasma::Types::DesktopContainment) {
             m_view = new PmcView(this);
+            QAction *removeAction = c->actions()->action("remove");
+            if(removeAction) {
+                removeAction->deleteLater();
+            }
             setView(m_view);
             m_view->setContainment(c);
             m_view->show();
