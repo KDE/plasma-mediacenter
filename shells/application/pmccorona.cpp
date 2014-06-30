@@ -22,9 +22,18 @@
 #include "pmcview.h"
 #include <QDebug>
 
+#include <Plasma/Package>
+#include <Plasma/PluginLoader>
+
 PmcCorona::PmcCorona(QObject *parent)
-    : Plasma::Corona(parent)
+    : Plasma::Corona(parent),
+      m_view(0)
 {
+    Plasma::Package package = Plasma::PluginLoader::self()->loadPackage("Plasma/Shell");
+    package.setPath("org.kde.plasma.mediacenter");
+    setPackage(package);
+    //QMetaObject::invokeMethod(this, "load", Qt::QueuedConnection);
+    load();
 }
 
 QRect PmcCorona::screenGeometry(int id) const

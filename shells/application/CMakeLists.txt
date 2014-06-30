@@ -13,6 +13,7 @@ target_link_libraries(
     Qt5::Widgets
     Qt5::Quick
     Qt5::Qml
+    KF5::I18n
     KF5::PlasmaQuick
     KF5::Plasma
 )

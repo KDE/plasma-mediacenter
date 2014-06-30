@@ -19,25 +19,35 @@
  */
 
 #include <QApplication>
+#include <qcommandlineparser.h>
+#include <qcommandlineoption.h>
 
-#include <Plasma/Package>
-#include <Plasma/PluginLoader>
+#include <KLocalizedString>
 
 #include "pmcview.h"
 #include "pmccorona.h"
 
-static const char version[] = "5.0";
+#include "plasmaquick/shellpluginloader.h"
+
+static const char version[] = "1.0";
 
 int main(int argc, char **argv)
 {
-    QApplication app(argc, argv);
+    QQuickWindow::setDefaultAlphaBuffer(true);
 
-    Plasma::Package package = Plasma::PluginLoader::self()->loadPackage("Plasma/Shell");
-    package.setPath("org.kde.plasma.mediacenter");
+    QApplication app(argc, argv);
+    app.setApplicationVersion(version);
+
+    QCommandLineParser parser;
+    parser.setApplicationDescription(i18n("Plasma Media Center"));
+    parser.addVersionOption();
+    parser.addHelpOption();
+    parser.addVersionOption();
+    parser.process(app);
+
+    Plasma::PluginLoader::setPluginLoader(new ShellPluginLoader);
 
     PmcCorona *corona = new PmcCorona();
-    corona->setPackage(package);
-    QMetaObject::invokeMethod(corona, "load", Qt::QueuedConnection);
 
     return app.exec();
 }
