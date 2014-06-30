@@ -29,7 +29,11 @@ PmcCorona::PmcCorona(QObject *parent)
 QRect PmcCorona::screenGeometry(int id) const
 {
     Q_UNUSED(id);
-    return QRect();
+    if(m_view) {
+        return m_view->geometry();
+    } else {
+        return QRect();
+    }
 }
 
 void PmcCorona::load()
@@ -42,11 +46,11 @@ void PmcCorona::load()
         saveLayout("plasma-org.kde.plasma.mediacenter-appletsrc");
     }
 }
-/*
+
 void PmcCorona::setView(PlasmaQuick::View *view)
 {
     m_view = view;
-}*/
+}
 
 
 void PmcCorona::loadDefaultLayout()

@@ -22,6 +22,7 @@
 #define PMCCORONA_H
 
 #include <plasma/corona.h>
+#include "plasmaquick/view.h"
 
 class PmcCorona : public Plasma::Corona
 {
@@ -31,11 +32,11 @@ public:
     QRect screenGeometry(int id) const;
 
     void load();
-   // void setView(PlasmaQuick::View *view);
+    void setView(PlasmaQuick::View *view);
     void loadDefaultLayout();
 
-//private:
-    //PlasmaQuick::View m_view;
+private:
+    PlasmaQuick::View *m_view;
 };
 
 #endif

@@ -29,7 +29,7 @@
 PmcView::PmcView(PmcCorona *pmccorona, QWindow *parent)
     : PlasmaQuick::View(pmccorona, parent)
 {
-    //pmccorona->setView(this);
+    pmccorona->setView(this);
     engine()->rootContext()->setContextProperty("desktop", this);
     setSource(QUrl::fromLocalFile(pmccorona->package().filePath("views", "Desktop.qml")));
 }
