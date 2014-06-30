@@ -37,10 +37,7 @@ int main(int argc, char **argv)
 
     PmcCorona *corona = new PmcCorona();
     corona->setPackage(package);
-    corona->load();
-
-    PmcView *view = new PmcView(corona);
-    view->show();
+    QMetaObject::invokeMethod(corona, "load", Qt::QueuedConnection);
 
     return app.exec();
 }

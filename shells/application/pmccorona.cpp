@@ -19,6 +19,7 @@
  */
 
 #include "pmccorona.h"
+#include "pmcview.h"
 #include <QDebug>
 
 PmcCorona::PmcCorona(QObject *parent)
@@ -40,10 +41,28 @@ void PmcCorona::load()
 {
     loadLayout("plasma-org.kde.plasma.mediacenter-appletsrc");
 
-    if(containments().isEmpty()) {
-        qDebug() << "Tata";
+    bool found = false;
+    for (auto c : containments()) {
+        if (c->containmentType() == Plasma::Types::DesktopContainment) {
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        qDebug() << "Loading default layout";
         loadDefaultLayout();
         saveLayout("plasma-org.kde.plasma.mediacenter-appletsrc");
+    }
+
+    for (auto c : containments()) {
+        qDebug() << "here we are!";
+        if (c->containmentType() == Plasma::Types::DesktopContainment) {
+            m_view = new PmcView(this);
+            m_view->setContainment(c);
+            m_view->show();
+            break;
+        }
     }
 }
 

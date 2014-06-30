@@ -26,14 +26,17 @@
 
 class PmcCorona : public Plasma::Corona
 {
+    Q_OBJECT
 
 public:
     explicit PmcCorona(QObject * parent = 0);
     QRect screenGeometry(int id) const;
 
-    void load();
     void setView(PlasmaQuick::View *view);
     void loadDefaultLayout();
+
+public Q_SLOTS:
+    void load();
 
 private:
     PlasmaQuick::View *m_view;
