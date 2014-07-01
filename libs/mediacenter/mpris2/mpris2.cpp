@@ -78,10 +78,16 @@ QString Mpris2::getCurrentTrackId()
 
 QVariantMap Mpris2::getMetadataOf(const QString &url)
 {
+    QVariantMap metadata = getMetadataOf(url, getCurrentTrackId());
+    return metadata;
+}
+
+QVariantMap Mpris2::getMetadataOf(const QString &url, const QString& trackId)
+{
     QVariantMap metadata;
     QSharedPointer<PmcMedia> media = SingletonFactory::instanceFor<MediaLibrary>()->mediaForUrl(url);
     if (media) {
-        metadata["mpris:trackid"] = QVariant::fromValue<QDBusObjectPath>(QDBusObjectPath(getCurrentTrackId()));
+        metadata["mpris:trackid"] = QVariant::fromValue<QDBusObjectPath>(QDBusObjectPath(trackId));
         metadata["mpris:length"] = qlonglong(media->duration())*1000000;
         //convert seconds into micro-seconds
         metadata["xesam:title"] = media->title();

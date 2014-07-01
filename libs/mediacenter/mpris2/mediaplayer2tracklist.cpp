@@ -20,8 +20,6 @@
 #include "mediaplayer2tracklist.h"
 #include "mpris2.h"
 
-#include <QDebug>
-
 static const QString playlistTidPrefix("/org/kde/plasmamediacenter/playlist/");
 static const QDBusObjectPath mprisNoTrack("/org/mpris/MediaPlayer2/TrackList/NoTrack");
 
@@ -77,7 +75,7 @@ void MediaPlayer2Tracklist::rowsInsertedInModel(const QModelIndex &parentModel, 
     QDBusObjectPath afterTrack;
     for (int i = start; i <= end; i++) {
         m_orderedTrackIds.insert(i, QDBusObjectPath(playlistTidPrefix + QString::number(tidCounter++)));
-        metadata = static_cast<Mpris2*>(parent())->getMetadataOf(urlOfIndex(i));
+        metadata = static_cast<Mpris2*>(parent())->getMetadataOf(urlOfIndex(i), m_orderedTrackIds[i].path());
         afterTrack = (i > 0) ? m_orderedTrackIds.at(i-1) : mprisNoTrack;
         emit TrackAdded(metadata, afterTrack);
     }
@@ -122,7 +120,7 @@ QList<QVariantMap> MediaPlayer2Tracklist::GetTracksMetadata(const QList<QDBusObj
     foreach (const QDBusObjectPath& trackId, trackIds) {
         index = m_orderedTrackIds.indexOf(trackId);
         if (index != -1) {
-            metadataList << static_cast<Mpris2*>(parent())->getMetadataOf(urlOfIndex(index));
+            metadataList << static_cast<Mpris2*>(parent())->getMetadataOf(urlOfIndex(index), trackId.path());
         }
     }
 
