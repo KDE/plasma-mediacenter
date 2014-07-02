@@ -44,7 +44,7 @@ LocalFilesAbstractModel::LocalFilesAbstractModel (QObject* parent, const QString
     KMimeType::List mimeList = KMimeType::allMimeTypes();
 
     d->mimeTypes << "inode/directory";
-    foreach (KMimeType::Ptr mime, mimeList) {
+    Q_FOREACH (KMimeType::Ptr mime, mimeList) {
         if (mime->name().startsWith(acceptedMimetypes)) {
             d->mimeTypes << mime->name();
         }

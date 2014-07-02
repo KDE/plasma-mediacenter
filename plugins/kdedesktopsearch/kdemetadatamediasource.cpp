@@ -112,7 +112,7 @@ void KdeMetadataMediaSource::runQuery()
 
 void KdeMetadataMediaSource::newEntries(const QList< Nepomuk2::Query::Result >& results)
 {
-    foreach (const Nepomuk2::Query::Result& r, results) {
+    Q_FOREACH (const Nepomuk2::Query::Result& r, results) {
         fetchValuesForResult(r);
     }
     emit newResults(results.size());
@@ -137,7 +137,7 @@ void KdeMetadataMediaSource::fetchValuesForResult(const Nepomuk2::Query::Result&
     }
 
     QHash<int, QVariant> values;
-    foreach(int role, m_rolesRequested) {
+    Q_FOREACH(int role, m_rolesRequested) {
         switch(role) {
         case Qt::DecorationRole: {
         const QString icon = result.resource().genericIcon();

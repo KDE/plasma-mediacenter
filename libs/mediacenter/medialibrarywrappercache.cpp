@@ -52,7 +52,7 @@ MediaLibraryWrapperCache::~MediaLibraryWrapperCache()
 
 void MediaLibraryWrapperCache::saveNewMedia(const QList< QSharedPointer< PmcMedia > > &media)
 {
-    foreach(const QSharedPointer<PmcMedia> &m, media) {
+    Q_FOREACH(const QSharedPointer<PmcMedia> &m, media) {
         d->pmcMediaByType[m->type()].append(m);
     }
 }
