@@ -28,7 +28,7 @@ MultiplePlaylistModel::MultiplePlaylistModel(QObject* parent): QAbstractListMode
     QString dirPath = MediaCenter::dataDirForComponent("playlists");
     QDir dir(dirPath);
     QStringList playlistList = dir.entryList (QDir::NoDotAndDotDot | QDir::Files);
-    foreach (const QString &str, playlistList) {
+    Q_FOREACH (const QString &str, playlistList) {
         m_multiplePlaylistList.append(str);
     }
     if (playlistList.length() == 0) {

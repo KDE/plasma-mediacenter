@@ -141,7 +141,7 @@ void MediaLibrary::processNextRequest()
         QSharedPointer<Media> media = mediaForSha(mediaSha);
 
         bool wasUpdated = false;
-        foreach(int role, request.second.keys()) {
+        Q_FOREACH(int role, request.second.keys()) {
             if (role == MediaCenter::AlbumRole) {
                 wasUpdated = extractAndSaveAlbumInfo(request, media) || wasUpdated;
             } else if (role == MediaCenter::ArtistRole) {
@@ -158,7 +158,7 @@ void MediaLibrary::processNextRequest()
     } else {
         if (d->mediaValidator->fileWithUrlExists(request.first)) {
             QSharedPointer<Media> media(new Media(request.first));
-            foreach(int role, request.second.keys()) {
+            Q_FOREACH(int role, request.second.keys()) {
                 if (role == MediaCenter::AlbumRole) {
                     extractAndSaveAlbumInfo(request, media);
                 } else if(role == MediaCenter::ArtistRole) {

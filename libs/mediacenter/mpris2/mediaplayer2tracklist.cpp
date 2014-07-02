@@ -117,7 +117,7 @@ QList<QVariantMap> MediaPlayer2Tracklist::GetTracksMetadata(const QList<QDBusObj
     QList<QVariantMap> metadataList;
     int index;
 
-    foreach (const QDBusObjectPath& trackId, trackIds) {
+    Q_FOREACH (const QDBusObjectPath& trackId, trackIds) {
         index = m_orderedTrackIds.indexOf(trackId);
         if (index != -1) {
             metadataList << static_cast<Mpris2*>(parent())->getMetadataOf(urlOfIndex(index), trackId.path());
