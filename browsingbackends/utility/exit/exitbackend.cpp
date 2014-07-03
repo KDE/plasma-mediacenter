@@ -21,7 +21,6 @@
 #include <QtGui/QApplication>
 #include <QtGui/QMainWindow>
 #include <QtCore/QMetaObject>
-#include <QtCore/QCoreApplication>
 
 MEDIACENTER_EXPORT_BROWSINGBACKEND(ExitBackend)
 
