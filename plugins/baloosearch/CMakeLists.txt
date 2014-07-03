@@ -1,9 +1,4 @@
-find_package(Baloo REQUIRED)
-find_package(KFileMetaData REQUIRED)
-
-include_directories(
-  ${BALOO_INCLUDE_DIR}
-)
+find_package(KF5FileMetaData REQUIRED)
 
 set(baloosearch_SRCS
     audiosearchresulthandler.cpp
@@ -18,8 +13,7 @@ set_target_properties(pmc_baloosearch PROPERTIES PREFIX "")
 
 target_link_libraries(pmc_baloosearch
     plasmamediacenter
-    ${BALOO_CORE_LIBRARY}
-    ${BALOO_FILE_LIBRARY}
+    KF5::BalooFile
     KF5::FileMetaData
 )
 

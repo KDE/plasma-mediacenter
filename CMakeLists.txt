@@ -35,7 +35,7 @@ add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
 
 # Load the frameworks we need
 find_package(KF5 COMPONENTS REQUIRED
-    CoreAddons Config I18n GuiAddons Service ConfigWidgets KIO Declarative Plasma PlasmaQuick)
+    CoreAddons Config I18n GuiAddons Service ConfigWidgets KIO Declarative Plasma PlasmaQuick Baloo)
 
 find_package(Taglib REQUIRED)
 
