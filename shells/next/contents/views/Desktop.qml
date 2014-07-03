@@ -137,12 +137,10 @@ Image {
     onContainmentChanged: {
         //containment.parent = root;
 
-        print("Containment changes");
         internal.newContainment = containment;
 
         if (containment != null) {
-            print("We are never here.. meh");
-            containment.visible = true;
+            containment.visible = false;
         }
         if (containment != null) {
             if (internal.oldContainment != null && internal.oldContainment != containment) {
@@ -225,7 +223,7 @@ Image {
         //configure the view behavior
         desktop.stayBehind = true;
         desktop.fillScreen = true;
-        //pmcPageStack.pushAndFocus(getMediaWelcome());
+        pmcPageStack.pushAndFocus(getMediaWelcome());
     }
 
     // End : shell stuff
