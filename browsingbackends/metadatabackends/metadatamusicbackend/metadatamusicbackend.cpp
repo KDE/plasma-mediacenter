@@ -49,6 +49,7 @@ MetadataMusicBackend::MetadataMusicBackend(QObject* parent, const QVariantList& 
     , m_albumsModel(0)
     , m_musicModel(0)
 {
+    setButtons(QStringList() << s_showAllButton << s_playAllButton);
 }
 
 MetadataMusicBackend::~MetadataMusicBackend()
@@ -169,13 +170,6 @@ bool MetadataMusicBackend::expand(int row, QAbstractItemModel* model)
     }
 
     return true;
-}
-
-QVariantList MetadataMusicBackend::buttons()
-{
-    QVariantList buttonList;
-    buttonList << s_showAllButton << s_playAllButton;
-    return buttonList;
 }
 
 void MetadataMusicBackend::handleButtonClick(const QString& buttonName)

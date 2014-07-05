@@ -50,6 +50,7 @@ public:
     QList<QObject*> models;
     QString searchTerm;
     QSharedPointer<PmcRuntime> pmcRuntime;
+    QStringList buttons;
 };
 
 AbstractBrowsingBackend::AbstractBrowsingBackend(QObject *parent, const QVariantList &args)
@@ -197,9 +198,17 @@ QVariantList AbstractBrowsingBackend::models()
     return modelList;
 }
 
-QVariantList AbstractBrowsingBackend::buttons()
+QStringList AbstractBrowsingBackend::buttons() const
 {
-    return QVariantList();
+    return d->buttons;
+}
+
+void AbstractBrowsingBackend::setButtons(const QStringList& buttons)
+{
+    if (d->buttons != buttons) {
+        d->buttons = buttons;
+        emit buttonsChanged();
+    }
 }
 
 void AbstractBrowsingBackend::handleButtonClick(const QString&)
