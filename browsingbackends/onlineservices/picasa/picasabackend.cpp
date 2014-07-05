@@ -32,6 +32,7 @@ namespace {
 PicasaBackend::PicasaBackend(QObject* parent, const QVariantList& args):
                              MediaCenter::AbstractBrowsingBackend(parent, args)
 {
+    setButtons(QStringList() << loginButtonText);
     QTimer::singleShot(2000, this, SLOT(showLoginScreen()));
 }
 
@@ -95,11 +96,6 @@ void PicasaBackend::setLoginText(const QString& loginText)
 {
     m_loginText = loginText;
     emit mediaBrowserSidePanelChanged();
-}
-
-QVariantList PicasaBackend::buttons()
-{
-    return QVariantList() << loginButtonText;
 }
 
 void PicasaBackend::showLoginScreen()

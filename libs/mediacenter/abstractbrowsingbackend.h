@@ -53,7 +53,7 @@ class MEDIACENTER_EXPORT AbstractBrowsingBackend : public QObject
     Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
     Q_PROPERTY(QString mediaBrowserSidePanel READ mediaBrowserSidePanel NOTIFY mediaBrowserSidePanelChanged)
     Q_PROPERTY(QVariantList models READ models NOTIFY modelsChanged)
-    Q_PROPERTY(QVariantList buttons READ buttons NOTIFY buttonsChanged)
+    Q_PROPERTY(QStringList buttons READ buttons NOTIFY buttonsChanged)
 
 public:
     /**
@@ -86,15 +86,15 @@ public:
     QVariantList models();
 
     /**
-     * When writing a backend, override this method to return a list of strings
-     * that will be used to create buttons when this backend is chosen.
+     * Call this method to get a list of strings that should be used to create
+     * buttons when this backend is chosen.
      *
      * When a button is pressed, the handleButtonClick method will be called.
      *
      * @see handleButtonClick()
-     * @returns a list of buttons the model wants to show on the UI
+     * @returns a list of buttons the backend wants to show on the UI
      */
-    virtual QVariantList buttons();
+    QStringList buttons() const;
 
     /**
      * This method will be called when the media center wants to load this backend.
@@ -271,6 +271,14 @@ protected:
      * @return QSharedPointer to the PmcRuntime object
      */
     QSharedPointer< PmcRuntime > pmcRuntime() const;
+
+    /**
+     * Subclasses can call this method to set the button strings that are used
+     * for the buttons property
+     *
+     * @param buttons list of strings for the buton labels
+     */
+    void setButtons(const QStringList &buttons);
 
 private:
     class AbstractBrowsingBackendPrivate;
