@@ -26,11 +26,14 @@ class EventsModel : public QAbstractListModel
 {
 public:
     explicit EventsModel(QObject* parent = 0);
+
     virtual QVariant data(const QModelIndex& index, int role) const;
     virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
 
     void addEvent(const QString &eventName, const QDate &startDate, const QDate &endDate);
     QPair<QDate,QDate> dateRangeForEvent(const QString &eventName) const;
+
+    void saveEvents();
 
 private:
     QList<QString> m_eventNames;

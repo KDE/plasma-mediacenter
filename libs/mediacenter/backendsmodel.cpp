@@ -72,7 +72,7 @@ void BackendsModel::loadBrowsingBackends()
 
         MediaCenter::AbstractBrowsingBackend *backend =
             service->createInstance<MediaCenter::AbstractBrowsingBackend>(
-                0, QVariantList() << service->storageId(), &errorMessage);
+                this, QVariantList() << service->storageId(), &errorMessage);
 
         if (backend) {
             if (!backend->okToLoad()) {

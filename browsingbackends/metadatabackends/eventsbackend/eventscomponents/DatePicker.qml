@@ -51,31 +51,6 @@ PlasmaCore.FrameSvgItem {
         }
 
         Digit {
-            id: dayDigit
-            model: {
-                var dd = new Date(year, month, 0);
-                return dd.getDate()
-            }
-            currentIndex: 23
-            delegate: Text {
-                horizontalAlignment: Text.AlignHCenter
-                width: dayDigit.width
-                property int ownIndex: index
-                text: index+1
-                font.pointSize: 20
-                opacity: PathView.itemOpacity
-            }
-        }
-        PlasmaCore.SvgItem {
-            svg: PlasmaCore.Svg {imagePath: "widgets/line"}
-            elementId: "vertical-line"
-            width: naturalSize.width
-            anchors {
-                top: parent.top
-                bottom:parent.bottom
-            }
-        }
-        Digit {
             id: monthDigit
             model: 12
             currentIndex: 2
@@ -103,6 +78,31 @@ PlasmaCore.FrameSvgItem {
             anchors {
                 top: parent.top
                 bottom: parent.bottom
+            }
+        }
+        Digit {
+            id: dayDigit
+            model: {
+                var dd = new Date(year, month, 0);
+                return dd.getDate()
+            }
+            currentIndex: 23
+            delegate: Text {
+                horizontalAlignment: Text.AlignHCenter
+                width: dayDigit.width
+                property int ownIndex: index
+                text: index+1
+                font.pointSize: 20
+                opacity: PathView.itemOpacity
+            }
+        }
+        PlasmaCore.SvgItem {
+            svg: PlasmaCore.Svg {imagePath: "widgets/line"}
+            elementId: "vertical-line"
+            width: naturalSize.width
+            anchors {
+                top: parent.top
+                bottom:parent.bottom
             }
         }
         Digit {
