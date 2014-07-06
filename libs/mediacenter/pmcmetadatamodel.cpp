@@ -149,7 +149,7 @@ void PmcMetadataModel::handleNewMedia(const QList< QSharedPointer< PmcMedia > >&
     const int existingRowCount = rowCount();
     QStringList resourceIdsToBeInserted;
 
-    foreach (const QSharedPointer<PmcMedia> &m, media) {
+    Q_FOREACH (const QSharedPointer<PmcMedia> &m, media) {
         if (d->modeForMediaType.value(m->type()) == d->currentMode) {
             d->mediaByResourceId.insert(m->sha(), QSharedPointer<QObject>(m));
             resourceIdsToBeInserted.append(m->sha());
@@ -180,7 +180,7 @@ void PmcMetadataModel::handleNewAlbumsOrArtists(const QList< QSharedPointer< T >
     const int existingRowCount = rowCount();
     QStringList resourceIdsToBeInserted;
 
-    foreach (const QSharedPointer<T> &a, mediaData) {
+    Q_FOREACH (const QSharedPointer<T> &a, mediaData) {
         if (d->mediaByResourceId.contains(a->name())) {
             qWarning() << "ALREADY HAS " << a->name();
             continue;

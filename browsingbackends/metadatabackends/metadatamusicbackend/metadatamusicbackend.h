@@ -53,7 +53,6 @@ public:
 
     virtual bool expand(int row, QAbstractItemModel* model);
 
-    virtual QVariantList buttons();
     virtual void handleButtonClick(const QString& buttonName);
 
     virtual void searchModel(const QString& searchTerm, QAbstractItemModel* model);

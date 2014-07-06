@@ -53,12 +53,12 @@ bool FilesystemSearchMediaSource::recursiveSearch(const QDir &dir)
 {
     if (shouldQuit())   return false;
 
-    foreach(const QFileInfo &fileInfo, dir.entryInfoList(QDir::Files)) {
+    Q_FOREACH(const QFileInfo &fileInfo, dir.entryInfoList(QDir::Files)) {
         if (shouldQuit())   return false;
         checkAndAddFile(fileInfo);
     }
 
-    foreach(const QFileInfo &dirInfo, dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot)) {
+    Q_FOREACH(const QFileInfo &dirInfo, dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot)) {
         if (shouldQuit())   return false;
         if (!recursiveSearch(QDir(dirInfo.absoluteFilePath()))) {
             break;

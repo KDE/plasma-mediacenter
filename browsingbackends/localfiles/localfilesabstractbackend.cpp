@@ -136,16 +136,6 @@ void LocalFilesAbstractBackend::slotStorageSetupDone(Solid::ErrorType error,cons
     expand(m_placesRow);
 }
 
-QVariantList LocalFilesAbstractBackend::buttons()
-{
-    if (m_isShowingPlacesModel) {
-        return QVariantList();
-    }
-    QVariantList buttonList;
-    buttonList << s_playAllButton;
-    return buttonList;
-}
-
 void LocalFilesAbstractBackend::handleButtonClick(const QString& buttonName)
 {
     /****
@@ -177,7 +167,11 @@ void LocalFilesAbstractBackend::addAllSongsToPlaylist(const QSharedPointer<Playl
 void LocalFilesAbstractBackend::setShowingPlacesModel(bool showing)
 {
     m_isShowingPlacesModel = showing;
-    emit buttonsChanged();
+    if (m_isShowingPlacesModel) {
+        setButtons(QStringList());
+    } else {
+        setButtons(QStringList() << s_playAllButton);
+    }
 }
 
 #include "localfilesabstractbackend.h"

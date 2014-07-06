@@ -40,6 +40,7 @@ public:
     MediaPlayer2Player* getMediaPlayer2Player();
     QString getCurrentTrackId();
     QVariantMap getMetadataOf(const QString& url);
+    QVariantMap getMetadataOf(const QString& url, const QString& trackId);
 
 signals:
     void raisePMC() const;

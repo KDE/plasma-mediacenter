@@ -97,7 +97,6 @@ public:
      */
     virtual bool okToLoad() const;
 
-    virtual QVariantList buttons();
     virtual void handleButtonClick(const QString& buttonName);
     void addAllSongsToPlaylist( const QSharedPointer< PlaylistModel >& playlistModel);
 

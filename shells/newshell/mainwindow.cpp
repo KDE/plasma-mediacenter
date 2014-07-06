@@ -160,6 +160,8 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::closeMediaCenter()
 {
+    QCloseEvent event;
+    closeEvent(&event);
     QApplication::quit();
 }
 

@@ -72,8 +72,6 @@ public:
      */
     virtual bool initImpl();
 
-    virtual QVariantList buttons();
-
     virtual void handleButtonClick(const QString& buttonName);
 
 signals:

@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
 
     KAboutData aboutData("plasma-mediacenter",
                          0,
-                         ki18n("Plasma Mediacenter Shell"),
+                         ki18n("Plasma Mediacenter"),
                          "1.3.0",
                          ki18n("A convenient shell for the Plasma Media Center Components"),
                          KAboutData::License_GPL_V2,
