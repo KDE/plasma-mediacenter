@@ -29,6 +29,7 @@
 #include "mediacenter/mediasourcesloader.h"
 #include "mediacenter/medialibrary.h"
 #include "mediacenter/runtimedata.h"
+#include "mediacenter/pmccoverartprovider.h"
 
 #include "qmlaccess.h"
 
@@ -52,6 +53,7 @@ void MediaCenterPlugin::initializeEngine(QQmlEngine *engine, const char *uri)
 {
     Q_ASSERT(uri == QLatin1String("org.kde.plasma.mediacenter"));
     qDebug() << "one time";
+    engine->addImageProvider(PmcCoverArtProvider::identificationString, new PmcCoverArtProvider());
 }
 
 #include "moc_mediacenterplugin.cpp"
