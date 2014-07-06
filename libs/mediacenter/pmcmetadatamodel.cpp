@@ -189,12 +189,14 @@ void PmcMetadataModel::handleNewAlbumsOrArtists(const QList< QSharedPointer< T >
         resourceIdsToBeInserted.append(a->name());
     }
 
-    beginInsertRows(QModelIndex(), existingRowCount,
-                    existingRowCount + resourceIdsToBeInserted.size() -1);
-    d->mediaResourceIds.append(resourceIdsToBeInserted);
+    if (resourceIdsToBeInserted.size() > 0) {
+        beginInsertRows(QModelIndex(), existingRowCount,
+                        existingRowCount + resourceIdsToBeInserted.size() -1);
+        d->mediaResourceIds.append(resourceIdsToBeInserted);
 
-    Q_ASSERT(d->mediaByResourceId.keys().size() == d->mediaResourceIds.size());
-    endInsertRows();
+        Q_ASSERT(d->mediaByResourceId.keys().size() == d->mediaResourceIds.size());
+        endInsertRows();
+    }
 }
 
 QVariant PmcMetadataModel::metadataValueForRole(const QModelIndex& index, int role) const
