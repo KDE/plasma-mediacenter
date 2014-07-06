@@ -40,7 +40,6 @@ PmcCoverArtProvider::PmcCoverArtProvider()
 QImage PmcCoverArtProvider::requestImage(const QString& id, QSize* size, const QSize& requestedSize)
 {
     const QString identification = id.split(':').at(0);
-    const QString url = id.section(':', 1);
 
     if (!id.startsWith("file:")) {
         return SingletonFactory::instanceFor<PmcImageCache>()->getImage(id);
@@ -51,7 +50,7 @@ QImage PmcCoverArtProvider::requestImage(const QString& id, QSize* size, const Q
     //from the real music file, and that is when it uses "file:"
     //TODO: This is cover extraction code and should be moved out of this. Or,
     //nuked altogether.
-    const QString file = QUrl(url).toLocalFile();
+    const QString file = QUrl(id).toLocalFile();
     TagLib::MPEG::File f(file.toUtf8().constData());
 
     if(!f.isValid() || !f.ID3v2Tag())
