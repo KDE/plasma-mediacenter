@@ -19,6 +19,7 @@
  */
 
 #include "qmlaccess.h"
+#include <QSharedPointer>
 #include <QWeakPointer>
 #include "mediacenter/medialibrary.h"
 
@@ -33,7 +34,7 @@ QMLAccess::QMLAccess(QObject *parent) : QObject(parent)
     //TODO; insert the commandline args here.
     QHash< PmcRuntime::RuntimeObjectType, QSharedPointer< QObject > > runtimeObjects;
     runtimeObjects.insert(PmcRuntime::PlaylistModel, m_playlistModel);
-    QWeakPointer<PmcRuntime> pmcRuntime = QWeakPointer<PmcRuntime>(new PmcRuntime(runtimeObjects, this));
+    QSharedPointer<PmcRuntime> pmcRuntime = QSharedPointer<PmcRuntime>(new PmcRuntime(runtimeObjects, this));
     m_backendsModel = new BackendsModel(pmcRuntime, this);
     emit backendsModelChanged();
     emit playlistModelChanged();

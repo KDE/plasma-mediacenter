@@ -35,6 +35,7 @@ Image {
     property QtObject mediaWelcomeInstance
     property QtObject mediaBrowserInstance
     property QtObject mediaPlayerInstance
+    property QtObject pmcInterfaceInstance
 
     // Shell stuff
     property Item containment
@@ -69,6 +70,13 @@ Image {
             mediaPlayerInstance = pmcMediaPlayerComponent.createObject(pmcPageStack);
         }
         return mediaPlayerInstance;
+    }
+
+    function getPmcInterface() {
+        if (!pmcInterfaceInstance) {
+            pmcInterfaceInstance = pmcInterfaceComponent.createObject(root);
+        }
+        return pmcInterfaceInstance;
     }
 
     function goBack()
@@ -223,6 +231,7 @@ Image {
         //configure the view behavior
         desktop.stayBehind = true;
         desktop.fillScreen = true;
+        getPmcInterface();
         pmcPageStack.pushAndFocus(getMediaWelcome());
     }
 
@@ -230,8 +239,10 @@ Image {
 
     // Start: Plasma mediacenter
 
-    PMC.QMLAccess {
-        id: pmcInterface
+    Component {
+        id: pmcInterfaceComponent
+        PMC.QMLAccess {
+        }
     }
 
     PMC.RuntimeData {
@@ -307,13 +318,13 @@ Image {
         id: pmcMediaWelcomeComponent
         MediaCenterElements.MediaWelcome {
             property bool hideMediaController: true
-            model: pmcInterface.backendsModel
+            model: getPmcInterface().backendsModel
             onBackendSelected: {
                 print("###############1");
                 if (!selectedBackend.init())
                     return;
                 print("###############2");
-                pmcInterface.currentBrowsingBackend = selectedBackend;
+                getPmcInterface().currentBrowsingBackend = selectedBackend;
                 print("###############3");
                 pmcPageStack.pushAndFocus(getMediaBrowser());
                 print("###############4");
@@ -353,13 +364,13 @@ Image {
     Component {
         id: pmcMediaBrowserComponent
         MediaCenterElements.MediaBrowser {
-            currentBrowsingBackend: pmcInterface.currentBrowsingBackend
+            currentBrowsingBackend: getPmcInterface().currentBrowsingBackend
 
             onPlayRequested: {
                 print("want to play "+url);
                 if (currentMediaType == "image") {
                     var mediaImageViewer = getMediaImageViewer();
-                    mediaImageViewer.stripModel = pmcInterface.currentBrowsingBackend.models[0].model;
+                    mediaImageViewer.stripModel = getPmcInterface().currentBrowsingBackend.models[0].model;
                     mediaImageViewer.stripCurrentIndex = index;
                     mediaImageViewer.source = url;
                     pmcPageStack.pushAndFocus(mediaImageViewer);

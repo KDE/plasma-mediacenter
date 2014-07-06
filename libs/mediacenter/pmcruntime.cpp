@@ -19,6 +19,7 @@
 #include "pmcruntime.h"
 
 #include <QQmlEngine>
+#include <QDebug>
 
 class PmcRuntime::Private
 {
