@@ -30,8 +30,9 @@ public:
     virtual QVariant data(const QModelIndex& index, int role) const;
     virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
 
-    void addEvent(const QString &eventName, const QDate &startDate, const QDate &endDate);
+    void addOrEditEvent(const QString &eventName, const QDate &startDate, const QDate &endDate);
     QPair<QDate,QDate> dateRangeForEvent(const QString &eventName) const;
+    bool deleteEvent(const QString &eventName);
 
     void saveEvents();
 

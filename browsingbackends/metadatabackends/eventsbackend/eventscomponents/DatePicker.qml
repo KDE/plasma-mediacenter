@@ -27,9 +27,9 @@ PlasmaCore.FrameSvgItem {
     clip: true
 
     //////// API
-    property int day: dayDigit.currentIndex+1
-    property int month: monthDigit.currentIndex+1
-    property int year: yearDigit.currentIndex
+    property alias day: dayDigit.currentIndex
+    property alias month: monthDigit.currentIndex
+    property alias year: yearDigit.currentIndex
 
     property bool userConfiguring: false
 
@@ -53,7 +53,6 @@ PlasmaCore.FrameSvgItem {
         Digit {
             id: monthDigit
             model: 12
-            currentIndex: 2
             property variant months: Array(i18n("Jan"), i18n("Feb"), i18n("Mar"), i18n("Apr"), i18n("May"), i18n("Jun"), i18n("Jul"), i18n("Aug"), i18n("Sep"), i18n("Oct"), i18n("Nov"), i18n("Dec"))
             delegate: Text {
                 horizontalAlignment: Text.AlignHCenter
@@ -82,11 +81,11 @@ PlasmaCore.FrameSvgItem {
         }
         Digit {
             id: dayDigit
-            model: {
-                var dd = new Date(year, month, 0);
-                return dd.getDate()
-            }
-            currentIndex: 23
+            model: 31
+//             model: {
+//                 var dd = new Date(year, month, 0);
+//                 return dd.getDate()
+//             }
             delegate: Text {
                 horizontalAlignment: Text.AlignHCenter
                 width: dayDigit.width
@@ -109,7 +108,6 @@ PlasmaCore.FrameSvgItem {
             id: yearDigit
             //FIXME: yes, this is a tad lame ;)
             model: 3000
-            currentIndex: 2014
             width: yearPlaceHolder.width*1.3
             Text {
                 id: yearPlaceHolder

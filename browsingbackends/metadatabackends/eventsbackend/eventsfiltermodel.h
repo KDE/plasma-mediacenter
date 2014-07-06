@@ -26,12 +26,16 @@ class EventsFilterModel : public FilterMediaModel
 {
 public:
     explicit EventsFilterModel(QObject* parent = 0);
-    void setDateRange(const QDate &startDate, const QDate &endDate);
+
+    void setDateRange(const QString &eventName, const QDate &startDate, const QDate &endDate);
+    QString eventName() const;
+    QPair<QDate,QDate> dateRange() const;
 
 protected:
     virtual bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const;
 
 private:
+    QString m_eventName;
     QDate m_startDate;
     QDate m_endDate;
 };

@@ -31,10 +31,13 @@ class EventsBackend : public AbstractMetadataBackend
 public:
     EventsBackend(QObject* parent, const QVariantList& args);
     virtual QString mediaBrowserSidePanel() const;
-    virtual QVariantList buttons();
     virtual void handleButtonClick(const QString& button);
     virtual bool expand(int row);
     virtual bool goOneLevelUp();
+
+    Q_INVOKABLE QList<int> editingStart() const;
+    Q_INVOKABLE QList<int> editingEnd() const;
+    Q_INVOKABLE QString editingEventName() const;
 
 public Q_SLOTS:
     void addEvent(int dayStart, int monthStart, int yearStart,
@@ -55,7 +58,12 @@ private:
     EventsFilterModel *m_eventsFilterModel = nullptr;
     ModelMetadata *m_eventsFilterModelMetadata = nullptr;
 
+    QDate m_editingStartDate;
+    QDate m_editingEndDate;
+    QString m_editingEventName;
+
     void setLoginText(const QString &loginText);
+    QString eventNameForRow(int row) const;
 };
 
 #endif // EVENTSBACKEND_H

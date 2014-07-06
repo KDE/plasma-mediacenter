@@ -59,14 +59,21 @@ int EventsModel::rowCount(const QModelIndex& parent) const
     return m_eventNames.size();
 }
 
-void EventsModel::addEvent(const QString& eventName, const QDate& startDate, const QDate& endDate)
+void EventsModel::addOrEditEvent(const QString& eventName, const QDate& startDate, const QDate& endDate)
 {
-    beginInsertRows(QModelIndex(), rowCount(), rowCount());
+    if (m_eventNames.contains(eventName)) {
+        m_events[eventName] = QPair<QDate,QDate>(startDate, endDate);
 
-    m_eventNames.append(eventName);
-    m_events.insert(eventName, QPair<QDate,QDate>(startDate, endDate));
+        auto row = m_eventNames.indexOf(eventName);
+        dataChanged(index(row), index(row));
+    } else {
+        beginInsertRows(QModelIndex(), rowCount(), rowCount());
 
-    endInsertRows();
+        m_eventNames.append(eventName);
+        m_events.insert(eventName, QPair<QDate,QDate>(startDate, endDate));
+
+        endInsertRows();
+    }
 
     saveEvents();
 }
@@ -85,4 +92,21 @@ void EventsModel::saveEvents()
     auto configGroup = KGlobal::config()->group(CONFIG_GROUP);
     configGroup.writeEntry("events", data);
     configGroup.sync();
+}
+
+bool EventsModel::deleteEvent(const QString& eventName)
+{
+    if (!m_eventNames.contains(eventName)) {
+        return false;
+    }
+
+    auto eventIndex = m_eventNames.indexOf(eventName);
+
+    beginRemoveRows(QModelIndex(), eventIndex, eventIndex);
+    m_eventNames.removeAt(eventIndex);
+    m_events.remove(eventName);
+    endRemoveRows();
+
+    saveEvents();
+    return true;
 }

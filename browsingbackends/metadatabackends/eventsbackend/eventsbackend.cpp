@@ -23,18 +23,24 @@
 
 #include <mediacenter/filtermediamodel.h>
 #include <mediacenter/modelmetadata.h>
+
 #include <QTimer>
 
 MEDIACENTER_EXPORT_BROWSINGBACKEND(EventsBackend)
 
 namespace {
-    const char s_manageEventsButton[] = "Manage Events or Trips";
+    const char s_addEventButton[] = "Add event or trip";
+    const char s_editEventButton[] = "Edit";
+    const char s_deleteEventButton[] = "Delete";
 }
 
 EventsBackend::EventsBackend(QObject* parent, const QVariantList& args)
     : AbstractMetadataBackend(parent, args)
 {
+    m_editingStartDate = QDate::currentDate();
+    m_editingEndDate = QDate::currentDate();
 
+    setButtons(QStringList() << s_addEventButton << s_editEventButton << s_deleteEventButton);
 }
 
 bool EventsBackend::initImpl()
@@ -70,17 +76,21 @@ void EventsBackend::setLoginText(const QString& loginText)
     emit mediaBrowserSidePanelChanged();
 }
 
-QVariantList EventsBackend::buttons()
-{
-    QVariantList buttonList;
-    buttonList << s_manageEventsButton;
-    return buttonList;
-}
-
 void EventsBackend::handleButtonClick(const QString& button)
 {
-    if (button == s_manageEventsButton) {
+    if (button == s_addEventButton) {
         showConfiguration();
+    } else if (button == s_editEventButton) {
+        auto editingDateRange = m_eventsFilterModel->dateRange();
+        m_editingStartDate = editingDateRange.first;
+        m_editingEndDate = editingDateRange.second;
+        m_editingEventName = m_eventsFilterModel->eventName();
+
+        showConfiguration();
+    } else if (button == s_deleteEventButton) {
+        if (m_eventsModel->deleteEvent(m_eventsFilterModel->eventName())) {
+            goOneLevelUp();
+        }
     }
 }
 
@@ -91,17 +101,17 @@ void EventsBackend::addEvent(int dayStart, int monthStart, int yearStart,
     auto dateStart = QDate(yearStart, monthStart, dayStart);
     auto dateEnd = QDate(yearEnd, monthEnd, dayEnd);
 
-    m_eventsModel->addEvent(eventName, dateStart, dateEnd);
+    m_eventsModel->addOrEditEvent(eventName, dateStart, dateEnd);
 
     setLoginText(QString());
 }
 
 bool EventsBackend::expand(int row)
 {
-    auto eventName = m_eventsModel->data(m_eventsModel->index(row), Qt::DisplayRole).toString();
+    auto eventName = eventNameForRow(row);
 
     auto dateRange = m_eventsModel->dateRangeForEvent(eventName);
-    m_eventsFilterModel->setDateRange(dateRange.first, dateRange.second);
+    m_eventsFilterModel->setDateRange(eventName, dateRange.first, dateRange.second);
     setModel(m_eventsFilterModelMetadata);
 
     return true;
@@ -115,4 +125,24 @@ bool EventsBackend::goOneLevelUp()
 
     setModel(m_eventsModelMetadata);
     return true;
+}
+
+QList< int > EventsBackend::editingStart() const
+{
+    return QList<int>() << m_editingStartDate.day() << m_editingStartDate.month() << m_editingStartDate.year();
+}
+
+QList< int > EventsBackend::editingEnd() const
+{
+    return QList<int>() << m_editingEndDate.day() << m_editingEndDate.month() << m_editingEndDate.year();
+}
+
+QString EventsBackend::editingEventName() const
+{
+    return m_editingEventName;
+}
+
+QString EventsBackend::eventNameForRow(int row) const
+{
+    return m_eventsModel->data(m_eventsModel->index(row), Qt::DisplayRole).toString();
 }

@@ -35,7 +35,7 @@ FocusScope {
 
             PlasmaExtras.Title {
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: "Select the date range for your event or trip"
+                text: i18n("Select the date range for your event or trip")
                 verticalAlignment: Text.AlignVCenter
             }
 
@@ -64,15 +64,34 @@ FocusScope {
             PlasmaComponents.TextField {
                 id: eventNameText
                 anchors.horizontalCenter: parent.horizontalCenter
-                placeholderText: "Enter event or trip name"
+                placeholderText: i18n("Enter event or trip name")
             }
 
             PlasmaComponents.Button {
-                text: "Add Event"
-                onClicked: backend.addEvent(startDate.day, startDate.month, startDate.year,
+                id: addOrEditButton
+                text: i18n("Save")
+                onClicked: backend.addEvent(startDate.day+1, startDate.month+1, startDate.year,
                                             endDate.day, endDate.month, endDate.year,
                                             eventNameText.text)
             }
         }
+    }
+
+    onBackendChanged: {
+        var editStartDate = backend.editingStart();
+        var editEndDate = backend.editingEnd();
+        var editEventName = backend.editingEventName();
+
+        console.log(editStartDate + " " + editEndDate + " " + editEventName);
+
+        startDate.day = editStartDate[0] - 1;
+        startDate.month = editStartDate[1] - 1;
+        startDate.year = editStartDate[2];
+
+        endDate.day = editEndDate[0] - 1;
+        endDate.month = editEndDate[1] - 1;
+        endDate.year = editEndDate[2];
+
+        eventNameText.text = editEventName;
     }
 }

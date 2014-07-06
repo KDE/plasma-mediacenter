@@ -27,12 +27,23 @@ EventsFilterModel::EventsFilterModel(QObject* parent): FilterMediaModel(parent)
 
 }
 
-void EventsFilterModel::setDateRange(const QDate& startDate, const QDate& endDate)
+void EventsFilterModel::setDateRange(const QString& eventName, const QDate& startDate, const QDate& endDate)
 {
+    m_eventName = eventName;
     m_startDate = startDate;
     m_endDate = endDate;
 
     invalidateFilter();
+}
+
+QPair< QDate, QDate > EventsFilterModel::dateRange() const
+{
+    return QPair<QDate,QDate>(m_startDate, m_endDate);
+}
+
+QString EventsFilterModel::eventName() const
+{
+    return m_eventName;
 }
 
 bool EventsFilterModel::filterAcceptsRow(int source_row, const QModelIndex& source_parent) const
