@@ -186,7 +186,7 @@ void MetadataMusicBackend::handleButtonClick(const QString& buttonName)
                 QMetaObject::invokeMethod(playlist, "playNext");
             }
         } else {
-            kWarning() << "Failed to get a reference to playlist model";
+            qWarning() << "Failed to get a reference to playlist model";
         }
     }
 }
