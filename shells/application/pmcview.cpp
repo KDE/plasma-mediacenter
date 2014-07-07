@@ -24,12 +24,14 @@
 
 #include <QDebug>
 #include <Plasma/Package>
+#include <KLocalizedString>
 
 #include "pmcview.h"
 
 PmcView::PmcView(PmcCorona *pmccorona, QWindow *parent)
     : PlasmaQuick::View(pmccorona, parent)
 {
+    setTitle(i18n("Plasma Mediacenter"));
     pmccorona->setView(this);
     engine()->rootContext()->setContextProperty("desktop", this);
     setSource(QUrl::fromLocalFile(pmccorona->package().filePath("views", "Desktop.qml")));
