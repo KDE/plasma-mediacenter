@@ -160,7 +160,7 @@ FocusScope {
     }
 
     function switchToModel(model) {
-        for (i=0; i < models.length ;i++) {
+        for (var i=0; i < models.length ;i++) {
             var tabButton = mediaTabBar.buttons.get(i).button;
             var smartBrowser = tabButton.tab;
 
