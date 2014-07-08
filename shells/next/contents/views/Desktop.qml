@@ -148,7 +148,7 @@ Image {
         internal.newContainment = containment;
 
         if (containment != null) {
-            containment.visible = false;
+            containment.visible = true;
         }
         if (containment != null) {
             if (internal.oldContainment != null && internal.oldContainment != containment) {
@@ -252,6 +252,7 @@ Image {
     PlasmaComponents.PageStack {
         id: pmcPageStack
         anchors.fill: parent
+        z: 1
 
         function pushAndFocus(page) {
             push(page);
@@ -280,7 +281,7 @@ Image {
         height: visible ? parent.height * 0.08 : 0
         runtimeDataObject: runtimeData
         z: 1; opacity: 0.8
-        visible: pmcPageStack.currentPage.hideMediaController ? false : true
+        visible: (!mediaWelcomeInstance) ? false : !(pmcPageStack.currentPage.hideMediaController)
         state: hideFlag && ((mediaPlayerInstance && mediaPlayerInstance.visible) || (imageViewerInstance && imageViewerInstance.visible)) ? "hidden"  : ""
 
         currentMediaTime: mediaPlayerInstance.currentTime
