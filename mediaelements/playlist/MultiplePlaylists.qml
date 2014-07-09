@@ -19,7 +19,7 @@
 
 import QtQuick 2.1
 import org.kde.plasma.components 2.0 as PlasmaComponents
-import org.kde.plasma.mediacenter.elements 2.0 as MediaCenterElements
+import org.kde.plasma.mediacenter 2.0 as PMC
 
 FocusScope {
     id: multiplePlaylistsRoot
@@ -29,7 +29,7 @@ FocusScope {
     Row {
         id: multiplePlaylistRow
         anchors.fill: parent
-        MediaCenterElements.Settings {
+        PMC.Settings {
            id: settings
         }
 
@@ -45,8 +45,8 @@ FocusScope {
             highlightResizeDuration: 500
             highlight: PlasmaComponents.Highlight { }
 
-            model: MediaCenterElements.MultiplePlaylistModel {
-                playlistModelAddress: playlistModel
+            model: PMC.MultiplePlaylistModel {
+                playlistModelAddress: pmcInterfaceInstance.playlistModel
             }
             currentIndex: model.currentIndex
 

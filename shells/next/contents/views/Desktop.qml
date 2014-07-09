@@ -36,6 +36,7 @@ Image {
     property QtObject mediaBrowserInstance
     property QtObject mediaPlayerInstance
     property QtObject pmcInterfaceInstance
+    property QtObject playlistInstance
     property QtObject popupMenuInstance
 
     // Shell stuff
@@ -85,6 +86,13 @@ Image {
            popupMenuInstance = pmcPopupMenuComponent.createObject(pmcPageStack);
        }
        return popupMenuInstance;
+    }
+
+    function getPlaylist() {
+        if (!playlistInstance) {
+            playlistInstance = pmcPlaylistComponent.createObject(pmcPageStack);
+        }
+        return playlistInstance;
     }
 
     function goBack()
@@ -241,6 +249,7 @@ Image {
         desktop.fillScreen = true;
         getPmcInterface();
         pmcPageStack.pushAndFocus(getMediaWelcome());
+        getPlaylist().visible = false;
     }
 
     // End : shell stuff
@@ -295,7 +304,7 @@ Image {
         currentMediaTime: mediaPlayerInstance.currentTime
         totalMediaTime: mediaPlayerInstance.totalTime
 
-        //onPlaylistButtonClicked: pmcPageStack.pushAndFocus(getPlaylist())
+        onPlaylistButtonClicked: pmcPageStack.pushAndFocus(getPlaylist())
         onBackButtonClicked: root.goBack()
         onPlayerButtonClicked: pmcPageStack.pushAndFocus(getMediaPlayer())
         //onPlayNext: playlistInstance.playNext()
@@ -472,6 +481,18 @@ Image {
                         break;
                 }
                 popupMenu.visible = false
+            }
+        }
+    }
+
+    Component {
+        id: pmcPlaylistComponent
+        MediaCenterElements.Playlist {
+            onPlayRequested: {
+                if (!mediaPlayerInstance) {
+                    pmcPageStack.pushAndFocus(getMediaPlayer());
+                }
+                runtimeData.playUrl(url);
             }
         }
     }

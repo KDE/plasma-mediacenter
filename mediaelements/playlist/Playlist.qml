@@ -81,7 +81,7 @@ FocusScope {
                     height: parent.height
                     iconSource: "media-playlist-shuffle"
                     onClicked: {
-                       playlistModel.shuffle();
+                       pmcInterfaceInstance.playlistModel.shuffle();
                        playlistList.currentIndex = 0;
                     }
                 }
@@ -91,19 +91,19 @@ FocusScope {
                     width: height
                     height: parent.height
                     iconSource: "edit-clear-list"
-                    onClicked: playlistModel.clearPlaylist()
+                    onClicked: pmcInterfaceInstance.playlistModel.clearPlaylist()
                 }
             }
 
             MediaCenterElements.FilterPlaylistModel {
                 id: filterModel
-                sourcePlaylistModel : playlistModel
+                sourcePlaylistModel : pmcInterfaceInstance.playlistModel
                 filterString: filterText.text
             }
 
             ListView {
                 id: playlistList
-                property string currentlyPlayingUrl: playlistModel.currentUrl
+                property string currentlyPlayingUrl: pmcInterfaceInstance.playlistModel.currentUrl
 
                 anchors { top: playlistActions.bottom; left: parent.left; right: parent.right }
                 anchors.bottom: parent.bottom
@@ -117,7 +117,7 @@ FocusScope {
                     onPlayRequested: {
                         playlistList.currentIndex = index;
                         filterModel.playFromSourceModel(index);
-                        playlistList.positionViewAtIndex(playlistModel.currentIndex, ListView.Contain);
+                        playlistList.positionViewAtIndex(pmcInterfaceInstance.playlistModel.currentIndex, ListView.Contain);
                     }
                     onRemoveRequested: {
                         filterModel.removeFromSourceModel(indexToRemove)
@@ -159,9 +159,9 @@ FocusScope {
 
                 function playCurrent()
                 {
-                    if (playlistModel.currentUrl) {
+                    if (pmcInterfaceInstance.playlistModel.currentUrl) {
                         playlistItem.active = true;
-                        playlistItem.playRequested(playlistModel.currentUrl);
+                        playlistItem.playRequested(pmcInterfaceInstance.playlistModel.currentUrl);
                         filterText.text = "";
                     }
                 }
@@ -171,17 +171,17 @@ FocusScope {
 
     function playNext()
     {
-        playlistModel.playNext();
+        pmcInterfaceInstance.playlistModel.playNext();
     }
 
     function playPrevious()
     {
-        playlistModel.playPrevious();
+        pmcInterfaceInstance.playlistModel.playPrevious();
     }
 
     function playTheCurrentInList()
     {
-        if (playlistModel.currentIndex != -1) {
+        if (pmcInterfaceInstance.playlistModel.currentIndex != -1) {
             playlistList.playCurrent();
         }
     }

@@ -25,7 +25,7 @@ import "PlaylistDelegateLogic.js" as Logic
 
 Item {
     id: listViewItem
-    property bool isCurrentlyPlaying: index == playlistModel.currentIndex
+    property bool isCurrentlyPlaying: index == pmcInterfaceInstance.playlistModel.currentIndex
     property variant url: mediaUrl
 
     signal playRequested(string url)
@@ -55,7 +55,7 @@ Item {
                 }
                 width: parent.width*0.4
                 text: mediaArtist
-                color: index == playlistModel.currentIndex && listViewItem.ListView.view.model.filterString == "" ? "red" : theme.textColor
+                color: index == pmcInterfaceInstance.playlistModel.currentIndex && listViewItem.ListView.view.model.filterString == "" ? "red" : theme.textColor
                 elide: Text.ElideRight
                 font.pixelSize: 18
                 style: Text.Sunken
@@ -69,7 +69,7 @@ Item {
                     margins: 5
                 }
                 text: mediaLength ? Math.floor(mediaLength/60) + ":" + (seconds.toString().length < 2 ? "0" + seconds : seconds) : ""
-                color: index == playlistModel.currentIndex && listViewItem.ListView.view.model.filterString == "" ? "red" : theme.textColor
+                color: index == pmcInterfaceInstance.playlistModel.currentIndex && listViewItem.ListView.view.model.filterString == "" ? "red" : theme.textColor
                 font.pixelSize: 18
                 style: Text.Sunken
             }
@@ -89,7 +89,7 @@ Item {
                 drag.axis: Drag.XandYAxis
                 onPressAndHold: Logic.onPressAndHold(dragItemArea, listViewItem)
                 onPositionChanged: Logic.onPositionChanged(dragItemArea, listViewItem)
-                onReleased:Logic.onReleased(dragItemArea, listViewItem, playlistList, playlistModel)
+                onReleased:Logic.onReleased(dragItemArea, listViewItem, playlistList, pmcInterfaceInstance.playlistModel)
                 onClicked: requestPlayback()
                 onEntered: playlistList.currentIndex = index;
             }
