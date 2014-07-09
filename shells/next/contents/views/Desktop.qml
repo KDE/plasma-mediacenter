@@ -36,6 +36,7 @@ Image {
     property QtObject mediaBrowserInstance
     property QtObject mediaPlayerInstance
     property QtObject pmcInterfaceInstance
+    property QtObject popupMenuInstance
 
     // Shell stuff
     property Item containment
@@ -77,6 +78,13 @@ Image {
             pmcInterfaceInstance = pmcInterfaceComponent.createObject(root);
         }
         return pmcInterfaceInstance;
+    }
+
+    function getPopupMenu() {
+       if (!popupMenuInstance) {
+           popupMenuInstance = pmcPopupMenuComponent.createObject(pmcPageStack);
+       }
+       return popupMenuInstance;
     }
 
     function goBack()
@@ -382,7 +390,7 @@ Image {
                     mediaPlayerInstance.runtimeDataObject = runtimeData;
                 }
             }
-/**            onBackRequested: pmcPageStack.popAndFocus()
+            onBackRequested: pmcPageStack.popAndFocus()
             onPopupMenuRequested: {
                 popupMenuInstance = getPopupMenu();
                 popupMenuInstance.visible = true;
@@ -392,7 +400,7 @@ Image {
                 popupMenuInstance.currentMediaDelegateIndex = index;
                 pmcPageStack.pushAndFocus(popupMenuInstance);
             }
-            onBackendOverlayChanged: {
+/**            onBackendOverlayChanged: {
                 if (backendOverlay) {
                     pmcPageStack.pushAndFocus(backendOverlay);
                 } else if (pmcPageStack.currentPage != mediaBrowserInstance) {
@@ -427,6 +435,46 @@ Image {
         }
     }
 
+    ListModel {
+        id: popupModel
+        ListElement {
+            name: "Add to Playlist"
+            icon: "list-add"
+        }
+        ListElement {
+            name: "Play"
+            icon: "pmc-play"
+        }
+        ListElement {
+            name: "Cancel"
+            icon: "dialog-cancel"
+        }
+    }
+
+    Component {
+        id: pmcPopupMenuComponent
+        MediaCenterElements.PopupMenu {
+            id: popupMenu
+            anchors.fill: parent
+            model: popupModel
+            onPopupMenuItemClicked: {
+                switch(index) {
+                    case 0:
+                        playlistModel.addToPlaylist(mediaUrl);
+                        root.goBack();
+                        break;
+                    case 1:
+                        pmcPageStack.popAndFocus(true);
+                        mediaBrowserInstance.playRequested(currentMediaDelegateIndex, mediaUrl, mediaType);
+                        break;
+                    case 2:
+                        root.goBack();
+                        break;
+                }
+                popupMenu.visible = false
+            }
+        }
+    }
 
     // End plasma mediacenter
 }
