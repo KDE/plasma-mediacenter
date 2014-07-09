@@ -136,7 +136,7 @@ Item {
             }
             visible: !isExpandable && mediaType != "image" &&  index == mediaItem.view.currentIndex
             onClicked: {
-                playlistModel.addToPlaylist (mediaUrl);
+                pmcInterfaceInstance.playlistModel.addToPlaylist (mediaUrl);
             }
         }
     }

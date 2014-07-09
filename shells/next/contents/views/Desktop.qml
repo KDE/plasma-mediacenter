@@ -460,7 +460,7 @@ Image {
             onPopupMenuItemClicked: {
                 switch(index) {
                     case 0:
-                        playlistModel.addToPlaylist(mediaUrl);
+                        pmcInterfaceInstance.playlistModel.addToPlaylist(mediaUrl);
                         root.goBack();
                         break;
                     case 1:
