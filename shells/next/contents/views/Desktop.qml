@@ -307,8 +307,8 @@ Image {
         onPlaylistButtonClicked: pmcPageStack.pushAndFocus(getPlaylist())
         onBackButtonClicked: root.goBack()
         onPlayerButtonClicked: pmcPageStack.pushAndFocus(getMediaPlayer())
-        //onPlayNext: playlistInstance.playNext()
-        //onPlayPrevious: playlistInstance.playPrevious()
+        onPlayNext: playlistInstance.playNext()
+        onPlayPrevious: playlistInstance.playPrevious()
         onSeekRequested: {
             if (mediaPlayerInstance) {
                 mediaPlayerInstance.seekTo(newPosition)
@@ -319,7 +319,7 @@ Image {
         onStop: runtimeData.stop()
         onWantToLoseFocus: pmcPageStack.currentPage.focus = true
 
-        //playlistButtonVisible : pmcPageStack.currentPage != playlistInstance
+        playlistButtonVisible : pmcPageStack.currentPage != playlistInstance
         playerButtonVisible: mediaPlayerInstance != null && mediaPlayerInstance.url && (pmcPageStack.currentPage != mediaPlayerInstance)
 
         states: [
@@ -347,8 +347,8 @@ Image {
                 pmcPageStack.pushAndFocus(getMediaBrowser());
                 print("###############4");
             }
-            /** TODO: Reenable
-            //onEmptyAreaClicked: pmcPageStack.pushAndFocus(mediaPlayerInstance ? getMediaPlayer() : getPlaylist())
+            onEmptyAreaClicked: pmcPageStack.pushAndFocus(mediaPlayerInstance ? getMediaPlayer() : getPlaylist())
+            /***
             onStatusChanged: {
                 switch (status) {
                     case PlasmaComponents.PageStatus.Active:
