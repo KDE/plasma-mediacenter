@@ -33,9 +33,9 @@ Item {
 
     Row {
         anchors.fill: parent
-        Rectangle {
+        PlasmaComponents.ListItem {
             width: parent.width - removeFromPlaylistButton.width; height: parent.height
-            color: listViewItem.ListView.isCurrentItem ? "#002378" : theme.backgroundColor
+//            color: listViewItem.ListView.isCurrentItem ? "#002378" : theme.backgroundColor
             Text {
                 anchors {
                     left: parent.left; verticalCenter: parent.verticalCenter
