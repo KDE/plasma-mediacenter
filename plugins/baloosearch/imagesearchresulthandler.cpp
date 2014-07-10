@@ -60,7 +60,7 @@ void ImageSearchResultHandler::handleResultImpl(
 
 void ImageSearchResultHandler::slotFileReceived(const Baloo::File &file)
 {
-    const QString fileUrl = QUrl(file.url()).toLocalFile();
+    const QString fileUrl = file.url();
     //Properties that signify the actual date/time the image was taken by the
     //camera
     QList<KFileMetaData::Property::Property> properties;
