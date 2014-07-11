@@ -39,8 +39,6 @@ EventsBackend::EventsBackend(QObject* parent, const QVariantList& args)
 {
     m_editingStartDate = QDate::currentDate();
     m_editingEndDate = QDate::currentDate();
-
-    setButtons(QStringList() << s_addEventButton << s_editEventButton << s_deleteEventButton);
 }
 
 bool EventsBackend::initImpl()
@@ -57,6 +55,7 @@ bool EventsBackend::initImpl()
     m_eventsFilterModelMetadata = new ModelMetadata(m_eventsFilterModel, this);
 
     setModel(m_eventsModelMetadata);
+    setButtons(QStringList() << s_addEventButton);
     return true;
 }
 
@@ -114,6 +113,8 @@ bool EventsBackend::expand(int row)
     m_eventsFilterModel->setDateRange(eventName, dateRange.first, dateRange.second);
     setModel(m_eventsFilterModelMetadata);
 
+    setButtons(QStringList() << s_editEventButton << s_deleteEventButton);
+
     return true;
 }
 
@@ -124,6 +125,7 @@ bool EventsBackend::goOneLevelUp()
     }
 
     setModel(m_eventsModelMetadata);
+    setButtons(QStringList() << s_addEventButton);
     return true;
 }
 
