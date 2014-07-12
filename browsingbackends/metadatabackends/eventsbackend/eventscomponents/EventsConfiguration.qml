@@ -71,7 +71,7 @@ FocusScope {
                 id: addOrEditButton
                 text: i18n("Save")
                 onClicked: backend.addEvent(startDate.day+1, startDate.month+1, startDate.year,
-                                            endDate.day, endDate.month, endDate.year,
+                                            endDate.day+1, endDate.month+1, endDate.year,
                                             eventNameText.text)
             }
         }

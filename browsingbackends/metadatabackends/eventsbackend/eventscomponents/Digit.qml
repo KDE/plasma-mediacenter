@@ -80,7 +80,7 @@ Item {
             height: width
 
             onWheelMoved: {
-                if (wheel.delta < 0) {
+                if (wheel.delta > 0) {
                     spinnerView.decrementCurrentIndex();
                 } else {
                     spinnerView.incrementCurrentIndex();
