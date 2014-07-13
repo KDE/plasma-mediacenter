@@ -70,7 +70,6 @@ PlasmaCore.FrameSvgItem {
             preferredHighlightEnd: parent.width*0.6
             highlightRangeMode: GridView.ApplyRange
             highlightFollowsCurrentItem: true
-            highlightMoveSpeed: -1
             delegate: PictureStripDelegate {
                 height: 64
                 width: isExpandable ? 0 : height
