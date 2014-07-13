@@ -38,6 +38,7 @@ Image {
     property QtObject pmcInterfaceInstance
     property QtObject playlistInstance
     property QtObject popupMenuInstance
+    property QtObject imageViewerInstance
 
     // Shell stuff
     property Item containment
@@ -93,6 +94,13 @@ Image {
             playlistInstance = pmcPlaylistComponent.createObject(pmcPageStack);
         }
         return playlistInstance;
+    }
+
+    function getMediaImageViewer() {
+        if (!imageViewerInstance) {
+            imageViewerInstance = pmcImageViewerComponent.createObject(pmcPageStack);
+        }
+        return imageViewerInstance;
     }
 
     function goBack()
@@ -393,7 +401,7 @@ Image {
                     mediaImageViewer.source = url;
                     pmcPageStack.pushAndFocus(mediaImageViewer);
                 } else {
-                    //if (playlistInstance) playlistInstance.active = false;
+                    if (playlistInstance) playlistInstance.active = false;
                     runtimeData.playUrl(url);
                     pmcPageStack.pushAndFocus(getMediaPlayer());
                     mediaPlayerInstance.runtimeDataObject = runtimeData;
@@ -482,6 +490,15 @@ Image {
                 }
                 popupMenu.visible = false
             }
+        }
+    }
+
+    Component {
+        id: pmcImageViewerComponent
+        MediaCenterElements.ImageViewer {
+            id: imageViewer
+            onClicked: toggleController(imageViewerInstance)
+            onSlideshowStarted: hideController(imageViewerInstance)
         }
     }
 
