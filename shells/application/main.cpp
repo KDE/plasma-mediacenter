@@ -45,6 +45,10 @@ int main(int argc, char **argv)
     parser.addVersionOption();
     parser.process(app);
 
+    Plasma::Theme theme;
+    theme.setUseGlobalSettings("false");
+    theme.setThemeName("breeze-dark");
+
     Plasma::PluginLoader::setPluginLoader(new ShellPluginLoader);
 
     PmcCorona *corona = new PmcCorona();
