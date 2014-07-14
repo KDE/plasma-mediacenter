@@ -111,6 +111,26 @@ Image {
         pmcPageStack.popAndFocus();
     }
 
+    function showController(itemToFocus)
+    {
+        mediaController.hideFlag = false;
+        itemToFocus.focus = true;
+    }
+
+    function hideController(itemToFocus)
+    {
+        mediaController.hideFlag = true;
+        itemToFocus.focus = true;
+    }
+
+    function toggleController(itemToFocus)
+    {
+        if (mediaController.hideFlag)
+            showController(itemToFocus);
+        else
+            hideController(itemToFocus);
+    }
+
     Image {
         id: grad
         source: "../images/gradient.png"
