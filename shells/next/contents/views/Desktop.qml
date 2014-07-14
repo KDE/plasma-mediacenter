@@ -172,7 +172,8 @@ Image {
         internal.newContainment = containment;
 
         if (containment != null) {
-            containment.visible = true;
+            // Don't show containment for now, its experimental
+            containment.visible = false;
         }
         if (containment != null) {
             if (internal.oldContainment != null && internal.oldContainment != containment) {
