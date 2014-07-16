@@ -51,7 +51,7 @@ FocusScope {
 
                 PlasmaExtras.Title {
                     height: parent.height
-                    text: "to"
+                    text: i18n("to")
                     verticalAlignment: Text.AlignVCenter
                 }
 
@@ -70,6 +70,7 @@ FocusScope {
             PlasmaComponents.Button {
                 id: addOrEditButton
                 text: i18n("Save")
+                enabled: startDate.jsDate < endDate.jsDate
                 onClicked: backend.addEvent(startDate.day+1, startDate.month+1, startDate.year,
                                             endDate.day+1, endDate.month+1, endDate.year,
                                             eventNameText.text)

@@ -33,7 +33,7 @@ PlasmaCore.FrameSvgItem {
 
     property bool userConfiguring: false
 
-    property string isoDate: year + "-" + clockRow.twoDigitString(month) + "-" + clockRow.twoDigitString(day)
+    property date jsDate: year + "-" + twoDigitString(month) + "-" + twoDigitString(day)
 
     imagePath: "widgets/picker"
     width: clockRow.width + margins.left + margins.right
@@ -44,11 +44,6 @@ PlasmaCore.FrameSvgItem {
         spacing: 3
         x: parent.margins.left
         y: parent.margins.top
-
-        function twoDigitString(number)
-        {
-            return number < 10 ? "0"+number : number
-        }
 
         Digit {
             id: monthDigit
@@ -116,5 +111,10 @@ PlasmaCore.FrameSvgItem {
                 text: "0000"
             }
         }
+    }
+
+    function twoDigitString(number)
+    {
+        return number < 10 ? "0"+number : number
     }
 }

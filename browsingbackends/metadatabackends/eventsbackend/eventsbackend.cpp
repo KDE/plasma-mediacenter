@@ -29,9 +29,9 @@
 MEDIACENTER_EXPORT_BROWSINGBACKEND(EventsBackend)
 
 namespace {
-    const char s_addEventButton[] = "Add event or trip";
-    const char s_editEventButton[] = "Edit";
-    const char s_deleteEventButton[] = "Delete";
+    const QString s_addEventButton = i18n("Add event or trip");
+    const QString s_editEventButton = i18n("Edit");
+    const QString s_deleteEventButton = i18n("Delete");
 }
 
 EventsBackend::EventsBackend(QObject* parent, const QVariantList& args)
@@ -93,16 +93,18 @@ void EventsBackend::handleButtonClick(const QString& button)
     }
 }
 
-void EventsBackend::addEvent(int dayStart, int monthStart, int yearStart,
-                  int dayEnd, int monthEnd, int yearEnd,
-                  const QString &eventName)
+bool EventsBackend::addEvent(int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd, const QString& eventName)
 {
     auto dateStart = QDate(yearStart, monthStart, dayStart);
     auto dateEnd = QDate(yearEnd, monthEnd, dayEnd);
 
-    m_eventsModel->addOrEditEvent(eventName, dateStart, dateEnd);
+    if (m_eventsModel->addOrEditEvent(eventName, dateStart, dateEnd)) {
+        setLoginText(QString());
+    } else {
+        return false;
+    }
 
-    setLoginText(QString());
+    return true;
 }
 
 bool EventsBackend::expand(int row)

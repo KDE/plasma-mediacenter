@@ -59,8 +59,12 @@ int EventsModel::rowCount(const QModelIndex& parent) const
     return m_eventNames.size();
 }
 
-void EventsModel::addOrEditEvent(const QString& eventName, const QDate& startDate, const QDate& endDate)
+bool EventsModel::addOrEditEvent(const QString& eventName, const QDate& startDate, const QDate& endDate)
 {
+    if (startDate > endDate ) {
+        return false;
+    }
+
     if (m_eventNames.contains(eventName)) {
         m_events[eventName] = QPair<QDate,QDate>(startDate, endDate);
 
@@ -76,6 +80,7 @@ void EventsModel::addOrEditEvent(const QString& eventName, const QDate& startDat
     }
 
     saveEvents();
+    return true;
 }
 
 QPair< QDate, QDate > EventsModel::dateRangeForEvent(const QString& eventName) const

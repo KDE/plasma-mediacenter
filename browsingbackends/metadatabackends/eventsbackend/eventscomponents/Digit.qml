@@ -63,12 +63,12 @@ Item {
             startX: spinnerView.width/2
             startY: spinnerView.height + 1.5*placeHolder.height
             PathAttribute { name: "itemOpacity"; value: 0 }
-            PathLine { 
+            PathLine {
                 x: spinnerView.width/2
                 y: spinnerView.height/2
             }
             PathAttribute { name: "itemOpacity"; value: 1 }
-            PathLine { 
+            PathLine {
                 x: spinnerView.width/2
                 y: -1.5*placeHolder.height
             }
