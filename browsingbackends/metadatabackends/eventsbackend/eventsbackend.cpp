@@ -67,6 +67,7 @@ void EventsBackend::showConfiguration()
 void EventsBackend::handleButtonClick(const QString& button)
 {
     if (button == s_addEventButton) {
+        m_editingEventName = QString();
         showConfiguration();
     } else if (button == s_editEventButton) {
         auto editingDateRange = m_eventsFilterModel->dateRange();
@@ -87,7 +88,15 @@ bool EventsBackend::addEvent(int dayStart, int monthStart, int yearStart, int da
     auto dateStart = QDate(yearStart, monthStart, dayStart);
     auto dateEnd = QDate(yearEnd, monthEnd, dayEnd);
 
-    return m_eventsModel->addOrEditEvent(eventName, dateStart, dateEnd);
+    if (m_eventsModel->addOrEditEvent(eventName, dateStart, dateEnd)) {
+        if (model() == m_eventsFilterModel) {
+            auto dateRange = m_eventsModel->dateRangeForEvent(eventName);
+            m_eventsFilterModel->setDateRange(eventName, dateRange.first, dateRange.second);
+        }
+        return true;
+    }
+
+    return false;
 }
 
 bool EventsBackend::expand(int row)

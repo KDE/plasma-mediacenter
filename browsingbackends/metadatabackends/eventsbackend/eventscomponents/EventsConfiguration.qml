@@ -35,7 +35,7 @@ FocusScope {
 
             PlasmaExtras.Title {
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: i18n("Select the date range for your event or trip")
+                text: i18n("Select the date range for ") + eventNameText.text
                 verticalAlignment: Text.AlignVCenter
             }
 
@@ -98,6 +98,7 @@ FocusScope {
         endDate.year = editEndDate[2];
 
         eventNameText.text = editEventName;
+        eventNameText.visible = !editEventName;
     }
 
     function goBack()
