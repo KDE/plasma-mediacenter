@@ -55,11 +55,6 @@ bool PicasaBackend::goOneLevelUp()
     return MediaCenter::AbstractBrowsingBackend::goOneLevelUp();
 }
 
-QString PicasaBackend::mediaBrowserSidePanel() const
-{
-    return m_loginText;
-}
-
 void PicasaBackend::login(const QString& username, const QString& password)
 {
     PicasaModel * picasaModel = new PicasaModel(this, username, password);
@@ -78,7 +73,6 @@ void PicasaBackend::updateLoginStatus(bool status)
     if (status) {
         emit loginSuccessful();
         m_loginText = "";
-        emit mediaBrowserSidePanelChanged();
     } else {
         emit loginFailed();
         setModel((ModelMetadata*)(0));
@@ -86,21 +80,9 @@ void PicasaBackend::updateLoginStatus(bool status)
     }
 }
 
-void PicasaBackend::setMediaBrowserSidePanel(QString text)
-{
-    m_loginText = text;
-    emit mediaBrowserSidePanelChanged();
-}
-
-void PicasaBackend::setLoginText(const QString& loginText)
-{
-    m_loginText = loginText;
-    emit mediaBrowserSidePanelChanged();
-}
-
 void PicasaBackend::showLoginScreen()
 {
-    setLoginText(constructQmlSource("picasacomponents", "0.1", "PicasaSidePanel"));
+    emit showCustomUi(constructQmlSource("picasacomponents", "0.1", "PicasaSidePanel"));
 }
 
 void PicasaBackend::handleButtonClick(const QString& buttonName)
@@ -108,9 +90,4 @@ void PicasaBackend::handleButtonClick(const QString& buttonName)
     if (buttonName == loginButtonText) {
         showLoginScreen();
     }
-}
-
-void PicasaBackend::hideLoginScreen()
-{
-    setLoginText(QString());
 }

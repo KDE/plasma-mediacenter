@@ -55,12 +55,6 @@ public:
 
     virtual QString backendCategory() const;
 
-     /**
-     * @return loginText which is of QString type
-     */
-    virtual QString mediaBrowserSidePanel() const;
-    virtual void setMediaBrowserSidePanel(QString text);
-
     /**
      * Opens up the album
      * @param row is the model row number
@@ -92,7 +86,6 @@ public Q_SLOTS:
     void updateLoginStatus(bool status);
 
     void showLoginScreen();
-    void hideLoginScreen();
 
 private:
     QString m_loginText;

@@ -30,7 +30,6 @@ class EventsBackend : public AbstractMetadataBackend
     Q_OBJECT
 public:
     EventsBackend(QObject* parent, const QVariantList& args);
-    virtual QString mediaBrowserSidePanel() const;
     virtual void handleButtonClick(const QString& button);
     virtual bool expand(int row);
     virtual bool goOneLevelUp();
@@ -43,6 +42,8 @@ public Q_SLOTS:
     bool addEvent(int dayStart, int monthStart, int yearStart,
                   int dayEnd, int monthEnd, int yearEnd,
                   const QString &eventName);
+
+    bool closeEventsConfiguration();
 
 protected:
     virtual bool initImpl();
@@ -62,7 +63,6 @@ private:
     QDate m_editingEndDate;
     QString m_editingEventName;
 
-    void setLoginText(const QString &loginText);
     QString eventNameForRow(int row) const;
 };
 

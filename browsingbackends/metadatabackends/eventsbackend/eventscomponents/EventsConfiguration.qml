@@ -22,11 +22,11 @@ import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.kde.plasma.extras 0.1 as PlasmaExtras
 
 FocusScope {
+    id: root
     property QtObject backend
+    signal close
 
     Item {
-        id: rootItem
-
         width: 600; height: 400
         anchors.centerIn: parent
 
@@ -71,9 +71,13 @@ FocusScope {
                 id: addOrEditButton
                 text: i18n("Save")
                 enabled: startDate.jsDate < endDate.jsDate
-                onClicked: backend.addEvent(startDate.day+1, startDate.month+1, startDate.year,
+                onClicked: {
+                    if (backend.addEvent(startDate.day+1, startDate.month+1, startDate.year,
                                             endDate.day+1, endDate.month+1, endDate.year,
-                                            eventNameText.text)
+                                            eventNameText.text)) {
+                        root.close();
+                    }
+                }
             }
         }
     }
@@ -94,5 +98,10 @@ FocusScope {
         endDate.year = editEndDate[2];
 
         eventNameText.text = editEventName;
+    }
+
+    function goBack()
+    {
+        return backend.closeEventsConfiguration();
     }
 }

@@ -21,7 +21,9 @@ import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
 
 FocusScope {
+    id: root
     property QtObject backend
+    signal close
 
     Item {
         id: rootItem
@@ -133,11 +135,15 @@ FocusScope {
 
     function loginSuccessful() {
         busyIndicator.running = false;
+        root.close();
     }
+
     function loginFailed() {
         busyIndicator.running = false;
         loginFailedText.visible = true
     }
 
-    onVisibleChanged: if (!visible) backend.hideLoginScreen()
+    function goBack() {
+        return false;
+    }
 }

@@ -59,20 +59,9 @@ bool EventsBackend::initImpl()
     return true;
 }
 
-QString EventsBackend::mediaBrowserSidePanel() const
-{
-    return m_loginText;
-}
-
 void EventsBackend::showConfiguration()
 {
-    setLoginText(constructQmlSource("eventscomponents", "0.1", "EventsConfiguration"));
-}
-
-void EventsBackend::setLoginText(const QString& loginText)
-{
-    m_loginText = loginText;
-    emit mediaBrowserSidePanelChanged();
+    emit showCustomUi(constructQmlSource("eventscomponents", "0.1", "EventsConfiguration"));
 }
 
 void EventsBackend::handleButtonClick(const QString& button)
@@ -98,13 +87,7 @@ bool EventsBackend::addEvent(int dayStart, int monthStart, int yearStart, int da
     auto dateStart = QDate(yearStart, monthStart, dayStart);
     auto dateEnd = QDate(yearEnd, monthEnd, dayEnd);
 
-    if (m_eventsModel->addOrEditEvent(eventName, dateStart, dateEnd)) {
-        setLoginText(QString());
-    } else {
-        return false;
-    }
-
-    return true;
+    return m_eventsModel->addOrEditEvent(eventName, dateStart, dateEnd);
 }
 
 bool EventsBackend::expand(int row)
@@ -149,4 +132,9 @@ QString EventsBackend::editingEventName() const
 QString EventsBackend::eventNameForRow(int row) const
 {
     return m_eventsModel->data(m_eventsModel->index(row), Qt::DisplayRole).toString();
+}
+
+bool EventsBackend::closeEventsConfiguration()
+{
+    return false;
 }
