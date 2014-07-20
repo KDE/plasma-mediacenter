@@ -34,7 +34,7 @@ FocusScope {
             spacing: 20
 
             PlasmaExtras.Title {
-                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.left: parent.left
                 text: i18n("Select the date range for ") + eventNameText.text
                 verticalAlignment: Text.AlignVCenter
             }
@@ -63,7 +63,7 @@ FocusScope {
 
             PlasmaComponents.TextField {
                 id: eventNameText
-                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.left: parent.left
                 placeholderText: i18n("Enter event or trip name")
             }
 
