@@ -23,33 +23,41 @@ import org.kde.plasma.extras 0.1 as PlasmaExtras
 
 FocusScope {
     id: root
+
+    property alias adding: eventNameText.visible
     property QtObject backend
     signal close
 
     Item {
-        width: 600; height: 400
+        width: 500; height: 400
         anchors.centerIn: parent
 
         Column {
             spacing: 20
+            anchors.fill: parent
 
             PlasmaExtras.Title {
                 anchors.left: parent.left
+                width: parent.width
+
+                elide: Text.ElideLeft
                 text: i18n("Select the date range for ") + eventNameText.text
                 verticalAlignment: Text.AlignVCenter
             }
 
             Row {
+                property int pickerWidth: (width - toText.width)/2 - 2*spacing
                 width: parent.width
                 height: 100
                 spacing: 10
 
                 DatePicker {
                     id: startDate
-                    width: 225; height: parent.height
+                    width: parent.pickerWidth; height: parent.height
                 }
 
                 PlasmaExtras.Title {
+                    id: toText
                     height: parent.height
                     text: i18n("to")
                     verticalAlignment: Text.AlignVCenter
@@ -57,27 +65,60 @@ FocusScope {
 
                 DatePicker {
                     id: endDate
-                    width: 225; height: parent.height
+                    width: parent.pickerWidth; height: parent.height
                 }
             }
 
-            PlasmaComponents.TextField {
-                id: eventNameText
-                anchors.left: parent.left
-                placeholderText: i18n("Enter event or trip name")
-            }
+            Row {
+                width: parent.width
+                spacing: 10
 
-            PlasmaComponents.Button {
-                id: addOrEditButton
-                text: i18n("Save")
-                enabled: startDate.jsDate < endDate.jsDate
-                onClicked: {
-                    if (backend.addEvent(startDate.day+1, startDate.month+1, startDate.year,
-                                            endDate.day+1, endDate.month+1, endDate.year,
-                                            eventNameText.text)) {
-                        root.close();
+                PlasmaComponents.TextField {
+                    id: eventNameText
+
+                    focus: true
+                    width: parent.width - addOrEditButton.width - parent.spacing*3
+                    placeholderText: i18n("Enter event or trip name")
+
+                    Keys.onEnterPressed: addOrEditTimer.start()
+                    Keys.onReturnPressed: addOrEditTimer.start()
+                }
+
+                PlasmaComponents.Button {
+                    id: addOrEditButton
+                    text: i18n("Save")
+                    enabled: startDate.jsDate <= endDate.jsDate && eventNameText.text
+                    onClicked: processClick()
+
+                    function processClick() {
+                        if (!addOrEditButton.enabled) return;
+                        var error;
+                        if (root.adding) {
+                            error = backend.addEvent(startDate.day+1, startDate.month+1, startDate.year,
+                                                    endDate.day+1, endDate.month+1, endDate.year,
+                                                    eventNameText.text);
+                        } else {
+                            error = backend.editEvent(startDate.day+1, startDate.month+1, startDate.year,
+                                                    endDate.day+1, endDate.month+1, endDate.year,
+                                                    eventNameText.text);
+                        }
+                        if (error) {
+                            errorLabel.error = error;
+                        } else {
+                            root.close();
+                        }
                     }
+
+                    Timer { id: addOrEditTimer; interval: 100; onTriggered: addOrEditButton.processClick() }
                 }
+            }
+
+            PlasmaExtras.Title {
+                id: errorLabel
+                property string error
+
+                visible: error
+                text: "error: " + error
             }
         }
     }
@@ -86,8 +127,6 @@ FocusScope {
         var editStartDate = backend.editingStart();
         var editEndDate = backend.editingEnd();
         var editEventName = backend.editingEventName();
-
-        console.log(editStartDate + " " + editEndDate + " " + editEventName);
 
         startDate.day = editStartDate[0] - 1;
         startDate.month = editStartDate[1] - 1;
@@ -98,7 +137,7 @@ FocusScope {
         endDate.year = editEndDate[2];
 
         eventNameText.text = editEventName;
-        eventNameText.visible = !editEventName;
+        root.adding = !editEventName;
     }
 
     function goBack()

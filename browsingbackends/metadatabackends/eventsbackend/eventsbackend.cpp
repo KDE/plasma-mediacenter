@@ -83,7 +83,7 @@ void EventsBackend::handleButtonClick(const QString& button)
     }
 }
 
-bool EventsBackend::addEvent(int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd, const QString& eventName)
+QString EventsBackend::editEvent(int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd, const QString& eventName)
 {
     auto dateStart = QDate(yearStart, monthStart, dayStart);
     auto dateEnd = QDate(yearEnd, monthEnd, dayEnd);
@@ -93,10 +93,19 @@ bool EventsBackend::addEvent(int dayStart, int monthStart, int yearStart, int da
             auto dateRange = m_eventsModel->dateRangeForEvent(eventName);
             m_eventsFilterModel->setDateRange(eventName, dateRange.first, dateRange.second);
         }
-        return true;
+        return QString();
     }
 
-    return false;
+    return i18n("Start date should be earlier than end date");
+}
+
+QString EventsBackend::addEvent(int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd, const QString& eventName)
+{
+    if (m_eventsModel->containsEvent(eventName)) {
+        return i18n("This event already exists");
+    }
+
+    return editEvent(dayStart, monthStart, yearStart, dayEnd, monthEnd, yearEnd, eventName);
 }
 
 bool EventsBackend::expand(int row)

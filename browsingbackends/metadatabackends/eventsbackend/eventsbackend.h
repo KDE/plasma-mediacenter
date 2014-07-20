@@ -39,7 +39,10 @@ public:
     Q_INVOKABLE QString editingEventName() const;
 
 public Q_SLOTS:
-    bool addEvent(int dayStart, int monthStart, int yearStart,
+    QString addEvent(int dayStart, int monthStart, int yearStart,
+                  int dayEnd, int monthEnd, int yearEnd,
+                  const QString &eventName);
+    QString editEvent(int dayStart, int monthStart, int yearStart,
                   int dayEnd, int monthEnd, int yearEnd,
                   const QString &eventName);
 

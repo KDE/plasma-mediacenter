@@ -115,3 +115,8 @@ bool EventsModel::deleteEvent(const QString& eventName)
     saveEvents();
     return true;
 }
+
+bool EventsModel::containsEvent(const QString &eventName) const
+{
+    return m_eventNames.contains(eventName);
+}

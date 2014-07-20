@@ -33,6 +33,7 @@ public:
     bool addOrEditEvent(const QString &eventName, const QDate &startDate, const QDate &endDate);
     QPair<QDate,QDate> dateRangeForEvent(const QString &eventName) const;
     bool deleteEvent(const QString &eventName);
+    bool containsEvent(const QString& eventName) const;
 
     void saveEvents();
 
