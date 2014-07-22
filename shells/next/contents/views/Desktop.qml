@@ -297,7 +297,10 @@ Image {
 
     PlasmaComponents.PageStack {
         id: pmcPageStack
-        anchors.fill: parent
+        anchors {
+	    top: pmcPageStack.currentPage == mediaPlayerInstance || pmcPageStack.currentPage == imageViewerInstance ? parent.top : mediaController.bottom
+	    right: parent.right; left: parent.left; bottom: parent.bottom
+	}
         z: 1
 
         function pushAndFocus(page) {
