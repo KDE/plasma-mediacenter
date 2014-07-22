@@ -32,7 +32,7 @@
 #include <QDebug>
 
 namespace {
-    const char* s_flickr_rest = "http://www.flickr.com/services/rest/";
+    const char* s_flickr_rest = "https://www.flickr.com/services/rest/";
     // Flickr API key for Flickr On Plasma
     const char* s_apikey = "df52d83b7fe03f1de079da2c300f3203";
     //static const char* s_secret = "";
@@ -107,7 +107,7 @@ void FlickrModel::listPhotos (KJob* job)
         photo.secret = farmID;
         photo.secret = serverID;
         // link of image fetched
-        photo.previewImgLink = QString("http://farm%1.static.flickr.com/%2/%3_%4_n.jpg")
+        photo.previewImgLink = QString("https://farm%1.static.flickr.com/%2/%3_%4_n.jpg")
                         .arg(farmID)
                         .arg(serverID)
                         .arg(id)
