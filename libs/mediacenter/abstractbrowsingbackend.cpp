@@ -150,11 +150,6 @@ QString AbstractBrowsingBackend::mediaBrowserOverride() const
     return QString();
 }
 
-QString AbstractBrowsingBackend::mediaBrowserSidePanel() const
-{
-    return d->mediaBrowserSidePanelText;
-}
-
 bool AbstractBrowsingBackend::okToLoad() const
 {
     return true;

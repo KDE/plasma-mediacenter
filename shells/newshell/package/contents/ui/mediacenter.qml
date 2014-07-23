@@ -209,7 +209,7 @@ Image {
                     if (backendOverlay) {
                         pmcPageStack.pushAndFocus(backendOverlay);
                     } else if (pmcPageStack.currentPage != mediaBrowserInstance) {
-                        root.goBack();
+                        pmcPageStack.popAndFocus();
                     }
                 }
             }

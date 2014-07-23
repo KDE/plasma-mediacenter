@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2014 Sinny Kumari <ksinny@gmail.com>                                *
+ *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,30 +16,28 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef FILTERMEDIAMODEL_H
-#define FILTERMEDIAMODEL_H
+#ifndef EVENTSFILTERMODEL_H
+#define EVENTSFILTERMODEL_H
 
-#include <QString>
-#include <QSortFilterProxyModel>
+#include <mediacenter/filtermediamodel.h>
+#include <QDate>
 
-#include "mediacenter_export.h"
-
-class MEDIACENTER_EXPORT FilterMediaModel: public QSortFilterProxyModel
+class EventsFilterModel : public FilterMediaModel
 {
-    Q_OBJECT
 public:
-    explicit FilterMediaModel(QObject* parent = 0);
-    ~FilterMediaModel();
+    explicit EventsFilterModel(QObject* parent = 0);
 
-    void setFilter(int role, const QVariant &filterValue);
-    void addFilter(int role, const QVariant &filterValue);
-    void clearFilters(bool invalidate = true);
+    void setDateRange(const QString &eventName, const QDate &startDate, const QDate &endDate);
+    QString eventName() const;
+    QPair<QDate,QDate> dateRange() const;
 
 protected:
     virtual bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const;
 
 private:
-    QHash<int, QVariant> m_filters;
+    QString m_eventName;
+    QDate m_startDate;
+    QDate m_endDate;
 };
 
-#endif // FILTERMEDIAMODEL_H
+#endif // EVENTSFILTERMODEL_H

@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2014 Sinny Kumari <ksinny@gmail.com>                                *
+ *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,30 +16,30 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef FILTERMEDIAMODEL_H
-#define FILTERMEDIAMODEL_H
+#ifndef EVENTSMODEL_H
+#define EVENTSMODEL_H
 
-#include <QString>
-#include <QSortFilterProxyModel>
+#include <QAbstractItemModel>
+#include <QDate>
 
-#include "mediacenter_export.h"
-
-class MEDIACENTER_EXPORT FilterMediaModel: public QSortFilterProxyModel
+class EventsModel : public QAbstractListModel
 {
-    Q_OBJECT
 public:
-    explicit FilterMediaModel(QObject* parent = 0);
-    ~FilterMediaModel();
+    explicit EventsModel(QObject* parent = 0);
 
-    void setFilter(int role, const QVariant &filterValue);
-    void addFilter(int role, const QVariant &filterValue);
-    void clearFilters(bool invalidate = true);
+    virtual QVariant data(const QModelIndex& index, int role) const;
+    virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
 
-protected:
-    virtual bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const;
+    bool addOrEditEvent(const QString &eventName, const QDate &startDate, const QDate &endDate);
+    QPair<QDate,QDate> dateRangeForEvent(const QString &eventName) const;
+    bool deleteEvent(const QString &eventName);
+    bool containsEvent(const QString& eventName) const;
+
+    void saveEvents();
 
 private:
-    QHash<int, QVariant> m_filters;
+    QList<QString> m_eventNames;
+    QHash<QString, QPair<QDate, QDate>> m_events;
 };
 
-#endif // FILTERMEDIAMODEL_H
+#endif // EVENTSMODEL_H

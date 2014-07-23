@@ -50,7 +50,6 @@ class MEDIACENTER_EXPORT AbstractBrowsingBackend : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
-    Q_PROPERTY(QString mediaBrowserSidePanel READ mediaBrowserSidePanel NOTIFY mediaBrowserSidePanelChanged)
     Q_PROPERTY(QVariantList models READ models NOTIFY modelsChanged)
     Q_PROPERTY(QStringList buttons READ buttons NOTIFY buttonsChanged)
 
@@ -160,14 +159,6 @@ public:
     virtual bool okToLoad() const;
 
     /**
-     * Override this method if you want your backend to show custom items on a
-     * panel/popup. For example this can be used to set filtering options
-     *
-     * @return Valid QML string, use constructQmlSource for convenience
-     */
-     virtual QString mediaBrowserSidePanel() const;
-
-    /**
      * Override this method and emit the busyChanged() signal to tell the mediacenter
      * that the backend is busy doing something
      *
@@ -190,7 +181,6 @@ public:
 
 Q_SIGNALS:
     void busyChanged();
-    void mediaBrowserSidePanelChanged();
     void modelsChanged();
     void buttonsChanged();
     void searchTermChanged();
@@ -198,6 +188,7 @@ Q_SIGNALS:
     void error(const QString &message);
     void modelNeedsAttention(QObject* model);
     void pmcRuntimeChanged();
+    void showCustomUi(const QString &customUiQml);
 
 protected:
     /**

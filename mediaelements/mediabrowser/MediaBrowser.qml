@@ -26,7 +26,6 @@ FocusScope {
     id: mediaBrowser
     property QtObject currentBrowsingBackend
     property QtObject previousBrowsingBackend
-    property string mediaBrowserSidePanel: currentBrowsingBackend ? currentBrowsingBackend.mediaBrowserSidePanel : ""
     property QtObject backendOverlay
 
     signal backRequested
@@ -35,7 +34,6 @@ FocusScope {
     anchors.topMargin: 50
 
     Component {
-        id: mediaBrowserSidePanelComponent
         Item {
             property QtObject child
             property bool enabled
@@ -112,6 +110,7 @@ FocusScope {
         if (currentBrowsingBackend) {
             currentBrowsingBackend.error.connect(errorLabel.setError);
             currentBrowsingBackend.modelNeedsAttention.connect(switchToModel);
+            currentBrowsingBackend.showCustomUi.connect(showCustomUi);
         }
     }
 
@@ -126,6 +125,7 @@ FocusScope {
     {
         mediaBrowserViewItem.mediaBrowserGridView.destroy()
     }
+
     function loadModel()
     {
         if (mediaBrowserViewItem && mediaBrowserViewItem.mediaBrowserGridView)
@@ -174,16 +174,29 @@ FocusScope {
         return mediaBrowser.currentBrowsingBackend.goOneLevelUp();
     }
 
-    onMediaBrowserSidePanelChanged: {
-        if (mediaBrowser.backendOverlay) {
-            mediaBrowser.backendOverlay.destroy();
-            mediaBrowser.backendOverlay = null;
-        }
-        if (currentBrowsingBackend.mediaBrowserSidePanel) {
-            var qmlSource = currentBrowsingBackend.mediaBrowserSidePanel;
+    function showCustomUi(qmlSource) {
+        if (qmlSource) {
             object = Qt.createQmlObject(qmlSource, mediaBrowser);
-            object.backend = (function() { return currentBrowsingBackend; });
-            mediaBrowser.backendOverlay = object;
+
+            if (object.goBack) {
+                object.backend = (function() { return currentBrowsingBackend; });
+                if (object.close) object.close.connect(closeCustomUi);
+
+                if (mediaBrowser.backendOverlay) {
+                    mediaBrowser.backendOverlay.destroy();
+                }
+                mediaBrowser.backendOverlay = object;
+            } else {
+                console.log("******************** ERROR ********************");
+                console.log("ERROR: missing goBack function in " + object);
+                object.destroy();
+            }
+        } else {
+            console.log("WARNING: qmlSource is empty, doing nothing");
         }
+    }
+
+    function closeCustomUi() {
+        mediaBrowser.backendOverlay = null;
     }
 }

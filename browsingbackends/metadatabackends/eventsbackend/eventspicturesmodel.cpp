@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2014 Sinny Kumari <ksinny@gmail.com>                                *
+ *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,30 +16,27 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef FILTERMEDIAMODEL_H
-#define FILTERMEDIAMODEL_H
+#include "eventspicturesmodel.h"
 
-#include <QString>
-#include <QSortFilterProxyModel>
-
-#include "mediacenter_export.h"
-
-class MEDIACENTER_EXPORT FilterMediaModel: public QSortFilterProxyModel
+EventsPicturesModel::EventsPicturesModel(QObject* parent, MediaLibrary* mediaLibrary): PmcMetadataModel(parent, mediaLibrary)
 {
-    Q_OBJECT
-public:
-    explicit FilterMediaModel(QObject* parent = 0);
-    ~FilterMediaModel();
+    showMediaType(MediaCenter::Picture);
+}
 
-    void setFilter(int role, const QVariant &filterValue);
-    void addFilter(int role, const QVariant &filterValue);
-    void clearFilters(bool invalidate = true);
+QVariant EventsPicturesModel::data(const QModelIndex& index, int role) const
+{
+    switch (role) {
+    case Qt::DecorationRole:
+        return PmcMetadataModel::data (index, MediaCenter::MediaUrlRole);
+    case MediaCenter::MediaTypeRole:
+        return "image";
+    case MediaCenter::HideLabelRole:
+        return true;
+    case MediaCenter::DecorationTypeRole:
+        return "image";
+    case MediaCenter::IsExpandableRole:
+        return false;
+    }
 
-protected:
-    virtual bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const;
-
-private:
-    QHash<int, QVariant> m_filters;
-};
-
-#endif // FILTERMEDIAMODEL_H
+    return PmcMetadataModel::data(index, role);
+}
