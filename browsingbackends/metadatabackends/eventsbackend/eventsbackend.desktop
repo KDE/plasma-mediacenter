@@ -2,7 +2,23 @@
 Type=Service
 Icon=image-x-generic
 Name=Events and Trips
+Name[en_GB]=Events and Trips
+Name[nl]=Afspraken en reisjes
+Name[pt]=Eventos e Viagens
+Name[pt_BR]=Eventos e Viagens
+Name[sl]=Dogodki in potovanja
+Name[sv]=Händelser och resor
+Name[uk]=Події і подорожі
+Name[x-test]=xxEvents and Tripsxx
 Comment=Organize your photos for events and trips you have taken
+Comment[en_GB]=Organise your photos for events and trips you have taken
+Comment[nl]=Uw foto's voor gebeurtenissen en reisjes die u hebt gemaakt organiseren
+Comment[pt]=Organizar as suas fotografias pelos eventos e viagens onde tenha participado
+Comment[pt_BR]=Organize suas fotos por eventos e viagens que realizou
+Comment[sl]=Organizirajte vaše fotografije dogodkov in potovanj
+Comment[sv]=Organisera dina bilder av händelser och resor som du har gjort
+Comment[uk]=Упорядкування фотографій, які було зроблено під час певних подій або подорожей
+Comment[x-test]=xxOrganize your photos for events and trips you have takenxx
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 
