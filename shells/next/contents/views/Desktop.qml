@@ -380,7 +380,6 @@ Image {
                 print("###############4");
             }
             onEmptyAreaClicked: pmcPageStack.pushAndFocus(mediaPlayerInstance ? getMediaPlayer() : getPlaylist())
-            /***
             onStatusChanged: {
                 switch (status) {
                     case PlasmaComponents.PageStatus.Active:
@@ -407,7 +406,7 @@ Image {
                     mediaPlayerInstance.height = pmcPageStackParentItem.height;
                     mediaPlayerInstance.dimVideo = true;
                 }
-            }**/
+            }
         }
     }
 
@@ -441,13 +440,13 @@ Image {
                 popupMenuInstance.currentMediaDelegateIndex = index;
                 pmcPageStack.pushAndFocus(popupMenuInstance);
             }
-/**            onBackendOverlayChanged: {
+            onBackendOverlayChanged: {
                 if (backendOverlay) {
                     pmcPageStack.pushAndFocus(backendOverlay);
                 } else if (pmcPageStack.currentPage != mediaBrowserInstance) {
                     root.goBack();
                 }
-            }*/
+            }
         }
     }
     Component {
