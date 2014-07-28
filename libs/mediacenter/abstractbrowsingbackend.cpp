@@ -141,7 +141,7 @@ bool AbstractBrowsingBackend::expand(int row)
 QString AbstractBrowsingBackend::constructQmlSource(const QString& componentDirName, const QString &versionString,
                                                     const QString& itemName) const
 {
-    return QString("import QtQuick 1.1\nimport org.kde.plasma.mediacenter.elements.%1 %2 as %3\n\%3.%4 {\n}\n")
+    return QString("import QtQuick 2.1\nimport org.kde.plasma.mediacenter.elements.%1 %2 as %3\n\%3.%4 {\n}\n")
         .arg(componentDirName).arg(versionString).arg(componentDirName.toUpper()).arg(itemName);
 }
 
