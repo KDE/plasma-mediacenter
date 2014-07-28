@@ -178,7 +178,7 @@ FocusScope {
             var object = Qt.createQmlObject(qmlSource, mediaBrowser);
 
             if (object.goBack) {
-                object.backend = (function() { return currentBrowsingBackend; });
+                object.backend = currentBrowsingBackend;
                 if (object.close) object.close.connect(closeCustomUi);
 
                 if (mediaBrowser.backendOverlay) {
