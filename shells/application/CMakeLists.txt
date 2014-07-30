@@ -20,3 +20,4 @@ target_link_libraries(
 )
 
 install(TARGETS plasma-mediacenter ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(FILES plasma-mediacenter.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
