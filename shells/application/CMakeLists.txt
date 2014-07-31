@@ -17,6 +17,7 @@ target_link_libraries(
     KF5::XmlGui
     KF5::PlasmaQuick
     KF5::Plasma
+    KF5::DBusAddons
 )
 
 install(TARGETS plasma-mediacenter ${INSTALL_TARGETS_DEFAULT_ARGS})

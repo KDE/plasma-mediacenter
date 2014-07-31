@@ -22,6 +22,7 @@
 #include <qcommandlineparser.h>
 #include <qcommandlineoption.h>
 
+#include <KDBusService>
 #include <KLocalizedString>
 
 #include "pmcview.h"
@@ -37,6 +38,9 @@ int main(int argc, char **argv)
 
     QApplication app(argc, argv);
     app.setApplicationVersion(version);
+    app.setOrganizationDomain(QStringLiteral("kde.org"));
+
+    KDBusService service(KDBusService::Unique);
 
     QCommandLineParser parser;
     parser.setApplicationDescription(i18n("Plasma Media Center"));
