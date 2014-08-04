@@ -349,6 +349,8 @@ void PlaylistModel::setPlaylistName(const QString& name)
 
     loadFromFile(playlistFilePath());
     endResetModel();
+
+    emit playlistNameChanged();
 }
 
 QString PlaylistModel::getPlaylistPath() const
@@ -372,7 +374,7 @@ bool PlaylistModel::processCommandLineArgs(const KCmdLineArgs* args)
     }
 
     if (urls.size()) {
-        setPlaylistName(DEFAULT_PLAYLIST_NAME);
+        switchToDefaultPlaylist();
         const int indexOfFirstMedia = addToPlaylist(urls);
 
         setCurrentIndex(indexOfFirstMedia);
@@ -390,4 +392,9 @@ void PlaylistModel::play(int index)
 QString PlaylistModel::currentUrl() const
 {
     return data(index(currentIndex()), MediaCenter::MediaUrlRole).toString();
+}
+
+void PlaylistModel::switchToDefaultPlaylist()
+{
+    setPlaylistName(DEFAULT_PLAYLIST_NAME);
 }
