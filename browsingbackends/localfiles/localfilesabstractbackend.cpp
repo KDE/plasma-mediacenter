@@ -143,9 +143,10 @@ void LocalFilesAbstractBackend::handleButtonClick(const QString& buttonName)
     if (buttonName == s_playAllButton) {
         auto model = pmcRuntime()->runtimeObjectAs<PlaylistModel>(PmcRuntime::PlaylistModel);
         if (model) {
-            const int n = model->rowCount();
+            model->switchToDefaultPlaylist();
+            model->clearPlaylist();
             addAllSongsToPlaylist(model);
-            model->play(n);
+            model->play(0);
         }
     }**/
 }

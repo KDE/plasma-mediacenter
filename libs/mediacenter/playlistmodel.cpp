@@ -27,9 +27,10 @@
 #include <QtCore/QCoreApplication>
 #include <QtXml/QDomDocument>
 
-namespace {
-    static const char DEFAULT_PLAYLIST_NAME[] = "Default";
-    static int INVALID_INDEX = -1;
+namespace
+{
+static const char DEFAULT_PLAYLIST_NAME[] = "Default";
+static int INVALID_INDEX = -1;
 }
 
 class PlaylistModel::Private
@@ -82,7 +83,7 @@ QVariant PlaylistModel::data(const QModelIndex& index, int role) const
         return QVariant();
     }
 
-    switch(role) {
+    switch (role) {
     case Qt::DisplayRole:
         return d->musicList.at(index.row())->mediaName();
     case MediaCenter::MediaUrlRole:
@@ -106,12 +107,14 @@ int PlaylistModel::rowCount(const QModelIndex& parent) const
 int PlaylistModel::addToPlaylist(const QStringList& urls)
 {
     const int n = rowCount();
-    if (urls.isEmpty()) return n-1;
+    if (urls.isEmpty()) {
+        return n - 1;
+    }
 
-    beginInsertRows(QModelIndex(), n, n+urls.size()-1);
+    beginInsertRows(QModelIndex(), n, n + urls.size() - 1);
 
-    Q_FOREACH(const QString &url, urls) {
-        PlaylistItem *item = new PlaylistItem(url, this);
+    Q_FOREACH(const QString & url, urls) {
+        PlaylistItem* item = new PlaylistItem(url, this);
         connect(item, SIGNAL(updated()), SLOT(playlistItemUpdated()));
         d->musicList.append(item);
     }
@@ -147,9 +150,9 @@ void PlaylistModel::moveItem(int originalIndex, int newIndex)
     if (originalIndex == d->currentIndex) {
         setCurrentIndex(newIndex);
     } else if (originalIndex < d->currentIndex && newIndex >= d->currentIndex) {
-        setCurrentIndex(d->currentIndex-1);
+        setCurrentIndex(d->currentIndex - 1);
     } else if (originalIndex > d->currentIndex && newIndex <= d->currentIndex) {
-        setCurrentIndex(d->currentIndex+1);
+        setCurrentIndex(d->currentIndex + 1);
     }
 }
 
@@ -197,7 +200,7 @@ void PlaylistModel::clearPlaylist()
 
 void PlaylistModel::clearPlaylistWithoutModelReset()
 {
-    Q_FOREACH(PlaylistItem *item, d->musicList) {
+    Q_FOREACH(PlaylistItem * item, d->musicList) {
         item->deleteLater();
     }
 
@@ -218,15 +221,17 @@ void PlaylistModel::setCurrentIndex(int index)
 
 void PlaylistModel::shuffle()
 {
-    if( d->musicList.isEmpty())
+    if (d->musicList.isEmpty()) {
         return;
+    }
 
     QList<PlaylistItem*> musicListShuffle;
-    if( d->currentIndex == INVALID_INDEX )
+    if (d->currentIndex == INVALID_INDEX) {
         d->currentIndex = 0;
+    }
     musicListShuffle.append(d->musicList.takeAt(d->currentIndex));
 
-    while( !d->musicList.isEmpty() ) {
+    while (!d->musicList.isEmpty()) {
         musicListShuffle.append(d->musicList.takeAt(qrand() % d->musicList.size()));
     }
 
@@ -238,7 +243,7 @@ void PlaylistModel::shuffle()
 
 void PlaylistModel::playlistItemUpdated()
 {
-    PlaylistItem *item = qobject_cast<PlaylistItem*>(sender());
+    PlaylistItem* item = qobject_cast<PlaylistItem*>(sender());
 
     int i = d->musicList.indexOf(item);
     emit dataChanged(createIndex(i, 0), createIndex(i, 0));
@@ -261,13 +266,13 @@ void PlaylistModel::loadFromFile(const QString& path)
             QDomNodeList itemList = doc.elementsByTagName("item");
             d->musicList.clear();
             resetCurrentIndex();
-            for (int i=0; i<itemList.count(); i++) {
+            for (int i = 0; i < itemList.count(); i++) {
                 QDomNode node = itemList.at(i);
                 if (node.isNull()) continue;
                 const QString url = node.toElement().attribute("url");
                 if (url.isEmpty()) continue;
 
-                PlaylistItem *item = new PlaylistItem(url, this);
+                PlaylistItem* item = new PlaylistItem(url, this);
                 connect(item, SIGNAL(updated()), SLOT(playlistItemUpdated()));
                 d->musicList.append(item);
             }
@@ -282,7 +287,7 @@ void PlaylistModel::saveToFile(const QString& path) const
         QDomDocument doc;
         QDomElement playlist = doc.createElement("playlist");
 
-        Q_FOREACH (const PlaylistItem *item, d->musicList) {
+        Q_FOREACH(const PlaylistItem * item, d->musicList) {
             QDomElement element = doc.createElement("item");
             element.setAttribute("url", item->mediaUrl());
             playlist.appendChild(element);
@@ -305,7 +310,7 @@ void PlaylistModel::resetCurrentIndex()
     setCurrentIndex(INVALID_INDEX);
 }
 
-bool PlaylistModel::removeCurrentPlaylist(const QString &playlistToSwitchToAfterDeletion)
+bool PlaylistModel::removeCurrentPlaylist(const QString& playlistToSwitchToAfterDeletion)
 {
     if (d->playlistName == DEFAULT_PLAYLIST_NAME) {
         clearPlaylist();
@@ -315,7 +320,7 @@ bool PlaylistModel::removeCurrentPlaylist(const QString &playlistToSwitchToAfter
 
         QFile::remove(playlistFilePath());
         d->playlistName = playlistToSwitchToAfterDeletion;
-        loadFromFile (playlistFilePath());
+        loadFromFile(playlistFilePath());
 
         endResetModel();
         return true;
@@ -338,8 +343,10 @@ void PlaylistModel::setPlaylistName(const QString& name)
     clearPlaylistWithoutModelReset();
     d->playlistName = name;
 
-    loadFromFile (playlistFilePath());
+    loadFromFile(playlistFilePath());
     endResetModel();
+
+    emit playlistNameChanged();
 }
 
 QString PlaylistModel::getPlaylistPath() const
@@ -353,10 +360,10 @@ QString PlaylistModel::getPlaylistPath() const
 
 bool PlaylistModel::processCommandLineArgs(const QStringList* urls)
 {
-    if (urls->size()) {
-        setPlaylistName(DEFAULT_PLAYLIST_NAME);
-        const int indexOfFirstMedia = addToPlaylist(*urls);
 
+    if (urls->size()) {
+        switchToDefaultPlaylist();
+        const int indexOfFirstMedia = addToPlaylist(*urls);
         setCurrentIndex(indexOfFirstMedia);
         return true;
     }
@@ -372,4 +379,9 @@ void PlaylistModel::play(int index)
 QString PlaylistModel::currentUrl() const
 {
     return data(index(currentIndex()), MediaCenter::MediaUrlRole).toString();
+}
+
+void PlaylistModel::switchToDefaultPlaylist()
+{
+    setPlaylistName(DEFAULT_PLAYLIST_NAME);
 }

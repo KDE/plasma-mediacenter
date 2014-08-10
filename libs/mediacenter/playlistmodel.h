@@ -70,10 +70,12 @@ Q_SIGNALS:
     void currentIndexChanged();
     void randomChanged();
     void currentUrlChanged();
+    void playlistNameChanged();
 
 public Q_SLOTS:
     void savePlaylist();
     void resetCurrentIndex();
+    void switchToDefaultPlaylist();
 
 private Q_SLOTS:
     void playlistItemUpdated();

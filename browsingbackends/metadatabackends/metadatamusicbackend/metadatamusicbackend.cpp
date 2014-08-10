@@ -180,11 +180,10 @@ void MetadataMusicBackend::handleButtonClick(const QString& buttonName)
 
         auto model = pmcRuntime()->runtimeObjectAs<PlaylistModel>(PmcRuntime::PlaylistModel);
         if (model) {
+            model->switchToDefaultPlaylist();
+            model->clearPlaylist();
             addAllSongsToPlaylist(model);
-            if (pmcRuntime()) {
-                QObject *playlist = pmcRuntime()->property("playlist").value<QObject*>();
-                QMetaObject::invokeMethod(playlist, "playNext");
-            }
+            model->play(0);
         } else {
             qWarning() << "Failed to get a reference to playlist model";
         }

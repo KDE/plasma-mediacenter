@@ -66,13 +66,16 @@ void MultiplePlaylistModel::createNewPlaylist(const QString& name)
     endInsertRows();
 
     m_playlistModel->setPlaylistName(name);
-    emit currentIndexChanged();
 }
 
 void MultiplePlaylistModel::setPlaylistModelAddress(QObject* model)
 {
-    if (model) {
+    if (model && m_playlistModel != model) {
+        if (m_playlistModel) {
+            m_playlistModel->disconnect(this);
+        }
         m_playlistModel = qobject_cast<PlaylistModel *> (model);
+        connect(m_playlistModel, SIGNAL(playlistNameChanged()), SIGNAL(currentIndexChanged()));
         emit playlistModelAddressChanged();
     }
 }
@@ -86,7 +89,6 @@ void MultiplePlaylistModel::switchToPlaylist(const QString &name)
 {
     if (!name.isEmpty()) {
         m_playlistModel->setPlaylistName(name);
-        emit currentIndexChanged();
     }
 }
 

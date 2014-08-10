@@ -53,7 +53,7 @@ signals:
 
 private:
     QStringList m_multiplePlaylistList;
-    PlaylistModel *m_playlistModel;
+    PlaylistModel *m_playlistModel = nullptr;
 };
 
 #endif  // MULTIPLEPLAYLISTMODEL_H
