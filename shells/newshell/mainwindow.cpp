@@ -229,6 +229,7 @@ bool MainWindow::loadThemeAndPopulateMainscriptAndImagesPath(QString& mainscript
     QStringPrototype getImagesPath = (QStringPrototype) plasmaAdapterLib.resolve("getImagesPath");
 
     if (!plasmaAdapterLib.isLoaded()) {
+        qDebug() << plasmaAdapterLib.errorString();
         return false;
     }
 
