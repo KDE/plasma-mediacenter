@@ -49,6 +49,7 @@ FocusScope {
     signal muteToggle
     signal previousMedia
     signal nextMedia
+    signal inaccessible
 
     MediaCenterElements.SubtitleProvider {
         id: subs
@@ -63,6 +64,8 @@ FocusScope {
 
         onStopped: mediaPlayerRootRect.mediaFinished()
         onStarted: mediaPlayerRootRect.mediaStarted()
+        onError  : mediaPlayerRootRect.inaccessible()
+
         Text {
             anchors {
                 bottom: parent.bottom

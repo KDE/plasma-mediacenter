@@ -228,6 +228,7 @@ Image {
                 onMuteToggle: runtimeData.muteToggle()
                 onPreviousMedia: playlistInstance.playPrevious()
                 onNextMedia: playlistInstance.playNext()
+                onInaccessible: playlistInstance.playNext()
                 onMediaFinished: {
                     if (playlistInstance && playlistInstance.active && totalTime != -1 && !runtimeData.userTrigerredStop) {
                         playlistInstance.playNext();
