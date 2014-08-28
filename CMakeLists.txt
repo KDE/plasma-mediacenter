@@ -1,5 +1,8 @@
 project(PlasmaMediaCenter)
 
+set(PROJECT_VERSION "1.3")
+set(PROJECT_VERSION_MAJOR "${PROJECT_VERSION}")
+
 option(NO_LINK_TO_PLASMA  "Do not link to Plasma at compile-time" OFF)
 
 include(CheckCXXCompilerFlag)
@@ -32,6 +35,8 @@ include_directories(
     ${KDE4WORKSPACE_INCLUDE_DIR}
     libs/
 )
+
+configure_file(config-plasma-mediacenter.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-plasma-mediacenter.h )
 
 add_subdirectory(libs)
 

@@ -19,6 +19,8 @@
 
 #include "mainwindow.h"
 
+#include <config-plasma-mediacenter.h>
+
 #include <mediacenter/backendsmodel.h>
 #include <mediacenter/filterplaylistmodel.h>
 #include <mediacenter/filteredbackendsmodel.h>
@@ -223,7 +225,7 @@ bool MainWindow::loadThemeAndPopulateMainscriptAndImagesPath(QString& mainscript
     typedef void (*MyPrototype)();
     typedef QString (*QStringPrototype)();
 
-    QLibrary plasmaAdapterLib("plasmaadapter.so");
+    QLibrary plasmaAdapterLib(PLASMAADAPTERLIBNAME);
     MyPrototype loadPlasmaTheme = (MyPrototype) plasmaAdapterLib.resolve("loadPlasmaTheme");
     QStringPrototype getMainscriptPath = (QStringPrototype) plasmaAdapterLib.resolve("getMainscriptPath");
     QStringPrototype getImagesPath = (QStringPrototype) plasmaAdapterLib.resolve("getImagesPath");
