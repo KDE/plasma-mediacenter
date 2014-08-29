@@ -55,8 +55,6 @@ include_directories(
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE_ENABLE_EXCEPTIONS}")
 set(CMAKE_AUTOMOC ON)
 
-add_subdirectory(libs)
-
 add_subdirectory(browsingbackends)
 add_subdirectory(plugins)
 add_subdirectory(mediaelements)
