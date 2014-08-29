@@ -1,6 +1,6 @@
 project (plasma-mediacenter)
 
-include_directories(${KDE4_INCLUDES})
+include_directories(${KDE4_INCLUDES} ${CMAKE_BINARY_DIR})
 
 set(QT_USE_QTOPENGL TRUE)
 include(${QT_USE_FILE})
