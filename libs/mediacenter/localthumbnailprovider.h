@@ -20,6 +20,7 @@
 #ifndef THUMBNAILPROVIDER_H
 #define THUMBNAILPROVIDER_H
 
+#include "mediacenter_export.h"
 #include <QtQuick/QQuickImageProvider>
 
 #include <QUrl>
@@ -41,7 +42,7 @@ class KFileItem;
  * 
  * This class inherit from QQuickImageProvider
  */
-class ThumbnailProvider : public QObject, public QQuickImageProvider
+class MEDIACENTER_EXPORT ThumbnailProvider : public QObject, public QQuickImageProvider
 {
 
     Q_OBJECT
