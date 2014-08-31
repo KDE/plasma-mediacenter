@@ -31,9 +31,13 @@
 PmcView::PmcView(PmcCorona *pmccorona, QWindow *parent)
     : PlasmaQuick::View(pmccorona, parent)
 {
+    qDebug() << "Setting title of view";
     setTitle(i18n("Plasma Mediacenter"));
+    qDebug() << "Setting view on corona";
     pmccorona->setView(this);
+    qDebug() << "setting desktop of root context";
     engine()->rootContext()->setContextProperty("desktop", this);
+    qDebug() << "Setting source to Desktop.qml";
     setSource(QUrl::fromLocalFile(pmccorona->package().filePath("views", "Desktop.qml")));
 }
 
