@@ -20,7 +20,7 @@
 #ifndef MEDIAPLAYER2TRACKLIST_H
 #define MEDIAPLAYER2TRACKLIST_H
 
-#include "mediacenter/mediacenter_export.h"
+#include "mediacenter_export.h"
 #include "mediacenter/singletonfactory.h"
 #include "playlistmodel.h"
 

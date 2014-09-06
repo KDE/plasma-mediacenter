@@ -22,7 +22,7 @@
 
 #include <QCoreApplication>
 
-#include <K4AboutData>
+#include <KAboutData>
 #include <KWindowSystem>
 #include <KCmdLineArgs>
 #include <KService>

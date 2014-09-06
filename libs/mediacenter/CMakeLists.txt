@@ -47,11 +47,19 @@ add_library(plasmamediacenter SHARED
 target_link_libraries(plasmamediacenter
     Qt5::Core
     Qt5::Quick
+    Qt5::Xml
+    Qt5::DBus
     KF5::Solid
     KF5::GuiAddons
     KF5::CoreAddons
-    KF5::KDELibs4Support
+    KF5::Service
+    KF5::KIOWidgets
     ${TAGLIB_LIBRARIES}
+)
+
+generate_export_header(plasmamediacenter
+    BASE_NAME mediacenter
+    EXPORT_MACRO_NAME MEDIACENTER_EXPORT
 )
 
 add_library(plasmamediacentertest SHARED

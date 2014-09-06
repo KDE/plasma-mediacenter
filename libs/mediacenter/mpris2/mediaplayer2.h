@@ -18,7 +18,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#include "mediacenter/mediacenter_export.h"
+#include "mediacenter_export.h"
 
 #include <QDBusAbstractAdaptor>
 #include <QStringList>

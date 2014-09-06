@@ -21,7 +21,7 @@
 #ifndef MEDIAPLAYER2PLAYER_H
 #define MEDIAPLAYER2PLAYER_H
 
-#include "mediacenter/mediacenter_export.h"
+#include "mediacenter_export.h"
 
 #include <QDBusAbstractAdaptor>
 #include <QDBusObjectPath>

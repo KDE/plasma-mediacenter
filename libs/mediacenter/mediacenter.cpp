@@ -22,8 +22,6 @@
 #include <QFileInfo>
 #include <QStandardPaths>
 
-#include <KMimeType>
-
 namespace MediaCenter {
 
 QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> &roles)

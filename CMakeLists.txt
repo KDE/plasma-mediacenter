@@ -6,7 +6,7 @@ set(QT_MIN_VERSION "5.2.0")
 find_package(ECM 0.0.8 REQUIRED NO_MODULE)
 include(FeatureSummary)
 include(WriteBasicConfigVersionFile)
-
+include(GenerateExportHeader)
 # where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(ECMMarkNonGuiExecutable)
@@ -29,7 +29,7 @@ else()
         message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
 
-find_package(Qt5 CONFIG REQUIRED COMPONENTS Core Quick Sql Test Declarative)
+find_package(Qt5 CONFIG REQUIRED COMPONENTS Core DBus Xml Quick Sql Test Declarative)
 
 add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
 
