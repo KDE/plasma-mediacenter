@@ -54,6 +54,8 @@ target_link_libraries(plasmamediacenter
     KF5::CoreAddons
     KF5::Service
     KF5::KIOWidgets
+    KF5::WindowSystem
+    KF5::KDELibs4Support
     ${TAGLIB_LIBRARIES}
 )
 
