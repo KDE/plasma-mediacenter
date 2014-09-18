@@ -13,7 +13,7 @@ include(ECMMarkNonGuiExecutable)
 
 include(KDEInstallDirs)
 include(KDECMakeSettings)
-# include(KDECompilerSettings)
+include(KDECompilerSettings)
 
 include(ECMOptionalAddSubdirectory)
 include(ECMInstallIcons)
