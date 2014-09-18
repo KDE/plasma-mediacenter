@@ -24,9 +24,9 @@
 #include "pmccoverartprovider.h"
 #include "pmcimagecache.h"
 #include "singletonfactory.h" 
-#include <id3v2tag.h>
-#include <mpegfile.h>
-#include <attachedpictureframe.h>
+#include <taglib/id3v2tag.h>
+#include <taglib/mpegfile.h>
+#include <taglib/attachedpictureframe.h>
 
 #include <QtCore/QUrl>
 
