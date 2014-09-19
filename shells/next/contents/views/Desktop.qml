@@ -131,6 +131,12 @@ Image {
             hideController(itemToFocus);
     }
 
+    function toggleDashboard()
+    {
+        containment.visible = !containment.visible;
+        pmcPageStack.visible = !pmcPageStack.visible;
+    }
+
     Image {
         id: grad
         source: "../images/gradient.png"
@@ -546,6 +552,7 @@ Image {
             case Qt.Key_MediaNext: playlistInstance.playNext(); break
             case Qt.Key_MediaPrevious: playlistInstance.playPrevious(); break
             case Qt.Key_MediaStop: playlistInstance.playNext(); break
+            case Qt.Key_F12: toggleDashboard(); break
             default: return
         }
         event.accepted = true;
