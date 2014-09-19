@@ -5,6 +5,8 @@ include(ECMAddTests)
 SET(QT_USE_QTMAIN TRUE)
 SET(QT_USE_QTTEST TRUE)
 
+kde_enable_exceptions()
+
 set(CMAKE_MODULE_PATH
     ${CMAKE_MODULE_PATH}
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
