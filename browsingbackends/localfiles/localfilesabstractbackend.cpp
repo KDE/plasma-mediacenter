@@ -133,11 +133,15 @@ bool LocalFilesAbstractBackend::okToLoad() const
 void LocalFilesAbstractBackend::slotStorageSetupDone(Solid::ErrorType error,const QVariant& errorData,const QString& udi)
 {
     //FIXME: Handle errors
+    Q_UNUSED(error);
+    Q_UNUSED(errorData);
+    Q_UNUSED(udi);
     expand(m_placesRow);
 }
 
 void LocalFilesAbstractBackend::handleButtonClick(const QString& buttonName)
 {
+    Q_UNUSED(buttonName);
     /****
      * TODO revisit this logic
     if (buttonName == s_playAllButton) {
