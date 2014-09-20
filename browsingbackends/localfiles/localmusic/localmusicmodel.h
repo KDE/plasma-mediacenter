@@ -24,9 +24,9 @@
 
 #include <QtGui/QImage>
 
-#include <id3v2tag.h>
-#include <mpegfile.h>
-#include <attachedpictureframe.h>
+#include <taglib/id3v2tag.h>
+#include <taglib/mpegfile.h>
+#include <taglib/attachedpictureframe.h>
 
 class LocalMusicModel : public LocalFilesAbstractModel
 {
