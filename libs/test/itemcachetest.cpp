@@ -1,6 +1,6 @@
 /***********************************************************************************
  *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
- *                                                                                 *
+ *   Copyright 2014 Bhushan Shah <bhush94@gmail.com>
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
  *   modify it under the terms of the GNU Lesser General Public                    *
@@ -48,6 +48,24 @@ void ItemCacheTest::shouldCreateArtistIfNotPresentWhenCreatingAlbum()
     auto album = cache.getAlbumByName("Ghost Stories", "Coldplay");
     auto artist = cache.getArtistByName("Coldplay", false);
     QVERIFY2(!artist.isNull(), "Artist should be created when creating album");
+}
+
+void ItemCacheTest::shouldNotCreateNewArtistIfNotPresent()
+{
+    ItemCache cache;
+
+    auto artist = cache.getArtistByName("Coldplay", false);
+    QVERIFY2(artist.isNull(), "Artist should not be created as create is set to false");
+}
+
+void ItemCacheTest::shouldNotCreateNewAlbumOrArtistIfNotPresent()
+{
+    ItemCache cache;
+    auto album = cache.getAlbumByName("Ghost Stories", "Coldplay", false);
+    auto artist = cache.getArtistByName("Coldplay", false);
+
+    QVERIFY2(album.isNull(), "Album should not be created here");
+    QVERIFY2(artist.isNull(), "Artist should not be created here");
 }
 
 #include "itemcachetest.moc"

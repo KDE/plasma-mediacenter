@@ -28,6 +28,8 @@ private Q_SLOTS:
     void shouldInsertAndReturnTheSameArtistNextTime();
     void shouldInsertAndReturnTheSameAlbumNextTime();
     void shouldCreateArtistIfNotPresentWhenCreatingAlbum();
+    void shouldNotCreateNewArtistIfNotPresent();
+    void shouldNotCreateNewAlbumOrArtistIfNotPresent();
 };
 
 #endif // ITEMCACHETEST_H
