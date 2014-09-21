@@ -66,6 +66,7 @@ FocusScope {
                 mediaPictureStrip.state = mediaPictureStrip.state == "hidden" ? "" : "hidden"
                 imageRect.clicked();
             }
+            onDoubleClicked : (mainImage.fillMode == Image.PreserveAspectFit) ? (mainImage.fillMode = Image.PreserveAspectCrop) : (mainImage.fillMode = Image.PreserveAspectFit)
         }
     }
 
