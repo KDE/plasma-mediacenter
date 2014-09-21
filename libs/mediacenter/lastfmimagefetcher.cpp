@@ -83,6 +83,13 @@ void LastFmImageFetcher::processQueue()
 
 void LastFmImageFetcher::gotResponse(QNetworkReply* reply)
 {
+
+    if (reply->error() != QNetworkReply::NoError) {
+        qDebug() << reply->errorString();
+        emit serviceUnavailable();
+        return;
+    }
+
     QDomDocument doc;
     doc.setContent(reply->readAll());
 
