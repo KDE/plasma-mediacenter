@@ -38,6 +38,7 @@ public:
 
 Q_SIGNALS:
     void imageFetched(const QVariant &identifier, const QString &artistName);
+    void serviceUnavailable();
 
 private Q_SLOTS:
     void processQueue();
