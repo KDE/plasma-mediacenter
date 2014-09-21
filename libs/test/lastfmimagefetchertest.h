@@ -40,7 +40,8 @@ private slots:
     void init();
     void cleanup();
 
-    void shouldDownloadImageAndSaveToCache();
+    void shouldDownloadArtistImageAndSaveToCache();
+    void shouldDownloadAlbumImageAndSaveToCache();
 
 private:
     bool waitForSignal(QSignalSpy *spy, int timeout);

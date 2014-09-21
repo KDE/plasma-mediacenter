@@ -44,7 +44,7 @@ void LastFmImageFetcherTest::cleanup()
     // Called after every testfunction
 }
 
-void LastFmImageFetcherTest::shouldDownloadImageAndSaveToCache()
+void LastFmImageFetcherTest::shouldDownloadArtistImageAndSaveToCache()
 {
     LastFmImageFetcher lastFmFetcher;
     QSignalSpy spyInitialize(&lastFmFetcher, SIGNAL(imageFetched(QVariant,QString)));
@@ -65,7 +65,31 @@ void LastFmImageFetcherTest::shouldDownloadImageAndSaveToCache()
     QList<QVariant> arguments = spyInitialize.takeFirst();
     QCOMPARE(arguments.at(0).value<QVariant>().toString(), QString("Myfaveartist"));
     QCOMPARE(arguments.at(1).toString(), QString("shaan"));
-    QVERIFY2(SingletonFactory::instanceFor<PmcImageCache>()->containsImageWithId("artist:shaan"), "Cache did not contain image");
+    QVERIFY2(SingletonFactory::instanceFor<PmcImageCache>()->containsImageWithId("artist:shaan"), "Cache did not contain artist image");
+}
+
+void LastFmImageFetcherTest::shouldDownloadAlbumImageAndSaveToCache()
+{
+    LastFmImageFetcher lastFmFetcher;
+    QSignalSpy spyInitialize(&lastFmFetcher, SIGNAL(imageFetched(QVariant,QString)));
+    QVERIFY2(spyInitialize.isValid(), "Can't listen to signal imageFetched");
+    QSignalSpy spyNetwork(&lastFmFetcher, SIGNAL(serviceUnavailable()));
+    QVERIFY2(spyNetwork.isValid(), "Can't listen to signal serviceUnavailable");
+
+    lastFmFetcher.fetchImage("album", "Myfavealbum", "Cher", "Believe");
+
+    waitForSignal(&spyNetwork, TIMEOUT_FOR_SIGNALS);
+
+    if(spyNetwork.size() >= 1)
+        QSKIP("Network connection unavailable");
+
+    waitForSignal(&spyInitialize, TIMEOUT_FOR_SIGNALS);
+
+    QCOMPARE(spyInitialize.size(), 1);
+    QList<QVariant> arguments = spyInitialize.takeFirst();
+    QCOMPARE(arguments.at(0).value<QVariant>().toString(), QString("Myfavealbum"));
+    QCOMPARE(arguments.at(1).toString(), QString("Believe"));
+    QVERIFY2(SingletonFactory::instanceFor<PmcImageCache>()->containsImageWithId("album:Believe"), "Cache did not contain album image");
 }
 
 bool LastFmImageFetcherTest::waitForSignal(QSignalSpy* spy, int timeout)
