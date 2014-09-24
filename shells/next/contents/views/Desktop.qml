@@ -134,8 +134,7 @@ Image {
 
     function toggleDashboard()
     {
-        containment.visible = !containment.visible;
-        pmcPageStack.visible = !pmcPageStack.visible;
+        containmentParent.opacity = containmentParent.opacity == 0 ? 1 : 0;
     }
 
     Image {
@@ -193,25 +192,40 @@ Image {
         }
     }
 
+    Rectangle {
+        id: containmentParent
+        opacity: 0
+        color: Qt.rgba(0, 0, 0, 0.7)
+        z: 999
+        //FIXME: this is quite weird, with opacity == 0 the containment still takes mouse events
+        visible: opacity > 0
+        anchors.fill: parent
+        Behavior on opacity {
+            NumberAnimation {
+                duration: units.longDuration
+                easing.type: Easing.InOutQuad
+            }
+        }
+        MouseArea {
+            anchors.fill: parent
+        }
+    }
     onContainmentChanged: {
-        //containment.parent = root;
+        containment.parent = containmentParent;
 
         internal.newContainment = containment;
 
         if (containment != null) {
-            // Don't show containment for now, its experimental
-            containment.visible = false;
-        }
-        if (containment != null) {
+            containment.visible = true;
             if (internal.oldContainment != null && internal.oldContainment != containment) {
                 if (internal.newContainment != null) {
                     switchAnim.running = true;
                 }
             } else {
-                containment.anchors.left = root.left;
-                containment.anchors.top = root.top;
-                containment.anchors.right = root.right;
-                containment.anchors.bottom = root.bottom;
+                containment.anchors.left = containmentParent.left;
+                containment.anchors.top = containmentParent.top;
+                containment.anchors.right = containmentParent.right;
+                containment.anchors.bottom = containmentParent.bottom;
                 internal.oldContainment = containment;
             }
         }
@@ -244,7 +258,7 @@ Image {
                     internal.oldContainment.z = 0;
                     internal.oldContainment.x = 0;
                     containment.z = 1;
-                    containment.x = root.width;
+                    containment.x = containmentParent.width;
                 }
             }
         }
@@ -267,10 +281,10 @@ Image {
         ScriptAction {
             script: {
                 if (containment) {
-                    containment.anchors.left = root.left;
-                    containment.anchors.top = root.top;
-                    containment.anchors.right = root.right;
-                    containment.anchors.bottom = root.bottom;
+                    containment.anchors.left = containmentParent.left;
+                    containment.anchors.top = containmentParent.top;
+                    containment.anchors.right = containmentParent.right;
+                    containment.anchors.bottom = containmentParent.bottom;
                     internal.oldContainment.visible = false;
                     internal.oldContainment = containment;
                 }
