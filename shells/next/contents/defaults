@@ -7,7 +7,10 @@ RuntimePlatform=
 RightButton;NoModifier=org.kde.contextmenu
 MidButton;NoModifier=org.kde.paste
 wheel:Vertical;NoModifier=org.kde.switchdesktop
- 
+
+[Theme]
+name=breeze-dark
+
 [Panel]
 Containment=org.kde.panel
 ToolBox=org.kde.paneltoolbox

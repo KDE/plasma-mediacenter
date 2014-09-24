@@ -23,6 +23,7 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.mediacenter 2.0 as PMC
 import org.kde.plasma.mediacenter.elements 2.0 as MediaCenterElements
+import org.kde.plasma.shell 2.0 as Shell
 import "../explorer"
 
 Image {
@@ -280,8 +281,7 @@ Image {
 
     Component.onCompleted: {
         //configure the view behavior
-        desktop.stayBehind = true;
-        desktop.fillScreen = true;
+        desktop.windowType = Shell.Desktop.FullScreen;
         getPmcInterface();
         pmcPageStack.pushAndFocus(getMediaWelcome());
         getPlaylist().visible = false;
@@ -553,6 +553,7 @@ Image {
             case Qt.Key_MediaPrevious: playlistInstance.playPrevious(); break
             case Qt.Key_MediaStop: playlistInstance.playNext(); break
             case Qt.Key_F12: toggleDashboard(); break
+            case Qt.Key_F: if (desktop.windowType == Shell.Desktop.FullScreen) desktop.windowType = Shell.Desktop.Normal; else desktop.windowType = Shell.Desktop.FullScreen;
             default: return
         }
         event.accepted = true;

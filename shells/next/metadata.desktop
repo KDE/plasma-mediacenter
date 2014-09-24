@@ -4,6 +4,7 @@ Encoding=UTF-8
 Keywords=
 Name=Plasma Media Center
 Type=Service
+Icon=applications-multimedia
 
 X-KDE-ServiceTypes=Plasma/Shell
 X-KDE-ParentApp=
