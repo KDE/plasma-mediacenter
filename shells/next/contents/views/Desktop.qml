@@ -567,7 +567,7 @@ Image {
             case Qt.Key_MediaPrevious: playlistInstance.playPrevious(); break
             case Qt.Key_MediaStop: playlistInstance.playNext(); break
             case Qt.Key_F12: toggleDashboard(); break
-            case Qt.Key_F: if (desktop.windowType == Shell.Desktop.FullScreen) desktop.windowType = Shell.Desktop.Normal; else desktop.windowType = Shell.Desktop.FullScreen;
+            case Qt.Key_F: if (desktop.windowType == Shell.Desktop.FullScreen) desktop.windowType = Shell.Desktop.Window; else desktop.windowType = Shell.Desktop.FullScreen;
             default: return
         }
         event.accepted = true;
