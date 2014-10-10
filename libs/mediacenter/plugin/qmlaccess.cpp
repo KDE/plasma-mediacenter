@@ -28,14 +28,18 @@
 QMLAccess::QMLAccess(QObject *parent) : QObject(parent)
 {
     SingletonFactory::instanceFor<MediaLibrary>()->start();
+ 
     MediaSourcesLoader mediasourceLoader;
     mediasourceLoader.load();
+
     m_playlistModel = QSharedPointer<PlaylistModel>(new PlaylistModel(this));
-    //TODO; insert the commandline args here.
+
     QHash< PmcRuntime::RuntimeObjectType, QSharedPointer< QObject > > runtimeObjects;
     runtimeObjects.insert(PmcRuntime::PlaylistModel, m_playlistModel);
+    
     QSharedPointer<PmcRuntime> pmcRuntime = QSharedPointer<PmcRuntime>(new PmcRuntime(runtimeObjects, this));
     m_backendsModel = new BackendsModel(pmcRuntime, this);
+    
     emit backendsModelChanged();
     emit playlistModelChanged();
 }
