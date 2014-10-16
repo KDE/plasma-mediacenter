@@ -21,6 +21,7 @@ import QtQuick.Window 2.0
 
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.kquickcontrolsaddons 2.0
 
 PlasmaCore.ToolTipArea {
     id: root
@@ -47,6 +48,9 @@ PlasmaCore.ToolTipArea {
 
     onFullRepresentationChanged: {
 
+        if (!fullRepresentation) {
+            return;
+        }
         //if the fullRepresentation size was restored to a stored size, or if is dragged from the desktop, restore popup size
         if (fullRepresentation.width > 0) {
             popupWindow.mainItem.width = fullRepresentation.width;
@@ -76,6 +80,7 @@ PlasmaCore.ToolTipArea {
         id: expandedItem
         anchors.fill: parent
         imagePath: "widgets/tabbar"
+        visible: fromCurrentTheme
         prefix: {
             var prefix;
             switch (plasmoid.location) {
@@ -122,7 +127,8 @@ PlasmaCore.ToolTipArea {
 
         property var oldStatus: PlasmaCore.Types.UnknownStatus
 
-        mainItem: Item {
+        //It's a MouseEventListener to get all the events, so the eventfilter will be able to catch them
+        mainItem: MouseEventListener {
             id: appletParent
             Layout.minimumWidth: (fullRepresentation && fullRepresentation.Layout) ? fullRepresentation.Layout.minimumWidth : 0
             Layout.minimumHeight: (fullRepresentation && fullRepresentation.Layout) ? fullRepresentation.Layout.minimumHeight: 0

@@ -43,7 +43,7 @@ Rectangle {
     ConfigModel {
         id: globalAppletConfigModel
         ConfigCategory {
-            name: "Keyboard shortcuts"
+            name: i18nd("plasma_shell_org.kde.plasma.desktop", "Keyboard shortcuts")
             icon: "preferences-desktop-keyboard"
             source: "ConfigurationShortcuts.qml"
         }
@@ -105,7 +105,6 @@ Rectangle {
             main.sourceFile = globalConfigModel.get(0).source
             main.title = globalConfigModel.get(0).name
         }
-        root.restoreConfig()
 //         root.width = mainColumn.implicitWidth
 //         root.height = mainColumn.implicitHeight
     }
@@ -118,8 +117,8 @@ Rectangle {
         id: messageDialog
         icon: StandardIcon.Warning
         property Item delegate
-        title: i18nd("org.kde.plasma.desktop", "Apply Settings")
-        text: i18nd("org.kde.plasma.desktop", "The settings of the current module have changed. Do you want to apply the changes or discard them?")
+        title: i18nd("plasma_shell_org.kde.plasma.desktop", "Apply Settings")
+        text: i18nd("plasma_shell_org.kde.plasma.desktop", "The settings of the current module have changed. Do you want to apply the changes or discard them?")
         standardButtons: StandardButton.Apply | StandardButton.Discard | StandardButton.Cancel
         onApply: {
             applyAction.trigger()
@@ -154,55 +153,33 @@ Rectangle {
                 frameVisible: true
                 Layout.fillHeight: true
                 visible: (configDialog.configModel ? configDialog.configModel.count : 0) + globalConfigModel.count > 1
-                width: visible ? 100 : 0
+                width: visible ? units.gridUnit * 7 : 0
                 implicitWidth: width
-                Flickable {
-                    id: categoriesView
-                    contentWidth: parent.width
-                    contentHeight: categories.height
-                    anchors.fill: parent
+                flickableItem.interactive: false
 
-                    property Item currentItem: categoriesColumn.children[1]
+                Rectangle {
+                    width: categoriesScroll.viewport.width
+                    height: Math.max(categoriesScroll.viewport.height, categories.height)
+                    color: syspal.base
 
-                    Item {
+                    Column {
                         id: categories
                         width: parent.width
-                        height: categoriesColumn.height
+                        height: childrenRect.height
 
-                        Item {
-                            width: parent.width
-                            height: categoriesView.currentItem.height
-                            y: categoriesView.currentItem.y
-                            Rectangle {
-                                color: syspal.highlight
-                                radius: 3
-                                anchors {
-                                    fill: parent
-                                    margins: 2
-                                }
-                            }
-                            Behavior on y {
-                                NumberAnimation {
-                                    duration: units.longDuration
-                                    easing.type: "InOutQuad"
-                                }
-                            }
+                        property Item currentItem: children[1]
+
+                        Repeater {
+                            model: root.isContainment ? globalConfigModel : undefined
+                            delegate: ConfigCategoryDelegate {}
                         }
-                        Column {
-                            id: categoriesColumn
-                            width: parent.width
-                            Repeater {
-                                model: root.isContainment ? globalConfigModel : undefined
-                                delegate: ConfigCategoryDelegate {}
-                            }
-                            Repeater {
-                                model: configDialog.configModel
-                                delegate: ConfigCategoryDelegate {}
-                            }
-                            Repeater {
-                                model: !root.isContainment ? globalConfigModel : undefined
-                                delegate: ConfigCategoryDelegate {}
-                            }
+                        Repeater {
+                            model: configDialog.configModel
+                            delegate: ConfigCategoryDelegate {}
+                        }
+                        Repeater {
+                            model: !root.isContainment ? globalConfigModel : undefined
+                            delegate: ConfigCategoryDelegate {}
                         }
                     }
                 }
@@ -236,12 +213,13 @@ Rectangle {
 
                         height: Math.max((scroll.height - pageTitle.height - parent.spacing), (main.currentItem  ? (main.currentItem.implicitHeight ? main.currentItem.implicitHeight : main.currentItem.childrenRect.height) : 0))
                         width: scroll.viewport.width
-                        clip: true
+
                         property string sourceFile
 
                         onSourceFileChanged: {
 //                             print("Source file changed in flickable" + sourceFile);
                             replace(Qt.resolvedUrl(sourceFile));
+                            root.restoreConfig()
                             for (var prop in currentItem) {
                                 if (prop.indexOf("cfg_") === 0 && prop.indexOf("Changed") > 0 ) {
                                     currentItem[prop].connect(root.settingValueChanged)
@@ -339,19 +317,19 @@ Rectangle {
             Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
             QtControls.Button {
                 iconName: "dialog-ok"
-                text: i18nd("org.kde.plasma.desktop", "Ok")
+                text: i18nd("plasma_shell_org.kde.plasma.desktop", "OK")
                 onClicked: acceptAction.trigger()
             }
             QtControls.Button {
                 id: applyButton
                 enabled: false
                 iconName: "dialog-ok-apply"
-                text: i18nd("org.kde.plasma.desktop", "Apply")
+                text: i18nd("plasma_shell_org.kde.plasma.desktop", "Apply")
                 onClicked: applyAction.trigger()
             }
             QtControls.Button {
                 iconName: "dialog-cancel"
-                text: i18nd("org.kde.plasma.desktop", "Cancel")
+                text: i18nd("plasma_shell_org.kde.plasma.desktop", "Cancel")
                 onClicked: cancelAction.trigger()
             }
         }

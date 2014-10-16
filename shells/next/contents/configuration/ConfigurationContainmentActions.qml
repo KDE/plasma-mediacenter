@@ -24,21 +24,21 @@ Item {
     id: root
 
     signal configurationChanged
-    implicitWidth: childrenRect.width
-    implicitHeight: childrenRect.height
+    implicitWidth: mainColumn.implicitWidth
+    implicitHeight: mainColumn.implicitHeight
 
     property var prettyStrings: {
-        "LeftButton": i18nd("org.kde.plasma.desktop", "Left-Button"),
-        "RightButton": i18nd("org.kde.plasma.desktop", "Right-Button"),
-        "MidButton": i18nd("org.kde.plasma.desktop", "Middle-Button"),
+        "LeftButton": i18nd("plasma_shell_org.kde.plasma.desktop", "Left-Button"),
+        "RightButton": i18nd("plasma_shell_org.kde.plasma.desktop", "Right-Button"),
+        "MidButton": i18nd("plasma_shell_org.kde.plasma.desktop", "Middle-Button"),
 
-        "wheel:Vertical": i18nd("org.kde.plasma.desktop", "Vertical-Scroll"),
-        "wheel:Horizontal": i18nd("org.kde.plasma.desktop", "Horizontal-Scroll"),
+        "wheel:Vertical": i18nd("plasma_shell_org.kde.plasma.desktop", "Vertical-Scroll"),
+        "wheel:Horizontal": i18nd("plasma_shell_org.kde.plasma.desktop", "Horizontal-Scroll"),
 
-        "ShiftModifier": i18nd("org.kde.plasma.desktop", "Shift"),
-        "ControlModifier": i18nd("org.kde.plasma.desktop", "Ctrl"),
-        "AltModifier": i18nd("org.kde.plasma.desktop", "Alt"),
-        "MetaModifier": i18nd("org.kde.plasma.desktop", "Meta")
+        "ShiftModifier": i18nd("plasma_shell_org.kde.plasma.desktop", "Shift"),
+        "ControlModifier": i18nd("plasma_shell_org.kde.plasma.desktop", "Ctrl"),
+        "AltModifier": i18nd("plasma_shell_org.kde.plasma.desktop", "Alt"),
+        "MetaModifier": i18nd("plasma_shell_org.kde.plasma.desktop", "Meta")
     }
 
     function saveConfig() {
@@ -46,6 +46,7 @@ Item {
     }
 
     Column {
+        id: mainColumn
         anchors {
             top: parent.top
             topMargin: 25
@@ -112,7 +113,7 @@ Item {
             }
         }
         MouseEventInputButton {
-            defaultText: i18nd("org.kde.plasma.desktop", "Add Action");
+            defaultText: i18nd("plasma_shell_org.kde.plasma.desktop", "Add Action");
             onEventStringChanged: {
                 configDialog.currentContainmentActionsModel.append(eventString, "org.kde.contextmenu");
                 root.configurationChanged();
