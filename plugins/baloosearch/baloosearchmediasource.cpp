@@ -27,7 +27,6 @@
 
 #include <baloo/query.h>
 #include <baloo/result.h>
-#include <baloo/filefetchjob.h>
 #include <baloo/file.h>
 
 #include <QDebug>

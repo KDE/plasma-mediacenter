@@ -22,10 +22,6 @@
 
 #include <QHash>
 
-namespace Baloo {
-    class File;
-}
-
 class ImageSearchResultHandler : public SearchResultHandler
 {
     Q_OBJECT
@@ -36,9 +32,6 @@ public:
 protected:
     virtual void handleResultImpl(const Baloo::ResultIterator& resultIterator,
                                   const QHash< int, QVariant >& values);
-
-private Q_SLOTS:
-    void slotFileReceived(const Baloo::File& file);
 
 private:
     int m_minimumImageSize;

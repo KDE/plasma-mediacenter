@@ -40,29 +40,23 @@ void AudioSearchResultHandler::handleResultImpl(
 {
     m_mediaLibrary->updateMedia(values);
 
-    Baloo::FileFetchJob* job = new Baloo::FileFetchJob(resultIterator.url().toLocalFile());
-    connect(job, SIGNAL(fileReceived(Baloo::File)),
-            this, SLOT(slotFileReceived(Baloo::File)));
+    Baloo::File file(resultIterator.url().toLocalFile());
+    file.load();
 
-    job->start();
-}
-
-void AudioSearchResultHandler::slotFileReceived(const Baloo::File &file)
-{
-    QHash<int, QVariant> values;
+    QHash<int, QVariant> vals;
 
     const int duration = file.property(KFileMetaData::Property::Duration).toInt();
     if (duration) {
-        values.insert(MediaCenter::DurationRole, duration);
+        vals.insert(MediaCenter::DurationRole, duration);
     }
 
     const QString title = file.property(KFileMetaData::Property::Title).toString();
     if (!title.isEmpty()) {
-        values.insert(Qt::DisplayRole, title);
+        vals.insert(Qt::DisplayRole, title);
     }
 
-    values.insert(MediaCenter::ArtistRole, file.property(KFileMetaData::Property::Artist));
-    values.insert(MediaCenter::AlbumRole, file.property(KFileMetaData::Property::Album));
+    vals.insert(MediaCenter::ArtistRole, file.property(KFileMetaData::Property::Artist));
+    vals.insert(MediaCenter::AlbumRole, file.property(KFileMetaData::Property::Album));
 
-    m_mediaLibrary->updateMedia(QUrl::fromLocalFile(file.url()).toString(), values);
+    m_mediaLibrary->updateMedia(QUrl::fromLocalFile(file.path()).toString(), vals);
 }

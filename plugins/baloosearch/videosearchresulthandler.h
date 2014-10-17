@@ -22,10 +22,6 @@
 
 #include <QVariant>
 
-namespace Baloo {
-class File;
-}
-
 class VideoSearchResultHandler : public SearchResultHandler
 {
     Q_OBJECT
@@ -36,9 +32,6 @@ public:
 protected:
     virtual void handleResultImpl(const Baloo::ResultIterator& resultIterator,
                                   const QHash< int, QVariant >& values);
-
-private Q_SLOTS:
-    void slotFileReceived(const Baloo::File &file);
 };
 
 #endif // VIDEOSEARCHRESULTHANDLER_H

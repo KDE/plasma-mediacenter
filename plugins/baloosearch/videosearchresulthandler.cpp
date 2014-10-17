@@ -20,7 +20,6 @@
 #include <mediacenter/medialibrary.h>
 #include <mediacenter/mediacenter.h>
 
-#include <baloo/filefetchjob.h>
 #include <baloo/file.h>
 #include <baloo/resultiterator.h>
 
@@ -44,21 +43,15 @@ void VideoSearchResultHandler::handleResultImpl(
 {
     m_mediaLibrary->updateMedia(values);
 
-    Baloo::FileFetchJob* job = new Baloo::FileFetchJob(resultIterator.url().toLocalFile());
-    connect(job, SIGNAL(fileReceived(Baloo::File)),
-            this, SLOT(slotFileReceived(Baloo::File)));
+    Baloo::File file(resultIterator.url().toLocalFile());
+    file.load();
 
-    job->start();
-}
-
-void VideoSearchResultHandler::slotFileReceived(const Baloo::File& file)
-{
-    QHash<int, QVariant> values;
+    QHash<int, QVariant> vals;
 
     const int duration = file.property(KFileMetaData::Property::Duration).toInt();
     if (duration) {
-        values.insert(MediaCenter::DurationRole, duration);
+        vals.insert(MediaCenter::DurationRole, duration);
     }
 
-    m_mediaLibrary->updateMedia(QUrl::fromLocalFile(file.url()).toString(), values);
+    m_mediaLibrary->updateMedia(QUrl::fromLocalFile(file.path()).toString(), vals);
 }

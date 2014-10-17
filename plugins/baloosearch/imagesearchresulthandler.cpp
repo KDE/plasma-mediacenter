@@ -22,7 +22,6 @@
 #include <mediacenter/mediacenter.h>
 
 #include <baloo/resultiterator.h>
-#include <baloo/filefetchjob.h>
 #include <baloo/file.h>
 
 #include <QDateTime>
@@ -51,16 +50,9 @@ void ImageSearchResultHandler::handleResultImpl(
     //photos appear before junk images in the browser.
     m_initialValuesByUrl[fileUrl].remove(MediaCenter::CreatedAtRole);
 
-    Baloo::FileFetchJob* job = new Baloo::FileFetchJob(resultIterator.url().toLocalFile());
-    connect(job, SIGNAL(fileReceived(Baloo::File)),
-            this, SLOT(slotFileReceived(Baloo::File)));
+    Baloo::File file(resultIterator.url().toLocalFile());
+    file.load();
 
-    job->start();
-}
-
-void ImageSearchResultHandler::slotFileReceived(const Baloo::File &file)
-{
-    const QString fileUrl = file.url();
     //Properties that signify the actual date/time the image was taken by the
     //camera
     QList<KFileMetaData::Property::Property> properties;
@@ -82,13 +74,13 @@ void ImageSearchResultHandler::slotFileReceived(const Baloo::File &file)
         }
     }
 
-    QHash<int, QVariant> values;
+    QHash<int, QVariant> vals;
     if (created.isValid()) {
-        values.insert(MediaCenter::CreatedAtRole, created);
+        vals.insert(MediaCenter::CreatedAtRole, created);
     }
 
-    values.unite(m_initialValuesByUrl.take(fileUrl));
+    vals.unite(m_initialValuesByUrl.take(fileUrl));
 
-    m_mediaLibrary->updateMedia(QUrl::fromLocalFile(file.url()).toString(),
-                                values);
+    m_mediaLibrary->updateMedia(QUrl::fromLocalFile(file.path()).toString(),
+                                vals);
 }

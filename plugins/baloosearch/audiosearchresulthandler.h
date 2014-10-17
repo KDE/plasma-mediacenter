@@ -22,10 +22,6 @@
 
 #include <QVariant>
 
-namespace Baloo {
-class File;
-}
-
 class MediaLibrary;
 
 class AudioSearchResultHandler : public SearchResultHandler
@@ -38,9 +34,6 @@ public:
 protected:
     virtual void handleResultImpl(const Baloo::ResultIterator& resultIterator,
                                   const QHash< int, QVariant >& values);
-
-private Q_SLOTS:
-    void slotFileReceived(const Baloo::File& file);
 };
 
 #endif // AUDIOSEARCHRESULTHANDLER_H
