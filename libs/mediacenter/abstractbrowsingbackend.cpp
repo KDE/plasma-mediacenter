@@ -27,7 +27,6 @@
 #include <KServiceTypeTrader>
 
 #include <QAbstractItemModel>
-#include <QDeclarativeEngine>
 
 using namespace MediaCenter;
 
