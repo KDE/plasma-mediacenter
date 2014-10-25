@@ -37,13 +37,11 @@ public:
     AbstractBrowsingBackendPrivate(AbstractBrowsingBackend *q) :
     q(q),
     cfInterface(false),
-    declarativeEngine(nullptr),
     hasInitialized(false)
     {}
 
     AbstractBrowsingBackend *q;
     bool cfInterface;
-    QDeclarativeEngine *declarativeEngine;
     bool hasInitialized;
     QString name;
     QString mediaBrowserSidePanelText;
