@@ -38,8 +38,8 @@ void SearchResultHandler::handleResult(Baloo::ResultIterator& resultIterator)
     while (resultIterator.next()) {
         //First collect common information
         QHash<int, QVariant> values;
-        const QUrl url = resultIterator.url();
-        QString localUrl = url.toLocalFile();
+        QString localUrl = resultIterator.filePath();
+        const QUrl url = QUrl::fromLocalFile(localUrl);
 
         values.insert(Qt::DisplayRole, QVariant(url.fileName()));
         values.insert(Qt::DecorationRole, QVariant(QMimeDatabase().mimeTypeForFile(localUrl).iconName()));

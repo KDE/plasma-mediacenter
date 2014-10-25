@@ -43,7 +43,7 @@ void VideoSearchResultHandler::handleResultImpl(
 {
     m_mediaLibrary->updateMedia(values);
 
-    Baloo::File file(resultIterator.url().toLocalFile());
+    Baloo::File file(resultIterator.filePath());
     file.load();
 
     QHash<int, QVariant> vals;

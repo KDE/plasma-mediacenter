@@ -50,7 +50,7 @@ void ImageSearchResultHandler::handleResultImpl(
     //photos appear before junk images in the browser.
     m_initialValuesByUrl[fileUrl].remove(MediaCenter::CreatedAtRole);
 
-    Baloo::File file(resultIterator.url().toLocalFile());
+    Baloo::File file(resultIterator.filePath());
     file.load();
 
     //Properties that signify the actual date/time the image was taken by the
