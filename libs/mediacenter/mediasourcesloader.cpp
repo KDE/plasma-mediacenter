@@ -23,6 +23,7 @@
 
 #include "singletonfactory.h"
 
+#include <KPluginTrader>
 #include <KPluginInfo>
 #include <QDebug>
 #include <QApplication>
@@ -34,30 +35,12 @@ MediaSourcesLoader::MediaSourcesLoader(QObject* parent): QObject(parent)
 
 void MediaSourcesLoader::load()
 {
-    KPluginInfo::List pluginInfo = MediaCenter::AbstractMediaSource::availableMediaSourcePlugins();
+    KPluginInfo::List pluginInfo = KPluginTrader::self()->query("plasma/mediacenter/mediasources");
+    if (pluginInfo.isEmpty()) {
+        qWarning() << "no available media sources";
+    }
 
     Q_FOREACH (const KPluginInfo &info, pluginInfo) {
-        /**
-        KService::Ptr service = info.service();
-        if (!service) {
-            qDebug() << "Could not get the service for media source " << info.name();
-            continue;
-        }
-        const QString key = service->library();
-        QString errorMessage;
-
-        MediaCenter::AbstractMediaSource *mediaSource =
-        service->createInstance<MediaCenter::AbstractMediaSource>(
-            0, QVariantList() << service->storageId(), &errorMessage);
-
-        if (mediaSource) {
-            mediaSource->setMediaLibrary(SingletonFactory::instanceFor<MediaLibrary>());
-            mediaSource->start();
-            connect(QApplication::instance(), SIGNAL(destroyed(QObject*)), mediaSource, SLOT(quit()));
-            qDebug() << "created instance for media source" << info.name();
-        } else {
-            qDebug() << "Could not create a instance for the media source " << info.name() << errorMessage;
-        }*/
         KPluginLoader loader(info.libraryPath());
         KPluginFactory* factory = loader.factory();
 

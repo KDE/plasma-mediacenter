@@ -22,7 +22,6 @@
 
 #include <QtCore/QThread>
 #include <KPluginInfo>
-#include <KPluginTrader>
 
 #include "mediacenter_export.h"
 
@@ -37,7 +36,6 @@ public:
     ~AbstractMediaSource();
 
     void setMediaLibrary(MediaLibrary *mediaLibrary);
-    static KPluginInfo::List availableMediaSourcePlugins();
 
 protected:
     MediaLibrary *mediaLibrary() const;

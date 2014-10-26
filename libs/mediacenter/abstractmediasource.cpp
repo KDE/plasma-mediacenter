@@ -40,15 +40,6 @@ AbstractMediaSource::~AbstractMediaSource()
 
 }
 
-KPluginInfo::List AbstractMediaSource::availableMediaSourcePlugins()
-{
-    KPluginInfo::List plugins = KPluginTrader::self()->query("plasma/mediacenter/mediasources");
-    if (plugins.isEmpty()) {
-        qWarning() << "no available media sources";
-    }
-    return plugins;
-}
-
 void AbstractMediaSource::setMediaLibrary(MediaLibrary* mediaLibrary)
 {
     d->mediaLibrary = mediaLibrary;

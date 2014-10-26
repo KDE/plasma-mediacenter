@@ -20,6 +20,7 @@
 #include "abstractbrowsingbackend.h"
 
 #include <QDebug>
+#include <KPluginTrader>
 
 bool pluginLessThan(const KPluginInfo &lh, const KPluginInfo &rh)
 {
@@ -40,7 +41,11 @@ BackendsModel::BackendsModel(QWeakPointer<PmcRuntime> pmcRuntime, QObject* paren
     , d(new Private)
 {
     d->pmcRuntime = pmcRuntime;
-    d->backendInfo = MediaCenter::AbstractBrowsingBackend::availableBackends();
+    d->backendInfo = KPluginTrader::self()->query("plasma/mediacenter/browsingbackends");
+    if (d->backendInfo.isEmpty()) {
+        qWarning() << "no available browsing backend";
+    }
+
     qStableSort(d->backendInfo.begin(), d->backendInfo.end(), pluginLessThan);
 
     QHash<int, QByteArray> roles = roleNames();

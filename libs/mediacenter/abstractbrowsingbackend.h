@@ -102,12 +102,6 @@ public:
     Q_INVOKABLE bool init();
 
     /**
-     * Convenience function that returns the list of
-     * available browsing backends found.
-     */
-    static KPluginInfo::List availableBackends();
-
-    /**
      * This function is used by Media Browser to go to one level
      * up in the browsing structure. Must be reimplemented
      *

@@ -23,7 +23,6 @@
 #include <KService>
 #include <KPluginInfo>
 #include <QDebug>
-#include <KPluginTrader>
 
 #include <QAbstractItemModel>
 
@@ -112,15 +111,6 @@ QAbstractItemModel* AbstractBrowsingBackend::model()
         return qobject_cast<QAbstractItemModel*>(qobject_cast<ModelMetadata*>(model)->model());
     }
     return 0;
-}
-
-KPluginInfo::List AbstractBrowsingBackend::availableBackends()
-{
-    KPluginInfo::List plugins = KPluginTrader::self()->query("plasma/mediacenter/browsingbackends");
-    if (plugins.isEmpty()) {
-        qWarning() << "no available browsing backend";
-    }
-    return plugins;
 }
 
 bool AbstractBrowsingBackend::goOneLevelUp()
