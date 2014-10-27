@@ -57,7 +57,7 @@ void LastFmImageFetcherTest::shouldDownloadArtistImageAndSaveToCache()
     waitForSignal(&spyNetwork, TIMEOUT_FOR_SIGNALS);
 
     if(spyNetwork.size() >= 1)
-        QSKIP("Network connection unavailable");
+        QSKIP("Network connection unavailable", SkipAll);
 
     waitForSignal(&spyInitialize, TIMEOUT_FOR_SIGNALS);
 
