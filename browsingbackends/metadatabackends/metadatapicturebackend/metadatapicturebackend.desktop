@@ -61,6 +61,7 @@ Comment[zh_TW]=看您的裝置上的所有圖片
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 
+X-KDE-PluginInfo-Name=allpictures
 X-KDE-PluginInfo-Author=Sinny Kumari
 X-KDE-PluginInfo-Email=ksinny@gmail.com
 X-KDE-PluginInfo-Version=1.0

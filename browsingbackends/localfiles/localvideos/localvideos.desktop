@@ -60,6 +60,7 @@ Comment[zh_TW]=瀏覽您的影片裝置的資料夾
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 
+X-KDE-PluginInfo-Name=localvideos
 X-KDE-PluginInfo-Author=Alessandro Diaferia
 X-KDE-PluginInfo-Email=alediaferia@gmail.com
 X-KDE-PluginInfo-Version=1.0

@@ -65,6 +65,7 @@ Comment[zh_TW]=從 flickr 中發現您指定標籤的圖片
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 
+X-KDE-PluginInfo-Name=flickrbackend
 X-KDE-PluginInfo-Author=Sinny Kumari
 X-KDE-PluginInfo-Email=ksinny@gmail.com
 X-KDE-PluginInfo-Version=1.0

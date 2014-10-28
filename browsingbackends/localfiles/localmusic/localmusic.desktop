@@ -60,6 +60,7 @@ Comment[zh_TW]=瀏覽您的音樂裝置的資料夾
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 
+X-KDE-PluginInfo-Name=localmusic
 X-KDE-PluginInfo-Author=Alessandro Diaferia
 X-KDE-PluginInfo-Email=alediaferia@gmail.com
 X-KDE-PluginInfo-Version=1.0

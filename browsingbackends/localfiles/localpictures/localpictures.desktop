@@ -60,6 +60,7 @@ Comment[zh_TW]=瀏覽您的圖片裝置的資料夾
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 
+X-KDE-PluginInfo-Name=localpictures
 X-KDE-PluginInfo-Author=Alessandro Diaferia
 X-KDE-PluginInfo-Email=alediaferia@gmail.com
 X-KDE-PluginInfo-Version=1.0

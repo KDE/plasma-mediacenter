@@ -58,6 +58,7 @@ Comment[zh_TW]=觀看 Youtube 的影片
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 
+X-KDE-PluginInfo-Name=youtubebackend
 X-KDE-PluginInfo-Author=Alessandro Diaferia
 X-KDE-PluginInfo-Email=alediaferia@gmail.com
 X-KDE-PluginInfo-Version=1.0

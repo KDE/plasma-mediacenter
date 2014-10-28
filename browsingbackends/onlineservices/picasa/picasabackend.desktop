@@ -63,6 +63,8 @@ Comment[x-test]=xxSee pictures from your Picasa accountxx
 Comment[zh_TW]=從您的 Picasa 帳號中觀看圖片
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
+
+X-KDE-PluginInfo-Name=picasabackend
 X-KDE-PluginInfo-Author=Sinny Kumari
 X-KDE-PluginInfo-Email=ksinny@gmail.com
 X-KDE-PluginInfo-Version=1.0

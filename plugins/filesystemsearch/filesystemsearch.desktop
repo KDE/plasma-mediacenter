@@ -48,6 +48,7 @@ Comment[zh_TW]=從您的本地端檔案取得媒體
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/MediaSource
 
+X-KDE-PluginInfo-Name=filsystemsearch
 X-KDE-PluginInfo-Author=Shantanu Tushar
 X-KDE-PluginInfo-Email=shantanu@kde.org
 X-KDE-PluginInfo-Version=1.0

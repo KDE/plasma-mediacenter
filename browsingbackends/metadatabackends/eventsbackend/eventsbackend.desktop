@@ -42,6 +42,7 @@ Comment[x-test]=xxOrganize your photos for events and trips you have takenxx
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 
+X-KDE-PluginInfo-Name=eventsbackend
 X-KDE-PluginInfo-Author=Shantanu Tushar
 X-KDE-PluginInfo-Email=shantanu@kde.org
 X-KDE-PluginInfo-Version=1.0
