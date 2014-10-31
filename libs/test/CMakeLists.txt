@@ -11,7 +11,11 @@ set(CMAKE_MODULE_PATH
     ${CMAKE_MODULE_PATH}
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
-find_package(mockcpp REQUIRED)
+find_package(mockcpp)
+
+if(NOT mockcpp_FOUND)
+    return()
+endif()
 
 include_directories(
     ${mockcpp_INCLUDE_DIRS}
