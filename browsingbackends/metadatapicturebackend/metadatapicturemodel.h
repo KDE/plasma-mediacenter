@@ -20,7 +20,7 @@
 #ifndef METADATAPICTUREMODEL_H
 #define METADATAPICTUREMODEL_H
 
-#include "mediacenter/pmcmetadatamodel.h"
+#include "pmcmetadatamodel.h"
 
 class MetadataPictureModel : public PmcMetadataModel
 {

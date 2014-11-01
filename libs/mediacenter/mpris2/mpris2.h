@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 #include "mediacenter_export.h"
-#include "mediacenter/playlistmodel.h"
+#include "playlistmodel.h"
 
 #include <QObject>
 #include <QSharedPointer>

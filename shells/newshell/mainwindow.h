@@ -26,7 +26,7 @@
 
 #include <QDeclarativeView>
 #include <QtCore/QTimer>
-#include <mediacenter/playlistmodel.h>
+#include <playlistmodel.h>
 #include "application.h"
 
 class PmcRuntime;

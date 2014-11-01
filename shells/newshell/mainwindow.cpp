@@ -21,17 +21,17 @@
 
 #include <config-plasma-mediacenter.h>
 
-#include <mediacenter/backendsmodel.h>
-#include <mediacenter/filterplaylistmodel.h>
-#include <mediacenter/filteredbackendsmodel.h>
-#include <mediacenter/subtitleprovider.h>
-#include <mediacenter/pmccoverartprovider.h>
-#include <mediacenter/objectpair.h>
-#include <mediacenter/settings.h>
-#include <mediacenter/multipleplaylistmodel.h>
-#include <mediacenter/mpris2/mediaplayer2player.h>
-#include <mediacenter/mpris2/mpris2.h>
-#include <mediacenter/pmcruntime.h>
+#include <backendsmodel.h>
+#include <filterplaylistmodel.h>
+#include <filteredbackendsmodel.h>
+#include <subtitleprovider.h>
+#include <pmccoverartprovider.h>
+#include <objectpair.h>
+#include <settings.h>
+#include <multipleplaylistmodel.h>
+#include <mpris2/mediaplayer2player.h>
+#include <mpris2/mpris2.h>
+#include <pmcruntime.h>
 
 #ifndef NO_LINK_TO_PLASMA
 #include <Plasma/Package>

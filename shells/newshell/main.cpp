@@ -17,9 +17,9 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#include <mediacenter/medialibrary.h>
-#include <mediacenter/mediasourcesloader.h>
-#include <mediacenter/singletonfactory.h>
+#include <medialibrary.h>
+#include <mediasourcesloader.h>
+#include <singletonfactory.h>
 
 #include <KDE/KApplication>
 #include <KDE/KAboutData>

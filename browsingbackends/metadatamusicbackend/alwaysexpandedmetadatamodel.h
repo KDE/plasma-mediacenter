@@ -20,8 +20,8 @@
 #ifndef ALWAYSEXPANDEDMETADATAMODEL_H
 #define ALWAYSEXPANDEDMETADATAMODEL_H
 
-#include "mediacenter/pmcmetadatamodel.h"
-#include "mediacenter/modelmetadata.h"
+#include "pmcmetadatamodel.h"
+#include "modelmetadata.h"
 
 class AlwaysExpandedMetadataModel : public PmcMetadataModel
 {

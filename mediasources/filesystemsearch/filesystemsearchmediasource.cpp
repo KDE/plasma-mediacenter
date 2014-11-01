@@ -17,9 +17,9 @@
 
 #include "filesystemsearchmediasource.h"
 
-#include <mediacenter/singletonfactory.h>
-#include <mediacenter/medialibrary.h>
-#include <mediacenter/mediacenter.h>
+#include <singletonfactory.h>
+#include <medialibrary.h>
+#include <mediacenter.h>
 
 #include <KMimeType>
 

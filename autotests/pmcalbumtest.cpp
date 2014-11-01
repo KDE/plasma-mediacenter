@@ -17,10 +17,10 @@
  ***********************************************************************************/
 
 #include "pmcalbumtest.h"
-#include <mediacenter/album.h>
-#include <mediacenter/pmcalbum.h>
-#include <mediacenter/media.h>
-#include <mediacenter/artist.h>
+#include <album.h>
+#include <pmcalbum.h>
+#include <media.h>
+#include <artist.h>
 
 #include <qtest.h>
 

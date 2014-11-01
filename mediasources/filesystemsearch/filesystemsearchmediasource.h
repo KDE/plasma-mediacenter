@@ -18,7 +18,7 @@
 #ifndef FILESYSTEMSEARCHMEDIASOURCE_H
 #define FILESYSTEMSEARCHMEDIASOURCE_H
 
-#include <mediacenter/abstractmediasource.h>
+#include <abstractmediasource.h>
 
 #include <QMutex>
 

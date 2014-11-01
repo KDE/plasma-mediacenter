@@ -20,7 +20,7 @@
 
 #include "flickrmodel.h"
 
-#include <mediacenter/mediacenter.h>
+#include <mediacenter.h>
 
 #include <QUrl>
 #include <QUrlQuery>

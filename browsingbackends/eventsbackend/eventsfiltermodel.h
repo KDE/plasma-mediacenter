@@ -19,7 +19,7 @@
 #ifndef EVENTSFILTERMODEL_H
 #define EVENTSFILTERMODEL_H
 
-#include <mediacenter/filtermediamodel.h>
+#include <filtermediamodel.h>
 #include <QDate>
 
 class EventsFilterModel : public FilterMediaModel

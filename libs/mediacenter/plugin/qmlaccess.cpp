@@ -21,7 +21,7 @@
 #include "qmlaccess.h"
 #include <QSharedPointer>
 #include <QWeakPointer>
-#include "mediacenter/medialibrary.h"
+#include "medialibrary.h"
 
 #include <QTimer>
 

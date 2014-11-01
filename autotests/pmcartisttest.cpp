@@ -17,8 +17,8 @@
  ***********************************************************************************/
 
 #include "pmcartisttest.h"
-#include <mediacenter/artist.h>
-#include <mediacenter/pmcartist.h>
+#include <artist.h>
+#include <pmcartist.h>
 
 #include <qtest.h>
 

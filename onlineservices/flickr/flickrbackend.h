@@ -21,7 +21,7 @@
 #ifndef FLICKRBACKEND_H
 #define FLICKRBACKEND_H
 
-#include <mediacenter/abstractbrowsingbackend.h>
+#include <abstractbrowsingbackend.h>
 
 class FlickrBackend : public MediaCenter::AbstractBrowsingBackend
 {

@@ -19,7 +19,7 @@
 
 #include "categoriesmodel.h"
 
-#include "mediacenter/mediacenter.h"
+#include "mediacenter.h"
 
 CategoriesModel::CategoriesModel(QObject* parent): QAbstractItemModel(parent)
 {

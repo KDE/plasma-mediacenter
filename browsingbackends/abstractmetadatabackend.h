@@ -20,7 +20,7 @@
 #ifndef ABSTRACTMETADATABACKEND_H
 #define ABSTRACTMETADATABACKEND_H
 
-#include <mediacenter/abstractbrowsingbackend.h>
+#include <abstractbrowsingbackend.h>
 
 class PmcMetadataModel;
 class AbstractMetadataBackend : public MediaCenter::AbstractBrowsingBackend

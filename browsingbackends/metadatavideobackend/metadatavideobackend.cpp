@@ -23,7 +23,7 @@
 #include "metadatavideobackend.h"
 #include "metadatavideomodel.h"
 
-#include "mediacenter/filtermediamodel.h"
+#include "filtermediamodel.h"
 
 #include <QDebug>
 

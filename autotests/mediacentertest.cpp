@@ -17,7 +17,7 @@
  ***********************************************************************************/
 
 #include "mediacentertest.h"
-#include <mediacenter/mediacenter.h>
+#include <mediacenter.h>
 
 #include <qtest.h>
 #include <QStandardPaths>

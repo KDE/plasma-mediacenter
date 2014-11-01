@@ -16,10 +16,10 @@
  ***********************************************************************************/
 
 #include "imagesearchresulthandler.h"
-#include <mediacenter/settings.h>
+#include <settings.h>
 
-#include <mediacenter/medialibrary.h>
-#include <mediacenter/mediacenter.h>
+#include <medialibrary.h>
+#include <mediacenter.h>
 
 #include <baloo/resultiterator.h>
 #include <baloo/file.h>

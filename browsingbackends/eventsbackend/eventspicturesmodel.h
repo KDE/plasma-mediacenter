@@ -19,7 +19,7 @@
 #ifndef EVENTSPICTURESMODEL_H
 #define EVENTSPICTURESMODEL_H
 
-#include <mediacenter/pmcmetadatamodel.h>
+#include <pmcmetadatamodel.h>
 
 class EventsPicturesModel : public PmcMetadataModel
 {

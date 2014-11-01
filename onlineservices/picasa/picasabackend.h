@@ -22,7 +22,7 @@
 #ifndef PICASABACKEND_H
 #define PICASABACKEND_H
 
-#include <mediacenter/abstractbrowsingbackend.h>
+#include <abstractbrowsingbackend.h>
 
 /**
  * @class PicasaBackend

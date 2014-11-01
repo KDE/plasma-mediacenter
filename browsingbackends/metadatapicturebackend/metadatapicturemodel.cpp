@@ -19,8 +19,8 @@
 
 
 #include "metadatapicturemodel.h"
-#include "mediacenter/mediacenter.h"
-#include "mediacenter/abstractbrowsingbackend.h"
+#include "mediacenter.h"
+#include "abstractbrowsingbackend.h"
 
 #include <QtGui/QIcon>
 #include <QEvent>

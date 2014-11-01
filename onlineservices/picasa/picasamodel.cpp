@@ -20,7 +20,7 @@
 
 #include "picasamodel.h"
 
-#include <mediacenter/mediacenter.h>
+#include <mediacenter.h>
 // Qt
 #include <QDomDocument>
 #include <QDomNodeList>
