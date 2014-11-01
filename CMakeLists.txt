@@ -65,6 +65,7 @@ add_subdirectory(libs)
 add_subdirectory(shells)
 add_subdirectory(images)
 add_subdirectory(tests)
+add_subdirectory(autotests)
 #
 # include(MacroOptionalAddSubdirectory)
 # macro_optional_add_subdirectory( po )
