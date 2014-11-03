@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright 2014 Sujith Haridasan <sujith.haridasan@kdemail.net>        *
- *   Copyright 2014 Ashish Madeti <ashishmadeti@gmail.com>                 *
+ *   Copyright 2009 by Onur-Hayri Bakici <thehayro@gmail.com               *
+ *   Copyright 2012 Sinny Kumari <ksinny@gmail.com>                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,35 +18,58 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#include "mediacenter_export.h"
-#include "playlistmodel.h"
+#ifndef FLICKRMODEL_H
+#define FLICKRMODEL_H
 
-#include <QObject>
-#include <QSharedPointer>
-#include <QVariantMap>
+#include <QAbstractListModel>
 
-class MediaPlayer2;
-class MediaPlayer2Player;
-class MediaPlayer2Tracklist;
+#include <modelmetadata.h>
 
-class MEDIACENTER_EXPORT Mpris2 : public QObject
+namespace KIO {
+    class Job;
+}
+
+class KJob;
+
+class FlickrModel : public QAbstractListModel
 {
     Q_OBJECT
-
+    Q_PROPERTY(QObject* metadata READ metadata)
 public:
-    explicit Mpris2(QSharedPointer<PlaylistModel> playlistModel, QObject* parent = 0);
-    ~Mpris2();
+    explicit FlickrModel (QObject* parent = 0);
+    ~FlickrModel();
+    void query(const QString &searchTerm);
 
-    MediaPlayer2Player* getMediaPlayer2Player();
-    QString getCurrentTrackId();
-    QVariantMap getMetadataOf(const QString& url);
-    QVariantMap getMetadataOf(const QString& url, const QString& trackId);
+    virtual QVariant data (const QModelIndex& index, int role = Qt::DisplayRole) const;
+    virtual int rowCount (const QModelIndex& parent = QModelIndex()) const;
 
-signals:
-    void raisePMC() const;
+    ModelMetadata *metadata();
+
+protected slots:
+    void flickrDataReady(KIO::Job *job, const QByteArray &data);
+    void parseResults(KJob *job);
 
 private:
-    MediaPlayer2 *m_mp2;
-    MediaPlayer2Player *m_mp2p;
-    MediaPlayer2Tracklist *m_mp2tl;
+    struct Photo;
+    QHash<KIO::Job*, QString> m_queries;
+    QHash<KIO::Job*, QString> m_datas;
+    QList<Photo> m_photos;
+    ModelMetadata m_metadata;
+
+    void listPhotos(KJob *job);
 };
+
+struct FlickrModel::Photo
+{
+public:
+    QString title;
+    QString id;
+    QString owner;
+    QString secret;
+    QString farmID;
+    QString serverID;
+    QString previewImgLink;
+    QString originalImgLink;
+};
+
+#endif // FLICKRMODEL_H

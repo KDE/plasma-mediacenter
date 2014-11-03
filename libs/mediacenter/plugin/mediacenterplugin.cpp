@@ -20,17 +20,17 @@
 
 #include "mediacenterplugin.h"
 
-#include "mediacenter/filteredbackendsmodel.h"
-#include "mediacenter/subtitleprovider.h"
-#include "mediacenter/filterplaylistmodel.h"
-#include "mediacenter/multipleplaylistmodel.h"
-#include "mediacenter/objectpair.h"
-#include "mediacenter/settings.h"
-#include "mediacenter/mediasourcesloader.h"
-#include "mediacenter/medialibrary.h"
-#include "mediacenter/runtimedata.h"
-#include "mediacenter/pmccoverartprovider.h"
-#include "mediacenter/playlistmodel.h"
+#include "filteredbackendsmodel.h"
+#include "subtitleprovider.h"
+#include "filterplaylistmodel.h"
+#include "multipleplaylistmodel.h"
+#include "objectpair.h"
+#include "settings.h"
+#include "mediasourcesloader.h"
+#include "medialibrary.h"
+#include "runtimedata.h"
+#include "pmccoverartprovider.h"
+#include "playlistmodel.h"
 
 #include "qmlaccess.h"
 

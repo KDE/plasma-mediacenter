@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright 2014 Sujith Haridasan <sujith.haridasan@kdemail.net>        *
- *   Copyright 2014 Ashish Madeti <ashishmadeti@gmail.com>                 *
+ *   Copyright 2009 by Onur-Hayri Bakici <thehayro@gmail.com               *
+ *   Copyright 2012 Sinny Kumari <ksinny@gmail.com>                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,35 +18,23 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#include "mediacenter_export.h"
-#include "playlistmodel.h"
+#ifndef FLICKRBACKEND_H
+#define FLICKRBACKEND_H
 
-#include <QObject>
-#include <QSharedPointer>
-#include <QVariantMap>
+#include <abstractbrowsingbackend.h>
 
-class MediaPlayer2;
-class MediaPlayer2Player;
-class MediaPlayer2Tracklist;
-
-class MEDIACENTER_EXPORT Mpris2 : public QObject
+class FlickrBackend : public MediaCenter::AbstractBrowsingBackend
 {
     Q_OBJECT
-
 public:
-    explicit Mpris2(QSharedPointer<PlaylistModel> playlistModel, QObject* parent = 0);
-    ~Mpris2();
+    FlickrBackend (QObject* parent, const QVariantList& args);
+    virtual ~FlickrBackend();
+    virtual QString backendCategory() const;
+    virtual void search(const QString& searchTerm);
 
-    MediaPlayer2Player* getMediaPlayer2Player();
-    QString getCurrentTrackId();
-    QVariantMap getMetadataOf(const QString& url);
-    QVariantMap getMetadataOf(const QString& url, const QString& trackId);
-
-signals:
-    void raisePMC() const;
-
-private:
-    MediaPlayer2 *m_mp2;
-    MediaPlayer2Player *m_mp2p;
-    MediaPlayer2Tracklist *m_mp2tl;
+public Q_SLOTS:
+    virtual bool initImpl();
+    virtual bool goOneLevelUp();
 };
+
+#endif // FLICKRBACKEND_H

@@ -1,6 +1,5 @@
 /***************************************************************************
- *   Copyright 2014 Sujith Haridasan <sujith.haridasan@kdemail.net>        *
- *   Copyright 2014 Ashish Madeti <ashishmadeti@gmail.com>                 *
+ *   Copyright 2011 Sinny Kumari <ksinny@gmail.com>                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,35 +17,41 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#include "mediacenter_export.h"
-#include "playlistmodel.h"
 
-#include <QObject>
-#include <QSharedPointer>
-#include <QVariantMap>
+#include "metadatapicturemodel.h"
+#include "mediacenter.h"
+#include "abstractbrowsingbackend.h"
 
-class MediaPlayer2;
-class MediaPlayer2Player;
-class MediaPlayer2Tracklist;
+#include <QtGui/QIcon>
+#include <QEvent>
 
-class MEDIACENTER_EXPORT Mpris2 : public QObject
+MetadataPictureModel::MetadataPictureModel (QObject* parent)
+    : PmcMetadataModel (parent)
 {
-    Q_OBJECT
+    showMediaType(MediaCenter::Picture);
+}
 
-public:
-    explicit Mpris2(QSharedPointer<PlaylistModel> playlistModel, QObject* parent = 0);
-    ~Mpris2();
+MetadataPictureModel::~MetadataPictureModel()
+{
 
-    MediaPlayer2Player* getMediaPlayer2Player();
-    QString getCurrentTrackId();
-    QVariantMap getMetadataOf(const QString& url);
-    QVariantMap getMetadataOf(const QString& url, const QString& trackId);
+}
 
-signals:
-    void raisePMC() const;
+QVariant MetadataPictureModel::data (const QModelIndex& index, int role) const
+{
+    switch (role) {
+    case Qt::DecorationRole:
+        return PmcMetadataModel::data (index, MediaCenter::MediaUrlRole);
+    case MediaCenter::MediaTypeRole:
+        return "image";
+    case MediaCenter::HideLabelRole:
+        return true;
+    case MediaCenter::DecorationTypeRole:
+        return "image";
+    case MediaCenter::IsExpandableRole:
+        return false;
+    }
 
-private:
-    MediaPlayer2 *m_mp2;
-    MediaPlayer2Player *m_mp2p;
-    MediaPlayer2Tracklist *m_mp2tl;
-};
+    return PmcMetadataModel::data(index, role);
+}
+
+#include "metadatapicturemodel.moc"

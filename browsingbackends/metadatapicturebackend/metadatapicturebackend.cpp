@@ -1,6 +1,7 @@
 /***************************************************************************
- *   Copyright 2014 Sujith Haridasan <sujith.haridasan@kdemail.net>        *
- *   Copyright 2014 Ashish Madeti <ashishmadeti@gmail.com>                 *
+ *   Copyright 2009 by Alessandro Diaferia <alediaferia@gmail.com>         *
+ *   Copyright 2011 Sinny Kumari <ksinny@gmail.com>                        *
+ *   Copyright 2007 Aaron Seigo <aseigo@kde.org>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,35 +19,38 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#include "mediacenter_export.h"
-#include "playlistmodel.h"
 
-#include <QObject>
-#include <QSharedPointer>
-#include <QVariantMap>
+#include "metadatapicturebackend.h"
 
-class MediaPlayer2;
-class MediaPlayer2Player;
-class MediaPlayer2Tracklist;
+#include "metadatapicturemodel.h"
 
-class MEDIACENTER_EXPORT Mpris2 : public QObject
+#include "modelmetadata.h"
+#include "filtermediamodel.h"
+
+MEDIACENTER_EXPORT_BROWSINGBACKEND(MetadataPictureBackend, "metadatapicturebackend.json")
+
+MetadataPictureBackend::MetadataPictureBackend(QObject* parent, const QVariantList& args)
+    : AbstractMetadataBackend(parent, args)
 {
-    Q_OBJECT
+}
 
-public:
-    explicit Mpris2(QSharedPointer<PlaylistModel> playlistModel, QObject* parent = 0);
-    ~Mpris2();
+MetadataPictureBackend::~MetadataPictureBackend()
+{
+}
 
-    MediaPlayer2Player* getMediaPlayer2Player();
-    QString getCurrentTrackId();
-    QVariantMap getMetadataOf(const QString& url);
-    QVariantMap getMetadataOf(const QString& url, const QString& trackId);
+bool MetadataPictureBackend::initImpl()
+{
+    PmcMetadataModel *pmcMetadataModel = new MetadataPictureModel(this);
 
-signals:
-    void raisePMC() const;
+    FilterMediaModel *filteredModel = new FilterMediaModel(this);
+    filteredModel->setSourceModel(pmcMetadataModel);
+    filteredModel->setSortRole(MediaCenter::CreatedAtRole);
+    filteredModel->sort(0, Qt::DescendingOrder);
 
-private:
-    MediaPlayer2 *m_mp2;
-    MediaPlayer2Player *m_mp2p;
-    MediaPlayer2Tracklist *m_mp2tl;
-};
+    ModelMetadata *metadata = new ModelMetadata(filteredModel, this);
+    handleBusySignals(pmcMetadataModel);
+    setModel(metadata);
+    return true;
+}
+
+#include "metadatapicturebackend.moc"

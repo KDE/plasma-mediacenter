@@ -1,6 +1,5 @@
 /***************************************************************************
- *   Copyright 2014 Sujith Haridasan <sujith.haridasan@kdemail.net>        *
- *   Copyright 2014 Ashish Madeti <ashishmadeti@gmail.com>                 *
+ *   Copyright 2013 by Shantanu Tushar <shantanu@kde.org>                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,35 +17,17 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#include "mediacenter_export.h"
-#include "playlistmodel.h"
+#ifndef METADATABACKENDCOMMONMODEL_H
+#define METADATABACKENDCOMMONMODEL_H
 
-#include <QObject>
-#include <QSharedPointer>
-#include <QVariantMap>
+#include <pmcmetadatamodel.h>
+#include <modelmetadata.h>
 
-class MediaPlayer2;
-class MediaPlayer2Player;
-class MediaPlayer2Tracklist;
-
-class MEDIACENTER_EXPORT Mpris2 : public QObject
+class MetadataBackendCommonModel : public PmcMetadataModel
 {
     Q_OBJECT
-
 public:
-    explicit Mpris2(QSharedPointer<PlaylistModel> playlistModel, QObject* parent = 0);
-    ~Mpris2();
-
-    MediaPlayer2Player* getMediaPlayer2Player();
-    QString getCurrentTrackId();
-    QVariantMap getMetadataOf(const QString& url);
-    QVariantMap getMetadataOf(const QString& url, const QString& trackId);
-
-signals:
-    void raisePMC() const;
-
-private:
-    MediaPlayer2 *m_mp2;
-    MediaPlayer2Player *m_mp2p;
-    MediaPlayer2Tracklist *m_mp2tl;
+    explicit MetadataBackendCommonModel(QObject* parent = 0);
 };
+
+#endif // METADATABACKENDCOMMONMODEL_H

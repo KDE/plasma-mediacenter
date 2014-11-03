@@ -1,6 +1,5 @@
 /***************************************************************************
- *   Copyright 2014 Sujith Haridasan <sujith.haridasan@kdemail.net>        *
- *   Copyright 2014 Ashish Madeti <ashishmadeti@gmail.com>                 *
+ *   Copyright 2013 by Sinny Kumari <ksinny@gmail.com>                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,35 +17,38 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#include "mediacenter_export.h"
-#include "playlistmodel.h"
+#ifndef YOUTUBEBACKEND_H
+#define YOUTUBEBACKEND_H
 
-#include <QObject>
-#include <QSharedPointer>
-#include <QVariantMap>
+#include "youtubemodel.h"
+#include "videodetailsmodel.h"
 
-class MediaPlayer2;
-class MediaPlayer2Player;
-class MediaPlayer2Tracklist;
+#include "abstractbrowsingbackend.h"
 
-class MEDIACENTER_EXPORT Mpris2 : public QObject
+/**
+ * @class YoutubeBackend
+ * @brief A backend that manages queries to Youtube.
+*/
+class YoutubeBackend : public MediaCenter::AbstractBrowsingBackend
 {
     Q_OBJECT
-
 public:
-    explicit Mpris2(QSharedPointer<PlaylistModel> playlistModel, QObject* parent = 0);
-    ~Mpris2();
+    YoutubeBackend(QObject *parent, const QVariantList &args);
 
-    MediaPlayer2Player* getMediaPlayer2Player();
-    QString getCurrentTrackId();
-    QVariantMap getMetadataOf(const QString& url);
-    QVariantMap getMetadataOf(const QString& url, const QString& trackId);
+    virtual QString backendCategory() const;
+    bool expand (int row);
+    virtual bool initImpl();
+    virtual void search(const QString& searchTerm);
 
-signals:
-    void raisePMC() const;
+public Q_SLOTS:
+    virtual bool goOneLevelUp();
+    void realUrlFound();
 
 private:
-    MediaPlayer2 *m_mp2;
-    MediaPlayer2Player *m_mp2p;
-    MediaPlayer2Tracklist *m_mp2tl;
+    YoutubeModel *m_youtubeModel;
+    VideoDetailsModel *m_videoDetailsModel;
+    ModelMetadata *m_metadata;
+    bool m_expanded;  // to detrmine which model is currently set into backend
 };
+
+#endif

@@ -1,4 +1,0 @@
-add_subdirectory(metadatamusicbackend)
-add_subdirectory(metadatavideobackend)
-add_subdirectory(metadatapicturebackend)
-#add_subdirectory(eventsbackend)

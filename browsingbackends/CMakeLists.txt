@@ -1,3 +1,4 @@
-add_subdirectory(localfiles)
-add_subdirectory(metadatabackends)
-add_subdirectory(onlineservices)
+add_subdirectory(metadatamusicbackend)
+add_subdirectory(metadatavideobackend)
+add_subdirectory(metadatapicturebackend)
+#add_subdirectory(eventsbackend)
