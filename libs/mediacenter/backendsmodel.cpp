@@ -33,14 +33,12 @@ public:
     QHash<QString, MediaCenter::AbstractBrowsingBackend*> backends;
     KPluginInfo::List backendInfo;
     KPluginInfo::List loadedBackendsInfo;
-    QWeakPointer<PmcRuntime> pmcRuntime;
 };
 
-BackendsModel::BackendsModel(QWeakPointer<PmcRuntime> pmcRuntime, QObject* parent)
+BackendsModel::BackendsModel(QObject* parent)
     : QAbstractListModel(parent)
     , d(new Private)
 {
-    d->pmcRuntime = pmcRuntime;
     d->backendInfo = KPluginTrader::self()->query("plasma/mediacenter/browsingbackends");
     if (d->backendInfo.isEmpty()) {
         qWarning() << "no available browsing backend";
@@ -79,7 +77,6 @@ void BackendsModel::loadBrowsingBackends()
                 }
                 backend->setPluginInfo(info);
                 backend->setParent(const_cast<BackendsModel *>(this));
-                backend->setPmcRuntime(d->pmcRuntime);
                 d->backends.insert(info.libraryPath(), backend);
                 d->loadedBackendsInfo.append(info);
             } else {

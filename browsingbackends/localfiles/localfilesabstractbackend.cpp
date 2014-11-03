@@ -23,7 +23,6 @@
 #include "localfilesabstractmodel.h"
 #include "localplacesmodel.h"
 #include "mediacenter/playlistmodel.h"
-#include "mediacenter/pmcruntime.h"
 
 #include <KSharedConfig>
 #include <KDE/KFilePlacesModel>
@@ -142,17 +141,7 @@ void LocalFilesAbstractBackend::slotStorageSetupDone(Solid::ErrorType error,cons
 void LocalFilesAbstractBackend::handleButtonClick(const QString& buttonName)
 {
     Q_UNUSED(buttonName);
-    /****
-     * TODO revisit this logic
-    if (buttonName == s_playAllButton) {
-        auto model = pmcRuntime()->runtimeObjectAs<PlaylistModel>(PmcRuntime::PlaylistModel);
-        if (model) {
-            model->switchToDefaultPlaylist();
-            model->clearPlaylist();
-            addAllSongsToPlaylist(model);
-            model->play(0);
-        }
-    }**/
+    //FIXME API for playing all media
 }
 
 void LocalFilesAbstractBackend::addAllSongsToPlaylist(const QSharedPointer<PlaylistModel> &playlistModel)

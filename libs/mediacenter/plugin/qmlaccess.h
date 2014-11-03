@@ -23,7 +23,6 @@
 
 #include "mediacenter/playlistmodel.h"
 #include "mediacenter/backendsmodel.h"
-#include "mediacenter/pmcruntime.h"
 #include "mediacenter/abstractbrowsingbackend.h"
 #include "mediacenter/singletonfactory.h"
 #include "mediacenter/mediasourcesloader.h"

@@ -44,7 +44,6 @@ public:
     QString mediaBrowserSidePanelText;
     QList<QObject*> models;
     QString searchTerm;
-    QSharedPointer<PmcRuntime> pmcRuntime;
     QStringList buttons;
 };
 
@@ -217,14 +216,4 @@ void AbstractBrowsingBackend::setButtons(const QStringList& buttons)
 
 void AbstractBrowsingBackend::handleButtonClick(const QString&)
 {
-}
-
-void AbstractBrowsingBackend::setPmcRuntime(const QSharedPointer<PmcRuntime> &pmcRuntime)
-{
-    d->pmcRuntime = pmcRuntime;
-}
-
-QSharedPointer<PmcRuntime> AbstractBrowsingBackend::pmcRuntime() const
-{
-    return d->pmcRuntime;
 }

@@ -19,7 +19,6 @@
 #include "localvideosbackend.h"
 #include "localvideosmodel.h"
 
-#include <mediacenter/pmcruntime.h>
 
 MEDIACENTER_EXPORT_BROWSINGBACKEND(LocalVideosBackend, "localvideos.json")
 

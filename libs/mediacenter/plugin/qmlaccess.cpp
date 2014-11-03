@@ -34,11 +34,7 @@ QMLAccess::QMLAccess(QObject *parent) : QObject(parent)
 
     m_playlistModel = QSharedPointer<PlaylistModel>(new PlaylistModel(this));
 
-    QHash< PmcRuntime::RuntimeObjectType, QSharedPointer< QObject > > runtimeObjects;
-    runtimeObjects.insert(PmcRuntime::PlaylistModel, m_playlistModel);
-    
-    QSharedPointer<PmcRuntime> pmcRuntime = QSharedPointer<PmcRuntime>(new PmcRuntime(runtimeObjects, this));
-    m_backendsModel = new BackendsModel(pmcRuntime, this);
+    m_backendsModel = new BackendsModel(this);
     
     emit backendsModelChanged();
     emit playlistModelChanged();

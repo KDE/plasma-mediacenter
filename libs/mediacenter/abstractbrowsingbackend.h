@@ -30,7 +30,6 @@
 class QAbstractItemModel;
 class KConfigDialog;
 class ModelMetadata;
-class PmcRuntime;
 
 namespace MediaCenter {
 
@@ -181,11 +180,6 @@ public:
      */
     Q_INVOKABLE virtual void handleButtonClick(const QString&);
 
-    /**
-     * @internal
-     */
-    void setPmcRuntime(const QSharedPointer<PmcRuntime> &pmcRuntime);
-
 Q_SIGNALS:
     void busyChanged();
     void modelsChanged();
@@ -260,14 +254,6 @@ protected:
      * @param model the model that this search should affect
      */
     Q_INVOKABLE virtual void searchModel(const QString &searchTerm, QAbstractItemModel *model);
-
-    /**
-     * Subclasses can call this method to access the PmcRuntime which can be
-     * then used to access PMC runtime objects.
-     *
-     * @return QSharedPointer to the PmcRuntime object
-     */
-    QSharedPointer< PmcRuntime > pmcRuntime() const;
 
     /**
      * Subclasses can call this method to set the button strings that are used

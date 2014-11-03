@@ -28,7 +28,6 @@
 #include "mediacenter/pmcmetadatamodel.h"
 #include "mediacenter/playlistmodel.h"
 #include "mediacenter/filtermediamodel.h"
-#include "mediacenter/pmcruntime.h"
 
 #include <KDebug>
 
@@ -177,16 +176,7 @@ void MetadataMusicBackend::handleButtonClick(const QString& buttonName)
         m_albumFilter = m_artistFilter = "";
         updateModelAccordingToFilters();
     } else if (buttonName == s_playAllButton) {
-
-        auto model = pmcRuntime()->runtimeObjectAs<PlaylistModel>(PmcRuntime::PlaylistModel);
-        if (model) {
-            model->switchToDefaultPlaylist();
-            model->clearPlaylist();
-            addAllSongsToPlaylist(model);
-            model->play(0);
-        } else {
-            qWarning() << "Failed to get a reference to playlist model";
-        }
+        //FIXME: Logic for playing all media
     }
 }
 

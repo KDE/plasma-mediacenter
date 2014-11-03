@@ -5,7 +5,6 @@ include_directories(
 set (plasmamediacenter_SRCS
     runtimedata.cpp
     itemcache.cpp
-    pmcruntime.cpp
     medialibrarywrappercache.cpp
     artist.cpp
     album.cpp

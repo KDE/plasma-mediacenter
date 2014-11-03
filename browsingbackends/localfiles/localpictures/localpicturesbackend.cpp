@@ -20,8 +20,6 @@
 #include "localpicturesbackend.h"
 #include "localpicturesmodel.h"
 
-#include "mediacenter/pmcruntime.h"
-
 MEDIACENTER_EXPORT_BROWSINGBACKEND(LocalPicturesBackend, "localpictures.json")
 
 LocalPicturesBackend::LocalPicturesBackend (QObject* parent, const QVariantList& args)
