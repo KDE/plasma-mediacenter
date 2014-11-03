@@ -37,10 +37,10 @@ public:
     hasInitialized(false)
     {}
 
+    KPluginInfo pluginInfo;
     AbstractBrowsingBackend *q;
     bool cfInterface;
     bool hasInitialized;
-    QString name;
     QString mediaBrowserSidePanelText;
     QList<QObject*> models;
     QString searchTerm;
@@ -62,24 +62,47 @@ AbstractBrowsingBackend::~AbstractBrowsingBackend()
     delete d;
 }
 
-void AbstractBrowsingBackend::setName(const QString &name)
-{
-    d->name = name;
-}
-
 QString AbstractBrowsingBackend::name() const
 {
-    if (d->name.isEmpty()) {
-        return "generic-backend";
+    if (d->pluginInfo.isValid()) {
+        return d->pluginInfo.name();
     }
+    return "generic-backend";
+}
 
-    return d->name;
+QString AbstractBrowsingBackend::icon() const
+{
+    if (d->pluginInfo.isValid()) {
+        return d->pluginInfo.icon();
+    }
+    return "applications-multimedia";
+}
+
+QString AbstractBrowsingBackend::comment() const
+{
+    if (d->pluginInfo.isValid()) {
+        return d->pluginInfo.comment();
+    }
+    return "Generic Backend";
+}
+
+QString AbstractBrowsingBackend::category() const
+{
+    if (d->pluginInfo.isValid()) {
+        return d->pluginInfo.category();
+    }
+    return "general";
 }
 
 void AbstractBrowsingBackend::setModel(ModelMetadata* model)
 {
     d->models.clear();
     addModel(model);
+}
+
+void AbstractBrowsingBackend::setPluginInfo(const KPluginInfo& info)
+{
+    d->pluginInfo = info;
 }
 
 void AbstractBrowsingBackend::setModel(QAbstractItemModel* model)

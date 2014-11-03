@@ -56,16 +56,9 @@ class MEDIACENTER_EXPORT AbstractBrowsingBackend : public QObject
 public:
     /**
      * Used to load a backend instance via a plugin loader through KService.
-     * The first argument of @param args must be the unique storageID of the service.
-     * */
+     */
     explicit AbstractBrowsingBackend(QObject *parent, const QVariantList &args = QVariantList());
     virtual ~AbstractBrowsingBackend();
-
-    /**
-     * Sets the plugin name for this backend; used for things such as configuration group naming
-     * @param name the plugin name to use
-     */
-    void setName(const QString &name);
 
     /**
      * @return the plugin name for this backend
@@ -73,8 +66,23 @@ public:
     QString name() const;
 
     /**
+     * @return the icon for this backend, as set in desktop file
+     */
+    QString icon() const;
+
+    /**
+     * @return the comment for this backend, as set in desktop file
+     */
+    QString comment() const;
+
+    /**
+     * @return the category of this backend
+     */
+    QString category() const;
+
+    /**
      * The default implementation returns the first (or the only) model.
-     * @returns the model of the browsing backend.
+     * @returns the model of the browsing backend
      */
     QAbstractItemModel *model();
 
@@ -100,6 +108,11 @@ public:
      * @see initImpl
      */
     Q_INVOKABLE bool init();
+
+    /**
+     * Sets pluginInfo on abstract browsing backend
+     */
+     void setPluginInfo(const KPluginInfo& info);
 
     /**
      * This function is used by Media Browser to go to one level
