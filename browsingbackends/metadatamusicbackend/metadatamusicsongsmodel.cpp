@@ -19,9 +19,9 @@
 
 #include "metadatamusicsongsmodel.h"
 
-#include <pmcimagecache.h>
-#include <pmccoverartprovider.h>
-#include <singletonfactory.h>
+#include <mediacenter/pmcimagecache.h>
+#include <mediacenter/pmccoverartprovider.h>
+#include <mediacenter/singletonfactory.h>
 
 #include <QTime>
 

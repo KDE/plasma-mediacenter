@@ -21,9 +21,9 @@
 #include "videosearchresulthandler.h"
 #include "audiosearchresulthandler.h"
 
-#include <medialibrary.h>
-#include <singletonfactory.h>
-#include <mediacenter.h>
+#include <mediacenter/medialibrary.h>
+#include <mediacenter/singletonfactory.h>
+#include <mediacenter/mediacenter.h>
 
 #include <baloo/query.h>
 #include <baloo/result.h>

@@ -22,8 +22,8 @@
 #include "mediaplayer2.h"
 #include "mediaplayer2player.h"
 #include "mediaplayer2tracklist.h"
-#include "medialibrary.h"
-#include "pmcmedia.h"
+#include "mediacenter/medialibrary.h"
+#include "mediacenter/pmcmedia.h"
 
 #include <QDBusConnection>
 #include <unistd.h>

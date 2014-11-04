@@ -21,8 +21,8 @@
 #include "eventsfiltermodel.h"
 #include "eventsmodel.h"
 
-#include <filtermediamodel.h>
-#include <modelmetadata.h>
+#include <mediacenter/filtermediamodel.h>
+#include <mediacenter/modelmetadata.h>
 
 #include <QTimer>
 

@@ -18,8 +18,8 @@
 
 #include "itemcachetest.h"
 
-#include <itemcache.h>
-#include <artist.h>
+#include <mediacenter/itemcache.h>
+#include <mediacenter/artist.h>
 
 #include <qtest.h>
 

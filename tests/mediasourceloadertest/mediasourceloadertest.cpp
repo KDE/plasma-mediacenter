@@ -19,7 +19,7 @@
  */
 
 #include <QCoreApplication>
-#include "mediasourcesloader.cpp"
+#include "mediacenter/mediasourcesloader.h"
 
 int main(int argc, char *argv[])
 {

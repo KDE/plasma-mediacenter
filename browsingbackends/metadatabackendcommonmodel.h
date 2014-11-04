@@ -20,8 +20,8 @@
 #ifndef METADATABACKENDCOMMONMODEL_H
 #define METADATABACKENDCOMMONMODEL_H
 
-#include <pmcmetadatamodel.h>
-#include <modelmetadata.h>
+#include <mediacenter/pmcmetadatamodel.h>
+#include <mediacenter/modelmetadata.h>
 
 class MetadataBackendCommonModel : public PmcMetadataModel
 {

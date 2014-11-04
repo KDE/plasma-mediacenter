@@ -17,8 +17,8 @@
 
 #include "audiosearchresulthandler.h"
 
-#include <mediacenter.h>
-#include <medialibrary.h>
+#include <mediacenter/mediacenter.h>
+#include <mediacenter/medialibrary.h>
 
 #include <baloo/file.h>
 #include <baloo/resultiterator.h>

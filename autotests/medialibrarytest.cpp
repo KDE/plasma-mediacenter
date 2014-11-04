@@ -19,12 +19,12 @@
 #include "medialibrarytest.h"
 #include "testhelpers.h"
 
-#include <medialibrary.h>
-#include <mediacenter.h>
+#include <mediacenter/medialibrary.h>
+#include <mediacenter/mediacenter.h>
 
-#include <pmcmedia.h>
-#include <pmcalbum.h>
-#include <pmcartist.h>
+#include <mediacenter/pmcmedia.h>
+#include <mediacenter/pmcalbum.h>
+#include <mediacenter/pmcartist.h>
 
 #include <qtest.h>
 

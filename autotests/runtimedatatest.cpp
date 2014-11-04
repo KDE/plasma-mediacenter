@@ -22,7 +22,7 @@
 
 #include "runtimedatatest.h"
 
-#include "runtimedata.h"
+#include "mediacenter/runtimedata.h"
 
 #include <QtTest>
 

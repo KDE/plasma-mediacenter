@@ -18,7 +18,7 @@
 #ifndef BALOOSEARCHMEDIASOURCE_H
 #define BALOOSEARCHMEDIASOURCE_H
 
-#include <abstractmediasource.h>
+#include <mediacenter/abstractmediasource.h>
 
 class SearchResultHandler;
 

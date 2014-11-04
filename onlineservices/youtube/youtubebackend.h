@@ -23,7 +23,7 @@
 #include "youtubemodel.h"
 #include "videodetailsmodel.h"
 
-#include "abstractbrowsingbackend.h"
+#include "mediacenter/abstractbrowsingbackend.h"
 
 /**
  * @class YoutubeBackend

@@ -23,7 +23,7 @@
 
 #include <QAbstractListModel>
 
-#include <modelmetadata.h>
+#include <mediacenter/modelmetadata.h>
 
 namespace KIO {
     class Job;

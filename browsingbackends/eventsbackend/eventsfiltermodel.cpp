@@ -17,7 +17,7 @@
  ***********************************************************************************/
 
 #include "eventsfiltermodel.h"
-#include <mediacenter.h>
+#include <mediacenter/mediacenter.h>
 
 #include <QDateTime>
 #include <QDebug>
