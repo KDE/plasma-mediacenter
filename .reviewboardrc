@@ -1,4 +1,4 @@
 REVIEWBOARD_URL = "https://git.reviewboard.kde.org"
-REPOSITORY = 'git://anongit.kde.org/plasma-framework'
+REPOSITORY = 'git://anongit.kde.org/plasma-mediacenter'
 TARGET_GROUPS = 'plasma'
-TARGET_PEOPLE = 'shantanu, sinnykumari, bshah, sujith'
+TARGET_PEOPLE = 'shantanu, sinnykumari, bshah, sujithh'
