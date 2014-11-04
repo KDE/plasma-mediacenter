@@ -450,6 +450,7 @@ Image {
                     mediaPlayerInstance.runtimeDataObject = runtimeData;
                 }
             }
+            onPlayAllRequested: playlistInstance.playAll();
             onBackRequested: pmcPageStack.popAndFocus()
             onPopupMenuRequested: {
                 popupMenuInstance = getPopupMenu();

@@ -185,4 +185,19 @@ void MetadataMusicBackend::searchModel(const QString& searchTerm, QAbstractItemM
     static_cast<FilterMediaModel *> (model)->setFilter(Qt::DisplayRole, searchTerm);
 }
 
+QStringList MetadataMusicBackend::allMedia()
+{
+    QStringList mediaList;
+    for (int i=0; i<m_musicFilteredModel->rowCount(); ++i) {
+        const auto index = m_musicFilteredModel->index(i, 0);
+        const auto url = m_musicFilteredModel->data(index, MediaCenter::MediaUrlRole).toString();
+        const auto songAndItsInfo = m_musicFilteredModel->data(index, Qt::DisplayRole).toList();
+        const auto name = songAndItsInfo.length() ? songAndItsInfo.at(0).toString() : QString();
+        if (!url.isEmpty() && !name.isEmpty()) {
+            mediaList.append(url);
+        }
+    }
+    return mediaList;
+}
+
 #include "metadatamusicbackend.moc"

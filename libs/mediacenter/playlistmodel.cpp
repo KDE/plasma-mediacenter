@@ -129,6 +129,11 @@ void PlaylistModel::addToPlaylist(const QString& url)
     addToPlaylist(QStringList() << url);
 }
 
+void PlaylistModel::addAllToPlaylist(const QStringList& list)
+{
+    addToPlaylist(list);
+}
+
 void PlaylistModel::removeFromPlaylist(const int& index)
 {
     beginRemoveRows(QModelIndex(), index, index);

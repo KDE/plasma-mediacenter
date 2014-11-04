@@ -57,6 +57,8 @@ public:
 
     virtual void searchModel(const QString& searchTerm, QAbstractItemModel* model);
 
+    virtual QStringList allMedia();
+
 Q_SIGNALS:
     void artistFilterChanged();
     void albumFilterChanged();

@@ -217,3 +217,8 @@ void AbstractBrowsingBackend::setButtons(const QStringList& buttons)
 void AbstractBrowsingBackend::handleButtonClick(const QString&)
 {
 }
+
+QStringList AbstractBrowsingBackend::allMedia()
+{
+    return QStringList();
+}

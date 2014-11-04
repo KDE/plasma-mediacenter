@@ -186,5 +186,14 @@ FocusScope {
         }
     }
 
+    function playAll()
+    {
+        if (mediaBrowserInstance) {
+            pmcInterfaceInstance.playlistModel.switchToDefaultPlaylist();
+            pmcInterfaceInstance.playlistModel.clearPlaylist();
+            pmcInterfaceInstance.playlistModel.addAllToPlaylist(mediaBrowserInstance.currentBrowsingBackend.allMedia());
+        }
+    }
+
     Component.onCompleted: playTheCurrentInList();
 }

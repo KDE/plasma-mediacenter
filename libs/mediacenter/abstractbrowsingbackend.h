@@ -180,6 +180,14 @@ public:
      */
     Q_INVOKABLE virtual void handleButtonClick(const QString&);
 
+    /**
+     * Override this method to provide all media that should be added to playlist when playAll
+     * button is clicked
+     *
+     * @return list of media urls
+     */
+    Q_INVOKABLE virtual QStringList allMedia();
+
 Q_SIGNALS:
     void busyChanged();
     void modelsChanged();

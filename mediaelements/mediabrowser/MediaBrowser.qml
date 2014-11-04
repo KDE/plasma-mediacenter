@@ -30,6 +30,7 @@ FocusScope {
 
     signal backRequested
     signal playRequested(int index, string url, string currentMediaType)
+    signal playAllRequested()
     signal popupMenuRequested(int index, string mediaUrl, string mediaType, string display)
 
     Component {
@@ -62,7 +63,13 @@ FocusScope {
             }
             height: 40
             buttons: currentBrowsingBackend ? currentBrowsingBackend.buttons : undefined
-            onButtonClicked: currentBrowsingBackend.handleButtonClick(buttonName)
+            onButtonClicked: {
+                if (buttonName == "Play All") {
+                    mediaBrowser.playAllRequested();
+                } else {
+                    currentBrowsingBackend.handleButtonClick(buttonName);
+                }
+            }
             Keys.onDownPressed: mediaBrowserViewItem.mediaBrowserGridView.focus = true
         }
     }
