@@ -20,6 +20,7 @@
 #define ABSTRACTBROWSINGBACKEND_H
 
 #include <QObject>
+#include <QAbstractItemModel>
 
 #include <KConfigGroup>
 #include <KPluginInfo>

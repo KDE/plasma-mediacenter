@@ -24,7 +24,6 @@
 #include <KPluginInfo>
 #include <QDebug>
 
-#include <QAbstractItemModel>
 
 using namespace MediaCenter;
 
