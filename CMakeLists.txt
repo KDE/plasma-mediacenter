@@ -58,7 +58,7 @@ set(CMAKE_AUTOMOC ON)
 
 add_subdirectory(browsingbackends)
 add_subdirectory(mediasources)
-add_subdirectory(onlineservices)
+#add_subdirectory(onlineservices)
 add_subdirectory(mediaelements)
 add_subdirectory(components)
 add_subdirectory(libs)
