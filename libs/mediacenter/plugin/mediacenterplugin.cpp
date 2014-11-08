@@ -27,6 +27,7 @@
 #include "mediacenter/objectpair.h"
 #include "mediacenter/settings.h"
 #include "mediacenter/mediasourcesloader.h"
+#include "mediacenter/abstractbrowsingbackend.h"
 #include "mediacenter/medialibrary.h"
 #include "mediacenter/runtimedata.h"
 #include "mediacenter/pmccoverartprovider.h"
@@ -51,6 +52,7 @@ void MediaCenterPlugin::registerTypes(const char *uri)
 
     qRegisterMetaType<BackendsModel*>("BackendsModel*");
     qRegisterMetaType<PlaylistModel*>("PlaylistModel*");
+    qRegisterMetaType<MediaCenter::AbstractBrowsingBackend*>("MediaCenter::AbstractBrowsingBackend*");
 
 }
 
