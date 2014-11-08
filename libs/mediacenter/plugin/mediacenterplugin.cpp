@@ -31,6 +31,7 @@
 #include "mediacenter/runtimedata.h"
 #include "mediacenter/pmccoverartprovider.h"
 #include "mediacenter/playlistmodel.h"
+#include "mediacenter/backendsloader.h"
 
 #include "qmlaccess.h"
 
@@ -46,6 +47,8 @@ void MediaCenterPlugin::registerTypes(const char *uri)
     qmlRegisterType<QMLAccess>(uri, 2, 0, "QMLAccess");
     qmlRegisterType<Settings>(uri, 2, 0, "Settings");
     qmlRegisterType<RuntimeData>(uri, 2, 0, "RuntimeData");
+    qmlRegisterType<BackendsLoader>(uri, 2, 0, "BackendsLoader");
+
     qRegisterMetaType<BackendsModel*>("BackendsModel*");
     qRegisterMetaType<PlaylistModel*>("PlaylistModel*");
 
