@@ -63,7 +63,7 @@ Comment[zh_TW]=聽您的裝置上的所有音樂
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 
-X-KDE-PluginInfo-Name=allmusic
+X-KDE-PluginInfo-Name=audio
 X-KDE-PluginInfo-Author=Sinny Kumari
 X-KDE-PluginInfo-Email=ksinny@gmail.com
 X-KDE-PluginInfo-Version=1.0
