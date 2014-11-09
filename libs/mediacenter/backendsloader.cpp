@@ -56,7 +56,7 @@ BackendsLoader::BackendsLoader(QObject* parent)
     }
 }
 
-MediaCenter::AbstractBrowsingBackend* BackendsLoader::backend (const QString& backendPluginName)
+MediaCenter::AbstractBrowsingBackend* BackendsLoader::backend (const QString& backendPluginName) const
 {
     return d->backends.value(backendPluginName);
 }

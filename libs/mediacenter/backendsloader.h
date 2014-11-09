@@ -38,7 +38,7 @@ class MEDIACENTER_EXPORT BackendsLoader : public QObject
 
 public:
     explicit BackendsLoader (QObject* parent = 0);
-    Q_INVOKABLE MediaCenter::AbstractBrowsingBackend* backend (const QString &backendName);
+    Q_INVOKABLE MediaCenter::AbstractBrowsingBackend* backend (const QString &backendName) const;
 
 private:
     class Private;
