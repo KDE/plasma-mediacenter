@@ -44,6 +44,8 @@ Image {
     // Shell stuff
     property Item containment
 
+    property url _pmc_shadow_image_path: Qt.resolvedUrl("../images/shadow.png")
+
     function toggleWidgetExplorer(containment) {
         console.log("Widget Explorer toggled");
 
