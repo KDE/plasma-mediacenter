@@ -1,5 +1,9 @@
 [Desktop Entry]
 Comment=PMC shell package
+Comment[nl]=PMC shell-pakket
+Comment[sk]=Balík shellu PMC
+Comment[uk]=Пакунок оболонки МЦП
+Comment[x-test]=xxPMC shell packagexx
 Encoding=UTF-8
 Keywords=
 Name=Plasma Media Center
