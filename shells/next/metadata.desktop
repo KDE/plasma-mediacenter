@@ -1,7 +1,10 @@
 [Desktop Entry]
 Comment=PMC shell package
+Comment[en_GB]=PMC shell package
 Comment[nl]=PMC shell-pakket
+Comment[pt]=Pacote da consola do PMC
 Comment[sk]=Balík shellu PMC
+Comment[tr]=PMC kabuk paketi
 Comment[uk]=Пакунок оболонки МЦП
 Comment[x-test]=xxPMC shell packagexx
 Encoding=UTF-8
