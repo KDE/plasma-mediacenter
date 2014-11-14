@@ -10,7 +10,7 @@ target_link_libraries(pmc_picasabackend
     plasmamediacenter
 )
 
-kservice_desktop_to_json(pmc_picasabackend picasabackend.desktop)
+kcoreaddons_desktop_to_json(pmc_picasabackend picasabackend.desktop)
 
 install(TARGETS pmc_picasabackend DESTINATION ${PLUGIN_INSTALL_DIR}/plasma/mediacenter/browsingbackends)
 install(FILES picasabackend.desktop DESTINATION ${SERVICES_INSTALL_DIR})
