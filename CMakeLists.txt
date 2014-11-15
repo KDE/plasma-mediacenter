@@ -37,7 +37,7 @@ add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
 find_package(KF5 COMPONENTS REQUIRED
     CoreAddons Config I18n GuiAddons Service ConfigWidgets KIO Declarative Plasma PlasmaQuick)
 
-find_package(KF5Baloo)
+find_package(KF5Baloo 5.1.90)
 find_package(Taglib REQUIRED)
 
 include_directories(
@@ -69,3 +69,5 @@ add_subdirectory(autotests)
 #
 # include(MacroOptionalAddSubdirectory)
 # macro_optional_add_subdirectory( po )
+
+feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
