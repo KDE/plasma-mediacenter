@@ -37,11 +37,6 @@ PicasaBackend::PicasaBackend(QObject* parent, const QVariantList& args):
     QTimer::singleShot(2000, this, SLOT(showLoginScreen()));
 }
 
-QString PicasaBackend::backendCategory() const
-{
-    return "image";
-}
-
 bool PicasaBackend::initImpl()
 {
     return true;

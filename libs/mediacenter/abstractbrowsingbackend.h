@@ -29,7 +29,6 @@
 #include "mediacenter.h"
 
 class QAbstractItemModel;
-class KConfigDialog;
 class ModelMetadata;
 
 namespace MediaCenter {

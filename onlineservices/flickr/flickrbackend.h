@@ -29,7 +29,6 @@ class FlickrBackend : public MediaCenter::AbstractBrowsingBackend
 public:
     FlickrBackend (QObject* parent, const QVariantList& args);
     virtual ~FlickrBackend();
-    virtual QString backendCategory() const;
     virtual void search(const QString& searchTerm);
 
 public Q_SLOTS:

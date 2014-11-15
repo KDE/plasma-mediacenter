@@ -35,7 +35,6 @@ class YoutubeBackend : public MediaCenter::AbstractBrowsingBackend
 public:
     YoutubeBackend(QObject *parent, const QVariantList &args);
 
-    virtual QString backendCategory() const;
     bool expand (int row);
     virtual bool initImpl();
     virtual void search(const QString& searchTerm);

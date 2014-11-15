@@ -49,11 +49,6 @@ bool FlickrBackend::goOneLevelUp()
     return MediaCenter::AbstractBrowsingBackend::goOneLevelUp();
 }
 
-QString FlickrBackend::backendCategory() const
-{
-    return "image";
-}
-
 void FlickrBackend::search(const QString& searchTerm)
 {
     qobject_cast<FlickrModel*>(model())->query(searchTerm);

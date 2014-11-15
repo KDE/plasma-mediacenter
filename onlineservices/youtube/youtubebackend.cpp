@@ -31,11 +31,6 @@ YoutubeBackend::YoutubeBackend(QObject* parent, const QVariantList& args):
 
 }
 
-QString YoutubeBackend::backendCategory() const
-{
-    return "video";
-}
-
 bool YoutubeBackend::expand(int row)
 {
     m_videoDetailsModel->setVideoUrl(m_youtubeModel->videoUrl(row));

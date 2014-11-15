@@ -53,8 +53,6 @@ public:
      */
     Q_INVOKABLE void login(const QString& username, const QString& password);
 
-    virtual QString backendCategory() const;
-
     /**
      * Opens up the album
      * @param row is the model row number
