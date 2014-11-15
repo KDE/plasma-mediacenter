@@ -161,11 +161,6 @@ QString AbstractBrowsingBackend::mediaBrowserOverride() const
     return QString();
 }
 
-bool AbstractBrowsingBackend::okToLoad() const
-{
-    return true;
-}
-
 void AbstractBrowsingBackend::search(const QString& searchTerm)
 {
     Q_UNUSED(searchTerm)

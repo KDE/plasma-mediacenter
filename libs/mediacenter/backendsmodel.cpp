@@ -68,14 +68,8 @@ void BackendsModel::loadBrowsingBackends()
 
         if(factory)
         {
-            MediaCenter::AbstractBrowsingBackend *backend = factory->create<MediaCenter::AbstractBrowsingBackend>(0, args); 
+            MediaCenter::AbstractBrowsingBackend *backend = factory->create<MediaCenter::AbstractBrowsingBackend>(0, args);
             if (backend) {
-
-                if (!backend->okToLoad()) {
-                    qDebug() << "Backend " << info.name() << " doesn't want to be loaded";
-                    continue;
-                }
-                backend->setPluginInfo(info);
                 backend->setParent(const_cast<BackendsModel *>(this));
                 d->backends.insert(info.libraryPath(), backend);
                 d->loadedBackendsInfo.append(info);
