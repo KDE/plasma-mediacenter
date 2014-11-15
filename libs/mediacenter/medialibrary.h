@@ -38,7 +38,7 @@ class MEDIACENTER_EXPORT MediaLibrary : public QThread
 {
     Q_OBJECT
 public:
-    explicit MediaLibrary(MediaValidator *mediaValidator = 0, QObject* parent = 0);
+    explicit MediaLibrary(QObject* parent = 0);
     virtual ~MediaLibrary();
 
     virtual void run();
