@@ -81,7 +81,6 @@ private:
     inline void addArtist(const QSharedPointer<Artist>& artist);
     template <class X, class Y> void addAlbumOrArtist(
         const QSharedPointer< X >& value, QMutex& mutex, QList< QSharedPointer< X > >& valueList, QList< QSharedPointer< Y > >& updatesList);
-    QString persistMedia(const QSharedPointer< Media >& media);
     void emitNewAlbumOrArtistIfNeeded(QSharedPointer< Media > media);
 };
 

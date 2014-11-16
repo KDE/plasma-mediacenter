@@ -168,7 +168,7 @@ void MediaLibrary::processNextRequest()
                 }
             }
 
-            const QString sha = persistMedia(media);
+            const QString sha = media->sha();
             addMedia(media);
 //             qDebug() << "Saved " << sha;
         }
@@ -179,12 +179,6 @@ void MediaLibrary::emitNewAlbumOrArtistIfNeeded(QSharedPointer< Media > media)
 {
     addArtist(media->artist());
     addAlbum(media->album());
-}
-
-QString MediaLibrary::persistMedia(const QSharedPointer< Media > &media)
-{
-    const QString sha = media->sha();
-    return sha;
 }
 
 bool MediaLibrary::extractAndSaveArtistInfo(
