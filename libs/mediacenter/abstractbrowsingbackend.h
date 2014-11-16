@@ -210,12 +210,6 @@ protected:
     void addModel(ModelMetadata * model);
 
     /**
-     * This method adds multiple models as a single model collection.
-     * This indicates the UI to show views for these models simultaneously
-     */
-    void addModelPair(const QString& pairLabel, QObject* firstModel, QObject* secondModel);
-
-    /**
      * This is a convenience function which constructs a string representing QML source for
      * loading an item of name itemName which exists in componentDirName
      *

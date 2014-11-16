@@ -115,16 +115,6 @@ void AbstractBrowsingBackend::addModel(ModelMetadata* model)
     emit modelsChanged();
 }
 
-void AbstractBrowsingBackend::addModelPair(const QString& pairLabel, QObject* firstModel, QObject* secondModel)
-{
-    ObjectPair *modelPair = new ObjectPair(this);
-    modelPair->setFirst(firstModel);
-    modelPair->setSecond(secondModel);
-
-    modelPair->setObjectName(pairLabel);
-    d->models.append(modelPair);
-}
-
 QAbstractItemModel* AbstractBrowsingBackend::model()
 {
     QObject *model = d->models.length() ? (QObject*)(d->models.first()) : 0;
