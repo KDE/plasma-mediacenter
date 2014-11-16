@@ -19,6 +19,8 @@
 #include <QDebug>
 #include <QSettings>
 
+#include <KFormat>
+
 #include "video.h"
 #include "networkaccess.h"
 #include "videodefinition.h"
@@ -346,6 +348,5 @@ void Video::findVideoUrl(int definitionCode) {
 
 
 QString Video::formattedDuration() const {
-    QString format = m_duration > 3600 ? "h:mm:ss" : "m:ss";
-    return QTime().addSecs(m_duration).toString(format);
+    return KFormat().formatDuration(m_duration * 1000);
 }
