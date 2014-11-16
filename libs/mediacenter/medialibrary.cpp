@@ -167,8 +167,6 @@ void MediaLibrary::processNextRequest()
                     media->setValueForRole(role, request.second.value(role));
                 }
             }
-
-            const QString sha = media->sha();
             addMedia(media);
 //             qDebug() << "Saved " << sha;
         }
