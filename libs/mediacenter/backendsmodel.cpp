@@ -70,6 +70,7 @@ void BackendsModel::loadBrowsingBackends()
         {
             MediaCenter::AbstractBrowsingBackend *backend = factory->create<MediaCenter::AbstractBrowsingBackend>(0, args);
             if (backend) {
+                backend->setPluginInfo(info);
                 backend->setParent(const_cast<BackendsModel *>(this));
                 d->backends.insert(info.libraryPath(), backend);
                 d->loadedBackendsInfo.append(info);
