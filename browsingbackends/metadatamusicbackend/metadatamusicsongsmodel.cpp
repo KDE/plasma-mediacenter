@@ -47,7 +47,7 @@ QVariant MetadataMusicSongsModel::data(const QModelIndex& index, int role) const
         QVariantList list;
         list << songName << albumName << artistName;
         if (duration > 0) {
-            list << KFormat().formatDuration(duration);
+            list << KFormat().formatDuration(duration * 1000);
         }
 
         return list;
