@@ -26,7 +26,6 @@
 class FilterMediaModel;
 class PmcMetadataModel;
 class AlwaysExpandedMetadataModel;
-class PlaylistModel;
 class PmcMetadataModel;
 class ModelMetadata;
 
@@ -45,8 +44,6 @@ public:
 
     void setArtistFilter(const QString &filter);
     void setAlbumFilter(const QString &filter);
-
-    void addAllSongsToPlaylist( const QSharedPointer< PlaylistModel >& playlistModel );
 
     virtual bool expand(int row, QAbstractItemModel* model);
 
@@ -72,7 +69,6 @@ private:
     AlwaysExpandedMetadataModel* m_artistsModel;
     AlwaysExpandedMetadataModel* m_albumsModel;
     PmcMetadataModel* m_musicModel;
-    PlaylistModel* m_playlistModel;
 
     QString m_artistFilter;
     QString m_albumFilter;
