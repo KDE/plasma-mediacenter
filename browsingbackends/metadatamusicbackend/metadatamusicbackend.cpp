@@ -23,7 +23,6 @@
 #include "metadatamusicbackend.h"
 #include "alwaysexpandedmetadatamodel.h"
 #include "metadatamusicsongsmodel.h"
-#include "../metadatabackendcommonmodel.h"
 
 #include "mediacenter/pmcmetadatamodel.h"
 #include "mediacenter/playlistmodel.h"

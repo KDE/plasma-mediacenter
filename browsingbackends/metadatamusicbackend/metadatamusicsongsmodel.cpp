@@ -25,7 +25,7 @@
 
 #include <KFormat>
 
-MetadataMusicSongsModel::MetadataMusicSongsModel(QObject* parent): MetadataBackendCommonModel(parent)
+MetadataMusicSongsModel::MetadataMusicSongsModel(QObject* parent): PmcMetadataModel(parent)
 {
 
 }
@@ -38,11 +38,11 @@ MetadataMusicSongsModel::~MetadataMusicSongsModel()
 QVariant MetadataMusicSongsModel::data(const QModelIndex& index, int role) const
 {
     if (role == Qt::DisplayRole) {
-        const QString songName = MetadataBackendCommonModel::data(index, role).toString();
-        const QString artistName = MetadataBackendCommonModel::data(index, MediaCenter::ArtistRole).toString();
-        const QString albumName = MetadataBackendCommonModel::data(index, MediaCenter::AlbumRole).toString();
+        const QString songName = PmcMetadataModel::data(index, role).toString();
+        const QString artistName = PmcMetadataModel::data(index, MediaCenter::ArtistRole).toString();
+        const QString albumName = PmcMetadataModel::data(index, MediaCenter::AlbumRole).toString();
 
-        const int duration = MetadataBackendCommonModel::data(index, MediaCenter::DurationRole).toInt();
+        const int duration = PmcMetadataModel::data(index, MediaCenter::DurationRole).toInt();
 
         QVariantList list;
         list << songName << albumName << artistName;
@@ -53,12 +53,12 @@ QVariant MetadataMusicSongsModel::data(const QModelIndex& index, int role) const
         return list;
     } else if (role == Qt::DecorationRole) {
         PmcImageCache *imageCache = SingletonFactory::instanceFor<PmcImageCache>();
-        const QString albumName = MetadataBackendCommonModel::data(index, MediaCenter::AlbumRole).toString();
+        const QString albumName = PmcMetadataModel::data(index, MediaCenter::AlbumRole).toString();
 
         if (imageCache->containsAlbumCover(albumName)) {
             return PmcCoverArtProvider::qmlImageUriForAlbumCover(albumName);
         }
     }
 
-    return MetadataBackendCommonModel::data(index, role).toString();
+    return PmcMetadataModel::data(index, role).toString();
 }

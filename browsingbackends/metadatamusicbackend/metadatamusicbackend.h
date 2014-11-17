@@ -25,12 +25,11 @@
 #include "categoriesmodel.h"
 
 class FilterMediaModel;
-class MetadataBackendCommonModel;
+class PmcMetadataModel;
 class AlwaysExpandedMetadataModel;
 class PlaylistModel;
 class CategoriesModel;
-class NepomukMusicModel;
-class MetadataBackendCommonModel;
+class PmcMetadataModel;
 class ModelMetadata;
 
 class MetadataMusicBackend : public AbstractMetadataBackend
@@ -74,7 +73,7 @@ private slots:
 private:
     AlwaysExpandedMetadataModel* m_artistsModel;
     AlwaysExpandedMetadataModel* m_albumsModel;
-    MetadataBackendCommonModel* m_musicModel;
+    PmcMetadataModel* m_musicModel;
     PlaylistModel* m_playlistModel;
 
     QString m_artistFilter;

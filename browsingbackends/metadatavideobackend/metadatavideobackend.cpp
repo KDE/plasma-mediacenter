@@ -26,6 +26,7 @@
 #include "mediacenter/filtermediamodel.h"
 
 #include <QDebug>
+#include "mediacenter/modelmetadata.h"
 
 MEDIACENTER_EXPORT_BROWSINGBACKEND(MetadataVideoBackend, "metadatavideobackend.json")
 

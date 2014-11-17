@@ -20,9 +20,10 @@
 #ifndef METADATAMUSICSONGSMODEL_H
 #define METADATAMUSICSONGSMODEL_H
 
-#include "../metadatabackendcommonmodel.h"
+#include "mediacenter/pmcmetadatamodel.h"
 
-class MetadataMusicSongsModel : public MetadataBackendCommonModel
+class MetadataMusicSongsModel : public PmcMetadataModel
+
 {
     Q_OBJECT
 public:
