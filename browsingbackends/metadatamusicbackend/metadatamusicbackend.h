@@ -25,8 +25,6 @@
 
 class FilterMediaModel;
 class PmcMetadataModel;
-class AlwaysExpandedMetadataModel;
-class PmcMetadataModel;
 class ModelMetadata;
 
 class MetadataMusicBackend : public AbstractMetadataBackend
@@ -66,8 +64,8 @@ private slots:
     void initializeModels();
 
 private:
-    AlwaysExpandedMetadataModel* m_artistsModel;
-    AlwaysExpandedMetadataModel* m_albumsModel;
+    PmcMetadataModel* m_artistsModel;
+    PmcMetadataModel* m_albumsModel;
     PmcMetadataModel* m_musicModel;
 
     QString m_artistFilter;

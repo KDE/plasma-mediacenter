@@ -278,6 +278,8 @@ QVariant PmcMetadataModel::dataForAlbum(int row, int role) const
         return album->name();
     case Qt::DecorationRole:
         return getAlbumArt(album->name(), album->albumArtist(), resourceId);
+    case MediaCenter::IsExpandableRole:
+        return true;
     }
 
     return QVariant();
@@ -294,6 +296,8 @@ QVariant PmcMetadataModel::dataForArtist(int row, int role) const
         return artist->name();
     case Qt::DecorationRole:
         return getArtistImage(artist->name(), resourceId);
+    case MediaCenter::IsExpandableRole:
+        return true;
     }
 
     return QVariant();
