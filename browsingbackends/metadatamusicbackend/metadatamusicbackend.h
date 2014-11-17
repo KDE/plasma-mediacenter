@@ -22,13 +22,10 @@
 #define METADATAMUSICBACKEND_H
 
 #include "../abstractmetadatabackend.h"
-#include "categoriesmodel.h"
 
 class FilterMediaModel;
 class PmcMetadataModel;
 class AlwaysExpandedMetadataModel;
-class PlaylistModel;
-class CategoriesModel;
 class PmcMetadataModel;
 class ModelMetadata;
 
