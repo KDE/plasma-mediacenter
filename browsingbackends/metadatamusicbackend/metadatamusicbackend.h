@@ -26,6 +26,7 @@
 class FilterMediaModel;
 class PmcMetadataModel;
 class AlwaysExpandedMetadataModel;
+class PlaylistModel;
 class PmcMetadataModel;
 class ModelMetadata;
 
