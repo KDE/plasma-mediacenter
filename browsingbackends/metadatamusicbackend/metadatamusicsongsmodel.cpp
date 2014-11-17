@@ -23,7 +23,7 @@
 #include <mediacenter/pmccoverartprovider.h>
 #include <mediacenter/singletonfactory.h>
 
-#include <QTime>
+#include <KFormat>
 
 MetadataMusicSongsModel::MetadataMusicSongsModel(QObject* parent): MetadataBackendCommonModel(parent)
 {
@@ -47,7 +47,7 @@ QVariant MetadataMusicSongsModel::data(const QModelIndex& index, int role) const
         QVariantList list;
         list << songName << albumName << artistName;
         if (duration > 0) {
-            list << QTime(0,0).addSecs(duration).toString("hh:mm:ss");
+            list << KFormat().formatDuration(duration);
         }
 
         return list;
