@@ -12,7 +12,6 @@ set (plasmamediacenter_SRCS
     lastfmimagefetcher.cpp
     modelmetadata.cpp
     objectpair.cpp
-    filteredbackendsmodel.cpp
     mediacenter.cpp
     abstractbrowsingbackend.cpp
     backendsloader.cpp

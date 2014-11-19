@@ -25,8 +25,6 @@ ListView {
     id: listView
     spacing: 20
 
-    property alias backendsModel: filteredModel.sourceBackendsModel
-    property alias categoryFilter: filteredModel.backendCategory
     property string currentBackendDescription: currentItem ? currentItem.currentBackendDescription : ""
 
     //FIXME: this is really bad looking :/
@@ -36,15 +34,10 @@ ListView {
     Keys.onReturnPressed: { currentItem.launch() }
     Keys.onEnterPressed: { currentItem.launch() }
 
-    model: PMC.FilteredBackendsModel {
-        id: filteredModel
-    }
-
     delegate: BackendsListDelegate {
         height: 64 + anchors.margins
         width: listView.width
         anchors.margins: 6
     }
 
-    onCategoryFilterChanged: currentIndex = 0
 }

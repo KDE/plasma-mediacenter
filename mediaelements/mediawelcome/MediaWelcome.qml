@@ -47,24 +47,15 @@ PlasmaComponents.Page {
             height: 0.1 * parent.height
         }
 
-        CategoriesList {
-            id: categoriesList
-            anchors.horizontalCenter: parent.horizontalCenter
-            height: 0.3 * parent.height
-            width: parent.width
-            clip: true
-        }
-
         FilteredBackendsList {
             id: backendsList
             anchors.horizontalCenter: parent.horizontalCenter
 
             width: 300
             height: 0.5 * parent.height
-            backendsModel: homeScreenRootItem.model
-            categoryFilter: categoriesList.currentCategory
+            model: homeScreenRootItem.model
         }
- 
+
         HomeScreenFooter {
             id: homeScreenFooter
             width: parent.width
@@ -73,6 +64,6 @@ PlasmaComponents.Page {
         }
     }
 
-    Keys.forwardTo: [ categoriesList, backendsList ]
+    Keys.forwardTo: [ backendsList ]
     Keys.onEscapePressed: homeScreenRootItem.emptyAreaClicked()
 }

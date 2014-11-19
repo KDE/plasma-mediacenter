@@ -20,7 +20,6 @@
 
 #include "mediacenterplugin.h"
 
-#include "mediacenter/filteredbackendsmodel.h"
 #include "mediacenter/subtitleprovider.h"
 #include "mediacenter/filterplaylistmodel.h"
 #include "mediacenter/multipleplaylistmodel.h"
@@ -40,7 +39,7 @@ void MediaCenterPlugin::registerTypes(const char *uri)
 {
     Q_ASSERT(uri == QLatin1String("org.kde.plasma.mediacenter"));
 
-    qmlRegisterType<FilteredBackendsModel>(uri, 2, 0, "FilteredBackendsModel");
+    qmlRegisterType<BackendsModel>(uri, 2, 0, "BackendsModel");
     qmlRegisterType<SubtitleProvider>(uri, 2, 0, "SubtitleProvider");
     qmlRegisterType<FilterPlaylistModel>(uri, 2, 0, "FilterPlaylistModel");
     qmlRegisterType<MultiplePlaylistModel>(uri, 2, 0, "MultiplePlaylistModel");
@@ -50,7 +49,6 @@ void MediaCenterPlugin::registerTypes(const char *uri)
     qmlRegisterType<RuntimeData>(uri, 2, 0, "RuntimeData");
     qmlRegisterType<BackendsLoader>(uri, 2, 0, "BackendsLoader");
 
-    qRegisterMetaType<BackendsModel*>("BackendsModel*");
     qRegisterMetaType<PlaylistModel*>("PlaylistModel*");
     qRegisterMetaType<MediaCenter::AbstractBrowsingBackend*>("MediaCenter::AbstractBrowsingBackend*");
 
@@ -59,7 +57,6 @@ void MediaCenterPlugin::registerTypes(const char *uri)
 void MediaCenterPlugin::initializeEngine(QQmlEngine *engine, const char *uri)
 {
     Q_ASSERT(uri == QLatin1String("org.kde.plasma.mediacenter"));
-    qDebug() << "one time";
     engine->addImageProvider(PmcCoverArtProvider::identificationString, new PmcCoverArtProvider());
 }
 
