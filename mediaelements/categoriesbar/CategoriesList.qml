@@ -37,5 +37,12 @@ ListView {
         color: theme.highlightColor
     }
 
+    onCurrentItemChanged: {
+        if(currentIndex != -1) {
+            categoriesBarRoot.backendObject = currentItem.backendObject;
+            categoriesBarRoot.backendSelected();
+        }
+    }
+
     Component.onCompleted: currentIndex = model.defaultIndex
 }

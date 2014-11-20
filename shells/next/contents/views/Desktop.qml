@@ -57,13 +57,6 @@ Image {
         }
     }
 
-    function getMediaWelcome() {
-        if (!mediaWelcomeInstance) {
-            mediaWelcomeInstance = pmcMediaWelcomeComponent.createObject(pmcPageStack);
-        }
-        return mediaWelcomeInstance;
-    }
-
     function getMediaBrowser() {
         if (!mediaBrowserInstance) {
             mediaBrowserInstance = pmcMediaBrowserComponent.createObject(pmcPageStack);
@@ -304,7 +297,6 @@ Image {
         //configure the view behavior
         desktop.windowType = Shell.Desktop.FullScreen;
         getPmcInterface();
-        pmcPageStack.pushAndFocus(getMediaWelcome());
         getPlaylist().visible = false;
     }
 
@@ -329,6 +321,12 @@ Image {
         width: parent.width * 0.2
         height: parent.height
         visible: true
+        onBackendSelected: {
+            if (!backendObject.init())
+                return;
+            getPmcInterface().currentBrowsingBackend = backendObject;
+            pmcPageStack.pushAndFocus(getMediaBrowser());
+        }
     }
 
     PlasmaComponents.PageStack {
@@ -368,7 +366,7 @@ Image {
         height: visible ? parent.height * 0.08 : 0
         runtimeDataObject: runtimeData
         z: 1; opacity: 0.8
-        visible: (!mediaWelcomeInstance) ? false : !(pmcPageStack.currentPage.hideMediaController)
+        visible: true 
         state: hideFlag && ((mediaPlayerInstance && mediaPlayerInstance.visible) || (imageViewerInstance && imageViewerInstance.visible)) ? "hidden"  : ""
 
         currentMediaTime: mediaPlayerInstance.currentTime
@@ -400,52 +398,6 @@ Image {
         ]
 
         transitions: [ Transition { AnchorAnimation { duration: 200 } } ]
-    }
-
-    Component {
-        id: pmcMediaWelcomeComponent
-        MediaCenterElements.MediaWelcome {
-            property bool hideMediaController: true
-            model: getPmcInterface().backendsModel
-            onBackendSelected: {
-                print("###############1");
-                if (!selectedBackend.init())
-                    return;
-                print("###############2");
-                getPmcInterface().currentBrowsingBackend = selectedBackend;
-                print("###############3");
-                pmcPageStack.pushAndFocus(getMediaBrowser());
-                print("###############4");
-            }
-            //onEmptyAreaClicked: pmcPageStack.pushAndFocus(mediaPlayerInstance ? getMediaPlayer() : getPlaylist())
-            onStatusChanged: {
-                switch (status) {
-                    case PlasmaComponents.PageStatus.Active:
-                        if (mediaPlayerInstance && mediaPlayerInstance.hasVideo) {
-                            videoBackdropTimer.start();
-                        }
-                    case PlasmaComponents.PageStatus.Deactivating:
-                        if (mediaPlayerInstance) {
-                            if (pmcPageStack.currentPage != mediaPlayerInstance) {
-                                mediaPlayerInstance.visible = false;
-                            }
-                            mediaPlayerInstance.z = 0;
-                            mediaPlayerInstance.dimVideo = false;
-                        }
-                    }
-            }
-
-            Timer {
-                id: videoBackdropTimer; interval: 250
-                onTriggered: {
-                    mediaPlayerInstance.parent = pmcPageStackParentItem;
-                    mediaPlayerInstance.visible = true;
-                    mediaPlayerInstance.z = -1;
-                    mediaPlayerInstance.height = pmcPageStackParentItem.height;
-                    mediaPlayerInstance.dimVideo = true;
-                }
-            }
-        }
     }
 
     Component {
@@ -488,6 +440,7 @@ Image {
             }
         }
     }
+
     Component {
         id: pmcMediaPlayerComponent
         MediaCenterElements.MediaPlayer {

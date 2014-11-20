@@ -4,9 +4,12 @@ import org.kde.plasma.components 2.0 as PlasmaComponents
 
 Rectangle {
 
-    id: bar
+    id: categoriesBarRoot
 
     property alias backendsModel: categoriesList.model
+    property QtObject backendObject
+
+    signal backendSelected
 
     color: theme.viewBackgroundColor
 

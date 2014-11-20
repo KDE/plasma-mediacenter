@@ -24,6 +24,8 @@ import org.kde.plasma.components 2.0 as PlasmaComponents
 Item {
     id: root
 
+    property QtObject backendObject: modelObject
+
     Row {
         anchors.fill: parent
         anchors.leftMargin: spacing
