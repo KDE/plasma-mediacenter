@@ -114,6 +114,11 @@ Image {
         pmcPageStack.popAndFocus();
     }
 
+    function toggleCategoriesBar()
+    {
+        categoriesbar.visible = !categoriesbar.visible;
+    }
+
     function showController(itemToFocus)
     {
         mediaController.hideFlag = false;
@@ -317,12 +322,23 @@ Image {
         id: runtimeData
     }
 
+    MediaCenterElements.CategoriesBar {
+        id: categoriesbar
+        z: 1
+        backendsModel: getPmcInterface().backendsModel
+        width: parent.width * 0.2
+        height: parent.height
+        visible: true
+    }
+
     PlasmaComponents.PageStack {
         id: pmcPageStack
         anchors {
-	    top: pmcPageStack.currentPage == mediaPlayerInstance || pmcPageStack.currentPage == imageViewerInstance ? parent.top : mediaController.bottom
-	    right: parent.right; left: parent.left; bottom: parent.bottom
-	}
+            top: pmcPageStack.currentPage == mediaPlayerInstance || pmcPageStack.currentPage == imageViewerInstance ? parent.top : mediaController.bottom
+            left: (categoriesbar.visible) ? categoriesbar.right : parent.left
+            right: parent.right;
+            bottom: parent.bottom
+        }
         z: 1
 
         function pushAndFocus(page) {
@@ -401,7 +417,7 @@ Image {
                 pmcPageStack.pushAndFocus(getMediaBrowser());
                 print("###############4");
             }
-            onEmptyAreaClicked: pmcPageStack.pushAndFocus(mediaPlayerInstance ? getMediaPlayer() : getPlaylist())
+            //onEmptyAreaClicked: pmcPageStack.pushAndFocus(mediaPlayerInstance ? getMediaPlayer() : getPlaylist())
             onStatusChanged: {
                 switch (status) {
                     case PlasmaComponents.PageStatus.Active:
@@ -562,7 +578,7 @@ Image {
 
     Keys.onPressed: {
         switch (event.key) {
-            case Qt.Key_Escape: goBack(); break
+            case Qt.Key_Escape: toggleCategoriesBar(); break
             case Qt.Key_Backspace: goBack(); break
             case Qt.Key_Space: runtimeData.playPause(); break
             case Qt.Key_MediaPlay: runtimeData.playPause(); break
