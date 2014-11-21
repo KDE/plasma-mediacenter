@@ -48,6 +48,7 @@ bool MetadataPictureBackend::initImpl()
     filteredModel->sort(0, Qt::DescendingOrder);
 
     ModelMetadata *metadata = new ModelMetadata(filteredModel, this);
+    metadata->setName("All Pictures");
     handleBusySignals(pmcMetadataModel);
     setModel(metadata);
     return true;
