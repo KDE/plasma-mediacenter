@@ -57,42 +57,46 @@ FocusScope {
         subtitleTime: video.position
     }
 
-    QtMultimediaKit.Video {
-        id: video
+    Rectangle {
         anchors.fill: parent
-        visible: hasVideo
-
-        onStopped: mediaPlayerRootRect.mediaFinished()
-        onStarted: mediaPlayerRootRect.mediaStarted()
-        onError  : mediaPlayerRootRect.inaccessible()
-
-        Text {
-            anchors {
-                bottom: parent.bottom
-                horizontalCenter: parent.horizontalCenter
-                bottomMargin: 20
-            }
-            horizontalAlignment: Text.AlignHCenter
-            color: theme.textColor
-            width: 0.5 * parent.width
-            wrapMode: Text.WordWrap
-            text: subs.subtitle
-            style: Text.Outline
-            styleColor: theme.backgroundColor
-            font.pixelSize: parent.height * 0.03
-            smooth: true
-        }
-
-        Rectangle {
-            id: videoDimRectangle
+        color: "black"
+        QtMultimediaKit.Video {
+            id: video
             anchors.fill: parent
-            color: "black"
-            opacity: video.hasVideo ? 0.5 : 0
-            visible: mediaPlayerRootRect.dimVideo
-        }
+            visible: hasVideo
 
-        Component.onCompleted: {
-          runtimeDataObject.volume = video.volume
+            onStopped: mediaPlayerRootRect.mediaFinished()
+            onStarted: mediaPlayerRootRect.mediaStarted()
+            onError  : mediaPlayerRootRect.inaccessible()
+
+            Text {
+                anchors {
+                    bottom: parent.bottom
+                    horizontalCenter: parent.horizontalCenter
+                    bottomMargin: 20
+                }
+                horizontalAlignment: Text.AlignHCenter
+                color: theme.textColor
+                width: 0.5 * parent.width
+                wrapMode: Text.WordWrap
+                text: subs.subtitle
+                style: Text.Outline
+                styleColor: theme.backgroundColor
+                font.pixelSize: parent.height * 0.03
+                smooth: true
+            }
+
+            Rectangle {
+                id: videoDimRectangle
+                anchors.fill: parent
+                color: "black"
+                opacity: video.hasVideo ? 0.5 : 0
+                visible: mediaPlayerRootRect.dimVideo
+            }
+
+            Component.onCompleted: {
+            runtimeDataObject.volume = video.volume
+            }
         }
     }
 
