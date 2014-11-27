@@ -19,6 +19,8 @@
 #include "filteredbackendsmodel.h"
 #include "backendsmodel.h"
 
+#include <QDebug>
+
 FilteredBackendsModel::FilteredBackendsModel(QObject *parent) : QSortFilterProxyModel(parent)
 {
 
@@ -44,6 +46,7 @@ void FilteredBackendsModel::setBackendCategory(const QString& category)
 {
     beginResetModel();
     m_category = category;
+    qDebug() << "Backend category changed to " << category;
     endResetModel();
     emit backendCategoryChanged();
 }
