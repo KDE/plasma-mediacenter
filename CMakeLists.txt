@@ -71,3 +71,4 @@ add_subdirectory(autotests)
 # macro_optional_add_subdirectory( po )
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
+
