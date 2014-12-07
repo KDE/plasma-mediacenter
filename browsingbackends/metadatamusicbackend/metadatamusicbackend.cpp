@@ -78,9 +78,10 @@ bool MetadataMusicBackend::initImpl()
 
     m_albumsModelMetadata->setName(i18n("Albums"));
     m_artistsModelMetadata->setName(i18n("Artists"));
-    m_musicModelMetadata->setName("Songs#list");
+    m_musicModelMetadata->setName(i18n("Songs"));
 
     m_musicModelMetadata->setSupportsSearch(true);
+    m_musicModelMetadata->setIsList(true);
     m_artistsModelMetadata->setSupportsSearch(true);
     m_albumsModelMetadata->setSupportsSearch(true);
 

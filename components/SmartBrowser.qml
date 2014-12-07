@@ -61,7 +61,7 @@ FocusScope {
                 } else {
                     console.log("******* Error loading SplitBrowser " + splitBrowserComponent.errorString())
                 }
-            } else if (modelLabel.split("#").length == 2 && modelLabel.split("#")[1] == "list") {
+            } else if (modelMetadata.isList) {
                 var listBrowserComponent = Qt.createComponent("listbrowser/ListBrowser.qml");
                 if (listBrowserComponent.status == Component.Ready) {
                     root.browser = listBrowserComponent.createObject(root);
