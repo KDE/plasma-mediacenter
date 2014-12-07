@@ -29,6 +29,7 @@
 #include "mediacenter/modelmetadata.h"
 
 #include <KDebug>
+#include <klocalizedstring.h>
 
 #include <QQmlEngine>
 #include <QTimer>
@@ -36,8 +37,8 @@
 MEDIACENTER_EXPORT_BROWSINGBACKEND(MetadataMusicBackend, "metadatamusicbackend.json")
 
 namespace {
-    static const char *s_showAllButton = "Show All";
-    static const char *s_playAllButton = "Play All";
+    static const QString s_showAllButton = i18n("Show All");
+    static const QString s_playAllButton = i18n("Play All");
 }
 
 MetadataMusicBackend::MetadataMusicBackend(QObject* parent, const QVariantList& args)
@@ -75,8 +76,8 @@ bool MetadataMusicBackend::initImpl()
     m_artistFilteredModel->setSourceModel(m_artistsModel);
     m_artistsModelMetadata = new ModelMetadata(m_artistFilteredModel, this);
 
-    m_albumsModelMetadata->setName("Albums");
-    m_artistsModelMetadata->setName("Artists");
+    m_albumsModelMetadata->setName(i18n("Albums"));
+    m_artistsModelMetadata->setName(i18n("Artists"));
     m_musicModelMetadata->setName("Songs#list");
 
     m_musicModelMetadata->setSupportsSearch(true);
