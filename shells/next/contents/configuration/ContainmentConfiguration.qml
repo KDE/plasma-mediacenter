@@ -36,12 +36,12 @@ AppletConfiguration {
     ConfigModel {
         id: globalContainmentConfigModel
         ConfigCategory {
-            name: i18nd("plasma_shell_org.kde.plasma.desktop", "Wallpaper")
+            name: i18nd("plasma_shell_org.kde.plasma.mediacenter", "Wallpaper")
             icon: "preferences-desktop-wallpaper"
             source: "ConfigurationContainmentAppearance.qml"
         }
         ConfigCategory {
-            name: i18nd("plasma_shell_org.kde.plasma.desktop", "Mouse Actions")
+            name: i18nd("plasma_shell_org.kde.plasma.mediacenter", "Mouse Actions")
             icon: "preferences-desktop-mouse"
             source: "ConfigurationContainmentActions.qml"
         }

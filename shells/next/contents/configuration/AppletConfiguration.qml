@@ -43,7 +43,7 @@ Rectangle {
     ConfigModel {
         id: globalAppletConfigModel
         ConfigCategory {
-            name: i18nd("plasma_shell_org.kde.plasma.desktop", "Keyboard shortcuts")
+            name: i18nd("plasma_shell_org.kde.plasma.mediacenter", "Keyboard shortcuts")
             icon: "preferences-desktop-keyboard"
             source: "ConfigurationShortcuts.qml"
         }
@@ -117,8 +117,8 @@ Rectangle {
         id: messageDialog
         icon: StandardIcon.Warning
         property Item delegate
-        title: i18nd("plasma_shell_org.kde.plasma.desktop", "Apply Settings")
-        text: i18nd("plasma_shell_org.kde.plasma.desktop", "The settings of the current module have changed. Do you want to apply the changes or discard them?")
+        title: i18nd("plasma_shell_org.kde.plasma.mediacenter", "Apply Settings")
+        text: i18nd("plasma_shell_org.kde.plasma.mediacenter", "The settings of the current module have changed. Do you want to apply the changes or discard them?")
         standardButtons: StandardButton.Apply | StandardButton.Discard | StandardButton.Cancel
         onApply: {
             applyAction.trigger()
@@ -317,19 +317,19 @@ Rectangle {
             Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
             QtControls.Button {
                 iconName: "dialog-ok"
-                text: i18nd("plasma_shell_org.kde.plasma.desktop", "OK")
+                text: i18nd("plasma_shell_org.kde.plasma.mediacenter", "OK")
                 onClicked: acceptAction.trigger()
             }
             QtControls.Button {
                 id: applyButton
                 enabled: false
                 iconName: "dialog-ok-apply"
-                text: i18nd("plasma_shell_org.kde.plasma.desktop", "Apply")
+                text: i18nd("plasma_shell_org.kde.plasma.mediacenter", "Apply")
                 onClicked: applyAction.trigger()
             }
             QtControls.Button {
                 iconName: "dialog-cancel"
-                text: i18nd("plasma_shell_org.kde.plasma.desktop", "Cancel")
+                text: i18nd("plasma_shell_org.kde.plasma.mediacenter", "Cancel")
                 onClicked: cancelAction.trigger()
             }
         }

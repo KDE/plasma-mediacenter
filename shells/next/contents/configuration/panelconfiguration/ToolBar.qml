@@ -29,9 +29,9 @@ Item {
     implicitWidth: units.gridUnit * 10
     implicitHeight: row.height + 20
 
-    readonly property string addWidgetsButtonText: i18nd("plasma_shell_org.kde.plasma.desktop", "Add Widgets...")
-    readonly property string addSpacerButtonText: i18nd("plasma_shell_org.kde.plasma.desktop", "Add Spacer")
-    readonly property string settingsButtonText: i18nd("plasma_shell_org.kde.plasma.desktop", "More Settings...")
+    readonly property string addWidgetsButtonText: i18nd("plasma_shell_org.kde.plasma.mediacenter", "Add Widgets...")
+    readonly property string addSpacerButtonText: i18nd("plasma_shell_org.kde.plasma.mediacenter", "Add Spacer")
+    readonly property string settingsButtonText: i18nd("plasma_shell_org.kde.plasma.mediacenter", "More Settings...")
 
     GridLayout {
         id: row
@@ -110,7 +110,7 @@ Item {
             parent: plasmoid.formFactor == PlasmaCore.Types.Horizontal ? buttonsLayout : root
             anchors.right: plasmoid.formFactor == PlasmaCore.Types.Horizontal ? undefined : parent.right
             iconSource: "window-close"
-            tooltip: i18nd("plasma_shell_org.kde.plasma.desktop", "Close")
+            tooltip: i18nd("plasma_shell_org.kde.plasma.mediacenter", "Close")
             onClicked: {
                 configDialog.close()
             }
@@ -129,7 +129,7 @@ Item {
                 spacing: units.smallSpacing
                 PlasmaExtras.Heading {
                     level: 3
-                    text: i18nd("plasma_shell_org.kde.plasma.desktop", "Panel Alignment")
+                    text: i18nd("plasma_shell_org.kde.plasma.mediacenter", "Panel Alignment")
                 }
                 PlasmaComponents.ButtonColumn {
                     spacing: 0
@@ -139,7 +139,7 @@ Item {
                             left: parent.left
                             right: parent.right
                         }
-                        text: i18nd("plasma_shell_org.kde.plasma.desktop", "Left")
+                        text: i18nd("plasma_shell_org.kde.plasma.mediacenter", "Left")
                         checkable: true
                         checked: panel.alignment == Qt.AlignLeft
                         onClicked: panel.alignment = Qt.AlignLeft
@@ -150,7 +150,7 @@ Item {
                             left: parent.left
                             right: parent.right
                         }
-                        text: i18nd("plasma_shell_org.kde.plasma.desktop", "Center")
+                        text: i18nd("plasma_shell_org.kde.plasma.mediacenter", "Center")
                         checkable: true
                         checked: panel.alignment == Qt.AlignCenter
                         onClicked: panel.alignment = Qt.AlignCenter
@@ -161,7 +161,7 @@ Item {
                             left: parent.left
                             right: parent.right
                         }
-                        text: i18nd("plasma_shell_org.kde.plasma.desktop", "Right")
+                        text: i18nd("plasma_shell_org.kde.plasma.mediacenter", "Right")
                         checkable: true
                         checked: panel.alignment == Qt.AlignRight
                         onClicked: panel.alignment = Qt.AlignRight
@@ -171,7 +171,7 @@ Item {
 
                 PlasmaExtras.Heading {
                     level: 3
-                    text: i18nd("plasma_shell_org.kde.plasma.desktop", "Visibility")
+                    text: i18nd("plasma_shell_org.kde.plasma.mediacenter", "Visibility")
                 }
                 PlasmaComponents.ButtonColumn {
                     spacing: 0
@@ -181,7 +181,7 @@ Item {
                             left: parent.left
                             right: parent.right
                         }
-                        text: i18nd("plasma_shell_org.kde.plasma.desktop", "Always Visible")
+                        text: i18nd("plasma_shell_org.kde.plasma.mediacenter", "Always Visible")
                         checkable: true
                         checked: configDialog.visibilityMode == 0
                         onClicked: configDialog.visibilityMode = 0
@@ -192,7 +192,7 @@ Item {
                             left: parent.left
                             right: parent.right
                         }
-                        text: i18nd("plasma_shell_org.kde.plasma.desktop", "Auto Hide")
+                        text: i18nd("plasma_shell_org.kde.plasma.mediacenter", "Auto Hide")
                         checkable: true
                         checked: configDialog.visibilityMode == 1
                         onClicked: configDialog.visibilityMode = 1
@@ -203,7 +203,7 @@ Item {
                             left: parent.left
                             right: parent.right
                         }
-                        text: i18nd("plasma_shell_org.kde.plasma.desktop", "Windows Can Cover")
+                        text: i18nd("plasma_shell_org.kde.plasma.mediacenter", "Windows Can Cover")
                         checkable: true
                         checked: configDialog.visibilityMode == 2
                         onClicked: configDialog.visibilityMode = 2
@@ -214,7 +214,7 @@ Item {
                             left: parent.left
                             right: parent.right
                         }
-                        text: i18nd("plasma_shell_org.kde.plasma.desktop", "Windows Go Below")
+                        text: i18nd("plasma_shell_org.kde.plasma.mediacenter", "Windows Go Below")
                         checkable: true
                         checked: configDialog.visibilityMode == 3
                         onClicked: configDialog.visibilityMode = 3
@@ -223,13 +223,13 @@ Item {
                 }
                 PlasmaComponents.ToolButton {
                     Layout.fillWidth: true
-                    text: i18nd("plasma_shell_org.kde.plasma.desktop", "Maximize Panel")
+                    text: i18nd("plasma_shell_org.kde.plasma.mediacenter", "Maximize Panel")
                     iconSource: panel.formFactor == PlasmaCore.Types.Vertical ? "zoom-fit-height" : "zoom-fit-width"
                     onClicked: panel.maximize();
                 }
                 PlasmaComponents.ToolButton {
                     Layout.fillWidth: true
-                    text: i18nd("plasma_shell_org.kde.plasma.desktop", "Lock Widgets")
+                    text: i18nd("plasma_shell_org.kde.plasma.mediacenter", "Lock Widgets")
                     iconSource: "document-encrypt"
                     onClicked: {
                         plasmoid.action("lock widgets").trigger();
@@ -238,7 +238,7 @@ Item {
                 }
                 PlasmaComponents.ToolButton {
                     Layout.fillWidth: true
-                    text: i18nd("plasma_shell_org.kde.plasma.desktop", "Remove Panel")
+                    text: i18nd("plasma_shell_org.kde.plasma.mediacenter", "Remove Panel")
                     iconSource: "window-close"
                     onClicked: {
                         contextMenu.visible = false;
