@@ -24,9 +24,11 @@ public:
     {
         model = 0;
         supportsSearch = false;
+        isList = false;
     }
     QString name;
     bool supportsSearch;
+    bool isList;
     QObject *model;
     QString headerText;
 };
@@ -57,6 +59,16 @@ void ModelMetadata::setSupportsSearch(bool supports)
 bool ModelMetadata::supportsSearch() const
 {
     return d->supportsSearch;
+}
+
+void ModelMetadata::setIsList(bool isList)
+{
+    d->isList = isList;
+}
+
+bool ModelMetadata::isList() const
+{
+    return d->isList;
 }
 
 QObject* ModelMetadata::model()

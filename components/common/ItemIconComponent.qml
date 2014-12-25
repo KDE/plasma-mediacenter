@@ -24,13 +24,5 @@ import org.kde.kquickcontrolsaddons 2.0 as KQuickControlsAddons
 KQuickControlsAddons.QIconItem {
     id: delegateItemIcon
     anchors.horizontalCenter: parent ? parent.horizontalCenter : undefined
-    icon: {
-        if (typeof iconImageLoader.source == "string")
-            iconImageLoader.source
-        else
-            if (typeof decorationType !== 'undefined' && decorationType == "qimage")
-                iconImageLoader.source
-            else
-                iconImageLoader.source
-    }
+    icon: iconImageLoader.source
 }

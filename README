@@ -1,8 +1,13 @@
 Required:
 ==========
 
-1) Dependencies as listed on http://community.kde.org/Plasma/Plasma_Media_Center/getting_started_with_PMC#Package_dependency
-2) Standard KDE Oxygen Plasma theme
+1) KDE Frameworks 5
+2) KDE Plasma 5
+3) Qt QtMultimedia
+4) Baloo (KF5)
+5) Taglib
+6) Mockcpp (required for building tests)
+7) Standard KDE Oxygen Plasma theme
 
 To know Plasma Media Center architecture and other related information browse through http://community.kde.org/Plasma/Plasma_Media_Center
 
@@ -10,23 +15,23 @@ Installation:
 =========
 mkdir build
 cd build
-cmake .. -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix`
+cmake -DKDE_INSTALL_USE_QT_SYS_PATHS=ON -DCMAKE_INSTALL_PREFIX=`kf5-config --prefix` ..
 make install
-kbuildsycoca4
+kbuildsycoca5
 
-Run PMC using "plasma-mediacenter" or by using the "Plasma Media Center" icon in your launcher
+Run PMC using "plasmashell -ap org.kde.plasma.mediacenter" or by using the "Plasma Media Center" icon in your launcher
+
+Uninstallation:
+=============
+Run this from build dir:
+for i in $(cat install_manifest.txt); do sudo rm $i; done;
+
 
 Troubleshooting
 ===============
 
-1. If you are having trouble playing audio and video files in latest Linux distributions, this is due to PMC is linking with
-both libplasma and QtMultimediaKit. libplasma links with libgstreamer1.0 while QtMultimediaKit links with libgstreamer0.10.
-If you are getting this problem. Please add option -DNO_LINK_TO_PLASMA to cmake as below,
-
-cmake .. -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` -DNO_LINK_TO_PLASMA=ON
-
-2. If you find any error related to mockcpp and don't want to build test, pass -DKDE4_BUILD_TESTS=OFF to cmake as below,
-cmake .. -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` -DKDE4_BUILD_TESTS=OFF
+1. If you find any error related to mockcpp and don't want to build test, pass -DBUILD_TESTING=OFF to cmake as below,
+cmake -DKDE_INSTALL_USE_QT_SYS_PATHS=ON -DCMAKE_INSTALL_PREFIX=`kf5-config --prefix` -DBUILD_TESTING=OFF ..
 
 and then run make and make install.
 

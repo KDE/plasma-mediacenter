@@ -16,10 +16,11 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
+#include "album.h"
+
 #include "media.h"
 
 #include "artist.h"
-#include "album.h"
 
 Album::Album(const QString& name, const QSharedPointer<Artist>& artist)
     : m_artist(artist)

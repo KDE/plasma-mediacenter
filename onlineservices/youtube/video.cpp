@@ -15,13 +15,14 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
+#include "video.h"
+
 #include <QNetworkReply>
 #include <QDebug>
 #include <QSettings>
 
 #include <KFormat>
 
-#include "video.h"
 #include "networkaccess.h"
 #include "videodefinition.h"
 

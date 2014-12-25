@@ -57,7 +57,7 @@ class NetworkAccess : public QObject {
     Q_OBJECT
 
 public:
-    NetworkAccess(QObject* parent = 0);
+    explicit NetworkAccess(QObject* parent = 0);
     QNetworkReply* request(QUrl url,
                              int operation = QNetworkAccessManager::GetOperation,
                              const QByteArray &body = QByteArray());

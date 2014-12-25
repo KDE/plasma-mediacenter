@@ -69,6 +69,19 @@ QHash< int, QVariant > MediaLibraryTest::createTestMediaDataWithAlbumArtist(cons
     return data;
 }
 
+QHash< int, QVariant > MediaLibraryTest::createTestMediaDataWithUrl(const QString &url) const
+{
+    QHash<int,QVariant> data;
+    data.insert(MediaCenter::MediaUrlRole, url);
+    data.insert(Qt::DisplayRole, "Title");
+    data.insert(MediaCenter::MediaTypeRole, "audio");
+    data.insert(Qt::DecorationRole, "smiley");
+    data.insert(MediaCenter::DurationRole, 100);
+    data.insert(MediaCenter::CreatedAtRole, QDateTime::currentDateTimeUtc());
+
+    return data;
+}
+
 void MediaLibraryTest::addsNewMediaAndItsMetadata()
 {
     MockObject<MediaValidator> validator;
@@ -332,6 +345,88 @@ void MediaLibraryTest::shouldAddDifferentAlbumsWhenArtistsAreDifferent()
 
     QSharedPointer<PmcArtist> artist2 = returnedArtist.at(1);
     QCOMPARE(artist2->name(), data2.value(MediaCenter::ArtistRole).toString());
+}
+
+void MediaLibraryTest::shouldReturnCorrectAlbumsAndArtists()
+{
+    MockObject<MediaValidator> validator;
+    MOCK_METHOD(validator, fileWithUrlExists).stubs().will(returnValue(true));
+
+    MediaLibrary mediaLibrary(validator);
+    mediaLibrary.start();
+    QSignalSpy initializedSpy(&mediaLibrary, SIGNAL(initialized()));
+    QVERIFY2(initializedSpy.isValid(), "Could not listen to signal initialized");
+
+    waitForSignal(&initializedSpy);
+
+    // Initial  state.
+
+    QList< QSharedPointer< PmcAlbum > > initialStateOfAlbums = mediaLibrary.getAlbums();
+    QList< QSharedPointer< PmcArtist > > initialStateOfArtists = mediaLibrary.getArtists();
+
+    QVERIFY( initialStateOfAlbums.isEmpty() );
+    QVERIFY( initialStateOfArtists.isEmpty() );
+
+    // After inserting 1 media with album and artist info.
+
+    QSignalSpy newAlbumSpy(&mediaLibrary, SIGNAL(newAlbums(QList< QSharedPointer<PmcAlbum> >)));
+    QVERIFY2(newAlbumSpy.isValid(), "Could not listen to signal newAlbums");
+    QSignalSpy newArtistSpy(&mediaLibrary, SIGNAL(newArtists(QList< QSharedPointer<PmcArtist> >)));
+    QVERIFY2(newArtistSpy.isValid(), "Could not listen to signal newArtists");
+
+    QHash<int,QVariant> data = createTestMediaDataWithAlbumArtist("Album for test", "Artist for test");
+    mediaLibrary.updateMedia(data);
+
+    waitForSignal(&newAlbumSpy);
+    waitForSignal(&newArtistSpy);
+
+    QList< QSharedPointer< PmcAlbum > > stateOfAlbums = mediaLibrary.getAlbums();
+    QList< QSharedPointer< PmcArtist > > stateOfArtists = mediaLibrary.getArtists();
+
+    QCOMPARE(stateOfAlbums.count(), 1);
+    QCOMPARE(stateOfAlbums.at(0)->name(), QString("Album for test"));
+    QCOMPARE(stateOfArtists.count(), 1);
+    QCOMPARE(stateOfArtists.at(0)->name(), QString("Artist for test"));
+
+    // After inserting another media with different artist and without album info.
+
+    QSignalSpy newAlbumSpy2(&mediaLibrary, SIGNAL(newAlbums(QList< QSharedPointer<PmcAlbum> >)));
+    QVERIFY2(newAlbumSpy2.isValid(), "Could not listen to signal newAlbums");
+    QSignalSpy newArtistSpy2(&mediaLibrary, SIGNAL(newArtists(QList< QSharedPointer<PmcArtist> >)));
+    QVERIFY2(newArtistSpy2.isValid(), "Could not listen to signal newArtists");
+
+    QHash<int,QVariant> data2 = createTestMediaDataWithUrl("/bar/foo");
+    data2.insert(MediaCenter::ArtistRole, "Artist");
+    mediaLibrary.updateMedia(data2);
+
+    waitForSignal(&newAlbumSpy2);
+    waitForSignal(&newArtistSpy2);
+
+    QList< QSharedPointer< PmcAlbum > > stateOfAlbums2 = mediaLibrary.getAlbums();
+    QList< QSharedPointer< PmcArtist > > stateOfArtists2 = mediaLibrary.getArtists();
+
+    QCOMPARE(stateOfAlbums2.count(), 1);
+    QCOMPARE(stateOfArtists2.count(), 2);
+
+    // After inserting another media with different album and without artist info.
+
+    QSignalSpy newAlbumSpy3(&mediaLibrary, SIGNAL(newAlbums(QList< QSharedPointer<PmcAlbum> >)));
+    QVERIFY2(newAlbumSpy3.isValid(), "Could not listen to signal newAlbums");
+    QSignalSpy newArtistSpy3(&mediaLibrary, SIGNAL(newArtists(QList< QSharedPointer<PmcArtist> >)));
+    QVERIFY2(newArtistSpy3.isValid(), "Could not listen to signal newArtists");
+
+    QHash<int,QVariant> data3 = createTestMediaDataWithUrl("/bar/foo123");
+    data3.insert(MediaCenter::AlbumRole, "Album");
+    mediaLibrary.updateMedia(data3);
+
+    waitForSignal(&newAlbumSpy3);
+    waitForSignal(&newArtistSpy3);
+
+    QList< QSharedPointer< PmcAlbum > > stateOfAlbums3 = mediaLibrary.getAlbums();
+    QList< QSharedPointer< PmcArtist > > stateOfArtists3 = mediaLibrary.getArtists();
+
+    QCOMPARE(stateOfAlbums3.count(), 2);
+    QCOMPARE(stateOfArtists3.count(), 2);
 }
 
 QTEST_GUILESS_MAIN(MediaLibraryTest)

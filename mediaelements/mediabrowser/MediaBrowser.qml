@@ -64,7 +64,7 @@ FocusScope {
             height: 40
             buttons: currentBrowsingBackend ? currentBrowsingBackend.buttons : undefined
             onButtonClicked: {
-                if (buttonName == "Play All") {
+                if (buttonName === i18n("Play All")) {
                     mediaBrowser.playAllRequested();
                 } else {
                     currentBrowsingBackend.handleButtonClick(buttonName);

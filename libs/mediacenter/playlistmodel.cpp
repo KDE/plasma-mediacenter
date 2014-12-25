@@ -19,6 +19,8 @@
 #include "playlistitem.h"
 #include "settings.h"
 
+#include <klocalizedstring.h>
+
 #include <QDebug>
 
 #include <QtCore/QDir>
@@ -29,7 +31,7 @@
 
 namespace
 {
-static const char DEFAULT_PLAYLIST_NAME[] = "Default";
+static const QString DEFAULT_PLAYLIST_NAME = i18n("Default");
 static int INVALID_INDEX = -1;
 }
 

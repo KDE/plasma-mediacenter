@@ -11,7 +11,7 @@ target_link_libraries(pmc_metadatapicturebackend
     plasmamediacenter
 )
 
-kcoreaddons_desktop_to_json(pmc_metadatapicturebackend metadatapicturebackend.desktop)
+kservice_desktop_to_json(pmc_metadatapicturebackend metadatapicturebackend.desktop)
 
 install(TARGETS pmc_metadatapicturebackend DESTINATION ${PLUGIN_INSTALL_DIR}/plasma/mediacenter/browsingbackends)
 install(FILES metadatapicturebackend.desktop DESTINATION ${SERVICES_INSTALL_DIR})

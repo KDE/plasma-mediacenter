@@ -28,17 +28,17 @@ Item {
     implicitHeight: mainColumn.implicitHeight
 
     property var prettyStrings: {
-        "LeftButton": i18nd("plasma_shell_org.kde.plasma.desktop", "Left-Button"),
-        "RightButton": i18nd("plasma_shell_org.kde.plasma.desktop", "Right-Button"),
-        "MidButton": i18nd("plasma_shell_org.kde.plasma.desktop", "Middle-Button"),
+        "LeftButton": i18nd("plasma_shell_org.kde.plasma.mediacenter", "Left-Button"),
+        "RightButton": i18nd("plasma_shell_org.kde.plasma.mediacenter", "Right-Button"),
+        "MidButton": i18nd("plasma_shell_org.kde.plasma.mediacenter", "Middle-Button"),
 
-        "wheel:Vertical": i18nd("plasma_shell_org.kde.plasma.desktop", "Vertical-Scroll"),
-        "wheel:Horizontal": i18nd("plasma_shell_org.kde.plasma.desktop", "Horizontal-Scroll"),
+        "wheel:Vertical": i18nd("plasma_shell_org.kde.plasma.mediacenter", "Vertical-Scroll"),
+        "wheel:Horizontal": i18nd("plasma_shell_org.kde.plasma.mediacenter", "Horizontal-Scroll"),
 
-        "ShiftModifier": i18nd("plasma_shell_org.kde.plasma.desktop", "Shift"),
-        "ControlModifier": i18nd("plasma_shell_org.kde.plasma.desktop", "Ctrl"),
-        "AltModifier": i18nd("plasma_shell_org.kde.plasma.desktop", "Alt"),
-        "MetaModifier": i18nd("plasma_shell_org.kde.plasma.desktop", "Meta")
+        "ShiftModifier": i18nd("plasma_shell_org.kde.plasma.mediacenter", "Shift"),
+        "ControlModifier": i18nd("plasma_shell_org.kde.plasma.mediacenter", "Ctrl"),
+        "AltModifier": i18nd("plasma_shell_org.kde.plasma.mediacenter", "Alt"),
+        "MetaModifier": i18nd("plasma_shell_org.kde.plasma.mediacenter", "Meta")
     }
 
     function saveConfig() {
@@ -113,7 +113,7 @@ Item {
             }
         }
         MouseEventInputButton {
-            defaultText: i18nd("plasma_shell_org.kde.plasma.desktop", "Add Action");
+            defaultText: i18nd("plasma_shell_org.kde.plasma.mediacenter", "Add Action");
             onEventStringChanged: {
                 configDialog.currentContainmentActionsModel.append(eventString, "org.kde.contextmenu");
                 root.configurationChanged();

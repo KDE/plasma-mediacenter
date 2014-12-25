@@ -24,7 +24,7 @@ import org.kde.plasma.configuration 2.0
 import org.kde.kquickcontrolsaddons 2.0 as KQuickControlsAddons
 
 PlasmaComponents.Button {
-    text: i18nd("plasma_shell_org.kde.plasma.desktop", "Screen Edge")
+    text: i18nd("plasma_shell_org.kde.plasma.mediacenter", "Screen Edge")
 
     KQuickControlsAddons.MouseEventListener {
         cursorShape: Qt.DragMoveCursor

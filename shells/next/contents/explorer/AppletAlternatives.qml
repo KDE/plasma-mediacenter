@@ -54,7 +54,7 @@ PlasmaCore.Dialog {
         }
 
         PlasmaExtras.Heading {
-            text: i18nd("plasma_shell_org.kde.plasma.desktop", "Alternatives");
+            text: i18nd("plasma_shell_org.kde.plasma.mediacenter", "Alternatives");
         }
 
         PlasmaExtras.ScrollArea {
@@ -120,7 +120,7 @@ PlasmaCore.Dialog {
             PlasmaComponents.Button {
                 enabled: root.currentPlugin != alternativesHelper.currentPlugin
                 Layout.fillWidth: true
-                text: i18nd("plasma_shell_org.kde.plasma.desktop", "Switch");
+                text: i18nd("plasma_shell_org.kde.plasma.mediacenter", "Switch");
                 onClicked: {
                     alternativesHelper.loadAlternative(root.currentPlugin);
                     dialog.close();
@@ -128,7 +128,7 @@ PlasmaCore.Dialog {
             }
             PlasmaComponents.Button {
                 Layout.fillWidth: true
-                text: i18nd("plasma_shell_org.kde.plasma.desktop", "Cancel");
+                text: i18nd("plasma_shell_org.kde.plasma.mediacenter", "Cancel");
                 onClicked: {
                     dialog.close();
                 }
