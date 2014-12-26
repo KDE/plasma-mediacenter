@@ -76,7 +76,7 @@ FocusScope {
 
     Component {
         id: mediaBrowserSmartBrowserComponent
-        MediaCenterComponents.SmartBrowser {
+        MediaCenterComponents.CategoriesBrowser {
             anchors {
                 bottom: parent.bottom; right: parent.right; left: parent.left;
                 top: browserToolbar.visible ? browserToolbar.bottom : parent.top

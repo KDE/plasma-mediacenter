@@ -43,7 +43,8 @@ FocusScope {
         anchors { top: parent.top; left: parent.left; right: parent.right }
         height: visible ? 32 : 0
         opacity: activeFocus ? 1 : 0.8
-        visible: (modelMetadata && modelMetadata.model && modelMetadata.supportsSearch) ? true : false
+        visible: false
+//         visible: (modelMetadata && modelMetadata.model && modelMetadata.supportsSearch) ? true : false
         clearButtonShown: true
         placeholderText: i18n("Search")
         onTextChanged: searchTimer.restart()

@@ -5,3 +5,4 @@ SmartBrowser 2.0 SmartBrowser.qml
 SplitBrowser 2.0 SplitBrowser.qml
 Search 2.0 Search.qml
 FocusIndicator 2.0 common/FocusIndicator.qml
+CategoriesBrowser 2.0 CategoriesBrowser.qml
