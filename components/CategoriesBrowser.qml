@@ -41,18 +41,32 @@ FocusScope {
     ListView {
         id: categoriesListView
         anchors.fill: parent
-        delegate: Item {
-            width: parent.width; height: 600
-            ColumnLayout {
-                anchors { margins: 5; fill: parent }
+        delegate:
+        ColumnLayout {
+            width: parent.width
+            Rectangle {
+                Layout.fillWidth: true; Layout.preferredHeight: nameLabel.height
+                color: theme.highlightColor
+
                 PlasmaComponents.Label {
-                    Layout.fillWidth: true
+                    id: nameLabel
+                    anchors { left: parent.left; verticalCenter: parent.verticalCenter }
                     text: model.modelData.name
                     font.pointSize: units.gridUnit
                 }
-                MediaCenterComponents.GridBrowser {
-                    Layout.fillWidth: true; Layout.fillHeight: true
-                    modelMetadata: model.modelData
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: categoriesListView.currentIndex = index
+                }
+            }
+            MediaCenterComponents.GridBrowser {
+                Layout.fillWidth: true; Layout.preferredHeight: categoriesListView.currentIndex === index ? 200 : 0
+                clip: true
+                modelMetadata: model.modelData
+
+                Behavior on Layout.preferredHeight {
+                    NumberAnimation { duration: 300 }
                 }
             }
         }
