@@ -32,15 +32,12 @@ class AbstractBrowsingBackend::AbstractBrowsingBackendPrivate
 public:
     AbstractBrowsingBackendPrivate(AbstractBrowsingBackend *q) :
     q(q),
-    cfInterface(false),
     hasInitialized(false)
     {}
 
     KPluginInfo pluginInfo;
     AbstractBrowsingBackend *q;
-    bool cfInterface;
     bool hasInitialized;
-    QString mediaBrowserSidePanelText;
     QList<QObject*> models;
     QString searchTerm;
     QStringList buttons;
@@ -52,7 +49,6 @@ AbstractBrowsingBackend::AbstractBrowsingBackend(QObject *parent, const QVariant
 {
     Q_UNUSED(args);
     qRegisterMetaType<QAbstractItemModel*>("QAbstractItemModel*");
-    d->mediaBrowserSidePanelText.clear();
 }
 
 AbstractBrowsingBackend::~AbstractBrowsingBackend()
