@@ -52,7 +52,7 @@ FocusScope {
                     id: nameLabel
                     anchors { left: parent.left; verticalCenter: parent.verticalCenter }
                     text: model.modelData.name
-                    font.pointSize: units.gridUnit
+                    font.pointSize: fontSizes.large
                 }
 
                 MouseArea {

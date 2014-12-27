@@ -304,6 +304,15 @@ Image {
 
     // Start: Plasma mediacenter
 
+    QtObject {
+        id: fontSizes
+        property int small: 8
+        property int medium: 10
+        property int large: 12
+        property int huge: 16
+        property int enormous: 22
+    }
+
     Component {
         id: pmcInterfaceComponent
         PMC.QMLAccess {
