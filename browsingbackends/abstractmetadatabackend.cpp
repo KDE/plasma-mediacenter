@@ -47,7 +47,6 @@ bool AbstractMetadataBackend::busy() const
 void AbstractMetadataBackend::handleBusySignals ( PmcMetadataModel* emitter )
 {
     connect(emitter, SIGNAL(queryStarted()), SLOT(makeBusy()));
-    connect(emitter, SIGNAL(queryError(QString)), SLOT(makeFree()));
     connect(emitter, SIGNAL(queryFinished()), SLOT(makeFree()));
 }
 
@@ -61,16 +60,6 @@ void AbstractMetadataBackend::makeFree()
 {
     m_busy = false;
     emit busyChanged();
-}
-
-void AbstractMetadataBackend::setModel(ModelMetadata* modelMetadata)
-{
-    PmcMetadataModel *metadataModel = qobject_cast<PmcMetadataModel*>(modelMetadata->model());
-    if (metadataModel) {
-        connect(metadataModel, SIGNAL(queryError(QString)), SIGNAL(error(QString)));
-    }
-
-    MediaCenter::AbstractBrowsingBackend::setModel(modelMetadata);
 }
 
 #include "abstractmetadatabackend.moc"

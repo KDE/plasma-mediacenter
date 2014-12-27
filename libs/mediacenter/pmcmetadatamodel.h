@@ -53,7 +53,6 @@ public Q_SLOTS:
 signals:
     void queryStarted();
     void queryFinished();
-    void queryError(const QString &message);
 
 protected Q_SLOTS:
     void handleNewMedia(const QList<QSharedPointer<PmcMedia> > &media);
