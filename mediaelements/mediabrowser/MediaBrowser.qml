@@ -148,7 +148,7 @@ FocusScope {
     PlasmaComponents.Label {
         id: errorLabel
         anchors.centerIn: parent
-        font.pointSize: 18
+        font.pointSize: fontSizes.large
         z: 2
 
         function setError(message)
