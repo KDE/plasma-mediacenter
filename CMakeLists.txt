@@ -1,7 +1,7 @@
 project(PlasmaMediaCenter)
 
 cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
-set(QT_MIN_VERSION "5.2.0")
+set(QT_MIN_VERSION "5.3.0")
 
 find_package(ECM 0.0.8 REQUIRED NO_MODULE)
 include(FeatureSummary)
