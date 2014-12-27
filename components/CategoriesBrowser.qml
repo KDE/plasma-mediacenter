@@ -61,7 +61,7 @@ FocusScope {
                 }
             }
             MediaCenterComponents.GridBrowser {
-                Layout.fillWidth: true; Layout.preferredHeight: categoriesListView.currentIndex === index ? 600 : 0
+                Layout.fillWidth: true; Layout.preferredHeight: categoriesListView.currentIndex === index ? categoriesListView.height*0.9 : 0
                 clip: true
                 modelMetadata: model.modelData
 
