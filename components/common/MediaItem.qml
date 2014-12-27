@@ -62,6 +62,7 @@ Item {
                 Layout.fillHeight: true; Layout.fillWidth: true
                 verticalAlignment: Text.AlignVCenter
                 wrapMode: Text.Wrap
+                font.pointSize: units.gridUnit
                 text: display
             }
         }

@@ -91,7 +91,7 @@ FocusScope {
         model: modelMetadata ? modelMetadata.model : undefined
         clip: true
         cellWidth: cellHeight*2
-        cellHeight: height/3.1
+        cellHeight: units.iconSizes.enormous
         delegate: Common.MediaItemDelegate {
             width: GridView.view.cellWidth
             height: GridView.view.cellHeight
