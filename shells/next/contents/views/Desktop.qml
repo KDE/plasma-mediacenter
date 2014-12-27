@@ -349,6 +349,7 @@ Image {
         z: 1
 
         function pushAndFocus(page) {
+            if (currentPage != page)
             push(page);
             focusCurrentPage();
         }
