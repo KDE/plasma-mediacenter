@@ -61,7 +61,6 @@ bool MetadataMusicBackend::initImpl()
     m_musicModel = new PmcMetadataModel(this);
     m_artistsModel->setDefaultDecoration("user-identity");
     m_albumsModel->setDefaultDecoration("pmcnocover");
-    connect(m_musicModel, SIGNAL(modelReset()), SLOT(musicModelReset()));
 
     m_musicFilteredModel = new FilterMediaModel(this);
     m_musicFilteredModel->setSourceModel(m_musicModel);
