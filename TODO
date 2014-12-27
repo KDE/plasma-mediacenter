@@ -1,0 +1,2 @@
+- Fix font sizes so that both HiDPI and Low DPI people are happy
+- Fix music images, it used to show album coverart if available
