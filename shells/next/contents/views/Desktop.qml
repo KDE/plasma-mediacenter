@@ -306,11 +306,11 @@ Image {
 
     QtObject {
         id: fontSizes
-        property int small: 8
-        property int medium: 10
-        property int large: 12
-        property int huge: 16
-        property int enormous: 22
+        property int small: theme.smallestFont.pointSize
+        property int medium: small*1.2
+        property int large: small*1.4
+        property int huge: small*1.6
+        property int enormous: small*2
     }
 
     Component {

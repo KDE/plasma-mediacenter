@@ -85,7 +85,7 @@ FocusScope {
                         Text {
                             text: name
                             color: theme.textColor
-                            font.pointSize: 24
+                            font.pointSize: fontSizes.large
                             anchors { centerIn: parent; margins: 10 }
                         }
 

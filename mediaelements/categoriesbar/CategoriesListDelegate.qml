@@ -46,7 +46,7 @@ Item {
             horizontalAlignment: Text.AlignRight
             elide: Text.ElideRight
             text: display
-            font.pointSize: units.gridUnit
+            font.pointSize: fontSizes.large
         }
     }
 

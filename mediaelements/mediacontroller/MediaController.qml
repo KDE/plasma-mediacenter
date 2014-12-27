@@ -221,7 +221,6 @@ FocusScope {
                 id: playlistButton
                 width: parent.height
                 height: width
-                font.pointSize: 12
                 iconSource: "format-list-ordered"
                 onClicked: playlistButtonClicked();
             }
@@ -230,7 +229,6 @@ FocusScope {
                 id: playerButton
                 width: parent.height
                 height: width
-                font.pointSize: 12
                 iconSource: "applications-multimedia"
                 onClicked: playerButtonClicked();
             }
