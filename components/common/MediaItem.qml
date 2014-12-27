@@ -31,11 +31,16 @@ Item {
     signal pressAndHold(int index)
 
     Rectangle {
-        anchors { fill: parent; margins: 10 }
+        anchors {
+            fill: parent;
+            topMargin: units.smallSpacing * 2
+            bottomMargin: units.smallSpacing * 2
+            rightMargin: units.smallSpacing * 4
+        }
         color: view.currentIndex === index ? theme.highlightColor : theme.backgroundColor
 
         RowLayout {
-            anchors { fill: parent; margins: 5 }
+            anchors { fill: parent; margins: units.smallSpacing }
             Loader {
                 Layout.fillHeight: true; Layout.preferredWidth: height
                 id: iconImageLoader

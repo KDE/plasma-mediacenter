@@ -61,13 +61,19 @@ FocusScope {
                 }
             }
             MediaCenterComponents.GridBrowser {
-                Layout.fillWidth: true; Layout.preferredHeight: categoriesListView.currentIndex === index ? categoriesListView.height*0.9 : 0
+                Layout.fillWidth: true; Layout.preferredHeight: categoriesListView.currentIndex === index ? categoriesListView.height*0.8 : 0
                 clip: true
                 modelMetadata: model.modelData
 
                 Behavior on Layout.preferredHeight {
                     NumberAnimation { duration: 300 }
                 }
+            }
+
+            Item {
+                Layout.preferredHeight: units.smallSpacing * 3
+                Layout.fillWidth: true
+                visible: categoriesListView.currentIndex === index ? true : false
             }
         }
     }

@@ -86,6 +86,8 @@ FocusScope {
         anchors {
             top: searchField.bottom; bottom: parent.bottom
             left: parent.left; right: parent.right
+            topMargin: units.smallSpacing * 2
+            bottomMargin: units.smallSpacing * 3
         }
         onCountChanged: currentIndex = -1
         model: modelMetadata ? modelMetadata.model : undefined
@@ -109,11 +111,6 @@ FocusScope {
         flow: GridView.FlowTopToBottom
         cacheBuffer: width*2
         focus: true
-
-        PlasmaComponents.ScrollBar {
-            orientation: Qt.Horizontal
-            flickableItem: gridBrowserGridView
-        }
 
         PlasmaComponents.BusyIndicator {
             anchors { bottom: parent.bottom; horizontalCenter: parent.horizontalCenter }
@@ -139,5 +136,15 @@ FocusScope {
                 searchField.text = event.text;
             }
         }
+    }
+    PlasmaComponents.ScrollBar {
+        anchors {
+            top: gridBrowserGridView.bottom
+            bottom: parent.bottom
+            left: parent.left
+            right: parent.right
+        }
+        orientation: Qt.Horizontal
+        flickableItem: gridBrowserGridView
     }
 }

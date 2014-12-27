@@ -345,6 +345,10 @@ Image {
             left: (categoriesbar.visible) ? categoriesbar.right : parent.left
             right: parent.right;
             bottom: parent.bottom
+            topMargin: units.largeSpacing * 2
+            bottomMargin: units.largeSpacing * 2
+            leftMargin: units.largeSpacing * 2
+            rightMargin: units.largeSpacing * 2
         }
         z: 1
 
@@ -376,7 +380,7 @@ Image {
         height: visible ? parent.height * 0.08 : 0
         runtimeDataObject: runtimeData
         z: 1; opacity: 0.8
-        visible: true 
+        visible: false
         state: hideFlag && ((mediaPlayerInstance && mediaPlayerInstance.visible) || (imageViewerInstance && imageViewerInstance.visible)) ? "hidden"  : ""
 
         currentMediaTime: mediaPlayerInstance.currentTime

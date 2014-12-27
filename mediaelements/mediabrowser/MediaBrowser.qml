@@ -55,23 +55,6 @@ FocusScope {
         anchors {
             fill: parent
         }
-
-        BrowserToolbar {
-            id: browserToolbar
-            anchors {
-                top: parent.top; right: parent.right; left: parent.left;
-            }
-            height: 40
-            buttons: currentBrowsingBackend ? currentBrowsingBackend.buttons : undefined
-            onButtonClicked: {
-                if (buttonName === i18n("Play All")) {
-                    mediaBrowser.playAllRequested();
-                } else {
-                    currentBrowsingBackend.handleButtonClick(buttonName);
-                }
-            }
-            Keys.onDownPressed: mediaBrowserViewItem.mediaBrowserGridView.focus = true
-        }
     }
 
     Component {
@@ -79,10 +62,9 @@ FocusScope {
         MediaCenterComponents.CategoriesBrowser {
             anchors {
                 bottom: parent.bottom; right: parent.right; left: parent.left;
-                top: browserToolbar.visible ? browserToolbar.bottom : parent.top
+                top: parent.top
                 bottomMargin: 10 + bottomPanel.height
-            }
-            topSibling: browserToolbar.visible ? browserToolbar : null
+	    }
             backend: mediaBrowser.currentBrowsingBackend
             models: mediaBrowser.currentBrowsingBackend.models
 
