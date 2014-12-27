@@ -46,7 +46,7 @@ FocusScope {
             width: parent.width
             Rectangle {
                 Layout.fillWidth: true; Layout.preferredHeight: nameLabel.height
-                color: theme.highlightColor
+                color: theme.buttonBackgroundColor
 
                 PlasmaComponents.Label {
                     id: nameLabel
@@ -61,7 +61,7 @@ FocusScope {
                 }
             }
             MediaCenterComponents.GridBrowser {
-                Layout.fillWidth: true; Layout.preferredHeight: categoriesListView.currentIndex === index ? 200 : 0
+                Layout.fillWidth: true; Layout.preferredHeight: categoriesListView.currentIndex === index ? 600 : 0
                 clip: true
                 modelMetadata: model.modelData
 

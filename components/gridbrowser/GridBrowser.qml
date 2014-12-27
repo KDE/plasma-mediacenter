@@ -90,8 +90,8 @@ FocusScope {
         onCountChanged: currentIndex = -1
         model: modelMetadata ? modelMetadata.model : undefined
         clip: true
-        cellWidth: cellHeight
-        cellHeight: height/2.1
+        cellWidth: cellHeight*2
+        cellHeight: height/3.1
         delegate: Common.MediaItemDelegate {
             width: GridView.view.cellWidth
             height: GridView.view.cellHeight
@@ -104,9 +104,9 @@ FocusScope {
             onPlayRequested: gridBrowserRoot.mediaSelected(index, url, currentMediaType)
             onPopupMenuRequested: gridBrowserRoot.popupRequested(index,mediaUrl,mediaType, display)
         }
-        highlight: PlasmaComponents.Highlight { z: 1 }
+        highlight: Item {}
         highlightFollowsCurrentItem: true
-        flow: GridView.LeftToRight 
+        flow: GridView.FlowTopToBottom
         cacheBuffer: width*2
         focus: true
 
