@@ -41,27 +41,12 @@ Item {
 
         RowLayout {
             anchors { fill: parent; margins: units.smallSpacing }
-            Loader {
+            Image {
                 Layout.fillHeight: true; Layout.preferredWidth: height
-                id: iconImageLoader
-                property variant source
-
-                function checkAndLoad()
-                {
-                    Logic.checkAndLoad(iconImageLoader);
-                }
-
-                Component.onCompleted: checkAndLoad()
-
-                Component {
-                    id: delegateItemImageComponent
-                    ItemImageComponent {}
-                }
-
-                Component {
-                    id: delegateItemIconComponent
-                    ItemIconComponent {}
-                }
+                asynchronous: true
+                fillMode: Image.PreserveAspectCrop
+                sourceSize { width: width; height: height }
+                source: decoration
             }
             PlasmaComponents.Label {
                 Layout.fillHeight: true; Layout.fillWidth: true

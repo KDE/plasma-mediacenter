@@ -39,8 +39,6 @@ PmcCoverArtProvider::PmcCoverArtProvider()
 
 QImage PmcCoverArtProvider::requestImage(const QString& id, QSize* size, const QSize& requestedSize)
 {
-    const QString identification = id.split(':').at(0);
-
     if (!id.startsWith("file:")) {
         return SingletonFactory::instanceFor<PmcImageCache>()->getImage(id);
     }
