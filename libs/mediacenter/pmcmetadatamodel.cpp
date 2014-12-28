@@ -233,6 +233,8 @@ QVariant PmcMetadataModel::data(const QModelIndex& index, int role) const
 QVariant PmcMetadataModel::dataForMedia(const QModelIndex &index, int role) const
 {
     const int row = index.row();
+
+    const QString resourceId = d->mediaResourceIds.at(row);
     const QSharedPointer<QObject> mediaObject = d->mediaByResourceId.value(d->mediaResourceIds.at(row));
     const QSharedPointer<PmcMedia> media = qSharedPointerObjectCast<PmcMedia>(mediaObject);
 
@@ -259,6 +261,8 @@ QVariant PmcMetadataModel::dataForMedia(const QModelIndex &index, int role) cons
             if (d->mediaUrlWhichFailedThumbnailGeneration.contains(url.url()))
                 return "image-missing";
             return const_cast<PmcMetadataModel*>(this)->fetchPreview(url, index);
+        } else if (media->type() == "audio") {
+            return getAlbumArt(media->album(), media->artist(), resourceId);
         } else {
             return media->thumbnail();
         }
