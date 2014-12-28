@@ -50,7 +50,7 @@ FocusScope {
 
                 PlasmaComponents.Label {
                     id: nameLabel
-                    anchors { left: parent.left; verticalCenter: parent.verticalCenter }
+                    anchors { left: parent.left; leftMargin: units.largeSpacing; verticalCenter: parent.verticalCenter }
                     text: model.modelData.name
                     font.pointSize: fontSizes.large
                 }
