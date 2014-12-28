@@ -69,6 +69,18 @@ FocusScope {
         }
     }
 
+    KQuickControlAddons.MouseEventListener {
+        anchors.fill: gridBrowserGridView
+
+        onWheelMoved: {
+            if (wheel.delta < 0) {
+                gridBrowserGridView.moveCurrentIndexRight();
+            } else {
+                gridBrowserGridView.moveCurrentIndexLeft();
+            }
+        }
+    }
+
     GridView {
         id: gridBrowserGridView
         anchors {
