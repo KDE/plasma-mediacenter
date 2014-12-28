@@ -48,3 +48,8 @@ QString PmcAlbum::albumArtist() const
 {
     return d->album->albumArtist();
 }
+
+int PmcAlbum::mediaCount() const
+{
+    return d->album->media().size();
+}

@@ -42,3 +42,8 @@ const QString& PmcArtist::name() const
 {
     return d->artist->name();
 }
+
+int PmcArtist::mediaCount() const
+{
+    return d->artist->media().size();
+}

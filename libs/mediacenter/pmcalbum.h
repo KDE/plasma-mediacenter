@@ -35,6 +35,7 @@ public:
 
     const QString& name() const;
     QString albumArtist() const;
+    int mediaCount() const;
 
 private:
     class Private;

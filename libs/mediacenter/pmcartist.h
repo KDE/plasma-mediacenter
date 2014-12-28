@@ -35,6 +35,7 @@ public:
     virtual ~PmcArtist();
 
     const QString& name() const;
+    int mediaCount() const;
 
 private:
     class Private;

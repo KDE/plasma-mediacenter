@@ -51,13 +51,24 @@ Item {
                 sourceSize { width: width; height: height }
                 source: decoration
             }
-            PlasmaComponents.Label {
+
+            ColumnLayout {
                 Layout.fillHeight: true; Layout.fillWidth: true
-                visible: !hideLabel
-                verticalAlignment: Text.AlignVCenter
-                wrapMode: Text.Wrap
-                font.pointSize: fontSizes.medium
-                text: display
+                PlasmaComponents.Label {
+                    Layout.fillHeight: true; Layout.fillWidth: true
+                    visible: !hideLabel
+                    verticalAlignment: mediaCount.visible? Text.AlignBottom : Text.AlignVCenter
+                    wrapMode: Text.Wrap
+                    font.pointSize: fontSizes.medium
+                    text: display
+                }
+                PlasmaComponents.Label {
+                    id: mediaCount
+                    Layout.fillHeight: true; Layout.fillWidth: true
+                    verticalAlignment: Text.AlignTop
+                    visible: mediaCountRole !== undefined
+                    text: mediaCountRole + (mediaCountRole > 1 ? " Songs" : " Song")
+                }
             }
         }
         MouseArea {

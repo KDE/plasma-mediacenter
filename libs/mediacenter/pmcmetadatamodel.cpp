@@ -290,6 +290,8 @@ QVariant PmcMetadataModel::dataForAlbum(int row, int role) const
         return true;
     case MediaCenter::HideLabelRole:
         return false;
+    case MediaCenter::MediaCountRole:
+        return album->mediaCount();
 
     }
 
@@ -311,6 +313,8 @@ QVariant PmcMetadataModel::dataForArtist(int row, int role) const
         return true;
     case MediaCenter::HideLabelRole:
         return false;
+    case MediaCenter::MediaCountRole:
+        return artist->mediaCount();
    }
 
     return QVariant();
