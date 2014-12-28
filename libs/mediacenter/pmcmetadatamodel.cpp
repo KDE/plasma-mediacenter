@@ -268,6 +268,8 @@ QVariant PmcMetadataModel::dataForMedia(const QModelIndex &index, int role) cons
         }
     case MediaCenter::CreatedAtRole:
         return media->createdAt();
+    case MediaCenter::HideLabelRole:
+        return false;
     }
 
     return QVariant();
@@ -286,6 +288,9 @@ QVariant PmcMetadataModel::dataForAlbum(int row, int role) const
         return getAlbumArt(album->name(), album->albumArtist(), resourceId);
     case MediaCenter::IsExpandableRole:
         return true;
+    case MediaCenter::HideLabelRole:
+        return false;
+
     }
 
     return QVariant();
@@ -304,7 +309,9 @@ QVariant PmcMetadataModel::dataForArtist(int row, int role) const
         return getArtistImage(artist->name(), resourceId);
     case MediaCenter::IsExpandableRole:
         return true;
-    }
+    case MediaCenter::HideLabelRole:
+        return false;
+   }
 
     return QVariant();
 }
