@@ -20,7 +20,6 @@
 import QtQuick 2.1
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.core 2.0 as PlasmaCore
-import "MediaItemDelegateLogic.js" as Logic
 import org.kde.plasma.mediacenter.elements 2.0 as MediaCenterElements
 
 Item {
@@ -40,25 +39,6 @@ Item {
 
             Item {
                 anchors.fill: parent
-
-                Loader {
-                    id: iconImageLoader
-                    property variant source
-
-                    anchors {
-                        left: parent.left; top: parent.top
-                        bottom: parent.bottom
-                    }
-
-                    width: height
-
-                    function checkAndLoad()
-                    {
-                        Logic.checkAndLoad(iconImageLoader);
-                    }
-
-                    Component.onCompleted: checkAndLoad()
-                }
 
                 MediaRow {
                     id: labelOverlay
@@ -89,16 +69,6 @@ Item {
                     autoWidth: true
                 }
 	    }
-
-            Component {
-                id: delegateItemImageComponent
-                ItemImageComponent {}
-            }
-
-            Component {
-                id: delegateItemIconComponent
-                ItemIconComponent {}
-            }
 
             MouseArea {
                 id: mediaItemDelegateItemMouseArea

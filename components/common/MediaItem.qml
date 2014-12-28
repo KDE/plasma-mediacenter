@@ -22,7 +22,6 @@ import QtQuick.Layouts 1.1
 
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.core 2.0 as PlasmaCore
-import "MediaItemDelegateLogic.js" as Logic
 
 Item {
     property QtObject view
