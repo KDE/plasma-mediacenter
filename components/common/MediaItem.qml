@@ -40,9 +40,12 @@ Item {
         color: view.currentIndex === index ? theme.highlightColor : theme.backgroundColor
 
         RowLayout {
-            anchors { fill: parent; margins: units.smallSpacing }
+            anchors.fill: parent
+            anchors.margins: hideLabel ? 0 : units.smallSpacing
             Image {
-                Layout.fillHeight: true; Layout.preferredWidth: height
+                Layout.fillHeight: true
+                Layout.fillWidth: hideLabel
+                Layout.preferredWidth: height
                 asynchronous: true
                 fillMode: Image.PreserveAspectCrop
                 sourceSize { width: width; height: height }
@@ -50,6 +53,7 @@ Item {
             }
             PlasmaComponents.Label {
                 Layout.fillHeight: true; Layout.fillWidth: true
+                visible: !hideLabel
                 verticalAlignment: Text.AlignVCenter
                 wrapMode: Text.Wrap
                 font.pointSize: fontSizes.medium
