@@ -41,6 +41,7 @@ FocusScope {
     ListView {
         id: categoriesListView
         anchors.fill: parent
+        spacing: units.smallSpacing * 3
         delegate:
         ColumnLayout {
             width: parent.width
@@ -68,12 +69,6 @@ FocusScope {
                 Behavior on Layout.preferredHeight {
                     NumberAnimation { duration: 300 }
                 }
-            }
-
-            Item {
-                Layout.preferredHeight: units.smallSpacing * 3
-                Layout.fillWidth: true
-                visible: categoriesListView.currentIndex === index ? true : false
             }
         }
     }
