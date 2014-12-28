@@ -318,26 +318,22 @@ QVariant PmcMetadataModel::getAlbumArt(const QString& albumName, const QString& 
 {
     PmcImageCache *imageCache = SingletonFactory::instanceFor<PmcImageCache>();
 
-    if (imageCache->containsAlbumCover(albumName)) {
-        return PmcCoverArtProvider::qmlImageUriForAlbumCover(albumName);
-    } else {
+    if (!imageCache->containsAlbumCover(albumName)) {
         SingletonFactory::instanceFor<LastFmImageFetcher>()->fetchImage("album", resourceId, albumArtist, albumName);
     }
 
-    return d->defaultDecoration;
+    return PmcCoverArtProvider::qmlImageUriForAlbumCover(albumName);
 }
 
 QVariant PmcMetadataModel::getArtistImage(const QString& artistName, const QString& resourceId) const
 {
     PmcImageCache *imageCache = SingletonFactory::instanceFor<PmcImageCache>();
 
-    if (imageCache->containsArtistCover(artistName)) {
-        return PmcCoverArtProvider::qmlImageUriForArtistCover(artistName);
-    } else {
+    if (!imageCache->containsArtistCover(artistName)) {
         SingletonFactory::instanceFor<LastFmImageFetcher>()->fetchImage("artist", resourceId, artistName);
     }
 
-    return d->defaultDecoration;
+    return PmcCoverArtProvider::qmlImageUriForArtistCover(artistName);
 }
 
 void PmcMetadataModel::fetchMetadata()

@@ -51,8 +51,12 @@ Item {
                 source: decoration
                 PlasmaCore.IconItem {
                     anchors.fill: parent
-                    source: fallbackDecoration
+                    source: fallbackDecoration ? fallbackDecoration : "image-missing"
                     visible: parent.status !== Image.Ready
+                    Component.onCompleted: {
+                        print(fallbackDecoration);
+                        print(parent.status);
+                    }
                 }
             }
             PlasmaComponents.Label {
