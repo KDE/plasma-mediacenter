@@ -49,11 +49,6 @@ Item {
                 fillMode: Image.PreserveAspectCrop
                 sourceSize { width: width; height: height }
                 source: decoration
-                PlasmaCore.IconItem {
-                    anchors.fill: parent
-                    source: fallbackDecoration
-                    visible: parent.status !== Image.Ready
-                }
             }
             PlasmaComponents.Label {
                 Layout.fillHeight: true; Layout.fillWidth: true
