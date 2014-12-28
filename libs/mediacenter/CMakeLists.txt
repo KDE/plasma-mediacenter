@@ -3,6 +3,7 @@ include_directories(
     ${TAGLIB_INCLUDES}
 )
 set (plasmamediacenter_SRCS
+    iconimageprovider.cpp
     runtimedata.cpp
     itemcache.cpp
     medialibrarywrappercache.cpp

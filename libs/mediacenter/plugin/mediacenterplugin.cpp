@@ -34,6 +34,7 @@
 #include "mediacenter/backendsloader.h"
 
 #include "qmlaccess.h"
+#include <iconimageprovider.h>
 
 void MediaCenterPlugin::registerTypes(const char *uri)
 {
@@ -58,6 +59,7 @@ void MediaCenterPlugin::initializeEngine(QQmlEngine *engine, const char *uri)
 {
     Q_ASSERT(uri == QLatin1String("org.kde.plasma.mediacenter"));
     engine->addImageProvider(PmcCoverArtProvider::identificationString, new PmcCoverArtProvider());
+    engine->addImageProvider(IconImageProvider::identificationString, new IconImageProvider());
 }
 
 #include "moc_mediacenterplugin.cpp"

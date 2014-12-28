@@ -58,7 +58,7 @@ public:
     QStringList mediaUrlWhichFailedThumbnailGeneration;
     //TODO: serve the default decoration using an image provider
     //  probably something like image://icon/foo would return the system icon foo
-    QVariant defaultDecoration;
+    QString defaultDecoration;
     Mode currentMode;
 
     bool isSearchTermValid;
@@ -365,7 +365,7 @@ QString PmcMetadataModel::fetchPreview(const QUrl &url, const QModelIndex& index
 
     d->filesToPreview.insert(url, QPersistentModelIndex(index));
     d->previewTimer.start(100);
-    return d->defaultDecoration.toString();
+    return d->defaultDecoration;
 }
 
 void PmcMetadataModel::delayedPreview()
@@ -415,7 +415,7 @@ void PmcMetadataModel::previewFailed(const KFileItem &item)
     }
 }
 
-void PmcMetadataModel::setDefaultDecoration(const QVariant& decoration)
+void PmcMetadataModel::setDefaultDecoration(const QString& decoration)
 {
     d->defaultDecoration = decoration;
 }
