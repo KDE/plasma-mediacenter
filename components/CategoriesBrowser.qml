@@ -61,17 +61,33 @@ FocusScope {
                     onClicked: categoriesListView.currentIndex = index
                 }
             }
-            MediaCenterComponents.GridBrowser {
+            Loader {
+                property variant theModel: modelRole
                 Layout.fillWidth: true; Layout.preferredHeight: categoriesListView.currentIndex === index ? categoriesListView.height*0.8 : 0
-                clip: true
-
-                currentBrowsingBackend: root.backend
-                model: modelRole
-
+                sourceComponent: isListRole ? listBrowserComponent : gridBrowserComponent
                 Behavior on Layout.preferredHeight {
                     NumberAnimation { duration: 300 }
                 }
             }
+        }
+    }
+
+    Component {
+        id: gridBrowserComponent
+        MediaCenterComponents.GridBrowser {
+            clip: true
+
+            currentBrowsingBackend: root.backend
+            model: theModel
+        }
+    }
+    Component {
+        id: listBrowserComponent
+        MediaCenterComponents.ListBrowser {
+            clip: true
+
+            currentBrowsingBackend: root.backend
+            model: theModel
         }
     }
 }

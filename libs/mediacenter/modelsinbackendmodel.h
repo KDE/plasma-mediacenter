@@ -28,7 +28,8 @@ class ModelsInBackendModel : public QAbstractListModel
     Q_OBJECT
 public:
     enum Roles {
-        ModelRole = Qt::UserRole + 1
+        ModelRole = Qt::UserRole + 1,
+        IsListRole
     };
     virtual QVariant data(const QModelIndex& index, int role) const;
     virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
