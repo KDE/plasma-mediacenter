@@ -24,6 +24,7 @@ import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.core 2.0 as PlasmaCore
 
 Item {
+    id: mediaItem
     property QtObject view
 
     signal clicked(int index)
@@ -58,6 +59,22 @@ Item {
                 font.pointSize: fontSizes.medium
                 text: display
             }
+        }
+        MouseArea {
+            id: mediaItemDelegateItemMouseArea
+            hoverEnabled: true
+            anchors.fill: parent
+            acceptedButtons: Qt.LeftButton | Qt.RightButton
+            onEntered: if(mediaItem.view &&
+                        !mediaItem.view.moving &&
+                        !mediaItem.view.flicking)
+                        mediaItem.view.currentIndex = index
+            onClicked: if (mouse.button == Qt.RightButton) {
+                mediaItem.pressAndHold(index);
+            } else {
+                mediaItem.clicked(index);
+            }
+            onPressAndHold: mediaItem.pressAndHold(index);
         }
     }
 }
