@@ -257,10 +257,7 @@ QVariant PmcMetadataModel::dataForMedia(const QModelIndex &index, int role) cons
         return media->genre();
     case Qt::DecorationRole:
         if (media->type() == "video") {
-            const QUrl url(media->url());
-            if (d->mediaUrlWhichFailedThumbnailGeneration.contains(url.url()))
-                return "image-missing";
-            return const_cast<PmcMetadataModel*>(this)->fetchPreview(url, index);
+            return const_cast<PmcMetadataModel*>(this)->fetchPreview(media->url(), index);
         } else if (media->type() == "audio") {
             return getAlbumArt(media->album(), media->artist(), resourceId);
         } else {
@@ -270,6 +267,8 @@ QVariant PmcMetadataModel::dataForMedia(const QModelIndex &index, int role) cons
         return media->createdAt();
     case MediaCenter::HideLabelRole:
         return false;
+    case MediaCenter::FallBackDecorationRole:
+        return d->defaultDecoration;
     }
 
     return QVariant();
@@ -290,7 +289,6 @@ QVariant PmcMetadataModel::dataForAlbum(int row, int role) const
         return true;
     case MediaCenter::HideLabelRole:
         return false;
-
     }
 
     return QVariant();
