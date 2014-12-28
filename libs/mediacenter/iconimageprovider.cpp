@@ -32,7 +32,6 @@ IconImageProvider::IconImageProvider() : QQuickImageProvider(QQuickImageProvider
 QPixmap IconImageProvider::requestPixmap(const QString& id, QSize* size,
                                          const QSize& requestedSize)
 {
-    qDebug() << "ICONNNNNNNNNN " << id << QIcon::fromTheme(id).isNull();
     *size = requestedSize;
     return QIcon::fromTheme(id).pixmap(requestedSize);
 }
