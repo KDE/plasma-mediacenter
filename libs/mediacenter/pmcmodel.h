@@ -15,15 +15,15 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef MEDIACENTER_MODELMETADATA_H
-#define MEDIACENTER_MODELMETADATA_H
+#ifndef MEDIACENTER_PMCMODEL_H
+#define MEDIACENTER_PMCMODEL_H
 
 #include <QObject>
 #include <QMetaType>
 
 #include "mediacenter_export.h"
 
-class MEDIACENTER_EXPORT ModelMetadata : public QObject
+class MEDIACENTER_EXPORT PmcModel : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString name READ name NOTIFY nameChanged)
@@ -32,7 +32,7 @@ class MEDIACENTER_EXPORT ModelMetadata : public QObject
     Q_PROPERTY(QObject* model READ model NOTIFY modelChanged)
     Q_PROPERTY(QString headerText READ headerText NOTIFY headerTextChanged)
 public:
-    explicit ModelMetadata(QObject *model = 0, QObject* parent = 0);
+    explicit PmcModel(QObject *model = 0, QObject* parent = 0);
 
     QString name() const;
     void setName(const QString &name);
@@ -43,7 +43,7 @@ public:
     bool isList() const;
     void setIsList(bool isList);
 
-    QObject *model();
+    QObject *model() const;
     void setModel(QObject* model);
 
     QString headerText() const;
@@ -61,4 +61,4 @@ private:
     Private * const d;
 };
 
-#endif // MEDIACENTER_MODELMETADATA_H
+#endif // MEDIACENTER_PMCMODEL_H

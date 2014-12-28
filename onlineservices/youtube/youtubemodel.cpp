@@ -158,7 +158,7 @@ QString YoutubeModel::videoThumbnail(int index)
     return m_videos.at(index).thumbnail;
 }
 
-ModelMetadata* YoutubeModel::metadata()
+PmcModel* YoutubeModel::metadata()
 {
     return &m_metadata;
 }

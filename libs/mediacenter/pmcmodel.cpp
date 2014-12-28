@@ -15,9 +15,9 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#include "modelmetadata.h"
+#include "pmcmodel.h"
 
-class ModelMetadata::Private
+class PmcModel::Private
 {
 public:
     Private()
@@ -33,50 +33,50 @@ public:
     QString headerText;
 };
 
-ModelMetadata::ModelMetadata(QObject* model, QObject* parent)
+PmcModel::PmcModel(QObject* model, QObject* parent)
     : QObject(parent)
     , d(new Private())
 {
     d->model = model;
 }
 
-QString ModelMetadata::name() const
+QString PmcModel::name() const
 {
     return d->name;
 }
 
-void ModelMetadata::setName(const QString& name)
+void PmcModel::setName(const QString& name)
 {
     d->name = name;
     emit nameChanged();
 }
 
-void ModelMetadata::setSupportsSearch(bool supports)
+void PmcModel::setSupportsSearch(bool supports)
 {
     d->supportsSearch = supports;
 }
 
-bool ModelMetadata::supportsSearch() const
+bool PmcModel::supportsSearch() const
 {
     return d->supportsSearch;
 }
 
-void ModelMetadata::setIsList(bool isList)
+void PmcModel::setIsList(bool isList)
 {
     d->isList = isList;
 }
 
-bool ModelMetadata::isList() const
+bool PmcModel::isList() const
 {
     return d->isList;
 }
 
-QObject* ModelMetadata::model()
+QObject* PmcModel::model() const
 {
     return d->model;
 }
 
-void ModelMetadata::setModel(QObject* model)
+void PmcModel::setModel(QObject* model)
 {
     if (d->model != model) {
         d->model = model;
@@ -84,12 +84,12 @@ void ModelMetadata::setModel(QObject* model)
     }
 }
 
-QString ModelMetadata::headerText() const
+QString PmcModel::headerText() const
 {
     return d->headerText;
 }
 
-void ModelMetadata::setHeaderText(const QString& text)
+void PmcModel::setHeaderText(const QString& text)
 {
     if (d->headerText != text) {
         d->headerText = text;

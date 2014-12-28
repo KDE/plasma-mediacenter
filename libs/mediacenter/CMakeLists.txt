@@ -3,6 +3,7 @@ include_directories(
     ${TAGLIB_INCLUDES}
 )
 set (plasmamediacenter_SRCS
+    modelsinbackendmodel.cpp
     iconimageprovider.cpp
     runtimedata.cpp
     itemcache.cpp
@@ -11,7 +12,7 @@ set (plasmamediacenter_SRCS
     album.cpp
     media.cpp
     lastfmimagefetcher.cpp
-    modelmetadata.cpp
+    pmcmodel.cpp
     objectpair.cpp
     mediacenter.cpp
     abstractbrowsingbackend.cpp
@@ -93,13 +94,13 @@ install(TARGETS plasmamediacenter ${INSTALL_TARGETS_DEFAULT_ARGS})
 set (plasmamediacenter_HDRS
     abstractbrowsingbackend.h
     abstractmediasource.h
-    modelmetadata.h
     mediacenter.h
     medialibrary.h
     pmcimagecache.h
-    pmcmedia.h
     pmcalbum.h
     pmcartist.h
+    pmcmedia.h
+    pmcmodel.h
     singletonfactory.h
 )
 

@@ -18,7 +18,8 @@
 
 #include "abstractbrowsingbackend.h"
 #include "objectpair.h"
-#include "modelmetadata.h"
+#include "pmcmodel.h"
+#include "modelsinbackendmodel.h"
 
 #include <KService>
 #include <KPluginInfo>
@@ -38,7 +39,7 @@ public:
     KPluginInfo pluginInfo;
     AbstractBrowsingBackend *q;
     bool hasInitialized;
-    QList<QObject*> models;
+    ModelsInBackendModel modelsInBackend;
     QString searchTerm;
     QStringList buttons;
 };
@@ -88,9 +89,9 @@ QString AbstractBrowsingBackend::category() const
     return "general";
 }
 
-void AbstractBrowsingBackend::setModel(ModelMetadata* model)
+void AbstractBrowsingBackend::setModel(PmcModel* model)
 {
-    d->models.clear();
+    d->modelsInBackend.clear();
     addModel(model);
 }
 
@@ -101,23 +102,29 @@ void AbstractBrowsingBackend::setPluginInfo(const KPluginInfo& info)
 
 void AbstractBrowsingBackend::setModel(QAbstractItemModel* model)
 {
-    ModelMetadata *metadata = new ModelMetadata(model, this);
+    PmcModel *metadata = new PmcModel(model, this);
     setModel(metadata);
 }
 
-void AbstractBrowsingBackend::addModel(ModelMetadata* model)
+void AbstractBrowsingBackend::addModel(PmcModel* model)
 {
-    d->models.append(model);
-    emit modelsChanged();
+    d->modelsInBackend.addModel(model);
+}
+
+bool AbstractBrowsingBackend::replaceModel(PmcModel* original,
+                                           PmcModel* replacement)
+{
+    return d->modelsInBackend.replaceModel(original, replacement);
 }
 
 QAbstractItemModel* AbstractBrowsingBackend::model()
 {
-    QObject *model = d->models.length() ? (QObject*)(d->models.first()) : 0;
-    if (model) {
-        return qobject_cast<QAbstractItemModel*>(qobject_cast<ModelMetadata*>(model)->model());
-    }
-    return 0;
+    return nullptr;
+//     QObject *model = d->models.length() ? (QObject*)(d->models.first()) : 0;
+//     if (model) {
+//         return qobject_cast<QAbstractItemModel*>(qobject_cast<PmcModel*>(model)->model());
+//     }
+//     return 0;
 }
 
 bool AbstractBrowsingBackend::goOneLevelUp()
@@ -172,13 +179,9 @@ bool AbstractBrowsingBackend::busy() const
     return false;
 }
 
-QVariantList AbstractBrowsingBackend::models()
+QObject* AbstractBrowsingBackend::models()
 {
-    QVariantList modelList;
-    Q_FOREACH(QObject *model, d->models) {
-        modelList.append(QVariant::fromValue(qobject_cast<QObject*>(model)));
-    }
-    return modelList;
+    return &d->modelsInBackend;
 }
 
 QStringList AbstractBrowsingBackend::buttons() const

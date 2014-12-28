@@ -25,7 +25,7 @@
 #include "mediacenter/pmcmetadatamodel.h"
 #include "mediacenter/playlistmodel.h"
 #include "mediacenter/filtermediamodel.h"
-#include "mediacenter/modelmetadata.h"
+#include "mediacenter/pmcmodel.h"
 
 #include <KDebug>
 #include <klocalizedstring.h>
@@ -65,28 +65,28 @@ bool MetadataMusicBackend::initImpl()
 
     m_musicFilteredModel = new FilterMediaModel(this);
     m_musicFilteredModel->setSourceModel(m_musicModel);
-    m_musicModelMetadata = new ModelMetadata(m_musicFilteredModel, this);
+    m_musicPmcModel = new PmcModel(m_musicFilteredModel, this);
 
     m_albumFilteredModel = new FilterMediaModel(this);
     m_albumFilteredModel->setSourceModel(m_albumsModel);
-    m_albumsModelMetadata = new ModelMetadata(m_albumFilteredModel, this);
+    m_albumsPmcModel = new PmcModel(m_albumFilteredModel, this);
 
     m_artistFilteredModel = new FilterMediaModel(this);
     m_artistFilteredModel->setSourceModel(m_artistsModel);
-    m_artistsModelMetadata = new ModelMetadata(m_artistFilteredModel, this);
+    m_artistsPmcModel = new PmcModel(m_artistFilteredModel, this);
 
-    m_albumsModelMetadata->setName(i18n("Albums"));
-    m_artistsModelMetadata->setName(i18n("Artists"));
-    m_musicModelMetadata->setName(i18n("Songs"));
+    m_albumsPmcModel->setName(i18n("Albums"));
+    m_artistsPmcModel->setName(i18n("Artists"));
+    m_musicPmcModel->setName(i18n("Songs"));
 
-    m_musicModelMetadata->setSupportsSearch(true);
-    m_musicModelMetadata->setIsList(true);
-    m_artistsModelMetadata->setSupportsSearch(true);
-    m_albumsModelMetadata->setSupportsSearch(true);
+    m_musicPmcModel->setSupportsSearch(true);
+    m_musicPmcModel->setIsList(true);
+    m_artistsPmcModel->setSupportsSearch(true);
+    m_albumsPmcModel->setSupportsSearch(true);
 
-    addModel(m_musicModelMetadata);
-    addModel(m_albumsModelMetadata);
-    addModel(m_artistsModelMetadata);
+    addModel(m_musicPmcModel);
+    addModel(m_albumsPmcModel);
+    addModel(m_artistsPmcModel);
 
     QTimer::singleShot(1000, this, SLOT(initializeModels()));
     return true;
@@ -117,6 +117,8 @@ void MetadataMusicBackend::setAlbumFilter(const QString& filter)
     m_artistFilter.clear();
     emit artistFilterChanged();
     updateModelAccordingToFilters();
+    m_musicPmcModel->setName(m_albumsPmcModel->name());
+    replaceModel(m_albumsPmcModel, m_musicPmcModel);
 }
 
 void MetadataMusicBackend::setArtistFilter(const QString& filter)
@@ -126,6 +128,8 @@ void MetadataMusicBackend::setArtistFilter(const QString& filter)
     m_albumFilter.clear();
     emit albumFilterChanged();
     updateModelAccordingToFilters();
+    m_musicPmcModel->setName(m_artistsPmcModel->name());
+    replaceModel(m_artistsPmcModel, m_musicPmcModel);
 }
 
 void MetadataMusicBackend::updateModelAccordingToFilters()
@@ -149,10 +153,10 @@ bool MetadataMusicBackend::expand(int row, QAbstractItemModel* model)
 
     if (model == m_albumFilteredModel) {
         setAlbumFilter(filter);
-        emit modelNeedsAttention(m_musicModelMetadata);
+        emit modelNeedsAttention(m_musicPmcModel);
     } else if (model == m_artistFilteredModel) {
         setArtistFilter(filter);
-        emit modelNeedsAttention(m_musicModelMetadata);
+        emit modelNeedsAttention(m_musicPmcModel);
     }
 
     return true;

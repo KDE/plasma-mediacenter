@@ -25,7 +25,7 @@
 
 class FilterMediaModel;
 class PmcMetadataModel;
-class ModelMetadata;
+class PmcModel;
 
 class MetadataMusicBackend : public AbstractMetadataBackend
 {
@@ -70,9 +70,9 @@ private:
 
     QString m_artistFilter;
     QString m_albumFilter;
-    ModelMetadata* m_musicModelMetadata;
-    ModelMetadata* m_albumsModelMetadata;
-    ModelMetadata* m_artistsModelMetadata;
+    PmcModel* m_musicPmcModel;
+    PmcModel* m_albumsPmcModel;
+    PmcModel* m_artistsPmcModel;
     FilterMediaModel* m_musicFilteredModel;
     FilterMediaModel* m_albumFilteredModel;
     FilterMediaModel* m_artistFilteredModel;

@@ -28,7 +28,7 @@ FocusScope {
 //     anchors.fill: parent
 
     property QtObject currentBrowsingBackend
-    property QtObject modelMetadata
+    property alias model: gridBrowserGridView.model
     property alias currentIndex: gridBrowserGridView.currentIndex
     property alias count: gridBrowserGridView.count
 
@@ -61,7 +61,7 @@ FocusScope {
             interval: 500
             onTriggered: {
                 if (currentBrowsingBackend.searchModel) {
-                    currentBrowsingBackend.searchModel(searchField.text, modelMetadata.model);
+                    currentBrowsingBackend.searchModel(searchField.text, model);
                 } else if (currentBrowsingBackend.search) {
                     currentBrowsingBackend.search(searchField.text);
                 }
@@ -90,7 +90,6 @@ FocusScope {
             bottomMargin: units.smallSpacing * 3
         }
         onCountChanged: currentIndex = -1
-        model: modelMetadata ? modelMetadata.model : undefined
         clip: true
         cellWidth: cellHeight*2
         cellHeight: units.iconSizes.enormous

@@ -29,7 +29,7 @@
 #include "mediacenter.h"
 
 class QAbstractItemModel;
-class ModelMetadata;
+class PmcModel;
 
 namespace MediaCenter {
 
@@ -49,7 +49,7 @@ class MEDIACENTER_EXPORT AbstractBrowsingBackend : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
-    Q_PROPERTY(QVariantList models READ models NOTIFY modelsChanged)
+    Q_PROPERTY(QObject* models READ models NOTIFY modelsChanged)
     Q_PROPERTY(QStringList buttons READ buttons NOTIFY buttonsChanged)
 
 public:
@@ -88,7 +88,7 @@ public:
     /**
      * @returns the models available in the browsing backend
      */
-    QVariantList models();
+    QObject* models();
 
     /**
      * Call this method to get a list of strings that should be used to create
@@ -186,6 +186,7 @@ Q_SIGNALS:
     void searchTermChanged();
 
     void error(const QString &message);
+    //TODO: remove this signal, no longer necessary
     void modelNeedsAttention(QObject* model);
     void pmcRuntimeChanged();
     void showCustomUi(const QString &customUiQml);
@@ -195,7 +196,7 @@ protected:
      * Set the only model (and its metadata) that this backend contains.
      * This used by the media browser to show media.
      */
-    void setModel(ModelMetadata* model);
+    void setModel(PmcModel* model);
 
     /**
      * Set the only model that this backend contains. Default metadata will be
@@ -207,7 +208,17 @@ protected:
     /**
      * This method is used to add more models to this backend
      */
-    void addModel(ModelMetadata * model);
+    void addModel(PmcModel * model);
+
+    /**
+     * Use this method to replace a model that has already been added
+     *
+     * @param original the model that has been added already
+     * @param replacement the model to replace the original with
+     *
+     * @return true if successful, false otherwise
+     */
+    bool replaceModel(PmcModel *original, PmcModel *replacement);
 
     /**
      * This is a convenience function which constructs a string representing QML source for

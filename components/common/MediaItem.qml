@@ -24,7 +24,7 @@ import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.core 2.0 as PlasmaCore
 
 Item {
-    id: mediaItem
+    id: root
     property QtObject view
 
     signal clicked(int index)
@@ -65,16 +65,16 @@ Item {
             hoverEnabled: true
             anchors.fill: parent
             acceptedButtons: Qt.LeftButton | Qt.RightButton
-            onEntered: if(mediaItem.view &&
-                        !mediaItem.view.moving &&
-                        !mediaItem.view.flicking)
-                        mediaItem.view.currentIndex = index
+            onEntered: if(root.view &&
+                        !root.view.moving &&
+                        !root.view.flicking)
+                        root.view.currentIndex = index
             onClicked: if (mouse.button == Qt.RightButton) {
-                mediaItem.pressAndHold(index);
+                root.pressAndHold(index);
             } else {
-                mediaItem.clicked(index);
+                root.clicked(index);
             }
-            onPressAndHold: mediaItem.pressAndHold(index);
+            onPressAndHold: root.pressAndHold(index);
         }
     }
 }

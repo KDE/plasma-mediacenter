@@ -52,7 +52,7 @@ FocusScope {
                 PlasmaComponents.Label {
                     id: nameLabel
                     anchors { left: parent.left; leftMargin: units.largeSpacing; verticalCenter: parent.verticalCenter }
-                    text: model.modelData.name
+                    text: display
                     font.pointSize: fontSizes.large
                 }
 
@@ -64,7 +64,9 @@ FocusScope {
             MediaCenterComponents.GridBrowser {
                 Layout.fillWidth: true; Layout.preferredHeight: categoriesListView.currentIndex === index ? categoriesListView.height*0.8 : 0
                 clip: true
-                modelMetadata: model.modelData
+
+                currentBrowsingBackend: root.backend
+                model: modelRole
 
                 Behavior on Layout.preferredHeight {
                     NumberAnimation { duration: 300 }

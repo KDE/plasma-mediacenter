@@ -16,57 +16,30 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef EVENTSBACKEND_H
-#define EVENTSBACKEND_H
+#ifndef MODELSINBACKENDMODEL_H
+#define MODELSINBACKENDMODEL_H
 
-#include "../abstractmetadatabackend.h"
+#include <QAbstractListModel>
 
 class PmcModel;
-class EventsFilterModel;
-class EventsPicturesModel;
-class EventsModel;
-class EventsBackend : public AbstractMetadataBackend
+
+class ModelsInBackendModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    EventsBackend(QObject* parent, const QVariantList& args);
-    virtual void handleButtonClick(const QString& button);
-    virtual bool expand(int row);
-    virtual bool goOneLevelUp();
+    enum Roles {
+        ModelRole = Qt::UserRole + 1
+    };
+    virtual QVariant data(const QModelIndex& index, int role) const;
+    virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
+    virtual QHash<int, QByteArray> roleNames() const;
 
-    Q_INVOKABLE QList<int> editingStart() const;
-    Q_INVOKABLE QList<int> editingEnd() const;
-    Q_INVOKABLE QString editingEventName() const;
-
-public Q_SLOTS:
-    QString addEvent(int dayStart, int monthStart, int yearStart,
-                  int dayEnd, int monthEnd, int yearEnd,
-                  const QString &eventName);
-    QString editEvent(int dayStart, int monthStart, int yearStart,
-                  int dayEnd, int monthEnd, int yearEnd,
-                  const QString &eventName);
-
-    bool closeEventsConfiguration();
-
-protected:
-    virtual bool initImpl();
-
-private Q_SLOTS:
-    void showConfiguration();
+    void addModel(const PmcModel *model);
+    bool replaceModel(const PmcModel *original, const PmcModel *replacement);
+    void clear();
 
 private:
-    QString m_loginText;
-    PmcModel *m_eventsPmcModel = nullptr;
-    EventsModel *m_eventsModel = nullptr;
-    EventsPicturesModel *m_eventsPicturesModel = nullptr;
-    EventsFilterModel *m_eventsFilterModel = nullptr;
-    PmcModel *m_eventsFilterPmcModel = nullptr;
-
-    QDate m_editingStartDate;
-    QDate m_editingEndDate;
-    QString m_editingEventName;
-
-    QString eventNameForRow(int row) const;
+    QList<const PmcModel*> m_models;
 };
 
-#endif // EVENTSBACKEND_H
+#endif // MODELSINBACKENDMODEL_H
