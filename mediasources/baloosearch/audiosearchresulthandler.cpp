@@ -57,6 +57,7 @@ void AudioSearchResultHandler::handleResultImpl(
 
     vals.insert(MediaCenter::ArtistRole, file.property(KFileMetaData::Property::Artist));
     vals.insert(MediaCenter::AlbumRole, file.property(KFileMetaData::Property::Album));
+    vals.insert(MediaCenter::AlbumArtistRole, file.property(KFileMetaData::Property::AlbumArtist));
 
     m_mediaLibrary->updateMedia(QUrl::fromLocalFile(file.path()).toString(), vals);
 }

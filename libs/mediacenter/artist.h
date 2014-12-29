@@ -25,8 +25,9 @@
 
 class Media;
 
-class Artist
+class Artist : public QObject
 {
+    Q_OBJECT
 public:
     explicit Artist(const QString &name);
 
@@ -35,6 +36,9 @@ public:
     void addMedia(const QSharedPointer<Media> &media);
     void removeMedia(const QSharedPointer<Media> &media);
     QList< QSharedPointer<Media> > media() const;
+
+signals:
+    void updated();
 
 private:
     QString m_name;

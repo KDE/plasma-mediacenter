@@ -31,6 +31,7 @@ PmcAlbum::PmcAlbum(const QSharedPointer< Album >& album, QObject* parent)
     , d(new Private())
 {
     d->album = album;
+    connect(d->album.data(), &Album::updated, this, &PmcAlbum::updated);
 }
 
 

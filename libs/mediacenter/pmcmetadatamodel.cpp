@@ -32,6 +32,7 @@
 #include <QDebug>
 
 #include <QtCore/QTimer>
+#include <QSharedPointer>
 
 class PmcMetadataModel::Private
 {
@@ -191,6 +192,9 @@ void PmcMetadataModel::handleNewAlbumsOrArtists(const QList< QSharedPointer< T >
         }
         d->mediaByResourceId.insert(a->name(), QSharedPointer<QObject>(a));
         resourceIdsToBeInserted.append(a->name());
+        connect(a.data(), &T::updated, [this]() {
+            albumOrArtistUpdated<T>(static_cast<T*>(sender()));
+        });
     }
 
     if (resourceIdsToBeInserted.size() > 0) {
@@ -442,5 +446,14 @@ void PmcMetadataModel::mediaUpdated()
 
     const int mediaIndex = d->mediaResourceIds.indexOf(resourceId);
     const QModelIndex changedIndex = index(mediaIndex);
+    emit dataChanged(changedIndex, changedIndex);
+}
+
+template <class T>
+void PmcMetadataModel::albumOrArtistUpdated(const T *albumOrArtist)
+{
+    const auto name = albumOrArtist->name();
+    const auto i = d->mediaResourceIds.indexOf(name);
+    const auto changedIndex = index(i);
     emit dataChanged(changedIndex, changedIndex);
 }

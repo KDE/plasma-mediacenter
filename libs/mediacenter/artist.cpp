@@ -33,11 +33,13 @@ const QString& Artist::name() const
 void Artist::addMedia(const QSharedPointer<Media>& media)
 {
     m_media.append(media);
+    emit updated();
 }
 
 void Artist::removeMedia(const QSharedPointer<Media>& media)
 {
     m_media.removeOne(media);
+    emit updated();
 }
 
 QList< QSharedPointer<Media> > Artist::media() const
