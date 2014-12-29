@@ -44,7 +44,7 @@ Item {
                     id: labelOverlay
                     anchors {
                         bottom: parent.bottom; margins: 2
-                        left: iconImageLoader.right
+                        left: parent.left
                         right: parent.right
                         verticalCenter: parent.verticalCenter
                     }
@@ -86,14 +86,6 @@ Item {
                 }
                 onPressAndHold: mediaItem.pressAndHold(index);
             }
-        }
-
-        Text {
-            id: workaroundForDecorationUpdate
-            text: decoration ? decoration.toString() : ""
-            visible: false
-
-            onTextChanged: iconImageLoader.checkAndLoad()
         }
 
         PlasmaComponents.ToolButton {

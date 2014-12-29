@@ -259,7 +259,7 @@ QVariant PmcMetadataModel::dataForMedia(const QModelIndex &index, int role) cons
         if (media->type() == "video") {
             const QUrl url(media->url());
             if (d->mediaUrlWhichFailedThumbnailGeneration.contains(url.url()))
-                return "image-missing";
+                return "image://icon/image-missing";
             return const_cast<PmcMetadataModel*>(this)->fetchPreview(url, index);
         } else if (media->type() == "audio") {
             return getAlbumArt(media->album(), media->artist(), resourceId);
