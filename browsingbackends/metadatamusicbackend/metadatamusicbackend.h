@@ -51,6 +51,9 @@ public:
 
     virtual QStringList allMedia();
 
+public Q_SLOTS:
+    bool back(QObject* model);
+
 Q_SIGNALS:
     void artistFilterChanged();
     void albumFilterChanged();
@@ -59,8 +62,7 @@ protected:
     void updateModelAccordingToFilters();
     virtual bool initImpl();
 
-private slots:
-
+private Q_SLOTS:
     void initializeModels();
 
 private:
@@ -73,9 +75,14 @@ private:
     PmcModel* m_musicPmcModel;
     PmcModel* m_albumsPmcModel;
     PmcModel* m_artistsPmcModel;
+    PmcModel* m_musicFilteredByAlbumPmcModel;
+    PmcModel* m_musicFilteredByArtistPmcModel;
+
     FilterMediaModel* m_musicFilteredModel;
     FilterMediaModel* m_albumFilteredModel;
+    FilterMediaModel* m_musicFilteredByAlbumModel;
     FilterMediaModel* m_artistFilteredModel;
+    FilterMediaModel* m_musicFilteredByArtistModel;
 };
 
 #endif // METADATAMUSICBACKEND_H

@@ -132,6 +132,11 @@ bool AbstractBrowsingBackend::goOneLevelUp()
     return false;
 }
 
+bool AbstractBrowsingBackend::back(QObject* model)
+{
+    return false;
+}
+
 bool AbstractBrowsingBackend::expand(int row, QAbstractItemModel* model)
 {
     return expand(row);

@@ -28,7 +28,6 @@
 #include "mediacenter_export.h"
 #include "mediacenter.h"
 
-class QAbstractItemModel;
 class PmcModel;
 
 namespace MediaCenter {
@@ -117,6 +116,7 @@ public:
      * This function is used by Media Browser to go to one level
      * up in the browsing structure. Must be reimplemented
      *
+     * @deprecated
      * @return true if operation succeeded
      * @return false if we are already at the topmost level
      */
@@ -186,10 +186,11 @@ Q_SIGNALS:
     void searchTermChanged();
 
     void error(const QString &message);
-    //TODO: remove this signal, no longer necessary
-    void modelNeedsAttention(QObject* model);
     void pmcRuntimeChanged();
     void showCustomUi(const QString &customUiQml);
+
+public Q_SLOTS:
+    bool back(QObject* model);
 
 protected:
     /**

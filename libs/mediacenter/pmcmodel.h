@@ -31,6 +31,7 @@ class MEDIACENTER_EXPORT PmcModel : public QObject
     Q_PROPERTY(bool isList READ isList NOTIFY isListChanged)
     Q_PROPERTY(QObject* model READ model NOTIFY modelChanged)
     Q_PROPERTY(QString headerText READ headerText NOTIFY headerTextChanged)
+    Q_PROPERTY(bool expanded READ expanded NOTIFY expandedChanged)
 public:
     explicit PmcModel(QObject *model = 0, QObject* parent = 0);
 
@@ -49,12 +50,16 @@ public:
     QString headerText() const;
     void setHeaderText(const QString &text);
 
+    bool expanded() const;
+    void setExpanded(bool expanded);
+
 Q_SIGNALS:
     void nameChanged();
     void supportsSearchChanged();
     void isListChanged();
     void modelChanged();
     void headerTextChanged();
+    void expandedChanged();
 
 private:
     class Private;

@@ -28,19 +28,18 @@ class ModelsInBackendModel : public QAbstractListModel
     Q_OBJECT
 public:
     enum Roles {
-        ModelRole = Qt::UserRole + 1,
-        IsListRole
+        ModelRole = Qt::UserRole + 1
     };
     virtual QVariant data(const QModelIndex& index, int role) const;
     virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
     virtual QHash<int, QByteArray> roleNames() const;
 
-    void addModel(const PmcModel *model);
-    bool replaceModel(const PmcModel *original, const PmcModel *replacement);
+    void addModel(PmcModel* model);
+    bool replaceModel(PmcModel* original, PmcModel* replacement);
     void clear();
 
 private:
-    QList<const PmcModel*> m_models;
+    QList<PmcModel*> m_models;
 };
 
 #endif // MODELSINBACKENDMODEL_H

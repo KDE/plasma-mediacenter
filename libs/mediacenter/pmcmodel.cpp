@@ -31,6 +31,7 @@ public:
     bool isList;
     QObject *model;
     QString headerText;
+    bool expanded;
 };
 
 PmcModel::PmcModel(QObject* model, QObject* parent)
@@ -94,5 +95,18 @@ void PmcModel::setHeaderText(const QString& text)
     if (d->headerText != text) {
         d->headerText = text;
         emit headerTextChanged();
+    }
+}
+
+bool PmcModel::expanded() const
+{
+    return d->expanded;
+}
+
+void PmcModel::setExpanded(bool expanded)
+{
+    if (d->expanded != expanded) {
+        d->expanded = expanded;
+        emit expandedChanged();
     }
 }

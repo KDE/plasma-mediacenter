@@ -56,15 +56,22 @@ FocusScope {
                     font.pointSize: fontSizes.large
                 }
 
+                PlasmaComponents.Button {
+                    anchors { right: parent.right; verticalCenter: parent.verticalCenter }
+                    width: 100; z: 2
+                    text: "Back"
+                    onClicked: { console.log("BACK " + modelRole); backend.back(modelRole) }
+                }
+
                 MouseArea {
                     anchors.fill: parent
                     onClicked: categoriesListView.currentIndex = index
                 }
             }
             Loader {
-                property variant theModel: modelRole
+                property variant theModel: modelRole.model
                 Layout.fillWidth: true; Layout.preferredHeight: categoriesListView.currentIndex === index ? categoriesListView.height*0.8 : 0
-                sourceComponent: isListRole ? listBrowserComponent : gridBrowserComponent
+                sourceComponent: modelRole.isList ? listBrowserComponent : gridBrowserComponent
                 Behavior on Layout.preferredHeight {
                     NumberAnimation { duration: 300 }
                 }

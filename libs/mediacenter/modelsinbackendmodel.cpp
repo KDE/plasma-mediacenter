@@ -23,11 +23,10 @@ QHash< int, QByteArray > ModelsInBackendModel::roleNames() const
 {
     auto defaultRoleNames = QAbstractItemModel::roleNames();
     defaultRoleNames.insert(ModelRole, "modelRole");
-    defaultRoleNames.insert(IsListRole, "isListRole");
     return defaultRoleNames;
 }
 
-void ModelsInBackendModel::addModel(const PmcModel* model)
+void ModelsInBackendModel::addModel(PmcModel* model)
 {
     auto rows = rowCount();
     beginInsertRows(QModelIndex(), rows, rows);
@@ -35,7 +34,7 @@ void ModelsInBackendModel::addModel(const PmcModel* model)
     endInsertRows();
 }
 
-bool ModelsInBackendModel::replaceModel(const PmcModel* original, const PmcModel* replacement)
+bool ModelsInBackendModel::replaceModel(PmcModel* original, PmcModel* replacement)
 {
     auto i = m_models.indexOf(original);
     if (i == -1) {
@@ -64,9 +63,7 @@ QVariant ModelsInBackendModel::data(const QModelIndex& index, int role) const
     case Qt::DisplayRole:
         return model->name();
     case ModelRole:
-        return QVariant::fromValue(model->model());
-    case IsListRole:
-        return model->isList();
+        return QVariant::fromValue(static_cast<QObject*>(model));
     }
     return QVariant();
 }

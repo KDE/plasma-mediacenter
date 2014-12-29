@@ -34,11 +34,6 @@ bool AbstractMetadataBackend::initImpl()
     return true;
 }
 
-bool AbstractMetadataBackend::goOneLevelUp()
-{
-    return false;
-}
-
 bool AbstractMetadataBackend::busy() const
 {
     return m_busy;

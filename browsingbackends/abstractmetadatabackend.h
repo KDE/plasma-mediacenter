@@ -30,9 +30,6 @@ public:
     AbstractMetadataBackend (QObject* parent, const QVariantList& args);
     virtual bool busy() const;
 
-public Q_SLOTS:
-    virtual bool goOneLevelUp();
-
 protected:
     virtual bool initImpl();
     void handleBusySignals(PmcMetadataModel *emitter);
