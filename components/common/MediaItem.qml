@@ -54,6 +54,7 @@ Item {
 
             ColumnLayout {
                 Layout.fillHeight: true; Layout.fillWidth: true
+                visible: !hideLabel
                 PlasmaComponents.Label {
                     Layout.fillHeight: true; Layout.fillWidth: true
                     visible: !hideLabel
