@@ -107,31 +107,6 @@ Image {
         pmcPageStack.popAndFocus();
     }
 
-    function toggleCategoriesBar()
-    {
-        categoriesbar.visible = !categoriesbar.visible;
-    }
-
-    function showController(itemToFocus)
-    {
-        mediaController.hideFlag = false;
-        itemToFocus.focus = true;
-    }
-
-    function hideController(itemToFocus)
-    {
-        mediaController.hideFlag = true;
-        itemToFocus.focus = true;
-    }
-
-    function toggleController(itemToFocus)
-    {
-        if (mediaController.hideFlag)
-            showController(itemToFocus);
-        else
-            hideController(itemToFocus);
-    }
-
     function toggleDashboard()
     {
         containmentParent.opacity = containmentParent.opacity == 0 ? 1 : 0;
@@ -324,12 +299,12 @@ Image {
     }
 
     MediaCenterElements.CategoriesBar {
-        id: categoriesbar
+        id: categoriesBar
         z: 1
         backendsModel: getPmcInterface().backendsModel
         width: parent.width * 0.2
         height: parent.height
-        visible: true
+        visible: pmcPageStack.currentPage !== mediaPlayerInstance
         onBackendSelected: {
             if (!backendObject.init())
                 return;
@@ -341,8 +316,8 @@ Image {
     PlasmaComponents.PageStack {
         id: pmcPageStack
         anchors {
-            top: pmcPageStack.currentPage == mediaPlayerInstance || pmcPageStack.currentPage == imageViewerInstance ? parent.top : mediaController.bottom
-            left: (categoriesbar.visible) ? categoriesbar.right : parent.left
+            top: parent.top
+            left: (categoriesBar.visible) ? categoriesBar.right : parent.left
             right: parent.right;
             bottom: parent.bottom
             topMargin: units.largeSpacing * 2
@@ -373,16 +348,16 @@ Image {
 
     MediaCenterElements.MediaController {
         id: mediaController
-        property bool hideFlag: false
         anchors {
-            top: parent.top; right: parent.right; left: parent.left
+            bottom: parent.bottom; horizontalCenter: parent.horizontalCenter
+            bottomMargin: units.smallSpacing * 20
         }
-        height: visible ? parent.height * 0.08 : 0
-        runtimeDataObject: runtimeData
-        z: 1; opacity: 0.8
-        visible: false
-        state: hideFlag && ((mediaPlayerInstance && mediaPlayerInstance.visible) || (imageViewerInstance && imageViewerInstance.visible)) ? "hidden"  : ""
+        width: parent.width * 0.8
+        height: units.iconSizes.large
+        opacity: pmcPageStack.currentPage === mediaPlayerInstance ? 0.8 : 0
+        z: 1
 
+        runtimeDataObject: runtimeData
         currentMediaTime: mediaPlayerInstance.currentTime
         totalMediaTime: mediaPlayerInstance.totalTime
 
@@ -404,14 +379,9 @@ Image {
         playlistButtonVisible : pmcPageStack.currentPage != playlistInstance
         playerButtonVisible: mediaPlayerInstance != null && mediaPlayerInstance.url && (pmcPageStack.currentPage != mediaPlayerInstance)
 
-        states: [
-            State {
-                name: "hidden"
-                AnchorChanges { target: mediaController; anchors.top: undefined; anchors.bottom: parent.top }
-            }
-        ]
-
-        transitions: [ Transition { AnchorAnimation { duration: 200 } } ]
+        Behavior on opacity {
+            NumberAnimation { duration: 200 }
+        }
     }
 
     Component {
@@ -420,7 +390,6 @@ Image {
             currentBrowsingBackend: getPmcInterface().currentBrowsingBackend
 
             onPlayRequested: {
-                print("want to play "+url);
                 if (currentMediaType == "image") {
                     var mediaImageViewer = getMediaImageViewer();
                     mediaImageViewer.stripModel = model;
@@ -545,7 +514,6 @@ Image {
 
     Keys.onPressed: {
         switch (event.key) {
-            case Qt.Key_Escape: toggleCategoriesBar(); break
             case Qt.Key_Backspace: goBack(); break
             case Qt.Key_Space: runtimeData.playPause(); break
             case Qt.Key_MediaPlay: runtimeData.playPause(); break

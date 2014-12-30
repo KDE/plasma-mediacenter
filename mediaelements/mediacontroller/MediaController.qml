@@ -161,31 +161,6 @@ FocusScope {
                 }
             }
 
-
-            PlasmaComponents.Slider {
-                id: volumeSlider
-                height: parent.height
-		width: volumeButton.checked ? parent.width * 0.1 : 1
-                visible: volumeButton.checked
-                minimumValue: 0
-                maximumValue: 100
-                onPressedChanged: if (!pressed) controlBarFrame.wantToLoseFocus()
-
-                Binding {
-                    when: volumeSlider.pressed
-                    target: runtimeDataObject
-                    property: "volume"
-                    value: volumeSlider.value * 0.01
-                }
-
-                Binding {
-                    when: !volumeSlider.pressed
-                    target: volumeSlider
-                    property: "value"
-                    value: Math.round(100 * runtimeDataObject.volume)
-                }
-            }
-
             KQuickControlsAddons.MouseEventListener {
                 width: parent.height
                 height: width
@@ -217,10 +192,35 @@ FocusScope {
                 }
             }
 
+            PlasmaComponents.Slider {
+                id: volumeSlider
+                height: parent.height
+                width: volumeButton.checked ? parent.width * 0.1 : 1
+                visible: volumeButton.checked
+                minimumValue: 0
+                maximumValue: 100
+                onPressedChanged: if (!pressed) controlBarFrame.wantToLoseFocus()
+
+                Binding {
+                    when: volumeSlider.pressed
+                    target: runtimeDataObject
+                    property: "volume"
+                    value: volumeSlider.value * 0.01
+                }
+
+                Binding {
+                    when: !volumeSlider.pressed
+                    target: volumeSlider
+                    property: "value"
+                    value: Math.round(100 * runtimeDataObject.volume)
+                }
+            }
+
             PlasmaComponents.ToolButton {
                 id: playlistButton
                 width: parent.height
                 height: width
+                enabled: false
                 iconSource: "format-list-ordered"
                 onClicked: playlistButtonClicked();
             }
@@ -229,6 +229,7 @@ FocusScope {
                 id: playerButton
                 width: parent.height
                 height: width
+                enabled: false
                 iconSource: "applications-multimedia"
                 onClicked: playerButtonClicked();
             }
