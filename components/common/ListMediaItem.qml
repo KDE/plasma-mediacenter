@@ -36,9 +36,6 @@ Item {
     Rectangle {
         anchors {
             fill: parent;
-            topMargin: units.smallSpacing * 2
-            bottomMargin: units.smallSpacing * 2
-            rightMargin: units.smallSpacing * 4
         }
         color: view.currentIndex === index ? theme.highlightColor : theme.backgroundColor
 
