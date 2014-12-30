@@ -85,6 +85,7 @@ FocusScope {
         MediaCenterComponents.GridBrowser {
             clip: true
 
+            onMediaSelected: root.mediaSelected(index, url, mediaType)
             currentBrowsingBackend: root.backend
             model: theModel
         }
@@ -93,7 +94,7 @@ FocusScope {
         id: listBrowserComponent
         MediaCenterComponents.ListBrowser {
             clip: true
-
+            onMediaSelected: root.mediaSelected(index, url, mediaType)
             currentBrowsingBackend: root.backend
             model: theModel
         }
