@@ -1,7 +1,5 @@
 install(FILES qmldir DESTINATION ${QML_INSTALL_DIR}/org/kde/plasma/mediacenter/components)
-install(FILES SmartBrowser.qml DESTINATION ${QML_INSTALL_DIR}/org/kde/plasma/mediacenter/components)
 install(FILES CategoriesBrowser.qml DESTINATION ${QML_INSTALL_DIR}/org/kde/plasma/mediacenter/components)
 install(DIRECTORY common DESTINATION ${QML_INSTALL_DIR}/org/kde/plasma/mediacenter/components)
 install(DIRECTORY gridbrowser DESTINATION ${QML_INSTALL_DIR}/org/kde/plasma/mediacenter/components)
 install(DIRECTORY listbrowser DESTINATION ${QML_INSTALL_DIR}/org/kde/plasma/mediacenter/components)
-install(DIRECTORY tabbrowser DESTINATION ${QML_INSTALL_DIR}/org/kde/plasma/mediacenter/components)
