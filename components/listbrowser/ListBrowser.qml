@@ -75,8 +75,9 @@ FocusScope {
         }
         clip: true
         focus: true
-        highlight: PlasmaComponents.Highlight { }
+        highlight: Item { }
         highlightFollowsCurrentItem: true
+        spacing: units.smallSpacing
 //         header: Common.LabelOverlay {
 //             height: text == "" ? 0 : 64; width: height ? listView.width : 0
 //
