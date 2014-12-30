@@ -305,6 +305,7 @@ Image {
         width: parent.width * 0.2
         height: parent.height
         visible: pmcPageStack.currentPage !== mediaPlayerInstance
+            && pmcPageStack.currentPage !== imageViewerInstance
         onBackendSelected: {
             if (!backendObject.init())
                 return;

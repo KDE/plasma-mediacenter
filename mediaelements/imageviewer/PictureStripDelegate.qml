@@ -21,27 +21,18 @@ import QtQuick 2.1
 
 Item {
     id: pictureStripDelegate
-    z: ListView.isCurrentItem ? 1 : 0
     signal imageClicked(string url)
     property bool isDirectory: isExpandable
 
     Image {
-        anchors { fill: parent; rightMargin: 1; topMargin: 10 }
-        anchors { leftMargin: anchors.rightMargin; bottomMargin: anchors.topMargin }
+        anchors.fill: parent
         sourceSize.width: width
         sourceSize.height: 0
         source: mediaUrl ? mediaUrl : ""
         asynchronous: true
         cache: true
-        scale: (pictureStripDelegate.ListView.isCurrentItem ? 1.5 : 1)
+        fillMode: Image.PreserveAspectCrop
         smooth: true
-
-        Behavior on scale {
-            NumberAnimation {
-                duration: 500
-                easing.type: Easing.OutExpo
-            }
-        }
     }
 
     MouseArea {
