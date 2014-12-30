@@ -35,7 +35,7 @@ FocusScope {
 
     property QtObject browser
 
-    signal mediaSelected(int index, string url, string mediaType)
+    signal mediaSelected(int index, string url, string mediaType, variant model)
     signal popupRequested(int index, string url, string mediaType, string title)
 
     ListView {
@@ -84,8 +84,7 @@ FocusScope {
         id: gridBrowserComponent
         MediaCenterComponents.GridBrowser {
             clip: true
-
-            onMediaSelected: root.mediaSelected(index, url, mediaType)
+            onMediaSelected: root.mediaSelected(index, url, mediaType, theModel)
             currentBrowsingBackend: root.backend
             model: theModel
         }
@@ -94,7 +93,7 @@ FocusScope {
         id: listBrowserComponent
         MediaCenterComponents.ListBrowser {
             clip: true
-            onMediaSelected: root.mediaSelected(index, url, mediaType)
+            onMediaSelected: root.mediaSelected(index, url, mediaType, theModel)
             currentBrowsingBackend: root.backend
             model: theModel
         }

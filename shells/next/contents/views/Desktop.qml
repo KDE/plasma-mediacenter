@@ -423,7 +423,7 @@ Image {
                 print("want to play "+url);
                 if (currentMediaType == "image") {
                     var mediaImageViewer = getMediaImageViewer();
-                    mediaImageViewer.stripModel = getPmcInterface().currentBrowsingBackend.models[0].model;
+                    mediaImageViewer.stripModel = model;
                     mediaImageViewer.stripCurrentIndex = index;
                     mediaImageViewer.source = url;
                     pmcPageStack.pushAndFocus(mediaImageViewer);

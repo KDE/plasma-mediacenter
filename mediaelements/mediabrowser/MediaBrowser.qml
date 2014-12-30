@@ -29,7 +29,7 @@ FocusScope {
     property QtObject backendOverlay
 
     signal backRequested
-    signal playRequested(int index, string url, string currentMediaType)
+    signal playRequested(int index, string url, string currentMediaType, variant model)
     signal playAllRequested()
     signal popupMenuRequested(int index, string mediaUrl, string mediaType, string display)
 
@@ -68,7 +68,7 @@ FocusScope {
             backend: mediaBrowser.currentBrowsingBackend
             models: mediaBrowser.currentBrowsingBackend.models
 
-            onMediaSelected: mediaBrowser.playRequested(index, url, mediaType)
+            onMediaSelected: mediaBrowser.playRequested(index, url, mediaType, model)
             onPopupRequested: mediaBrowser.popupMenuRequested(index, url, mediaType, title)
         }
     }
