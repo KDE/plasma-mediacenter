@@ -42,6 +42,7 @@ FocusScope {
         id: categoriesListView
         anchors.fill: parent
         spacing: units.smallSpacing * 3
+        boundsBehavior: Flickable.StopAtBounds 
         delegate:
         ColumnLayout {
             width: parent.width
