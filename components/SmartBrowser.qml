@@ -48,20 +48,7 @@ FocusScope {
         if (models && (models.length == undefined || models.length == 1)) {
             var modelMetadata = models.length ? models[0] : models;
             var modelLabel = modelMetadata.name ? modelMetadata.name : modelMetadata.objectName
-            if (modelMetadata.first || modelMetadata.second) {
-                splitBrowserComponent = Qt.createComponent("SplitBrowser.qml");
-                root.browser = splitBrowserComponent.createObject(root);
-                if (splitBrowserComponent.status == Component.Ready) {
-                    connectSignals(root.browser);
-                    setSiblings(root.browser);
-                    root.browser.backend = root.backend; 
-                    root.browser.firstModel = modelMetadata.first;
-                    root.browser.secondModel = modelMetadata.second;
-                    root.browser.focus = true;
-                } else {
-                    console.log("******* Error loading SplitBrowser " + splitBrowserComponent.errorString())
-                }
-            } else if (modelMetadata.isList) {
+            if (modelMetadata.isList) {
                 var listBrowserComponent = Qt.createComponent("listbrowser/ListBrowser.qml");
                 if (listBrowserComponent.status == Component.Ready) {
                     root.browser = listBrowserComponent.createObject(root);
