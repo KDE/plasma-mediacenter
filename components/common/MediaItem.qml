@@ -67,7 +67,7 @@ Item {
                     Layout.fillHeight: true; Layout.fillWidth: true
                     verticalAlignment: Text.AlignTop
                     visible: mediaCountRole !== undefined
-                    text: i18ncp("Songs count", "1 Song", "%1 Songs", mediaCountRole);
+                    text: (mediaCountRole !== undefined) ? i18ncp("Songs count", "1 Song", "%1 Songs", mediaCountRole) : "" ;
                 }
             }
         }
