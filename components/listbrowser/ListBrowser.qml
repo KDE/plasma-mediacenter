@@ -79,6 +79,7 @@ FocusScope {
         highlight: Item { }
         highlightFollowsCurrentItem: true
         spacing: units.smallSpacing
+        boundsBehaviour: Flickable.StopAtBounds
 //         header: Common.LabelOverlay {
 //             height: text == "" ? 0 : 64; width: height ? listView.width : 0
 //
@@ -93,9 +94,8 @@ FocusScope {
             view: listView
 
             width: ListView.view.width - listScrollbar.width
-            height: 64
+            height: units.iconSizes.huge
             clip: !ListView.isCurrentItem
-            z: ListView.isCurrentItem ? 1 : 0
 
             backend: listBrowserRoot.currentBrowsingBackend
             onPlayRequested: listBrowserRoot.mediaSelected(index, url, currentMediaType)

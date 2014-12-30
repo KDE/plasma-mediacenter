@@ -107,6 +107,7 @@ FocusScope {
         }
         highlight: Item {}
         highlightFollowsCurrentItem: true
+        boundsBehaviour: Flickable.StopAtBounds
         flow: GridView.FlowTopToBottom
         cacheBuffer: width*2
         focus: true
