@@ -94,9 +94,9 @@ bool MetadataMusicBackend::initImpl()
     m_artistsPmcModel->setSupportsSearch(true);
     m_albumsPmcModel->setSupportsSearch(true);
 
-    addModel(m_musicPmcModel);
     addModel(m_albumsPmcModel);
     addModel(m_artistsPmcModel);
+    addModel(m_musicPmcModel);
 
     QTimer::singleShot(1000, this, SLOT(initializeModels()));
     return true;
