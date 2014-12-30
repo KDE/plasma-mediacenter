@@ -79,7 +79,7 @@ FocusScope {
         highlight: Item { }
         highlightFollowsCurrentItem: true
         spacing: units.smallSpacing
-        boundsBehaviour: Flickable.StopAtBounds
+        boundsBehavior: Flickable.StopAtBounds
 //         header: Common.LabelOverlay {
 //             height: text == "" ? 0 : 64; width: height ? listView.width : 0
 //
