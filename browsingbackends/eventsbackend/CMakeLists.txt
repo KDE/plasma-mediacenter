@@ -6,17 +6,15 @@ set(eventsbackend_SRCS
     eventsbackend.cpp
 )
 
-qt4_automoc(${eventsbackend_SRCS})
-
-kde4_add_plugin(pmc_eventsbackend ${eventsbackend_SRCS})
+add_library(pmc_eventsbackend MODULE ${eventsbackend_SRCS})
+set_target_properties(pmc_eventsbackend PROPERTIES PREFIX "")
 
 target_link_libraries(pmc_eventsbackend
     plasmamediacenter
-    ${KDE4_KDECORE_LIBS}
-    ${QT_QTCORE_LIBRARIES}
-    ${QT_QTGUI_LIBRARIES}
 )
 
-install(TARGETS pmc_eventsbackend DESTINATION ${PLUGIN_INSTALL_DIR})
+kservice_desktop_to_json(pmc_eventsbackend eventsbackend.desktop)
+
+install(TARGETS pmc_eventsbackend DESTINATION ${PLUGIN_INSTALL_DIR}/plasma/mediacenter/browsingbackends)
 install(FILES eventsbackend.desktop DESTINATION ${SERVICES_INSTALL_DIR})
-install(DIRECTORY eventscomponents DESTINATION ${IMPORTS_INSTALL_DIR}/org/kde/plasma/mediacenter/elements)
+install(DIRECTORY eventscomponents DESTINATION ${QML_INSTALL_DIR}/org/kde/plasma/mediacenter/elements)

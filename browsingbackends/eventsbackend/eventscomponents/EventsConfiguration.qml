@@ -17,9 +17,10 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-import QtQuick 1.1
-import org.kde.plasma.components 0.1 as PlasmaComponents
-import org.kde.plasma.extras 0.1 as PlasmaExtras
+import QtQuick 2.0
+import QtQuick.Controls 1.2
+import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.plasma.extras 2.0 as PlasmaExtras
 
 FocusScope {
     id: root
@@ -51,9 +52,11 @@ FocusScope {
                 height: 100
                 spacing: 10
 
-                DatePicker {
+                Calendar {
                     id: startDate
-                    width: parent.pickerWidth; height: parent.height
+                    //width: parent.pickerWidth; height: parent.height
+                    width: 400
+                    height: 400
                 }
 
                 PlasmaExtras.Title {
@@ -63,7 +66,7 @@ FocusScope {
                     verticalAlignment: Text.AlignVCenter
                 }
 
-                DatePicker {
+                Calendar {
                     id: endDate
                     width: parent.pickerWidth; height: parent.height
                 }
@@ -94,13 +97,9 @@ FocusScope {
                         if (!addOrEditButton.enabled) return;
                         var error;
                         if (root.adding) {
-                            error = backend.addEvent(startDate.day+1, startDate.month+1, startDate.year,
-                                                    endDate.day+1, endDate.month+1, endDate.year,
-                                                    eventNameText.text);
+                            error = backend.addEvent(startDate.selectedDate, endDate.selectedDate, eventNameText.text);
                         } else {
-                            error = backend.editEvent(startDate.day+1, startDate.month+1, startDate.year,
-                                                    endDate.day+1, endDate.month+1, endDate.year,
-                                                    eventNameText.text);
+                            error = backend.editEvent(startDate.selectedDate, endDate.selectedDate,eventNameText.text);
                         }
                         if (error) {
                             errorLabel.error = error;
