@@ -325,7 +325,6 @@ void MediaLibrary::emitNewMedia()
     { \
         QMutexLocker l(&mutex); \
         if (!list.isEmpty()) { \
-            qDebug() << "Emitting " << SIGNAL(signal); \
             emit signal(list); \
             list.clear(); \
         } \
