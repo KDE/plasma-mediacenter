@@ -302,15 +302,18 @@ Image {
         id: categoriesBar
         z: 1
         backendsModel: getPmcInterface().backendsModel
-        width: parent.width * 0.2
+        width: pmcPageStack.currentPage !== mediaPlayerInstance
+            && pmcPageStack.currentPage !== imageViewerInstance ? parent.width * 0.2 : 0
         height: parent.height
-        visible: pmcPageStack.currentPage !== mediaPlayerInstance
-            && pmcPageStack.currentPage !== imageViewerInstance
         onBackendSelected: {
             if (!backendObject.init())
                 return;
             getPmcInterface().currentBrowsingBackend = backendObject;
             pmcPageStack.pushAndFocus(getMediaBrowser());
+        }
+
+        Behavior on width {
+            NumberAnimation { duration: 300 }
         }
     }
 
