@@ -98,7 +98,7 @@ FocusScope {
                 id: stopButton
                 height: parent.height
                 width: height
-                enabled: runtimeData.playing || runtimeData.paused
+                enabled: runtimeDataObject.status == RuntimeData.Playing || runtimeDataObject.status == RuntimeData.Paused
 
                 iconSource: "pmc-stop"
                 onClicked: controlBarFrame.stop()

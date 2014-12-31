@@ -43,6 +43,4 @@ ListView {
             categoriesBarRoot.backendSelected();
         }
     }
-
-    Component.onCompleted: currentIndex = model.defaultIndex
 }

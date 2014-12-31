@@ -379,7 +379,7 @@ Image {
         onWantToLoseFocus: pmcPageStack.currentPage.focus = true
 
         playlistButtonVisible : pmcPageStack.currentPage != playlistInstance
-        playerButtonVisible: mediaPlayerInstance != null && mediaPlayerInstance.url && (pmcPageStack.currentPage != mediaPlayerInstance)
+        playerButtonVisible: mediaPlayerInstance != null && (pmcPageStack.currentPage != mediaPlayerInstance)
 
         Behavior on opacity {
             NumberAnimation { duration: 200 }
