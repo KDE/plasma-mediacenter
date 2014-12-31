@@ -71,13 +71,12 @@ MouseArea {
             Layout.fillHeight: true
             ListView {
                 id: imageList
-                anchors { fill: parent; margins: units.smallSpacing * 2}
+                anchors { fill: parent}
                 orientation: ListView.Horizontal
                 highlight: Item { }
-                spacing: units.smallSpacing * 2
                 preferredHighlightBegin: parent.width*0.4
                 preferredHighlightEnd: parent.width*0.6
-                highlightRangeMode: GridView.ApplyRange
+                highlightRangeMode: ListView.ApplyRange
                 highlightFollowsCurrentItem: true
                 highlightMoveDuration: 500
                 delegate: PictureStripDelegate {

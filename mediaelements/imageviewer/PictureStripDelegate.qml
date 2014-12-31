@@ -24,21 +24,25 @@ Item {
     signal imageClicked(string url)
     property bool isDirectory: isExpandable
 
-    Image {
+    Rectangle {
         anchors.fill: parent
-        sourceSize.width: width
-        sourceSize.height: 0
-        source: mediaUrl ? mediaUrl : ""
-        asynchronous: true
-        cache: true
-        fillMode: Image.PreserveAspectCrop
-        smooth: true
-    }
+        color: pictureStripDelegate.ListView.isCurrentItem ? theme.highlightColor : theme.backgroundColor
+        Image {
+            anchors {fill: parent; margins: units.smallSpacing * 2 }
+            sourceSize.width: width
+            sourceSize.height: 0
+            source: mediaUrl ? mediaUrl : ""
+            asynchronous: true
+            cache: true
+            fillMode: Image.PreserveAspectCrop
+            smooth: true
+        }
 
-    MouseArea {
-        id: pictureStripMouseArea
-        anchors.fill: parent
-        onClicked: emitClicked()
+        MouseArea {
+            id: pictureStripMouseArea
+            anchors.fill: parent
+            onClicked: emitClicked()
+        }
     }
 
     Keys.onReturnPressed: emitClicked()
