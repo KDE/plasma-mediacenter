@@ -19,9 +19,13 @@
 #define MEDIACENTER_PMCMODEL_H
 
 #include <QObject>
+#include <QMap>
+#include <QVariant>
 #include <QMetaType>
 
 #include "mediacenter_export.h"
+
+typedef QMap<QString, QVariant> ParentData;
 
 class MEDIACENTER_EXPORT PmcModel : public QObject
 {
@@ -32,6 +36,7 @@ class MEDIACENTER_EXPORT PmcModel : public QObject
     Q_PROPERTY(QObject* model READ model NOTIFY modelChanged)
     Q_PROPERTY(QString headerText READ headerText NOTIFY headerTextChanged)
     Q_PROPERTY(bool expanded READ expanded NOTIFY expandedChanged)
+    Q_PROPERTY(ParentData parentData READ parentData NOTIFY parentDataChanged)
 public:
     explicit PmcModel(QObject *model = 0, QObject* parent = 0);
 
@@ -53,6 +58,9 @@ public:
     bool expanded() const;
     void setExpanded(bool expanded);
 
+    ParentData parentData() const;
+    void setParentData(const QMap<int, QVariant> &parentData);
+
 Q_SIGNALS:
     void nameChanged();
     void supportsSearchChanged();
@@ -60,6 +68,7 @@ Q_SIGNALS:
     void modelChanged();
     void headerTextChanged();
     void expandedChanged();
+    void parentDataChanged();
 
 private:
     class Private;

@@ -120,24 +120,6 @@ QString MetadataMusicBackend::artistFilter() const
     return m_artistFilter;
 }
 
-void MetadataMusicBackend::setAlbumFilter(const QString& filter)
-{
-    m_albumFilter = filter;
-    emit albumFilterChanged();
-    m_artistFilter.clear();
-    emit artistFilterChanged();
-    updateModelAccordingToFilters();
-}
-
-void MetadataMusicBackend::setArtistFilter(const QString& filter)
-{
-    m_artistFilter = filter;
-    emit artistFilterChanged();
-    m_albumFilter.clear();
-    emit albumFilterChanged();
-    updateModelAccordingToFilters();
-}
-
 void MetadataMusicBackend::updateModelAccordingToFilters()
 {
     if (!m_albumFilter.isEmpty()) {
@@ -154,17 +136,38 @@ void MetadataMusicBackend::updateModelAccordingToFilters()
     }
 }
 
+void MetadataMusicBackend::setArtistData(const QMap<int, QVariant>& data)
+{
+    m_musicFilteredByArtistPmcModel->setParentData(data);
+}
+
+void MetadataMusicBackend::setAlbumData(const QMap<int, QVariant>& data)
+{
+    m_musicFilteredByAlbumPmcModel->setParentData(data);
+}
+
 bool MetadataMusicBackend::expand(int row, QAbstractItemModel* model)
 {
     if (!model) return false;
 
+    const auto parentData = model->itemData(model->index(row, 0));
+
     const QString filter = model->data(model->index(row, 0), Qt::DisplayRole).toString();
 
     if (model == m_albumFilteredModel) {
-        setAlbumFilter(filter);
+        m_albumFilter = filter;
+        setAlbumData(parentData);
+        m_artistFilter.clear();
     } else if (model == m_artistFilteredModel) {
-        setArtistFilter(filter);
+        m_artistFilter = filter;
+        setArtistData(parentData);
+        m_albumFilter.clear();
     }
+
+    updateModelAccordingToFilters();
+
+    emit artistFilterChanged();
+    emit albumFilterChanged();
 
     return true;
 }

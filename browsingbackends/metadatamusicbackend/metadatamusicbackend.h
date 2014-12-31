@@ -30,8 +30,8 @@ class PmcModel;
 class MetadataMusicBackend : public AbstractMetadataBackend
 {
     Q_OBJECT
-    Q_PROPERTY(QString artistFilter READ artistFilter WRITE setArtistFilter NOTIFY artistFilterChanged)
-    Q_PROPERTY(QString albumFilter READ albumFilter WRITE setAlbumFilter NOTIFY albumFilterChanged)
+    Q_PROPERTY(QString artistFilter READ artistFilter NOTIFY artistFilterChanged)
+    Q_PROPERTY(QString albumFilter READ albumFilter NOTIFY albumFilterChanged)
 
 public:
     MetadataMusicBackend (QObject* parent, const QVariantList& args);
@@ -40,8 +40,8 @@ public:
     QString artistFilter() const;
     QString albumFilter() const;
 
-    void setArtistFilter(const QString &filter);
-    void setAlbumFilter(const QString &filter);
+    void setArtistData(const QMap<int, QVariant>& data);
+    void setAlbumData(const QMap<int, QVariant>& data);
 
     virtual bool expand(int row, QAbstractItemModel* model);
 

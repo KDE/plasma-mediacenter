@@ -17,6 +17,9 @@
 
 #include "pmcmodel.h"
 
+#include <QDebug>
+#include <QAbstractItemModel>
+
 class PmcModel::Private
 {
 public:
@@ -32,12 +35,14 @@ public:
     QObject *model;
     QString headerText;
     bool expanded;
+    QVariantMap parentData;
 };
 
 PmcModel::PmcModel(QObject* model, QObject* parent)
     : QObject(parent)
     , d(new Private())
 {
+    qRegisterMetaType<ParentData>("ParentData");
     d->model = model;
 }
 
@@ -104,9 +109,22 @@ bool PmcModel::expanded() const
 }
 
 void PmcModel::setExpanded(bool expanded)
-{
-    if (d->expanded != expanded) {
+ {
+     if (d->expanded != expanded) {
         d->expanded = expanded;
         emit expandedChanged();
     }
+}
+
+QVariantMap PmcModel::parentData() const
+{
+    qDebug() << "Parent Data asked" << d->parentData;
+    return d->parentData;
+}
+
+void PmcModel::setParentData(const QMap<int, QVariant>& data)
+{
+    d->parentData["display"] = data.value(Qt::DisplayRole);
+    d->parentData["decoration"] = data.value(Qt::DecorationRole);
+    emit parentDataChanged();
 }
