@@ -355,7 +355,8 @@ Image {
         }
         width: parent.width * 0.8
         height: units.iconSizes.large
-        opacity: pmcPageStack.currentPage === mediaPlayerInstance ? 0.8 : 0
+        visible: pmcPageStack.currentPage === mediaPlayerInstance ? true : false
+        opacity: 0.8
         z: 1
 
         runtimeDataObject: runtimeData
