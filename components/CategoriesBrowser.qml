@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright 2013 Shantanu Tushar <shantanu@kde.org>                     *
+ *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -42,7 +42,7 @@ FocusScope {
         id: categoriesListView
         anchors.fill: parent
         spacing: units.smallSpacing * 3
-        boundsBehavior: Flickable.StopAtBounds 
+        boundsBehavior: Flickable.StopAtBounds
         delegate:
         ColumnLayout {
             width: parent.width

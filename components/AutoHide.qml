@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright 2012 Sinny Kumari <ksinny@gmail.com>                        *
+ *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,35 +17,27 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-import QtQuick 2.1
+import QtQuick 2.3
 
 Item {
-    id: pictureStripDelegate
-    signal imageClicked(string url)
-    property bool isDirectory: isExpandable
+    id: root
+    property bool inhibit
+    property bool shouldHide
 
-    Image {
-        anchors.fill: parent
-        sourceSize.width: width
-        sourceSize.height: 0
-        source: mediaUrl ? mediaUrl : ""
-        asynchronous: true
-        cache: true
-        fillMode: Image.PreserveAspectCrop
-        smooth: true
+    Timer {
+        id: timer
+        interval: 1000
+
+        onTriggered: {
+            shouldHide = true;
+            stop();
+        }
     }
 
-    MouseArea {
-        id: pictureStripMouseArea
-        anchors.fill: parent
-        onClicked: emitClicked()
-    }
-
-    Keys.onReturnPressed: emitClicked()
-
-    function emitClicked()
-    {
-        pictureStripDelegate.ListView.view.currentIndex = index;
-        pictureStripDelegate.imageClicked(mediaUrl);
+    onInhibitChanged: if (inhibit) {
+        shouldHide = false;
+        timer.stop();
+    } else {
+        timer.start();
     }
 }

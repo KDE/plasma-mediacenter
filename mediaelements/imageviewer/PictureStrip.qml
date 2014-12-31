@@ -18,17 +18,22 @@
  ***************************************************************************/
 
 import QtQuick 2.1
-import org.kde.plasma.components 2.0 as PlasmaComponents
-import org.kde.plasma.core 2.0 as PlasmaCore
 import QtQuick.Layouts 1.1
 
-Item {
+import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.plasma.core 2.0 as PlasmaCore
+
+import org.kde.plasma.mediacenter.components 2.0 as MediaCenterComponents
+
+MouseArea {
     id: rootItem
     property alias model: imageList.model
     property alias currentIndex: imageList.currentIndex
     property bool slideshowPaused: false
     signal imageClicked(string url)
     signal slideShowStarted
+
+    hoverEnabled: true
 
     Rectangle {
         anchors.fill: parent
@@ -74,6 +79,7 @@ Item {
                 preferredHighlightEnd: parent.width*0.6
                 highlightRangeMode: GridView.ApplyRange
                 highlightFollowsCurrentItem: true
+                highlightMoveDuration: 500
                 delegate: PictureStripDelegate {
                     height: parent.height
                     width: isExpandable ? 0 : height * 1.5
@@ -94,6 +100,16 @@ Item {
             iconSource: "arrow-right"
             onClicked: rootItem.nextImage()
         }
+    }
+
+    MediaCenterComponents.AutoHide {
+        id: autoHide
+        inhibit: rootItem.containsMouse || imageList.horizontalVelocity!=0.0
+    }
+
+    opacity: autoHide.shouldHide ? 0.0 : 1.0
+    Behavior on opacity {
+        NumberAnimation { duration: 500 }
     }
 
     function nextImage()
