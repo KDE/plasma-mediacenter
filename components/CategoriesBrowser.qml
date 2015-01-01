@@ -1,5 +1,6 @@
 /***************************************************************************
  *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                     *
+ *   Copyright 2015 Bhushan Shah    <bshah@kde.org>                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -57,24 +58,24 @@ FocusScope {
                     font.pointSize: fontSizes.large
                 }
 
-                PlasmaComponents.Button {
-                    anchors { right: parent.right; verticalCenter: parent.verticalCenter }
-                    width: 100; z: 2
-                    text: "Back"
-                    onClicked: { console.log("BACK " + modelRole); backend.back(modelRole) }
-                }
-
                 MouseArea {
                     anchors.fill: parent
                     onClicked: categoriesListView.currentIndex = index
                 }
             }
-            Loader {
-                property variant theModel: modelRole.model
-                Layout.fillWidth: true; Layout.preferredHeight: categoriesListView.currentIndex === index ? categoriesListView.height*0.8 : 0
-                sourceComponent: modelRole.isList ? listBrowserComponent : gridBrowserComponent
-                Behavior on Layout.preferredHeight {
-                    NumberAnimation { duration: 300 }
+            RowLayout {
+                MediaInfoPanel {
+                    Layout.alignment: Qt.AlignTop
+                    visible: modelRole.expanded
+                    width: units.iconSizes.enormous * 2
+                }
+                Loader {
+                    property variant theModel: modelRole.model
+                    Layout.fillWidth: true; Layout.preferredHeight: categoriesListView.currentIndex === index ? categoriesListView.height*0.8 : 0
+                    sourceComponent: modelRole.isList ? listBrowserComponent : gridBrowserComponent
+                    Behavior on Layout.preferredHeight {
+                        NumberAnimation { duration: 300 }
+                    }
                 }
             }
         }
