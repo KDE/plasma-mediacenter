@@ -75,7 +75,7 @@ FocusScope {
                 visible: true
                 enabled: playlistModel.currentIndex != -1
 
-                iconSource: "pmc-previous"
+                iconSource: "media-skip-backward"
 
                 onClicked: {
                     runtimeDataObject.userTrigerredStop = true;
@@ -90,7 +90,7 @@ FocusScope {
                 width: height
                 enabled: runtimeData.url !== undefined
 
-                iconSource: (runtimeDataObject.status == RuntimeData.Playing) ? "pmc-pause" : "pmc-play"
+                iconSource: (runtimeDataObject.status == RuntimeData.Playing) ? "media-playback-pause" : "media-playback-play"
                 onClicked: controlBarFrame.playPause()
             }
 
@@ -100,7 +100,7 @@ FocusScope {
                 width: height
                 enabled: runtimeDataObject.status == RuntimeData.Playing || runtimeDataObject.status == RuntimeData.Paused
 
-                iconSource: "pmc-stop"
+                iconSource: "media-playback-stop"
                 onClicked: controlBarFrame.stop()
             }
 
@@ -111,7 +111,7 @@ FocusScope {
                 visible: true
                 enabled: playlistModel.currentIndex != -1
 
-                iconSource: "pmc-next"
+                iconSource: "media-skip-forward"
 
                 onClicked: {
                     runtimeDataObject.userTrigerredStop = true;
