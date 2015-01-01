@@ -28,6 +28,7 @@ public:
         model = 0;
         supportsSearch = false;
         isList = false;
+        expanded = false;
     }
     QString name;
     bool supportsSearch;
