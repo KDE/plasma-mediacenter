@@ -1,2 +1,22 @@
+Preview
+=======
+
+- once merged to master, get feedback from VDG (Volunteers? :P)
 - Fix font sizes so that both HiDPI and Low DPI people are happy
-- Fix music images, it used to show album coverart if available
+- Fix music images, it used to show album coverart if available (DONE)
+- Export additional roles in itemData so they can be used in MediaInfoPanel
+- Put rating widget in plasma-framework/kdeclarative/foobar
+
+Past Preview
+============
+
+- Get it in sync with Plasma release schedule and merge with Plasma 5
+- Merge events backend
+    - Adapt to new API
+    - Merge it with metadatapictures
+        - Use events from kdepim? investigate if possible
+- Configuration for backends
+- Allow backends/models to export KActionCollection
+- Allow user to favorite media
+- Integrate online backends / search stuff
+- Talk with nikhatzi and get DVB backend/stuff in
