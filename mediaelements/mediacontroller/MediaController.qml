@@ -55,7 +55,7 @@ FocusScope {
         Row {
             id: mediaController
             anchors {
-                fill: parent; bottomMargin: 10
+                fill: parent;
             }
 
             spacing: 10
@@ -90,7 +90,7 @@ FocusScope {
                 width: height
                 enabled: runtimeData.url !== undefined
 
-                iconSource: (runtimeDataObject.status == RuntimeData.Playing) ? "media-playback-pause" : "media-playback-play"
+                iconSource: (runtimeDataObject.status == RuntimeData.Playing) ? "media-playback-pause" : "media-playback-start"
                 onClicked: controlBarFrame.playPause()
             }
 
