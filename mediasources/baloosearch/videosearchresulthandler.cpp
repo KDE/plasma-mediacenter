@@ -24,7 +24,6 @@
 #include <baloo/resultiterator.h>
 
 #include <QHash>
-#include <QUrl>
 
 VideoSearchResultHandler::VideoSearchResultHandler(MediaLibrary* mediaLibrary,
                                                    QObject* parent)

@@ -23,8 +23,6 @@
 #include <baloo/file.h>
 #include <baloo/resultiterator.h>
 
-#include <QUrl>
-
 AudioSearchResultHandler::AudioSearchResultHandler(MediaLibrary* mediaLibrary,
                                                    QObject* parent)
     : SearchResultHandler(mediaLibrary, parent)
