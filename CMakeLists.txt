@@ -1,7 +1,9 @@
 project(PlasmaMediaCenter)
 
 cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
+
 set(QT_MIN_VERSION "5.3.0")
+set (KF5_MIN_VERSION "5.5.0")
 
 find_package(ECM 0.0.8 REQUIRED NO_MODULE)
 include(FeatureSummary)
@@ -34,7 +36,7 @@ find_package(Qt5 CONFIG REQUIRED COMPONENTS Core DBus Xml Quick Sql Test Declara
 add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
 
 # Load the frameworks we need
-find_package(KF5 COMPONENTS REQUIRED
+find_package(KF5 ${KF5_MIN_VERSION} COMPONENTS REQUIRED
     CoreAddons Config I18n GuiAddons Service ConfigWidgets KIO Declarative Plasma PlasmaQuick)
 
 find_package(KF5Baloo 5.1.90)
@@ -45,7 +47,7 @@ include_directories(
 )
 
 # needed for backend export
-find_package(KF5KDELibs4Support REQUIRED NO_MODULE)
+find_package(KF5KDELibs4Support ${KF5_MIN_VERSION} REQUIRED NO_MODULE)
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
