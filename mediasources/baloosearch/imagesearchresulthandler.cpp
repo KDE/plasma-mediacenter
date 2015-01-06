@@ -25,6 +25,7 @@
 #include <baloo/file.h>
 
 #include <QDateTime>
+#include <QUrl>
 #include <QDebug>
 
 ImageSearchResultHandler::ImageSearchResultHandler(MediaLibrary* mediaLibrary, QObject* parent)
