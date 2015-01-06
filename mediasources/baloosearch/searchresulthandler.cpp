@@ -25,6 +25,7 @@
 #include <QFileInfo>
 #include <QDateTime>
 #include <QVariant>
+#include <QUrl>
 #include <QMimeDatabase>
 
 SearchResultHandler::SearchResultHandler(MediaLibrary *mediaLibrary, QObject* parent)
