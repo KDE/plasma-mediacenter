@@ -47,7 +47,8 @@ add_library(plasmamediacenter SHARED
     ${plasmamediacenter_SRCS}
 )
 
-target_link_libraries(plasmamediacenter
+
+set(plasmamediacenter_link_libs
     Qt5::Core
     Qt5::Quick
     Qt5::Xml
@@ -58,8 +59,12 @@ target_link_libraries(plasmamediacenter
     KF5::CoreAddons
     KF5::Service
     KF5::KIOWidgets
-    KF5::WindowSystem
+    KF5::WindowSystem #needed for mpris2, not used now
     ${TAGLIB_LIBRARIES}
+)
+
+target_link_libraries(plasmamediacenter
+    ${plasmamediacenter_link_libs}
 )
 
 generate_export_header(plasmamediacenter
@@ -78,18 +83,7 @@ PROPERTIES COMPILE_FLAGS  -fvisibility=default
 )
 
 target_link_libraries(plasmamediacentertest
-    Qt5::Core
-    Qt5::Quick
-    Qt5::Xml
-    Qt5::DBus
-    KF5::I18n
-    KF5::ConfigCore
-    KF5::GuiAddons
-    KF5::CoreAddons
-    KF5::Service
-    KF5::KIOWidgets
-    KF5::WindowSystem
-    ${TAGLIB_LIBRARIES}
+    ${plasmamediacenter_link_libs}
 )
 
 set_target_properties(plasmamediacenter PROPERTIES VERSION ${PROJECT_VERSION} SOVERSION ${PROJECT_VERSION_MAJOR})
