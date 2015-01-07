@@ -53,7 +53,6 @@ target_link_libraries(plasmamediacenter
     Qt5::Xml
     Qt5::DBus
     KF5::I18n
-    KF5::Solid
     KF5::ConfigCore
     KF5::GuiAddons
     KF5::CoreAddons
@@ -84,7 +83,6 @@ target_link_libraries(plasmamediacentertest
     Qt5::Xml
     Qt5::DBus
     KF5::I18n
-    KF5::Solid
     KF5::ConfigCore
     KF5::GuiAddons
     KF5::CoreAddons
