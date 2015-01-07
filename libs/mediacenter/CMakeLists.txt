@@ -37,10 +37,10 @@ set (plasmamediacenter_SRCS
     mediavalidator.cpp
     settings.cpp
     localthumbnailprovider.cpp
-    mpris2/mpris2.cpp
-    mpris2/mediaplayer2.cpp
-    mpris2/mediaplayer2player.cpp
-    mpris2/mediaplayer2tracklist.cpp
+    #mpris2/mpris2.cpp
+    #mpris2/mediaplayer2.cpp
+    #mpris2/mediaplayer2player.cpp
+    #mpris2/mediaplayer2tracklist.cpp
 )
 
 add_library(plasmamediacenter SHARED
@@ -52,13 +52,14 @@ target_link_libraries(plasmamediacenter
     Qt5::Quick
     Qt5::Xml
     Qt5::DBus
+    KF5::I18n
     KF5::Solid
+    KF5::ConfigCore
     KF5::GuiAddons
     KF5::CoreAddons
     KF5::Service
     KF5::KIOWidgets
     KF5::WindowSystem
-    KF5::KDELibs4Support
     ${TAGLIB_LIBRARIES}
 )
 
@@ -80,10 +81,16 @@ PROPERTIES COMPILE_FLAGS  -fvisibility=default
 target_link_libraries(plasmamediacentertest
     Qt5::Core
     Qt5::Quick
+    Qt5::Xml
+    Qt5::DBus
+    KF5::I18n
     KF5::Solid
+    KF5::ConfigCore
     KF5::GuiAddons
     KF5::CoreAddons
-    KF5::KDELibs4Support
+    KF5::Service
+    KF5::KIOWidgets
+    KF5::WindowSystem
     ${TAGLIB_LIBRARIES}
 )
 

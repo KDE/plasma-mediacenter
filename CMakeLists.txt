@@ -46,9 +46,6 @@ include_directories(
     ${TAGLIB_INCLUDES}
 )
 
-# needed for backend export
-find_package(KF5KDELibs4Support ${KF5_MIN_VERSION} REQUIRED NO_MODULE)
-
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_BINARY_DIR}

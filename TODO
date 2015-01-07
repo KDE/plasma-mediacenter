@@ -1,6 +1,9 @@
 Preview
 =======
 
+- Port away eventsbackend from kdelibs4support
+- Port away mpris2 interface from kdelibs4support
+- Re enable the mpris2 interface (madeti?)
 - once merged to master, get feedback from VDG (Volunteers? :P)
 - Fix font sizes so that both HiDPI and Low DPI people are happy
 - Fix music images, it used to show album coverart if available (DONE)

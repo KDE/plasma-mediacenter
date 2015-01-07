@@ -27,7 +27,7 @@
 #include "mediacenter/filtermediamodel.h"
 #include "mediacenter/pmcmodel.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <klocalizedstring.h>
 
 #include <QQmlEngine>
