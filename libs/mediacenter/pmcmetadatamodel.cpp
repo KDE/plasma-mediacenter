@@ -255,6 +255,8 @@ QVariant PmcMetadataModel::dataForMedia(const QModelIndex &index, int role) cons
         return media->album();
     case MediaCenter::ArtistRole:
         return media->artist();
+    case MediaCenter::RatingRole:
+        return media->rating();
     case MediaCenter::DurationRole:
         return media->duration();
     case MediaCenter::GenreRole:

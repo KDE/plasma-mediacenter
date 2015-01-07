@@ -73,6 +73,8 @@ public:
     void setArtistAndUpdateRelations(const QSharedPointer<Media> &media,
                                      const QSharedPointer<Artist> &artist);
 
+    int rating() const;
+
 signals:
     void updated();
 
@@ -87,6 +89,7 @@ private:
 
     bool setAlbum(const QSharedPointer<Album> &album);
     bool setArtist(const QSharedPointer<Artist> &artist);
+    bool setRating(const int &rating);
 };
 
 #endif // MEDIA_H

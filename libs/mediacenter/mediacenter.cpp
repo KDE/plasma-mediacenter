@@ -39,6 +39,7 @@ QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> 
     newRoles[AlbumArtistRole] = "mediaAlbumArtist";
     newRoles[GenreRole] = "mediaGenre";
     newRoles[MediaCountRole] = "mediaCountRole";
+    newRoles[RatingRole] = "mediaRating";
     return newRoles;
 }
 

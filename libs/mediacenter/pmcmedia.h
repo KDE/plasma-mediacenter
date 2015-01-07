@@ -42,6 +42,7 @@ public:
     QString album() const;
     QString artist() const;
     int duration() const;
+    int rating() const;
     QString genre() const;
     QDateTime createdAt() const;
 
