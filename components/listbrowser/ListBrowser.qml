@@ -40,7 +40,7 @@ FocusScope {
     ListView {
         id: listView
         anchors {
-            top: parent.bottom; bottom: parent.bottom
+            top: parent.top; bottom: parent.bottom
             left: parent.left; right: parent.right
         }
         clip: true
