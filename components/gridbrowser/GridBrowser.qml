@@ -38,37 +38,6 @@ FocusScope {
     signal mediaSelected(int index, string url, string mediaType)
     signal popupRequested(int index, string url, string mediaType, string title)
 
-    PlasmaComponents.TextField {
-        id: searchField
-        anchors { top: parent.top; left: parent.left; right: parent.right }
-        height: visible ? 32 : 0
-        opacity: activeFocus ? 1 : 0.8
-        visible: false
-//         visible: (modelMetadata && modelMetadata.model && modelMetadata.supportsSearch) ? true : false
-        clearButtonShown: true
-        placeholderText: i18n("Search")
-        onTextChanged: searchTimer.restart()
-
-        Keys.onUpPressed: gridBrowserRoot.topSibling.focus = true
-        Keys.onDownPressed: gridBrowserGridView.focus = true
-        Keys.onPressed: if (event.key == Qt.Key_Escape && text != "") {
-            text = "";
-            event.accepted = true;
-        }
-
-        Timer {
-            id: searchTimer
-            interval: 500
-            onTriggered: {
-                if (currentBrowsingBackend.searchModel) {
-                    currentBrowsingBackend.searchModel(searchField.text, model);
-                } else if (currentBrowsingBackend.search) {
-                    currentBrowsingBackend.search(searchField.text);
-                }
-            }
-        }
-    }
-
     KQuickControlAddons.MouseEventListener {
         anchors.fill: gridBrowserGridView
 
@@ -84,7 +53,7 @@ FocusScope {
     GridView {
         id: gridBrowserGridView
         anchors {
-            top: searchField.bottom; bottom: parent.bottom
+            top: parent.top; bottom: parent.bottom
             left: parent.left; right: parent.right
             topMargin: units.smallSpacing * 2
             bottomMargin: units.smallSpacing * 3
@@ -120,7 +89,7 @@ FocusScope {
 
         onCurrentIndexChanged: positionViewAtIndex(currentIndex, GridView.Contain)
 
-        Keys.onPressed: {
+/*        Keys.onPressed: {
             if (event.key == Qt.Key_Down && currentIndex%2 && gridBrowserRoot.bottomSibling) {
                 gridBrowserRoot.bottomSibling.focus = true;
                 event.accepted = true;
@@ -135,7 +104,7 @@ FocusScope {
                 searchField.focus = true;
                 searchField.text = event.text;
             }
-        }
+        }*/
     }
     PlasmaComponents.ScrollBar {
         anchors {
