@@ -26,12 +26,10 @@ import org.kde.plasma.mediacenter.elements 2.0 as MediaCenterElements
 import org.kde.plasma.shell 2.0 as Shell
 import "../explorer"
 
-Image {
+Item {
     id: root
     width: 1024
     height: 768
-    fillMode: Image.Tile
-    source: "../images/noiselight.png"
 
     property QtObject mediaWelcomeInstance
     property QtObject mediaBrowserInstance
@@ -112,12 +110,6 @@ Image {
         containmentParent.opacity = containmentParent.opacity == 0 ? 1 : 0;
     }
 
-    Image {
-        id: grad
-        source: "../images/gradient.png"
-        anchors.fill: parent
-    }
-
     PlasmaCore.Dialog {
         id: sidePanel
         location: PlasmaCore.Types.LeftEdge
@@ -169,11 +161,8 @@ Image {
 
     Rectangle {
         id: containmentParent
-        opacity: 0
         color: Qt.rgba(0, 0, 0, 0.7)
-        z: 999
-        //FIXME: this is quite weird, with opacity == 0 the containment still takes mouse events
-        visible: opacity > 0
+        visible: true
         anchors.fill: parent
         Behavior on opacity {
             NumberAnimation {
@@ -329,7 +318,6 @@ Image {
             leftMargin: units.largeSpacing * 2
             rightMargin: units.largeSpacing * 2
         }
-        z: 1
 
         function pushAndFocus(page) {
             if (currentPage != page)
@@ -525,7 +513,7 @@ Image {
             case Qt.Key_MediaNext: playlistInstance.playNext(); break
             case Qt.Key_MediaPrevious: playlistInstance.playPrevious(); break
             case Qt.Key_MediaStop: playlistInstance.playNext(); break
-            case Qt.Key_F12: toggleDashboard(); break
+//            case Qt.Key_F12: toggleDashboard(); break
             case Qt.Key_F: if (desktop.windowType == Shell.Desktop.FullScreen) desktop.windowType = Shell.Desktop.Window; else desktop.windowType = Shell.Desktop.FullScreen;
             default: return
         }
