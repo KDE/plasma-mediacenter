@@ -26,6 +26,7 @@
 #include "mediacenter/abstractbrowsingbackend.h"
 #include "mediacenter/singletonfactory.h"
 #include "mediacenter/mediasourcesloader.h"
+#include "mediacenter/mpris2/mediaplayer2player.h"
 
 class QMLAccess : public QObject
 {
@@ -33,19 +34,24 @@ class QMLAccess : public QObject
     Q_PROPERTY(PlaylistModel *playlistModel READ playlistModel NOTIFY playlistModelChanged)
     Q_PROPERTY(BackendsModel *backendsModel READ backendsModel NOTIFY backendsModelChanged)
     Q_PROPERTY(QObject *currentBrowsingBackend MEMBER m_currentBrowsingBackend NOTIFY currentBrowsingBackendChanged)
+    Q_PROPERTY(MediaPlayer2Player *mpris2PlayerAdaptor READ mpris2PlayerAdaptor NOTIFY mpris2PlayerAdaptorChanged)
 
 Q_SIGNALS:
     void playlistModelChanged();
     void backendsModelChanged();
     void currentBrowsingBackendChanged();
+    void mpris2PlayerAdaptorChanged();
 
 public:
     explicit QMLAccess(QObject *parent = 0);
     PlaylistModel* playlistModel() {
         return m_playlistModel.data();
-    };
+    }
     BackendsModel* backendsModel() {
         return m_backendsModel;
+    }
+    MediaPlayer2Player* mpris2PlayerAdaptor() {
+        return m_mpris2PlayerAdaptor;
     }
 
 private:
@@ -53,6 +59,7 @@ private:
     QSharedPointer<PlaylistModel> m_playlistModel;
     BackendsModel* m_backendsModel;
     QObject* m_currentBrowsingBackend;
+    MediaPlayer2Player* m_mpris2PlayerAdaptor;
 };
 
 #endif // QMLACCESS_H

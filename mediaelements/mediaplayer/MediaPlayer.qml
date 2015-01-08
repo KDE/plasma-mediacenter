@@ -172,11 +172,11 @@ FocusScope {
 
     function setRate(newRate)
     {
-        video.playbackRate = newRate;
+        mediaplayer.playbackRate = newRate;
     }
 
     function getRate()
     {
-        return video.playbackRate;
+        return mediaplayer.playbackRate;
     }
 }

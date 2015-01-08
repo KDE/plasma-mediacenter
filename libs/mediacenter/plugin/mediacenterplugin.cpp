@@ -32,6 +32,7 @@
 #include "mediacenter/pmccoverartprovider.h"
 #include "mediacenter/playlistmodel.h"
 #include "mediacenter/backendsloader.h"
+#include "mediacenter/mpris2/mediaplayer2player.h"
 
 #include "qmlaccess.h"
 #include <iconimageprovider.h>
@@ -52,6 +53,7 @@ void MediaCenterPlugin::registerTypes(const char *uri)
 
     qRegisterMetaType<PlaylistModel*>("PlaylistModel*");
     qRegisterMetaType<MediaCenter::AbstractBrowsingBackend*>("MediaCenter::AbstractBrowsingBackend*");
+    qRegisterMetaType<MediaPlayer2Player*>("MediaPlayer2Player*");
 
 }
 

@@ -28,6 +28,7 @@
 #include <QPointer>
 #include <QUrl>
 
+
 class MEDIACENTER_EXPORT MediaPlayer2Player : public QDBusAbstractAdaptor
 {
     Q_OBJECT
@@ -48,7 +49,7 @@ class MEDIACENTER_EXPORT MediaPlayer2Player : public QDBusAbstractAdaptor
     Q_PROPERTY(bool CanSeek READ CanSeek)
     Q_PROPERTY(int paused READ paused WRITE setPaused)
     Q_PROPERTY(int stopped READ stopped WRITE setStopped)
-    Q_PROPERTY(QUrl currentTrack READ currentTrack WRITE setCurrentTrack)
+    Q_PROPERTY(QString currentTrack READ currentTrack WRITE setCurrentTrack)
     Q_PROPERTY(int mediaPlayerPresent READ mediaPlayerPresent WRITE setMediaPlayerPresent)
 
 public:
@@ -70,7 +71,7 @@ public:
     bool CanControl() const;
     int stopped() const;
     int paused() const;
-    QUrl currentTrack() const;
+    QString currentTrack() const;
     int mediaPlayerPresent() const;
 
 signals:
@@ -109,10 +110,10 @@ private:
     void setPropertyPosition(int newPositionInMs);
     void setStopped(int newVal);
     void setPaused(int newVal);
-    void setCurrentTrack(QUrl newTrack);
+    void setCurrentTrack(QString newTrack);
 
     QVariantMap m_metadata;
-    QUrl m_currentTrack;
+    QString m_currentTrack;
     double m_rate;
     double m_volume;
     bool m_paused;

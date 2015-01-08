@@ -22,9 +22,9 @@
 
 #include <QCoreApplication>
 
-#include <K4AboutData>
+//#include <K4AboutData>
 #include <KWindowSystem>
-#include <KCmdLineArgs>
+//#include <KCmdLineArgs>
 #include <KService>
 
 MediaPlayer2::MediaPlayer2(QObject* parent)
@@ -62,16 +62,16 @@ void MediaPlayer2::Raise() const
 
 QString MediaPlayer2::Identity() const
 {
-    return KCmdLineArgs::aboutData()->programName();
+    return QString(); //KCmdLineArgs::aboutData()->programName();
 }
 
 QString MediaPlayer2::DesktopEntry() const
 {
-    KService::Ptr app = KService::serviceByDesktopName(KCmdLineArgs::aboutData()->appName());
+//    KService::Ptr app = KService::serviceByDesktopName(KCmdLineArgs::aboutData()->appName());
 
-    if (app) {
-        return app->desktopEntryName();
-    }
+//    if (app) {
+//        return app->desktopEntryName();
+//    }
 
     return QString();
 }
@@ -83,11 +83,11 @@ QStringList MediaPlayer2::SupportedUriSchemes() const
 
 QStringList MediaPlayer2::SupportedMimeTypes() const
 {
-    KService::Ptr app = KService::serviceByDesktopName(KCmdLineArgs::aboutData()->appName());
+//    KService::Ptr app = KService::serviceByDesktopName(KCmdLineArgs::aboutData()->appName());
 
-    if (app) {
-        return app->mimeTypes();
-    }
+//    if (app) {
+//        return app->mimeTypes();
+//    }
 
     return QStringList();
 }

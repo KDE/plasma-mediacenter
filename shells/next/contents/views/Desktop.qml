@@ -262,6 +262,7 @@ Item {
         desktop.windowType = Shell.Desktop.FullScreen;
         getPmcInterface();
         getPlaylist().visible = false;
+        setupMprisPlayer();
     }
 
     // End : shell stuff
@@ -362,7 +363,7 @@ Item {
         onSeekRequested: {
             if (mediaPlayerInstance) {
                 mediaPlayerInstance.seekTo(newPosition)
-                //mprisPlayerObject.emitSeeked(newPosition);
+                pmcInterfaceInstance.mpris2PlayerAdaptor.emitSeeked(newPosition);
             }
         }
         onPlayPause: runtimeData.playPause()
@@ -519,6 +520,31 @@ Item {
         }
         event.accepted = true;
     }
+
+    //Bindings for MediaPlayer2Player adaptor
+    Binding { target: pmcInterfaceInstance.mpris2PlayerAdaptor; property: "Volume"; value: runtimeData.volume }
+    Binding { target: pmcInterfaceInstance.mpris2PlayerAdaptor; property: "Rate"; value: mediaPlayerInstance.getRate() }
+    Binding { target: pmcInterfaceInstance.mpris2PlayerAdaptor; property: "Position"; value: mediaPlayerInstance.currentTime }
+    Binding { target: pmcInterfaceInstance.mpris2PlayerAdaptor; property: "mediaPlayerPresent"; value: mediaPlayerInstance ? true : false }
+    Binding { target: pmcInterfaceInstance.mpris2PlayerAdaptor; property: "currentTrack"; value: runtimeData.url }
+    Binding { target: pmcInterfaceInstance.mpris2PlayerAdaptor; property: "stopped"; value: runtimeData.stopped }
+    Binding { target: pmcInterfaceInstance.mpris2PlayerAdaptor; property: "paused"; value: runtimeData.paused }
+
+    function setupMprisPlayer() {
+            pmcInterfaceInstance.mpris2PlayerAdaptor.next.connect(playlistInstance.playNext);
+            pmcInterfaceInstance.mpris2PlayerAdaptor.previous.connect(playlistInstance.playPrevious);
+            pmcInterfaceInstance.mpris2PlayerAdaptor.playPause.connect(runtimeData.playPause);
+            pmcInterfaceInstance.mpris2PlayerAdaptor.stop.connect(runtimeData.stop);
+            pmcInterfaceInstance.mpris2PlayerAdaptor.pause.connect(function() { if (runtimeData.playing) runtimeData.playPause() });
+            pmcInterfaceInstance.mpris2PlayerAdaptor.play.connect(function() { if (!runtimeData.playing) runtimeData.playPause() });
+            pmcInterfaceInstance.mpris2PlayerAdaptor.volumeChanged.connect(function(newVol) { runtimeData.volume = newVol });
+            pmcInterfaceInstance.mpris2PlayerAdaptor.rateChanged.connect(function(newRate) { mediaPlayerInstance.setRate(newRate) });
+            pmcInterfaceInstance.mpris2PlayerAdaptor.seek.connect(function(offset) {
+                mediaPlayerInstance.seekTo(mediaPlayerInstance.currentTime + offset);
+                pmcInterfaceInstance.mpris2PlayerAdaptor.emitSeeked(mediaPlayerInstance.currentTime);
+            });
+            pmcInterfaceInstance.mpris2PlayerAdaptor.playUrl.connect(runtimeData.playUrl);
+        }
 
     // End plasma mediacenter
 }

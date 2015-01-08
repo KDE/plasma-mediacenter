@@ -225,15 +225,15 @@ void MediaPlayer2Player::OpenUri(QString uri) const
     }
 }
 
-QUrl MediaPlayer2Player::currentTrack() const
+QString MediaPlayer2Player::currentTrack() const
 {
     return m_currentTrack;
 }
 
-void MediaPlayer2Player::setCurrentTrack(QUrl newTrack)
+void MediaPlayer2Player::setCurrentTrack(QString newTrack)
 {
     m_currentTrack = newTrack;
-    m_metadata = static_cast<Mpris2*>(parent())->getMetadataOf(m_currentTrack.toString());
+    m_metadata = static_cast<Mpris2*>(parent())->getMetadataOf(m_currentTrack);
 
     signalPropertiesChange("Metadata", Metadata());
 }

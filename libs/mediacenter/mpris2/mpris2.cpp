@@ -68,7 +68,7 @@ QString Mpris2::getCurrentTrackId()
         return m_mp2tl->currentTrackId().path();
     }
 
-    QSharedPointer<PmcMedia> media = SingletonFactory::instanceFor<MediaLibrary>()->mediaForUrl(m_mp2p->currentTrack().toString());
+    QSharedPointer<PmcMedia> media = SingletonFactory::instanceFor<MediaLibrary>()->mediaForUrl(m_mp2p->currentTrack());
     if (media) {
         return QString("/org/kde/plasmamediacenter/tid_") + media->sha();
     }

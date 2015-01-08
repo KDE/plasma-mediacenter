@@ -37,10 +37,10 @@ set (plasmamediacenter_SRCS
     mediavalidator.cpp
     settings.cpp
     localthumbnailprovider.cpp
-    #mpris2/mpris2.cpp
-    #mpris2/mediaplayer2.cpp
-    #mpris2/mediaplayer2player.cpp
-    #mpris2/mediaplayer2tracklist.cpp
+    mpris2/mpris2.cpp
+    mpris2/mediaplayer2.cpp
+    mpris2/mediaplayer2player.cpp
+    mpris2/mediaplayer2tracklist.cpp
 )
 
 add_library(plasmamediacenter SHARED

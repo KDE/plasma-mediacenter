@@ -20,6 +20,7 @@
 
 #include "qmlaccess.h"
 #include "mediacenter/medialibrary.h"
+#include "mediacenter/mpris2/mpris2.h"
 
 #include <QSharedPointer>
 
@@ -34,8 +35,12 @@ QMLAccess::QMLAccess(QObject *parent) : QObject(parent)
 
     m_backendsModel = new BackendsModel(this);
 
+    Mpris2 *mprisObject = new Mpris2(m_playlistModel, this);
+    m_mpris2PlayerAdaptor = mprisObject->getMediaPlayer2Player();
+
     emit backendsModelChanged();
     emit playlistModelChanged();
+    emit mpris2PlayerAdaptorChanged();
 }
 
 #include "qmlaccess.moc"
