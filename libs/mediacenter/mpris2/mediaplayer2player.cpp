@@ -33,8 +33,7 @@ static const double MIN_RATE = 0.0;
 MediaPlayer2Player::MediaPlayer2Player(QObject* parent)
     : QDBusAbstractAdaptor(parent),
       m_rate(0),
-      m_paused(false),
-      m_stopped(true)
+      m_status(RuntimeData::PmcStatus::Stopped)
 {
 }
 
@@ -44,9 +43,9 @@ MediaPlayer2Player::~MediaPlayer2Player()
 
 QString MediaPlayer2Player::PlaybackStatus() const
 {
-    if (stopped()) {
+    if (m_status == RuntimeData::PmcStatus::Stopped) {
         return QLatin1String("Stopped");
-    } else if (paused()) {
+    } else if (m_status == RuntimeData::PmcStatus::Paused) {
         return QLatin1String("Paused");
     } else
         return QLatin1String("Playing");
@@ -85,34 +84,6 @@ void MediaPlayer2Player::Pause() const
 void MediaPlayer2Player::PlayPause()
 {
     emit playPause();
-}
-
-int MediaPlayer2Player::stopped() const
-{
-    return m_stopped;
-}
-
-void MediaPlayer2Player::setStopped(int newVal)
-{
-    if (mediaPlayerPresent()) {
-        m_stopped = newVal;
-
-        signalPropertiesChange("PlaybackStatus", PlaybackStatus());
-    }
-}
-
-int MediaPlayer2Player::paused() const
-{
-    return m_paused;
-}
-
-void MediaPlayer2Player::setPaused(int newVal)
-{
-    if (mediaPlayerPresent()) {
-        m_paused = newVal;
-
-        signalPropertiesChange("PlaybackStatus", PlaybackStatus());
-    }
 }
 
 void MediaPlayer2Player::Stop() const
@@ -238,9 +209,20 @@ void MediaPlayer2Player::setCurrentTrack(QString newTrack)
     signalPropertiesChange("Metadata", Metadata());
 }
 
+void MediaPlayer2Player::setPmcStatus(RuntimeData::PmcStatus status)
+{
+    m_status = status;
+    signalPropertiesChange("PlaybackStatus", PlaybackStatus());
+}
+
 int MediaPlayer2Player::mediaPlayerPresent() const
 {
     return m_mediaPlayerPresent;
+}
+
+RuntimeData::PmcStatus MediaPlayer2Player::pmcStatus() const
+{
+    return m_status;
 }
 
 void MediaPlayer2Player::setMediaPlayerPresent(int status)

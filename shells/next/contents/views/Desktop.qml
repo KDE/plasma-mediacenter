@@ -527,8 +527,7 @@ Item {
     Binding { target: pmcInterfaceInstance.mpris2PlayerAdaptor; property: "Position"; value: mediaPlayerInstance.currentTime }
     Binding { target: pmcInterfaceInstance.mpris2PlayerAdaptor; property: "mediaPlayerPresent"; value: mediaPlayerInstance ? true : false }
     Binding { target: pmcInterfaceInstance.mpris2PlayerAdaptor; property: "currentTrack"; value: runtimeData.url }
-    Binding { target: pmcInterfaceInstance.mpris2PlayerAdaptor; property: "stopped"; value: runtimeData.stopped }
-    Binding { target: pmcInterfaceInstance.mpris2PlayerAdaptor; property: "paused"; value: runtimeData.paused }
+    Binding { target: pmcInterfaceInstance.mpris2PlayerAdaptor; property: "pmcStatus"; value: runtimeData.status }
 
     function setupMprisPlayer() {
             pmcInterfaceInstance.mpris2PlayerAdaptor.next.connect(playlistInstance.playNext);

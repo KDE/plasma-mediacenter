@@ -28,6 +28,8 @@
 #include <QPointer>
 #include <QUrl>
 
+#include "mediacenter/runtimedata.h"
+
 
 class MEDIACENTER_EXPORT MediaPlayer2Player : public QDBusAbstractAdaptor
 {
@@ -47,8 +49,7 @@ class MEDIACENTER_EXPORT MediaPlayer2Player : public QDBusAbstractAdaptor
     Q_PROPERTY(bool CanPause READ CanPause)
     Q_PROPERTY(bool CanControl READ CanControl)
     Q_PROPERTY(bool CanSeek READ CanSeek)
-    Q_PROPERTY(int paused READ paused WRITE setPaused)
-    Q_PROPERTY(int stopped READ stopped WRITE setStopped)
+    Q_PROPERTY(RuntimeData::PmcStatus pmcStatus READ pmcStatus WRITE setPmcStatus)
     Q_PROPERTY(QString currentTrack READ currentTrack WRITE setCurrentTrack)
     Q_PROPERTY(int mediaPlayerPresent READ mediaPlayerPresent WRITE setMediaPlayerPresent)
 
@@ -69,10 +70,9 @@ public:
     bool CanPause() const;
     bool CanSeek() const;
     bool CanControl() const;
-    int stopped() const;
-    int paused() const;
     QString currentTrack() const;
     int mediaPlayerPresent() const;
+    RuntimeData::PmcStatus pmcStatus() const;
 
 signals:
     void Seeked(qlonglong Position) const;
@@ -108,9 +108,8 @@ private:
     void setRate(double newRate);
     void setVolume(double volume);
     void setPropertyPosition(int newPositionInMs);
-    void setStopped(int newVal);
-    void setPaused(int newVal);
     void setCurrentTrack(QString newTrack);
+    void setPmcStatus(RuntimeData::PmcStatus status);
 
     QVariantMap m_metadata;
     QString m_currentTrack;
@@ -120,6 +119,7 @@ private:
     bool m_stopped;
     int m_mediaPlayerPresent;
     qlonglong m_position;
+    RuntimeData::PmcStatus m_status;
 };
 
 #endif // MEDIAPLAYER2PLAYER_H
