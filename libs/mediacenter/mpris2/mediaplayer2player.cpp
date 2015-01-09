@@ -78,7 +78,9 @@ bool MediaPlayer2Player::CanPause() const
 
 void MediaPlayer2Player::Pause() const
 {
-    emit pause();
+    if (m_status == RuntimeData::PmcStatus::Playing) {
+        emit playPause();
+    }
 }
 
 void MediaPlayer2Player::PlayPause()
@@ -98,7 +100,9 @@ bool MediaPlayer2Player::CanPlay() const
 
 void MediaPlayer2Player::Play() const
 {
-    emit play();
+    if (m_status != RuntimeData::PmcStatus::Playing) {
+        emit playPause();
+    }
 }
 
 double MediaPlayer2Player::Volume() const
