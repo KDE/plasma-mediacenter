@@ -81,7 +81,7 @@ signals:
     void volumeChanged(double newVol) const;
     void next() const;
     void previous() const;
-    void playPause();
+    void playPause() const;
     void stop() const;
     void seek(int offset) const;
     void playUrl(QUrl url) const;
