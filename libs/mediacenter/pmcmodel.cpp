@@ -119,7 +119,6 @@ void PmcModel::setExpanded(bool expanded)
 
 QVariantMap PmcModel::parentData() const
 {
-    qDebug() << "Parent Data asked" << d->parentData;
     return d->parentData;
 }
 
