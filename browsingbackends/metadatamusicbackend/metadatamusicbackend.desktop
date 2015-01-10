@@ -2,6 +2,7 @@
 Type=Service
 Icon=tools-rip-audio-cd
 Name=All Music
+Name[ar]=كلّ الموسيقى
 Name[bs]=Sva muzika
 Name[ca]=Tota la música
 Name[ca@valencia]=Tota la música
@@ -34,6 +35,7 @@ Name[uk]=Вся музика
 Name[x-test]=xxAll Musicxx
 Name[zh_TW]=所有音樂
 Comment=Listen to the music on your device
+Comment[ar]=استمع إلى الموسيقى في جهازك
 Comment[bs]=Slušaj muziku na svom uređaju
 Comment[ca]=Escolta la música en el dispositiu
 Comment[ca@valencia]=Escolta la música en el dispositiu

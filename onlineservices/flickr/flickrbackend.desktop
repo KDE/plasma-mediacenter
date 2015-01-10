@@ -2,6 +2,7 @@
 Type=Service
 Icon=image-x-generic
 Name=Flickr
+Name[ar]=فلِكر
 Name[bs]=Flikr
 Name[ca]=Flickr
 Name[ca@valencia]=Flickr
@@ -37,6 +38,7 @@ Name[uk]=Flickr
 Name[x-test]=xxFlickrxx
 Name[zh_TW]=Flickr
 Comment=Discover pictures from flickr for your chosen tag
+Comment[ar]=استكشف الصّور من فلِكر للوسم الذي اخترته
 Comment[bs]=Pronađi slike sa Flickr-a za izabranu oznaku
 Comment[ca]=Descobreix les imatges de «flickr» per l'etiqueta escollida
 Comment[ca@valencia]=Descobreix les imatges de «flickr» per l'etiqueta escollida
