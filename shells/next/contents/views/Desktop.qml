@@ -362,7 +362,7 @@ Item {
         onPlayPrevious: playlistInstance.playPrevious()
         onSeekRequested: {
             if (mediaPlayerInstance) {
-                mediaPlayerInstance.seekTo(newPosition)
+                mediaPlayerInstance.seekTo(newPosition);
                 pmcInterfaceInstance.mpris2PlayerAdaptor.emitSeeked(newPosition);
             }
         }
@@ -523,8 +523,8 @@ Item {
 
     //Bindings for MediaPlayer2Player adaptor
     Binding { target: pmcInterfaceInstance.mpris2PlayerAdaptor; property: "Volume"; value: runtimeData.volume }
-    Binding { target: pmcInterfaceInstance.mpris2PlayerAdaptor; property: "Rate"; value: mediaPlayerInstance.getRate() }
-    Binding { target: pmcInterfaceInstance.mpris2PlayerAdaptor; property: "Position"; value: mediaPlayerInstance.currentTime }
+    Binding { target: pmcInterfaceInstance.mpris2PlayerAdaptor; property: "Rate"; value: getMediaPlayer().getRate() }
+    Binding { target: pmcInterfaceInstance.mpris2PlayerAdaptor; property: "Position"; value: getMediaPlayer().currentTime }
     Binding { target: pmcInterfaceInstance.mpris2PlayerAdaptor; property: "mediaPlayerPresent"; value: mediaPlayerInstance ? true : false }
     Binding { target: pmcInterfaceInstance.mpris2PlayerAdaptor; property: "currentTrack"; value: runtimeData.url }
     Binding { target: pmcInterfaceInstance.mpris2PlayerAdaptor; property: "pmcStatus"; value: runtimeData.status }
@@ -534,16 +534,14 @@ Item {
         pmcInterfaceInstance.mpris2PlayerAdaptor.previous.connect(playlistInstance.playPrevious);
         pmcInterfaceInstance.mpris2PlayerAdaptor.playPause.connect(runtimeData.playPause);
         pmcInterfaceInstance.mpris2PlayerAdaptor.stop.connect(runtimeData.stop);
-        pmcInterfaceInstance.mpris2PlayerAdaptor.pause.connect(function() { runtimeData.playPause() });
-        pmcInterfaceInstance.mpris2PlayerAdaptor.play.connect(function() { runtimeData.playPause() });
         pmcInterfaceInstance.mpris2PlayerAdaptor.volumeChanged.connect(function(newVol) {
             if (runtimeData.volume != newVol) {
                 runtimeData.volume = newVol;
             }});
-        pmcInterfaceInstance.mpris2PlayerAdaptor.rateChanged.connect(function(newRate) { mediaPlayerInstance.setRate(newRate) });
+        pmcInterfaceInstance.mpris2PlayerAdaptor.rateChanged.connect(function(newRate) { getMediaPlayer().setRate(newRate) });
         pmcInterfaceInstance.mpris2PlayerAdaptor.seek.connect(function(offset) {
-            mediaPlayerInstance.seekTo(mediaPlayerInstance.currentTime + offset);
-            pmcInterfaceInstance.mpris2PlayerAdaptor.emitSeeked(mediaPlayerInstance.currentTime);
+            getMediaPlayer().seekTo(getMediaPlayer().currentTime + offset)
+            pmcInterfaceInstance.mpris2PlayerAdaptor.emitSeeked(getMediaPlayer().currentTime);
         });
         pmcInterfaceInstance.mpris2PlayerAdaptor.playUrl.connect(runtimeData.playUrl);
         }

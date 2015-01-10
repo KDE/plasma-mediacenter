@@ -174,8 +174,8 @@ bool MediaPlayer2Player::CanControl() const
 void MediaPlayer2Player::Seek(qlonglong Offset) const
 {
     if (mediaPlayerPresent()) {
-        //The seekBy function (to which this signal is linked to) accepts offset in seconds
-        int offset = Offset/1000000;
+        //The seekTo function (to which this signal is linked to) accepts offset in milliseconds
+        int offset = Offset/1000;
         emit seek(offset);
     }
 }
@@ -188,7 +188,7 @@ void MediaPlayer2Player::emitSeeked(int pos)
 void MediaPlayer2Player::SetPosition(const QDBusObjectPath& trackId, qlonglong pos)
 {
     if (trackId.path() == static_cast<Mpris2*>(parent())->getCurrentTrackId()) {
-        seek((pos - Position())/1000000);
+        emit seek((pos - Position())/1000);
     }
 }
 
