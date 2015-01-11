@@ -27,6 +27,7 @@ Item {
     Timer {
         id: timer
         interval: 1000
+        running: true
 
         onTriggered: {
             shouldHide = true;

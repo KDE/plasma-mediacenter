@@ -347,8 +347,8 @@ Item {
         }
         width: parent.width * 0.8
         height: units.iconSizes.large
-        visible: pmcPageStack.currentPage === mediaPlayerInstance ? true : false
-        opacity: 0.8
+        visible: pmcPageStack.currentPage === mediaPlayerInstance
+            || pmcPageStack.currentPage === imageViewerInstance
         z: 1
 
         runtimeDataObject: runtimeData
