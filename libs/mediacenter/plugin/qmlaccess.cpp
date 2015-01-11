@@ -31,7 +31,7 @@ QMLAccess::QMLAccess(QObject *parent) : QObject(parent)
     MediaSourcesLoader mediasourceLoader;
     mediasourceLoader.load();
 
-    m_playlistModel = QSharedPointer<PlaylistModel>(new PlaylistModel(this));
+    m_playlistModel = new PlaylistModel(this);
 
     m_backendsModel = new BackendsModel(this);
 

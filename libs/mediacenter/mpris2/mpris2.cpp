@@ -28,7 +28,7 @@
 #include <QDBusConnection>
 #include <unistd.h>
 
-Mpris2::Mpris2(QSharedPointer<PlaylistModel> playlistModel, QObject* parent)
+Mpris2::Mpris2(PlaylistModel *playlistModel, QObject* parent)
     : QObject(parent)
 {
     QString mspris2Name("org.mpris.MediaPlayer2." + QLatin1String("plasma-mediacenter"));

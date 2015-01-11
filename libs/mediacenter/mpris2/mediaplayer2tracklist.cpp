@@ -23,16 +23,16 @@
 static const QString playlistTidPrefix("/org/kde/plasmamediacenter/playlist/");
 static const QDBusObjectPath mprisNoTrack("/org/mpris/MediaPlayer2/TrackList/NoTrack");
 
-MediaPlayer2Tracklist::MediaPlayer2Tracklist(QSharedPointer<PlaylistModel> playlistModel, QObject *parent)
+MediaPlayer2Tracklist::MediaPlayer2Tracklist(PlaylistModel *playlistModel, QObject *parent)
     : QDBusAbstractAdaptor(parent),
       m_playlistModel(playlistModel)
 {
     qDBusRegisterMetaType< QList<QVariantMap> >();
 
-    connect(m_playlistModel.data(), SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(rowsInsertedInModel(QModelIndex,int,int)));
-    connect(m_playlistModel.data(), SIGNAL(rowsRemoved(QModelIndex,int,int)), this, SLOT(rowsRemovedFromModel(QModelIndex,int,int)));
-    connect(m_playlistModel.data(), SIGNAL(modelReset()), this, SLOT(resetTrackIds()));
-    connect(m_playlistModel.data(), SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)), this, SLOT(rowsMovedInModel(QModelIndex,int,int,QModelIndex,int)));
+    connect(m_playlistModel, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(rowsInsertedInModel(QModelIndex,int,int)));
+    connect(m_playlistModel, SIGNAL(rowsRemoved(QModelIndex,int,int)), this, SLOT(rowsRemovedFromModel(QModelIndex,int,int)));
+    connect(m_playlistModel, SIGNAL(modelReset()), this, SLOT(resetTrackIds()));
+    connect(m_playlistModel, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)), this, SLOT(rowsMovedInModel(QModelIndex,int,int,QModelIndex,int)));
 
     for (int i = 0; i < m_playlistModel->rowCount(); i++) {
         m_orderedTrackIds << QDBusObjectPath(playlistTidPrefix + QString::number(tidCounter++));

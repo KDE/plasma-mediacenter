@@ -45,7 +45,7 @@ Q_SIGNALS:
 public:
     explicit QMLAccess(QObject *parent = 0);
     PlaylistModel* playlistModel() {
-        return m_playlistModel.data();
+        return m_playlistModel;
     }
     BackendsModel* backendsModel() {
         return m_backendsModel;
@@ -56,7 +56,7 @@ public:
 
 private:
 
-    QSharedPointer<PlaylistModel> m_playlistModel;
+    PlaylistModel* m_playlistModel;
     BackendsModel* m_backendsModel;
     QObject* m_currentBrowsingBackend;
     MediaPlayer2Player* m_mpris2PlayerAdaptor;

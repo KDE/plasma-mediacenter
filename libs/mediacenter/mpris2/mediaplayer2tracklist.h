@@ -42,7 +42,7 @@ class MEDIACENTER_EXPORT MediaPlayer2Tracklist : public QDBusAbstractAdaptor
     Q_PROPERTY(bool CanEditTracks READ CanEditTracks)
 
 public:
-    explicit MediaPlayer2Tracklist(QSharedPointer<PlaylistModel> playlistModel, QObject* parent = 0);
+    explicit MediaPlayer2Tracklist(PlaylistModel* playlistModel, QObject* parent = 0);
     ~MediaPlayer2Tracklist();
 
     bool CanEditTracks() const;
@@ -73,7 +73,7 @@ signals:
 private:
     QString urlOfIndex(int index) const;
 
-    QSharedPointer<PlaylistModel> m_playlistModel;
+    PlaylistModel* m_playlistModel;
     QList<QDBusObjectPath> m_orderedTrackIds;
 
     int tidCounter = 0;
