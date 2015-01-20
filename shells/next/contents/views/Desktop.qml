@@ -115,7 +115,6 @@ Item {
         location: PlasmaCore.Types.LeftEdge
         type: PlasmaCore.Dialog.Dock
         flags: Qt.Window|Qt.WindowStaysOnTopHint|Qt.X11BypassWindowManagerHint
-
         hideOnWindowDeactivate: true
 
         onVisibleChanged: {
@@ -314,10 +313,7 @@ Item {
             left: (categoriesBar.visible) ? categoriesBar.right : parent.left
             right: parent.right;
             bottom: parent.bottom
-            topMargin: units.largeSpacing * 2
-            bottomMargin: units.largeSpacing * 2
-            leftMargin: units.largeSpacing * 2
-            rightMargin: units.largeSpacing * 2
+            margins: (pmcPageStack.currentPage == mediaPlayerInstance || pmcPageStack.currentPage == imageViewerInstance) ? 0 : units.largeSpacing * 2
         }
 
         function pushAndFocus(page) {
