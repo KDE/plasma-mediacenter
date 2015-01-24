@@ -165,12 +165,6 @@ void AbstractBrowsingBackend::search(const QString& searchTerm)
     // Does nothing
 }
 
-void AbstractBrowsingBackend::searchModel(const QString& searchTerm, QAbstractItemModel* model)
-{
-    Q_UNUSED(model)
-    search(searchTerm);
-}
-
 bool AbstractBrowsingBackend::init()
 {
     if (!d->hasInitialized) {

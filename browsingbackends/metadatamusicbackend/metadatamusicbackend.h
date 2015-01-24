@@ -47,7 +47,7 @@ public:
 
     virtual void handleButtonClick(const QString& buttonName);
 
-    virtual void searchModel(const QString& searchTerm, QAbstractItemModel* model);
+    //virtual void searchModel(const QString& searchTerm, QAbstractItemModel* model);
 
     virtual QStringList allMedia();
 

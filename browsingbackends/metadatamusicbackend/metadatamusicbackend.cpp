@@ -197,10 +197,10 @@ void MetadataMusicBackend::handleButtonClick(const QString& buttonName)
     }
 }
 
-void MetadataMusicBackend::searchModel(const QString& searchTerm, QAbstractItemModel* model)
-{
-    static_cast<FilterMediaModel *> (model)->setFilter(Qt::DisplayRole, searchTerm);
-}
+//void MetadataMusicBackend::searchModel(const QString& searchTerm, QAbstractItemModel* model)
+//{
+//    static_cast<FilterMediaModel *> (model)->setFilter(Qt::DisplayRole, searchTerm);
+//}
 
 QStringList MetadataMusicBackend::allMedia()
 {

@@ -250,17 +250,6 @@ protected:
     Q_INVOKABLE virtual void search(const QString &searchTerm);
 
     /**
-     * This method is called by the UI when the user requests to search for a media
-     * for a particular model.
-     * You should override this method if your backend support search and has
-     * multiple models
-     *
-     * @param searchTerm string entered by the user
-     * @param model the model that this search should affect
-     */
-    Q_INVOKABLE virtual void searchModel(const QString &searchTerm, QAbstractItemModel *model);
-
-    /**
      * Subclasses can call this method to set the button strings that are used
      * for the buttons property
      *
