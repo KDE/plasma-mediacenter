@@ -31,7 +31,7 @@ else()
         message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
 
-find_package(Qt5 CONFIG REQUIRED COMPONENTS Core DBus Xml Quick Sql Test Declarative)
+find_package(Qt5 CONFIG REQUIRED COMPONENTS Core DBus Xml Quick Sql Test)
 
 add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
 
