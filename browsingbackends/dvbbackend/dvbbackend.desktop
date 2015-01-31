@@ -1,0 +1,16 @@
+[Desktop Entry]
+Type=Service
+Icon=tools-rip-video-cd
+Name=Tv
+Comment=Watch the TV on your device
+
+X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
+
+X-KDE-PluginInfo-Name=dvb
+X-KDE-PluginInfo-Author=Bhushan Shah
+X-KDE-PluginInfo-Email=bshah@kde.org
+X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-Category=general
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
+X-KDE-Library=pmc_dvbbackend
