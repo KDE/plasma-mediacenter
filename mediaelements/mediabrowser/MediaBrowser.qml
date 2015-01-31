@@ -82,15 +82,8 @@ FocusScope {
         if (mediaBrowserViewItem.mediaBrowserGridView) {
             mediaBrowserViewItem.mediaBrowserGridView.destroy();
         }
-        //Check if there is a custom browser, if yes, load that
-        var object;
-        if (currentBrowsingBackend.mediaBrowserOverride()) {
-            var qmlSource = currentBrowsingBackend.mediaBrowserOverride();
-            object = Qt.createQmlObject(qmlSource, mediaBrowserViewItem);
-            object.backend = (function() { return currentBrowsingBackend; });
-        } else {
-            object = mediaBrowserSmartBrowserComponent.createObject(mediaBrowserViewItem);
-        }
+
+        object = mediaBrowserSmartBrowserComponent.createObject(mediaBrowserViewItem);
 
         mediaBrowserViewItem.mediaBrowserGridView = object;
         object.focus = true;
