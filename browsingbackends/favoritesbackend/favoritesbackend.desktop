@@ -1,0 +1,16 @@
+[Desktop Entry]
+Type=Service
+Icon=tools-rip-video-cd
+Name=Tv
+Comment=Allows to pin and browse favorite media
+
+X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
+
+X-KDE-PluginInfo-Name=Home
+X-KDE-PluginInfo-Author=R.Harish Navnit
+X-KDE-PluginInfo-Email=harishnavnit@gmail.com
+X-KDE-PluginInfo-Version=0.1
+X-KDE-PluginInfo-Category=general
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
+X-KDE-Library=pmc_favoritesbackend
