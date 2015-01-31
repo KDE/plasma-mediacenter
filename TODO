@@ -2,8 +2,8 @@ Preview
 =======
 
 - Port away eventsbackend from kdelibs4support
-- Port away mpris2 interface from kdelibs4support
-- Polish mpris2 interface
+- Port away mpris2 interface from kdelibs4support (DONE)
+- Polish mpris2 interface (DONE)
 - once merged to master, get feedback from VDG (Volunteers? :P)
 - Fix font sizes so that both HiDPI and Low DPI people are happy
 - Fix music images, it used to show album coverart if available (DONE)
@@ -23,4 +23,4 @@ Past Preview
 - Allow backends/models to export KActionCollection
 - Integrate online backends / search stuff
 - Implement "recently watched"
-- Talk with nikhatzi and get DVB backend/stuff in
+- Talk with nikhatzi and get DVB backend/stuff in (work in progress, nik/dvbbackend branch)
