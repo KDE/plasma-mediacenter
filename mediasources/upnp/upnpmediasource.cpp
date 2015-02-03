@@ -17,6 +17,22 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
+extern "C"{
+    #include <libgupnp/gupnp-control-point.h>
+    #include <libgupnp-av/gupnp-av.h>
+    #include <libgssdp/gssdp.h>
+    #define CONTENT_DIR "urn:schemas-upnp-org:service:ContentDirectory"
+    #define MAX_BROWSE 64
+    #define MEDIA_SERVER "urn:schemas-upnp-org:device:MediaServer:1"
+    typedef struct{
+        GUPnPServiceProxy *contentDir;
+        gchar *id;
+        guint32 startingIndex;
+    } BrowseData;
+    int upnpClientPort = 0;
+    GUPnPContextManager *contextManager;
+}
+
 #include "upnpmediasource.h"
 
 #include <mediacenter/medialibrary.h>
