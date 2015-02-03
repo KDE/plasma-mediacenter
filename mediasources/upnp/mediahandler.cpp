@@ -40,7 +40,7 @@ void MediaHandler::handleResult(QHash<int, QString> properties)
         QString rawUrl = properties.value(0);
         QUrl url (rawUrl);
         QMimeType mimeType = QMimeDatabase().mimeTypeForUrl(rawUrl);
-        QString mediaType = mimeType.name;
+        QString mediaType = mimeType.name();
         mediaType = mediaType.split("/").at(0).toLower();
         if(!QString::compare(mediaType, "text", Qt::CaseInsensitive)){
             return;

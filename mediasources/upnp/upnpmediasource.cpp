@@ -28,7 +28,7 @@
 #include <QDomDocument>
 #include <QTimer>
 
-void addMedia(QList<QString> properties, const QString& type);
+void addMedia(QHash<int, QString> properties);
 
 static void browse(GUPnPServiceProxy *contentDir,
                    const char        *containerId,
@@ -83,7 +83,7 @@ static void appendDidlObject(GUPnPDIDLLiteObject *object,
         properties.insert(3, artist);
         properties.insert(4, album);
         properties.insert(5, albumArtist);
-        UPnPMediaSource::addMedia(properties);
+        addMedia(properties);
     }
 }
 
