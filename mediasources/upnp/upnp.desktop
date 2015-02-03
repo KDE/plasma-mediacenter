@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Service
+Icon=upnp
+Name=UPnP PMC
+X-KDE-ServiceTypes=Plasma/MediaCenter/MediaSource
+
+X-KDE-PluginInfo-Name=pmcupnp
+X-KDE-PluginInfo-Author=Ashish Bansal
+X-KDE-PluginInfo-Email=bansal.ashish096@gmail.com
+X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
+X-KDE-Library=pmc_upnp

@@ -3,3 +3,5 @@ if(KF5Baloo_FOUND)
 else()
     add_subdirectory(filesystemsearch)
 endif()
+
+add_subdirectory(upnp)
