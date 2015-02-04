@@ -60,5 +60,5 @@ void MediaHandler::handleResult(QHash<int, QString> properties)
         }else if(!QString::compare(mediaType, "Image", Qt::CaseInsensitive)){
 
         }
-        mMediaLibrary->updateMedia(rawUrl, values);
+        mMediaLibrary->updateMedia(values);
 }

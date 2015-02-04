@@ -91,15 +91,17 @@ static void appendDidlObject(GUPnPDIDLLiteObject *object,
         album = gupnp_didl_lite_object_get_album (object);
         albumArtist = gupnp_didl_lite_object_get_author(object);
 //         ToDo : Get duration property of media
-//         xmlNodeGetContent(gupnp_didl_lite_object_get_xml_node(object));
+        QString xmlContent((char *)xmlNodeGetContent(gupnp_didl_lite_object_get_xml_node(object)));
+//         ToDo : Dirty Hack, correct it :p
+        QString url("http://" + xmlContent.split("http://")[1]);
         QHash<int, QString> properties;
-//         properties.insert(0, url);
+        properties.insert(0, url);
         properties.insert(1, title);
 //         properties.insert(2, duration);
         properties.insert(3, artist);
         properties.insert(4, album);
         properties.insert(5, albumArtist);
-        addMedia(properties);
+        UPnPMediaSource::addMedia(properties);
     }
 }
 
@@ -340,9 +342,12 @@ void UPnPMediaSource::setupContextManager()
                      NULL);
 }
 
+MEDIACENTER_EXPORT_MEDIASOURCE(UPnPMediaSource, "upnp.json")
+
 UPnPMediaSource::UPnPMediaSource(QObject* parent, const QVariantList& args)
     : AbstractMediaSource(parent, args)
 {
+    qDebug() << "UPnPMediaSource Constructor called!";
 }
 
 void UPnPMediaSource::run()
@@ -353,7 +358,10 @@ void UPnPMediaSource::run()
 
 void UPnPMediaSource::addMedia(QHash<int, QString> properties)
 {
+    qDebug() << "Adding Media";
     MediaLibrary *mediaLibrary = SingletonFactory::instanceFor<MediaLibrary>();
     MediaHandler *mediaHandler = new MediaHandler(mediaLibrary, 0);
     mediaHandler->handleResult(properties);
 }
+
+#include "upnpmediasource.moc"

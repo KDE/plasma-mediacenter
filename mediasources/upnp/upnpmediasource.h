@@ -28,6 +28,7 @@ class UPnPMediaSource : public MediaCenter::AbstractMediaSource
     Q_OBJECT
 public:
     explicit UPnPMediaSource(QObject* parent = 0, const QVariantList& args = QVariantList());
+    static void addMedia(QHash<int, QString> properties);
 
 protected:
     virtual void run();
@@ -35,8 +36,6 @@ protected:
 private Q_SLOTS:
     void setupContextManager();
 
-private:
-    static void addMedia(QHash<int, QString> properties);
 };
 
 #endif // UPNPMEDIASOURCE_H
