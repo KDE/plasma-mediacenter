@@ -21,7 +21,7 @@
 #include "qmlaccess.h"
 #include "mediacenter/medialibrary.h"
 #include "mediacenter/mpris2/mpris2.h"
-
+#include "mediacenter/mediaserver.h"
 #include <QSharedPointer>
 
 QMLAccess::QMLAccess(QObject *parent) : QObject(parent)
@@ -30,6 +30,10 @@ QMLAccess::QMLAccess(QObject *parent) : QObject(parent)
 
     MediaSourcesLoader mediasourceLoader;
     mediasourceLoader.load();
+
+    MediaServer *mediaServer = new MediaServer();
+    MediaLibrary *mediaLibrary = SingletonFactory::instanceFor<MediaLibrary>();
+    connect(mediaLibrary, &MediaLibrary::newMedia, mediaServer, &MediaServer::updateLibrary);
 
     m_playlistModel = new PlaylistModel(this);
 

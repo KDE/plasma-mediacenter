@@ -3,6 +3,7 @@ include_directories(
     ${TAGLIB_INCLUDES}
 )
 set (plasmamediacenter_SRCS
+    mediaserver.cpp
     modelsinbackendmodel.cpp
     iconimageprovider.cpp
     runtimedata.cpp
@@ -67,6 +68,15 @@ target_link_libraries(plasmamediacenter
     ${plasmamediacenter_link_libs}
 )
 
+
+find_package (PkgConfig REQUIRED)
+pkg_check_modules(LIBS REQUIRED gupnp-1.0 gupnp-av-1.0 libsoup-2.4 libxml-2.0)
+include_directories (${LIBS_INCLUDE_DIRS})
+link_directories (${LIBS_LIBRARY_DIRS})
+target_link_libraries(plasmamediacenter
+    ${LIBS_LIBRARIES}
+)
+
 generate_export_header(plasmamediacenter
     BASE_NAME mediacenter
     EXPORT_MACRO_NAME MEDIACENTER_EXPORT
@@ -86,11 +96,13 @@ target_link_libraries(plasmamediacentertest
     ${plasmamediacenter_link_libs}
 )
 
+
 set_target_properties(plasmamediacenter PROPERTIES VERSION ${PROJECT_VERSION} SOVERSION ${PROJECT_VERSION_MAJOR})
 
 install(TARGETS plasmamediacenter ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 set (plasmamediacenter_HDRS
+    mediaserver.h
     abstractbrowsingbackend.h
     abstractmediasource.h
     mediacenter.h
