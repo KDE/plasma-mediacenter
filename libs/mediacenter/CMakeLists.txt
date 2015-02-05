@@ -2,6 +2,14 @@ include(ECMMarkAsTest)
 include_directories(
     ${TAGLIB_INCLUDES}
 )
+
+find_package (PkgConfig REQUIRED)
+pkg_check_modules(LIBS REQUIRED gupnp-1.0 gupnp-av-1.0 libsoup-2.4 libxml-2.0)
+include_directories (${LIBS_INCLUDE_DIRS})
+link_directories (${LIBS_LIBRARY_DIRS})
+
+message(STATUS ${LIBS_LIBRARIES})
+
 set (plasmamediacenter_SRCS
     mediaserver.cpp
     modelsinbackendmodel.cpp
@@ -48,11 +56,6 @@ add_library(plasmamediacenter SHARED
     ${plasmamediacenter_SRCS}
 )
 
-find_package (PkgConfig REQUIRED)
-pkg_check_modules(LIBS REQUIRED gupnp-1.0 gupnp-av-1.0 libsoup-2.4 libxml-2.0)
-include_directories (${LIBS_INCLUDE_DIRS})
-link_directories (${LIBS_LIBRARY_DIRS})
-
 set(plasmamediacenter_link_libs
     Qt5::Core
     Qt5::Quick
@@ -66,6 +69,7 @@ set(plasmamediacenter_link_libs
     KF5::KIOWidgets
     KF5::WindowSystem #needed for mpris2, not used now
     ${TAGLIB_LIBRARIES}
+    -lsoup-2.4
     ${LIBS_LIBRARIES}
 )
 

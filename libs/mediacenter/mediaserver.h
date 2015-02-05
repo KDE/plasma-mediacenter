@@ -22,7 +22,9 @@
 
 #include <QObject>
 
-class MediaServer : public QObject
+#include "mediacenter_export.h"
+
+class MEDIACENTER_EXPORT MediaServer : public QObject
 {
     Q_OBJECT
 public:

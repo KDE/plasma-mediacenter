@@ -22,6 +22,7 @@
 #include "mediacenter/medialibrary.h"
 #include "mediacenter/mpris2/mpris2.h"
 #include "mediacenter/mediaserver.h"
+#include "mediacenter/pmcmedia.h"
 #include <QSharedPointer>
 
 QMLAccess::QMLAccess(QObject *parent) : QObject(parent)
