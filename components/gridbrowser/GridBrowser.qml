@@ -89,22 +89,6 @@ FocusScope {
 
         onCurrentIndexChanged: positionViewAtIndex(currentIndex, GridView.Contain)
 
-/*        Keys.onPressed: {
-            if (event.key == Qt.Key_Down && currentIndex%2 && gridBrowserRoot.bottomSibling) {
-                gridBrowserRoot.bottomSibling.focus = true;
-                event.accepted = true;
-            } else if (event.key == Qt.Key_Up && currentIndex%2 == 0) {
-                if (searchField.visible) {
-                    searchField.focus = true;
-                } else if (gridBrowserRoot.topSibling) {
-                    gridBrowserRoot.topSibling.focus = true;
-                }
-                event.accepted = true;
-            } else if (event.key != Qt.Key_Escape && event.text && searchField.visible) {
-                searchField.focus = true;
-                searchField.text = event.text;
-            }
-        }*/
     }
     PlasmaComponents.ScrollBar {
         anchors {
