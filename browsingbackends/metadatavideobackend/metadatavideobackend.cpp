@@ -31,7 +31,7 @@
 MEDIACENTER_EXPORT_BROWSINGBACKEND(MetadataVideoBackend, "metadatavideobackend.json")
 
 MetadataVideoBackend::MetadataVideoBackend(QObject* parent, const QVariantList& args)
-    : AbstractMetadataBackend(parent, args)
+    : AbstractBrowsingBackend(parent, args)
 {
 }
 
@@ -41,7 +41,6 @@ MetadataVideoBackend::~MetadataVideoBackend()
 
 bool MetadataVideoBackend::initImpl()
 {
-    AbstractMetadataBackend::initImpl();
     MetadataVideoModel *model = new MetadataVideoModel(this);
 
     FilterMediaModel *filteredModel = new FilterMediaModel(this);
@@ -52,7 +51,6 @@ bool MetadataVideoBackend::initImpl()
     metadata->setName("All videos");
 
     metadata->setSupportsSearch(true);
-    handleBusySignals(model);
     setModel(metadata);
     return true;
 }

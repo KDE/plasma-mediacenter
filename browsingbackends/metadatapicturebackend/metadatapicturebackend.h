@@ -23,9 +23,8 @@
 
 #include "mediacenter/abstractbrowsingbackend.h"
 
-#include "../abstractmetadatabackend.h"
 
-class MetadataPictureBackend : public AbstractMetadataBackend
+class MetadataPictureBackend : public MediaCenter::AbstractBrowsingBackend
 {
     Q_OBJECT
 public:

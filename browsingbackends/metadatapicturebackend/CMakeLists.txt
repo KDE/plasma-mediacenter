@@ -1,6 +1,5 @@
 set(metadatapicturebackend_SRCS
     metadatapicturemodel.cpp
-    ../abstractmetadatabackend.cpp
     metadatapicturebackend.cpp
 )
 

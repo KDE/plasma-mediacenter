@@ -30,7 +30,7 @@
 MEDIACENTER_EXPORT_BROWSINGBACKEND(MetadataPictureBackend, "metadatapicturebackend.json")
 
 MetadataPictureBackend::MetadataPictureBackend(QObject* parent, const QVariantList& args)
-    : AbstractMetadataBackend(parent, args)
+    : MediaCenter::AbstractBrowsingBackend(parent, args)
 {
 }
 
@@ -49,7 +49,6 @@ bool MetadataPictureBackend::initImpl()
 
     PmcModel *metadata = new PmcModel(filteredModel, this);
     metadata->setName("All Pictures");
-    handleBusySignals(pmcMetadataModel);
     setModel(metadata);
     return true;
 }
