@@ -65,6 +65,7 @@ FocusScope {
                 top: parent.top
                 bottomMargin: 10 + bottomPanel.height
 	    }
+            focus: true
             backend: mediaBrowser.currentBrowsingBackend
             models: mediaBrowser.currentBrowsingBackend.models
 

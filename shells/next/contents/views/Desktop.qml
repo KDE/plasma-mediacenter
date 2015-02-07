@@ -298,7 +298,7 @@ Item {
             if (!backendObject.init())
                 return;
             getPmcInterface().currentBrowsingBackend = backendObject;
-            pmcPageStack.pushAndFocus(getMediaBrowser());
+            pmcPageStack.push(getMediaBrowser());
         }
 
         Behavior on width {
