@@ -33,21 +33,6 @@ FocusScope {
     signal playAllRequested()
     signal popupMenuRequested(int index, string mediaUrl, string mediaType, string display)
 
-    Component {
-        Item {
-            property QtObject child
-            property bool enabled
-
-            clip: true
-
-            Behavior on width {
-                NumberAnimation {
-                    duration: 500
-                }
-            }
-        }
-    }
-
     Item {
         id: mediaBrowserViewItem
         property QtObject mediaBrowserGridView
