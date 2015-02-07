@@ -63,8 +63,7 @@ FocusScope {
             anchors {
                 bottom: parent.bottom; right: parent.right; left: parent.left;
                 top: parent.top
-                bottomMargin: 10 + bottomPanel.height
-	    }
+	        }
             focus: true
             backend: mediaBrowser.currentBrowsingBackend
             models: mediaBrowser.currentBrowsingBackend.models
@@ -104,31 +103,6 @@ FocusScope {
     {
         if (mediaBrowserViewItem && mediaBrowserViewItem.mediaBrowserGridView)
             mediaBrowserViewItem.mediaBrowserGridView.model = (function() { return currentBrowsingBackend.models[0]; });
-    }
-
-    Item {
-        id: bottomPanel
-        width: parent.width
-        height: 30
-        anchors {
-            left: parent.left
-            bottom: parent.bottom
-            right: parent.right
-            margins: 10
-        }
-
-        PlasmaComponents.Label {
-            id: mediaCountLabel
-            text: mediaBrowserViewItem.mediaBrowserGridView ? i18np("%1 item", "%1 items", mediaBrowserViewItem.mediaBrowserGridView.count) : ""
-            visible: mediaBrowserViewItem.mediaBrowserGridView ? (mediaBrowserViewItem.mediaBrowserGridView.count != undefined) : false
-
-            anchors {
-                bottom: parent.bottom
-                top: parent.top
-                right: parent.right
-                margins: 10
-            }
-        }
     }
 
     PlasmaComponents.Label {
