@@ -154,6 +154,11 @@ QString AbstractBrowsingBackend::constructQmlSource(const QString& componentDirN
         .arg(componentDirName).arg(versionString).arg(componentDirName.toUpper()).arg(itemName);
 }
 
+QString AbstractBrowsingBackend::mediaBrowserOverride() const
+{
+    return QString();
+}
+
 void AbstractBrowsingBackend::search(const QString& searchTerm)
 {
     Q_UNUSED(searchTerm)

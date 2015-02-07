@@ -148,6 +148,14 @@ public:
     Q_INVOKABLE virtual bool expand(int row);
 
     /**
+     * Override this method if you want your backend to show a custom media browser
+     * instead of the standard PMC MediaBrowser.
+     *
+     * @return Valid QML string, use constructQmlSource for convenience
+     */
+    Q_INVOKABLE virtual QString mediaBrowserOverride() const;
+
+    /**
      * Override this method and emit the busyChanged() signal to tell the mediacenter
      * that the backend is busy doing something
      *
