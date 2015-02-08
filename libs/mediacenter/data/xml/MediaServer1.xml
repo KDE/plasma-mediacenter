@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns="urn:schemas-upnp-org:device-1-0">
+  <specVersion>
+    <major>1</major>
+    <minor>0</minor>
+  </specVersion>
+  <device>
+    <deviceType>urn:schemas-upnp-org:device:MediaServer:1</deviceType>
+    <friendlyName>PMC Media Server</friendlyName>
+    <manufacturer>Software Manufacturer : KDE</manufacturer>
+    <modelName>Media Server</modelName>
+    <UDN>uuid:adsfa344-6b8b-4f60-87ca-228c46b5b0e8</UDN>
+    <serviceList>
+        <service>
+                        <serviceType>urn:schemas-upnp-org:service:AVTransport:1</serviceType>
+			<serviceId>AVTransport</serviceId>
+                        <SCPDURL>/AVTransport1.xml</SCPDURL>
+                        <controlURL>/AVTransport/Control</controlURL>
+                        <eventSubURL>/AVTransport/Event</eventSubURL>
+        </service>
+        <service>
+                        <serviceType>urn:schemas-upnp-org:service:ContentDirectory:1</serviceType>
+			<serviceId>ContentDirectory</serviceId>
+                        <SCPDURL>/ContentDirectory1.xml</SCPDURL>
+                        <controlURL>/ContentDirectory/Control</controlURL>
+                        <eventSubURL>/ContentDirectory/Event</eventSubURL>
+        </service>
+        <service>
+                        <serviceType>urn:schemas-upnp-org:service:ConnectionManager:1</serviceType>
+			<serviceId>ConnectionManager</serviceId>
+                        <SCPDURL>/ConnectionManager1.xml</SCPDURL>
+                        <controlURL>/ConnectionManager/Control</controlURL>
+                        <eventSubURL>/ConnectionManager/Event</eventSubURL>
+        </service>
+    </serviceList>
+  </device>
+</root>
