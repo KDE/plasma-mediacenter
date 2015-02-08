@@ -23,22 +23,30 @@ extern "C" {
     #include <gtk/gtk.h>
     GUPnPContext *context;
     GUPnPRootDevice *device;
-    int upnpServerPort = 0;
+    int upnpServerPort = 34552;
+    int id = 1;
 }
 
 
 #include "mediaserver.h"
+#include "singletonfactory.h"
+#include "medialibrary.h"
+#include "pmcmedia.h"
 
-static void
-add_item (GUPnPContext        *context,
-          GUPnPDIDLLiteWriter *didl_writer,
-          GUPnPDIDLLiteObject *object,
-          const char          *id,
-          const char          *parent_id,
-          const char          *mime,
-          const char          *title,
-          const char          *path)
+#include <QStandardPaths>
+#include <QDebug>
+
+static char*
+addItem (const char *mime, const char *title, const char *path)
 {
+    GUPnPContext *context;
+    const char *didl;
+    char *result;
+    GUPnPDIDLLiteWriter *didlw = gupnp_didl_lite_writer_new (NULL);
+    GUPnPDIDLLiteObject *object = GUPNP_DIDL_LITE_OBJECT
+            (gupnp_didl_lite_writer_add_item (didlw));
+    context = gupnp_device_info_get_context (GUPNP_DEVICE_INFO (device));
+
     GUPnPDIDLLiteResource *res;
     res = gupnp_didl_lite_object_add_resource(object);
     gupnp_didl_lite_resource_set_uri(res, g_strdup_printf ("http://%s:%d%s",
@@ -48,29 +56,11 @@ add_item (GUPnPContext        *context,
     GUPnPProtocolInfo *protocolInfo =
             gupnp_protocol_info_new_from_string(g_strdup_printf("http-get:*:%s:*", mime), NULL);
     gupnp_didl_lite_resource_set_protocol_info(res, protocolInfo);
-    gupnp_didl_lite_object_set_id(object, id);
-    gupnp_didl_lite_object_set_parent_id(object, parent_id);
+    gupnp_didl_lite_object_set_id(object, QString::number(id++).toStdString().c_str());
+    gupnp_didl_lite_object_set_parent_id(object, "0");
     gupnp_didl_lite_object_set_title(object, title);
     gupnp_didl_lite_object_set_restricted(object, true);
-}
 
-static char* browse_direct_children()
-{
-    GUPnPContext *context;
-    const char *didl;
-    char *result;
-    GUPnPDIDLLiteWriter *didlw = gupnp_didl_lite_writer_new (NULL);
-    GUPnPDIDLLiteObject *object = GUPNP_DIDL_LITE_OBJECT
-            (gupnp_didl_lite_writer_add_item (didlw));
-    context = gupnp_device_info_get_context (GUPNP_DEVICE_INFO (device));
-    add_item (context,
-              didlw,
-              object,
-              "4000",
-              "0",
-              "audio/mp3",
-              "Song1",
-              "/home/phantom/Music/2.mp3");
     didl = gupnp_didl_lite_writer_get_string (didlw);
     result = g_strdup(didl);
     return result;
@@ -80,10 +70,9 @@ static void browse_cb(GUPnPService *service,
                       GUPnPServiceAction *action,
                       gpointer user_data)
 {
-//     qDebug() << "Browse";
     char *object_id, *browse_flag;
-    char *result;
-    guint num_returned = 1;
+    const char* finalResult;
+    guint num_returned = 0;
 
     /* Handle incoming arguments */
     gupnp_service_action_get (action,
@@ -94,14 +83,35 @@ static void browse_cb(GUPnPService *service,
                               G_TYPE_STRING,
                               &browse_flag,
                               NULL);
+    QString result;
+    MediaLibrary *library = SingletonFactory::instanceFor<MediaLibrary>();
+    QStringList mediaType = {"Audio", "Video", "Image"};
+    foreach (QString type, mediaType) {
+        qDebug() << "Media Type" << type;
+        QList < QSharedPointer <PmcMedia> > mediaList = library->getMedia(type);
+        foreach(QSharedPointer <PmcMedia> media, mediaList){
+            qDebug() << "URL" << media->url();
+            const char *mimeType;
+            if (type == "Audio") {
+                mimeType = "audio/mp3";
+            } else if(type == "Video") {
+                mimeType = "video/mp4";
+            } else {
+                mimeType = "image/png";
+            }
+            result += QString::fromUtf8(addItem(mimeType, media->title().toStdString().c_str(), media->url().toStdString().c_str()));
+            num_returned++;
+        }
+    }
+    qDebug() << "Result" << result;
 
-    result = browse_direct_children();
+    finalResult = result.toStdString().c_str();
 
     /* Set action return arguments */
     gupnp_service_action_set (action,
                               "Result",
                               G_TYPE_STRING,
-                              result,
+                              finalResult,
                               "NumberReturned",
                               G_TYPE_UINT,
                               num_returned,
@@ -124,8 +134,6 @@ server_callback (SoupServer        *server,
                  SoupClientContext *client,
                  gpointer           user_data)
 {
-//     qDebug() << "File Requested" << (char*) user_data;
-
     GMappedFile *mapping;
     SoupBuffer *buffer;
 
@@ -144,11 +152,6 @@ server_callback (SoupServer        *server,
     soup_message_set_status (msg, SOUP_STATUS_OK);
 }
 
-void MediaServer::updateLibrary()
-{
-
-}
-
 MediaServer::MediaServer()
 {
     context = gupnp_context_new(NULL,
@@ -163,10 +166,14 @@ MediaServer::MediaServer()
                                      server_callback,
                                      user_data,
                                      NULL);
-
+    QString mediaServerSpecsPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "plasma/mediacenter/MediaServer1.xml");
+    if(mediaServerSpecsPath.isEmpty()){
+        qDebug() << "MediaServer1.xml not found, starting media server failed!";
+        return;
+    }
     device = gupnp_root_device_new(context,
                                    "MediaServer1.xml",
-                                   ".");
+                                   mediaServerSpecsPath.split("MediaServer1.xml")[0].toLocal8Bit().constData());
 
     gupnp_root_device_set_available(device, TRUE);
 

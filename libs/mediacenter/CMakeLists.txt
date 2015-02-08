@@ -119,4 +119,9 @@ install(FILES ${plasmamediacenter_HDRS} DESTINATION ${INCLUDE_INSTALL_DIR}/media
 install(FILES data/servicetypes/pmc_browsingbackend.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
 install(FILES data/servicetypes/pmc_mediasource.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
 
+install(FILES data/xml/AVTransport1.xml DESTINATION ${DATA_INSTALL_DIR}/plasma/mediacenter)
+install(FILES data/xml/ConnectionManager1.xml DESTINATION ${DATA_INSTALL_DIR}/plasma/mediacenter)
+install(FILES data/xml/ContentDirectory1.xml DESTINATION ${DATA_INSTALL_DIR}/plasma/mediacenter)
+install(FILES data/xml/MediaServer1.xml DESTINATION ${DATA_INSTALL_DIR}/plasma/mediacenter)
+
 add_subdirectory(plugin)
