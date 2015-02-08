@@ -294,6 +294,11 @@ static void mediaServerProxyAvailable(GUPnPControlPoint *cp,
     qDebug() << "Adding media server proxy.";
     #endif
 
+    QString udn = gupnp_device_info_get_udn(GUPNP_DEVICE_INFO (proxy));
+    if(udn == "uuid:adsfa344-6b8b-4f60-87ca-228c46b5b0e8"){
+        return;
+    }
+
     addMediaServer (proxy);
 }
 
