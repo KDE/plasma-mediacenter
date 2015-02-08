@@ -301,6 +301,8 @@ Item {
             pmcPageStack.push(getMediaBrowser());
         }
 
+        KeyNavigation.right: pmcPageStack.currentPage
+
         Behavior on width {
             NumberAnimation { duration: 300 }
         }
