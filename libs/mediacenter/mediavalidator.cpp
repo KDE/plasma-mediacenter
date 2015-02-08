@@ -28,5 +28,6 @@ MediaValidator::MediaValidator(QObject* parent): QObject(parent)
 
 bool MediaValidator::fileWithUrlExists(const QString& url)
 {
-    return QFile::exists(QUrl(url).toLocalFile());
+    auto qUrl = QUrl(url);
+    return qUrl.isLocalFile() ? QFile::exists(qUrl.toLocalFile()) : true;
 }
