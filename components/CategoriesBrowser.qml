@@ -44,6 +44,7 @@ FocusScope {
         anchors.fill: parent
         spacing: units.smallSpacing * 3
         boundsBehavior: Flickable.StopAtBounds
+        focus: true
         delegate:
         ColumnLayout {
             width: parent.width
@@ -84,6 +85,7 @@ FocusScope {
     Component {
         id: gridBrowserComponent
         MediaCenterComponents.GridBrowser {
+            focus: true
             clip: true
             onMediaSelected: root.mediaSelected(index, url, mediaType, theModel)
             currentBrowsingBackend: root.backend
@@ -94,6 +96,7 @@ FocusScope {
         id: listBrowserComponent
         MediaCenterComponents.ListBrowser {
             clip: true
+            focus: true
             onMediaSelected: root.mediaSelected(index, url, mediaType, theModel)
             currentBrowsingBackend: root.backend
             model: theModel
