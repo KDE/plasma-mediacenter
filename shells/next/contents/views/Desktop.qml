@@ -298,7 +298,8 @@ Item {
             if (!backendObject.init())
                 return;
             getPmcInterface().currentBrowsingBackend = backendObject;
-            pmcPageStack.push(getMediaBrowser());
+            if (pmcPageStack.currentPage !== getMediaBrowser())
+                pmcPageStack.push(getMediaBrowser());
         }
 
         KeyNavigation.right: pmcPageStack.currentPage
