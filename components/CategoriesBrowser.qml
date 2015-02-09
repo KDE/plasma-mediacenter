@@ -46,36 +46,43 @@ FocusScope {
         boundsBehavior: Flickable.StopAtBounds
         focus: true
         delegate:
-        ColumnLayout {
+        FocusScope {
             width: parent.width
-            Rectangle {
-                Layout.fillWidth: true; Layout.preferredHeight: nameLabel.height
-                color: theme.buttonBackgroundColor
+            height: delegate.height
+            x: delegate.x
+            y: delegate.y
+            ColumnLayout {
+                id: delegate
+                width: parent.width
+                Rectangle {
+                    Layout.fillWidth: true; Layout.preferredHeight: nameLabel.height
+                    color: theme.buttonBackgroundColor
 
-                PlasmaComponents.Label {
-                    id: nameLabel
-                    anchors { left: parent.left; leftMargin: units.largeSpacing; verticalCenter: parent.verticalCenter }
-                    text: display
-                    font.pointSize: fontSizes.large
-                }
+                    PlasmaComponents.Label {
+                        id: nameLabel
+                        anchors { left: parent.left; leftMargin: units.largeSpacing; verticalCenter: parent.verticalCenter }
+                        text: display
+                        font.pointSize: fontSizes.large
+                    }
 
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: categoriesListView.currentIndex = index
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: categoriesListView.currentIndex = index
+                    }
                 }
-            }
-            RowLayout {
-                MediaInfoPanel {
-                    Layout.alignment: Qt.AlignTop
-                    visible: modelRole.expanded
-                    width: units.iconSizes.enormous * 2
-                }
-                Loader {
-                    property variant theModel: modelRole.model
-                    Layout.fillWidth: true; Layout.preferredHeight: categoriesListView.currentIndex === index ? categoriesListView.height*0.8 : 0
-                    sourceComponent: modelRole.isList ? listBrowserComponent : gridBrowserComponent
-                    Behavior on Layout.preferredHeight {
-                        NumberAnimation { duration: 300 }
+                RowLayout {
+                    MediaInfoPanel {
+                        Layout.alignment: Qt.AlignTop
+                        visible: modelRole.expanded
+                        width: units.iconSizes.enormous * 2
+                    }
+                    Loader {
+                        property variant theModel: modelRole.model
+                        Layout.fillWidth: true; Layout.preferredHeight: categoriesListView.currentIndex === index ? categoriesListView.height*0.8 : 0
+                        sourceComponent: modelRole.isList ? listBrowserComponent : gridBrowserComponent
+                        Behavior on Layout.preferredHeight {
+                            NumberAnimation { duration: 300 }
+                        }
                     }
                 }
             }
