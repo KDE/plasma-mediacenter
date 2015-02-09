@@ -58,7 +58,6 @@ FocusScope {
             topMargin: units.smallSpacing * 2
             bottomMargin: units.smallSpacing * 3
         }
-        onCountChanged: currentIndex = -1
         clip: true
         cellWidth: cellHeight*2
         cellHeight: units.iconSizes.enormous
