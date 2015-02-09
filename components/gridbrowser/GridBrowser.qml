@@ -87,9 +87,8 @@ FocusScope {
             visible: running
         }
 
-        onCurrentIndexChanged: positionViewAtIndex(currentIndex, GridView.Contain)
-
     }
+
     PlasmaComponents.ScrollBar {
         anchors {
             top: gridBrowserGridView.bottom

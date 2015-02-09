@@ -49,14 +49,6 @@ FocusScope {
         highlightFollowsCurrentItem: true
         spacing: units.smallSpacing
         boundsBehavior: Flickable.StopAtBounds
-//         header: Common.LabelOverlay {
-//             height: text == "" ? 0 : 64; width: height ? listView.width : 0
-//
-//             text: modelMetadata.headerText && modelMetadata.headerText != "" ?
-//                     modelMetadata.headerText : ""
-//             visible: text != ""
-//             horizontalAlignment: Text.AlignLeft
-//         }
 
         delegate: Common.MediaItemDelegate {
             horizontal: true
@@ -82,8 +74,5 @@ FocusScope {
             running: listBrowserRoot.currentBrowsingBackend ? listBrowserRoot.currentBrowsingBackend.busy : false
             visible: running
         }
-
-        onCurrentIndexChanged: positionViewAtIndex(currentIndex, GridView.Contain)
-
     }
 }
