@@ -81,12 +81,6 @@ FocusScope {
         cacheBuffer: width*2
         focus: true
 
-        PlasmaComponents.BusyIndicator {
-            anchors { bottom: parent.bottom; horizontalCenter: parent.horizontalCenter }
-            running: (gridBrowserRoot.currentBrowsingBackend && gridBrowserRoot.currentBrowsingBackend.busy) ? true : false
-            visible: running
-        }
-
     }
 
     PlasmaComponents.ScrollBar {

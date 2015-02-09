@@ -69,10 +69,5 @@ FocusScope {
             flickableItem: listView
         }
 
-        PlasmaComponents.BusyIndicator {
-            anchors { bottom: parent.bottom; horizontalCenter: parent.horizontalCenter }
-            running: listBrowserRoot.currentBrowsingBackend ? listBrowserRoot.currentBrowsingBackend.busy : false
-            visible: running
-        }
     }
 }
