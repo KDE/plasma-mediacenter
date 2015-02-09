@@ -66,7 +66,6 @@ FocusScope {
             width: GridView.view.cellWidth
             height: GridView.view.cellHeight
             clip: !GridView.isCurrentItem
-            z: GridView.isCurrentItem ? 1 : 0
             view: gridBrowserGridView
             horizontal: false
 
