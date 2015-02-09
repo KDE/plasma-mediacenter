@@ -78,6 +78,7 @@ FocusScope {
                     }
                     Loader {
                         property variant theModel: modelRole.model
+                        focus: true
                         Layout.fillWidth: true; Layout.preferredHeight: categoriesListView.currentIndex === index ? categoriesListView.height*0.8 : 0
                         sourceComponent: modelRole.isList ? listBrowserComponent : gridBrowserComponent
                         Behavior on Layout.preferredHeight {
