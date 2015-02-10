@@ -90,6 +90,11 @@ int PmcMedia::duration() const
     return !d->media.isNull() ? d->media->duration() : -1;
 }
 
+int PmcMedia::rating() const
+{
+    return !d->media.isNull() ? d->media->rating() : 0;
+}
+
 QString PmcMedia::genre() const
 {
     return !d->media.isNull() ? d->media->genre() : QString();

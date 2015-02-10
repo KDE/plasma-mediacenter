@@ -28,7 +28,7 @@
 #include <QDBusConnection>
 #include <unistd.h>
 
-Mpris2::Mpris2(QSharedPointer<PlaylistModel> playlistModel, QObject* parent)
+Mpris2::Mpris2(PlaylistModel *playlistModel, QObject* parent)
     : QObject(parent)
 {
     QString mspris2Name("org.mpris.MediaPlayer2." + QLatin1String("plasma-mediacenter"));
@@ -68,7 +68,7 @@ QString Mpris2::getCurrentTrackId()
         return m_mp2tl->currentTrackId().path();
     }
 
-    QSharedPointer<PmcMedia> media = SingletonFactory::instanceFor<MediaLibrary>()->mediaForUrl(m_mp2p->currentTrack().toString());
+    QSharedPointer<PmcMedia> media = SingletonFactory::instanceFor<MediaLibrary>()->mediaForUrl(m_mp2p->currentTrack());
     if (media) {
         return QString("/org/kde/plasmamediacenter/tid_") + media->sha();
     }

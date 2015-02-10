@@ -72,19 +72,20 @@ FocusScope {
     PictureStrip {
         id: mediaPictureStrip
         anchors {
-            top: undefined
-            bottom: parent.bottom
+            top: parent.top
+            bottom: undefined
             left: parent.left
             right: parent.right
+            topMargin: units.largeSpacing
         }
-        height: 64
+        height: units.iconSizes.enormous
         slideshowPaused: mainImage.status == Image.Loading
         onImageClicked: mainImage.source = url
         onSlideShowStarted: {imageRect.slideshowStarted(); mediaPictureStrip.state = "hidden"}
         states: [
             State {
                 name: "hidden"
-                AnchorChanges { target: mediaPictureStrip; anchors.top: parent.bottom; anchors.bottom: undefined }
+                AnchorChanges { target: mediaPictureStrip; anchors.top: undefined; anchors.bottom: parent.top }
                 PropertyChanges { target: mediaPictureStrip; clip: true }
             }
         ]

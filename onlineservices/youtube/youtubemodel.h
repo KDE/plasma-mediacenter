@@ -68,7 +68,7 @@ public:
     virtual int rowCount (const QModelIndex& parent = QModelIndex()) const;
     QString videoUrl(int index);
     QString videoThumbnail(int index);
-    ModelMetadata *metadata();
+    PmcModel *metadata();
 
 
 signals:
@@ -93,7 +93,7 @@ private:
     QHash<KIO::Job*, QString> m_queries;
     QHash<KIO::Job*, QString> m_datas;
     QList<VideoPackage> m_videos;
-    ModelMetadata m_metadata;
+    PmcModel m_metadata;
 };
 
 #endif

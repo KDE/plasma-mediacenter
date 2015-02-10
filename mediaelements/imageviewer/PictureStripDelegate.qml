@@ -21,34 +21,28 @@ import QtQuick 2.1
 
 Item {
     id: pictureStripDelegate
-    z: ListView.isCurrentItem ? 1 : 0
     signal imageClicked(string url)
     property bool isDirectory: isExpandable
 
-    Image {
-        anchors { fill: parent; rightMargin: 1; topMargin: 10 }
-        anchors { leftMargin: anchors.rightMargin; bottomMargin: anchors.topMargin }
-        sourceSize.width: width
-        sourceSize.height: 0
-        source: mediaUrl ? mediaUrl : ""
-        asynchronous: true
-        cache: true
-        scale: (pictureStripDelegate.ListView.isCurrentItem ? 1.5 : 1)
-        smooth: true
-
-        Behavior on scale {
-            NumberAnimation {
-                duration: 500
-                easing.type: Easing.OutExpo
-            }
-        }
-    }
-
-    MouseArea {
-        id: pictureStripMouseArea
+    Rectangle {
         anchors.fill: parent
-        hoverEnabled: true
-        onClicked: emitClicked()
+        color: pictureStripDelegate.ListView.isCurrentItem ? theme.highlightColor : theme.backgroundColor
+        Image {
+            anchors {fill: parent; margins: units.smallSpacing * 2 }
+            sourceSize.width: width
+            sourceSize.height: 0
+            source: mediaUrl ? mediaUrl : ""
+            asynchronous: true
+            cache: true
+            fillMode: Image.PreserveAspectCrop
+            smooth: true
+        }
+
+        MouseArea {
+            id: pictureStripMouseArea
+            anchors.fill: parent
+            onClicked: emitClicked()
+        }
     }
 
     Keys.onReturnPressed: emitClicked()

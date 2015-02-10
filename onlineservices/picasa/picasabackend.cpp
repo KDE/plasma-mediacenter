@@ -71,7 +71,7 @@ void PicasaBackend::updateLoginStatus(bool status)
         m_loginText = "";
     } else {
         emit loginFailed();
-        setModel((ModelMetadata*)(0));
+        setModel((PmcModel*)(0));
         sender()->deleteLater();
     }
 }

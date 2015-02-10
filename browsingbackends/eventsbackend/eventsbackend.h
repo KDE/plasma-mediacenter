@@ -21,7 +21,7 @@
 
 #include "../abstractmetadatabackend.h"
 
-class ModelMetadata;
+class PmcModel;
 class EventsFilterModel;
 class EventsPicturesModel;
 class EventsModel;
@@ -52,11 +52,11 @@ private Q_SLOTS:
 
 private:
     QString m_loginText;
-    ModelMetadata *m_eventsModelMetadata = nullptr;
+    PmcModel *m_eventsPmcModel = nullptr;
     EventsModel *m_eventsModel = nullptr;
     EventsPicturesModel *m_eventsPicturesModel = nullptr;
     EventsFilterModel *m_eventsFilterModel = nullptr;
-    ModelMetadata *m_eventsFilterModelMetadata = nullptr;
+    PmcModel *m_eventsFilterPmcModel = nullptr;
 
     QDate m_editingStartDate;
     QDate m_editingEndDate;

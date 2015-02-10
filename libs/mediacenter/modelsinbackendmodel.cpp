@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2012 Shantanu Tushar <shantanu@kde.org>                             *
+ *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,56 +16,60 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#include "filteredbackendsmodel.h"
-#include "backendsmodel.h"
+#include "modelsinbackendmodel.h"
+#include "pmcmodel.h"
 
-#include <QDebug>
-
-FilteredBackendsModel::FilteredBackendsModel(QObject *parent) : QSortFilterProxyModel(parent)
+QHash< int, QByteArray > ModelsInBackendModel::roleNames() const
 {
-
+    auto defaultRoleNames = QAbstractItemModel::roleNames();
+    defaultRoleNames.insert(ModelRole, "modelRole");
+    return defaultRoleNames;
 }
 
-bool FilteredBackendsModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
+void ModelsInBackendModel::addModel(PmcModel* model)
 {
-    Q_UNUSED(source_parent)
+    auto rows = rowCount();
+    beginInsertRows(QModelIndex(), rows, rows);
+    m_models.append(model);
+    endInsertRows();
+}
 
-    if (!sourceModel()) {
+bool ModelsInBackendModel::replaceModel(PmcModel* original, PmcModel* replacement)
+{
+    auto i = m_models.indexOf(original);
+    if (i == -1) {
         return false;
     }
-
-    if (m_category.isEmpty()) {
-        return true;
-    }
-
-    return sourceModel()->data(sourceModel()->index(source_row, 0),
-                               BackendsModel::BackendCategoryRole).toString() == m_category;
+    m_models.replace(i, replacement);
+    emit dataChanged(index(i), index(i));
+    return true;
 }
 
-void FilteredBackendsModel::setBackendCategory(const QString& category)
+void ModelsInBackendModel::clear()
 {
     beginResetModel();
-    m_category = category;
-    qDebug() << "Backend category changed to " << category;
+    m_models.clear();
     endResetModel();
-    emit backendCategoryChanged();
 }
 
-QString FilteredBackendsModel::backendCategory() const
+QVariant ModelsInBackendModel::data(const QModelIndex& index, int role) const
 {
-    return m_category;
-}
-
-void FilteredBackendsModel::setSourceBackendsModel(QObject* model)
-{
-    QAbstractItemModel *m = qobject_cast<QAbstractItemModel*>(model);
-    if (m) {
-        setSourceModel(m);
+    auto row = index.row();
+    if (row >= rowCount()) {
+        return QVariant();
     }
-    emit sourceBackendsModelChanged();
+    auto model = m_models.at(row);
+    switch (role) {
+    case Qt::DisplayRole:
+        return model->name();
+    case ModelRole:
+        return QVariant::fromValue(static_cast<QObject*>(model));
+    }
+    return QVariant();
 }
 
-QObject* FilteredBackendsModel::sourceBackendsModel()
+int ModelsInBackendModel::rowCount(const QModelIndex& parent) const
 {
-    return static_cast<QObject*>(sourceModel());
+    Q_ASSERT(!parent.isValid());
+    return m_models.size();
 }

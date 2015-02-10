@@ -18,24 +18,29 @@
  */
 
 import QtQuick 2.1
+import org.kde.plasma.core 2.0 as PlasmaCore
 
 ListView {
     id: categoriesList
-    spacing: 50
+    spacing: units.smallSpacing * 3
 
-    model: CategoriesModel { }
-    property string currentCategory: currentItem.currentCategory
-
-    preferredHighlightBegin: width / 2 - height / 2
-    preferredHighlightEnd: width / 2 + height / 2
-    highlightRangeMode: ListView.StrictlyEnforceRange
-    highlightMoveDuration: 400
-    orientation: ListView.Horizontal
+    highlightMoveDuration: units.longDuration * 2
+    orientation: ListView.Vertical
+    boundsBehavior: Flickable.StopAtBounds
 
     delegate: CategoriesListDelegate {
-        height: categoriesList.height
-        width: categoriesList.height
+        width: categoriesList.width
+        height: units.gridUnit * 2
     }
 
-    Component.onCompleted: currentIndex = model.defaultIndex
+    highlight: Rectangle {
+        color: theme.highlightColor
+    }
+
+    onCurrentItemChanged: {
+        if(currentIndex != -1) {
+            categoriesBarRoot.backendObject = currentItem.backendObject;
+            categoriesBarRoot.backendSelected();
+        }
+    }
 }

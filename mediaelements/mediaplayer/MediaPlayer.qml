@@ -72,68 +72,15 @@ FocusScope {
         }
     }
 
-/*    property bool playing: runtimeDataObject.playing
-    property bool paused: runtimeDataObject.paused
-    property bool stopped: runtimeDataObject.stopped
-    property bool dimVideo: false
-
-    property alias totalTime: video.duration
-    property alias url: video.source
-    property alias volume: video.volume
-    property alias metaData: video.metaData
-    property alias hasVideo: video.hasVideo
-
-    signal clicked
-    signal mediaFinished
-    signal mediaStarted
-    signal escapePressed
-    signal volumeUp
-    signal volumeDown
-    signal muteToggle
-    signal previousMedia
-    signal nextMedia
-    signal inaccessible
-
-    MediaCenterElements.SubtitleProvider {
+/*    MediaCenterElements.SubtitleProvider {
         id: subs
         filename: video.source
         subtitleTime: video.position
     }
 
-    QtMultimediaKit.Video {
-        id: video
-        anchors.fill: parent
-        visible: hasVideo
-
-        onStopped: mediaPlayerRootRect.mediaFinished()
-        onStarted: mediaPlayerRootRect.mediaStarted()
-        onError  : mediaPlayerRootRect.inaccessible()
-
         Text {
-            anchors {
-                bottom: parent.bottom
-                horizontalCenter: parent.horizontalCenter
-                bottomMargin: 20
-            }
-            horizontalAlignment: Text.AlignHCenter
-            color: theme.textColor
-            width: 0.5 * parent.width
-            wrapMode: Text.WordWrap
             text: subs.subtitle
-            style: Text.Outline
-            styleColor: theme.backgroundColor
-            font.pixelSize: parent.height * 0.03
-            smooth: true
-        }
-
-        Rectangle {
-            id: videoDimRectangle
-            anchors.fill: parent
-            color: "black"
-            opacity: video.hasVideo ? 0.5 : 0
-            visible: mediaPlayerRootRect.dimVideo
-        }
-    }
+       }
 */
     MusicStats {
         anchors.fill: parent
@@ -144,12 +91,6 @@ FocusScope {
         path: mediaplayer.source
     }
 
-/*
-    MouseArea {
-        anchors.fill: parent
-        onClicked: mediaPlayerRootRect.clicked()
-    }
-*/
     PlasmaComponents.BusyIndicator {
         anchors { horizontalCenter: parent.horizontalCenter; bottom: parent.bottom; margins: 10 }
         visible: running
@@ -172,11 +113,11 @@ FocusScope {
 
     function setRate(newRate)
     {
-        video.playbackRate = newRate;
+        mediaplayer.playbackRate = newRate;
     }
 
     function getRate()
     {
-        return video.playbackRate;
+        return mediaplayer.playbackRate;
     }
 }

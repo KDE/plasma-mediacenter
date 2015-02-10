@@ -157,7 +157,7 @@ int FlickrModel::rowCount (const QModelIndex& parent) const
     return m_photos.count();
 }
 
-ModelMetadata* FlickrModel::metadata()
+PmcModel* FlickrModel::metadata()
 {
     return &m_metadata;
 }

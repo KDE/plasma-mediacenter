@@ -34,7 +34,7 @@ class MEDIACENTER_EXPORT Mpris2 : public QObject
     Q_OBJECT
 
 public:
-    explicit Mpris2(QSharedPointer<PlaylistModel> playlistModel, QObject* parent = 0);
+    explicit Mpris2(PlaylistModel* playlistModel, QObject* parent = 0);
     ~Mpris2();
 
     MediaPlayer2Player* getMediaPlayer2Player();

@@ -43,7 +43,7 @@ public:
     virtual QVariant data (const QModelIndex& index, int role = Qt::DisplayRole) const;
     virtual int rowCount (const QModelIndex& parent = QModelIndex()) const;
 
-    ModelMetadata *metadata();
+    PmcModel *metadata();
 
 protected slots:
     void flickrDataReady(KIO::Job *job, const QByteArray &data);
@@ -54,7 +54,7 @@ private:
     QHash<KIO::Job*, QString> m_queries;
     QHash<KIO::Job*, QString> m_datas;
     QList<Photo> m_photos;
-    ModelMetadata m_metadata;
+    PmcModel m_metadata;
 
     void listPhotos(KJob *job);
 };

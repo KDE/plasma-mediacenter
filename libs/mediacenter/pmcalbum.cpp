@@ -31,6 +31,7 @@ PmcAlbum::PmcAlbum(const QSharedPointer< Album >& album, QObject* parent)
     , d(new Private())
 {
     d->album = album;
+    connect(d->album.data(), &Album::updated, this, &PmcAlbum::updated);
 }
 
 
@@ -47,4 +48,9 @@ const QString& PmcAlbum::name() const
 QString PmcAlbum::albumArtist() const
 {
     return d->album->albumArtist();
+}
+
+int PmcAlbum::mediaCount() const
+{
+    return d->album->media().size();
 }

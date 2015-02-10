@@ -46,6 +46,7 @@ public:
     QDateTime createdAt;
     QSharedPointer<Album> album;
     QSharedPointer<Artist> artist;
+    int rating;
 };
 
 Media::Media(const QString& url, QObject* parent)
@@ -153,6 +154,8 @@ bool Media::setValueForRole(int role, const QVariant& value)
             return setGenre(value.toString());
         case MediaCenter::DurationRole :
             return setDuration(value.toInt());
+        case MediaCenter::RatingRole :
+            return setRating(value.toInt());
         default:
             //qWarning() << "Unknown role " << role << " for value " << value;
             return false;
@@ -169,6 +172,11 @@ bool Media::setAlbum(const QSharedPointer< Album >& album)
     return updateIfChanged(d->album, album);
 }
 
+int Media::rating() const
+{
+    return d->rating;
+}
+
 QSharedPointer<Artist> Media::artist() const
 {
     return d->artist;
@@ -177,6 +185,11 @@ QSharedPointer<Artist> Media::artist() const
 bool Media::setArtist(const QSharedPointer< Artist >& artist)
 {
     return updateIfChanged(d->artist, artist);
+}
+
+bool Media::setRating(const int &rating)
+{
+    return updateIfChanged(d->rating, rating);
 }
 
 int Media::duration() const

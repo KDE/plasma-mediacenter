@@ -24,13 +24,13 @@
 
 #include "metadatapicturemodel.h"
 
-#include "mediacenter/modelmetadata.h"
+#include "mediacenter/pmcmodel.h"
 #include "mediacenter/filtermediamodel.h"
 
 MEDIACENTER_EXPORT_BROWSINGBACKEND(MetadataPictureBackend, "metadatapicturebackend.json")
 
 MetadataPictureBackend::MetadataPictureBackend(QObject* parent, const QVariantList& args)
-    : AbstractMetadataBackend(parent, args)
+    : MediaCenter::AbstractBrowsingBackend(parent, args)
 {
 }
 
@@ -47,8 +47,8 @@ bool MetadataPictureBackend::initImpl()
     filteredModel->setSortRole(MediaCenter::CreatedAtRole);
     filteredModel->sort(0, Qt::DescendingOrder);
 
-    ModelMetadata *metadata = new ModelMetadata(filteredModel, this);
-    handleBusySignals(pmcMetadataModel);
+    PmcModel *metadata = new PmcModel(filteredModel, this);
+    metadata->setName("All Pictures");
     setModel(metadata);
     return true;
 }

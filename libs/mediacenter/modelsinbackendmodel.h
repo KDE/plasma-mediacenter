@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2012 Shantanu Tushar <shantanu@kde.org>                             *
+ *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,33 +16,30 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef FILTEREDBACKENDSMODEL_H
-#define FILTEREDBACKENDSMODEL_H
+#ifndef MODELSINBACKENDMODEL_H
+#define MODELSINBACKENDMODEL_H
 
-#include <QtCore/QSortFilterProxyModel>
-#include "mediacenter_export.h"
+#include <QAbstractListModel>
 
-class MEDIACENTER_EXPORT FilteredBackendsModel : public QSortFilterProxyModel
+class PmcModel;
+
+class ModelsInBackendModel : public QAbstractListModel
 {
     Q_OBJECT
-    Q_PROPERTY(QString backendCategory READ backendCategory WRITE setBackendCategory NOTIFY backendCategoryChanged)
-    Q_PROPERTY(QObject* sourceBackendsModel READ sourceBackendsModel WRITE setSourceBackendsModel NOTIFY sourceBackendsModelChanged)
-
 public:
-    explicit FilteredBackendsModel(QObject* parent = 0);
-    virtual bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const;
+    enum Roles {
+        ModelRole = Qt::UserRole + 1
+    };
+    virtual QVariant data(const QModelIndex& index, int role) const;
+    virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
+    virtual QHash<int, QByteArray> roleNames() const;
 
-    QString backendCategory() const;
-    void setBackendCategory(const QString &category);
-    QObject *sourceBackendsModel();
-    void setSourceBackendsModel(QObject *model);
-
-signals:
-    void backendCategoryChanged();
-    void sourceBackendsModelChanged();
+    void addModel(PmcModel* model);
+    bool replaceModel(PmcModel* original, PmcModel* replacement);
+    void clear();
 
 private:
-    QString m_category;
+    QList<PmcModel*> m_models;
 };
 
-#endif // FILTEREDBACKENDSMODEL_H
+#endif // MODELSINBACKENDMODEL_H

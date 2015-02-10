@@ -25,9 +25,9 @@
 #include "mediacenter/pmcmetadatamodel.h"
 #include "mediacenter/playlistmodel.h"
 #include "mediacenter/filtermediamodel.h"
-#include "mediacenter/modelmetadata.h"
+#include "mediacenter/pmcmodel.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <klocalizedstring.h>
 
 #include <QQmlEngine>
@@ -41,7 +41,7 @@ namespace {
 }
 
 MetadataMusicBackend::MetadataMusicBackend(QObject* parent, const QVariantList& args)
-    : AbstractMetadataBackend(parent, args)
+    : AbstractBrowsingBackend(parent, args)
     , m_artistsModel(0)
     , m_albumsModel(0)
     , m_musicModel(0)
@@ -55,37 +55,47 @@ MetadataMusicBackend::~MetadataMusicBackend()
 
 bool MetadataMusicBackend::initImpl()
 {
-    AbstractMetadataBackend::initImpl();
     m_albumsModel = new PmcMetadataModel(this);
     m_artistsModel = new PmcMetadataModel(this);
     m_musicModel = new PmcMetadataModel(this);
-    m_artistsModel->setDefaultDecoration("user-identity");
-    m_albumsModel->setDefaultDecoration("pmcnocover");
+
+    m_musicModel->setDefaultDecoration("image://icon/audio");
+    m_artistsModel->setDefaultDecoration("image://icon/user-identity");
+    m_albumsModel->setDefaultDecoration("image://icon/pmcnocover");
 
     m_musicFilteredModel = new FilterMediaModel(this);
     m_musicFilteredModel->setSourceModel(m_musicModel);
-    m_musicModelMetadata = new ModelMetadata(m_musicFilteredModel, this);
+    m_musicPmcModel = new PmcModel(m_musicFilteredModel, this);
+    m_musicPmcModel->setName(i18n("Songs"));
+    m_musicPmcModel->setIsList(true);
 
     m_albumFilteredModel = new FilterMediaModel(this);
     m_albumFilteredModel->setSourceModel(m_albumsModel);
-    m_albumsModelMetadata = new ModelMetadata(m_albumFilteredModel, this);
+    m_albumsPmcModel = new PmcModel(m_albumFilteredModel, this);
+    m_albumsPmcModel->setName(i18n("Albums"));
+    m_musicFilteredByAlbumModel = new FilterMediaModel(this);
+    m_musicFilteredByAlbumModel->setSourceModel(m_musicModel);
+    m_musicFilteredByAlbumPmcModel = new PmcModel(m_musicFilteredByAlbumModel);
+    m_musicFilteredByAlbumPmcModel->setIsList(true);
+    m_musicFilteredByAlbumPmcModel->setExpanded(true);
 
     m_artistFilteredModel = new FilterMediaModel(this);
     m_artistFilteredModel->setSourceModel(m_artistsModel);
-    m_artistsModelMetadata = new ModelMetadata(m_artistFilteredModel, this);
+    m_artistsPmcModel = new PmcModel(m_artistFilteredModel, this);
+    m_artistsPmcModel->setName(i18n("Artists"));
+    m_musicFilteredByArtistModel = new FilterMediaModel(this);
+    m_musicFilteredByArtistModel->setSourceModel(m_musicModel);
+    m_musicFilteredByArtistPmcModel = new PmcModel(m_musicFilteredByArtistModel);
+    m_musicFilteredByArtistPmcModel->setIsList(true);
+    m_musicFilteredByArtistPmcModel->setExpanded(true);
 
-    m_albumsModelMetadata->setName(i18n("Albums"));
-    m_artistsModelMetadata->setName(i18n("Artists"));
-    m_musicModelMetadata->setName(i18n("Songs"));
+    m_musicPmcModel->setSupportsSearch(true);
+    m_artistsPmcModel->setSupportsSearch(true);
+    m_albumsPmcModel->setSupportsSearch(true);
 
-    m_musicModelMetadata->setSupportsSearch(true);
-    m_musicModelMetadata->setIsList(true);
-    m_artistsModelMetadata->setSupportsSearch(true);
-    m_albumsModelMetadata->setSupportsSearch(true);
-
-    addModel(m_musicModelMetadata);
-    addModel(m_albumsModelMetadata);
-    addModel(m_artistsModelMetadata);
+    addModel(m_albumsPmcModel);
+    addModel(m_artistsPmcModel);
+    addModel(m_musicPmcModel);
 
     QTimer::singleShot(1000, this, SLOT(initializeModels()));
     return true;
@@ -109,52 +119,71 @@ QString MetadataMusicBackend::artistFilter() const
     return m_artistFilter;
 }
 
-void MetadataMusicBackend::setAlbumFilter(const QString& filter)
-{
-    m_albumFilter = filter;
-    emit albumFilterChanged();
-    m_artistFilter.clear();
-    emit artistFilterChanged();
-    updateModelAccordingToFilters();
-}
-
-void MetadataMusicBackend::setArtistFilter(const QString& filter)
-{
-    m_artistFilter = filter;
-    emit artistFilterChanged();
-    m_albumFilter.clear();
-    emit albumFilterChanged();
-    updateModelAccordingToFilters();
-}
-
 void MetadataMusicBackend::updateModelAccordingToFilters()
 {
-    FilterMediaModel *filterModel = static_cast<FilterMediaModel *> (m_musicFilteredModel);
-    filterModel->clearFilters();
-
     if (!m_albumFilter.isEmpty()) {
-        filterModel->setFilter(MediaCenter::AlbumRole, m_albumFilter);
+        m_musicFilteredByAlbumModel->clearFilters();
+        m_musicFilteredByAlbumModel->setFilter(MediaCenter::AlbumRole, m_albumFilter);
+        m_musicFilteredByAlbumPmcModel->setName(m_albumFilter);
+        replaceModel(m_albumsPmcModel, m_musicFilteredByAlbumPmcModel);
     }
     if (!m_artistFilter.isEmpty()) {
-        filterModel->setFilter(MediaCenter::ArtistRole, m_artistFilter);
+        m_musicFilteredByArtistModel->clearFilters();
+        m_musicFilteredByArtistModel->setFilter(MediaCenter::ArtistRole, m_artistFilter);
+        m_musicFilteredByArtistPmcModel->setName(m_artistFilter);
+        replaceModel(m_artistsPmcModel, m_musicFilteredByArtistPmcModel);
     }
+}
+
+void MetadataMusicBackend::setArtistData(const QMap<int, QVariant>& data)
+{
+    m_musicFilteredByArtistPmcModel->setParentData(data);
+}
+
+void MetadataMusicBackend::setAlbumData(const QMap<int, QVariant>& data)
+{
+    m_musicFilteredByAlbumPmcModel->setParentData(data);
 }
 
 bool MetadataMusicBackend::expand(int row, QAbstractItemModel* model)
 {
     if (!model) return false;
 
+    const auto parentData = model->itemData(model->index(row, 0));
+
     const QString filter = model->data(model->index(row, 0), Qt::DisplayRole).toString();
 
     if (model == m_albumFilteredModel) {
-        setAlbumFilter(filter);
-        emit modelNeedsAttention(m_musicModelMetadata);
+        m_albumFilter = filter;
+        setAlbumData(parentData);
+        m_artistFilter.clear();
     } else if (model == m_artistFilteredModel) {
-        setArtistFilter(filter);
-        emit modelNeedsAttention(m_musicModelMetadata);
+        m_artistFilter = filter;
+        setArtistData(parentData);
+        m_albumFilter.clear();
     }
 
+    updateModelAccordingToFilters();
+
+    emit artistFilterChanged();
+    emit albumFilterChanged();
+
     return true;
+}
+
+bool MetadataMusicBackend::back(QObject* model)
+{
+    auto pmcModel = static_cast<PmcModel*>(model);
+    if (!pmcModel) {
+        return false;
+    }
+    if (pmcModel == m_musicFilteredByAlbumPmcModel) {
+        return replaceModel(m_musicFilteredByAlbumPmcModel, m_albumsPmcModel);
+    }
+    if (pmcModel == m_musicFilteredByArtistPmcModel) {
+        return replaceModel(m_musicFilteredByArtistPmcModel, m_artistsPmcModel);
+    }
+    return false;
 }
 
 void MetadataMusicBackend::handleButtonClick(const QString& buttonName)
@@ -167,10 +196,10 @@ void MetadataMusicBackend::handleButtonClick(const QString& buttonName)
     }
 }
 
-void MetadataMusicBackend::searchModel(const QString& searchTerm, QAbstractItemModel* model)
-{
-    static_cast<FilterMediaModel *> (model)->setFilter(Qt::DisplayRole, searchTerm);
-}
+//void MetadataMusicBackend::searchModel(const QString& searchTerm, QAbstractItemModel* model)
+//{
+//    static_cast<FilterMediaModel *> (model)->setFilter(Qt::DisplayRole, searchTerm);
+//}
 
 QStringList MetadataMusicBackend::allMedia()
 {

@@ -32,6 +32,7 @@
 #include <QDebug>
 
 #include <QtCore/QTimer>
+#include <QSharedPointer>
 
 class PmcMetadataModel::Private
 {
@@ -56,7 +57,9 @@ public:
     QList< QHash<int, QVariant> > metadataValues;
     QList<int> rowsToFetchMetadataFor;
     QStringList mediaUrlWhichFailedThumbnailGeneration;
-    QVariant defaultDecoration;
+    //TODO: serve the default decoration using an image provider
+    //  probably something like image://icon/foo would return the system icon foo
+    QString defaultDecoration;
     Mode currentMode;
 
     bool isSearchTermValid;
@@ -189,6 +192,9 @@ void PmcMetadataModel::handleNewAlbumsOrArtists(const QList< QSharedPointer< T >
         }
         d->mediaByResourceId.insert(a->name(), QSharedPointer<QObject>(a));
         resourceIdsToBeInserted.append(a->name());
+        connect(a.data(), &T::updated, [this]() {
+            albumOrArtistUpdated<T>(static_cast<T*>(sender()));
+        });
     }
 
     if (resourceIdsToBeInserted.size() > 0) {
@@ -231,6 +237,8 @@ QVariant PmcMetadataModel::data(const QModelIndex& index, int role) const
 QVariant PmcMetadataModel::dataForMedia(const QModelIndex &index, int role) const
 {
     const int row = index.row();
+
+    const QString resourceId = d->mediaResourceIds.at(row);
     const QSharedPointer<QObject> mediaObject = d->mediaByResourceId.value(d->mediaResourceIds.at(row));
     const QSharedPointer<PmcMedia> media = qSharedPointerObjectCast<PmcMedia>(mediaObject);
 
@@ -247,6 +255,8 @@ QVariant PmcMetadataModel::dataForMedia(const QModelIndex &index, int role) cons
         return media->album();
     case MediaCenter::ArtistRole:
         return media->artist();
+    case MediaCenter::RatingRole:
+        return media->rating();
     case MediaCenter::DurationRole:
         return media->duration();
     case MediaCenter::GenreRole:
@@ -255,13 +265,17 @@ QVariant PmcMetadataModel::dataForMedia(const QModelIndex &index, int role) cons
         if (media->type() == "video") {
             const QUrl url(media->url());
             if (d->mediaUrlWhichFailedThumbnailGeneration.contains(url.url()))
-                return "image-missing";
+                return "image://icon/image-missing";
             return const_cast<PmcMetadataModel*>(this)->fetchPreview(url, index);
+        } else if (media->type() == "audio") {
+            return getAlbumArt(media->album(), media->artist(), resourceId);
         } else {
             return media->thumbnail();
         }
     case MediaCenter::CreatedAtRole:
         return media->createdAt();
+    case MediaCenter::HideLabelRole:
+        return false;
     }
 
     return QVariant();
@@ -280,6 +294,11 @@ QVariant PmcMetadataModel::dataForAlbum(int row, int role) const
         return getAlbumArt(album->name(), album->albumArtist(), resourceId);
     case MediaCenter::IsExpandableRole:
         return true;
+    case MediaCenter::HideLabelRole:
+        return false;
+    case MediaCenter::MediaCountRole:
+        return album->mediaCount();
+
     }
 
     return QVariant();
@@ -298,7 +317,11 @@ QVariant PmcMetadataModel::dataForArtist(int row, int role) const
         return getArtistImage(artist->name(), resourceId);
     case MediaCenter::IsExpandableRole:
         return true;
-    }
+    case MediaCenter::HideLabelRole:
+        return false;
+    case MediaCenter::MediaCountRole:
+        return artist->mediaCount();
+   }
 
     return QVariant();
 }
@@ -352,7 +375,7 @@ QString PmcMetadataModel::fetchPreview(const QUrl &url, const QModelIndex& index
 
     d->filesToPreview.insert(url, QPersistentModelIndex(index));
     d->previewTimer.start(100);
-    return d->defaultDecoration.toString();
+    return d->defaultDecoration;
 }
 
 void PmcMetadataModel::delayedPreview()
@@ -402,7 +425,7 @@ void PmcMetadataModel::previewFailed(const KFileItem &item)
     }
 }
 
-void PmcMetadataModel::setDefaultDecoration(const QVariant& decoration)
+void PmcMetadataModel::setDefaultDecoration(const QString& decoration)
 {
     d->defaultDecoration = decoration;
 }
@@ -425,5 +448,14 @@ void PmcMetadataModel::mediaUpdated()
 
     const int mediaIndex = d->mediaResourceIds.indexOf(resourceId);
     const QModelIndex changedIndex = index(mediaIndex);
+    emit dataChanged(changedIndex, changedIndex);
+}
+
+template <class T>
+void PmcMetadataModel::albumOrArtistUpdated(const T *albumOrArtist)
+{
+    const auto name = albumOrArtist->name();
+    const auto i = d->mediaResourceIds.indexOf(name);
+    const auto changedIndex = index(i);
     emit dataChanged(changedIndex, changedIndex);
 }

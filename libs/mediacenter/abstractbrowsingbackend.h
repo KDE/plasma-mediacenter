@@ -28,8 +28,7 @@
 #include "mediacenter_export.h"
 #include "mediacenter.h"
 
-class QAbstractItemModel;
-class ModelMetadata;
+class PmcModel;
 
 namespace MediaCenter {
 
@@ -49,7 +48,7 @@ class MEDIACENTER_EXPORT AbstractBrowsingBackend : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
-    Q_PROPERTY(QVariantList models READ models NOTIFY modelsChanged)
+    Q_PROPERTY(QObject* models READ models NOTIFY modelsChanged)
     Q_PROPERTY(QStringList buttons READ buttons NOTIFY buttonsChanged)
 
 public:
@@ -88,7 +87,7 @@ public:
     /**
      * @returns the models available in the browsing backend
      */
-    QVariantList models();
+    QObject* models();
 
     /**
      * Call this method to get a list of strings that should be used to create
@@ -117,6 +116,7 @@ public:
      * This function is used by Media Browser to go to one level
      * up in the browsing structure. Must be reimplemented
      *
+     * @deprecated
      * @return true if operation succeeded
      * @return false if we are already at the topmost level
      */
@@ -146,14 +146,6 @@ public:
      * @return false if operation was unsuccessful
      */
     Q_INVOKABLE virtual bool expand(int row);
-
-    /**
-     * Override this method if you want your backend to show a custom media browser
-     * instead of the standard PMC MediaBrowser.
-     *
-     * @return Valid QML string, use constructQmlSource for convenience
-     */
-    Q_INVOKABLE virtual QString mediaBrowserOverride() const;
 
     /**
      * Override this method and emit the busyChanged() signal to tell the mediacenter
@@ -186,16 +178,18 @@ Q_SIGNALS:
     void searchTermChanged();
 
     void error(const QString &message);
-    void modelNeedsAttention(QObject* model);
     void pmcRuntimeChanged();
     void showCustomUi(const QString &customUiQml);
+
+public Q_SLOTS:
+    bool back(QObject* model);
 
 protected:
     /**
      * Set the only model (and its metadata) that this backend contains.
      * This used by the media browser to show media.
      */
-    void setModel(ModelMetadata* model);
+    void setModel(PmcModel* model);
 
     /**
      * Set the only model that this backend contains. Default metadata will be
@@ -207,7 +201,17 @@ protected:
     /**
      * This method is used to add more models to this backend
      */
-    void addModel(ModelMetadata * model);
+    void addModel(PmcModel * model);
+
+    /**
+     * Use this method to replace a model that has already been added
+     *
+     * @param original the model that has been added already
+     * @param replacement the model to replace the original with
+     *
+     * @return true if successful, false otherwise
+     */
+    bool replaceModel(PmcModel *original, PmcModel *replacement);
 
     /**
      * This is a convenience function which constructs a string representing QML source for
@@ -236,17 +240,6 @@ protected:
      * @param searchTerm string entered by the user
      */
     Q_INVOKABLE virtual void search(const QString &searchTerm);
-
-    /**
-     * This method is called by the UI when the user requests to search for a media
-     * for a particular model.
-     * You should override this method if your backend support search and has
-     * multiple models
-     *
-     * @param searchTerm string entered by the user
-     * @param model the model that this search should affect
-     */
-    Q_INVOKABLE virtual void searchModel(const QString &searchTerm, QAbstractItemModel *model);
 
     /**
      * Subclasses can call this method to set the button strings that are used

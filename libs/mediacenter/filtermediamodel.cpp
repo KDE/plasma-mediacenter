@@ -48,11 +48,7 @@ bool FilterMediaModel::filterAcceptsRow(int source_row, const QModelIndex& sourc
         const QVariant value = m_filters.value(role);
         if (value.canConvert(QVariant::String)) {
             const QVariant rowData = sourceModel()->data(index, role);
-            if (rowData.canConvert<QString>() && !rowData.toString().contains(
-                value.toString(), sortCaseSensitivity())) {
-                return false;
-            } else if (rowData.canConvert<QStringList>() && !rowData.toStringList().join(" ").contains(
-                value.toString(), sortCaseSensitivity())) {
+            if (rowData.canConvert<QString>() && rowData.toString() != value.toString()) {
                 return false;
             }
         }

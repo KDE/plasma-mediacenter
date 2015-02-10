@@ -21,17 +21,17 @@
 #ifndef METADATAMUSICBACKEND_H
 #define METADATAMUSICBACKEND_H
 
-#include "../abstractmetadatabackend.h"
+#include "mediacenter/abstractbrowsingbackend.h"
 
 class FilterMediaModel;
 class PmcMetadataModel;
-class ModelMetadata;
+class PmcModel;
 
-class MetadataMusicBackend : public AbstractMetadataBackend
+class MetadataMusicBackend : public MediaCenter::AbstractBrowsingBackend
 {
     Q_OBJECT
-    Q_PROPERTY(QString artistFilter READ artistFilter WRITE setArtistFilter NOTIFY artistFilterChanged)
-    Q_PROPERTY(QString albumFilter READ albumFilter WRITE setAlbumFilter NOTIFY albumFilterChanged)
+    Q_PROPERTY(QString artistFilter READ artistFilter NOTIFY artistFilterChanged)
+    Q_PROPERTY(QString albumFilter READ albumFilter NOTIFY albumFilterChanged)
 
 public:
     MetadataMusicBackend (QObject* parent, const QVariantList& args);
@@ -40,16 +40,19 @@ public:
     QString artistFilter() const;
     QString albumFilter() const;
 
-    void setArtistFilter(const QString &filter);
-    void setAlbumFilter(const QString &filter);
+    void setArtistData(const QMap<int, QVariant>& data);
+    void setAlbumData(const QMap<int, QVariant>& data);
 
     virtual bool expand(int row, QAbstractItemModel* model);
 
     virtual void handleButtonClick(const QString& buttonName);
 
-    virtual void searchModel(const QString& searchTerm, QAbstractItemModel* model);
+    //virtual void searchModel(const QString& searchTerm, QAbstractItemModel* model);
 
     virtual QStringList allMedia();
+
+public Q_SLOTS:
+    bool back(QObject* model);
 
 Q_SIGNALS:
     void artistFilterChanged();
@@ -59,8 +62,7 @@ protected:
     void updateModelAccordingToFilters();
     virtual bool initImpl();
 
-private slots:
-
+private Q_SLOTS:
     void initializeModels();
 
 private:
@@ -70,12 +72,17 @@ private:
 
     QString m_artistFilter;
     QString m_albumFilter;
-    ModelMetadata* m_musicModelMetadata;
-    ModelMetadata* m_albumsModelMetadata;
-    ModelMetadata* m_artistsModelMetadata;
+    PmcModel* m_musicPmcModel;
+    PmcModel* m_albumsPmcModel;
+    PmcModel* m_artistsPmcModel;
+    PmcModel* m_musicFilteredByAlbumPmcModel;
+    PmcModel* m_musicFilteredByArtistPmcModel;
+
     FilterMediaModel* m_musicFilteredModel;
     FilterMediaModel* m_albumFilteredModel;
+    FilterMediaModel* m_musicFilteredByAlbumModel;
     FilterMediaModel* m_artistFilteredModel;
+    FilterMediaModel* m_musicFilteredByArtistModel;
 };
 
 #endif // METADATAMUSICBACKEND_H

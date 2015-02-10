@@ -28,6 +28,9 @@
 #include <QPointer>
 #include <QUrl>
 
+#include "mediacenter/runtimedata.h"
+
+
 class MEDIACENTER_EXPORT MediaPlayer2Player : public QDBusAbstractAdaptor
 {
     Q_OBJECT
@@ -46,9 +49,8 @@ class MEDIACENTER_EXPORT MediaPlayer2Player : public QDBusAbstractAdaptor
     Q_PROPERTY(bool CanPause READ CanPause)
     Q_PROPERTY(bool CanControl READ CanControl)
     Q_PROPERTY(bool CanSeek READ CanSeek)
-    Q_PROPERTY(int paused READ paused WRITE setPaused)
-    Q_PROPERTY(int stopped READ stopped WRITE setStopped)
-    Q_PROPERTY(QUrl currentTrack READ currentTrack WRITE setCurrentTrack)
+    Q_PROPERTY(RuntimeData::PmcStatus pmcStatus READ pmcStatus WRITE setPmcStatus)
+    Q_PROPERTY(QString currentTrack READ currentTrack WRITE setCurrentTrack)
     Q_PROPERTY(int mediaPlayerPresent READ mediaPlayerPresent WRITE setMediaPlayerPresent)
 
 public:
@@ -68,10 +70,9 @@ public:
     bool CanPause() const;
     bool CanSeek() const;
     bool CanControl() const;
-    int stopped() const;
-    int paused() const;
-    QUrl currentTrack() const;
+    QString currentTrack() const;
     int mediaPlayerPresent() const;
+    RuntimeData::PmcStatus pmcStatus() const;
 
 signals:
     void Seeked(qlonglong Position) const;
@@ -80,10 +81,8 @@ signals:
     void volumeChanged(double newVol) const;
     void next() const;
     void previous() const;
-    void pause() const;
-    void playPause();
+    void playPause() const;
     void stop() const;
-    void play() const;
     void seek(int offset) const;
     void playUrl(QUrl url) const;
 
@@ -107,18 +106,18 @@ private:
     void setRate(double newRate);
     void setVolume(double volume);
     void setPropertyPosition(int newPositionInMs);
-    void setStopped(int newVal);
-    void setPaused(int newVal);
-    void setCurrentTrack(QUrl newTrack);
+    void setCurrentTrack(QString newTrack);
+    void setPmcStatus(RuntimeData::PmcStatus status);
 
     QVariantMap m_metadata;
-    QUrl m_currentTrack;
+    QString m_currentTrack;
     double m_rate;
     double m_volume;
     bool m_paused;
     bool m_stopped;
     int m_mediaPlayerPresent;
     qlonglong m_position;
+    RuntimeData::PmcStatus m_status;
 };
 
 #endif // MEDIAPLAYER2PLAYER_H

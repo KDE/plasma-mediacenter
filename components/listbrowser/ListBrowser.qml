@@ -27,7 +27,7 @@ FocusScope {
     anchors.fill: parent
 
     property QtObject currentBrowsingBackend
-    property QtObject modelMetadata
+    property alias model: listView.model
     property alias currentIndex: listView.currentIndex
     property alias count: listView.count
 
@@ -37,64 +37,26 @@ FocusScope {
     signal mediaSelected(int index, string url, string mediaType)
     signal popupRequested(int index, string url, string mediaType, string title)
 
-    PlasmaComponents.TextField {
-        id: searchField
-        anchors { top: parent.top; left: parent.left; right: parent.right }
-        height: visible ? 32 : 0
-        opacity: activeFocus ? 1 : 0.8
-        visible: (modelMetadata && modelMetadata.model && modelMetadata.supportsSearch) ? true : false
-        clearButtonShown: true
-        placeholderText: i18n("Search")
-        onTextChanged: searchTimer.restart()
-
-        Keys.onUpPressed: listBrowserRoot.topSibling.focus = true
-        Keys.onDownPressed: listView.focus = true
-        Keys.onPressed: if (event.key == Qt.Key_Escape && text != "") {
-            text = "";
-            event.accepted = true;
-        }
-
-        Timer {
-            id: searchTimer
-            interval: 500
-            onTriggered: {
-                if (currentBrowsingBackend.searchModel) {
-                    currentBrowsingBackend.searchModel(searchField.text, modelMetadata.model);
-                } else if (currentBrowsingBackend.search) {
-                    currentBrowsingBackend.search(searchField.text);
-                }
-            }
-        }
-    }
-
     ListView {
         id: listView
         anchors {
-            top: searchField.bottom; bottom: parent.bottom
+            top: parent.top; bottom: parent.bottom
             left: parent.left; right: parent.right
         }
-        model: modelMetadata ? modelMetadata.model : null
         clip: true
         focus: true
-        highlight: PlasmaComponents.Highlight { }
+        highlight: Item { }
         highlightFollowsCurrentItem: true
-        header: Common.LabelOverlay {
-            height: text == "" ? 0 : 64; width: height ? listView.width : 0
-
-            text: modelMetadata.headerText && modelMetadata.headerText != "" ?
-                    modelMetadata.headerText : ""
-            visible: text != ""
-            horizontalAlignment: Text.AlignLeft
-        }
+        spacing: units.smallSpacing
+        boundsBehavior: Flickable.StopAtBounds
 
         delegate: Common.MediaItemDelegate {
             horizontal: true
             view: listView
 
             width: ListView.view.width - listScrollbar.width
-            height: 64
+            height: units.iconSizes.huge
             clip: !ListView.isCurrentItem
-            z: ListView.isCurrentItem ? 1 : 0
 
             backend: listBrowserRoot.currentBrowsingBackend
             onPlayRequested: listBrowserRoot.mediaSelected(index, url, currentMediaType)
@@ -107,50 +69,5 @@ FocusScope {
             flickableItem: listView
         }
 
-        PlasmaComponents.BusyIndicator {
-            anchors { bottom: parent.bottom; horizontalCenter: parent.horizontalCenter }
-            running: listBrowserRoot.currentBrowsingBackend ? listBrowserRoot.currentBrowsingBackend.busy : false
-            visible: running
-        }
-
-        onCurrentIndexChanged: positionViewAtIndex(currentIndex, GridView.Contain)
-
-        Keys.onPressed: {
-            if (event.key == Qt.Key_Down && currentIndex == (count-1) && listBrowserRoot.bottomSibling) {
-                listBrowserRoot.bottomSibling.focus = true;
-                event.accepted = true;
-            } else if (event.key == Qt.Key_Up && currentIndex == 0) {
-                if (searchField.visible) {
-                    searchField.focus = true;
-                } else if (listBrowserRoot.topSibling) {
-                    listBrowserRoot.topSibling.focus = true;
-                }
-                event.accepted = true;
-            } else if (event.key != Qt.Key_Escape && event.text && searchField.visible) {
-                searchField.focus = true;
-                searchField.text = event.text;
-            } else if (event.key == Qt.Key_Escape && currentIndex) {
-                currentIndex = 0;
-                event.accepted = true;
-            } else if (event.key == Qt.Key_Right) {
-		//This button will take to Albums.
-                var buttons = listBrowserRoot.topSibling.buttons;
-                if (buttons) {
-                    listBrowserRoot.topSibling.focus = true;
-                    var tabButton = listBrowserRoot.topSibling.buttons.get(1).button;
-                    tabButton.clicked();
-                    event.accepted = true;
-		}
-            } else if (event.key == Qt.Key_Left) {
-		//This button will take to Artists.
-                var buttons = listBrowserRoot.topSibling.buttons;
-                if (buttons) {
-                    listBrowserRoot.topSibling.focus = true;
-                    var tabButton = listBrowserRoot.topSibling.buttons.get(2).button;
-                    tabButton.clicked();
-                    event.accepted = true;
-		}
-            }
-        }
     }
 }

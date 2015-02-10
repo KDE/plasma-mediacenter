@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright 2012 by Sinny Kumari <ksinny@gmail.com>                     *
+ *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,34 +17,28 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-import QtQuick 2.1
-import org.kde.plasma.mediacenter 2.0 as PMC
-import org.kde.plasma.components 2.0 as PlasmaComponents
+import QtQuick 2.3
 
-ListView {
-    id: listView
-    spacing: 20
+Item {
+    id: root
+    property bool inhibit
+    property bool shouldHide
 
-    property alias backendsModel: filteredModel.sourceBackendsModel
-    property alias categoryFilter: filteredModel.backendCategory
-    property string currentBackendDescription: currentItem ? currentItem.currentBackendDescription : ""
+    Timer {
+        id: timer
+        interval: 1000
+        running: true
 
-    //FIXME: this is really bad looking :/
-    highlight: PlasmaComponents.Highlight { }
-    highlightFollowsCurrentItem: true
-
-    Keys.onReturnPressed: { currentItem.launch() }
-    Keys.onEnterPressed: { currentItem.launch() }
-
-    model: PMC.FilteredBackendsModel {
-        id: filteredModel
+        onTriggered: {
+            shouldHide = true;
+            stop();
+        }
     }
 
-    delegate: BackendsListDelegate {
-        height: 64 + anchors.margins
-        width: listView.width
-        anchors.margins: 6
+    onInhibitChanged: if (inhibit) {
+        shouldHide = false;
+        timer.stop();
+    } else {
+        timer.start();
     }
-
-    onCategoryFilterChanged: currentIndex = 0
 }

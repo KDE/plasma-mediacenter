@@ -1,5 +1,4 @@
 /***************************************************************************
- *   Copyright 2010 by Alessandro Diaferia <alediaferia@gmail.com>         *
  *   Copyright 2012 by Sinny Kumari <ksinny@gmail.com>                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -19,60 +18,44 @@
  ***************************************************************************/
 
 import QtQuick 2.1
-import org.kde.plasma.mediacenter.elements 2.0 as MediaCenterElements
+import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
 
-PlasmaComponents.Page {
-    id: homeScreenRootItem
-    property QtObject model
-    property QtObject selectedBackend
-    property QtObject metaData
+Item {
+    id: root
 
-    signal backendSelected
-    signal emptyAreaClicked
+    property QtObject backendObject: modelObject
+
+    Row {
+        anchors.fill: parent
+        anchors.leftMargin: spacing
+        anchors.rightMargin: spacing
+        spacing: units.smallSpacing * 2
+
+        PlasmaCore.IconItem {
+            id: categoryIcon
+            source: decoration
+            height: parent.height
+            width: height
+        }
+
+        PlasmaComponents.Label {
+            height: parent.height
+            width: parent.width - categoryIcon.width - parent.spacing
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignRight
+            elide: Text.ElideRight
+            text: display
+            font.pointSize: fontSizes.large
+        }
+    }
 
     MouseArea {
         anchors.fill: parent
-        onClicked: emptyAreaClicked()
-    }
-    Column {
-        anchors {
-            fill: parent
-            topMargin: 10; bottomMargin: 10
-        }
-
-        HomeScreenHeader {
-            id: homeScreenHeader
-            width: parent.width
-            height: 0.1 * parent.height
-        }
-
-        CategoriesList {
-            id: categoriesList
-            anchors.horizontalCenter: parent.horizontalCenter
-            height: 0.3 * parent.height
-            width: parent.width
-            clip: true
-        }
-
-        FilteredBackendsList {
-            id: backendsList
-            anchors.horizontalCenter: parent.horizontalCenter
-
-            width: 300
-            height: 0.5 * parent.height
-            backendsModel: homeScreenRootItem.model
-            categoryFilter: categoriesList.currentCategory
-        }
- 
-        HomeScreenFooter {
-            id: homeScreenFooter
-            width: parent.width
-            height: 0.1 * parent.height
-            text: backendsList.currentBackendDescription
+        onClicked: {
+            root.ListView.view.currentIndex = index;
+            root.ListView.view.focus = true;
         }
     }
 
-    Keys.forwardTo: [ categoriesList, backendsList ]
-    Keys.onEscapePressed: homeScreenRootItem.emptyAreaClicked()
 }

@@ -69,7 +69,7 @@ FocusScope {
                     Text {
                         id: mediaCount
                         anchors.verticalCenter: parent.verticalCenter
-                        text: i18np("%1 item", "%1 items", playlistList.count)
+                        text: (playlist.count !== undefined) ? i18np("%1 item", "%1 items", playlistList.count) : ""
                         font.pixelSize: 18
                         color: theme.textColor
                     }

@@ -18,36 +18,43 @@
  ***************************************************************************/
 
 import QtQuick 2.1
+import QtQuick.Layouts 1.1
+
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.core 2.0 as PlasmaCore
 
-PlasmaCore.FrameSvgItem {
+import org.kde.plasma.mediacenter.components 2.0 as MediaCenterComponents
+
+MouseArea {
     id: rootItem
     property alias model: imageList.model
     property alias currentIndex: imageList.currentIndex
     property bool slideshowPaused: false
     signal imageClicked(string url)
     signal slideShowStarted
-    imagePath: "widgets/background"
-    enabledBorders: "LeftBorder|RightBorder|TopBorder"
-    opacity: 0.9
 
-    Item {
+    hoverEnabled: true
+
+    Rectangle {
+        anchors.fill: parent
+        color: "black"
+        opacity: 0.8
+    }
+    RowLayout {
         anchors.fill: parent
         PlasmaComponents.ToolButton {
             id: button1
-            height: parent.height; width: height
-            anchors { left: parent.left; top: parent.top; bottom: parent.bottom }
+            Layout.fillHeight: true
             iconSource: "arrow-left"
+            visible: false
             onClicked: rootItem.previousImage();
         }
 
         PlasmaComponents.ToolButton {
             id: slideshow
-            anchors.left: button1.right
-            height: parent.height
+            Layout.fillHeight: true
             checkable: true
-            width: height
+            visible: false
             iconSource: checked ? "pmc-pause" : "pmc-play"
             onCheckedChanged: if (checked) rootItem.slideShowStarted();
             Timer {
@@ -59,35 +66,49 @@ PlasmaCore.FrameSvgItem {
 
         }
 
-        ListView {
-            id: imageList
-            anchors { left: slideshow.right; right: button2.left; top: parent.top; bottom: parent.bottom }
+        Item {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            ListView {
+                id: imageList
+                anchors { fill: parent}
+                orientation: ListView.Horizontal
+                highlight: Item { }
+                preferredHighlightBegin: parent.width*0.4
+                preferredHighlightEnd: parent.width*0.6
+                highlightRangeMode: ListView.ApplyRange
+                highlightFollowsCurrentItem: true
+                highlightMoveDuration: 500
+                delegate: PictureStripDelegate {
+                    height: parent.height
+                    width: isExpandable ? 0 : height * 1.5
+                    onImageClicked: rootItem.imageClicked(url)
+                }
+                snapMode: ListView.SnapToItem
+                clip: true
 
-            orientation: ListView.Horizontal
-            spacing: 2
-            highlight: Item { }
-            preferredHighlightBegin: parent.width*0.4
-            preferredHighlightEnd: parent.width*0.6
-            highlightRangeMode: GridView.ApplyRange
-            highlightFollowsCurrentItem: true
-            delegate: PictureStripDelegate {
-                height: 64
-                width: isExpandable ? 0 : height
-                onImageClicked: rootItem.imageClicked(url)
+                onFlickStarted: slideshow.checked = false
             }
-            snapMode: ListView.SnapToItem
-            clip: true
-
-            onFlickStarted: slideshow.checked = false
         }
 
         PlasmaComponents.ToolButton {
             id: button2
-            height: parent.height; width: height
-            anchors { right: parent.right; top: parent.top; bottom: parent.bottom }
+            Layout.fillHeight: true
+            visible: false
+
             iconSource: "arrow-right"
             onClicked: rootItem.nextImage()
         }
+    }
+
+    MediaCenterComponents.AutoHide {
+        id: autoHide
+        inhibit: rootItem.containsMouse || imageList.horizontalVelocity!=0.0
+    }
+
+    opacity: autoHide.shouldHide ? 0.0 : 1.0
+    Behavior on opacity {
+        NumberAnimation { duration: 500 }
     }
 
     function nextImage()

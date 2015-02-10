@@ -3,6 +3,8 @@ include_directories(
     ${TAGLIB_INCLUDES}
 )
 set (plasmamediacenter_SRCS
+    modelsinbackendmodel.cpp
+    iconimageprovider.cpp
     runtimedata.cpp
     itemcache.cpp
     medialibrarywrappercache.cpp
@@ -10,9 +12,8 @@ set (plasmamediacenter_SRCS
     album.cpp
     media.cpp
     lastfmimagefetcher.cpp
-    modelmetadata.cpp
+    pmcmodel.cpp
     objectpair.cpp
-    filteredbackendsmodel.cpp
     mediacenter.cpp
     abstractbrowsingbackend.cpp
     backendsloader.cpp
@@ -46,19 +47,24 @@ add_library(plasmamediacenter SHARED
     ${plasmamediacenter_SRCS}
 )
 
-target_link_libraries(plasmamediacenter
+
+set(plasmamediacenter_link_libs
     Qt5::Core
     Qt5::Quick
     Qt5::Xml
     Qt5::DBus
-    KF5::Solid
+    KF5::I18n
+    KF5::ConfigCore
     KF5::GuiAddons
     KF5::CoreAddons
     KF5::Service
     KF5::KIOWidgets
-    KF5::WindowSystem
-    KF5::KDELibs4Support
+    KF5::WindowSystem #needed for mpris2, not used now
     ${TAGLIB_LIBRARIES}
+)
+
+target_link_libraries(plasmamediacenter
+    ${plasmamediacenter_link_libs}
 )
 
 generate_export_header(plasmamediacenter
@@ -77,13 +83,7 @@ PROPERTIES COMPILE_FLAGS  -fvisibility=default
 )
 
 target_link_libraries(plasmamediacentertest
-    Qt5::Core
-    Qt5::Quick
-    KF5::Solid
-    KF5::GuiAddons
-    KF5::CoreAddons
-    KF5::KDELibs4Support
-    ${TAGLIB_LIBRARIES}
+    ${plasmamediacenter_link_libs}
 )
 
 set_target_properties(plasmamediacenter PROPERTIES VERSION ${PROJECT_VERSION} SOVERSION ${PROJECT_VERSION_MAJOR})
@@ -93,13 +93,13 @@ install(TARGETS plasmamediacenter ${INSTALL_TARGETS_DEFAULT_ARGS})
 set (plasmamediacenter_HDRS
     abstractbrowsingbackend.h
     abstractmediasource.h
-    modelmetadata.h
     mediacenter.h
     medialibrary.h
     pmcimagecache.h
-    pmcmedia.h
     pmcalbum.h
     pmcartist.h
+    pmcmedia.h
+    pmcmodel.h
     singletonfactory.h
 )
 

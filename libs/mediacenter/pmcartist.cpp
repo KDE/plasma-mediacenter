@@ -30,6 +30,7 @@ PmcArtist::PmcArtist(const QSharedPointer< Artist >& artist, QObject* parent)
     , d(new Private())
 {
     d->artist = artist;
+    connect(d->artist.data(), &Artist::updated, this, &PmcArtist::updated);
 }
 
 
@@ -41,4 +42,9 @@ PmcArtist::~PmcArtist()
 const QString& PmcArtist::name() const
 {
     return d->artist->name();
+}
+
+int PmcArtist::mediaCount() const
+{
+    return d->artist->media().size();
 }

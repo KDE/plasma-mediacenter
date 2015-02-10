@@ -45,7 +45,7 @@ bool YoutubeBackend::expand(int row)
 bool YoutubeBackend::initImpl()
 {
     m_youtubeModel = new YoutubeModel(this);
-    m_metadata = new ModelMetadata(m_youtubeModel, this);
+    m_metadata = new PmcModel(m_youtubeModel, this);
     m_metadata->setSupportsSearch(true);
     m_videoDetailsModel = new VideoDetailsModel(this);
     if (!(m_youtubeModel && m_videoDetailsModel)) {

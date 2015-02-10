@@ -29,24 +29,9 @@ FocusScope {
     property QtObject backendOverlay
 
     signal backRequested
-    signal playRequested(int index, string url, string currentMediaType)
+    signal playRequested(int index, string url, string currentMediaType, variant model)
     signal playAllRequested()
     signal popupMenuRequested(int index, string mediaUrl, string mediaType, string display)
-
-    Component {
-        Item {
-            property QtObject child
-            property bool enabled
-
-            clip: true
-
-            Behavior on width {
-                NumberAnimation {
-                    duration: 500
-                }
-            }
-        }
-    }
 
     Item {
         id: mediaBrowserViewItem
@@ -55,38 +40,20 @@ FocusScope {
         anchors {
             fill: parent
         }
-
-        BrowserToolbar {
-            id: browserToolbar
-            anchors {
-                top: parent.top; right: parent.right; left: parent.left;
-            }
-            height: 40
-            buttons: currentBrowsingBackend ? currentBrowsingBackend.buttons : undefined
-            onButtonClicked: {
-                if (buttonName === i18n("Play All")) {
-                    mediaBrowser.playAllRequested();
-                } else {
-                    currentBrowsingBackend.handleButtonClick(buttonName);
-                }
-            }
-            Keys.onDownPressed: mediaBrowserViewItem.mediaBrowserGridView.focus = true
-        }
     }
 
     Component {
         id: mediaBrowserSmartBrowserComponent
-        MediaCenterComponents.SmartBrowser {
+        MediaCenterComponents.CategoriesBrowser {
             anchors {
                 bottom: parent.bottom; right: parent.right; left: parent.left;
-                top: browserToolbar.visible ? browserToolbar.bottom : parent.top
-                bottomMargin: 10 + bottomPanel.height
-            }
-            topSibling: browserToolbar.visible ? browserToolbar : null
+                top: parent.top
+	        }
+            focus: true
             backend: mediaBrowser.currentBrowsingBackend
             models: mediaBrowser.currentBrowsingBackend.models
 
-            onMediaSelected: mediaBrowser.playRequested(index, url, mediaType)
+            onMediaSelected: mediaBrowser.playRequested(index, url, mediaType, model)
             onPopupRequested: mediaBrowser.popupMenuRequested(index, url, mediaType, title)
         }
     }
@@ -100,30 +67,15 @@ FocusScope {
         if (mediaBrowserViewItem.mediaBrowserGridView) {
             mediaBrowserViewItem.mediaBrowserGridView.destroy();
         }
-        //Check if there is a custom browser, if yes, load that
-        var object;
-        if (currentBrowsingBackend.mediaBrowserOverride()) {
-            var qmlSource = currentBrowsingBackend.mediaBrowserOverride();
-            object = Qt.createQmlObject(qmlSource, mediaBrowserViewItem);
-            object.backend = (function() { return currentBrowsingBackend; });
-        } else {
-            object = mediaBrowserSmartBrowserComponent.createObject(mediaBrowserViewItem);
-        }
+
+        var object = mediaBrowserSmartBrowserComponent.createObject(mediaBrowserViewItem);
 
         mediaBrowserViewItem.mediaBrowserGridView = object;
         object.focus = true;
 
         if (currentBrowsingBackend) {
             currentBrowsingBackend.error.connect(errorLabel.setError);
-            currentBrowsingBackend.modelNeedsAttention.connect(switchToModel);
             currentBrowsingBackend.showCustomUi.connect(showCustomUi);
-        }
-    }
-
-    function switchToModel(model)
-    {
-        if (mediaBrowserViewItem.mediaBrowserGridView.switchToModel) {
-            mediaBrowserViewItem.mediaBrowserGridView.switchToModel(model);
         }
     }
 
@@ -138,35 +90,10 @@ FocusScope {
             mediaBrowserViewItem.mediaBrowserGridView.model = (function() { return currentBrowsingBackend.models[0]; });
     }
 
-    Item {
-        id: bottomPanel
-        width: parent.width
-        height: 30
-        anchors {
-            left: parent.left
-            bottom: parent.bottom
-            right: parent.right
-            margins: 10
-        }
-
-        PlasmaComponents.Label {
-            id: mediaCountLabel
-            text: mediaBrowserViewItem.mediaBrowserGridView ? i18np("%1 item", "%1 items", mediaBrowserViewItem.mediaBrowserGridView.count) : ""
-            visible: mediaBrowserViewItem.mediaBrowserGridView ? (mediaBrowserViewItem.mediaBrowserGridView.count != undefined) : false
-
-            anchors {
-                bottom: parent.bottom
-                top: parent.top
-                right: parent.right
-                margins: 10
-            }
-        }
-    }
-
     PlasmaComponents.Label {
         id: errorLabel
         anchors.centerIn: parent
-        font.pointSize: 18
+        font.pointSize: fontSizes.large
         z: 2
 
         function setError(message)

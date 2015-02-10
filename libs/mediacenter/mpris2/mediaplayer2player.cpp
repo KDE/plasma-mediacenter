@@ -33,8 +33,7 @@ static const double MIN_RATE = 0.0;
 MediaPlayer2Player::MediaPlayer2Player(QObject* parent)
     : QDBusAbstractAdaptor(parent),
       m_rate(0),
-      m_paused(false),
-      m_stopped(true)
+      m_status(RuntimeData::PmcStatus::Stopped)
 {
 }
 
@@ -44,9 +43,9 @@ MediaPlayer2Player::~MediaPlayer2Player()
 
 QString MediaPlayer2Player::PlaybackStatus() const
 {
-    if (stopped()) {
+    if (m_status == RuntimeData::PmcStatus::Stopped) {
         return QLatin1String("Stopped");
-    } else if (paused()) {
+    } else if (m_status == RuntimeData::PmcStatus::Paused) {
         return QLatin1String("Paused");
     } else
         return QLatin1String("Playing");
@@ -79,40 +78,14 @@ bool MediaPlayer2Player::CanPause() const
 
 void MediaPlayer2Player::Pause() const
 {
-    emit pause();
+    if (m_status == RuntimeData::PmcStatus::Playing) {
+        emit playPause();
+    }
 }
 
 void MediaPlayer2Player::PlayPause()
 {
     emit playPause();
-}
-
-int MediaPlayer2Player::stopped() const
-{
-    return m_stopped;
-}
-
-void MediaPlayer2Player::setStopped(int newVal)
-{
-    if (mediaPlayerPresent()) {
-        m_stopped = newVal;
-
-        signalPropertiesChange("PlaybackStatus", PlaybackStatus());
-    }
-}
-
-int MediaPlayer2Player::paused() const
-{
-    return m_paused;
-}
-
-void MediaPlayer2Player::setPaused(int newVal)
-{
-    if (mediaPlayerPresent()) {
-        m_paused = newVal;
-
-        signalPropertiesChange("PlaybackStatus", PlaybackStatus());
-    }
 }
 
 void MediaPlayer2Player::Stop() const
@@ -127,7 +100,9 @@ bool MediaPlayer2Player::CanPlay() const
 
 void MediaPlayer2Player::Play() const
 {
-    emit play();
+    if (m_status != RuntimeData::PmcStatus::Playing) {
+        emit playPause();
+    }
 }
 
 double MediaPlayer2Player::Volume() const
@@ -199,8 +174,8 @@ bool MediaPlayer2Player::CanControl() const
 void MediaPlayer2Player::Seek(qlonglong Offset) const
 {
     if (mediaPlayerPresent()) {
-        //The seekBy function (to which this signal is linked to) accepts offset in seconds
-        int offset = Offset/1000000;
+        //The seekTo function (to which this signal is linked to) accepts offset in milliseconds
+        int offset = Offset/1000;
         emit seek(offset);
     }
 }
@@ -213,7 +188,7 @@ void MediaPlayer2Player::emitSeeked(int pos)
 void MediaPlayer2Player::SetPosition(const QDBusObjectPath& trackId, qlonglong pos)
 {
     if (trackId.path() == static_cast<Mpris2*>(parent())->getCurrentTrackId()) {
-        seek((pos - Position())/1000000);
+        emit seek((pos - Position())/1000);
     }
 }
 
@@ -225,22 +200,33 @@ void MediaPlayer2Player::OpenUri(QString uri) const
     }
 }
 
-QUrl MediaPlayer2Player::currentTrack() const
+QString MediaPlayer2Player::currentTrack() const
 {
     return m_currentTrack;
 }
 
-void MediaPlayer2Player::setCurrentTrack(QUrl newTrack)
+void MediaPlayer2Player::setCurrentTrack(QString newTrack)
 {
     m_currentTrack = newTrack;
-    m_metadata = static_cast<Mpris2*>(parent())->getMetadataOf(m_currentTrack.toString());
+    m_metadata = static_cast<Mpris2*>(parent())->getMetadataOf(m_currentTrack);
 
     signalPropertiesChange("Metadata", Metadata());
+}
+
+void MediaPlayer2Player::setPmcStatus(RuntimeData::PmcStatus status)
+{
+    m_status = status;
+    signalPropertiesChange("PlaybackStatus", PlaybackStatus());
 }
 
 int MediaPlayer2Player::mediaPlayerPresent() const
 {
     return m_mediaPlayerPresent;
+}
+
+RuntimeData::PmcStatus MediaPlayer2Player::pmcStatus() const
+{
+    return m_status;
 }
 
 void MediaPlayer2Player::setMediaPlayerPresent(int status)

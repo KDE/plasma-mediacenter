@@ -37,7 +37,7 @@ FocusScope {
             color: theme.textColor
             width: parent.width
             wrapMode: Text.Wrap
-            font.pointSize: 12
+            font.pointSize: fontSizes.medium
             text: i18n ("Enter your Google credentials and browse through your picasa albums")
         }
 
@@ -120,7 +120,7 @@ FocusScope {
             id: loginFailedText
             anchors.top: margin3.bottom
             width: parent.width
-            font.pointSize: 12
+            font.pointSize: fontSizes.medium
             wrapMode: Text.Wrap
             text: i18n("Incorrect Username or Password")
             color: "red"

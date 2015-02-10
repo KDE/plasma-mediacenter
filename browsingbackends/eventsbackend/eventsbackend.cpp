@@ -22,7 +22,8 @@
 #include "eventsmodel.h"
 
 #include <mediacenter/filtermediamodel.h>
-#include <mediacenter/modelmetadata.h>
+
+#include <mediacenter/pmcmodel.h>
 #include <KLocalizedString>
 
 #include <QTimer>
@@ -45,7 +46,7 @@ EventsBackend::EventsBackend(QObject* parent, const QVariantList& args)
 bool EventsBackend::initImpl()
 {
     m_eventsModel = new EventsModel(this);
-    m_eventsModelMetadata = new ModelMetadata(m_eventsModel, this);
+    m_eventsPmcModel = new PmcModel(m_eventsModel, this);
 
     m_eventsPicturesModel = new EventsPicturesModel(this);
 
@@ -53,9 +54,9 @@ bool EventsBackend::initImpl()
     m_eventsFilterModel->setSourceModel(m_eventsPicturesModel);
     m_eventsFilterModel->setSortRole(MediaCenter::CreatedAtRole);
     m_eventsFilterModel->sort(0, Qt::DescendingOrder);
-    m_eventsFilterModelMetadata = new ModelMetadata(m_eventsFilterModel, this);
+    m_eventsFilterPmcModel = new PmcModel(m_eventsFilterModel, this);
 
-    setModel(m_eventsModelMetadata);
+    setModel(m_eventsPmcModel);
     setButtons(QStringList() << s_addEventButton);
     return true;
 }
@@ -112,7 +113,7 @@ bool EventsBackend::expand(int row)
 
     auto dateRange = m_eventsModel->dateRangeForEvent(eventName);
     m_eventsFilterModel->setDateRange(eventName, dateRange.first, dateRange.second);
-    setModel(m_eventsFilterModelMetadata);
+    setModel(m_eventsFilterPmcModel);
 
     setButtons(QStringList() << s_editEventButton << s_deleteEventButton);
 
@@ -125,7 +126,7 @@ bool EventsBackend::goOneLevelUp()
         return false;
     }
 
-    setModel(m_eventsModelMetadata);
+    setModel(m_eventsPmcModel);
     setButtons(QStringList() << s_addEventButton);
     return true;
 }

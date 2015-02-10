@@ -35,6 +35,10 @@ public:
     virtual ~PmcArtist();
 
     const QString& name() const;
+    int mediaCount() const;
+
+signals:
+    void updated();
 
 private:
     class Private;

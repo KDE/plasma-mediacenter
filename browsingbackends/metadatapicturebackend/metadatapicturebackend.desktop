@@ -1,8 +1,7 @@
 [Desktop Entry]
 Type=Service
 Icon=image-x-generic
-Name=All pictures
-Name[ar]=كلّ الصّور
+Name=Pictures
 Name[bs]=Slike
 Name[ca]=Totes les imatges
 Name[ca@valencia]=Totes les imatges
@@ -35,7 +34,6 @@ Name[x-test]=xxAll picturesxx
 Name[zh_CN]=所有图片
 Name[zh_TW]=所有圖片
 Comment=See the pictures on your device
-Comment[ar]=طالع الصّور في جهازك
 Comment[bs]=Gledaj slike na svom uređaju
 Comment[ca]=Mostra les imatges en el dispositiu
 Comment[ca@valencia]=Mostra les imatges en el dispositiu
@@ -52,7 +50,6 @@ Comment[gl]=Vexa as imaxes no seu dispositivo
 Comment[hu]=Képek megtekintése az eszközén
 Comment[id]=Lihat gambar pada perangkat anda
 Comment[it]=Guarda le immagini sul tuo dispositivo
-Comment[lt]=Žiūrėti paveikslėlius Jūsų įrenginyje
 Comment[lv]=Skatīt attēlus jūsu ierīcē
 Comment[nl]=Zie de beelden op uw apparaat
 Comment[pl]=Oglądaj zdjęcia ze swojego urządzenia
