@@ -2,6 +2,12 @@
 Type=Service
 Icon=image-x-generic
 Name=Pictures
+Name[nl]=Afbeeldingen
+Name[pt]=Imagens
+Name[sk]=Obrázky
+Name[sv]=Bilder
+Name[uk]=Зображення
+Name[x-test]=xxPicturesxx
 Comment=See the pictures on your device
 Comment[ar]=طالع الصّور في جهازك
 Comment[bs]=Gledaj slike na svom uređaju

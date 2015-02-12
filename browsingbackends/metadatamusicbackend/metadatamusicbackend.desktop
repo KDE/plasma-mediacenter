@@ -2,6 +2,12 @@
 Type=Service
 Icon=tools-rip-audio-cd
 Name=Music
+Name[nl]=Muziek
+Name[pt]=Música
+Name[sk]=Hudba
+Name[sv]=Musik
+Name[uk]=Музика
+Name[x-test]=xxMusicxx
 Comment=Listen to the music on your device
 Comment[ar]=استمع إلى الموسيقى في جهازك
 Comment[bs]=Slušaj muziku na svom uređaju
