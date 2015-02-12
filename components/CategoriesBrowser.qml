@@ -84,6 +84,12 @@ FocusScope {
                         Behavior on Layout.preferredHeight {
                             NumberAnimation { duration: 300 }
                         }
+                        Keys.onPressed: {
+                            if (event.key == Qt.Key_Left) {
+                                categoriesBar.focus = true;
+                                event.accepted = true;
+                            }
+                        }
                     }
                 }
             }
