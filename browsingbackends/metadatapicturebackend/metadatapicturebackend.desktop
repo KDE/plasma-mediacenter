@@ -2,7 +2,10 @@
 Type=Service
 Icon=image-x-generic
 Name=Pictures
+Name[ca]=Imatges
+Name[cs]=Obrázky
 Name[nl]=Afbeeldingen
+Name[pl]=Zdjęcia
 Name[pt]=Imagens
 Name[pt_BR]=Imagens
 Name[sk]=Obrázky

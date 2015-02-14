@@ -2,7 +2,10 @@
 Type=Service
 Icon=tools-rip-audio-cd
 Name=Music
+Name[ca]=Música
+Name[cs]=Hudba
 Name[nl]=Muziek
+Name[pl]=Muzyka
 Name[pt]=Música
 Name[pt_BR]=Músicas
 Name[sk]=Hudba
