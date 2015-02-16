@@ -97,7 +97,6 @@ bool FilesystemSearchMediaSource::checkAndAddFile(const QFileInfo& fileInfo)
 void FilesystemSearchMediaSource::addFile(const QFileInfo& fileInfo,
                                           const QString &type)
 {
-    qDebug() << "Adding " << type << fileInfo.fileName();
     QHash<int, QVariant> values;
 
     values.insert(Qt::DisplayRole, fileInfo.fileName());
