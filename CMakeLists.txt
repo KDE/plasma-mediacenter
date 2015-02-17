@@ -55,6 +55,13 @@ include_directories(
     libs/
 )
 
+# if plasma-workspace is installed in different prefix then pmc then it will not work
+# TODO: figure out proper solution
+configure_file(plasma-mediacenter.desktop.cmake ${CMAKE_CURRENT_BINARY_DIR}/plasma-mediacenter.desktop)
+install(FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/plasma-mediacenter.desktop
+        DESTINATION ${DATA_INSTALL_DIR}/xsessions
+)
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE_ENABLE_EXCEPTIONS}")
 set(CMAKE_AUTOMOC ON)
 
