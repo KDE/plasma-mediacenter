@@ -60,66 +60,6 @@ static GUPnPServiceProxy* getContentDir(GUPnPDeviceProxy *proxy)
     return GUPNP_SERVICE_PROXY(contentDir);
 }
 
-static void appendDidlObject(GUPnPDIDLLiteObject *object,
-                             BrowseData          *browseData,
-                             const char*         udn)
-{
-    Q_UNUSED(udn);
-    QString id, title, parentId;
-    bool isContainer;
-    id = gupnp_didl_lite_object_get_id (object);
-    title = gupnp_didl_lite_object_get_title (object);
-    parentId = gupnp_didl_lite_object_get_parent_id (object);
-
-    if (id.isEmpty() || title.isEmpty() || parentId.isEmpty()) {
-        return;
-    }
-
-    isContainer = GUPNP_IS_DIDL_LITE_CONTAINER (object);
-
-    if (isContainer) {
-        if (strcmp(browseData->id, "0") == 0) {
-            #ifdef UPNP_DEBUG
-            qDebug() << "Root Container!";
-            #endif
-        }
-        browse(browseData->contentDir, id.toLocal8Bit(), 0, MAX_BROWSE);
-    }
-    else {
-        QString artist, album, albumArtist;
-        artist = gupnp_didl_lite_object_get_artist (object);
-        album = gupnp_didl_lite_object_get_album (object);
-        albumArtist = gupnp_didl_lite_object_get_author(object);
-//         ToDo : Get duration property of media
-        QString xmlContent((char *)xmlNodeGetContent(gupnp_didl_lite_object_get_xml_node(object)));
-//         ToDo : Dirty Hack, correct it :p
-        QString url("http://" + xmlContent.split("http://")[1]);
-        QHash<int, QString> properties;
-        properties.insert(0, url);
-        properties.insert(1, title);
-//         properties.insert(2, duration);
-        properties.insert(3, artist);
-        properties.insert(4, album);
-        properties.insert(5, albumArtist);
-        UPnPMediaSource::addMedia(properties);
-    }
-}
-
-static void onDidlObjectAvailable(GUPnPDIDLLiteParser *parser,
-                                  GUPnPDIDLLiteObject *object,
-                                  gpointer             userData)
-{
-    Q_UNUSED(parser);
-    BrowseData *browseData;
-    const char *udn;
-
-    browseData = (BrowseData *)userData;
-    udn = gupnp_service_info_get_udn(GUPNP_SERVICE_INFO(browseData->contentDir));
-    appendDidlObject(object,
-                     browseData,
-                     udn);
-}
-
 static void browseCallBack(GUPnPServiceProxy       *contentDir,
                            GUPnPServiceProxyAction *action,
                            gpointer                 userData)
@@ -147,49 +87,56 @@ static void browseCallBack(GUPnPServiceProxy       *contentDir,
                                    G_TYPE_UINT,
                                    &totalMatches,
                                    NULL);
-
     if (didlXml) {
-        GUPnPDIDLLiteParser *parser;
         gint32 remaining;
         gint32 batchSize;
-        GError *error;
 
-        error = NULL;
-        parser = gupnp_didl_lite_parser_new();
-
-        g_signal_connect(parser,
-                         "object-available",
-                         G_CALLBACK (onDidlObjectAvailable),
-                         data);
-
-        /* Only try to parse DIDL if server claims that there is result */
         if (numberReturned > 0) {
-            if (!gupnp_didl_lite_parser_parse_didl(parser,
-                                                   didlXml,
-                                                   &error)) {
-                g_warning ("Error while browsing %s: %s",
-                           data->id,
-                           error->message);
-                g_error_free (error);
+            QDomElement docElem;
+            QDomDocument xmlDoc;
+            xmlDoc.setContent(QByteArray(didlXml));
+            docElem=xmlDoc.documentElement();
+            QDomNodeList itemList = docElem.elementsByTagName("item");
+            QString artist, album, albumArtist, title, mediaType, duration, url, protocolInfo, mimeType;
+
+            for (int i = 0; i < itemList.count(); i++) {
+                QDomElement item = itemList.at(i).toElement();
+                title = item.elementsByTagName("dc:title").at(0).toElement().text();
+                artist = item.elementsByTagName("upnp:artist").at(0).toElement().text();
+                album = item.elementsByTagName("upnp:album").at(0).toElement().text();
+                protocolInfo= item.elementsByTagName("res").at(0).toElement().attribute("protocolInfo");
+                duration = item.elementsByTagName("res").at(0).toElement().attribute("duration");
+                url = item.elementsByTagName("res").at(0).toElement().text();
+                mimeType = protocolInfo.split(":").at(2);
+
+                QHash<int, QString> properties;
+                properties.insert(MediaCenter::MediaUrlRole, url);
+                properties.insert(Qt::DisplayRole, title);
+                properties.insert(MediaCenter::DurationRole, duration);
+                properties.insert(MediaCenter::ArtistRole, artist);
+                properties.insert(MediaCenter::AlbumRole, album);
+                properties.insert(MediaCenter::AlbumArtistRole, albumArtist);
+                properties.insert(MediaCenter::MimeTypeRole, mimeType);
+                UPnPMediaSource::addMedia(properties);
+            }
+            QDomNodeList containerList  = docElem.elementsByTagName("container");
+            for (int i = 0; i < containerList.count(); i++) {
+                QDomElement container = containerList.at(i).toElement();
+                char* id = container.attribute("id").toLatin1().data();
+                browse(contentDir, id, 0, MAX_BROWSE);
             }
         }
-        g_object_unref(parser);
         g_free(didlXml);
-
         data->startingIndex += numberReturned;
-
-        /* See if we have more objects to get */
         remaining = totalMatches - data->startingIndex;
-
-        /* Keep browsing till we get each and every object */
         if ((remaining > 0 || totalMatches == 0) && numberReturned != 0) {
             if (remaining > 0) {
                 batchSize = MIN(remaining, MAX_BROWSE);
             }
-            else{
+            else {
                 batchSize = MAX_BROWSE;
             }
-            browse(contentDir,
+            browse(data->contentDir,
                    data->id,
                    data->startingIndex,
                    batchSize);
@@ -248,7 +195,6 @@ static void browse(GUPnPServiceProxy *contentDir,
 
 static void appendMediaServer(GUPnPDeviceProxy *proxy)
 {
-
     GUPnPDeviceInfo *info;
     GUPnPServiceProxy *contentDir;
     QString friendlyName;
@@ -363,7 +309,6 @@ void UPnPMediaSource::run()
 
 void UPnPMediaSource::addMedia(QHash<int, QString> properties)
 {
-    qDebug() << "Adding Media";
     MediaLibrary *mediaLibrary = SingletonFactory::instanceFor<MediaLibrary>();
     MediaHandler *mediaHandler = new MediaHandler(mediaLibrary, 0);
     mediaHandler->handleResult(properties);

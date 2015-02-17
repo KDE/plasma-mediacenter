@@ -43,6 +43,7 @@ enum AdditionalMediaRoles {
     GenreRole,
     MediaCountRole,
     RatingRole,
+    MimeTypeRole,
     AdditionalRoles     //If additional roles are needed to be defined
 };
 
