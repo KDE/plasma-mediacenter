@@ -41,7 +41,7 @@ namespace {
 }
 
 MetadataMusicBackend::MetadataMusicBackend(QObject* parent, const QVariantList& args)
-    : AbstractMetadataBackend(parent, args)
+    : AbstractBrowsingBackend(parent, args)
     , m_artistsModel(0)
     , m_albumsModel(0)
     , m_musicModel(0)
@@ -55,7 +55,6 @@ MetadataMusicBackend::~MetadataMusicBackend()
 
 bool MetadataMusicBackend::initImpl()
 {
-    AbstractMetadataBackend::initImpl();
     m_albumsModel = new PmcMetadataModel(this);
     m_artistsModel = new PmcMetadataModel(this);
     m_musicModel = new PmcMetadataModel(this);

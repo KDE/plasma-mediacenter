@@ -49,14 +49,6 @@ FocusScope {
         highlightFollowsCurrentItem: true
         spacing: units.smallSpacing
         boundsBehavior: Flickable.StopAtBounds
-//         header: Common.LabelOverlay {
-//             height: text == "" ? 0 : 64; width: height ? listView.width : 0
-//
-//             text: modelMetadata.headerText && modelMetadata.headerText != "" ?
-//                     modelMetadata.headerText : ""
-//             visible: text != ""
-//             horizontalAlignment: Text.AlignLeft
-//         }
 
         delegate: Common.MediaItemDelegate {
             horizontal: true
@@ -77,50 +69,5 @@ FocusScope {
             flickableItem: listView
         }
 
-        PlasmaComponents.BusyIndicator {
-            anchors { bottom: parent.bottom; horizontalCenter: parent.horizontalCenter }
-            running: listBrowserRoot.currentBrowsingBackend ? listBrowserRoot.currentBrowsingBackend.busy : false
-            visible: running
-        }
-
-        onCurrentIndexChanged: positionViewAtIndex(currentIndex, GridView.Contain)
-
-/*        Keys.onPressed: {
-            if (event.key == Qt.Key_Down && currentIndex == (count-1) && listBrowserRoot.bottomSibling) {
-                listBrowserRoot.bottomSibling.focus = true;
-                event.accepted = true;
-            } else if (event.key == Qt.Key_Up && currentIndex == 0) {
-                if (searchField.visible) {
-                    searchField.focus = true;
-                } else if (listBrowserRoot.topSibling) {
-                    listBrowserRoot.topSibling.focus = true;
-                }
-                event.accepted = true;
-            } else if (event.key != Qt.Key_Escape && event.text && searchField.visible) {
-                searchField.focus = true;
-                searchField.text = event.text;
-            } else if (event.key == Qt.Key_Escape && currentIndex) {
-                currentIndex = 0;
-                event.accepted = true;
-            } else if (event.key == Qt.Key_Right) {
-		//This button will take to Albums.
-                var buttons = listBrowserRoot.topSibling.buttons;
-                if (buttons) {
-                    listBrowserRoot.topSibling.focus = true;
-                    var tabButton = listBrowserRoot.topSibling.buttons.get(1).button;
-                    tabButton.clicked();
-                    event.accepted = true;
-		}
-            } else if (event.key == Qt.Key_Left) {
-		//This button will take to Artists.
-                var buttons = listBrowserRoot.topSibling.buttons;
-                if (buttons) {
-                    listBrowserRoot.topSibling.focus = true;
-                    var tabButton = listBrowserRoot.topSibling.buttons.get(2).button;
-                    tabButton.clicked();
-                    event.accepted = true;
-		}
-            }
-        }*/
     }
 }

@@ -58,7 +58,6 @@ FocusScope {
             topMargin: units.smallSpacing * 2
             bottomMargin: units.smallSpacing * 3
         }
-        onCountChanged: currentIndex = -1
         clip: true
         cellWidth: cellHeight*2
         cellHeight: units.iconSizes.enormous
@@ -66,7 +65,6 @@ FocusScope {
             width: GridView.view.cellWidth
             height: GridView.view.cellHeight
             clip: !GridView.isCurrentItem
-            z: GridView.isCurrentItem ? 1 : 0
             view: gridBrowserGridView
             horizontal: false
 
@@ -81,31 +79,8 @@ FocusScope {
         cacheBuffer: width*2
         focus: true
 
-        PlasmaComponents.BusyIndicator {
-            anchors { bottom: parent.bottom; horizontalCenter: parent.horizontalCenter }
-            running: (gridBrowserRoot.currentBrowsingBackend && gridBrowserRoot.currentBrowsingBackend.busy) ? true : false
-            visible: running
-        }
-
-        onCurrentIndexChanged: positionViewAtIndex(currentIndex, GridView.Contain)
-
-/*        Keys.onPressed: {
-            if (event.key == Qt.Key_Down && currentIndex%2 && gridBrowserRoot.bottomSibling) {
-                gridBrowserRoot.bottomSibling.focus = true;
-                event.accepted = true;
-            } else if (event.key == Qt.Key_Up && currentIndex%2 == 0) {
-                if (searchField.visible) {
-                    searchField.focus = true;
-                } else if (gridBrowserRoot.topSibling) {
-                    gridBrowserRoot.topSibling.focus = true;
-                }
-                event.accepted = true;
-            } else if (event.key != Qt.Key_Escape && event.text && searchField.visible) {
-                searchField.focus = true;
-                searchField.text = event.text;
-            }
-        }*/
     }
+
     PlasmaComponents.ScrollBar {
         anchors {
             top: gridBrowserGridView.bottom

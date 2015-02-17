@@ -21,13 +21,13 @@
 #ifndef METADATAMUSICBACKEND_H
 #define METADATAMUSICBACKEND_H
 
-#include "../abstractmetadatabackend.h"
+#include "mediacenter/abstractbrowsingbackend.h"
 
 class FilterMediaModel;
 class PmcMetadataModel;
 class PmcModel;
 
-class MetadataMusicBackend : public AbstractMetadataBackend
+class MetadataMusicBackend : public MediaCenter::AbstractBrowsingBackend
 {
     Q_OBJECT
     Q_PROPERTY(QString artistFilter READ artistFilter NOTIFY artistFilterChanged)

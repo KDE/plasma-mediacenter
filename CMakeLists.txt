@@ -5,6 +5,9 @@ cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 set(QT_MIN_VERSION "5.3.0")
 set (KF5_MIN_VERSION "5.5.0")
 
+set(PROJECT_VERSION "2.0.0")
+set(PROJECT_VERSION_MAJOR "2")
+
 find_package(ECM 0.0.8 REQUIRED NO_MODULE)
 include(FeatureSummary)
 include(WriteBasicConfigVersionFile)
@@ -52,6 +55,15 @@ include_directories(
     libs/
 )
 
+# if plasma-workspace is installed in different prefix then pmc then it will not work
+
+set(STARTKDE_BINARY_DIR ${CMAKE_INSTALL_FULL_BINDIR})
+
+configure_file(plasma-mediacenter.desktop.cmake ${CMAKE_CURRENT_BINARY_DIR}/plasma-mediacenter.desktop)
+install(FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/plasma-mediacenter.desktop
+        DESTINATION ${DATA_INSTALL_DIR}/xsessions
+)
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE_ENABLE_EXCEPTIONS}")
 set(CMAKE_AUTOMOC ON)
 

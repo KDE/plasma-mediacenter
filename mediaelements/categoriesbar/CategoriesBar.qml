@@ -23,4 +23,9 @@ Rectangle {
         focus: true
     }
 
+    onActiveFocusChanged: {
+        if(activeFocus) {
+            categoriesList.focus = true;
+        }
+    }
 }

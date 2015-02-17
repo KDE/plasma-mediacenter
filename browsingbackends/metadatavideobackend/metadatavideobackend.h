@@ -21,9 +21,9 @@
 #ifndef METADATAVIDEOBACKEND_H
 #define METADATAVIDEOBACKEND_H
 
-#include "../abstractmetadatabackend.h"
+#include "mediacenter/abstractbrowsingbackend.h"
 
-class MetadataVideoBackend : public AbstractMetadataBackend
+class MetadataVideoBackend : public MediaCenter::AbstractBrowsingBackend
 {
     Q_OBJECT
 public:

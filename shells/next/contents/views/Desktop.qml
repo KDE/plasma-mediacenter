@@ -1,6 +1,7 @@
 /*
  *  Copyright 2012 Marco Martin <mart@kde.org>
  *  Copyright 2014 David Edmundson <davidedmundson@kde.org>
+ *  Copyright 2014-2015 Bhushan Shah <bshah@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -298,8 +299,11 @@ Item {
             if (!backendObject.init())
                 return;
             getPmcInterface().currentBrowsingBackend = backendObject;
-            pmcPageStack.pushAndFocus(getMediaBrowser());
+            if (pmcPageStack.currentPage !== getMediaBrowser())
+                pmcPageStack.push(getMediaBrowser());
         }
+
+        KeyNavigation.right: pmcPageStack.currentPage
 
         Behavior on width {
             NumberAnimation { duration: 300 }

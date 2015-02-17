@@ -12,4 +12,3 @@ target_link_libraries(pmc_filesystemsearch
 kcoreaddons_desktop_to_json(pmc_filesystemsearch filesystemsearch.desktop)
 
 install(TARGETS pmc_filesystemsearch DESTINATION ${PLUGIN_INSTALL_DIR}/plasma/mediacenter/mediasources)
-install(FILES filesystemsearch.desktop DESTINATION ${SERVICES_INSTALL_DIR})

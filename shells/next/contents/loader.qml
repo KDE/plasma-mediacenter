@@ -27,7 +27,8 @@ Item {
 
     property string shell  : "org.kde.plasma.mediacenter"
     property bool willing  : true
-    property int  priority : 1
+    property int  priority : currentSession == "plasma-mediacenter" ? 0 : 1
+    property string currentSession
 
     // This is not needed, but allows the
     // handler to know whether its shell is loaded

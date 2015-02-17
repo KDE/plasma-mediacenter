@@ -21,11 +21,11 @@
 #include <mediacenter/medialibrary.h>
 #include <mediacenter/mediacenter.h>
 
-#include <KMimeType>
-
 #include <QUrl>
 #include <QDir>
 #include <QDebug>
+#include <QMimeType>
+#include <QMimeDatabase>
 
 MEDIACENTER_EXPORT_MEDIASOURCE(FilesystemSearchMediaSource, "filesystemsearch.json")
 
@@ -82,9 +82,8 @@ void FilesystemSearchMediaSource::stop()
 
 bool FilesystemSearchMediaSource::checkAndAddFile(const QFileInfo& fileInfo)
 {
-    const QString mimeType = KMimeType::findByUrl(
-        QUrl::fromLocalFile(fileInfo.absoluteFilePath()))->name();
-
+    QMimeDatabase db;
+    const QString mimeType = db.mimeTypeForFile(fileInfo).name();
     const QString topLevelTypeName = mimeType.split('/').at(0);
 
     if (!topLevelTypeName.isEmpty() && m_allowedMimes.contains(topLevelTypeName)) {
@@ -98,7 +97,6 @@ bool FilesystemSearchMediaSource::checkAndAddFile(const QFileInfo& fileInfo)
 void FilesystemSearchMediaSource::addFile(const QFileInfo& fileInfo,
                                           const QString &type)
 {
-    qDebug() << "Adding " << type << fileInfo.fileName();
     QHash<int, QVariant> values;
 
     values.insert(Qt::DisplayRole, fileInfo.fileName());
