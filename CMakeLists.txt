@@ -56,7 +56,9 @@ include_directories(
 )
 
 # if plasma-workspace is installed in different prefix then pmc then it will not work
-# TODO: figure out proper solution
+
+set(STARTKDE_BINARY_DIR ${CMAKE_INSTALL_FULL_BINDIR})
+
 configure_file(plasma-mediacenter.desktop.cmake ${CMAKE_CURRENT_BINARY_DIR}/plasma-mediacenter.desktop)
 install(FILES
         ${CMAKE_CURRENT_BINARY_DIR}/plasma-mediacenter.desktop
