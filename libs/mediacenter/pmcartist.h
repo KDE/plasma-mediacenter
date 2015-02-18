@@ -37,9 +37,6 @@ public:
     const QString& name() const;
     int mediaCount() const;
 
-signals:
-    void updated();
-
 private:
     class Private;
     Private * const d;

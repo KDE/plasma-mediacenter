@@ -203,24 +203,24 @@ bool MediaLibrary::extractAndSaveAlbumInfo(
     QSharedPointer<Media> &media)
 {
     QString albumName = request.second.value(MediaCenter::AlbumRole).toString();
-    QString albumArtistName = request.second.value(MediaCenter::AlbumArtistRole).toString();
+    QString artistName = request.second.value(MediaCenter::ArtistRole).toString();
 
     if (albumName.isEmpty()){
         albumName = "Unknown Album";
     }
-    if (albumArtistName.isEmpty()) {
+    if (artistName.isEmpty()) {
         if(!media->artist().isNull()) {
-            albumArtistName = media->artist()->name();
+            artistName = media->artist()->name();
         } else {
-            albumArtistName = "Unknown Artist";
+            artistName = "Unknown Artist";
         }
     }
     if (!media->album().isNull() && media->album()->name() == albumName
-        && media->album()->albumArtist() == albumArtistName) {
+        && media->album()->albumArtist() == artistName) {
         return false;
     }
 
-    QSharedPointer<Album> album = d->itemCache.getAlbumByName(albumName, albumArtistName);
+    QSharedPointer<Album> album = d->itemCache.getAlbumByName(albumName, artistName);
 
     media->setAlbumAndUpdateRelations(media, album);
     return true;

@@ -22,8 +22,8 @@
 
 #include "artist.h"
 
-Album::Album(const QString& name, const QSharedPointer<Artist>& albumArtist)
-    : m_albumArtist(albumArtist)
+Album::Album(const QString& name, const QSharedPointer<Artist>& artist)
+    : m_artist(artist)
     , m_name(name)
 {
 }
@@ -35,19 +35,17 @@ const QString& Album::name() const
 
 QString Album::albumArtist() const
 {
-    return m_albumArtist->name();
+    return m_artist->name();
 }
 
 void Album::addMedia(const QSharedPointer<Media>& media)
 {
     m_media.append(media);
-    emit updated();
 }
 
 void Album::removeMedia(const QSharedPointer<Media>& media)
 {
     m_media.removeOne(media);
-    emit updated();
 }
 
 QList< QSharedPointer<Media> > Album::media() const
