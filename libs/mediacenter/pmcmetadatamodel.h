@@ -85,6 +85,7 @@ private:
     template <class T> void handleNewAlbumsOrArtists(const QList< QSharedPointer< T > > &mediaData);
     QVariant getAlbumArt(const QString& albumName, const QString& albumArtist, const QString& resourceId) const;
     QVariant getArtistImage(const QString& artistName, const QString& resourceId) const;
+    template <class T> void albumOrArtistUpdated(const T* albumOrArtist);
 };
 
 #endif // PMCMETADATAMODEL_H

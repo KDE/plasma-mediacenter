@@ -62,7 +62,7 @@ private slots:
 
 private:
     QHash< int, QVariant > createTestMediaData() const;
-    QHash< int, QVariant > createTestMediaDataWithAlbumArtist(const QString& albumName = "album", const QString& artistName = "artist") const;
+    QHash< int, QVariant > createTestMediaDataWithAlbumArtist(const QString& albumName = "album", const QString& artistName = "artist", const QString& albumArtist = "albumartist") const;
     QHash< int, QVariant > createTestMediaDataWithUrl(const QString& url="/foo/bar") const;
 };
 

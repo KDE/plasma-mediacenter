@@ -60,11 +60,12 @@ QHash<int,QVariant> MediaLibraryTest::createTestMediaData() const
     return data;
 }
 
-QHash< int, QVariant > MediaLibraryTest::createTestMediaDataWithAlbumArtist(const QString &albumName, const QString &artistName) const
+QHash< int, QVariant > MediaLibraryTest::createTestMediaDataWithAlbumArtist(const QString &albumName, const QString &artistName, const QString &albumArtistName) const
 {
     QHash<int,QVariant> data = createTestMediaData();
     data.insert(MediaCenter::AlbumRole, albumName);
     data.insert(MediaCenter::ArtistRole, artistName);
+    data.insert(MediaCenter::AlbumArtistRole, albumArtistName);
 
     return data;
 }
@@ -125,7 +126,7 @@ void MediaLibraryTest::addsNewMediaAndItsMetadata()
 
     QSharedPointer<PmcAlbum> album = returnedAlbum.first();
     QCOMPARE(album->name(), data.value(MediaCenter::AlbumRole).toString());
-    QCOMPARE(album->albumArtist(), data.value(MediaCenter::ArtistRole).toString());
+    QCOMPARE(album->albumArtist(), data.value(MediaCenter::AlbumArtistRole).toString());
 
 
     QCOMPARE(newArtistSpy.size(), 1);

@@ -38,6 +38,7 @@ enum AdditionalMediaRoles {
     DurationRole,
     ArtistRole,
     AlbumRole,
+    AlbumArtistRole,
     CreatedAtRole,
     GenreRole,
     MediaCountRole,

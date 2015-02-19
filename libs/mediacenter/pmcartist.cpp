@@ -30,6 +30,7 @@ PmcArtist::PmcArtist(const QSharedPointer< Artist >& artist, QObject* parent)
     , d(new Private())
 {
     d->artist = artist;
+    connect(d->artist.data(), &Artist::updated, this, &PmcArtist::updated);
 }
 
 

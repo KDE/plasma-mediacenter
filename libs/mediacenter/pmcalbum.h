@@ -37,6 +37,9 @@ public:
     QString albumArtist() const;
     int mediaCount() const;
 
+signals:
+    void updated();
+
 private:
     class Private;
     Private * const d;
