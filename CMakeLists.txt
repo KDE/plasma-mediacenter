@@ -36,6 +36,9 @@ endif()
 
 find_package(Qt5 CONFIG REQUIRED COMPONENTS Core DBus Xml Quick Sql Test)
 
+find_package(Qt5Multimedia)
+add_feature_info("Qt5Multimedia" Qt5Multimedia_FOUND "Qt5Multimedia QML bindings are required at runtime to play media files")
+
 add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
 
 # Load the frameworks we need
@@ -82,4 +85,3 @@ add_subdirectory(autotests)
 # macro_optional_add_subdirectory( po )
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
-

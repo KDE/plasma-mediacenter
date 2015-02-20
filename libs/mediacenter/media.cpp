@@ -143,6 +143,7 @@ bool Media::setValueForRole(int role, const QVariant& value)
             return setTitle(value.toString());
         case MediaCenter::MediaUrlRole:
             if (d->url != value.toString()) {
+                qDebug() << d->url << value.toString();
                 qFatal("Media URLs CANNOT be changed");
             }
             return false;
