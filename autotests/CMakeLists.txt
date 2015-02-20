@@ -12,6 +12,7 @@ set(CMAKE_MODULE_PATH
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 find_package(mockcpp)
+add_feature_info("mockcpp" mockcpp_FOUND "Required for running tests, https://bitbucket.org/godsme/mockcpp")
 
 if(NOT mockcpp_FOUND)
     return()

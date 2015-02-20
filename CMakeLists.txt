@@ -37,9 +37,7 @@ endif()
 find_package(Qt5 CONFIG REQUIRED COMPONENTS Core DBus Xml Quick Sql Test)
 
 find_package(Qt5Multimedia)
-if(NOT Qt5Multimedia_FOUND)
-    message(STATUS "Qt5Multimedia QML bindings are required at runtime to play media files")
-endif()
+add_feature_info("Qt5Multimedia" Qt5Multimedia_FOUND "Qt5Multimedia QML bindings are required at runtime to play media files")
 
 add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
 
