@@ -16,7 +16,6 @@ set (plasmamediacenter_SRCS
     objectpair.cpp
     mediacenter.cpp
     abstractbrowsingbackend.cpp
-    backendsloader.cpp
     backendsmodel.cpp
     playlistitem.cpp
     playlistmodel.cpp
