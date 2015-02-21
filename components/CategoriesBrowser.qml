@@ -84,14 +84,12 @@ FocusScope {
                             NumberAnimation { duration: 300 }
                         }
                         Keys.onPressed: {
-                            if (event.key == Qt.Key_Left) {
-                                categoriesBar.focus = true;
-                                event.accepted = true;
+                            switch (event.key) {
+                                case Qt.Key_Left: categoriesBar.focus = true; break
+                                case Qt.Key_Escape: backend.back(modelRole); break
+                                default: return
                             }
-                            if (event.key == Qt.Key_Escape) {
-                                backend.back(modelRole)
-                                event.accepted = true;
-                            }
+                            event.accepted = true;
                         }
                     }
                 }
