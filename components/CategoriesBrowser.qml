@@ -30,7 +30,6 @@ FocusScope {
 
     property QtObject backend
     property alias models: categoriesListView.model
-    property variant model: models ? models.model : models
     property QtObject topSibling
     property QtObject bottomSibling
 
