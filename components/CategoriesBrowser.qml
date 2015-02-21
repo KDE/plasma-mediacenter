@@ -88,6 +88,10 @@ FocusScope {
                                 categoriesBar.focus = true;
                                 event.accepted = true;
                             }
+                            if (event.key == Qt.Key_Escape) {
+                                backend.back(modelRole)
+                                event.accepted = true;
+                            }
                         }
                     }
                 }
