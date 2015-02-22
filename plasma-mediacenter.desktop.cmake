@@ -39,6 +39,7 @@ Name[uk]=Медіацентр Плазми
 Name[x-test]=xxPlasma Media Centerxx
 Name[zh_TW]=Plasma 媒體中心
 Comment=Plasma Media Center by KDE
+Comment[ca]=Centre multimèdia del Plasma pel KDE
 Comment[da]=Plasma Mediecenter af KDE
 Comment[nl]=Plasma mediacentrum door KDE
 Comment[pl]=Centrum Multimedialne Plazmy dla KDE
