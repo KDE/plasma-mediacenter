@@ -89,20 +89,6 @@ set_target_properties(plasmamediacenter PROPERTIES VERSION ${PROJECT_VERSION} SO
 
 install(TARGETS plasmamediacenter ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-set (plasmamediacenter_HDRS
-    abstractbrowsingbackend.h
-    abstractmediasource.h
-    mediacenter.h
-    medialibrary.h
-    pmcimagecache.h
-    pmcalbum.h
-    pmcartist.h
-    pmcmedia.h
-    pmcmodel.h
-    singletonfactory.h
-)
-
-install(FILES ${plasmamediacenter_HDRS} DESTINATION ${INCLUDE_INSTALL_DIR}/mediacenter COMPONENT Devel)
 install(FILES data/servicetypes/pmc_browsingbackend.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
 install(FILES data/servicetypes/pmc_mediasource.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
 
