@@ -87,7 +87,7 @@ target_link_libraries(plasmamediacentertest
 
 set_target_properties(plasmamediacenter PROPERTIES VERSION ${PROJECT_VERSION} SOVERSION ${PROJECT_VERSION_MAJOR})
 
-install(TARGETS plasmamediacenter ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS plasmamediacenter ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
 
 install(FILES data/servicetypes/pmc_browsingbackend.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
 install(FILES data/servicetypes/pmc_mediasource.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
