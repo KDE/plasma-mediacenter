@@ -18,6 +18,9 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
+#ifndef MEDIACENTER_MPRIS2_H
+#define MEDIACENTER_MPRIS2_H
+
 #include "mediacenter_export.h"
 #include "mediacenter/playlistmodel.h"
 
@@ -50,3 +53,5 @@ private:
     MediaPlayer2Player *m_mp2p;
     MediaPlayer2Tracklist *m_mp2tl;
 };
+
+#endif //MEDIACENTER_MPRIS2_H
