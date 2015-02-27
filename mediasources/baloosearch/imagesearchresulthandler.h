@@ -30,11 +30,11 @@ public:
     virtual QString supportedMediaType() const;
 
 protected:
-    virtual void handleResultImpl(const Baloo::ResultIterator& resultIterator,
+    virtual void handleResultImpl(const QString& filePath,
                                   const QHash< int, QVariant >& values);
 
 private:
-    int m_minimumImageSize;
+    unsigned int m_minimumImageSize;
     QHash<QString, QHash<int, QVariant>> m_initialValuesByUrl;
 };
 

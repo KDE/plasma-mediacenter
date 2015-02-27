@@ -72,7 +72,11 @@ void BalooSearchMediaSource::queryForMediaType(const QString& type)
 
     Baloo::ResultIterator it = query.exec();
     SearchResultHandler *handler = m_searchResultHandlers.value(type);
-    handler->handleResult(it);
+    while (it.next()) {
+        QString localUrl = it.filePath();
+        handler->handleResult(localUrl);
+    }
+
 }
 
 

@@ -32,7 +32,7 @@ public:
     virtual QString supportedMediaType() const;
 
 protected:
-    virtual void handleResultImpl(const Baloo::ResultIterator& resultIterator,
+    virtual void handleResultImpl(const QString& filePath,
                                   const QHash< int, QVariant >& values);
 };
 

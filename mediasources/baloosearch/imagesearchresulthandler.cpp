@@ -40,7 +40,7 @@ QString ImageSearchResultHandler::supportedMediaType() const
 }
 
 void ImageSearchResultHandler::handleResultImpl(
-    const Baloo::ResultIterator& resultIterator,
+    const QString& filePath,
     const QHash< int, QVariant >& values)
 {
     const QString fileUrl = values.value(MediaCenter::MediaUrlRole).toUrl().toLocalFile();
@@ -51,7 +51,7 @@ void ImageSearchResultHandler::handleResultImpl(
     //photos appear before junk images in the browser.
     m_initialValuesByUrl[fileUrl].remove(MediaCenter::CreatedAtRole);
 
-    Baloo::File file(resultIterator.filePath());
+    Baloo::File file(filePath);
     file.load();
 
     //Properties that signify the actual date/time the image was taken by the
