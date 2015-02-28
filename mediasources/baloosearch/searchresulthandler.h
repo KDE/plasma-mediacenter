@@ -34,6 +34,7 @@ class SearchResultHandler : public QObject
 public:
     SearchResultHandler(MediaLibrary *mediaLibrary, QObject* parent);
     virtual QString supportedMediaType() const = 0;
+    virtual QString supportedMimeType() const = 0;
 
     virtual void handleResult(QString &filePath);
 

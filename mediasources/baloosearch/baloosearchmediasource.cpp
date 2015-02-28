@@ -29,15 +29,23 @@
 #include <baloo/result.h>
 #include <baloo/file.h>
 
+#include <QUrl>
 #include <QDebug>
 #include <QTimer>
-
+#include <QDBusConnection>
+#include <QMimeDatabase>
 
 MEDIACENTER_EXPORT_MEDIASOURCE(BalooSearchMediaSource, "baloosearch.json")
 
 BalooSearchMediaSource::BalooSearchMediaSource(QObject* parent, const QVariantList& args)
     : AbstractMediaSource(parent, args)
 {
+
+    m_allowedMimes << "audio" << "image" << "video";
+
+    QDBusConnection conn = QDBusConnection::sessionBus();
+    conn.connect(QString(), QLatin1String("/files"), QLatin1String("org.kde"), QLatin1String("changed"), this, SLOT(handleNewFile(QStringList)));
+
 }
 
 void BalooSearchMediaSource::run()
@@ -58,10 +66,26 @@ void BalooSearchMediaSource::startQuerying()
 
     Q_FOREACH(SearchResultHandler* searchResultHandler, searchResultHandlerList) {
         m_searchResultHandlers.insert(searchResultHandler->supportedMediaType(), searchResultHandler);
+        m_searchResultHandlersByMimeType.insert(searchResultHandler->supportedMimeType(), searchResultHandler);
     }
 
     Q_FOREACH(const QString &type, m_searchResultHandlers.keys()) {
         queryForMediaType(type);
+    }
+}
+
+void BalooSearchMediaSource::handleNewFile(const QStringList &files)
+{
+    QMimeDatabase db;
+    for (auto file : files)
+    {
+        const QString fileMimeType = db.mimeTypeForUrl(QUrl::fromLocalFile(file)).name();
+        const QString topLevelMimeType = fileMimeType.split('/').at(0);
+
+        if (m_allowedMimes.contains(topLevelMimeType)) {
+            SearchResultHandler *handler = m_searchResultHandlersByMimeType.value(topLevelMimeType);
+            handler->handleResult(file);
+        }
     }
 }
 

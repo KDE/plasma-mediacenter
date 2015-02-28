@@ -39,6 +39,11 @@ QString ImageSearchResultHandler::supportedMediaType() const
     return "Image";
 }
 
+QString ImageSearchResultHandler::supportedMimeType() const
+{
+    return "image";
+}
+
 void ImageSearchResultHandler::handleResultImpl(
     const QString& filePath,
     const QHash< int, QVariant >& values)

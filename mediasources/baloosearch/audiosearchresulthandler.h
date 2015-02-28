@@ -30,6 +30,7 @@ class AudioSearchResultHandler : public SearchResultHandler
 public:
     AudioSearchResultHandler(MediaLibrary* mediaLibrary, QObject* parent);
     virtual QString supportedMediaType() const;
+    virtual QString supportedMimeType() const;
 
 protected:
     virtual void handleResultImpl(const QString& filePath,

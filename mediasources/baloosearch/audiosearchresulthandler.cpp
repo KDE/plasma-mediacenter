@@ -36,6 +36,11 @@ QString AudioSearchResultHandler::supportedMediaType() const
     return "Audio";
 }
 
+QString AudioSearchResultHandler::supportedMimeType() const
+{
+    return "audio";
+}
+
 void AudioSearchResultHandler::handleResultImpl(
     const QString& filePath,
     const QHash< int, QVariant >& values)

@@ -38,6 +38,11 @@ QString VideoSearchResultHandler::supportedMediaType() const
     return "Video";
 }
 
+QString VideoSearchResultHandler::supportedMimeType() const
+{
+    return "video";
+}
+
 void VideoSearchResultHandler::handleResultImpl(
     const QString& filePath,
     const QHash< int, QVariant >& values)
