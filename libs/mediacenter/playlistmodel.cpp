@@ -40,11 +40,8 @@ class PlaylistModel::Private
 public:
     QList<PlaylistItem*> musicList;
     int currentIndex;
-    QFile file;
-    bool random;
     QString playlistName;
     QString playlistsDirectoryPath;
-    bool cmdLineURL;
 };
 
 PlaylistModel::PlaylistModel(QObject* parent):
