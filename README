@@ -7,7 +7,6 @@ Required:
 4) Baloo (KF5)
 5) Taglib
 6) Mockcpp (required for building tests)
-7) Standard KDE Oxygen Plasma theme
 
 To know Plasma Media Center architecture and other related information browse through http://community.kde.org/Plasma/Plasma_Media_Center
 
