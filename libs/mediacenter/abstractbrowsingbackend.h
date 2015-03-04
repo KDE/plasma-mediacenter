@@ -175,7 +175,6 @@ Q_SIGNALS:
     void busyChanged();
     void modelsChanged();
     void buttonsChanged();
-    void searchTermChanged();
 
     void error(const QString &message);
     void pmcRuntimeChanged();
