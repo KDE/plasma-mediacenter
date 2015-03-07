@@ -1,8 +1,26 @@
 [Desktop Entry]
 Comment=PMC shell package
+Comment[ca]=Paquet de l'intèrpret d'ordres PMC
+Comment[es]=Paquete del entorno PMC
+Comment[nl]=PMC shell-pakket
+Comment[pl]=Pakiet powłoki PMC
+Comment[pt]=Pacote da consola do PMC
+Comment[pt_BR]=Pacote do console do PMC
+Comment[sv]=PMC-skalpaket
+Comment[x-test]=xxPMC shell packagexx
+Comment[zh_CN]=PMC 外壳包
 Encoding=UTF-8
 Keywords=
 Name=Plasma Media Center
+Name[ca]=Centre multimèdia del Plasma
+Name[es]=Centro multimedia de Plasma
+Name[nl]=Plasma mediacentrum
+Name[pl]=Centrum multimedialne plazmy
+Name[pt]=Centro Multimédia do Plasma
+Name[pt_BR]=Plasma Media Center
+Name[sv]=Plasma Media Center
+Name[x-test]=xxPlasma Media Centerxx
+Name[zh_CN]=Plasma 媒体中心
 Type=Service
 Icon=applications-multimedia
 

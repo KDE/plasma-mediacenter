@@ -2,7 +2,24 @@
 Type=Service
 Icon=tools-rip-video-cd
 Name=Videos
+Name[ca]=Vídeos
+Name[es]=Vídeos
+Name[nl]=Video's
+Name[pl]=Filmy
+Name[pt]=Vídeos
+Name[pt_BR]=Vídeos
+Name[sv]=Videor
+Name[x-test]=xxVideosxx
+Name[zh_CN]=视频
 Comment=Watch the videos on your device
+Comment[ca]=Mostra els vídeos en el dispositiu
+Comment[es]=Vea los vídeos de su dispositivo
+Comment[nl]=Bekijk de video's op uw apparaat
+Comment[pl]=Oglądaj filmy ze swojego urządzenia
+Comment[pt]=Ver os vídeos no seu dispositivo
+Comment[pt_BR]=Assista aos vídeos no seu dispositivo
+Comment[sv]=Titta på videorna på en enhet
+Comment[x-test]=xxWatch the videos on your devicexx
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 

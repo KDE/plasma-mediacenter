@@ -2,7 +2,24 @@
 Type=Service
 Icon=image-x-generic
 Name=Flickr
+Name[ca]=Flickr
+Name[es]=Flickr
+Name[nl]=Flickr
+Name[pl]=Flickr
+Name[pt]=Flickr
+Name[pt_BR]=Flickr
+Name[sv]=Flickr
+Name[x-test]=xxFlickrxx
+Name[zh_CN]=Flickr
 Comment=Discover pictures from flickr for your chosen tag
+Comment[ca]=Descobreix les imatges de «flickr» per l'etiqueta escollida
+Comment[es]=Descubra imágenes de Flickr para la etiqueta que elija
+Comment[nl]=Zoek naar beelden uit flickr op door u gekozen tag
+Comment[pl]=Odkryj zdjęcia z flickr dla wybranego znacznika
+Comment[pt]=Descobrir imagens do Flickr para a sua marca escolhida
+Comment[pt_BR]=Descubra as imagens do Flickr para a sua etiqueta escolhida
+Comment[sv]=Upptäck bilder på Flickr för vald etikett
+Comment[x-test]=xxDiscover pictures from flickr for your chosen tagxx
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 

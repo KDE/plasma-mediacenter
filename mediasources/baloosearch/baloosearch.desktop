@@ -2,7 +2,24 @@
 Type=Service
 Icon=baloo
 Name=Baloo Search
+Name[ca]=Cerca amb Baloo
+Name[es]=Búsqueda de Baloo
+Name[nl]=Zoeken met Baloo
+Name[pl]=Wyszukiwarka Baloo
+Name[pt]=Pesquisa no Baloo
+Name[pt_BR]=Pesquisa do Baloo
+Name[sv]=Baloo-sökning
+Name[x-test]=xxBaloo Searchxx
+Name[zh_CN]=Baloo 搜索
 Comment=Get media from Baloo Search
+Comment[ca]=Obté medis de la cerca del Baloo
+Comment[es]=Obtenga archivos multimedia de la búsqueda de Baloo
+Comment[nl]=Haal media uit Baloo-zoeken
+Comment[pl]=Pobierz multimedia z wyszukiwarki Baloo
+Comment[pt]=Obter conteúdos da pesquisa no Baloo
+Comment[pt_BR]=Obtém a mídia a partir da Pesquisa do Baloo
+Comment[sv]=Hämta media från Baloo-sökning
+Comment[x-test]=xxGet media from Baloo Searchxx
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/MediaSource
 

@@ -2,7 +2,24 @@
 Type=Service
 Icon=youtube-pmc
 Name=YouTube Videos
+Name[ca]=Vídeos de YouTube
+Name[es]=Vídeos de YouTube
+Name[nl]=Video's van YouTube
+Name[pl]=Filmy YouTube.
+Name[pt]=Vídeos do YouTube
+Name[pt_BR]=Vídeos do YouTube
+Name[sv]=YouTube-videor
+Name[x-test]=xxYouTube Videosxx
+Name[zh_CN]=YouTube 视频
 Comment=Watch videos from Youtube
+Comment[ca]=Mostra els vídeos des de YouTube
+Comment[es]=Vea vídeos de YouTube
+Comment[nl]=Bekijk video's van Youtube
+Comment[pl]=Oglądaj filmy z Youtube
+Comment[pt]=Ver os vídeos do YouTube
+Comment[pt_BR]=Assista aos vídeos do YouTube
+Comment[sv]=Titta på videor från YouTube
+Comment[x-test]=xxWatch videos from Youtubexx
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 

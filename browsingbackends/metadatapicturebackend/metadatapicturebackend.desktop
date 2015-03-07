@@ -2,7 +2,24 @@
 Type=Service
 Icon=image-x-generic
 Name=Pictures
+Name[ca]=Imatges
+Name[es]=Imágenes
+Name[nl]=Afbeeldingen
+Name[pl]=Zdjęcia
+Name[pt]=Imagens
+Name[pt_BR]=Imagens
+Name[sv]=Bilder
+Name[x-test]=xxPicturesxx
+Name[zh_CN]=图片
 Comment=See the pictures on your device
+Comment[ca]=Mostra les imatges en el dispositiu
+Comment[es]=Vea las imágenes de su dispositivo
+Comment[nl]=Zie de beelden op uw apparaat
+Comment[pl]=Oglądaj zdjęcia ze swojego urządzenia
+Comment[pt]=Ver as imagens no seu dispositivo
+Comment[pt_BR]=Veja as imagens no seu dispositivo
+Comment[sv]=Titta på bilderna på en enhet
+Comment[x-test]=xxSee the pictures on your devicexx
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 

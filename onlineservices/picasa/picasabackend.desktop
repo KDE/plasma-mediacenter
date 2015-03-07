@@ -2,7 +2,24 @@
 Type=Service
 Icon=image-x-generic
 Name=Picasa
+Name[ca]=Picasa
+Name[es]=Picasa
+Name[nl]=Picasa
+Name[pl]=Picasa
+Name[pt]=Picasa
+Name[pt_BR]=Picasa
+Name[sv]=Picasa
+Name[x-test]=xxPicasaxx
+Name[zh_CN]=Picasa
 Comment=See pictures from your Picasa account
+Comment[ca]=Mostra les imatges del vostre compte de «Picasa»
+Comment[es]=Vea imágenes de su cuenta de Picasa
+Comment[nl]=Zie beelden uit uw Picasa-account
+Comment[pl]=Oglądaj zdjęcia ze swojego konta Picasa
+Comment[pt]=Ver imagens da sua conta do Picasa
+Comment[pt_BR]=Veja as imagens da sua conta do Picasa
+Comment[sv]=Titta på bilder från ditt Picasa-konto
+Comment[x-test]=xxSee pictures from your Picasa accountxx
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 
