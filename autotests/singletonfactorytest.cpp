@@ -51,4 +51,3 @@ void SingletonFactoryTest::shouldReturnSameInstanceEveryTime()
 
 QTEST_GUILESS_MAIN(SingletonFactoryTest)
 
-#include "singletonfactorytest.moc"

@@ -106,4 +106,3 @@ void FilesystemSearchMediaSource::addFile(const QFileInfo& fileInfo,
     SingletonFactory::instanceFor<MediaLibrary>()->updateMedia(values);
 }
 
-#include "filesystemsearchmediasource.moc"

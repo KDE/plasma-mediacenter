@@ -431,4 +431,3 @@ void MediaLibraryTest::shouldReturnCorrectAlbumsAndArtists()
 }
 
 QTEST_GUILESS_MAIN(MediaLibraryTest)
-#include "medialibrarytest.moc"

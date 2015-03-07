@@ -156,4 +156,3 @@ bool EventsBackend::closeEventsConfiguration()
     return false;
 }
 
-#include "eventsbackend.moc"

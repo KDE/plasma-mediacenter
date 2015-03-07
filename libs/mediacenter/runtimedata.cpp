@@ -82,4 +82,3 @@ void RuntimeData::setVolume(qreal volume) {
     emit volumeChanged(m_volume);
 }
 
-#include "runtimedata.moc"
