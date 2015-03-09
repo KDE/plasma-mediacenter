@@ -1,5 +1,3 @@
-project(mediasourceloadertest)
-
 set (pmc_SRCS
     application.cpp
     )
