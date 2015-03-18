@@ -49,6 +49,7 @@ Comment[ast]=Centru multimedia Plasma por KDE
 Comment[ca]=Centre multimèdia del Plasma pel KDE
 Comment[cs]=Multimediální centrum Plasma od KDE
 Comment[da]=Plasma Mediecenter af KDE
+Comment[de]=Plasma-Mediencenter von KDE
 Comment[el]=Plasma Media Center από το KDE
 Comment[en_GB]=Plasma Media Centre by KDE
 Comment[es]=Centro multimedia de Plasma, por KDE
