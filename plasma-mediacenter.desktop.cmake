@@ -62,6 +62,7 @@ Comment[pl]=Centrum Multimedialne Plazmy dla KDE
 Comment[pt]=Centro Multimédia do Plasma para o KDE
 Comment[pt_BR]=Plasma Media Center do KDE
 Comment[sk]=Plasma Media Center od KDE
+Comment[sl]=Predstavnostno središče Plasma s strani razvijalcev KDE
 Comment[sr]=Плазма медија центар од КДЕ‑а
 Comment[sr@ijekavian]=Плазма медија центар од КДЕ‑а
 Comment[sr@ijekavianlatin]=Plasma medija centar od KDE‑a
