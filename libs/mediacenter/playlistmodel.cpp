@@ -31,7 +31,7 @@
 
 namespace
 {
-static const QString DEFAULT_PLAYLIST_NAME = i18n("Default");
+static const QString DEFAULT_PLAYLIST_NAME = i18nd("plasma-mediacenter", "Default");
 static int INVALID_INDEX = -1;
 }
 

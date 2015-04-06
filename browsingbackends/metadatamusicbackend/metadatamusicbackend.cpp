@@ -36,8 +36,8 @@
 MEDIACENTER_EXPORT_BROWSINGBACKEND(MetadataMusicBackend, "metadatamusicbackend.json")
 
 namespace {
-    static const QString s_showAllButton = i18n("Show All");
-    static const QString s_playAllButton = i18n("Play All");
+    static const QString s_showAllButton = i18nd("plasma-mediacenter", "Show All");
+    static const QString s_playAllButton = i18nd("plasma-mediacenter", "Play All");
 }
 
 MetadataMusicBackend::MetadataMusicBackend(QObject* parent, const QVariantList& args)
@@ -66,13 +66,13 @@ bool MetadataMusicBackend::initImpl()
     m_musicFilteredModel = new FilterMediaModel(this);
     m_musicFilteredModel->setSourceModel(m_musicModel);
     m_musicPmcModel = new PmcModel(m_musicFilteredModel, this);
-    m_musicPmcModel->setName(i18n("Songs"));
+    m_musicPmcModel->setName(i18nd("plasma-mediacenter", "Songs"));
     m_musicPmcModel->setIsList(true);
 
     m_albumFilteredModel = new FilterMediaModel(this);
     m_albumFilteredModel->setSourceModel(m_albumsModel);
     m_albumsPmcModel = new PmcModel(m_albumFilteredModel, this);
-    m_albumsPmcModel->setName(i18n("Albums"));
+    m_albumsPmcModel->setName(i18nd("plasma-mediacenter", "Albums"));
     m_musicFilteredByAlbumModel = new FilterMediaModel(this);
     m_musicFilteredByAlbumModel->setSourceModel(m_musicModel);
     m_musicFilteredByAlbumPmcModel = new PmcModel(m_musicFilteredByAlbumModel);
@@ -82,7 +82,7 @@ bool MetadataMusicBackend::initImpl()
     m_artistFilteredModel = new FilterMediaModel(this);
     m_artistFilteredModel->setSourceModel(m_artistsModel);
     m_artistsPmcModel = new PmcModel(m_artistFilteredModel, this);
-    m_artistsPmcModel->setName(i18n("Artists"));
+    m_artistsPmcModel->setName(i18nd("plasma-mediacenter", "Artists"));
     m_musicFilteredByArtistModel = new FilterMediaModel(this);
     m_musicFilteredByArtistModel->setSourceModel(m_musicModel);
     m_musicFilteredByArtistPmcModel = new PmcModel(m_musicFilteredByArtistModel);
