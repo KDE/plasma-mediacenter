@@ -2,7 +2,6 @@
 Type=Service
 Icon=tools-rip-video-cd
 Name=Videos
-Name[ast]=Videos
 Name[ca]=Vídeos
 Name[cs]=Videa
 Name[da]=Videoer
@@ -31,7 +30,6 @@ Name[x-test]=xxVideosxx
 Name[zh_CN]=视频
 Comment=Watch the videos on your device
 Comment[ar]=شاهد الفيديوهات في جهازك
-Comment[ast]=Ve los videos nel to preséu
 Comment[bs]=Gledaj videozapise na svom uređaju
 Comment[ca]=Mostra els vídeos en el dispositiu
 Comment[ca@valencia]=Mostra els vídeos en el dispositiu
