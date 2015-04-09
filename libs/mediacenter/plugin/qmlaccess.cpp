@@ -32,7 +32,7 @@ QMLAccess::QMLAccess(QObject *parent) : QObject(parent)
     MediaSourcesLoader mediasourceLoader;
     mediasourceLoader.load();
 
-    MediaServer *mediaServer = new MediaServer();
+//     MediaServer *mediaServer = new MediaServer();
     MediaLibrary *mediaLibrary = SingletonFactory::instanceFor<MediaLibrary>();
 
     m_playlistModel = new PlaylistModel(this);
