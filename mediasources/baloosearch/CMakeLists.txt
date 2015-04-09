@@ -13,6 +13,7 @@ set_target_properties(pmc_baloosearch PROPERTIES PREFIX "")
 
 target_link_libraries(pmc_baloosearch
     plasmamediacenter
+    Qt5::DBus
     KF5::Baloo
     KF5::FileMetaData
 )

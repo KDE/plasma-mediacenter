@@ -50,4 +50,3 @@ QVariant MetadataVideoModel::data(const QModelIndex& index, int role) const
     return PmcMetadataModel::data(index, role);
 }
 
-#include "metadatavideomodel.moc"

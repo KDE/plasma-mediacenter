@@ -28,9 +28,10 @@ class VideoSearchResultHandler : public SearchResultHandler
 public:
     VideoSearchResultHandler(MediaLibrary* mediaLibrary, QObject* parent);
     virtual QString supportedMediaType() const;
+    virtual QString supportedMimeType() const;
 
 protected:
-    virtual void handleResultImpl(const Baloo::ResultIterator& resultIterator,
+    virtual void handleResultImpl(const QString& filePath,
                                   const QHash< int, QVariant >& values);
 };
 

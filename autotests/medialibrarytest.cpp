@@ -60,11 +60,12 @@ QHash<int,QVariant> MediaLibraryTest::createTestMediaData() const
     return data;
 }
 
-QHash< int, QVariant > MediaLibraryTest::createTestMediaDataWithAlbumArtist(const QString &albumName, const QString &artistName) const
+QHash< int, QVariant > MediaLibraryTest::createTestMediaDataWithAlbumArtist(const QString &albumName, const QString &artistName, const QString &albumArtistName) const
 {
     QHash<int,QVariant> data = createTestMediaData();
     data.insert(MediaCenter::AlbumRole, albumName);
     data.insert(MediaCenter::ArtistRole, artistName);
+    data.insert(MediaCenter::AlbumArtistRole, albumArtistName);
 
     return data;
 }
@@ -125,7 +126,7 @@ void MediaLibraryTest::addsNewMediaAndItsMetadata()
 
     QSharedPointer<PmcAlbum> album = returnedAlbum.first();
     QCOMPARE(album->name(), data.value(MediaCenter::AlbumRole).toString());
-    QCOMPARE(album->albumArtist(), data.value(MediaCenter::ArtistRole).toString());
+    QCOMPARE(album->albumArtist(), data.value(MediaCenter::AlbumArtistRole).toString());
 
 
     QCOMPARE(newArtistSpy.size(), 1);
@@ -315,7 +316,7 @@ void MediaLibraryTest::shouldAddDifferentAlbumsWhenArtistsAreDifferent()
     QVERIFY2(newArtistSpy.isValid(), "Could not listen to signal newArtists");
 
     QHash<int,QVariant> data1 = createTestMediaDataWithAlbumArtist();
-    QHash<int,QVariant> data2 = createTestMediaDataWithAlbumArtist(data1.value(MediaCenter::AlbumRole).toString(), "myartist");
+    QHash<int,QVariant> data2 = createTestMediaDataWithAlbumArtist(data1.value(MediaCenter::AlbumRole).toString(), "myartist", "awesomeartist");
 
     mediaLibrary.updateMedia(data1);
     mediaLibrary.updateMedia(data2);
@@ -329,11 +330,11 @@ void MediaLibraryTest::shouldAddDifferentAlbumsWhenArtistsAreDifferent()
 
     QSharedPointer<PmcAlbum> album1 = returnedAlbums.first();
     QCOMPARE(album1->name(), data1.value(MediaCenter::AlbumRole).toString());
-    QCOMPARE(album1->albumArtist(), data1.value(MediaCenter::ArtistRole).toString());
+    QCOMPARE(album1->albumArtist(), data1.value(MediaCenter::AlbumArtistRole).toString());
 
     QSharedPointer<PmcAlbum> album2 = returnedAlbums.at(1);
     QCOMPARE(album2->name(), data2.value(MediaCenter::AlbumRole).toString());
-    QCOMPARE(album2->albumArtist(), data2.value(MediaCenter::ArtistRole).toString());
+    QCOMPARE(album2->albumArtist(), data2.value(MediaCenter::AlbumArtistRole).toString());
 
 
     QCOMPARE(newArtistSpy.size(), 1);
@@ -430,4 +431,3 @@ void MediaLibraryTest::shouldReturnCorrectAlbumsAndArtists()
 }
 
 QTEST_GUILESS_MAIN(MediaLibraryTest)
-#include "medialibrarytest.moc"

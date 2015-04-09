@@ -34,13 +34,14 @@ class SearchResultHandler : public QObject
 public:
     SearchResultHandler(MediaLibrary *mediaLibrary, QObject* parent);
     virtual QString supportedMediaType() const = 0;
+    virtual QString supportedMimeType() const = 0;
 
-    virtual void handleResult(Baloo::ResultIterator &resultIterator);
+    virtual void handleResult(QString &filePath);
 
 protected:
     MediaLibrary *m_mediaLibrary;
 
-    virtual void handleResultImpl(const Baloo::ResultIterator &resultIterator,
+    virtual void handleResultImpl(const QString &filePath,
                                   const QHash<int, QVariant> &values) = 0;
 };
 

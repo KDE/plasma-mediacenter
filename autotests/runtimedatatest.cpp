@@ -87,4 +87,3 @@ void TestRuntimeData::testVolumeAndMuteFunction()
     QCOMPARE(runtimeData.property("volume").toReal(), 5.0);
 }
 
-#include "runtimedatatest.moc"

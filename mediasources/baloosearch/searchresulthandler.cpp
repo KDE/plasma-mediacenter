@@ -35,27 +35,24 @@ SearchResultHandler::SearchResultHandler(MediaLibrary *mediaLibrary, QObject* pa
 {
 }
 
-void SearchResultHandler::handleResult(Baloo::ResultIterator& resultIterator)
+void SearchResultHandler::handleResult(QString &filePath)
 {
-    while (resultIterator.next()) {
-        //First collect common information
-        QHash<int, QVariant> values;
-        QString localUrl = resultIterator.filePath();
-        const QUrl url = QUrl::fromLocalFile(localUrl);
-        KFileMetaData::UserMetaData md(localUrl);
+    QHash<int, QVariant> values;
+    const QUrl url = QUrl::fromLocalFile(filePath);
+    KFileMetaData::UserMetaData md(filePath);
 
-        values.insert(Qt::DisplayRole, QVariant(url.fileName()));
-        values.insert(Qt::DecorationRole, QVariant(QMimeDatabase().mimeTypeForFile(localUrl).iconName()));
-        values.insert(MediaCenter::MediaTypeRole, QVariant(supportedMediaType().toLower()));
-        values.insert(MediaCenter::MediaUrlRole, QVariant(url.toString()));
-        values.insert(MediaCenter::RatingRole, QVariant(md.rating()));
+    values.insert(Qt::DisplayRole, QVariant(url.fileName()));
+    values.insert(Qt::DecorationRole, QVariant(QMimeDatabase().mimeTypeForFile(filePath).iconName()));
+    values.insert(MediaCenter::MediaTypeRole, QVariant(supportedMediaType().toLower()));
+    values.insert(MediaCenter::MediaUrlRole, QVariant(url.toString()));
+    values.insert(MediaCenter::RatingRole, QVariant(md.rating()));
 
-        //HACK: This is a workaround as Baloo does not provide creation or
-        // modification date/time through KFileMetaData::Property
-        values.insert(MediaCenter::CreatedAtRole,
-                      QVariant(QFileInfo(localUrl).created()));
+    //HACK: This is a workaround as Baloo does not provide creation or
+    // modification date/time through KFileMetaData::Property
+    values.insert(MediaCenter::CreatedAtRole,
+            QVariant(QFileInfo(filePath).created()));
 
-        //Now collect information specific to this media type
-        handleResultImpl(resultIterator, values);
-    }
+    //Now collect information specific to this media type
+    handleResultImpl(filePath, values);
+
 }

@@ -7,7 +7,6 @@ Required:
 4) Baloo (KF5)
 5) Taglib
 6) Mockcpp (required for building tests)
-7) Standard KDE Oxygen Plasma theme
 
 To know Plasma Media Center architecture and other related information browse through http://community.kde.org/Plasma/Plasma_Media_Center
 
@@ -17,7 +16,6 @@ mkdir build
 cd build
 cmake -DKDE_INSTALL_USE_QT_SYS_PATHS=ON -DCMAKE_INSTALL_PREFIX=`kf5-config --prefix` ..
 make install
-kbuildsycoca5
 
 Run PMC using "plasmashell -ap org.kde.plasma.mediacenter" or by using the "Plasma Media Center" icon in your launcher
 

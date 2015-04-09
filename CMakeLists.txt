@@ -5,8 +5,8 @@ cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 set(QT_MIN_VERSION "5.3.0")
 set (KF5_MIN_VERSION "5.5.0")
 
-set(PROJECT_VERSION "2.0.0")
-set(PROJECT_VERSION_MAJOR "2")
+set(PROJECT_VERSION "5.3.90")
+set(PROJECT_VERSION_MAJOR "5")
 
 find_package(ECM 0.0.8 REQUIRED NO_MODULE)
 include(FeatureSummary)
@@ -36,11 +36,16 @@ endif()
 
 find_package(Qt5 CONFIG REQUIRED COMPONENTS Core DBus Xml Quick Sql Test)
 
+find_package(Qt5Multimedia QUIET)
+set_package_properties(Qt5Multimedia PROPERTIES
+        PURPOSE "Qt5Multimedia QML bindings are required at runtime to play media files"
+        TYPE RUNTIME)
+
 add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
 
 # Load the frameworks we need
 find_package(KF5 ${KF5_MIN_VERSION} COMPONENTS REQUIRED
-    CoreAddons Config I18n GuiAddons Service ConfigWidgets KIO Declarative Plasma PlasmaQuick)
+    CoreAddons Config I18n GuiAddons Service ConfigWidgets KIO Declarative WindowSystem Plasma PlasmaQuick)
 
 find_package(KF5Baloo 5.1.90)
 find_package(Taglib REQUIRED)
@@ -82,4 +87,3 @@ add_subdirectory(autotests)
 # macro_optional_add_subdirectory( po )
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
-

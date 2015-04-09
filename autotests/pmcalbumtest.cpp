@@ -69,4 +69,3 @@ void PmcAlbumTest::shouldReturnNameOfAlbum()
     QCOMPARE(pmcAlbum.name(), QString("Album"));
 }
 
-#include "pmcalbumtest.moc"

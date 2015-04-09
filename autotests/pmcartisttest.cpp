@@ -52,4 +52,3 @@ void PmcArtistTest::shouldReturnNameOfArtist()
     QCOMPARE(pmcArtist.name(), QString("Artist"));
 }
 
-#include "pmcartisttest.moc"

@@ -68,4 +68,3 @@ void ItemCacheTest::shouldNotCreateNewAlbumOrArtistIfNotPresent()
     QVERIFY2(artist.isNull(), "Artist should not be created here");
 }
 
-#include "itemcachetest.moc"

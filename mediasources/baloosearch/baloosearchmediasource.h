@@ -33,11 +33,14 @@ protected:
 
 private Q_SLOTS:
     void startQuerying();
+    void handleNewFile(const QStringList &files);
 
 private:
     QHash<QString, SearchResultHandler*> m_searchResultHandlers;
+    QHash<QString, SearchResultHandler*> m_searchResultHandlersByMimeType;
 
     void queryForMediaType(const QString &type);
+    QStringList m_allowedMimes;
 };
 
 #endif // BALOOSEARCHMEDIASOURCE_H

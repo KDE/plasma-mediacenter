@@ -47,4 +47,3 @@ QMLAccess::QMLAccess(QObject *parent) : QObject(parent)
     emit mpris2PlayerAdaptorChanged();
 }
 
-#include "qmlaccess.moc"

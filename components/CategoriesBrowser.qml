@@ -30,7 +30,6 @@ FocusScope {
 
     property QtObject backend
     property alias models: categoriesListView.model
-    property variant model: models ? models.model : models
     property QtObject topSibling
     property QtObject bottomSibling
 
@@ -85,10 +84,12 @@ FocusScope {
                             NumberAnimation { duration: 300 }
                         }
                         Keys.onPressed: {
-                            if (event.key == Qt.Key_Left) {
-                                categoriesBar.focus = true;
-                                event.accepted = true;
+                            switch (event.key) {
+                                case Qt.Key_Left: categoriesBar.focus = true; break
+                                case Qt.Key_Escape: backend.back(modelRole); break
+                                default: return
                             }
+                            event.accepted = true;
                         }
                     }
                 }

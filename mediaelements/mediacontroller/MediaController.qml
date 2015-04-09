@@ -70,7 +70,7 @@ MouseArea {
                     id: backButton
                     height: parent.height
                     width: height
-                    iconSource: "pmc-back";
+                    iconSource: "draw-arrow-back";
                     onClicked: controlBarFrame.backButtonClicked();
                 }
 

@@ -25,7 +25,6 @@ set (plasmamediacenter_SRCS
     objectpair.cpp
     mediacenter.cpp
     abstractbrowsingbackend.cpp
-    backendsloader.cpp
     backendsmodel.cpp
     playlistitem.cpp
     playlistmodel.cpp
@@ -99,23 +98,8 @@ target_link_libraries(plasmamediacentertest
 
 set_target_properties(plasmamediacenter PROPERTIES VERSION ${PROJECT_VERSION} SOVERSION ${PROJECT_VERSION_MAJOR})
 
-install(TARGETS plasmamediacenter ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS plasmamediacenter ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
 
-set (plasmamediacenter_HDRS
-    mediaserver.h
-    abstractbrowsingbackend.h
-    abstractmediasource.h
-    mediacenter.h
-    medialibrary.h
-    pmcimagecache.h
-    pmcalbum.h
-    pmcartist.h
-    pmcmedia.h
-    pmcmodel.h
-    singletonfactory.h
-)
-
-install(FILES ${plasmamediacenter_HDRS} DESTINATION ${INCLUDE_INSTALL_DIR}/mediacenter COMPONENT Devel)
 install(FILES data/servicetypes/pmc_browsingbackend.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
 install(FILES data/servicetypes/pmc_mediasource.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
 

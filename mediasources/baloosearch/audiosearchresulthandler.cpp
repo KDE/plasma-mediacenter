@@ -36,13 +36,18 @@ QString AudioSearchResultHandler::supportedMediaType() const
     return "Audio";
 }
 
+QString AudioSearchResultHandler::supportedMimeType() const
+{
+    return "audio";
+}
+
 void AudioSearchResultHandler::handleResultImpl(
-    const Baloo::ResultIterator& resultIterator,
+    const QString& filePath,
     const QHash< int, QVariant >& values)
 {
     m_mediaLibrary->updateMedia(values);
 
-    Baloo::File file(resultIterator.filePath());
+    Baloo::File file(filePath);
     file.load();
 
     QHash<int, QVariant> vals;
