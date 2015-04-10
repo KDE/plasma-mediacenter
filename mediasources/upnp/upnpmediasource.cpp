@@ -17,6 +17,8 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
+#define UPNP_DEBUG 1
+
 extern "C"{
     #include <libgupnp/gupnp-control-point.h>
     #include <libgupnp-av/gupnp-av.h>
@@ -108,6 +110,8 @@ static void browseCallBack(GUPnPServiceProxy       *contentDir,
                 duration = item.elementsByTagName("res").at(0).toElement().attribute("duration");
                 url = item.elementsByTagName("res").at(0).toElement().text();
                 mimeType = protocolInfo.split(":").at(2);
+
+                qDebug() << "Media item" << url;
 
                 QHash<int, QString> properties;
                 properties.insert(MediaCenter::MediaUrlRole, url);
@@ -242,6 +246,7 @@ static void mediaServerProxyAvailable(GUPnPControlPoint *cp,
 
     QString udn = gupnp_device_info_get_udn(GUPNP_DEVICE_INFO (proxy));
     if(udn == "uuid:adsfa344-6b8b-4f60-87ca-228c46b5b0e8"){
+        qDebug() << "ignored pmc media server";
         return;
     }
 
