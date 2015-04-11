@@ -109,8 +109,9 @@ static void browseCallBack(GUPnPServiceProxy       *contentDir,
                 protocolInfo= item.elementsByTagName("res").at(0).toElement().attribute("protocolInfo");
                 duration = item.elementsByTagName("res").at(0).toElement().attribute("duration");
                 url = item.elementsByTagName("res").at(0).toElement().text();
-                mimeType = protocolInfo.split(":").at(2);
-
+                if (!protocolInfo.isEmpty()) {
+                    mimeType = protocolInfo.split(":").at(2);
+                }
                 qDebug() << "Media item" << url;
 
                 QHash<int, QString> properties;
@@ -126,7 +127,7 @@ static void browseCallBack(GUPnPServiceProxy       *contentDir,
             QDomNodeList containerList  = docElem.elementsByTagName("container");
             for (int i = 0; i < containerList.count(); i++) {
                 QDomElement container = containerList.at(i).toElement();
-                char* id = container.attribute("id").toLatin1().data();
+                const char* id = g_strdup(container.attribute("id").toAscii().constData());
                 browse(contentDir, id, 0, MAX_BROWSE);
             }
         }
@@ -213,7 +214,6 @@ static void appendMediaServer(GUPnPDeviceProxy *proxy)
 
     browse(contentDir, "0", 0, MAX_BROWSE);
     gupnp_service_proxy_set_subscribed(contentDir, TRUE);
-    g_object_unref(contentDir);
 }
 
 void addMediaServer(GUPnPDeviceProxy *proxy)
@@ -285,7 +285,6 @@ static void onContextAvailable(GUPnPContextManager *contextManager,
     gssdp_resource_browser_set_active(GSSDP_RESOURCE_BROWSER (mediaServerControlPoint),
                                        TRUE);
     gupnp_context_manager_manage_control_point(contextManager, mediaServerControlPoint);
-    g_object_unref(mediaServerControlPoint);
 }
 
 void UPnPMediaSource::setupContextManager()
