@@ -36,35 +36,21 @@ MediaHandler::MediaHandler(MediaLibrary *mediaLibrary, QObject* parent)
 
 void MediaHandler::handleResult(QHash<int, QString> properties)
 {
-        QHash<int, QVariant> values;
         QString rawUrl = properties.value(MediaCenter::MediaUrlRole);
-        QUrl url(rawUrl);
-        QString mimeType = properties.value(MediaCenter::MimeTypeRole);
-        QString mediaType;
+        QString mediaType = properties.value(MediaCenter::MimeTypeRole);
 
-        if (mimeType.contains("audio")) {
-            mediaType = "audio";
-        } else if (mimeType.contains("video")) {
-            mediaType = "video";
-        } else if (mimeType.contains("image")) {
-            mediaType = "image";
-        } else {
-            return;
-        }
-
+        QHash <int, QVariant> values;
         values.insert(Qt::DisplayRole, QVariant(properties.value(Qt::DisplayRole)));
-        values.insert(MediaCenter::MediaUrlRole, QVariant(url.toString()));
-        values.insert(MediaCenter::MediaTypeRole, QVariant(mediaType.toLower()));
+        values.insert(MediaCenter::MediaUrlRole, QVariant(rawUrl));
+        values.insert(MediaCenter::MediaTypeRole, QVariant(mediaType));
 
-        if (!QString::compare(mediaType, "Audio", Qt::CaseInsensitive)) {
-//             values.insert(MediaCenter::DurationRole, properties.value(2));
-//             values.insert(MediaCenter::ArtistRole, properties.value(MediaCenter::ArtistRole));
-//             values.insert(MediaCenter::AlbumRole, properties.value(MediaCenter::AlbumRole));
-//             values.insert(MediaCenter::AlbumArtistRole, properties.value(MediaCenter::AlbumArtistRole));
-        } else if (!QString::compare(mediaType, "Video", Qt::CaseInsensitive)) {
-//             values.insert(MediaCenter::DurationRole, properties.value(2));
-        } else if (!QString::compare(mediaType, "Image", Qt::CaseInsensitive)) {
-
+        if (mediaType == "audio") {
+            values.insert(MediaCenter::DurationRole, properties.value(MediaCenter::DurationRole));
+            values.insert(MediaCenter::ArtistRole, properties.value(MediaCenter::ArtistRole));
+            values.insert(MediaCenter::AlbumRole, properties.value(MediaCenter::AlbumRole));
+            values.insert(MediaCenter::AlbumArtistRole, properties.value(MediaCenter::AlbumArtistRole));
+        } else if (mediaType == "video") {
+            values.insert(MediaCenter::DurationRole, properties.value(MediaCenter::DurationRole));
         }
         mMediaLibrary->updateMedia(values);
 }

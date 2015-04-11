@@ -17,41 +17,48 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#define UPNP_DEBUG 1
-
 extern "C"{
     #include <libgupnp/gupnp-control-point.h>
     #include <libgupnp-av/gupnp-av.h>
     #include <libgssdp/gssdp.h>
-    #define CONTENT_DIR "urn:schemas-upnp-org:service:ContentDirectory"
     #define MAX_BROWSE 64
     #define MEDIA_SERVER "urn:schemas-upnp-org:device:MediaServer:1"
-    typedef struct{
+    #define CONTENT_DIR "urn:schemas-upnp-org:service:ContentDirectory"
+    typedef struct
+    {
         GUPnPServiceProxy *contentDir;
         gchar *id;
         guint32 startingIndex;
     } BrowseData;
+
+    typedef struct
+    {
+        gchar *id;
+        gpointer userdata;
+    } BrowseMetadataData;
+
     int upnpClientPort = 0;
     GUPnPContextManager *contextManager;
 }
 
 #include "upnpmediasource.h"
-
-#include <mediacenter/medialibrary.h>
-#include <mediacenter/singletonfactory.h>
-#include <mediacenter/mediacenter.h>
+#include "mediacenter/medialibrary.h"
+#include "mediacenter/singletonfactory.h"
+#include "mediacenter/mediacenter.h"
 
 #include <QDebug>
 #include <QDomElement>
 #include <QDomDocument>
 #include <QTimer>
 
-void addMedia(QHash<int, QString> properties);
+#define UPNP_DEBUG 1
 
-static void browse(GUPnPServiceProxy *contentDir,
-                   const char        *containerId,
-                   guint32            startingIndex,
-                   guint32            requestedCount);
+void addMedia(QHash <int, QString> properties);
+
+static void browseDirectChildren(GUPnPServiceProxy *contentDir,
+                                 const char *containerId,
+                                 guint32 startingIndex,
+                                 guint32 requestedCount);
 
 static GUPnPServiceProxy* getContentDir(GUPnPDeviceProxy *proxy)
 {
@@ -62,18 +69,146 @@ static GUPnPServiceProxy* getContentDir(GUPnPDeviceProxy *proxy)
     return GUPNP_SERVICE_PROXY(contentDir);
 }
 
-static void browseCallBack(GUPnPServiceProxy       *contentDir,
-                           GUPnPServiceProxyAction *action,
-                           gpointer                 userData)
+static void browseMetadataCallback (GUPnPServiceProxy *contentDir,
+                                    GUPnPServiceProxyAction *action,
+                                    gpointer userdata)
 {
-    BrowseData *data;
-    char       *didlXml;
-    guint32     numberReturned;
-    guint32     totalMatches;
-    GError     *error;
-    data = (BrowseData *)userData;
-    didlXml = NULL;
-    error = NULL;
+    GError *error = nullptr;
+    char *metadata = nullptr;
+    BrowseMetadataData *data = (BrowseMetadataData *) userdata;
+    gupnp_service_proxy_end_action(contentDir,
+                                   action,
+                                   &error,
+                                   /* OUT args */
+                                   "Result",
+                                   G_TYPE_STRING,
+                                   &metadata,
+                                   NULL);
+    if (metadata) {
+        #ifdef UPNP_DEBUG
+        qDebug() << "Metadata :" << metadata;
+        #endif
+
+        QString artist, album, albumArtist, title, mediaType, duration, url, protocolInfo, mimeType;
+        QDomElement docElem;
+        QDomDocument xmlDoc;
+        xmlDoc.setContent(QByteArray(metadata));
+        docElem = xmlDoc.documentElement();
+        QDomNodeList itemList = docElem.elementsByTagName("item");
+        for(int i = 0; i < itemList.count(); i++){
+            QDomElement item = itemList.at(i).toElement();
+            mimeType = item.elementsByTagName("upnp:class").at(0).toElement().text();
+
+            if (mimeType.contains("audio", Qt::CaseInsensitive)) {
+                mimeType = "audio";
+            } else if (mimeType.contains("video", Qt::CaseInsensitive)) {
+                mimeType = "video";
+            } else if (mimeType.contains("image", Qt::CaseInsensitive)) {
+                mimeType = "image";
+            } else {
+                continue;
+            }
+
+            url = item.elementsByTagName("res").at(0).toElement().text();
+            title = item.elementsByTagName("dc:title").at(0).toElement().text();
+            album = item.elementsByTagName("upnp:album").at(0).toElement().text();
+            artist = item.elementsByTagName("upnp:artist").at(0).toElement().text();
+            duration = item.elementsByTagName("res").at(0).toElement().attribute("duration");
+            protocolInfo= item.elementsByTagName("res").at(0).toElement().attribute("protocolInfo");
+
+            QHash<int, QString> properties;
+            properties.insert(Qt::DisplayRole, title);
+            properties.insert(MediaCenter::AlbumRole, album);
+            properties.insert(MediaCenter::MediaUrlRole, url);
+            properties.insert(MediaCenter::ArtistRole, artist);
+            properties.insert(MediaCenter::MimeTypeRole, mimeType);
+            properties.insert(MediaCenter::DurationRole, duration);
+            properties.insert(MediaCenter::AlbumArtistRole, albumArtist);
+            UPnPMediaSource::addMedia(properties);
+        }
+        g_free(metadata);
+    } else if (error) {
+        g_warning("Failed to get metadata for '%s': %s",
+                   data->id,
+                   error->message);
+
+        g_error_free(error);
+    }
+}
+
+static void browseMetadata (GUPnPServiceProxy *contentDir,
+                             const char        *id,
+                             gpointer           userdata)
+{
+    BrowseMetadataData *data;
+    data = g_slice_new(BrowseMetadataData);
+    data->id = g_strdup(id);
+    data->userdata = userdata;
+    gupnp_service_proxy_begin_action((GUPnPServiceProxy*)g_object_ref(contentDir),
+                                     "Browse",
+                                     browseMetadataCallback,
+                                     data,
+                                     /* IN args */
+                                     "ObjectID",
+                                     G_TYPE_STRING,
+                                     data->id,
+                                     "BrowseFlag",
+                                     G_TYPE_STRING,
+                                     "BrowseMetadata",
+                                     "Filter",
+                                     G_TYPE_STRING,
+                                     "*",
+                                     "StartingIndex",
+                                     G_TYPE_UINT,
+                                     0,
+                                     "RequestedCount",
+                                     G_TYPE_UINT,
+                                     0,
+                                     "SortCriteria",
+                                     G_TYPE_STRING,
+                                     "",
+                                     NULL);
+}
+
+static void appendDidlObject(GUPnPDIDLLiteObject *object,
+                             BrowseData *browseData,
+                             const char* udn)
+{
+    Q_UNUSED(udn);
+    const char *id = NULL;
+    const char *parentId = NULL;
+    const char *title = NULL;
+    id = gupnp_didl_lite_object_get_id (object);
+    title = gupnp_didl_lite_object_get_title (object);
+    parentId = gupnp_didl_lite_object_get_parent_id (object);
+    if (id == NULL || title == NULL || parentId == NULL) {
+        return;
+    }
+    browseMetadata((GUPnPServiceProxy*)g_object_ref(browseData->contentDir), id, NULL);
+}
+
+static void onDidlObjectAvailable(GUPnPDIDLLiteParser *parser,
+                                  GUPnPDIDLLiteObject *object,
+                                  gpointer userdata)
+{
+    Q_UNUSED(parser);
+    BrowseData   *browseData;
+    const char   *udn;
+
+    browseData = (BrowseData *)userdata;
+    udn = gupnp_service_info_get_udn(GUPNP_SERVICE_INFO (browseData->contentDir));
+    appendDidlObject(object, browseData, udn);
+}
+
+static void browseDirectChildrenCallback(GUPnPServiceProxy *contentDir,
+                                         GUPnPServiceProxyAction *action,
+                                         gpointer userData)
+{
+    char *didlXml = nullptr;
+    GError *error = nullptr;
+    guint32 totalMatches;
+    guint32 numberReturned;
+    BrowseData *data = (BrowseData *)userData;
 
     gupnp_service_proxy_end_action(contentDir,
                                    action,
@@ -90,6 +225,17 @@ static void browseCallBack(GUPnPServiceProxy       *contentDir,
                                    &totalMatches,
                                    NULL);
     if (didlXml) {
+        #ifdef UPNP_DEBUG
+        qDebug() << "DIDLXML:" << didlXml;
+        #endif
+
+        GUPnPDIDLLiteParser *parser;
+        parser = gupnp_didl_lite_parser_new();
+        g_signal_connect(parser,
+                         "object-available",
+                         G_CALLBACK (onDidlObjectAvailable),
+                         data);
+        gupnp_didl_lite_parser_parse_didl(parser, didlXml, &error);
         gint32 remaining;
         gint32 batchSize;
 
@@ -103,32 +249,27 @@ static void browseCallBack(GUPnPServiceProxy       *contentDir,
 
             for (int i = 0; i < itemList.count(); i++) {
                 QDomElement item = itemList.at(i).toElement();
-                title = item.elementsByTagName("dc:title").at(0).toElement().text();
-                artist = item.elementsByTagName("upnp:artist").at(0).toElement().text();
-                album = item.elementsByTagName("upnp:album").at(0).toElement().text();
-                protocolInfo= item.elementsByTagName("res").at(0).toElement().attribute("protocolInfo");
-                duration = item.elementsByTagName("res").at(0).toElement().attribute("duration");
                 url = item.elementsByTagName("res").at(0).toElement().text();
-                if (!protocolInfo.isEmpty()) {
-                    mimeType = protocolInfo.split(":").at(2);
-                }
-                qDebug() << "Media item" << url;
+                title = item.elementsByTagName("dc:title").at(0).toElement().text();
+                album = item.elementsByTagName("upnp:album").at(0).toElement().text();
+                artist = item.elementsByTagName("upnp:artist").at(0).toElement().text();
+                duration = item.elementsByTagName("res").at(0).toElement().attribute("duration");
 
                 QHash<int, QString> properties;
-                properties.insert(MediaCenter::MediaUrlRole, url);
                 properties.insert(Qt::DisplayRole, title);
-                properties.insert(MediaCenter::DurationRole, duration);
-                properties.insert(MediaCenter::ArtistRole, artist);
                 properties.insert(MediaCenter::AlbumRole, album);
-                properties.insert(MediaCenter::AlbumArtistRole, albumArtist);
+                properties.insert(MediaCenter::MediaUrlRole, url);
+                properties.insert(MediaCenter::ArtistRole, artist);
+                properties.insert(MediaCenter::DurationRole, duration);
                 properties.insert(MediaCenter::MimeTypeRole, mimeType);
+                properties.insert(MediaCenter::AlbumArtistRole, albumArtist);
                 UPnPMediaSource::addMedia(properties);
             }
             QDomNodeList containerList  = docElem.elementsByTagName("container");
             for (int i = 0; i < containerList.count(); i++) {
                 QDomElement container = containerList.at(i).toElement();
                 const char* id = g_strdup(container.attribute("id").toAscii().constData());
-                browse(contentDir, id, 0, MAX_BROWSE);
+                browseDirectChildren(contentDir, id, 0, MAX_BROWSE);
             }
         }
         g_free(didlXml);
@@ -137,14 +278,13 @@ static void browseCallBack(GUPnPServiceProxy       *contentDir,
         if ((remaining > 0 || totalMatches == 0) && numberReturned != 0) {
             if (remaining > 0) {
                 batchSize = MIN(remaining, MAX_BROWSE);
-            }
-            else {
+            } else {
                 batchSize = MAX_BROWSE;
             }
-            browse(data->contentDir,
-                   data->id,
-                   data->startingIndex,
-                   batchSize);
+            browseDirectChildren(data->contentDir,
+                                 data->id,
+                                 data->startingIndex,
+                                 batchSize);
         }
     }
     else if (error) {
@@ -157,16 +297,16 @@ static void browseCallBack(GUPnPServiceProxy       *contentDir,
     }
 }
 
-static void browse(GUPnPServiceProxy *contentDir,
-                   const char        *containerId,
-                   guint32            startingIndex,
-                   guint32            requestedCount)
+static void browseDirectChildren(GUPnPServiceProxy *contentDir,
+                                 const char *containerId,
+                                 guint32 startingIndex,
+                                 guint32 requestedCount)
 {
     BrowseData *data;
     data = g_slice_new(BrowseData);
-    data->contentDir = (GUPnPServiceProxy*) g_object_ref(contentDir);
     data->id = g_strdup(containerId);
     data->startingIndex = startingIndex;
+    data->contentDir = (GUPnPServiceProxy*) g_object_ref(contentDir);
 
     #ifdef UPNP_DEBUG
     qDebug() << "Container ID and Starting Index if item is container:" << containerId << startingIndex << endl;
@@ -174,7 +314,7 @@ static void browse(GUPnPServiceProxy *contentDir,
 
     gupnp_service_proxy_begin_action(contentDir,
                                      "Browse",
-                                     browseCallBack,
+                                     browseDirectChildrenCallback,
                                      data,
                                      /* IN args */
                                      "ObjectID",
@@ -212,7 +352,7 @@ static void appendMediaServer(GUPnPDeviceProxy *proxy)
     qDebug() << "Friendly Name" << friendlyName;
     #endif
 
-    browse(contentDir, "0", 0, MAX_BROWSE);
+    browseDirectChildren(contentDir, "0", 0, MAX_BROWSE);
     gupnp_service_proxy_set_subscribed(contentDir, TRUE);
 }
 
@@ -231,13 +371,11 @@ void addMediaServer(GUPnPDeviceProxy *proxy)
 
 void removeMediaServer(GUPnPDeviceProxy *proxy)
 {
-    QString udn;
-    udn = gupnp_device_info_get_udn(GUPNP_DEVICE_INFO (proxy));
+    QString udn = gupnp_device_info_get_udn(GUPNP_DEVICE_INFO (proxy));
     //ToDo: Remove Media Server
 }
 
-static void mediaServerProxyAvailable(GUPnPControlPoint *cp,
-                                      GUPnPDeviceProxy  *proxy)
+static void mediaServerProxyAvailable(GUPnPControlPoint *cp, GUPnPDeviceProxy  *proxy)
 {
     Q_UNUSED(cp);
     #ifdef UPNP_DEBUG
@@ -246,15 +384,14 @@ static void mediaServerProxyAvailable(GUPnPControlPoint *cp,
 
     QString udn = gupnp_device_info_get_udn(GUPNP_DEVICE_INFO (proxy));
     if(udn == "uuid:adsfa344-6b8b-4f60-87ca-228c46b5b0e8"){
-        qDebug() << "ignored pmc media server";
+        qDebug() << "Ignored PMC Media Server";
         return;
     }
 
     addMediaServer (proxy);
 }
 
-static void mediaServerProxyUnavailable(GUPnPControlPoint *cp,
-                                        GUPnPDeviceProxy  *proxy)
+static void mediaServerProxyUnavailable(GUPnPControlPoint *cp, GUPnPDeviceProxy  *proxy)
 {
     Q_UNUSED(cp);
     #ifdef UPNP_DEBUG
@@ -265,8 +402,8 @@ static void mediaServerProxyUnavailable(GUPnPControlPoint *cp,
 }
 
 static void onContextAvailable(GUPnPContextManager *contextManager,
-                               GUPnPContext        *context,
-                               gpointer             userData)
+                               GUPnPContext *context,
+                               gpointer userData)
 {
     Q_UNUSED(userData);
     GUPnPControlPoint *mediaServerControlPoint;
@@ -282,8 +419,7 @@ static void onContextAvailable(GUPnPContextManager *contextManager,
                      G_CALLBACK (mediaServerProxyUnavailable),
                      NULL);
 
-    gssdp_resource_browser_set_active(GSSDP_RESOURCE_BROWSER (mediaServerControlPoint),
-                                       TRUE);
+    gssdp_resource_browser_set_active(GSSDP_RESOURCE_BROWSER (mediaServerControlPoint), TRUE);
     gupnp_context_manager_manage_control_point(contextManager, mediaServerControlPoint);
 }
 
