@@ -51,7 +51,7 @@ extern "C"{
 #include <QDomDocument>
 #include <QTimer>
 
-#define UPNP_DEBUG 1
+#define UPNP_DEBUG 0
 
 void addMedia(QHash <int, QString> properties);
 
@@ -86,7 +86,7 @@ static void browseMetadataCallback (GUPnPServiceProxy *contentDir,
                                    NULL);
     if (metadata) {
         #ifdef UPNP_DEBUG
-        qDebug() << "Metadata :" << metadata;
+        //qDebug() << "Metadata :" << metadata;
         #endif
 
         QString artist, album, albumArtist, title, mediaType, duration, url, protocolInfo, mimeType;
@@ -226,7 +226,7 @@ static void browseDirectChildrenCallback(GUPnPServiceProxy *contentDir,
                                    NULL);
     if (didlXml) {
         #ifdef UPNP_DEBUG
-        qDebug() << "DIDLXML:" << didlXml;
+        //qDebug() << "DIDLXML:" << didlXml;
         #endif
 
         GUPnPDIDLLiteParser *parser;
@@ -309,7 +309,7 @@ static void browseDirectChildren(GUPnPServiceProxy *contentDir,
     data->contentDir = (GUPnPServiceProxy*) g_object_ref(contentDir);
 
     #ifdef UPNP_DEBUG
-    qDebug() << "Container ID and Starting Index if item is container:" << containerId << startingIndex << endl;
+    //qDebug() << "Container ID and Starting Index if item is container:" << containerId << startingIndex << endl;
     #endif
 
     gupnp_service_proxy_begin_action(contentDir,
@@ -438,7 +438,6 @@ MEDIACENTER_EXPORT_MEDIASOURCE(UPnPMediaSource, "upnp.json")
 UPnPMediaSource::UPnPMediaSource(QObject* parent, const QVariantList& args)
     : AbstractMediaSource(parent, args)
 {
-    qDebug() << "UPnPMediaSource Constructor called!";
 }
 
 void UPnPMediaSource::run()
