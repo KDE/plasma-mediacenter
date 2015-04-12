@@ -192,8 +192,8 @@ void PmcMetadataModel::handleNewAlbumsOrArtists(const QList< QSharedPointer< T >
         }
         d->mediaByResourceId.insert(a->name(), QSharedPointer<QObject>(a));
         resourceIdsToBeInserted.append(a->name());
-        connect(a.data(), &T::updated, [this]() {
-            albumOrArtistUpdated<T>(static_cast<T*>(sender()));
+        connect(a.data(), &T::updated, [a, this]() {
+            albumOrArtistUpdated<T>(static_cast<T*>(a.data()));
         });
     }
 
