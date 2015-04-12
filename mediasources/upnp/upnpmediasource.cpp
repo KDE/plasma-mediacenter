@@ -244,27 +244,7 @@ static void browseDirectChildrenCallback(GUPnPServiceProxy *contentDir,
             QDomDocument xmlDoc;
             xmlDoc.setContent(QByteArray(didlXml));
             docElem=xmlDoc.documentElement();
-            QDomNodeList itemList = docElem.elementsByTagName("item");
-            QString artist, album, albumArtist, title, mediaType, duration, url, protocolInfo, mimeType;
 
-            for (int i = 0; i < itemList.count(); i++) {
-                QDomElement item = itemList.at(i).toElement();
-                url = item.elementsByTagName("res").at(0).toElement().text();
-                title = item.elementsByTagName("dc:title").at(0).toElement().text();
-                album = item.elementsByTagName("upnp:album").at(0).toElement().text();
-                artist = item.elementsByTagName("upnp:artist").at(0).toElement().text();
-                duration = item.elementsByTagName("res").at(0).toElement().attribute("duration");
-
-                QHash<int, QString> properties;
-                properties.insert(Qt::DisplayRole, title);
-                properties.insert(MediaCenter::AlbumRole, album);
-                properties.insert(MediaCenter::MediaUrlRole, url);
-                properties.insert(MediaCenter::ArtistRole, artist);
-                properties.insert(MediaCenter::DurationRole, duration);
-                properties.insert(MediaCenter::MimeTypeRole, mimeType);
-                properties.insert(MediaCenter::AlbumArtistRole, albumArtist);
-                UPnPMediaSource::addMedia(properties);
-            }
             QDomNodeList containerList  = docElem.elementsByTagName("container");
             for (int i = 0; i < containerList.count(); i++) {
                 QDomElement container = containerList.at(i).toElement();
