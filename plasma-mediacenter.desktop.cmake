@@ -44,6 +44,7 @@ Name[x-test]=xxPlasma Media Centerxx
 Name[zh_CN]=Plasma 媒体中心
 Name[zh_TW]=Plasma 媒體中心
 Comment=Plasma Media Center by KDE
+Comment[ar]=مركز بلازما للوسائط لكدي
 Comment[ca]=Centre multimèdia del Plasma pel KDE
 Comment[cs]=Multimediální centrum Plasma od KDE
 Comment[da]=Plasma Mediecenter af KDE
