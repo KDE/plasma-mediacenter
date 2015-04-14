@@ -85,16 +85,16 @@ static void browse_cb(GUPnPService *service,
                               NULL);
     QString result;
     MediaLibrary *library = SingletonFactory::instanceFor<MediaLibrary>();
-    QStringList mediaType = {"Audio", "Video", "Image"};
+    QStringList mediaType = {"audio", "video", "image"};
     foreach (QString type, mediaType) {
         qDebug() << "Media Type" << type;
         QList < QSharedPointer <PmcMedia> > mediaList = library->getMedia(type);
         foreach(QSharedPointer <PmcMedia> media, mediaList){
             qDebug() << "URL" << media->url();
             const char *mimeType;
-            if (type == "Audio") {
+            if (type == "audio") {
                 mimeType = "audio/mp3";
-            } else if(type == "Video") {
+            } else if(type == "video") {
                 mimeType = "video/mp4";
             } else {
                 mimeType = "image/png";
