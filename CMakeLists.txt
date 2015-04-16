@@ -47,7 +47,8 @@ add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
 find_package(KF5 ${KF5_MIN_VERSION} COMPONENTS REQUIRED
     CoreAddons Config I18n GuiAddons Service ConfigWidgets KIO Declarative WindowSystem Plasma PlasmaQuick)
 
-find_package(KF5Baloo 5.1.90)
+find_package(KF5Baloo)
+add_feature_info("KF5Baloo" KF5Baloo_FOUND "Required for Baloo integration")
 find_package(Taglib REQUIRED)
 
 include_directories(
