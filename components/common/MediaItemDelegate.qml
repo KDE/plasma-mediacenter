@@ -27,7 +27,6 @@ Item {
     property bool horizontal
     property QtObject view
     property QtObject backend
-    signal popupMenuRequested(int index, string mediaUrl, string mediaType, string display)
     signal playRequested(int index, string url, string currentMediaType)
 
     Component.onCompleted: init()
@@ -56,11 +55,6 @@ Item {
                     mediaItemDelegateItem.playRequested(index, mediaUrl, mediaType)
                 }
             }
-            onPressAndHold: {
-                if( mediaType == "audio" || mediaType == "video") {
-                    mediaItemDelegateItem.popupMenuRequested(index, mediaUrl, mediaType, display);
-                }
-            }
         }
     }
 
@@ -76,11 +70,6 @@ Item {
                     backend.expand(index, view.model);
                 } else {
                     mediaItemDelegateItem.playRequested(index, mediaUrl, mediaType)
-                }
-            }
-            onPressAndHold: {
-                if( mediaType == "audio" || mediaType == "video") {
-                    mediaItemDelegateItem.popupMenuRequested(index, mediaUrl, mediaType, display);
                 }
             }
         }

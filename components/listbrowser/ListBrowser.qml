@@ -60,7 +60,6 @@ FocusScope {
 
             backend: listBrowserRoot.currentBrowsingBackend
             onPlayRequested: listBrowserRoot.mediaSelected(index, url, currentMediaType)
-            onPopupMenuRequested: listBrowserRoot.popupRequested(index,mediaUrl,mediaType, display)
         }
 
         PlasmaComponents.ScrollBar {

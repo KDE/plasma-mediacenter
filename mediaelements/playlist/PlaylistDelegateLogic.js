@@ -1,18 +1,3 @@
-function onPressAndHold(dragItemArea, listViewItem)
-{
-    listViewItem.z = 1;
-    dragItemArea.posStartX = listViewItem.x;
-    dragItemArea.posStartY = listViewItem.y;
-    dragItemArea.delegateHeld = true;
-    dragItemArea.drag.target = listViewItem;
-    listViewItem.opacity = 0.5;
-    listViewItem.ListView.view.interactive = false;
-    dragItemArea.maximumX = parent.width;
-    dragItemArea.drag.minimumX = 0;
-    dragItemArea.maximumY = parent.height*listViewItem.ListView.count;
-    dragItemArea.minimumY = 0;
-}
-
 function onPositionChanged(dragItemArea, listViewItem)
 {
     dragItemArea.posEndX = listViewItem.x;

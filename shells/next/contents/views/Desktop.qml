@@ -37,7 +37,6 @@ Item {
     property QtObject mediaPlayerInstance
     property QtObject pmcInterfaceInstance
     property QtObject playlistInstance
-    property QtObject popupMenuInstance
     property QtObject imageViewerInstance
 
     // Shell stuff
@@ -75,13 +74,6 @@ Item {
             pmcInterfaceInstance = pmcInterfaceComponent.createObject(root);
         }
         return pmcInterfaceInstance;
-    }
-
-    function getPopupMenu() {
-       if (!popupMenuInstance) {
-           popupMenuInstance = pmcPopupMenuComponent.createObject(pmcPageStack);
-       }
-       return popupMenuInstance;
     }
 
     function getPlaylist() {
@@ -402,15 +394,6 @@ Item {
             }
             onPlayAllRequested: playlistInstance.playAll();
             onBackRequested: pmcPageStack.popAndFocus()
-            onPopupMenuRequested: {
-                popupMenuInstance = getPopupMenu();
-                popupMenuInstance.visible = true;
-                popupMenuInstance.mediaUrl = mediaUrl;
-                popupMenuInstance.display = display;
-                popupMenuInstance.mediaType = mediaType;
-                popupMenuInstance.currentMediaDelegateIndex = index;
-                pmcPageStack.pushAndFocus(popupMenuInstance);
-            }
             onBackendOverlayChanged: {
                 if (backendOverlay) {
                     pmcPageStack.pushAndFocus(backendOverlay);
@@ -443,47 +426,6 @@ Item {
                         //pmcPageStack.pushAndFocus(getMediaBrowser())
                     }
                 }
-            }
-        }
-    }
-
-    ListModel {
-        id: popupModel
-        ListElement {
-            name: "Add to Playlist"
-            icon: "list-add"
-        }
-        ListElement {
-            name: "Play"
-            icon: "pmc-play"
-        }
-        ListElement {
-            name: "Cancel"
-            icon: "dialog-cancel"
-        }
-    }
-
-    Component {
-        id: pmcPopupMenuComponent
-        MediaCenterElements.PopupMenu {
-            id: popupMenu
-            anchors.fill: parent
-            model: popupModel
-            onPopupMenuItemClicked: {
-                switch(index) {
-                    case 0:
-                        pmcInterfaceInstance.playlistModel.addToPlaylist(mediaUrl);
-                        root.goBack();
-                        break;
-                    case 1:
-                        pmcPageStack.popAndFocus(true);
-                        mediaBrowserInstance.playRequested(currentMediaDelegateIndex, mediaUrl, mediaType);
-                        break;
-                    case 2:
-                        root.goBack();
-                        break;
-                }
-                popupMenu.visible = false
             }
         }
     }

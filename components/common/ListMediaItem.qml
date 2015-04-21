@@ -31,7 +31,6 @@ Item {
     property QtObject view
 
     signal clicked(int index)
-    signal pressAndHold(int index)
 
     Rectangle {
         anchors {
@@ -85,11 +84,10 @@ Item {
                         !root.view.flicking)
                         root.view.currentIndex = index
             onClicked: if (mouse.button == Qt.RightButton) {
-                root.pressAndHold(index);
+                //do something
             } else {
                 root.clicked(index);
             }
-            onPressAndHold: root.pressAndHold(index);
         }
 
     }
