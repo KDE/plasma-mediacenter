@@ -36,7 +36,6 @@ FocusScope {
     property QtObject topSibling
 
     signal mediaSelected(int index, string url, string mediaType)
-    signal popupRequested(int index, string url, string mediaType, string title)
 
     KQuickControlAddons.MouseEventListener {
         anchors.fill: gridBrowserGridView
