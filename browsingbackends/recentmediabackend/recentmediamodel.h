@@ -18,30 +18,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#include "recentmediabackend.h"
-#include "recentmediamodel.h"
+#ifndef RECENTMEDIAMODEL_H
+#define RECENTMEDIAMODEL_H
+
+#include <QAbstractListModel>
 
 #include <mediacenter/pmcmodel.h>
 
-MEDIACENTER_EXPORT_BROWSINGBACKEND(RecentMediaBackend, "recentmediabackend.json")
-
-RecentMediaBackend::RecentMediaBackend(QObject *parent, const QVariantList& args)
-    : AbstractBrowsingBackend(parent, args)
+class RecentMediaModel : public QAbstractListModel
 {
-}
 
-RecentMediaBackend::~RecentMediaBackend()
-{
-}
+public:
+    explicit RecentMediaModel(QObject* parent = 0);
+    virtual ~RecentMediaModel();
 
-bool RecentMediaBackend::initImpl()
-{
-    RecentMediaModel* model = new RecentMediaModel(this);
-    PmcModel* pmcModel = new PmcModel(model, this);
-    pmcModel->setName("Recent Videos");
-    setModel(pmcModel);
+    virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+    virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
 
-    return true;
-}
+private:
+    class Private;
+    Private * const d;
 
-#include "recentmediabackend.moc"
+};
+
+#endif //RECENTMEDIAMODEL_H
