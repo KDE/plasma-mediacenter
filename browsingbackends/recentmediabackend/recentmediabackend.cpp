@@ -50,6 +50,7 @@ bool RecentMediaBackend::initImpl()
     musicModel->query();
     PmcModel* pmcMusicModel = new PmcModel(musicModel, this);
     pmcMusicModel->setName(i18n("Recent Music"));
+    pmcMusicModel->setIsList(true);
     addModel(pmcMusicModel);
 
     RecentMediaModel* imageModel = new RecentMediaModel(this);

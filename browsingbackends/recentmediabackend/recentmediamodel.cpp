@@ -25,6 +25,7 @@
 #include <mediacenter/medialibrary.h>
 #include <mediacenter/singletonfactory.h>
 #include <mediacenter/pmcmedia.h>
+#include <mediacenter/pmccoverartprovider.h>
 
 #include <QDebug>
 #include <QUrl>
@@ -121,11 +122,16 @@ QVariant RecentMediaModel::data(const QModelIndex& index, int role) const
     case MediaCenter::GenreRole:
         return media->genre();
     case Qt::DecorationRole:
-        return "image://icon/image-missing";
+        if (media->type() == "video")
+            return PmcCoverArtProvider::qmlImageUriForMediaFileCover(media->url());
+        else if (media->type() == "audio")
+            return PmcCoverArtProvider::qmlImageUriForAlbumCover(media->album());
+        else
+            return media->thumbnail();
     case MediaCenter::CreatedAtRole:
         return media->createdAt();
     case MediaCenter::HideLabelRole:
-        return false;
+        return(media->type() == "image");
     case MediaCenter::IsExpandableRole:
         return false;
     }
