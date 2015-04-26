@@ -29,6 +29,7 @@
 
 #include <QDebug>
 #include <QUrl>
+
 //TODO: Make pretty headers work out again
 //#include <KActivitiesExperimentalStats/Cleaning>
 //#include <KActivitiesExperimentalStats/ResultModel>
