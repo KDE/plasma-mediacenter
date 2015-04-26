@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Service
 Icon=tools-rip-audio-cd
-Name=Recent Media
+Name=Home
 Comment=Recently accessed media on your device
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
 

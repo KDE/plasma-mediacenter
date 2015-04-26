@@ -23,6 +23,8 @@
 
 #include <mediacenter/pmcmodel.h>
 
+#include <KLocalizedString>
+
 MEDIACENTER_EXPORT_BROWSINGBACKEND(RecentMediaBackend, "recentmediabackend.json")
 
 RecentMediaBackend::RecentMediaBackend(QObject *parent, const QVariantList& args)
@@ -36,10 +38,26 @@ RecentMediaBackend::~RecentMediaBackend()
 
 bool RecentMediaBackend::initImpl()
 {
-    RecentMediaModel* model = new RecentMediaModel(this);
-    PmcModel* pmcModel = new PmcModel(model, this);
-    pmcModel->setName("Recent Videos");
-    setModel(pmcModel);
+    RecentMediaModel* videoModel = new RecentMediaModel(this);
+    videoModel->setMediaType("video/*");
+    videoModel->query();
+    PmcModel* pmcVideoModel = new PmcModel(videoModel, this);
+    pmcVideoModel->setName(i18n("Recent Videos"));
+    setModel(pmcVideoModel);
+
+    RecentMediaModel* musicModel = new RecentMediaModel(this);
+    musicModel->setMediaType("audio/*");
+    musicModel->query();
+    PmcModel* pmcMusicModel = new PmcModel(musicModel, this);
+    pmcMusicModel->setName(i18n("Recent Music"));
+    addModel(pmcMusicModel);
+
+    RecentMediaModel* imageModel = new RecentMediaModel(this);
+    imageModel->setMediaType("image/*");
+    imageModel->query();
+    PmcModel* pmcImageModel = new PmcModel(imageModel, this);
+    pmcImageModel->setName(i18n("Recent Pictures"));
+    addModel(pmcImageModel);
 
     return true;
 }

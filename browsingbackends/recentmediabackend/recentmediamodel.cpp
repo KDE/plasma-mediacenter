@@ -49,24 +49,16 @@ public:
         result = nullptr;
     }
     ResultModel* result;
+    QString mediaType;
     MediaLibrary* mediaLibrary;
 };
 
-RecentMediaModel::RecentMediaModel(QObject* parent):
+RecentMediaModel::RecentMediaModel(QObject* parent) :
     QAbstractListModel(parent),
     d(new Private())
 {
     setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
     d->mediaLibrary = SingletonFactory::instanceFor<MediaLibrary>();
-
-    auto query = UsedResources
-        | RecentlyUsedFirst
-        | Agent::any()
-        | Type::Type("video/*")
-        | Activity::current()
-        | Url::file();
-
-    d->result = new ResultModel(query);
 }
 
 RecentMediaModel::~RecentMediaModel()
@@ -76,19 +68,36 @@ RecentMediaModel::~RecentMediaModel()
 
 int RecentMediaModel::rowCount(const QModelIndex& parent) const
 {
-    Q_UNUSED(parent)
+    if(!d->result) {
+        return 0;
+    }
     return d->result->rowCount(parent);
+}
+
+void RecentMediaModel::setMediaType(const QString &type)
+{
+    d->mediaType = type;
+}
+
+void RecentMediaModel::query()
+{
+    auto query = UsedResources
+        | RecentlyUsedFirst
+        | Agent::any()
+        | Type::Type(d->mediaType)
+        | Activity::current()
+        | Url::file();
+
+    d->result = new ResultModel(query);
 }
 
 QVariant RecentMediaModel::data(const QModelIndex& index, int role) const
 {
-    Q_UNUSED(role)
     const int row=index.row();
 
     if (!index.isValid() || row >= rowCount())
         return QVariant();
 
-    //const QString url = d->result->data(index, ResultModel::ResourceRole).toString();
     const QUrl url = QUrl::fromLocalFile(d->result->data(index, ResultModel::ResourceRole).toString());
     auto media = d->mediaLibrary->mediaForUrl(url.toString());
 
