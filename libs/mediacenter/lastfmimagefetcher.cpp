@@ -73,7 +73,7 @@ void LastFmImageFetcher::processQueue()
         apiUrl = QUrl(m_artistInfoUrl.arg(nameList.at(1)));
     }
 
-    qDebug() << "Fetching " << apiUrl;
+    // qDebug() << "Fetching " << apiUrl;
     QNetworkReply *reply = m_netAccessManager.get(QNetworkRequest(apiUrl));
     m_currentInfoDownloads.insert(reply,
                                   nameList.count() > 2 ? nameList.at(2) : nameList.at(1));
@@ -121,7 +121,7 @@ void LastFmImageFetcher::downloadImage(const QString& type, const QString& name,
         qDebug() << "Webservice has no image for " << name;
         return;
     }
-    qDebug() << "Downloading image for " << name << " from " << url;
+    // qDebug() << "Downloading image for " << name << " from " << url;
     QNetworkReply *reply = m_imageDownloadManager.get(QNetworkRequest(url));
     m_currentImageDownloads.insert(reply, QPair<QString,QString>(type, name));
 }
@@ -134,7 +134,7 @@ void LastFmImageFetcher::gotImage(QNetworkReply* reply)
     const QByteArray data = reply->readAll();
 
     QImage image = QImage::fromData(data);
-    qDebug() << "Adding image " << image.size() << " for " << name;
+    // qDebug() << "Adding image " << image.size() << " for " << name;
     SingletonFactory::instanceFor<PmcImageCache>()->addImage(QString(name).prepend(typePrefix), image);
 
     m_busy = false;
