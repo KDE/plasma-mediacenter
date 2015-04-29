@@ -48,11 +48,10 @@ class RecentMediaModel::Private
 public:
     Private()
     {
-        result = nullptr;
     }
-    ResultModel* result;
+    ResultModel* result = nullptr;
     QString mediaType;
-    MediaLibrary* mediaLibrary;
+    MediaLibrary* mediaLibrary = nullptr;
 };
 
 RecentMediaModel::RecentMediaModel(QObject* parent) :
