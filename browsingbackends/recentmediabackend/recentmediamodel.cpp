@@ -64,6 +64,9 @@ RecentMediaModel::RecentMediaModel(QObject* parent) :
 
 RecentMediaModel::~RecentMediaModel()
 {
+    if(d->result) {
+        disconnect(d->result, 0, this, 0);
+    }
     delete d;
 }
 
@@ -90,6 +93,47 @@ void RecentMediaModel::query()
         | Url::file();
 
     d->result = new ResultModel(query);
+
+    connect(d->result, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
+            this, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
+            Qt::UniqueConnection);
+    connect(d->result, SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)),
+            this, SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)),
+            Qt::UniqueConnection);
+    connect(d->result, SIGNAL(rowsAboutToBeMoved(QModelIndex,int,int,QModelIndex,int)),
+            this, SIGNAL(rowsAboutToBeMoved(QModelIndex,int,int,QModelIndex,int)),
+            Qt::UniqueConnection);
+    connect(d->result, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
+            this, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
+            Qt::UniqueConnection);
+    connect(d->result, SIGNAL(layoutAboutToBeChanged(QList<QPersistentModelIndex>,QAbstractItemModel::LayoutChangeHint)),
+            this, SIGNAL(layoutAboutToBeChanged(QList<QPersistentModelIndex>,QAbstractItemModel::LayoutChangeHint)),
+            Qt::UniqueConnection);
+    connect(d->result, SIGNAL(rowsInserted(QModelIndex,int,int)),
+            this, SIGNAL(rowsInserted(QModelIndex,int,int)),
+            Qt::UniqueConnection);
+    connect(d->result, SIGNAL(rowsInserted(QModelIndex,int,int)),
+            this, SIGNAL(countChanged()), Qt::UniqueConnection);
+    connect(d->result, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
+            this, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
+            Qt::UniqueConnection);
+    connect(d->result, SIGNAL(rowsRemoved(QModelIndex,int,int)),
+            this, SIGNAL(rowsRemoved(QModelIndex,int,int)),
+            Qt::UniqueConnection);
+    connect(d->result, SIGNAL(rowsRemoved(QModelIndex,int,int)),
+            this, SIGNAL(countChanged()), Qt::UniqueConnection);
+    connect(d->result, SIGNAL(modelAboutToBeReset()),
+            this, SIGNAL(modelAboutToBeReset()),
+            Qt::UniqueConnection);
+    connect(d->result, SIGNAL(modelReset()),
+            this, SIGNAL(modelReset()),
+            Qt::UniqueConnection);
+    connect(d->result, SIGNAL(modelReset()),
+            this, SIGNAL(countChanged()),
+            Qt::UniqueConnection);
+    connect(d->result, SIGNAL(layoutChanged(QList<QPersistentModelIndex>,QAbstractItemModel::LayoutChangeHint)),
+            this, SIGNAL(layoutChanged(QList<QPersistentModelIndex>,QAbstractItemModel::LayoutChangeHint)),
+            Qt::UniqueConnection);
 }
 
 QVariant RecentMediaModel::data(const QModelIndex& index, int role) const
