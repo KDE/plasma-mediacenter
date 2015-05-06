@@ -21,6 +21,8 @@
 
 #include "runtimedata.h"
 
+#include <KActivities/ResourceInstance>
+
 RuntimeData::RuntimeData()
 {
 }
@@ -44,6 +46,7 @@ void RuntimeData::toggleMute() {
 void RuntimeData::playUrl(QUrl url) {
     m_url = url;
     m_status = PmcStatus::Playing;
+    KActivities::ResourceInstance::notifyAccessed(url);
     emit urlChanged(m_url);
     emit statusChanged(m_status);
 }
