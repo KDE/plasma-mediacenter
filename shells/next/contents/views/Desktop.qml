@@ -34,79 +34,11 @@ Item {
     property Item wallpaper
 
     function toggleWidgetExplorer(containment) {
-//         console.log("Widget Explorer toggled");
-
-        if (sidePanelStack.state == "widgetExplorer") {
-            sidePanelStack.state = "closed";
-        } else {
-            sidePanelStack.state = "widgetExplorer";
-            sidePanelStack.setSource(Qt.resolvedUrl("../explorer/WidgetExplorer.qml"), {"containment": containment})
-        }
+         console.log("Widget Explorer toggled");
     }
 
     KWindowSystem {
         id: kwindowsystem
-    }
-
-    PlasmaCore.Dialog {
-        id: sidePanel
-        location: PlasmaCore.Types.LeftEdge
-        type: PlasmaCore.Dialog.Dock
-        flags: Qt.WindowStaysOnTopHint
-
-        hideOnWindowDeactivate: true
-
-        onVisibleChanged: {
-            if (!visible) {
-                sidePanelStack.state = "closed";
-            } else {
-                var rect = containment.availableScreenRect;
-                // get the current available screen geometry and subtract the dialog's frame margins
-                sidePanelStack.height = containment ? rect.height - sidePanel.margins.top - sidePanel.margins.bottom : 1000;
-                sidePanel.x = desktop.x + rect.x;
-                sidePanel.y = desktop.y + rect.y;
-            }
-        }
-
-        mainItem: Loader {
-            id: sidePanelStack
-            asynchronous: true
-            height: 1000 //start with some arbitrary height, will be changed from onVisibleChanged
-            width: item ? item.width: 0
-            state: "closed"
-
-            onLoaded: {
-                if (sidePanelStack.item) {
-                    item.closed.connect(function(){sidePanelStack.state = "closed";});
-
-                    if (sidePanelStack.state == "widgetExplorer"){
-                        sidePanel.hideOnWindowDeactivate = Qt.binding(function() { return sidePanelStack.item && !sidePanelStack.item.preventWindowHide; })
-                    } else {
-                        sidePanel.hideOnWindowDeactivate = true;
-                    }
-                }
-                sidePanel.visible = true;
-                kwindowsystem.forceActivateWindow(sidePanel)
-            }
-            onStateChanged: {
-                if (sidePanelStack.state == "closed") {
-                    sidePanel.visible = false;
-                    sidePanelStack.source = ""; //unload all elements
-                }
-            }
-        }
-    }
-
-    Connections {
-        target: containment
-        onAvailableScreenRectChanged: {
-            var rect = containment.availableScreenRect;
-            sidePanel.requestActivate();
-            // get the current available screen geometry and subtract the dialog's frame margins
-            sidePanelStack.height = containment ? rect.height - sidePanel.margins.top - sidePanel.margins.bottom : 1000;
-            sidePanel.x = desktop.x + rect.x;
-            sidePanel.y = desktop.y + rect.y;
-        }
     }
 
     onContainmentChanged: {
