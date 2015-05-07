@@ -22,7 +22,6 @@ import QtQuick 2.0
 
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
-import org.kde.kwindowsystem 1.0
 import org.kde.plasma.shell 2.0 as Shell
 import "../explorer"
 
@@ -35,10 +34,6 @@ Item {
 
     function toggleWidgetExplorer(containment) {
          console.log("Widget Explorer toggled");
-    }
-
-    KWindowSystem {
-        id: kwindowsystem
     }
 
     onContainmentChanged: {
