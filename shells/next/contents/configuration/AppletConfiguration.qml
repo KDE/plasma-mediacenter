@@ -20,7 +20,9 @@ import QtQuick 2.0
 import QtQuick.Dialogs 1.1
 import QtQuick.Controls 1.0 as QtControls
 import QtQuick.Layouts 1.0
+import org.kde.plasma.core 2.1 as PlasmaCore
 import org.kde.plasma.configuration 2.0
+import org.kde.kquickcontrolsaddons 2.0
 
 
 //TODO: all of this will be done with desktop components
@@ -48,17 +50,23 @@ Rectangle {
             source: "ConfigurationShortcuts.qml"
         }
     }
+
+    PlasmaCore.SortFilterModel {
+        id: configDialogFilterModel
+        sourceModel: configDialog.configModel
+        filterRole: "visible"
+        filterCallback: function(source_row, value) { return value; }
+    }
 //END model
 
 //BEGIN functions
     function saveConfig() {
         if (main.currentItem.saveConfig) {
             main.currentItem.saveConfig()
-        } else {
-            for (var key in plasmoid.configuration) {
-                if (main.currentItem["cfg_"+key] !== undefined) {
-                    plasmoid.configuration[key] = main.currentItem["cfg_"+key]
-                }
+        }
+        for (var key in plasmoid.configuration) {
+            if (main.currentItem["cfg_"+key] !== undefined) {
+                plasmoid.configuration[key] = main.currentItem["cfg_"+key]
             }
         }
     }
@@ -69,25 +77,6 @@ Rectangle {
                 main.currentItem["cfg_"+key] = plasmoid.configuration[key]
             }
         }
-    }
-
-    function configurationHasChanged() {
-        for (var key in plasmoid.configuration) {
-            if (main.currentItem["cfg_"+key] !== undefined) {
-                //for objects == doesn't work
-                if (typeof plasmoid.configuration[key] == 'object') {
-                    for (var i in plasmoid.configuration[key]) {
-                        if (plasmoid.configuration[key][i] != main.currentItem["cfg_"+key][i]) {
-                            return true;
-                        }
-                    }
-                    return false;
-                } else if (main.currentItem["cfg_"+key] != plasmoid.configuration[key]) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     function settingValueChanged() {
@@ -112,6 +101,22 @@ Rectangle {
 
 //BEGIN UI components
     SystemPalette {id: syspal}
+
+    MouseEventListener {
+        anchors.fill: parent
+        property int oldX
+        property int oldY
+        onPressed: {
+            oldX = mouse.screenX
+            oldY = mouse.screenY
+        }
+        onPositionChanged: {
+            configDialog.y += mouse.screenY - oldY
+            configDialog.x += mouse.screenX - oldX
+            oldX = mouse.screenX
+            oldY = mouse.screenY
+        }
+    }
 
     MessageDialog {
         id: messageDialog
@@ -174,7 +179,7 @@ Rectangle {
                             delegate: ConfigCategoryDelegate {}
                         }
                         Repeater {
-                            model: configDialog.configModel
+                            model: configDialogFilterModel
                             delegate: ConfigCategoryDelegate {}
                         }
                         Repeater {
@@ -189,14 +194,11 @@ Rectangle {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 Column {
-                    width: scroll.viewport.width
                     spacing: units.largeSpacing / 2
+
                     QtControls.Label {
                         id: pageTitle
-                        anchors {
-                            left: parent.left
-                            right: parent.right
-                        }
+                        width: scroll.viewport.width
                         font.pointSize: theme.defaultFont.pointSize*2
                         font.weight: Font.Light
                         text: main.title
@@ -205,13 +207,9 @@ Rectangle {
                     QtControls.StackView {
                         id: main
                         property string title: ""
-                        anchors {
-                            left: parent.left
-                        }
                         property bool invertAnimations: false
 
-
-                        height: Math.max((scroll.height - pageTitle.height - parent.spacing), (main.currentItem  ? (main.currentItem.implicitHeight ? main.currentItem.implicitHeight : main.currentItem.childrenRect.height) : 0))
+                        height: Math.max((scroll.viewport.height - pageTitle.height - parent.spacing), (main.currentItem  ? (main.currentItem.implicitHeight ? main.currentItem.implicitHeight : main.currentItem.childrenRect.height) : 0))
                         width: scroll.viewport.width
 
                         property string sourceFile
@@ -303,6 +301,8 @@ Rectangle {
                 } else {
                     root.saveConfig();
                 }
+
+                applyButton.enabled = false;
             }
         }
 

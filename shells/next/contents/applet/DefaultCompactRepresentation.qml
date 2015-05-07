@@ -17,11 +17,33 @@
  */
 
 import QtQuick 2.0
-
+import QtQuick.Layouts 1.1
 import org.kde.plasma.core 2.0 as PlasmaCore
 
 PlasmaCore.IconItem {
     id: icon
+
+    Layout.minimumWidth: {
+        switch (plasmoid.formFactor) {
+        case PlasmaCore.Types.Vertical:
+            return 0;
+        case PlasmaCore.Types.Horizontal:
+            return height;
+        default:
+            return units.gridUnit * 3;
+        }
+    }
+
+    Layout.minimumHeight: {
+        switch (plasmoid.formFactor) {
+        case PlasmaCore.Types.Vertical:
+            return width;
+        case PlasmaCore.Types.Horizontal:
+            return 0;
+        default:
+            return units.gridUnit * 3;
+        }
+    }
 
     source: plasmoid.icon ? plasmoid.icon : "plasma"
     active: mouseArea.containsMouse

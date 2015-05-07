@@ -17,7 +17,9 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-import QtQuick 2.0
+import QtQuick 2.2
+import QtQuick.Controls 1.1
+
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.extras 2.0 as PlasmaExtras
@@ -31,12 +33,8 @@ import org.kde.plasma.private.shell 2.0
 Item {
     id: main
 
-    width: minimumWidth
+    width: Math.max(heading.paintedWidth, units.gridUnit * 16)
     height: 800//Screen.height
-
-    // The +4 is for the gap and cross button
-    property int minimumWidth: theme.mSize(heading.font).width * (heading.text.length + 6)
-    property int minimumHeight: 800//width will be set by the dialog anyway
 
     property alias containment: widgetExplorer.containment
 
@@ -50,6 +48,43 @@ Item {
     property Item categoryButton
 
     signal closed()
+
+    function addCurrentApplet() {
+        var pluginName = list.currentItem ? list.currentItem.pluginName : ""
+        if (pluginName) {
+            widgetExplorer.addApplet(pluginName)
+        }
+    }
+
+    Action {
+        shortcut: "Escape"
+        onTriggered: {
+            if (searchInput.length > 0) {
+                searchInput.text = ""
+            } else {
+                main.closed()
+            }
+        }
+    }
+
+    Action {
+        shortcut: "Up"
+        onTriggered: list.decrementCurrentIndex()
+    }
+
+    Action {
+        shortcut: "Down"
+        onTriggered: list.incrementCurrentIndex()
+    }
+
+    Action {
+        shortcut: "Enter"
+        onTriggered: addCurrentApplet()
+    }
+    Action {
+        shortcut: "Return"
+        onTriggered: addCurrentApplet()
+    }
 
     WidgetExplorer {
         id: widgetExplorer
@@ -165,13 +200,15 @@ Item {
         }
 
         PlasmaComponents.TextField {
+            id: searchInput
             clearButtonShown: true
             placeholderText: i18nd("plasma_shell_org.kde.plasma.mediacenter", "Search...")
             onTextChanged: {
-                list.contentX = 0
-                list.contentY = 0
+                list.positionViewAtBeginning()
+                list.currentIndex = -1
                 widgetExplorer.widgetsModel.searchTerm = text
             }
+
             Component.onCompleted: forceActiveFocus()
             Layout.columnSpan: 2
             Layout.fillWidth: true
@@ -207,16 +244,15 @@ Item {
         ListView {
             id: list
 
-            property int delegateWidth: list.width
-            property int delegateHeight: units.iconSizes.huge + backgroundHint.margins.top + backgroundHint.margins.bottom
-
-            snapMode: ListView.SnapToItem
             model: widgetExplorer.widgetsModel
-
-            clip: true //TODO work out why this is this needed
-            cacheBuffer: delegateHeight * 5 // keep 5 delegates either side
+            activeFocusOnTab: true
+            currentIndex: -1
+            keyNavigationWraps: true
 
             delegate: AppletDelegate {}
+            highlight: PlasmaComponents.Highlight {}
+            highlightMoveDuration: 0
+            highlightResizeDuration: 0
 
             //slide in to view from the left
             add: Transition {
