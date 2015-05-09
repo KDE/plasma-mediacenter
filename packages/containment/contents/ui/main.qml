@@ -187,36 +187,6 @@ function checkLastSpacer() {
         LayoutManager.save();
     }
 
-    Plasmoid.onUserConfiguringChanged: {
-        if (plasmoid.immutable) {
-            if (dragOverlay) {
-                dragOverlay.destroy();
-            }
-            return;
-        }
-
-        if (plasmoid.userConfiguring) {
-            for (var i = 0; i < plasmoid.applets.length; ++i) {
-                plasmoid.applets[i].expanded = false;
-            }
-            if (!dragOverlay) {
-                var component = Qt.createComponent("ConfigOverlay.qml");
-                if (component.status == Component.Ready) {
-                    dragOverlay = component.createObject(root);
-                } else {
-                    console.log("Could not create ConfigOverlay");
-                    console.log(component.errorString());
-                }
-                component.destroy();
-            } else {
-                dragOverlay.visible = true;
-            }
-        } else {
-            dragOverlay.visible = false;
-            dragOverlay.destroy();
-        }
-    }
-
     Plasmoid.onFormFactorChanged: containmentSizeSyncTimer.restart();
     Plasmoid.onImmutableChanged: {
         containmentSizeSyncTimer.restart();
