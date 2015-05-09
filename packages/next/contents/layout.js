@@ -4,6 +4,7 @@ for (var i = 0; i < screenCount; ++i) {
     print(desktopsArray.length);
     for( var j = 0; j < desktopsArray.length; j++) {
         desktopsArray[j].wallpaperPlugin = 'org.kde.image';
-        //var clock = desktopsArray[j].addWidget("org.kde.plasma.analogclock");
+        var clock = desktopsArray[j].addWidget("org.kde.plasma.analogclock");
+        var clock = desktopsArray[j].addWidget("org.kde.plasma.digitalclock");
     }
 }
