@@ -27,8 +27,6 @@ import "plasmapackage:/code/LayoutManager.js" as LayoutManager
 
 Flickable {
     id: root
-    width: 640
-    height: 48
 
 //BEGIN properties
     Layout.minimumWidth: fixedWidth > 0 ? fixedWidth : (currentLayout.Layout.minimumWidth + (isHorizontal && toolBox ? toolBox.width : 0))
@@ -85,7 +83,7 @@ function addApplet(applet, x, y) {
         // of a specific type, and the containment caring about the applet type. In a better
         // system the containment would be informed of requested launchers, and determine by
         // itself what it wants to do with that information.
-        if (!startupTimer.running && applet.pluginName == "org.kde.plasma.icon") {
+        if (applet.pluginName == "org.kde.plasma.icon") {
             var middle = currentLayout.childAt(root.width / 2, root.height / 2);
 
             if (middle) {
@@ -103,8 +101,6 @@ function addApplet(applet, x, y) {
             container.parent = currentLayout;
         }
 
-        //event compress the enable of animations
-        startupTimer.restart();
     }
 
     if (applet.Layout.fillWidth) {
@@ -186,9 +182,6 @@ function checkLastSpacer() {
 
     onToolBoxChanged: {
         containmentSizeSyncTimer.restart();
-        if (startupTimer.running) {
-            startupTimer.restart();
-        }
     }
 //END connections
 
@@ -255,7 +248,6 @@ function checkLastSpacer() {
                     return;
                 }
                 if (!animationsEnabled) {
-                    startupTimer.restart();
                     return;
                 }
                 translation.x = oldX - x
@@ -270,7 +262,6 @@ function checkLastSpacer() {
                     return;
                 }
                 if (!animationsEnabled) {
-                    startupTimer.restart();
                     return;
                 }
                 translation.x = oldX - x
@@ -336,15 +327,10 @@ function checkLastSpacer() {
 
     onWidthChanged: {
         containmentSizeSyncTimer.restart()
-        if (startupTimer.running) {
-            startupTimer.restart();
-        }
     }
+
     onHeightChanged: {
         containmentSizeSyncTimer.restart()
-        if (startupTimer.running) {
-            startupTimer.restart();
-        }
     }
 
     Timer {
@@ -359,17 +345,5 @@ function checkLastSpacer() {
         }
     }
 
-    //FIXME: I don't see other ways at the moment a way to see when the UI is REALLY ready
-    Timer {
-        id: startupTimer
-        interval: 4000
-        onTriggered: {
-            for (var i = 0; i < currentLayout.children.length; ++i) {
-                if ( currentLayout.children[i].hasOwnProperty('animationsEnabled') ) {
-                    currentLayout.children[i].animationsEnabled = true;
-                }
-            }
-        }
-    }
 //END UI elements
 }
