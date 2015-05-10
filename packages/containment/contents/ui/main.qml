@@ -210,9 +210,11 @@ function checkLastSpacer() {
             }
 
             Layout.minimumWidth: applet && applet.Layout.minimumWidth > 0 ? applet.Layout.minimumWidth : root.height
+            //TODO: put sensible size for applet
             Layout.minimumHeight: root.height
 
             Layout.preferredWidth: applet && applet.Layout.preferredWidth > 0 ? applet.Layout.preferredWidth : root.height
+            //TODO: put sensible size for applet
             Layout.preferredHeight: root.height
 
             Layout.maximumWidth: applet && applet.Layout.maximumWidth > 0 ? applet.Layout.maximumWidth : (Layout.fillWidth ? root.width : root.height)
