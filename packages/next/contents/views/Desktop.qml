@@ -28,6 +28,8 @@ import "../explorer"
 
 Item {
     id: root
+    height: 768
+    width: 1366
 
     property Item containment
     property Item wallpaper
@@ -50,16 +52,19 @@ Item {
                     switchAnim.running = true;
                 }
             } else {
+                containment.anchors.fill = undefined;
                 containment.anchors.left = root.left;
-                containment.anchors.top = root.top;
                 containment.anchors.right = root.right;
                 containment.anchors.bottom = root.bottom;
+                containment.height = root.height / 3;
                 internal.oldContainment = containment;
             }
         }
     }
 
     onWallpaperChanged: {
+        wallpaper.parent = root;
+        wallpaper.anchors.fill = root;
         if (!internal.oldWallpaper) {
             internal.oldWallpaper = wallpaper;
         }

@@ -297,7 +297,7 @@ function checkLastSpacer() {
 
     RowLayout {
         id: currentLayout
-        spacing: units.smallSpacing
+        spacing: units.largeSpacing * 2
 
         Layout.preferredWidth: {
             var width = 0;
