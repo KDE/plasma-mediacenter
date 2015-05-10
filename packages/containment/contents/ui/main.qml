@@ -22,6 +22,7 @@ import org.kde.plasma.plasmoid 2.0
 
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.plasma.mediacenter.components 2.0 as PmcComponents
 
 import "plasmapackage:/code/LayoutManager.js" as LayoutManager
 
@@ -187,7 +188,7 @@ function checkLastSpacer() {
 //BEGIN components
     Component {
         id: appletContainerComponent
-        Item {
+        PmcComponents.BreezeBlock {
             id: container
             visible: false
             property bool animationsEnabled: true
@@ -297,8 +298,9 @@ function checkLastSpacer() {
 
     RowLayout {
         id: currentLayout
-        spacing: units.largeSpacing * 2
+        spacing: units.smallSpacing * 2
 
+        Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
         Layout.preferredWidth: {
             var width = 0;
             for (var i = 0; i < currentLayout.children.length; ++i) {
