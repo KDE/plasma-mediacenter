@@ -22,8 +22,6 @@ import org.kde.plasma.plasmoid 2.0
 
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
-import org.kde.kquickcontrolsaddons 2.0
-import org.kde.draganddrop 2.0 as DragDrop
 
 import "plasmapackage:/code/LayoutManager.js" as LayoutManager
 
@@ -46,8 +44,6 @@ Flickable {
     contentWidth: currentLayout.Layout.preferredWidth
     //contentHeight: currentLayout.Layout.preferredHeight
 
-    property Item dragOverlay
-
     property bool isHorizontal: plasmoid.formFactor != PlasmaCore.Types.Vertical
     property int fixedWidth: 0
     property int fixedHeight: 0
@@ -67,13 +63,7 @@ function addApplet(applet, x, y) {
     container.visible = true;
 
     // Is there a DND placeholder? Replace it!
-    if (dndSpacer.parent === currentLayout) {
-        LayoutManager.insertBefore(dndSpacer, container);
-        dndSpacer.parent = root;
-        return;
-
-    // If the provided position is valid, use it.
-    } else if (x >= 0 && y >= 0) {
+    if (x >= 0 && y >= 0) {
         var index = LayoutManager.insertAtCoordinates(container, x , y);
 
     // Fall through to determining an appropriate insert position.
@@ -313,14 +303,6 @@ function checkLastSpacer() {
         Layout.fillHeight: true
     }
 
-    Item {
-        id: dndSpacer
-        Layout.preferredWidth: width
-        Layout.preferredHeight: height
-        width: (plasmoid.formFactor == PlasmaCore.Types.Vertical) ? currentLayout.width : theme.mSize(theme.defaultFont).width * 10
-        height: (plasmoid.formFactor == PlasmaCore.Types.Vertical) ?  theme.mSize(theme.defaultFont).width * 10 : currentLayout.height
-    }
-
     GridLayout {
         id: currentLayout
         property bool isLayoutHorizontal
@@ -369,7 +351,6 @@ function checkLastSpacer() {
         id: containmentSizeSyncTimer
         interval: 150
         onTriggered: {
-            dndSpacer.parent = root;
             currentLayout.x = (Qt.application.layoutDirection === Qt.RightToLeft) ? toolBox.width : 0;
             currentLayout.y = 0
             currentLayout.width = root.width - (isHorizontal && toolBox && !plasmoid.immutable ? toolBox.width : 0)
