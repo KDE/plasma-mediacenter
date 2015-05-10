@@ -139,7 +139,6 @@ function checkLastSpacer() {
 
 //BEGIN connections
     Component.onCompleted: {
-        currentLayout.isLayoutHorizontal = isHorizontal
         LayoutManager.plasmoid = plasmoid;
         LayoutManager.root = root;
         LayoutManager.layout = currentLayout;
@@ -210,14 +209,14 @@ function checkLastSpacer() {
                 }
             }
 
-            Layout.minimumWidth: (currentLayout.isLayoutHorizontal ? (applet && applet.Layout.minimumWidth > 0 ? applet.Layout.minimumWidth : root.height) : root.width)
-            Layout.minimumHeight: (!currentLayout.isLayoutHorizontal ? (applet && applet.Layout.minimumHeight > 0 ? applet.Layout.minimumHeight : root.width) : root.height)
+            Layout.minimumWidth: applet && applet.Layout.minimumWidth > 0 ? applet.Layout.minimumWidth : root.height
+            Layout.minimumHeight: root.height
 
-            Layout.preferredWidth: (currentLayout.isLayoutHorizontal ? (applet && applet.Layout.preferredWidth > 0 ? applet.Layout.preferredWidth : root.height) : root.width)
-            Layout.preferredHeight: (!currentLayout.isLayoutHorizontal ? (applet && applet.Layout.preferredHeight > 0 ? applet.Layout.preferredHeight : root.width) : root.height)
+            Layout.preferredWidth: applet && applet.Layout.preferredWidth > 0 ? applet.Layout.preferredWidth : root.height
+            Layout.preferredHeight: root.height
 
-            Layout.maximumWidth: (currentLayout.isLayoutHorizontal ? (applet && applet.Layout.maximumWidth > 0 ? applet.Layout.maximumWidth : (Layout.fillWidth ? root.width : root.height)) : root.height)
-            Layout.maximumHeight: (!currentLayout.isLayoutHorizontal ? (applet && applet.Layout.maximumHeight > 0 ? applet.Layout.maximumHeight : (Layout.fillHeight ? root.height : root.width)) : root.width)
+            Layout.maximumWidth: applet && applet.Layout.maximumWidth > 0 ? applet.Layout.maximumWidth : (Layout.fillWidth ? root.width : root.height)
+            Layout.maximumHeight: root.width
 
             property int oldX: x
             property int oldY: y
@@ -294,11 +293,9 @@ function checkLastSpacer() {
         Layout.fillHeight: true
     }
 
-    GridLayout {
+    RowLayout {
         id: currentLayout
-        property bool isLayoutHorizontal
-        rowSpacing: units.smallSpacing
-        columnSpacing: units.smallSpacing
+        spacing: units.smallSpacing
 
         Layout.preferredWidth: {
             var width = 0;
@@ -318,10 +315,7 @@ function checkLastSpacer() {
             }
             return height;
         }
-        rows: 1
-        columns: 1
         //when horizontal layout top-to-bottom, this way it will obey our limit of one row and actually lay out left to right
-        flow: isHorizontal ? GridLayout.TopToBottom : GridLayout.LeftToRight
         layoutDirection: Qt.application.layoutDirection
     }
 
@@ -341,7 +335,6 @@ function checkLastSpacer() {
             currentLayout.y = 0
             currentLayout.width = root.width - (isHorizontal && toolBox && !plasmoid.immutable ? toolBox.width : 0)
             currentLayout.height = root.height - (!isHorizontal && toolBox && !plasmoid.immutable ? toolBox.height : 0)
-            currentLayout.isLayoutHorizontal = isHorizontal
         }
     }
 
