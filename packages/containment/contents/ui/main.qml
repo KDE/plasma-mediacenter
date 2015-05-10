@@ -42,7 +42,7 @@ Flickable {
     contentWidth: currentLayout.Layout.preferredWidth
     //contentHeight: currentLayout.Layout.preferredHeight
 
-    property bool isHorizontal: plasmoid.formFactor != PlasmaCore.Types.Vertical
+    property bool isHorizontal: true
     property int fixedWidth: 0
     property int fixedHeight: 0
 
