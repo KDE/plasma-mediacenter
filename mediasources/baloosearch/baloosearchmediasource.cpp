@@ -26,7 +26,7 @@
 #include <mediacenter/mediacenter.h>
 
 #include <baloo/query.h>
-#include <baloo/result.h>
+#include <baloo/resultiterator.h>
 #include <baloo/file.h>
 
 #include <QUrl>
