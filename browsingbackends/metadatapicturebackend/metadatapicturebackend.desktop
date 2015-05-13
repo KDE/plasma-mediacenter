@@ -2,6 +2,7 @@
 Type=Service
 Icon=image-x-generic
 Name=Pictures
+Name[ar]=الصّور
 Name[ca]=Imatges
 Name[cs]=Obrázky
 Name[da]=Billeder
