@@ -73,6 +73,7 @@ Comment[sr@ijekavian]=Плазма медија центар од КДЕ‑а
 Comment[sr@ijekavianlatin]=Plasma medija centar od KDE‑a
 Comment[sr@latin]=Plasma medija centar od KDE‑a
 Comment[sv]=Plasma Media Center av KDE
+Comment[tr]=KDE Plasma Ortam Merkezi
 Comment[uk]=Медіацентр Плазми від KDE
 Comment[x-test]=xxPlasma Media Center by KDExx
 Comment[zh_CN]=KDE 的 Plasma 媒体中心
