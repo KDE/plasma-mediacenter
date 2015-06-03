@@ -46,7 +46,8 @@ void RuntimeData::toggleMute() {
 void RuntimeData::playUrl(QUrl url) {
     m_url = url;
     m_status = PmcStatus::Playing;
-    KActivities::ResourceInstance::notifyAccessed(url);
+    if(!m_testMode)
+        KActivities::ResourceInstance::notifyAccessed(url);
     emit urlChanged(m_url);
     emit statusChanged(m_status);
 }
@@ -85,3 +86,10 @@ void RuntimeData::setVolume(qreal volume) {
     emit volumeChanged(m_volume);
 }
 
+void RuntimeData::setTestMode(bool mode) {
+    if(m_testMode != mode)
+    {
+        m_testMode = mode;
+        emit testModeChanged(m_testMode);
+    }
+}

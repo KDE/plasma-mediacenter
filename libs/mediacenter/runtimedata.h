@@ -31,7 +31,7 @@ class MEDIACENTER_EXPORT RuntimeData : public QObject
 {
     Q_OBJECT
     Q_ENUMS(PmcStatus)
-    
+
     Q_PROPERTY(bool userTrigerredStop MEMBER m_userTrigerredStop NOTIFY userTrigerredStopChanged)
     Q_PROPERTY(qreal volume MEMBER m_volume WRITE setVolume NOTIFY volumeChanged)
     Q_PROPERTY(int currentTime MEMBER m_currentTime NOTIFY currentTimeChanged)
@@ -40,6 +40,7 @@ class MEDIACENTER_EXPORT RuntimeData : public QObject
     Q_PROPERTY(bool mute MEMBER m_mute NOTIFY muteChanged)
     Q_PROPERTY(QUrl url MEMBER m_url NOTIFY urlChanged)
     Q_PROPERTY(PmcStatus status MEMBER m_status NOTIFY statusChanged)
+    Q_PROPERTY(bool testMode MEMBER m_testMode WRITE setTestMode NOTIFY testModeChanged)
 
 public:
     RuntimeData();
@@ -57,6 +58,7 @@ public:
     };
 
     void setVolume(qreal volume);
+    void setTestMode(bool mode);
 
 Q_SIGNALS:
     void userTrigerredStopChanged();
@@ -67,6 +69,7 @@ Q_SIGNALS:
     void statusChanged(PmcStatus status);
     void muteChanged(bool muted);
     void urlChanged(QUrl url);
+    void testModeChanged(bool mode);
 
 private:
     bool m_userTrigerredStop;
@@ -78,6 +81,7 @@ private:
     bool m_mute;
     qreal m_lastVolume;
     PmcStatus m_status;
+    bool m_testMode = false;
 };
 
 #endif // RUNTIMEDATA_H
