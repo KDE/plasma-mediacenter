@@ -1,5 +1,5 @@
 for (var i = 0; i < screenCount; ++i) {
-    var id = createActivity("Desktop", "org.kde.mediacentercontainment");
+    var id = createActivity("Desktop");
     var desktopsArray = desktopsForActivity(id);
     print(desktopsArray.length);
     for( var j = 0; j < desktopsArray.length; j++) {
