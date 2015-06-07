@@ -47,6 +47,15 @@ Flickable {
     property int fixedWidth: 0
     property int fixedHeight: 0
 
+    focus: true
+    Keys.onLeftPressed: contentX -= 100
+    Keys.onRightPressed: contentX += 100
+
+    Behavior on contentX {
+        NumberAnimation {
+            duration: units.smallDuration
+        }
+    }
 //END properties
 
 //BEGIN functions
