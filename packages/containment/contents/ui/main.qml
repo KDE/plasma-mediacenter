@@ -1,5 +1,5 @@
 /*
- *  Copyright 2015 Bhushan Shah <bshah@kde.org>
+ *  Copyright 2013 Marco Martin <mart@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,43 +24,303 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.mediacenter.components 2.0 as PmcComponents
 
-Item {
+import "plasmapackage:/code/LayoutManager.js" as LayoutManager
+
+Flickable {
     id: root
 
-    PathView {
-        id: view
-        model: plasmoid.applets.length
-        focus: true
-        Keys.onLeftPressed: decrementCurrentIndex()
-        Keys.onRightPressed: incrementCurrentIndex()
+//BEGIN properties
+    Layout.minimumWidth: fixedWidth > 0 ? fixedWidth : (currentLayout.Layout.minimumWidth + (isHorizontal && toolBox ? toolBox.width : 0))
+    Layout.maximumWidth: fixedWidth > 0 ? fixedWidth : (currentLayout.Layout.maximumWidth + (isHorizontal && toolBox ? toolBox.width : 0))
+    Layout.preferredWidth: fixedWidth > 0 ? fixedWidth : (currentLayout.Layout.preferredWidth + (isHorizontal && toolBox ? toolBox.width : 0))
 
-        delegate: PmcComponents.BreezeBlock {
-            id: delegate
-            width: plasmoid.applets[index].width
-            height: root.height
-            Component.onCompleted: {
-                plasmoid.applets[index].visible = true;
-                plasmoid.applets[index].z = 99;
-            }
-            onXChanged: {
-                plasmoid.applets[index].x = x;
-            }
-            onYChanged: {
-                plasmoid.applets[index].y = y;
-            }
+    Layout.minimumHeight: fixedHeight > 0 ? fixedHeight : (currentLayout.Layout.minimumHeight + (!isHorizontal && toolBox ? toolBox.height : 0))
+    Layout.maximumHeight: fixedHeight > 0 ? fixedHeight : (currentLayout.Layout.maximumHeight + (!isHorizontal && toolBox ? toolBox.height : 0))
+    Layout.preferredHeight: fixedHeight > 0 ? fixedHeight : (currentLayout.Layout.preferredHeight + (!isHorizontal && toolBox? toolBox.height : 0))
+
+    property Item toolBox
+
+    contentWidth: currentLayout.Layout.preferredWidth
+    //contentHeight: currentLayout.Layout.preferredHeight
+
+    property bool isHorizontal: true
+    property int fixedWidth: 0
+    property int fixedHeight: 0
+
+//END properties
+
+//BEGIN functions
+function addApplet(applet, x, y) {
+    var container = appletContainerComponent.createObject(root)
+
+    var appletWidth = applet.width;
+    var appletHeight = applet.height;
+    applet.parent = container;
+    container.applet = applet;
+    applet.anchors.fill = container;
+    applet.visible = true;
+    container.visible = true;
+
+    // Is there a DND placeholder? Replace it!
+    if (x >= 0 && y >= 0) {
+        var index = LayoutManager.insertAtCoordinates(container, x , y);
+
+    // Fall through to determining an appropriate insert position.
+    } else {
+        var before = null;
+        container.animationsEnabled = false;
+
+        if (lastSpacer.parent === currentLayout) {
+            before = lastSpacer;
         }
 
-        path: Path {
-            startX: 0
-            startY: root.height/2
-            PathLine {
-                x: root.width/2
-                y: root.height/2
+        if (before) {
+            LayoutManager.insertBefore(before, container);
+
+        // Fall through to adding at the end.
+        } else {
+            container.parent = currentLayout;
+        }
+
+    }
+
+    if (applet.Layout.fillWidth) {
+        lastSpacer.parent = root;
+    }
+}
+
+
+function checkLastSpacer() {
+    lastSpacer.parent = root
+
+    var expands = false;
+
+    if (isHorizontal) {
+        for (var container in currentLayout.children) {
+            var item = currentLayout.children[container];
+            if (item.Layout && item.Layout.fillWidth) {
+                expands = true;
             }
-            PathLine {
-                x: root.width
-                y: root.height/2
+        }
+    } else {
+        for (var container in currentLayout.children) {
+            var item = currentLayout.children[container];
+            if (item.Layout && item.Layout.fillHeight) {
+                expands = true;
             }
         }
     }
+    if (!expands) {
+        lastSpacer.parent = currentLayout
+    }
+
+}
+
+//END functions
+
+//BEGIN connections
+    Component.onCompleted: {
+        LayoutManager.plasmoid = plasmoid;
+        LayoutManager.root = root;
+        LayoutManager.layout = currentLayout;
+        LayoutManager.lastSpacer = lastSpacer;
+        LayoutManager.restore();
+        containmentSizeSyncTimer.restart();
+        plasmoid.action("configure").visible = !plasmoid.immutable;
+        plasmoid.action("configure").enabled = !plasmoid.immutable;
+    }
+
+    Containment.onAppletAdded: {
+        addApplet(applet, x, y);
+        LayoutManager.save();
+    }
+
+    Containment.onAppletRemoved: {
+        LayoutManager.removeApplet(applet);
+        var flexibleFound = false;
+        for (var i = 0; i < currentLayout.children.length; ++i) {
+            if (((root.isHorizontal && currentLayout.children[i].applet.Layout.fillWidth) ||
+                (!root.isHorizontal && currentLayout.children[i].applet.Layout.fillHeight)) &&
+                currentLayout.children[i].applet.visible) {
+                flexibleFound = true;
+                break
+            }
+        }
+        if (!flexibleFound) {
+            lastSpacer.parent = currentLayout;
+        }
+
+        LayoutManager.save();
+    }
+
+    Plasmoid.onFormFactorChanged: containmentSizeSyncTimer.restart();
+    Plasmoid.onImmutableChanged: {
+        containmentSizeSyncTimer.restart();
+        plasmoid.action("configure").visible = !plasmoid.immutable;
+        plasmoid.action("configure").enabled = !plasmoid.immutable;
+    }
+
+    onToolBoxChanged: {
+        containmentSizeSyncTimer.restart();
+    }
+//END connections
+
+//BEGIN components
+    Component {
+        id: appletContainerComponent
+        PmcComponents.BreezeBlock {
+            id: container
+            visible: false
+            property bool animationsEnabled: true
+
+            //when the applet moves caused by its resize, don't animate.
+            //this is completely heuristic, but looks way less "jumpy"
+            property bool movingForResize: false
+
+            Layout.fillWidth: applet && applet.Layout.fillWidth
+            Layout.onFillWidthChanged: {
+                if (plasmoid.formFactor != PlasmaCore.Types.Vertical) {
+                    checkLastSpacer();
+                }
+            }
+            Layout.fillHeight: applet && applet.Layout.fillHeight
+            Layout.onFillHeightChanged: {
+                if (plasmoid.formFactor == PlasmaCore.Types.Vertical) {
+                    checkLastSpacer();
+                }
+            }
+
+            Layout.minimumWidth: applet && applet.Layout.minimumWidth > 0 ? applet.Layout.minimumWidth : root.height
+            //TODO: put sensible size for applet
+            Layout.minimumHeight: root.height
+
+            Layout.preferredWidth: applet && applet.Layout.preferredWidth > 0 ? applet.Layout.preferredWidth : root.height
+            //TODO: put sensible size for applet
+            Layout.preferredHeight: root.height
+
+            Layout.maximumWidth: applet && applet.Layout.maximumWidth > 0 ? applet.Layout.maximumWidth : (Layout.fillWidth ? root.width : root.height)
+            Layout.maximumHeight: root.width
+
+            property int oldX: x
+            property int oldY: y
+
+            property Item applet
+            onAppletChanged: {
+                if (!applet) {
+                    destroy();
+                }
+            }
+
+            Layout.onMinimumWidthChanged: movingForResize = true;
+            Layout.onMinimumHeightChanged: movingForResize = true;
+            Layout.onMaximumWidthChanged: movingForResize = true;
+            Layout.onMaximumHeightChanged: movingForResize = true;
+
+            PlasmaComponents.BusyIndicator {
+                z: 1000
+                visible: applet && applet.busy
+                running: visible
+                anchors.centerIn: parent
+                width: Math.min(parent.width, parent.height)
+                height: width
+            }
+            onXChanged: {
+                if (movingForResize) {
+                    movingForResize = false;
+                    return;
+                }
+                if (!animationsEnabled) {
+                    return;
+                }
+                translation.x = oldX - x
+                translation.y = oldY - y
+                translAnim.running = true
+                oldX = x
+                oldY = y
+            }
+            onYChanged: {
+                if (movingForResize) {
+                    movingForResize = false;
+                    return;
+                }
+                if (!animationsEnabled) {
+                    return;
+                }
+                translation.x = oldX - x
+                translation.y = oldY - y
+                translAnim.running = true
+                oldX = x
+                oldY = y
+            }
+            transform: Translate {
+                id: translation
+            }
+            NumberAnimation {
+                id: translAnim
+                duration: units.longDuration
+                easing.type: Easing.InOutQuad
+                target: translation
+                properties: "x,y"
+                to: 0
+            }
+        }
+    }
+//END components
+
+//BEGIN UI elements
+    Item {
+        id: lastSpacer
+        parent: currentLayout
+
+        Layout.fillWidth: true
+        Layout.fillHeight: true
+    }
+
+    RowLayout {
+        id: currentLayout
+        spacing: units.smallSpacing * 2
+
+        Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+        Layout.preferredWidth: {
+            var width = 0;
+            for (var i = 0; i < currentLayout.children.length; ++i) {
+                if (currentLayout.children[i].Layout) {
+                    width += Math.max(currentLayout.children[i].Layout.minimumWidth, currentLayout.children[i].Layout.preferredWidth);
+                }
+            }
+            return width;
+        }
+        Layout.preferredHeight: {
+            var height = 0;
+            for (var i = 0; i < currentLayout.children.length; ++i) {
+                if (currentLayout.children[i].Layout) {
+                    height += Math.max(currentLayout.children[i].Layout.minimumHeight, currentLayout.children[i].Layout.preferredHeight);
+                }
+            }
+            return height;
+        }
+        //when horizontal layout top-to-bottom, this way it will obey our limit of one row and actually lay out left to right
+        layoutDirection: Qt.application.layoutDirection
+    }
+
+    onWidthChanged: {
+        containmentSizeSyncTimer.restart()
+    }
+
+    onHeightChanged: {
+        containmentSizeSyncTimer.restart()
+    }
+
+    Timer {
+        id: containmentSizeSyncTimer
+        interval: 150
+        onTriggered: {
+            currentLayout.x = (Qt.application.layoutDirection === Qt.RightToLeft) ? toolBox.width : 0;
+            currentLayout.y = 0
+            currentLayout.width = root.width - (isHorizontal && toolBox && !plasmoid.immutable ? toolBox.width : 0)
+            currentLayout.height = root.height - (!isHorizontal && toolBox && !plasmoid.immutable ? toolBox.height : 0)
+        }
+    }
+
+//END UI elements
 }
