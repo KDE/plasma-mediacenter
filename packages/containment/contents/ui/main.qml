@@ -51,7 +51,7 @@ Flickable {
 
     Behavior on contentX {
         NumberAnimation {
-            duration: units.smallDuration
+            duration: units.longDuration
         }
     }
 //END properties
