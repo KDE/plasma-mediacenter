@@ -30,13 +30,13 @@ Flickable {
     id: root
 
 //BEGIN properties
-    Layout.minimumWidth: fixedWidth > 0 ? fixedWidth : (currentLayout.Layout.minimumWidth + (isHorizontal && toolBox ? toolBox.width : 0))
-    Layout.maximumWidth: fixedWidth > 0 ? fixedWidth : (currentLayout.Layout.maximumWidth + (isHorizontal && toolBox ? toolBox.width : 0))
-    Layout.preferredWidth: fixedWidth > 0 ? fixedWidth : (currentLayout.Layout.preferredWidth + (isHorizontal && toolBox ? toolBox.width : 0))
+    Layout.minimumWidth: currentLayout.Layout.minimumWidth
+    Layout.maximumWidth: currentLayout.Layout.maximumWidth
+    Layout.preferredWidth: currentLayout.Layout.preferredWidth
 
-    Layout.minimumHeight: fixedHeight > 0 ? fixedHeight : (currentLayout.Layout.minimumHeight + (!isHorizontal && toolBox ? toolBox.height : 0))
-    Layout.maximumHeight: fixedHeight > 0 ? fixedHeight : (currentLayout.Layout.maximumHeight + (!isHorizontal && toolBox ? toolBox.height : 0))
-    Layout.preferredHeight: fixedHeight > 0 ? fixedHeight : (currentLayout.Layout.preferredHeight + (!isHorizontal && toolBox? toolBox.height : 0))
+    Layout.minimumHeight: currentLayout.Layout.minimumHeight
+    Layout.maximumHeight: currentLayout.Layout.maximumHeight
+    Layout.preferredHeight: currentLayout.Layout.preferredHeight
 
     property Item toolBox
 
@@ -44,8 +44,6 @@ Flickable {
     //contentHeight: currentLayout.Layout.preferredHeight
 
     property bool isHorizontal: true
-    property int fixedWidth: 0
-    property int fixedHeight: 0
 
     focus: true
     Keys.onLeftPressed: contentX -= 100
@@ -326,8 +324,8 @@ function checkLastSpacer() {
         onTriggered: {
             currentLayout.x = (Qt.application.layoutDirection === Qt.RightToLeft) ? toolBox.width : 0;
             currentLayout.y = 0
-            currentLayout.width = root.width - (isHorizontal && toolBox && !plasmoid.immutable ? toolBox.width : 0)
-            currentLayout.height = root.height - (!isHorizontal && toolBox && !plasmoid.immutable ? toolBox.height : 0)
+            currentLayout.width = root.width
+            currentLayout.height = root.height
         }
     }
 
