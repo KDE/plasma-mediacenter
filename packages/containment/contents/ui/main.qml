@@ -44,10 +44,21 @@ Flickable {
     //contentHeight: currentLayout.Layout.preferredHeight
 
     property bool isHorizontal: true
+    property int currentApplet: 0
 
     focus: true
-    Keys.onLeftPressed: contentX -= 100
-    Keys.onRightPressed: contentX += 100
+    Keys.onLeftPressed: {
+        if (currentApplet > 0) {
+            currentApplet--;
+            positionViewAt(currentApplet);
+        }
+    }
+    Keys.onRightPressed: {
+        if (currentApplet < plasmoid.applets.length-1) {
+            currentApplet++;
+            positionViewAt(currentApplet);
+        }
+    }
 
     Behavior on contentX {
         NumberAnimation {
@@ -123,6 +134,13 @@ function checkLastSpacer() {
 
 }
 
+function positionViewAt(id)
+{
+    var x1 = currentLayout.children[id].x;
+    var containerWidth = currentLayout.children[id].width;
+    var appletCenter = x1 + containerWidth/2;
+    contentX = appletCenter - root.width/2;
+}
 //END functions
 
 //BEGIN connections
@@ -326,6 +344,7 @@ function checkLastSpacer() {
             currentLayout.y = 0
             currentLayout.width = root.width
             currentLayout.height = root.height
+            positionViewAt(currentApplet);
         }
     }
 
