@@ -40,6 +40,8 @@ Flickable {
 
     property Item toolBox
 
+    interactive: false
+
     contentWidth: currentLayout.Layout.preferredWidth
     //contentHeight: currentLayout.Layout.preferredHeight
 
