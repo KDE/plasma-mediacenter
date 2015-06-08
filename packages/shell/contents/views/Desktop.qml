@@ -56,6 +56,7 @@ Item {
                 containment.anchors.left = root.left;
                 containment.anchors.right = root.right;
                 containment.anchors.bottom = root.bottom;
+                containment.anchors.bottomMargin = units.largeSpacing;
                 containment.height = root.height / 3;
                 internal.oldContainment = containment;
             }

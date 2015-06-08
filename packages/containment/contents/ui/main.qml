@@ -305,7 +305,7 @@ function positionViewAt(id)
 
     RowLayout {
         id: currentLayout
-        spacing: units.smallSpacing * 2
+        spacing: units.largeSpacing
 
         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
         Layout.preferredWidth: {
