@@ -78,6 +78,12 @@ function addApplet(applet, x, y) {
     applet.parent = container;
     container.applet = applet;
     applet.anchors.fill = container;
+    applet.anchors.topMargin = container.margins.top;
+    applet.anchors.bottomMargin = container.margins.bottom;
+    //FIXME: this seems to create bindings loop
+    // <Unknown File>: QML QQuickLayoutAttached: Binding loop detected for property "maximumWidth"
+    //applet.anchors.leftMargin = container.margins.left;
+    //applet.anchors.rightMargin = container.margins.right;
     applet.visible = true;
     container.visible = true;
 
@@ -198,6 +204,7 @@ function positionViewAt(id)
         Item {
             id: container
             visible: false
+            property alias margins: plasmoidBackground.margins
             property bool animationsEnabled: true
 
             //when the applet moves caused by its resize, don't animate.
