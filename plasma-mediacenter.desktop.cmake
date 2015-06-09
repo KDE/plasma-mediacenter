@@ -75,4 +75,5 @@ Comment[sv]=Plasma Media Center av KDE
 Comment[uk]=Медіацентр Плазми від KDE
 Comment[x-test]=xxPlasma Media Center by KDExx
 Comment[zh_CN]=KDE 的 Plasma 媒体中心
+Comment[zh_TW]=KDE Plasma 媒體中心
 X-KDE-PluginInfo-Version=${PROJECT_VERSION}
