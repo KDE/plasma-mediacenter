@@ -195,7 +195,7 @@ function positionViewAt(id)
 //BEGIN components
     Component {
         id: appletContainerComponent
-        PmcComponents.BreezeBlock {
+        Item {
             id: container
             visible: false
             property bool animationsEnabled: true
@@ -242,6 +242,13 @@ function positionViewAt(id)
             Layout.onMinimumHeightChanged: movingForResize = true;
             Layout.onMaximumWidthChanged: movingForResize = true;
             Layout.onMaximumHeightChanged: movingForResize = true;
+
+            PlasmaCore.FrameSvgItem {
+                id: plasmoidBackground
+                visible: applet && applet.backgroundHints != PlasmaCore.Types.NoBackground
+                imagePath: "widgets/background"
+                anchors.fill: parent
+            }
 
             PlasmaComponents.BusyIndicator {
                 z: 1000
