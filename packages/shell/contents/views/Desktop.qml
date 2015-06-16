@@ -19,10 +19,15 @@
  */
 
 import QtQuick 2.0
+import QtQuick.Layouts 1.1
 
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.shell 2.0 as Shell
+
+import org.kde.plasma.mediacenter 2.0 as PMC
+import org.kde.plasma.mediacenter.components 2.0 as PmcComponents
+
 import "../explorer"
 
 
@@ -34,8 +39,17 @@ Item {
     property Item containment
     property Item wallpaper
 
+    property QtObject pmcInterfaceInstance
+
     function toggleWidgetExplorer(containment) {
          console.log("Widget Explorer toggled");
+    }
+
+    function getPmcInterface() {
+        if (!pmcInterfaceInstance) {
+            pmcInterfaceInstance = pmcInterfaceComponent.createObject(root);
+        }
+        return pmcInterfaceInstance;
     }
 
     onContainmentChanged: {
@@ -56,7 +70,6 @@ Item {
                 containment.anchors.left = root.left;
                 containment.anchors.right = root.right;
                 containment.anchors.bottom = root.bottom;
-                containment.anchors.bottomMargin = units.largeSpacing;
                 containment.height = root.height / 3;
                 internal.oldContainment = containment;
             }
@@ -135,6 +148,60 @@ Item {
         }
     }
 
+    PmcComponents.BreezeBlock {
+        height: parent.height / 3
+        width: parent.width
+        anchors {
+            left: parent.left
+            right: parent.right
+            verticalCenter: parent.verticalCenter
+        }
+        ListView {
+            id: backendList
+            model: getPmcInterface().backendsModel
+            height: units.largeSpacing * 8
+            anchors {
+                left: parent.left
+                right: parent.right
+                verticalCenter: parent.verticalCenter
+            }
+            spacing: units.largeSpacing
+            orientation: ListView.Horizontal
+            preferredHighlightBegin: width / 2 - height / 2
+            preferredHighlightEnd: width / 2 + height / 2
+            highlightRangeMode: ListView.StrictlyEnforceRange
+            delegate: backendListDelegate
+        }
+    }
+
+
+    Component {
+        id: pmcInterfaceComponent
+        PMC.QMLAccess {
+        }
+    }
+
+    Component {
+        id: backendListDelegate
+        Item {
+            height: parent.height
+            width: height
+            PlasmaCore.IconItem {
+                id: icon
+                source: decoration
+                anchors.top: parent.top
+                anchors.horizontalCenter: parent.horizontalCenter
+                height: units.largeSpacing * 6
+                width: height
+            }
+            PlasmaComponents.Label {
+                id: text
+                text: display
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.bottom: parent.bottom
+            }
+        }
+    }
 
     Component.onCompleted: {
         //configure the view behavior
