@@ -40,7 +40,6 @@ Flickable {
 
     property Item toolBox
 
-    interactive: false
 
     contentWidth: currentLayout.Layout.preferredWidth
     //contentHeight: currentLayout.Layout.preferredHeight
@@ -48,7 +47,6 @@ Flickable {
     property bool isHorizontal: true
     property int currentApplet: 0
 
-    focus: true
     Keys.onLeftPressed: {
         if (currentApplet > 0) {
             currentApplet--;
