@@ -27,6 +27,7 @@ import org.kde.plasma.shell 2.0 as Shell
 
 import org.kde.plasma.mediacenter 2.0 as PMC
 import org.kde.plasma.mediacenter.components 2.0 as PmcComponents
+import org.kde.plasma.mediacenter.elements 2.0 as MediaCenterElements
 
 import "../explorer"
 
@@ -40,6 +41,7 @@ Item {
     property Item wallpaper
 
     property QtObject pmcInterfaceInstance
+    property QtObject pmcMediaBrowserInstance
 
     function toggleWidgetExplorer(containment) {
          console.log("Widget Explorer toggled");
@@ -50,6 +52,13 @@ Item {
             pmcInterfaceInstance = pmcInterfaceComponent.createObject(root);
         }
         return pmcInterfaceInstance;
+    }
+
+    function getMediaBrowser() {
+        if (!pmcMediaBrowserInstance) {
+            pmcMediaBrowserInstance = pmcMediaBrowserComponent.createObject(root);
+        }
+        return pmcMediaBrowserInstance;
     }
 
     onContainmentChanged: {
@@ -91,6 +100,15 @@ Item {
         property Item oldContainment: null;
         property Item newContainment: null;
         property Item oldWallpaper: null;
+    }
+
+    QtObject {
+        id: fontSizes
+        property int small: theme.smallestFont.pointSize
+        property int medium: small*1.2
+        property int large: small*1.4
+        property int huge: small*1.6
+        property int enormous: small*2
     }
 
     SequentialAnimation {
@@ -148,9 +166,11 @@ Item {
         }
     }
 
-    PmcComponents.BreezeBlock {
+    Rectangle {
+        id: backendStrip
         height: parent.height / 3
         width: parent.width
+        color: PlasmaCore.ColorScope.backgroundColor
         anchors {
             left: parent.left
             right: parent.right
@@ -175,6 +195,12 @@ Item {
         }
     }
 
+    PlasmaComponents.PageStack {
+        id: pmcPageStack
+        anchors.fill: parent
+        z: 99
+        visible: false
+    }
 
     Component {
         id: pmcInterfaceComponent
@@ -201,11 +227,43 @@ Item {
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottom: parent.bottom
             }
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    if (!modelObject.init())
+                        return;
+                    getPmcInterface().currentBrowsingBackend = modelObject;
+                    pmcPageStack.visible = true;
+                    pmcPageStack.push(getMediaBrowser());
+                    print(getPmcInterface().currentBrowsingBackend);
+                }
+            }
         }
+    }
+
+    Component {
+        id: pmcMediaBrowserComponent
+        MediaCenterElements.MediaBrowser {
+            currentBrowsingBackend: getPmcInterface().currentBrowsingBackend
+            onBackRequested: pmcPageStack.pop()
+        }
+    }
+
+    Binding {
+        target: containment
+        property: "visible"
+        value: !pmcPageStack.visible
+    }
+
+    Binding {
+        target: backendStrip
+        property: "visible"
+        value: !pmcPageStack.visible
     }
 
     Component.onCompleted: {
         //configure the view behavior
         desktop.windowType = Shell.Desktop.Desktop;
+        getPmcInterface();
     }
 }
