@@ -25,7 +25,7 @@
 #include <QAbstractListModel>
 #include <QStringList>
 
-#include "mediacenter/modelmetadata.h"
+#include "mediacenter/pmcmodel.h"
 
 namespace KIO {
     class Job;
