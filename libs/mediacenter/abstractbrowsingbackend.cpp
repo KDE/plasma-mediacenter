@@ -21,7 +21,6 @@
 #include "pmcmodel.h"
 #include "modelsinbackendmodel.h"
 
-#include <KService>
 #include <KPluginInfo>
 #include <QDebug>
 
