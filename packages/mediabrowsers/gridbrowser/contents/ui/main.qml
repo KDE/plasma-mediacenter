@@ -21,7 +21,7 @@ import QtQuick 2.1
 import org.kde.kquickcontrolsaddons 2.0 as KQuickControlAddons
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.core 2.0 as PlasmaCore
-import "../common" as Common
+import org.kde.plasma.mediacenter.components 2.0 as PmcComponents
 
 FocusScope {
     id: gridBrowserRoot
@@ -60,7 +60,7 @@ FocusScope {
         clip: true
         cellWidth: cellHeight*2
         cellHeight: units.iconSizes.enormous
-        delegate: Common.MediaItemDelegate {
+        delegate: PmcComponents.MediaItemDelegate {
             width: GridView.view.cellWidth
             height: GridView.view.cellHeight
             clip: !GridView.isCurrentItem

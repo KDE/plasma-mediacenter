@@ -20,7 +20,7 @@
 import QtQuick 2.1
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.core 2.0 as PlasmaCore
-import "../common" as Common
+import org.kde.plasma.mediacenter.components 2.0 as PmcComponents
 
 FocusScope {
     id: listBrowserRoot
@@ -49,7 +49,7 @@ FocusScope {
         spacing: units.smallSpacing
         boundsBehavior: Flickable.StopAtBounds
 
-        delegate: Common.MediaItemDelegate {
+        delegate: PmcComponents.MediaItemDelegate {
             horizontal: true
             view: listView
 

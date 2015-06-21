@@ -20,6 +20,7 @@
 
 import QtQuick 2.1
 import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.plasma.mediacenter 2.0 as PMC
 import org.kde.plasma.mediacenter.components 2.0 as MediaCenterComponents
 
 FocusScope {
@@ -33,6 +34,10 @@ FocusScope {
     signal playAllRequested()
     signal popupMenuRequested(int index, string mediaUrl, string mediaType, string display)
 
+    PMC.MediaBrowserLoader {
+        id: loader
+    }
+
     Item {
         id: mediaBrowserViewItem
         property QtObject mediaBrowserGridView
@@ -43,7 +48,7 @@ FocusScope {
     }
 
     Component {
-        id: mediaBrowserSmartBrowserComponent
+        id: mediaBrowserComponent
         Item {
         }
     }
@@ -52,10 +57,15 @@ FocusScope {
         if (!currentBrowsingBackend)
             return;
 
-        var object = mediaBrowserSmartBrowserComponent.createObject(mediaBrowserViewItem);
-
-        mediaBrowserViewItem.mediaBrowserGridView = object;
-        object.focus = true;
+        var component = Qt.createComponent(loader.getMediaBrowser("listbrowser"));
+        var object = component.createObject(mediaBrowserViewItem);
+        if (object != null) {
+            mediaBrowserViewItem.mediaBrowserGridView = object;
+            object.focus = true;
+        } else {
+            print("Failed to create browser");
+            print(component.errorString());
+        }
 
     }
 
