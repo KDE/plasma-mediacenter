@@ -62,44 +62,11 @@ FocusScope {
         if (!currentBrowsingBackend)
             return;
 
-        errorLabel.text = "";
-
-        if (mediaBrowserViewItem.mediaBrowserGridView) {
-            mediaBrowserViewItem.mediaBrowserGridView.destroy();
-        }
-
         var object = mediaBrowserSmartBrowserComponent.createObject(mediaBrowserViewItem);
 
         mediaBrowserViewItem.mediaBrowserGridView = object;
         object.focus = true;
 
-        if (currentBrowsingBackend) {
-            currentBrowsingBackend.error.connect(errorLabel.setError);
-            currentBrowsingBackend.showCustomUi.connect(showCustomUi);
-        }
-    }
-
-    function destroyGridView()
-    {
-        mediaBrowserViewItem.mediaBrowserGridView.destroy()
-    }
-
-    function loadModel()
-    {
-        if (mediaBrowserViewItem && mediaBrowserViewItem.mediaBrowserGridView)
-            mediaBrowserViewItem.mediaBrowserGridView.model = (function() { return currentBrowsingBackend.models[0]; });
-    }
-
-    PlasmaComponents.Label {
-        id: errorLabel
-        anchors.centerIn: parent
-        font.pointSize: fontSizes.large
-        z: 2
-
-        function setError(message)
-        {
-            errorLabel.text = message;
-        }
     }
 
     function goBack()
@@ -107,29 +74,4 @@ FocusScope {
         return mediaBrowser.currentBrowsingBackend.goOneLevelUp();
     }
 
-    function showCustomUi(qmlSource) {
-        if (qmlSource) {
-            var object = Qt.createQmlObject(qmlSource, mediaBrowser);
-
-            if (object.goBack) {
-                object.backend = currentBrowsingBackend;
-                if (object.close) object.close.connect(closeCustomUi);
-
-                if (mediaBrowser.backendOverlay) {
-                    mediaBrowser.backendOverlay.destroy();
-                }
-                mediaBrowser.backendOverlay = object;
-            } else {
-                console.log("******************** ERROR ********************");
-                console.log("ERROR: missing goBack function in " + object);
-                object.destroy();
-            }
-        } else {
-            console.log("WARNING: qmlSource is empty, doing nothing");
-        }
-    }
-
-    function closeCustomUi() {
-        mediaBrowser.backendOverlay = null;
-    }
 }
