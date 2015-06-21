@@ -1,5 +1,3 @@
-GridBrowser 2.0 gridbrowser/GridBrowser.qml
-ListBrowser 2.0 listbrowser/ListBrowser.qml
 TabBrowser 2.0 tabbrowser/TabBrowser.qml
 CategoriesBrowser 2.0 CategoriesBrowser.qml
 AutoHide 2.0 AutoHide.qml

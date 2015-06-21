@@ -1,0 +1,14 @@
+[Desktop Entry]
+Name=List Browser
+Comment=Shows media files in List
+GenericName=List Browser
+Type=Service
+
+X-KDE-PluginInfo-Author=Bhushan Shah
+X-KDE-PluginInfo-Email=bshah@kde.org
+X-KDE-PluginInfo-Name=listbrowser
+X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-Website=https://kde.org/
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
+X-Plasma-MainScript=ui/main.qml

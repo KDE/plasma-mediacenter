@@ -36,6 +36,7 @@ set (plasmamediacenter_SRCS
     mediavalidator.cpp
     settings.cpp
     localthumbnailprovider.cpp
+    mediabrowserloader.cpp
     mpris2/mpris2.cpp
     mpris2/mediaplayer2.cpp
     mpris2/mediaplayer2player.cpp
@@ -60,6 +61,7 @@ set(plasmamediacenter_link_libs
     KF5::Activities
     KF5::KIOWidgets
     KF5::WindowSystem #needed for mpris2, not used now
+    KF5::Plasma
     ${TAGLIB_LIBRARIES}
 )
 

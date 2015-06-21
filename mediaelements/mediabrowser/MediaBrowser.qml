@@ -44,17 +44,7 @@ FocusScope {
 
     Component {
         id: mediaBrowserSmartBrowserComponent
-        MediaCenterComponents.CategoriesBrowser {
-            anchors {
-                bottom: parent.bottom; right: parent.right; left: parent.left;
-                top: parent.top
-	        }
-            focus: true
-            backend: mediaBrowser.currentBrowsingBackend
-            models: mediaBrowser.currentBrowsingBackend.models
-
-            onMediaSelected: mediaBrowser.playRequested(index, url, mediaType, model)
-            onPopupRequested: mediaBrowser.popupMenuRequested(index, url, mediaType, title)
+        Item {
         }
     }
 

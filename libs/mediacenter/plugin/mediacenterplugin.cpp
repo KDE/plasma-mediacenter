@@ -32,6 +32,7 @@
 #include "mediacenter/pmccoverartprovider.h"
 #include "mediacenter/playlistmodel.h"
 #include "mediacenter/mpris2/mediaplayer2player.h"
+#include "mediacenter/mediabrowserloader.h"
 
 #include "qmlaccess.h"
 #include <iconimageprovider.h>
@@ -48,6 +49,7 @@ void MediaCenterPlugin::registerTypes(const char *uri)
     qmlRegisterType<QMLAccess>(uri, 2, 0, "QMLAccess");
     qmlRegisterType<Settings>(uri, 2, 0, "Settings");
     qmlRegisterType<RuntimeData>(uri, 2, 0, "RuntimeData");
+    qmlRegisterType<MediaBrowserLoader>(uri, 2, 0, "MediaBrowserLoader");
 
     qRegisterMetaType<PlaylistModel*>("PlaylistModel*");
     qRegisterMetaType<MediaCenter::AbstractBrowsingBackend*>("MediaCenter::AbstractBrowsingBackend*");

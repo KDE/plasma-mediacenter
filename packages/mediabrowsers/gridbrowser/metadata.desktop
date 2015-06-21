@@ -1,0 +1,14 @@
+[Desktop Entry]
+Name=Grid Browser
+Comment=Shows media files in grid
+GenericName=Grid Browser
+Type=Service
+
+X-KDE-PluginInfo-Author=Bhushan Shah
+X-KDE-PluginInfo-Email=bshah@kde.org
+X-KDE-PluginInfo-Name=gridbrowser
+X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-Website=https://kde.org/
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
+X-Plasma-MainScript=ui/main.qml
