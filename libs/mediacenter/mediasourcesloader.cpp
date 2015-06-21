@@ -52,7 +52,7 @@ void MediaSourcesLoader::load()
                 mediaSource->setMediaLibrary(SingletonFactory::instanceFor<MediaLibrary>());
                 mediaSource->start();
                 connect(QApplication::instance(), SIGNAL(destroyed(QObject*)), mediaSource, SLOT(quit()));
-                qDebug() << "created instance for media source" << info.name();
+                //qDebug() << "created instance for media source" << info.name();
             } else {
                 qDebug() << "Could not create a instance for the media source " << info.name();
             }

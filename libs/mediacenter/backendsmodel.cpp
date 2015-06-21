@@ -74,7 +74,7 @@ void BackendsModel::loadBrowsingBackends()
                 backend->setParent(const_cast<BackendsModel *>(this));
                 d->backends.insert(info.libraryPath(), backend);
                 d->loadedBackendsInfo.append(info);
-                qDebug() << "loaded backend " << info.name();
+                // qDebug() << "loaded backend " << info.name();
             } else {
                 qDebug() << "Could not create a instance for the backend " << info.name();
             }

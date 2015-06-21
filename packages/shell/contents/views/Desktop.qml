@@ -235,7 +235,6 @@ Item {
                     getPmcInterface().currentBrowsingBackend = modelObject;
                     pmcPageStack.visible = true;
                     pmcPageStack.push(getMediaBrowser());
-                    print(getPmcInterface().currentBrowsingBackend);
                 }
             }
         }
