@@ -30,13 +30,11 @@ using namespace MediaCenter;
 class AbstractBrowsingBackend::AbstractBrowsingBackendPrivate
 {
 public:
-    AbstractBrowsingBackendPrivate(AbstractBrowsingBackend *q) :
-    q(q),
+    AbstractBrowsingBackendPrivate() :
     hasInitialized(false)
     {}
 
     KPluginInfo pluginInfo;
-    AbstractBrowsingBackend *q;
     bool hasInitialized;
     ModelsInBackendModel modelsInBackend;
     QString searchTerm;
@@ -45,7 +43,7 @@ public:
 
 AbstractBrowsingBackend::AbstractBrowsingBackend(QObject *parent, const QVariantList &args)
     : QObject(parent),
-      d(new AbstractBrowsingBackendPrivate(this))
+      d(new AbstractBrowsingBackendPrivate)
 {
     Q_UNUSED(args);
     qRegisterMetaType<QAbstractItemModel*>("QAbstractItemModel*");
