@@ -37,6 +37,8 @@ class MEDIACENTER_EXPORT PmcModel : public QObject
     Q_PROPERTY(QString headerText READ headerText NOTIFY headerTextChanged)
     Q_PROPERTY(bool expanded READ expanded NOTIFY expandedChanged)
     Q_PROPERTY(ParentData parentData READ parentData NOTIFY parentDataChanged)
+    Q_PROPERTY(QString viewType READ viewType NOTIFY viewTypeChanged)
+
 public:
     explicit PmcModel(QObject *model = 0, QObject* parent = 0);
 
@@ -61,12 +63,16 @@ public:
     ParentData parentData() const;
     void setParentData(const QMap<int, QVariant> &parentData);
 
+    QString viewType() const;
+    void setViewType(const QString &view);
+
 Q_SIGNALS:
     void nameChanged();
     void supportsSearchChanged();
     void isListChanged();
     void modelChanged();
     void headerTextChanged();
+    void viewTypeChanged();
     void expandedChanged();
     void parentDataChanged();
 

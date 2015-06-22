@@ -52,8 +52,7 @@ FocusScope {
     GridView {
         id: gridBrowserGridView
         anchors {
-            top: parent.top; bottom: parent.bottom
-            left: parent.left; right: parent.right
+            fill: parent
             topMargin: units.smallSpacing * 2
             bottomMargin: units.smallSpacing * 3
         }
@@ -76,7 +75,6 @@ FocusScope {
         flow: GridView.FlowTopToBottom
         cacheBuffer: width*2
         focus: true
-
     }
 
     PlasmaComponents.ScrollBar {

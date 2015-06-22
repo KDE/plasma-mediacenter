@@ -47,21 +47,19 @@ FocusScope {
         }
     }
 
-    Component {
-        id: mediaBrowserComponent
-        Item {
-        }
-    }
-
     onCurrentBrowsingBackendChanged: {
         if (!currentBrowsingBackend)
             return;
 
-        var component = Qt.createComponent(loader.getMediaBrowser("listbrowser"));
+        var model = currentBrowsingBackend.model();
+        print(model);
+        var component = Qt.createComponent(loader.getMediaBrowser(currentBrowsingBackend.viewType()));
         var object = component.createObject(mediaBrowserViewItem);
         if (object != null) {
             mediaBrowserViewItem.mediaBrowserGridView = object;
             object.focus = true;
+            object.model = model;
+            object.anchors.fill = mediaBrowserViewItem;
         } else {
             print("Failed to create browser");
             print(component.errorString());

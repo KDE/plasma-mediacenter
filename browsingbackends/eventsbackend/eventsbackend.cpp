@@ -47,6 +47,7 @@ bool EventsBackend::initImpl()
 {
     m_eventsModel = new EventsModel(this);
     m_eventsPmcModel = new PmcModel(m_eventsModel, this);
+    m_eventsPmcModel.setViewType("gridbrowser");
 
     m_eventsPicturesModel = new EventsPicturesModel(this);
 

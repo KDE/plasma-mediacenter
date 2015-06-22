@@ -101,6 +101,11 @@ public:
     QStringList buttons() const;
 
     /**
+     * TODO: Remove when multiple models are there
+     */
+    Q_INVOKABLE QString viewType() const;
+
+    /**
      * This method will be called when the media center wants to load this backend.
      * Please use initImpl method to do initialization instead of the constructor.
      * @see initImpl

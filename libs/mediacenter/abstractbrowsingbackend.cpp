@@ -188,6 +188,15 @@ QStringList AbstractBrowsingBackend::buttons() const
     return d->buttons;
 }
 
+QString AbstractBrowsingBackend::viewType() const
+{
+     QObject *model = d->models.length() ? (QObject*)(d->models.first()) : 0;
+     if (model) {
+         return qobject_cast<PmcModel*>(model)->viewType();
+     }
+     return QString();
+}
+
 void AbstractBrowsingBackend::setButtons(const QStringList& buttons)
 {
     if (d->buttons != buttons) {

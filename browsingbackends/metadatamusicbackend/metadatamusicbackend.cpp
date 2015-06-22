@@ -68,34 +68,39 @@ bool MetadataMusicBackend::initImpl()
     m_musicPmcModel = new PmcModel(m_musicFilteredModel, this);
     m_musicPmcModel->setName(i18nd("plasma-mediacenter", "Songs"));
     m_musicPmcModel->setIsList(true);
+    m_musicPmcModel->setViewType("listbrowser");
 
     m_albumFilteredModel = new FilterMediaModel(this);
     m_albumFilteredModel->setSourceModel(m_albumsModel);
     m_albumsPmcModel = new PmcModel(m_albumFilteredModel, this);
     m_albumsPmcModel->setName(i18nd("plasma-mediacenter", "Albums"));
+    m_albumsPmcModel->setViewType("listbrowser");
     m_musicFilteredByAlbumModel = new FilterMediaModel(this);
     m_musicFilteredByAlbumModel->setSourceModel(m_musicModel);
     m_musicFilteredByAlbumPmcModel = new PmcModel(m_musicFilteredByAlbumModel);
     m_musicFilteredByAlbumPmcModel->setIsList(true);
     m_musicFilteredByAlbumPmcModel->setExpanded(true);
+    m_musicFilteredByAlbumPmcModel->setViewType("listbrowser");
 
     m_artistFilteredModel = new FilterMediaModel(this);
     m_artistFilteredModel->setSourceModel(m_artistsModel);
     m_artistsPmcModel = new PmcModel(m_artistFilteredModel, this);
     m_artistsPmcModel->setName(i18nd("plasma-mediacenter", "Artists"));
+    m_artistsPmcModel->setViewType("listbrowser");
     m_musicFilteredByArtistModel = new FilterMediaModel(this);
     m_musicFilteredByArtistModel->setSourceModel(m_musicModel);
     m_musicFilteredByArtistPmcModel = new PmcModel(m_musicFilteredByArtistModel);
     m_musicFilteredByArtistPmcModel->setIsList(true);
     m_musicFilteredByArtistPmcModel->setExpanded(true);
+    m_musicFilteredByArtistPmcModel->setViewType("listbrowser");
 
     m_musicPmcModel->setSupportsSearch(true);
     m_artistsPmcModel->setSupportsSearch(true);
     m_albumsPmcModel->setSupportsSearch(true);
 
+    addModel(m_musicPmcModel);
     addModel(m_albumsPmcModel);
     addModel(m_artistsPmcModel);
-    addModel(m_musicPmcModel);
 
     QTimer::singleShot(1000, this, SLOT(initializeModels()));
     return true;
