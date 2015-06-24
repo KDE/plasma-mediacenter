@@ -36,36 +36,43 @@ FocusScope {
 
     signal mediaSelected(int index, string url, string mediaType)
 
-    ListView {
-        id: listView
-        anchors {
-            top: parent.top; bottom: parent.bottom
-            left: parent.left; right: parent.right
+    PlasmaCore.FrameSvgItem {
+        id: background
+        visible: true
+        imagePath: "widgets/background"
+        anchors.fill: parent
+        ListView {
+            id: listView
+
+            anchors.fill: parent
+            anchors.leftMargin: background.margins.left
+            anchors.topMargin: background.margins.top
+            anchors.rightMargin: background.margins.right
+            anchors.bottomMargin: background.margins.bottom
+
+            clip: true
+            focus: true
+
+            highlight: PlasmaComponents.Highlight { }
+            highlightFollowsCurrentItem: true
+            highlightMoveDuration: 0
+            boundsBehavior: Flickable.StopAtBounds
+
+            delegate: ListMediaItem {
+                id: delegate
+                view: listView
+                width: ListView.view.width - listScrollbar.width
+                height: units.iconSizes.huge
+                clip: !ListView.isCurrentItem
+                checked: ListView.isCurrentItem
+            }
+
+            PlasmaComponents.ScrollBar {
+                id: listScrollbar
+                orientation: Qt.Vertical
+                flickableItem: listView
+            }
+
         }
-        clip: true
-        focus: true
-        highlight: Item { }
-        highlightFollowsCurrentItem: true
-        spacing: units.smallSpacing
-        boundsBehavior: Flickable.StopAtBounds
-
-        delegate: PmcComponents.MediaItemDelegate {
-            horizontal: true
-            view: listView
-
-            width: ListView.view.width - listScrollbar.width
-            height: units.iconSizes.huge
-            clip: !ListView.isCurrentItem
-
-            backend: listBrowserRoot.currentBrowsingBackend
-            onPlayRequested: listBrowserRoot.mediaSelected(index, url, currentMediaType)
-        }
-
-        PlasmaComponents.ScrollBar {
-            id: listScrollbar
-            orientation: Qt.Vertical
-            flickableItem: listView
-        }
-
     }
 }

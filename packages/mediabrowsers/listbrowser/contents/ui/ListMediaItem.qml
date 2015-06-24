@@ -26,54 +26,48 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 
 import org.kde.kcoreaddons 1.0 as KCoreAddons
 
-Item {
+PlasmaComponents.ListItem {
     id: root
     property QtObject view
 
-    signal clicked(int index)
+    signal playRequested
+    enabled: true
 
-    Rectangle {
-        anchors {
-            fill: parent;
+    RowLayout {
+        anchors.fill: parent
+        anchors.margins: units.smallSpacing
+
+        Image {
+            Layout.fillHeight: true
+            Layout.preferredWidth: height
+            asynchronous: true
+            fillMode: Image.PreserveAspectCrop
+            sourceSize { width: width; height: height }
+            source: decoration
         }
-        color: view.currentIndex === index ? theme.highlightColor : theme.backgroundColor
 
-        RowLayout {
-            anchors.fill: parent
-            anchors.margins: units.smallSpacing
-
-            Image {
-                Layout.fillHeight: true
-                Layout.preferredWidth: height
-                asynchronous: true
-                fillMode: Image.PreserveAspectCrop
-                sourceSize { width: width; height: height }
-                source: decoration
-            }
-
-            ColumnLayout {
-                Layout.fillHeight: true; Layout.fillWidth: true
-                PlasmaComponents.Label {
-                    Layout.fillHeight: true; Layout.fillWidth: true
-                    verticalAlignment: Text.AlignVCenter
-                    font.pointSize: fontSizes.medium
-                    text: display
-                }
-                PlasmaComponents.Label {
-                    id: mediaInfo
-                    Layout.fillHeight: true; Layout.fillWidth: true
-                    verticalAlignment: Text.AlignVCenter
-                    text: mediaArtist + " - " + mediaAlbum
-                }
-            }
-
+        ColumnLayout {
+            Layout.fillHeight: true; Layout.fillWidth: true
             PlasmaComponents.Label {
-                Layout.fillWidth: false; Layout.fillHeight: true
+                Layout.fillHeight: true; Layout.fillWidth: true
                 verticalAlignment: Text.AlignVCenter
-                text: KCoreAddons.Format.formatDuration(mediaDuration * 1000, KCoreAddons.FormatTypes.FoldHours)
+                font.pointSize: fontSizes.medium
+                text: display
             }
-
+            PlasmaComponents.Label {
+                id: mediaInfo
+                Layout.fillHeight: true; Layout.fillWidth: true
+                verticalAlignment: Text.AlignVCenter
+                text: mediaArtist + " - " + mediaAlbum
+            }
         }
+
+        PlasmaComponents.Label {
+            Layout.fillWidth: false; Layout.fillHeight: true
+            verticalAlignment: Text.AlignVCenter
+            text: KCoreAddons.Format.formatDuration(mediaDuration * 1000, KCoreAddons.FormatTypes.FoldHours)
+        }
+
         MouseArea {
             id: mediaItemDelegateItemMouseArea
             hoverEnabled: true
@@ -83,13 +77,8 @@ Item {
                         !root.view.moving &&
                         !root.view.flicking)
                         root.view.currentIndex = index
-            onClicked: if (mouse.button == Qt.RightButton) {
-                //do something
-            } else {
-                root.clicked(index);
-            }
+            onClicked: print("Foobar " + mediaUrl);
         }
-
     }
 
 }
