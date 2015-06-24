@@ -49,7 +49,7 @@ bool MetadataVideoBackend::initImpl()
     filteredModel->sort(0, Qt::DescendingOrder);
     PmcModel *metadata = new PmcModel(filteredModel, this);
     metadata->setName("All videos");
-    metadata->setViewType("gridbrowser");
+    metadata->setViewType("listbrowser");
 
     metadata->setSupportsSearch(true);
     setModel(metadata);
