@@ -23,7 +23,12 @@
 
 Settings::Settings(QObject *parent) : QObject(parent)
 {
-    configGroup = KSharedConfig::openConfig()->group("General");
+    configGroup = KSharedConfig::openConfig("plasma-mediacenterrc")->group("General");
+}
+
+Settings::~Settings()
+{
+    sync();
 }
 
 void Settings::setValue(const QString &key, const QVariant &value)

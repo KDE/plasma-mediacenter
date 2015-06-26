@@ -29,8 +29,9 @@
 
 MEDIACENTER_EXPORT_MEDIASOURCE(FilesystemSearchMediaSource, "filesystemsearch.json")
 
-FilesystemSearchMediaSource::FilesystemSearchMediaSource(QObject* parent, const QVariantList&)
-    : m_quit(false)
+FilesystemSearchMediaSource::FilesystemSearchMediaSource(QObject* parent, const QVariantList& args)
+    : AbstractMediaSource(parent, args),
+      m_quit(false)
 {
     m_allowedMimes << "audio" << "image" << "video";
 }

@@ -24,9 +24,13 @@
 #include "mediaplayer2tracklist.h"
 #include "mediacenter/medialibrary.h"
 #include "mediacenter/pmcmedia.h"
+#include "mediacenter/pmcimagecache.h"
 
 #include <QDBusConnection>
+#include <QDir>
 #include <unistd.h>
+
+static const QString tmpPmcDirPath(QDir::tempPath() + QLatin1String("/plasma-mediacenter/covers/"));
 
 Mpris2::Mpris2(PlaylistModel *playlistModel, QObject* parent)
     : QObject(parent)
@@ -43,6 +47,9 @@ Mpris2::Mpris2(PlaylistModel *playlistModel, QObject* parent)
     }
 
     if (success) {
+        QDir tmpPmcDir;
+        tmpPmcDir.mkpath(tmpPmcDirPath);
+
         m_mp2 = new MediaPlayer2(this);
         m_mp2p = new MediaPlayer2Player(this);
         m_mp2tl = new MediaPlayer2Tracklist(playlistModel, this);
@@ -86,6 +93,7 @@ QVariantMap Mpris2::getMetadataOf(const QString &url, const QString& trackId)
 {
     QVariantMap metadata;
     QSharedPointer<PmcMedia> media = SingletonFactory::instanceFor<MediaLibrary>()->mediaForUrl(url);
+    PmcImageCache *imageCache = SingletonFactory::instanceFor<PmcImageCache>();
     if (media) {
         metadata["mpris:trackid"] = QVariant::fromValue<QDBusObjectPath>(QDBusObjectPath(trackId));
         metadata["mpris:length"] = qlonglong(media->duration())*1000000;
@@ -95,6 +103,12 @@ QVariantMap Mpris2::getMetadataOf(const QString &url, const QString& trackId)
         metadata["xesam:album"] = media->album();
         metadata["xesam:artist"] = QStringList(media->artist());
         metadata["xesam:genre"] = QStringList(media->genre());
+        if (imageCache->containsAlbumCover(media->album())) {
+            if (imageCache->getImage(imageCache->imageIdForAlbumCover(media->album()))
+                    .save(tmpPmcDirPath + media->album(), "PNG")) {
+            metadata["mpris:artUrl"] = QString(tmpPmcDirPath + media->album());
+            }
+        }
     }
 
     return metadata;

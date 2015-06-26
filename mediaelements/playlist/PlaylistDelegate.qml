@@ -87,7 +87,6 @@ Item {
                 property bool delegateHeld: false
                 property int newPositionY: index + movedY
                 drag.axis: Drag.XandYAxis
-                onPressAndHold: Logic.onPressAndHold(dragItemArea, listViewItem)
                 onPositionChanged: Logic.onPositionChanged(dragItemArea, listViewItem)
                 onReleased:Logic.onReleased(dragItemArea, listViewItem, playlistList, pmcInterfaceInstance.playlistModel)
                 onClicked: requestPlayback()

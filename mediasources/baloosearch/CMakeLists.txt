@@ -1,3 +1,6 @@
+if(NOT KF5Baloo_FOUND)
+    return()
+endif()
 find_package(KF5FileMetaData REQUIRED)
 
 set(baloosearch_SRCS

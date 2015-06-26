@@ -31,6 +31,7 @@ class MEDIACENTER_EXPORT Settings : public QObject
     Q_OBJECT
 public:
     explicit Settings(QObject *parent = 0);
+    ~Settings();
 
     Q_INVOKABLE QVariant value(const QString &key, const QVariant &defaultValue = QVariant()) const;
     Q_INVOKABLE void setValue(const QString &key, const QVariant &value);

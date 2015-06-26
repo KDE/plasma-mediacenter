@@ -35,7 +35,6 @@ FocusScope {
     property QtObject topSibling
 
     signal mediaSelected(int index, string url, string mediaType)
-    signal popupRequested(int index, string url, string mediaType, string title)
 
     ListView {
         id: listView
@@ -60,7 +59,6 @@ FocusScope {
 
             backend: listBrowserRoot.currentBrowsingBackend
             onPlayRequested: listBrowserRoot.mediaSelected(index, url, currentMediaType)
-            onPopupMenuRequested: listBrowserRoot.popupRequested(index,mediaUrl,mediaType, display)
         }
 
         PlasmaComponents.ScrollBar {

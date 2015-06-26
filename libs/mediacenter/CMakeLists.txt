@@ -65,6 +65,7 @@ set(plasmamediacenter_link_libs
     KF5::GuiAddons
     KF5::CoreAddons
     KF5::Service
+    KF5::Activities
     KF5::KIOWidgets
     KF5::WindowSystem #needed for mpris2, not used now
     ${TAGLIB_LIBRARIES}

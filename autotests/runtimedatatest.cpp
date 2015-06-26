@@ -54,6 +54,7 @@ void TestRuntimeData::cleanup()
 void TestRuntimeData::testPlayUrl()
 {
     RuntimeData runtimeData;
+    runtimeData.setTestMode(true);
     //First try setting url
     runtimeData.playUrl(TEST_URL);
     QCOMPARE(runtimeData.property("url").toString(), TEST_URL);
@@ -65,6 +66,7 @@ void TestRuntimeData::testPlayUrl()
 void TestRuntimeData::testVolumeAndMuteFunction()
 {
     RuntimeData runtimeData;
+    runtimeData.setTestMode(true);
 
     //Lets set volume to something reasonable
     runtimeData.setVolume(5.0);

@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 set(QT_MIN_VERSION "5.3.0")
 set (KF5_MIN_VERSION "5.5.0")
 
-set(PROJECT_VERSION "5.3.90")
+set(PROJECT_VERSION "5.3.0")
 set(PROJECT_VERSION_MAJOR "5")
 
 find_package(ECM 0.0.8 REQUIRED NO_MODULE)
@@ -45,9 +45,10 @@ add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
 
 # Load the frameworks we need
 find_package(KF5 ${KF5_MIN_VERSION} COMPONENTS REQUIRED
-    CoreAddons Config I18n GuiAddons Service ConfigWidgets KIO Declarative WindowSystem Plasma PlasmaQuick)
+    CoreAddons Config I18n GuiAddons Service ConfigWidgets KIO Declarative WindowSystem Activities Plasma PlasmaQuick)
 
-find_package(KF5Baloo 5.1.90)
+find_package(KF5Baloo)
+add_feature_info("KF5Baloo" KF5Baloo_FOUND "Required for Baloo integration")
 find_package(Taglib REQUIRED)
 
 include_directories(
