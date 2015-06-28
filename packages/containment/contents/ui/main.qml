@@ -189,9 +189,6 @@ function positionViewAt(id)
         plasmoid.action("configure").enabled = !plasmoid.immutable;
     }
 
-    onToolBoxChanged: {
-        containmentSizeSyncTimer.restart();
-    }
 //END connections
 
 //BEGIN components
