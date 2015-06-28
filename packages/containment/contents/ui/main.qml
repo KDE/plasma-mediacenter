@@ -38,8 +38,6 @@ Flickable {
     Layout.maximumHeight: currentLayout.Layout.maximumHeight
     Layout.preferredHeight: currentLayout.Layout.preferredHeight
 
-    property Item toolBox
-
 
     contentWidth: currentLayout.Layout.preferredWidth
     //contentHeight: currentLayout.Layout.preferredHeight
@@ -353,7 +351,7 @@ function positionViewAt(id)
         id: containmentSizeSyncTimer
         interval: 150
         onTriggered: {
-            currentLayout.x = (Qt.application.layoutDirection === Qt.RightToLeft) ? toolBox.width : 0;
+            currentLayout.x = 0;
             currentLayout.y = 0
             currentLayout.width = root.width
             currentLayout.height = root.height
