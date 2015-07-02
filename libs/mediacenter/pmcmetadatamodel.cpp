@@ -121,6 +121,7 @@ void PmcMetadataModel::showMediaType(MediaCenter::MediaType mediaType)
     connect(d->mediaLibrary,
             SIGNAL(newMedia(QList<QSharedPointer<PmcMedia> >)),
             SLOT(handleNewMedia(QList<QSharedPointer<PmcMedia> >)));
+    connect(d->mediaLibrary, &MediaLibrary::mediaRemoved, this, &PmcMetadataModel::removeMediaRef);
 
     handleNewMedia(mediaData);
 }
@@ -169,6 +170,15 @@ void PmcMetadataModel::handleNewMedia(const QList< QSharedPointer< PmcMedia > >&
     }
 }
 
+void PmcMetadataModel::removeMediaRef(QSharedPointer<PmcMedia> media)
+{
+    int index = d->mediaResourceIds.indexOf(media->sha());
+    beginRemoveRows(QModelIndex(), index, index);
+    d->mediaByResourceId.remove(media->sha());
+    d->mediaResourceIds.removeAt(index);
+    endRemoveRows();
+}
+
 void PmcMetadataModel::handleNewAlbums(const QList< QSharedPointer< PmcAlbum > >& mediaData)
 {
     handleNewAlbumsOrArtists<PmcAlbum>(mediaData);
@@ -195,8 +205,10 @@ void PmcMetadataModel::handleNewAlbumsOrArtists(const QList< QSharedPointer< T >
         connect(a.data(), &T::updated, [a, this]() {
             albumOrArtistUpdated<T>(static_cast<T*>(a.data()));
         });
+        connect(a.data(), &T::removeRefs, [a, this]() {
+            removeAlbumOrArtist(static_cast<T*>(a.data()));
+        });
     }
-
     if (resourceIdsToBeInserted.size() > 0) {
         beginInsertRows(QModelIndex(), existingRowCount,
                         existingRowCount + resourceIdsToBeInserted.size() - 1);
@@ -205,6 +217,16 @@ void PmcMetadataModel::handleNewAlbumsOrArtists(const QList< QSharedPointer< T >
         Q_ASSERT(d->mediaByResourceId.keys().size() == d->mediaResourceIds.size());
         endInsertRows();
     }
+}
+
+template <class T>
+void PmcMetadataModel::removeAlbumOrArtist(const T* albumOrArtist)
+{
+    int index = d->mediaResourceIds.indexOf(albumOrArtist->name());
+    beginRemoveRows(QModelIndex(), index, index);
+    d->mediaByResourceId.remove(albumOrArtist->name());
+    d->mediaResourceIds.removeAt(index);
+    endRemoveRows();
 }
 
 QVariant PmcMetadataModel::metadataValueForRole(const QModelIndex& index, int role) const

@@ -45,6 +45,7 @@ public:
 
     void updateMedia(const QHash<int, QVariant> &data);
     void updateMedia(const QString &url, const QHash<int, QVariant> &data);
+    void removeMedia(const QString &url);
     QList<QSharedPointer <PmcMedia> > getMedia(const QString &type) const;
     QList< QSharedPointer< PmcAlbum > > getAlbums() const;
     QList< QSharedPointer< PmcArtist > > getArtists() const;
@@ -57,6 +58,7 @@ Q_SIGNALS:
     void newMedia(const QList< QSharedPointer<PmcMedia> > &media);
     void newAlbums(const QList< QSharedPointer<PmcAlbum> > &album);
     void newArtists(const QList< QSharedPointer<PmcArtist> > &artist);
+    void mediaRemoved(QSharedPointer<PmcMedia> media);
 
 private Q_SLOTS:
     void init();

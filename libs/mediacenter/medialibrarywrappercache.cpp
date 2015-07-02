@@ -42,6 +42,7 @@ MediaLibraryWrapperCache::MediaLibraryWrapperCache(MediaLibrary* parent)
             SLOT(saveNewAlbums(QList<QSharedPointer<PmcAlbum> >)));
     connect(parent, SIGNAL(newArtists(QList<QSharedPointer<PmcArtist> >)),
             SLOT(saveNewArtists(QList<QSharedPointer<PmcArtist> >)));
+    connect(parent, &MediaLibrary::mediaRemoved, this, &MediaLibraryWrapperCache::removeMediaRef);
 }
 
 
@@ -57,14 +58,37 @@ void MediaLibraryWrapperCache::saveNewMedia(const QList< QSharedPointer< PmcMedi
     }
 }
 
+void MediaLibraryWrapperCache::removeMediaRef(QSharedPointer<PmcMedia> media)
+{
+    d->pmcMediaByType[media->type()].removeOne(media);
+}
+
 void MediaLibraryWrapperCache::saveNewAlbums(const QList<QSharedPointer<PmcAlbum> > &albums)
 {
     d->pmcAlbums.append(albums);
+    Q_FOREACH(QSharedPointer<PmcAlbum> album, albums) {
+        connect(album.data(), &PmcAlbum::removeRefs, this, &MediaLibraryWrapperCache::removeAlbumRef);
+    }
+}
+
+void MediaLibraryWrapperCache::removeAlbumRef()
+{
+    QSharedPointer<PmcAlbum> album = QSharedPointer<PmcAlbum>(static_cast<PmcAlbum*>(sender()));
+    d->pmcAlbums.removeOne(album);
 }
 
 void MediaLibraryWrapperCache::saveNewArtists(const QList<QSharedPointer<PmcArtist> > &artists)
 {
     d->pmcArtists.append(artists);
+    Q_FOREACH(QSharedPointer<PmcArtist> artist, artists) {
+        connect(artist.data(), &PmcArtist::removeRefs, this, &MediaLibraryWrapperCache::removeArtistRef);
+    }
+}
+
+void MediaLibraryWrapperCache::removeArtistRef()
+{
+    QSharedPointer<PmcArtist> artist = QSharedPointer<PmcArtist>(static_cast<PmcArtist*>(sender()));
+    d->pmcArtists.removeOne(artist);
 }
 
 QList< QSharedPointer< PmcAlbum > > MediaLibraryWrapperCache::getAlbums() const

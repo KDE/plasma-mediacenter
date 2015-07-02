@@ -54,3 +54,11 @@ int PmcAlbum::mediaCount() const
 {
     return d->album->media().size();
 }
+
+void PmcAlbum::removeMedia(const QSharedPointer<Media> &media)
+{
+    d->album->removeMedia(media);
+    if (mediaCount() <= 0) {
+        emit removeRefs();
+    }
+}
