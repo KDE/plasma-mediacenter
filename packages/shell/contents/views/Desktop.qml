@@ -42,9 +42,12 @@ Item {
 
     property QtObject pmcInterfaceInstance
     property QtObject pmcMediaBrowserInstance
+    property QtObject pmcWidgetExploreInstance
 
     function toggleWidgetExplorer(containment) {
-         console.log("Widget Explorer toggled");
+        pmcPageStack.visible = true;
+        pmcPageStack.push(getWidgetExplorer());
+        getWidgetExplorer().containment = containment
     }
 
     function getPmcInterface() {
@@ -59,6 +62,13 @@ Item {
             pmcMediaBrowserInstance = pmcMediaBrowserComponent.createObject(root);
         }
         return pmcMediaBrowserInstance;
+    }
+
+    function getWidgetExplorer() {
+        if(!pmcWidgetExploreInstance) {
+            pmcWidgetExploreInstance = widgetExplorerComponent.createObject(root);
+        }
+        return pmcWidgetExploreInstance;
     }
 
     onContainmentChanged: {
@@ -245,6 +255,17 @@ Item {
         MediaCenterElements.MediaBrowser {
             currentBrowsingBackend: getPmcInterface().currentBrowsingBackend
             onBackRequested: pmcPageStack.pop()
+        }
+    }
+
+    Component {
+        id: widgetExplorerComponent
+        WidgetExplorer {
+            id: widgetExplorer
+            onClose: {
+                pmcPageStack.pop();
+                pmcPageStack.visible = false;
+            }
         }
     }
 
