@@ -39,7 +39,7 @@ private:
     static void browseDirectChildrenCallback(GUPnPServiceProxy *contentDir, GUPnPServiceProxyAction *action, gpointer userData);
     static void onDidlObjectAvailable(GUPnPDIDLLiteParser *parser, GUPnPDIDLLiteObject *object, gpointer userdata);
     static void appendDidlObject(GUPnPDIDLLiteObject *object, BrowseData *browseData, const char* udn);
-    static void browseMetadata(GUPnPServiceProxy *contentDir, const char *id, const char *udn, gpointer userdata);
+    static void browseMetadata(GUPnPServiceProxy *contentDir, const char *id, const char *udn);
     static void browseMetadataCallback(GUPnPServiceProxy *contentDir, GUPnPServiceProxyAction *action, gpointer userdata);
     static GUPnPServiceProxy* getContentDir(GUPnPDeviceProxy *proxy);
 };

@@ -45,7 +45,6 @@ struct BrowseData
 struct BrowseMetadataData
 {
     gchar *id;
-    gpointer userdata;
     gchar *udn;
 };
 
@@ -99,135 +98,6 @@ void UPnPInstance::browseDirectChildren(GUPnPServiceProxy *contentDir, const cha
                                      G_TYPE_STRING,
                                      "",
                                      nullptr);
-}
-
-GUPnPServiceProxy* UPnPInstance::getContentDir(GUPnPDeviceProxy *proxy)
-{
-    GUPnPDeviceInfo *info;
-    GUPnPServiceInfo *contentDir;
-    info = GUPNP_DEVICE_INFO(proxy);
-    contentDir = gupnp_device_info_get_service(info, CONTENT_DIR);
-    return GUPNP_SERVICE_PROXY(contentDir);
-}
-
-void UPnPInstance::browseMetadataCallback(GUPnPServiceProxy *contentDir, GUPnPServiceProxyAction *action, gpointer userdata)
-{
-    GError *error = nullptr;
-    char *metadata = nullptr;
-    BrowseMetadataData *data = (BrowseMetadataData *) userdata;
-    gupnp_service_proxy_end_action(contentDir,
-                                   action,
-                                   &error,
-                                   /* OUT args */
-                                   "Result",
-                                   G_TYPE_STRING,
-                                   &metadata,
-                                   nullptr);
-    if (metadata) {
-        QString artist, album, albumArtist, title, mediaType, duration, url, protocolInfo, mimeType;
-        QDomElement docElem;
-        QDomDocument xmlDoc;
-        xmlDoc.setContent(QByteArray(metadata));
-        docElem = xmlDoc.documentElement();
-        QDomNodeList itemList = docElem.elementsByTagName("item");
-        for(int i = 0; i < itemList.count(); i++){
-            QDomElement item = itemList.at(i).toElement();
-            mimeType = item.elementsByTagName("upnp:class").at(0).toElement().text();
-
-            if (mimeType.contains("audio", Qt::CaseInsensitive)) {
-                mimeType = "audio";
-            } else if (mimeType.contains("video", Qt::CaseInsensitive)) {
-                mimeType = "video";
-            } else if (mimeType.contains("image", Qt::CaseInsensitive)) {
-                mimeType = "image";
-            } else {
-                continue;
-            }
-
-            url = item.elementsByTagName("res").at(0).toElement().text();
-            title = item.elementsByTagName("dc:title").at(0).toElement().text();
-            album = item.elementsByTagName("upnp:album").at(0).toElement().text();
-            artist = item.elementsByTagName("upnp:artist").at(0).toElement().text();
-            duration = item.elementsByTagName("res").at(0).toElement().attribute("duration");
-            protocolInfo= item.elementsByTagName("res").at(0).toElement().attribute("protocolInfo");
-
-            QHash<int, QString> properties;
-            properties.insert(Qt::DisplayRole, title);
-            properties.insert(MediaCenter::AlbumRole, album);
-            properties.insert(MediaCenter::MediaUrlRole, url);
-            properties.insert(MediaCenter::ArtistRole, artist);
-            properties.insert(MediaCenter::MimeTypeRole, mimeType);
-            properties.insert(MediaCenter::DurationRole, duration);
-            properties.insert(MediaCenter::AlbumArtistRole, albumArtist);
-            UPnPMediaSource::mediaList.append(qMakePair(QString::fromLocal8Bit(data->udn), url));
-            UPnPMediaSource::addMedia(properties);
-        }
-        g_free(metadata);
-    } else if (error) {
-        g_warning("Failed to get metadata for '%s': %s",
-                   data->id,
-                   error->message);
-
-        g_error_free(error);
-    }
-}
-
-void UPnPInstance::browseMetadata(GUPnPServiceProxy *contentDir, const char *id, const char *udn, gpointer userdata)
-{
-    BrowseMetadataData *data;
-    data = g_slice_new(BrowseMetadataData);
-    data->id = g_strdup(id);
-    data->userdata = userdata;
-    data->udn = g_strdup(udn);
-    gupnp_service_proxy_begin_action((GUPnPServiceProxy*)g_object_ref(contentDir),
-                                     "Browse",
-                                     browseMetadataCallback,
-                                     data,
-                                     /* IN args */
-                                     "ObjectID",
-                                     G_TYPE_STRING,
-                                     data->id,
-                                     "BrowseFlag",
-                                     G_TYPE_STRING,
-                                     "BrowseMetadata",
-                                     "Filter",
-                                     G_TYPE_STRING,
-                                     "*",
-                                     "StartingIndex",
-                                     G_TYPE_UINT,
-                                     0,
-                                     "RequestedCount",
-                                     G_TYPE_UINT,
-                                     0,
-                                     "SortCriteria",
-                                     G_TYPE_STRING,
-                                     "",
-                                     nullptr);
-}
-
-void UPnPInstance::appendDidlObject(GUPnPDIDLLiteObject *object, BrowseData *browseData, const char* udn)
-{
-    const char *id = nullptr;
-    const char *parentId = nullptr;
-    const char *title = nullptr;
-    id = gupnp_didl_lite_object_get_id (object);
-    title = gupnp_didl_lite_object_get_title (object);
-    parentId = gupnp_didl_lite_object_get_parent_id (object);
-    if (id == nullptr || title == nullptr || parentId == nullptr) {
-        return;
-    }
-    browseMetadata((GUPnPServiceProxy*)g_object_ref(browseData->contentDir), id, udn, nullptr);
-}
-
-void UPnPInstance::onDidlObjectAvailable(GUPnPDIDLLiteParser *parser, GUPnPDIDLLiteObject *object, gpointer userdata)
-{
-    Q_UNUSED(parser);
-    BrowseData *browseData;
-    const char *udn;
-
-    browseData = (BrowseData *)userdata;
-    udn = gupnp_service_info_get_udn(GUPNP_SERVICE_INFO (browseData->contentDir));
-    appendDidlObject(object, browseData, udn);
 }
 
 void UPnPInstance::browseDirectChildrenCallback(GUPnPServiceProxy *contentDir, GUPnPServiceProxyAction *action, gpointer userData)
@@ -300,4 +170,132 @@ void UPnPInstance::browseDirectChildrenCallback(GUPnPServiceProxy *contentDir, G
                                  batchSize);
         }
     } 
+}
+
+void UPnPInstance::onDidlObjectAvailable(GUPnPDIDLLiteParser *parser, GUPnPDIDLLiteObject *object, gpointer userdata)
+{
+    Q_UNUSED(parser);
+    BrowseData *browseData;
+    const char *udn;
+
+    browseData = (BrowseData *)userdata;
+    udn = gupnp_service_info_get_udn(GUPNP_SERVICE_INFO (browseData->contentDir));
+    appendDidlObject(object, browseData, udn);
+}
+
+void UPnPInstance::appendDidlObject(GUPnPDIDLLiteObject *object, BrowseData *browseData, const char* udn)
+{
+    const char *id = nullptr;
+    const char *parentId = nullptr;
+    const char *title = nullptr;
+    id = gupnp_didl_lite_object_get_id (object);
+    title = gupnp_didl_lite_object_get_title (object);
+    parentId = gupnp_didl_lite_object_get_parent_id (object);
+    if (id == nullptr || title == nullptr || parentId == nullptr) {
+        return;
+    }
+    browseMetadata((GUPnPServiceProxy*)g_object_ref(browseData->contentDir), id, udn);
+}
+
+GUPnPServiceProxy* UPnPInstance::getContentDir(GUPnPDeviceProxy *proxy)
+{
+    GUPnPDeviceInfo *info;
+    GUPnPServiceInfo *contentDir;
+    info = GUPNP_DEVICE_INFO(proxy);
+    contentDir = gupnp_device_info_get_service(info, CONTENT_DIR);
+    return GUPNP_SERVICE_PROXY(contentDir);
+}
+
+void UPnPInstance::browseMetadata(GUPnPServiceProxy *contentDir, const char *id, const char *udn)
+{
+    BrowseMetadataData *data;
+    data = g_slice_new(BrowseMetadataData);
+    data->id = g_strdup(id);
+    data->udn = g_strdup(udn);
+    gupnp_service_proxy_begin_action((GUPnPServiceProxy*)g_object_ref(contentDir),
+                                     "Browse",
+                                     browseMetadataCallback,
+                                     data,
+                                     /* IN args */
+                                     "ObjectID",
+                                     G_TYPE_STRING,
+                                     data->id,
+                                     "BrowseFlag",
+                                     G_TYPE_STRING,
+                                     "BrowseMetadata",
+                                     "Filter",
+                                     G_TYPE_STRING,
+                                     "*",
+                                     "StartingIndex",
+                                     G_TYPE_UINT,
+                                     0,
+                                     "RequestedCount",
+                                     G_TYPE_UINT,
+                                     0,
+                                     "SortCriteria",
+                                     G_TYPE_STRING,
+                                     "",
+                                     nullptr);
+}
+
+void UPnPInstance::browseMetadataCallback(GUPnPServiceProxy *contentDir, GUPnPServiceProxyAction *action, gpointer userdata)
+{
+    GError *error = nullptr;
+    char *metadata = nullptr;
+    BrowseMetadataData *data = (BrowseMetadataData *) userdata;
+    gupnp_service_proxy_end_action(contentDir,
+                                   action,
+                                   &error,
+                                   /* OUT args */
+                                   "Result",
+                                   G_TYPE_STRING,
+                                   &metadata,
+                                   nullptr);
+    if (metadata) {
+        QString artist, album, albumArtist, title, mediaType, duration, url, protocolInfo, mimeType;
+        QDomElement docElem;
+        QDomDocument xmlDoc;
+        xmlDoc.setContent(QByteArray(metadata));
+        docElem = xmlDoc.documentElement();
+        QDomNodeList itemList = docElem.elementsByTagName("item");
+        for(int i = 0; i < itemList.count(); i++){
+            QDomElement item = itemList.at(i).toElement();
+            mimeType = item.elementsByTagName("upnp:class").at(0).toElement().text();
+
+            if (mimeType.contains("audio", Qt::CaseInsensitive)) {
+                mimeType = "audio";
+            } else if (mimeType.contains("video", Qt::CaseInsensitive)) {
+                mimeType = "video";
+            } else if (mimeType.contains("image", Qt::CaseInsensitive)) {
+                mimeType = "image";
+            } else {
+                continue;
+            }
+
+            url = item.elementsByTagName("res").at(0).toElement().text();
+            title = item.elementsByTagName("dc:title").at(0).toElement().text();
+            album = item.elementsByTagName("upnp:album").at(0).toElement().text();
+            artist = item.elementsByTagName("upnp:artist").at(0).toElement().text();
+            duration = item.elementsByTagName("res").at(0).toElement().attribute("duration");
+            protocolInfo= item.elementsByTagName("res").at(0).toElement().attribute("protocolInfo");
+
+            QHash<int, QString> properties;
+            properties.insert(Qt::DisplayRole, title);
+            properties.insert(MediaCenter::AlbumRole, album);
+            properties.insert(MediaCenter::MediaUrlRole, url);
+            properties.insert(MediaCenter::ArtistRole, artist);
+            properties.insert(MediaCenter::MimeTypeRole, mimeType);
+            properties.insert(MediaCenter::DurationRole, duration);
+            properties.insert(MediaCenter::AlbumArtistRole, albumArtist);
+            UPnPMediaSource::mediaList.append(qMakePair(QString::fromLocal8Bit(data->udn), url));
+            UPnPMediaSource::addMedia(properties);
+        }
+        g_free(metadata);
+    } else if (error) {
+        g_warning("Failed to get metadata for '%s': %s",
+                   data->id,
+                   error->message);
+
+        g_error_free(error);
+    }
 }
