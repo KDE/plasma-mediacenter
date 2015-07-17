@@ -1,2 +1,12 @@
 build/*
 compile_commands.json
+build
+clang
+*.kdev4
+Makefile
+lib
+src/Makefile
+src/*_automoc.cpp*
+src/moc_*.cpp
+CMakeTmp
+CMakeFiles
