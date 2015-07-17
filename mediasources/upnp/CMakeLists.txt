@@ -1,6 +1,7 @@
 set(upnp_SRCS
     upnpmediasource.cpp
     mediahandler.cpp
+    upnpinstance.cpp
 )
 FIND_PACKAGE(Qt5Widgets REQUIRED)
 add_library(pmc_upnp MODULE ${upnp_SRCS})

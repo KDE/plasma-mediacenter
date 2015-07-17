@@ -20,8 +20,17 @@
 #ifndef UPNPMEDIASOURCE_H
 #define UPNPMEDIASOURCE_H
 
+#include "mediahandler.h"
 #include <mediacenter/abstractmediasource.h>
-#include <mediahandler.h>
+
+#include <QStringList>
+
+typedef struct _GUPnPDeviceProxy GUPnPDeviceProxy;
+typedef struct _GUPnPControlPoint GUPnPControlPoint;
+typedef struct _GUPnPContext GUPnPContext;
+typedef struct _GUPnPContextManager GUPnPContextManager;
+typedef void* gpointer;
+class UPnPInstance;
 
 class UPnPMediaSource : public MediaCenter::AbstractMediaSource
 {
@@ -30,11 +39,23 @@ public:
     explicit UPnPMediaSource(QObject* parent = 0, const QVariantList& args = QVariantList());
     static void addMedia(QHash<int, QString> properties);
 
+private:
+    static void onContextAvailable(GUPnPContextManager *contextManager, GUPnPContext *context, gpointer userData);
+    static void mediaServerProxyAvailable(GUPnPControlPoint *cp, GUPnPDeviceProxy  *proxy);
+    static void mediaServerProxyUnavailable(GUPnPControlPoint *cp, GUPnPDeviceProxy  *proxy);
+    static void addMediaServer(GUPnPDeviceProxy *proxy);
+    static void removeMediaServer(GUPnPDeviceProxy *proxy);
+    static void rescanMediaServer(GUPnPDeviceProxy *proxy);
+    static GUPnPContextManager *contextManager;
+    static int port;
+    static QList< QPair< QString, UPnPInstance* > > mediaservers;
+    static QList< QPair< QString, QString > > mediaList;
+
 protected:
     virtual void run();
 
 private Q_SLOTS:
-    void setupContextManager();
+    static void setupContextManager();
 
 };
 
