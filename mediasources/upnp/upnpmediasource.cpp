@@ -115,7 +115,16 @@ void UPnPMediaSource::removeMediaServer(GUPnPDeviceProxy *proxy)
 {
     QString udn = QString::fromLocal8Bit(gupnp_device_info_get_udn(GUPNP_DEVICE_INFO (proxy)));
     qDebug() << "Removing media server proxy" << udn;
-    //ToDo: Remove Media Server
+    MediaLibrary *mediaLibrary = SingletonFactory::instanceFor<MediaLibrary>();
+    for(int i = 0; i < mediaList.size(); i++) {
+        auto p = mediaList[i];
+        if (p.first == udn) {
+//             ToDo: Needs merging ashish/medialibrary
+//             mediaLibrary->removeMedia(p.second);
+            mediaList.removeAt(i);
+            i--;
+        }
+    }
 }
 
 void UPnPMediaSource::rescanMediaServer(GUPnPDeviceProxy *proxy)
