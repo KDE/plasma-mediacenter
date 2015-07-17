@@ -38,6 +38,7 @@ class UPnPMediaSource : public MediaCenter::AbstractMediaSource
 public:
     explicit UPnPMediaSource(QObject* parent = 0, const QVariantList& args = QVariantList());
     static void addMedia(QHash<int, QString> properties);
+    static QList< QPair< QString, QString > > mediaList;
 
 private:
     static void onContextAvailable(GUPnPContextManager *contextManager, GUPnPContext *context, gpointer userData);
@@ -49,7 +50,6 @@ private:
     static GUPnPContextManager *contextManager;
     static int port;
     static QList< QPair< QString, UPnPInstance* > > mediaservers;
-    static QList< QPair< QString, QString > > mediaList;
 
 protected:
     virtual void run();

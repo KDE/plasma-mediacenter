@@ -33,6 +33,8 @@
 #include <QDomDocument>
 #include <QDomNodeList>
 
+QList< QPair< QString, QString > > UPnPMediaSource::mediaList;
+
 struct BrowseData
 {
     GUPnPServiceProxy *contentDir;
@@ -44,7 +46,7 @@ struct BrowseMetadataData
 {
     gchar *id;
     gpointer userdata;
-    QString udn;
+    gchar *udn;
 };
 
 UPnPInstance::UPnPInstance(GUPnPDeviceProxy* proxy)
@@ -157,6 +159,7 @@ void UPnPInstance::browseMetadataCallback(GUPnPServiceProxy *contentDir, GUPnPSe
             properties.insert(MediaCenter::MimeTypeRole, mimeType);
             properties.insert(MediaCenter::DurationRole, duration);
             properties.insert(MediaCenter::AlbumArtistRole, albumArtist);
+            UPnPMediaSource::mediaList.append(qMakePair(QString::fromLocal8Bit(data->udn), url));
             UPnPMediaSource::addMedia(properties);
         }
         g_free(metadata);
@@ -175,6 +178,7 @@ void UPnPInstance::browseMetadata(GUPnPServiceProxy *contentDir, const char *id,
     data = g_slice_new(BrowseMetadataData);
     data->id = g_strdup(id);
     data->userdata = userdata;
+    data->udn = g_strdup(udn);
     gupnp_service_proxy_begin_action((GUPnPServiceProxy*)g_object_ref(contentDir),
                                      "Browse",
                                      browseMetadataCallback,

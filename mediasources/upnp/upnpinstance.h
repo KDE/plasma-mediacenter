@@ -33,6 +33,8 @@ class UPnPInstance
 {
 public:
     UPnPInstance(GUPnPDeviceProxy *proxy);
+
+private:
     static void browseDirectChildren(GUPnPServiceProxy *contentDir, const char *containerId, guint32 startingIndex, guint32 requestedCount);
     static void browseDirectChildrenCallback(GUPnPServiceProxy *contentDir, GUPnPServiceProxyAction *action, gpointer userData);
     static void onDidlObjectAvailable(GUPnPDIDLLiteParser *parser, GUPnPDIDLLiteObject *object, gpointer userdata);
