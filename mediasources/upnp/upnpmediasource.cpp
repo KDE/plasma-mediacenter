@@ -27,7 +27,6 @@
 #include <QTimer>
 #include <QPair>
 
-#define UPNP_DEBUG 0
 #define MEDIA_SERVER "urn:schemas-upnp-org:device:MediaServer:1"
 
 GUPnPContextManager *UPnPMediaSource::contextManager;

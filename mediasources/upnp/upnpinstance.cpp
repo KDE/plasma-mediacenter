@@ -33,8 +33,6 @@
 #include <QDomDocument>
 #include <QDomNodeList>
 
-#define UPNP_DEBUG 0
-
 struct BrowseData
 {
     GUPnPServiceProxy *contentDir;
@@ -59,9 +57,7 @@ UPnPInstance::UPnPInstance(GUPnPDeviceProxy* proxy)
     contentDir = getContentDir(proxy);
     friendlyName = gupnp_device_info_get_friendly_name(info);
 
-    #ifdef UPNP_DEBUG
     qDebug() << "Friendly Name" << friendlyName;
-    #endif
 
     browseDirectChildren(contentDir, "0", 0, MAX_BROWSE);
     gupnp_service_proxy_set_subscribed(contentDir, TRUE);
@@ -75,9 +71,7 @@ void UPnPInstance::browseDirectChildren(GUPnPServiceProxy *contentDir, const cha
     data->startingIndex = startingIndex;
     data->contentDir = (GUPnPServiceProxy*) g_object_ref(contentDir);
 
-    #ifdef UPNP_DEBUG
     qDebug() << "Container ID and Starting Index if item is container:" << containerId << startingIndex << endl;
-    #endif
 
     gupnp_service_proxy_begin_action(contentDir,
                                      "Browse",
@@ -262,9 +256,7 @@ void UPnPInstance::browseDirectChildrenCallback(GUPnPServiceProxy *contentDir, G
                   error->message);
         g_error_free(error);
     } else if (didlXml) {
-        #ifdef UPNP_DEBUG
         qDebug() << "DIDLXML:" << didlXml;
-        #endif
 
         GUPnPDIDLLiteParser *parser;
         parser = gupnp_didl_lite_parser_new();

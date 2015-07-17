@@ -1,3 +1,7 @@
+if(NOT UPNP_DEBUG)
+    add_definitions(-DQT_NO_DEBUG_OUTPUT)
+endif()
+
 set(upnp_SRCS
     upnpmediasource.cpp
     mediahandler.cpp
