@@ -47,10 +47,17 @@ LastFmImageFetcher::~LastFmImageFetcher()
 
 void LastFmImageFetcher::fetchImage(const QString& type, const QVariant& identifier, const QString& artistName, const QString& albumName)
 {
+    if (albumList.contains(albumName) || artistList.contains(artistName)) {
+        return;
+    }
     QStringList nameList;
     nameList << type << artistName;
     if (!albumName.isEmpty()) {
         nameList << albumName;
+        albumList.append(albumName);
+    }
+    if (!artistList.isEmpty()) {
+        artistList.append(artistName);
     }
     m_pendingQueue.enqueue(nameList);
     m_identifiers.insert(albumName.isEmpty() ? artistName : albumName, identifier);
@@ -109,7 +116,7 @@ void LastFmImageFetcher::gotResponse(QNetworkReply* reply)
         }
     }
 
-    qDebug() << "Webservice has no image for " << name;
+//     qDebug() << "Webservice has no image for " << name;
     QTimer::singleShot(0, this, SLOT(processQueue()));
 
     reply->deleteLater();
@@ -118,7 +125,7 @@ void LastFmImageFetcher::gotResponse(QNetworkReply* reply)
 void LastFmImageFetcher::downloadImage(const QString& type, const QString& name, const QString& url)
 {
     if (url.isEmpty() || type == "error") {
-        qDebug() << "Webservice has no image for " << name;
+//         qDebug() << "Webservice has no image for " << name;
         return;
     }
     // qDebug() << "Downloading image for " << name << " from " << url;
@@ -129,13 +136,14 @@ void LastFmImageFetcher::downloadImage(const QString& type, const QString& name,
 void LastFmImageFetcher::gotImage(QNetworkReply* reply)
 {
     const QPair<QString,QString> thisDownload = m_currentImageDownloads.take(reply);
-    const QString typePrefix = thisDownload.first + ':';
+    const QString type = thisDownload.first;
+    const QString namePrefix = type + ':';
     const QString name = thisDownload.second;
     const QByteArray data = reply->readAll();
 
     QImage image = QImage::fromData(data);
     // qDebug() << "Adding image " << image.size() << " for " << name;
-    SingletonFactory::instanceFor<PmcImageCache>()->addImage(QString(name).prepend(typePrefix), image);
+    SingletonFactory::instanceFor<PmcImageCache>()->addImage(QString(name).prepend(namePrefix), image);
 
     m_busy = false;
     QTimer::singleShot(0, this, SLOT(processQueue()));

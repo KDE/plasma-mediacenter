@@ -57,8 +57,6 @@ public:
     QList< QHash<int, QVariant> > metadataValues;
     QList<int> rowsToFetchMetadataFor;
     QStringList mediaUrlWhichFailedThumbnailGeneration;
-    //TODO: serve the default decoration using an image provider
-    //  probably something like image://icon/foo would return the system icon foo
     QString defaultDecoration;
     Mode currentMode;
 

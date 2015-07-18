@@ -57,6 +57,7 @@ private:
     QHash<QNetworkReply*, QString> m_currentInfoDownloads;
     QHash<QNetworkReply*, QPair<QString,QString> > m_currentImageDownloads;
     QHash<QString, QVariant> m_identifiers;
+    QStringList albumList, artistList;
 };
 
 #endif // LASTFMIMAGEFETCHER_H_H
