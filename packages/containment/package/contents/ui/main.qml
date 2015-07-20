@@ -76,8 +76,6 @@ function addApplet(applet, x, y) {
     applet.anchors.fill = container;
     applet.anchors.topMargin = container.margins.top;
     applet.anchors.bottomMargin = container.margins.bottom;
-    //FIXME: this seems to create bindings loop
-    // <Unknown File>: QML QQuickLayoutAttached: Binding loop detected for property "maximumWidth"
     applet.anchors.leftMargin = container.margins.left;
     applet.anchors.rightMargin = container.margins.right;
     applet.visible = true;
