@@ -78,8 +78,8 @@ function addApplet(applet, x, y) {
     applet.anchors.bottomMargin = container.margins.bottom;
     //FIXME: this seems to create bindings loop
     // <Unknown File>: QML QQuickLayoutAttached: Binding loop detected for property "maximumWidth"
-    //applet.anchors.leftMargin = container.margins.left;
-    //applet.anchors.rightMargin = container.margins.right;
+    applet.anchors.leftMargin = container.margins.left;
+    applet.anchors.rightMargin = container.margins.right;
     applet.visible = true;
     container.visible = true;
 
@@ -217,16 +217,16 @@ function positionViewAt(id)
                 }
             }
 
-            Layout.minimumWidth: applet && applet.Layout.minimumWidth > 0 ? applet.Layout.minimumWidth : root.height
+            Layout.minimumWidth: applet && applet.Layout.minimumWidth > 0 ? applet.Layout.minimumWidth + plasmoidBackground.margins.left + plasmoidBackground.margins.right : root.height
             //TODO: put sensible size for applet
             Layout.minimumHeight: root.height
 
-            Layout.preferredWidth: applet && applet.Layout.preferredWidth > 0 ? applet.Layout.preferredWidth : root.height
+            Layout.preferredWidth: applet && applet.Layout.preferredWidth + plasmoidBackground.margins.left + plasmoidBackground.margins.right > 0 ? applet.Layout.preferredWidth : root.height
             //TODO: put sensible size for applet
             Layout.preferredHeight: root.height
 
-            Layout.maximumWidth: applet && applet.Layout.maximumWidth > 0 ? applet.Layout.maximumWidth : (Layout.fillWidth ? root.width : root.height)
-            Layout.maximumHeight: root.width
+            Layout.maximumWidth: applet && applet.Layout.maximumWidth > 0 && applet.Layout.maximumWidth != Infinity ? applet.Layout.maximumWidth + plasmoidBackground.margins.left + plasmoidBackground.margins.right : (Layout.fillWidth ? Infinity : root.height)
+            Layout.maximumHeight: root.height
 
             property int oldX: x
             property int oldY: y
