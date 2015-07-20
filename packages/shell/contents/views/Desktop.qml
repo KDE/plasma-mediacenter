@@ -29,9 +29,6 @@ import org.kde.plasma.mediacenter 2.0 as PMC
 import org.kde.plasma.mediacenter.components 2.0 as PmcComponents
 import org.kde.plasma.mediacenter.elements 2.0 as MediaCenterElements
 
-import "../explorer"
-
-
 Item {
     id: root
     height: 768
