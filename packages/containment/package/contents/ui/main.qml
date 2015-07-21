@@ -29,6 +29,8 @@ import "LayoutManager.js" as LayoutManager
 Flickable {
     id: root
 
+    focus: true
+
 //BEGIN properties
     Layout.minimumWidth: currentLayout.Layout.minimumWidth
     Layout.maximumWidth: currentLayout.Layout.maximumWidth
@@ -41,6 +43,8 @@ Flickable {
 
     contentWidth: currentLayout.Layout.preferredWidth
     //contentHeight: currentLayout.Layout.preferredHeight
+    boundsBehavior: Flickable.DragOverBounds
+    interactive: false
 
     property bool isHorizontal: true
     property int currentApplet: 0

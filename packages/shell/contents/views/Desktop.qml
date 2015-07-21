@@ -196,7 +196,7 @@ Item {
             preferredHighlightEnd: width / 2 + height / 2
             highlightRangeMode: ListView.StrictlyEnforceRange
             delegate: backendListDelegate
-            focus: true
+            //focus: true
         }
     }
 
