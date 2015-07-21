@@ -75,8 +75,6 @@ Item {
 
         if (containment != null) {
             containment.visible = true;
-        }
-        if (containment != null) {
             if (internal.oldContainment != null && internal.oldContainment != containment) {
                 if (internal.newContainment != null) {
                     switchAnim.running = true;
