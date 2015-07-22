@@ -224,7 +224,7 @@ function positionViewAt(id)
             //TODO: put sensible size for applet
             Layout.minimumHeight: root.height
 
-            Layout.preferredWidth: applet && applet.Layout.preferredWidth + plasmoidBackground.margins.left + plasmoidBackground.margins.right > 0 ? applet.Layout.preferredWidth : root.height
+            Layout.preferredWidth: applet && applet.Layout.preferredWidth > 0 ? applet.Layout.preferredWidth + plasmoidBackground.margins.left + plasmoidBackground.margins.right : root.height
             //TODO: put sensible size for applet
             Layout.preferredHeight: root.height
 
