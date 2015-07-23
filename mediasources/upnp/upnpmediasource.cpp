@@ -125,6 +125,14 @@ void UPnPMediaSource::removeMediaServer(GUPnPDeviceProxy *proxy)
             i--;
         }
     }
+    for(int i = 0; i < mediaservers.size(); i++) {
+        auto p = mediaservers[i];
+        if (p.first == udn) {
+            delete p.second;
+            mediaservers.removeAt(i);
+            break;
+        }
+    }
 }
 
 void UPnPMediaSource::rescanMediaServer(GUPnPDeviceProxy *proxy)
