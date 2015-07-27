@@ -52,7 +52,7 @@ int PmcArtist::mediaCount() const
 void PmcArtist::removeMedia(const QSharedPointer<Media> &media)
 {
     d->artist->removeMedia(media);
-    if (mediaCount() <= 0) {
+    if (mediaCount() == 0) {
         emit removeRefs();
     }
 }

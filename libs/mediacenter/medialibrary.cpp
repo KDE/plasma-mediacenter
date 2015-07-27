@@ -155,16 +155,16 @@ void MediaLibrary::removeMedia(const QString &url)
             break;
         }
     }
-    Q_FOREACH(QSharedPointer<Artist> album, d->artistList) {
-        if (album->name() == albumName) {
-            album->removeMedia(media);
+    Q_FOREACH(QSharedPointer<Artist> artist, d->artistList) {
+        if (artist->name() == artistName) {
+            artist->removeMedia(media);
             break;
         }
     }
 
-    emit mediaRemoved(pmcMedia);
     d->pmcMediaByUrl.remove(url);
     d->mediaBySha.remove(mediaSha);
+    emit mediaRemoved(pmcMedia);
 }
 
 void MediaLibrary::processNextRequest()
