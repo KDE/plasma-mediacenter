@@ -25,7 +25,6 @@ include_directories(
 set(pmc_test_SRCS
     medialibrarytest.cpp
     singletonfactorytest.cpp
-    lastfmimagefetchertest.cpp
     pmcmediatest.cpp
     mediatest.cpp
     mediacentertest.cpp
