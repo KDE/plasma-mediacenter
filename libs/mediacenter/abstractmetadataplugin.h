@@ -17,33 +17,31 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "abstractplugin.h"
+#ifndef ABSTRACTPLUGIN_H
+#define ABSTRACTPLUGIN_H
 
-using namespace MediaCenter;
+#include <KPluginInfo>
 
-class AbstractPlugin::Private
-{
+#include "mediacenter_export.h"
+
+#include <QObject>
+
+namespace MediaCenter {
+class MEDIACENTER_EXPORT AbstractMetadataPlugin : public QObject {
+    Q_OBJECT
+
 public:
-    Private() {}
-    QString pluginName;
+    explicit AbstractMetadataPlugin(QObject* parent = 0, const QVariantList& = QVariantList());
+    ~AbstractMetadataPlugin();
+    QString getPluginName();
+    void setPluginName(QString pluginName);
+private:
+    class Private;
+    Private * const d;
 };
-
-AbstractPlugin::AbstractPlugin(QObject* parent, const QVariantList&)
-    : QObject(parent), d(new Private)
-{
 }
 
-AbstractPlugin::~AbstractPlugin()
-{
-    delete d;
-}
+#define MEDIACENTER_EXPORT_PLUGIN(classname, jsonfile) \
+    K_PLUGIN_FACTORY_WITH_JSON( PluginFactory, jsonfile, registerPlugin< classname >(); )
 
-QString AbstractPlugin::getPluginName()
-{
-    return d->pluginName;
-}
-
-void AbstractPlugin::setPluginName(QString pluginName)
-{
-    d->pluginName = pluginName;
-}
+#endif // ABSTRACTPLUGIN_H

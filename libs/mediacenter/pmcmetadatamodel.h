@@ -22,7 +22,7 @@
 
 #include "mediacenter_export.h"
 #include "mediacenter.h"
-#include "abstractplugin.h"
+#include "abstractmetadataplugin.h"
 
 #include <QtCore/QAbstractItemModel>
 #include <QSharedPointer>
@@ -94,7 +94,7 @@ private:
 
     QStringList pluginList;
     void checkAvailablePlugins();
-    QHash < QString, MediaCenter::AbstractPlugin* > loadedPlugins;
+    QHash < QString, MediaCenter::AbstractMetadataPlugin* > loadedPlugins;
 };
 
 #endif // PMCMETADATAMODEL_H

@@ -39,7 +39,7 @@ set (plasmamediacenter_SRCS
     mpris2/mediaplayer2.cpp
     mpris2/mediaplayer2player.cpp
     mpris2/mediaplayer2tracklist.cpp
-    abstractplugin.cpp
+    abstractmetadataplugin.cpp
 )
 
 add_library(plasmamediacenter SHARED

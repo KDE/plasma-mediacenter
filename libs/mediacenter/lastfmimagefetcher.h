@@ -26,9 +26,9 @@
 #include <QVariant>
 
 #include "mediacenter_export.h"
-#include "abstractplugin.h"
+#include "abstractmetadataplugin.h"
 
-class LastFmImageFetcher : public MediaCenter::AbstractPlugin
+class LastFmImageFetcher : public MediaCenter::AbstractMetadataPlugin
 {
     Q_OBJECT
 public:

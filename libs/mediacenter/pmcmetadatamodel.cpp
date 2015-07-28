@@ -506,7 +506,7 @@ void PmcMetadataModel::checkAvailablePlugins()
         KPluginLoader pluginloader(info.libraryPath());
         KPluginFactory* pluginfactory = pluginloader.factory();
         if(pluginfactory) {
-            MediaCenter::AbstractPlugin *plugin = pluginfactory->create<MediaCenter::AbstractPlugin>(0);
+            MediaCenter::AbstractMetadataPlugin *plugin = pluginfactory->create<MediaCenter::AbstractMetadataPlugin>(0);
             if (plugin) {
                 plugin->setPluginName(info.name());
                 loadedPlugins.insert(info.name(), plugin);
