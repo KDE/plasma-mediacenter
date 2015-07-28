@@ -60,6 +60,10 @@ private slots:
 
     void shouldReturnCorrectAlbumsAndArtists();
 
+    void shouldEmitMediaRemovedWhenMediaIsPresentAndRemoved();
+
+    void shouldNotEmitMediaRemovedWhenRemoveMediaIsCalledAndMediaNotPresent();
+
 private:
     QHash< int, QVariant > createTestMediaData() const;
     QHash< int, QVariant > createTestMediaDataWithAlbumArtist(const QString& albumName = "album", const QString& artistName = "artist", const QString& albumArtist = "albumartist") const;

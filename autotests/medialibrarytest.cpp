@@ -137,6 +137,40 @@ void MediaLibraryTest::addsNewMediaAndItsMetadata()
     QCOMPARE(artist->name(), data.value(MediaCenter::ArtistRole).toString());
 }
 
+void MediaLibraryTest::shouldEmitMediaRemovedWhenMediaIsPresentAndRemoved()
+{
+    MockObject<MediaValidator> validator;
+    MOCK_METHOD(validator, fileWithUrlExists).stubs().will(returnValue(true));
+
+    MediaLibrary mediaLibrary(validator);
+    mediaLibrary.start();
+
+    QHash<int,QVariant> data = createTestMediaDataWithAlbumArtist();
+    QString url = data.value(MediaCenter::MediaUrlRole).toString();
+    mediaLibrary.updateMedia(data);
+
+    QSignalSpy mediaRemovedSpy(&mediaLibrary, SIGNAL(mediaRemoved(QSharedPointer<PmcMedia>)));
+    QVERIFY2(mediaRemovedSpy.isValid(), "Invalid signal mediaRemoved");
+    mediaLibrary.removeMedia(url);
+
+    QCOMPARE(mediaRemovedSpy.count(), 1);
+}
+
+void MediaLibraryTest::shouldNotEmitMediaRemovedWhenRemoveMediaIsCalledAndMediaNotPresent()
+{
+    MockObject<MediaValidator> validator;
+    MOCK_METHOD(validator, fileWithUrlExists).stubs().will(returnValue(true));
+
+    MediaLibrary mediaLibrary(validator);
+    mediaLibrary.start();
+
+    QSignalSpy mediaRemovedSpy(&mediaLibrary, SIGNAL(mediaRemoved(QSharedPointer<PmcMedia>)));
+    QVERIFY2(mediaRemovedSpy.isValid(), "Invalid signal newMedia");
+    mediaLibrary.removeMedia("/media/not/present/");
+
+    QCOMPARE(mediaRemovedSpy.count(), 0);
+}
+
 void MediaLibraryTest::shouldEmitUpdatedForMediaInsteadOfNewMediaWhenDataUpdated()
 {
     MockObject<MediaValidator> validator;
