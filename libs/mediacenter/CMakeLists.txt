@@ -11,7 +11,6 @@ set (plasmamediacenter_SRCS
     artist.cpp
     album.cpp
     media.cpp
-    lastfmimagefetcher.cpp
     pmcmodel.cpp
     objectpair.cpp
     mediacenter.cpp
@@ -40,6 +39,7 @@ set (plasmamediacenter_SRCS
     mpris2/mediaplayer2.cpp
     mpris2/mediaplayer2player.cpp
     mpris2/mediaplayer2tracklist.cpp
+    abstractplugin.cpp
 )
 
 add_library(plasmamediacenter SHARED
@@ -94,3 +94,11 @@ install(FILES data/servicetypes/pmc_browsingbackend.desktop DESTINATION ${SERVIC
 install(FILES data/servicetypes/pmc_mediasource.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
 
 add_subdirectory(plugin)
+
+add_library(pmc_lastfmimagefetcher MODULE ${lastfmimagefetcher_SRCS})
+set_target_properties(pmc_lastfmimagefetcher PROPERTIES PREFIX "")
+target_link_libraries(pmc_lastfmimagefetcher
+    plasmamediacenter
+)
+kcoreaddons_desktop_to_json(pmc_lastfmimagefetcher lastfmimagefetcher.desktop)
+install(TARGETS pmc_lastfmimagefetcher DESTINATION ${PLUGIN_INSTALL_DIR}/plasma/mediacenter/plugins)

@@ -19,7 +19,6 @@
 
 #include "pmcmetadatamodel.h"
 #include "pmcimagecache.h"
-#include "lastfmimagefetcher.h"
 #include "media.h"
 #include "medialibrary.h"
 #include "pmcmedia.h"
@@ -33,6 +32,10 @@
 
 #include <QtCore/QTimer>
 #include <QSharedPointer>
+#include <KPluginTrader>
+#include <KPluginInfo>
+
+class LastFmImageFetcher;
 
 class PmcMetadataModel::Private
 {
@@ -75,6 +78,12 @@ PmcMetadataModel::PmcMetadataModel(QObject* parent, MediaLibrary* mediaLibrary):
     QAbstractListModel(parent),
     d(new Private())
 {
+    checkAvailablePlugins();
+    if (loadedPlugins.contains("lastfmimagefetcher")) {
+        connect(loadedPlugins.value("lastfmimagefetcher"),
+                SIGNAL(imageFetched(QVariant,QString)),
+                SLOT(signalUpdate(QVariant,QString)));
+    }
     d->mediaLibrary = mediaLibrary ? mediaLibrary : SingletonFactory::instanceFor<MediaLibrary>();
 
     setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
@@ -87,10 +96,6 @@ PmcMetadataModel::PmcMetadataModel(QObject* parent, MediaLibrary* mediaLibrary):
     connect(&d->metadataFetchTimer, SIGNAL(timeout()), SLOT(fetchMetadata()));
 
     d->thumbnailSize = QSize(512, 512);
-
-    connect(SingletonFactory::instanceFor<LastFmImageFetcher>(),
-            SIGNAL(imageFetched(QVariant,QString)),
-            SLOT(signalUpdate(QVariant,QString)));
 }
 
 PmcMetadataModel::~PmcMetadataModel()
@@ -115,6 +120,7 @@ void PmcMetadataModel::showMediaType(MediaCenter::MediaType mediaType)
         case MediaCenter::Video:
             d->currentMode = Video;
     }
+
     const QString mediaTypeString = d->modeForMediaType.key(d->currentMode);
     QList <QSharedPointer<PmcMedia> > mediaData = d->mediaLibrary->getMedia(mediaTypeString);
 
@@ -354,8 +360,12 @@ QVariant PmcMetadataModel::getAlbumArt(const QString& albumName, const QString& 
 
     if (imageCache->containsAlbumCover(albumName)) {
         return PmcCoverArtProvider::qmlImageUriForAlbumCover(albumName);
-    } else {
-        SingletonFactory::instanceFor<LastFmImageFetcher>()->fetchImage("album", resourceId, albumArtist, albumName);
+    } else if (loadedPlugins.contains("lastfmimagefetcher")) {
+        QMetaObject::invokeMethod(loadedPlugins.value("lastfmimagefetcher"), "fetchImage",  Qt::DirectConnection,
+                                  Q_ARG(QString, "album"),
+                                  Q_ARG(QString, resourceId),
+                                  Q_ARG(QString, albumArtist),
+                                  Q_ARG(QString, albumName));
     }
 
     return d->defaultDecoration;
@@ -367,8 +377,11 @@ QVariant PmcMetadataModel::getArtistImage(const QString& artistName, const QStri
 
     if (imageCache->containsArtistCover(artistName)) {
         return PmcCoverArtProvider::qmlImageUriForArtistCover(artistName);
-    } else {
-        SingletonFactory::instanceFor<LastFmImageFetcher>()->fetchImage("artist", resourceId, artistName);
+    } else if (loadedPlugins.contains("lastfmimagefetcher")) {
+        QMetaObject::invokeMethod(loadedPlugins.value("lastfmimagefetcher"), "fetchImage",  Qt::DirectConnection,
+                                  Q_ARG(QString, "artist"),
+                                  Q_ARG(QString, resourceId),
+                                  Q_ARG(QString, artistName));
     }
 
     return d->defaultDecoration;
@@ -480,4 +493,27 @@ void PmcMetadataModel::albumOrArtistUpdated(const T *albumOrArtist)
     const auto i = d->mediaResourceIds.indexOf(name);
     const auto changedIndex = index(i);
     emit dataChanged(changedIndex, changedIndex);
+}
+
+void PmcMetadataModel::checkAvailablePlugins()
+{
+    KPluginInfo::List pluginInfo = KPluginTrader::self()->query("plasma/mediacenter/plugins");
+    if (pluginInfo.isEmpty()) {
+        qWarning() << "No backend plugins available";
+    }
+
+    Q_FOREACH (const KPluginInfo &info, pluginInfo) {
+        KPluginLoader pluginloader(info.libraryPath());
+        KPluginFactory* pluginfactory = pluginloader.factory();
+        if(pluginfactory) {
+            MediaCenter::AbstractPlugin *plugin = pluginfactory->create<MediaCenter::AbstractPlugin>(0);
+            if (plugin) {
+                plugin->setPluginName(info.name());
+                loadedPlugins.insert(info.name(), plugin);
+                qDebug() << "Created instance for plugin" << info.name();
+            } else {
+                qDebug() << "Could not create a instance for the plugin" << info.name();
+            }
+        }
+    }
 }

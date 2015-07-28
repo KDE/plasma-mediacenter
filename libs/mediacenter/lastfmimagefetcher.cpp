@@ -29,8 +29,10 @@
 #include <QImage>
 #include <QDebug>
 
-LastFmImageFetcher::LastFmImageFetcher(QObject* parent)
-    : QObject(parent)
+MEDIACENTER_EXPORT_PLUGIN(LastFmImageFetcher, "lastfmimagefetcher.json")
+
+LastFmImageFetcher::LastFmImageFetcher(QObject* parent, const QVariantList& args)
+    : MediaCenter::AbstractPlugin(parent)
     , m_busy(false)
     , m_artistInfoUrl("http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=%1&api_key=22a6906e49bffd8cc11be1385aea73de")
     , m_albumInfoUrl("http://ws.audioscrobbler.com/2.0/?method=album.getinfo&artist=%1&album=%2&api_key=22a6906e49bffd8cc11be1385aea73de")
@@ -142,3 +144,5 @@ void LastFmImageFetcher::gotImage(QNetworkReply* reply)
 
     emit imageFetched(m_identifiers.take(name), name);
 }
+
+#include "lastfmimagefetcher.moc"

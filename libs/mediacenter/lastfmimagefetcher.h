@@ -26,14 +26,14 @@
 #include <QVariant>
 
 #include "mediacenter_export.h"
+#include "abstractplugin.h"
 
-class LastFmImageFetcher : public QObject
+class LastFmImageFetcher : public MediaCenter::AbstractPlugin
 {
     Q_OBJECT
 public:
-    explicit LastFmImageFetcher(QObject* parent = 0);
+    explicit LastFmImageFetcher(QObject* parent = 0, const QVariantList& args = QVariantList());
     ~LastFmImageFetcher();
-
     void fetchImage(const QString& type, const QVariant& identifier, const QString& artistName, const QString& albumName = QString());
 
 Q_SIGNALS:

@@ -22,10 +22,13 @@
 
 #include "mediacenter_export.h"
 #include "mediacenter.h"
+#include "abstractplugin.h"
 
 #include <QtCore/QAbstractItemModel>
 #include <QSharedPointer>
 #include <QList>
+#include <QStringList>
+#include <QHash>
 
 class PmcArtist;
 class PmcAlbum;
@@ -89,6 +92,9 @@ private:
     QVariant getArtistImage(const QString& artistName, const QString& resourceId) const;
     template <class T> void albumOrArtistUpdated(const T* albumOrArtist);
 
+    QStringList pluginList;
+    void checkAvailablePlugins();
+    QHash < QString, MediaCenter::AbstractPlugin* > loadedPlugins;
 };
 
 #endif // PMCMETADATAMODEL_H
