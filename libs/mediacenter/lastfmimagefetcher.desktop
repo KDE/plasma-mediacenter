@@ -1,7 +1,6 @@
 [Desktop Entry]
 Type=Service
-Icon=drive-harddisk
-Name=Filesystem Search
+Name=LastFmImageFetcher
 X-KDE-ServiceTypes=Plasma/Mediacenter/Plugins
 
 X-KDE-PluginInfo-Name=lastfmimagefetcher
