@@ -95,6 +95,10 @@ install(FILES data/servicetypes/pmc_mediasource.desktop DESTINATION ${SERVICETYP
 
 add_subdirectory(plugin)
 
+set(lastfmimagefetcher_SRCS
+    lastfmimagefetcher.cpp
+)
+
 add_library(pmc_lastfmimagefetcher MODULE ${lastfmimagefetcher_SRCS})
 set_target_properties(pmc_lastfmimagefetcher PROPERTIES PREFIX "")
 target_link_libraries(pmc_lastfmimagefetcher
