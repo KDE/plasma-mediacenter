@@ -57,7 +57,7 @@ Flickable {
         }
     }
     Keys.onRightPressed: {
-        if (currentApplet < plasmoid.applets.length-1) {
+        if (currentApplet < plasmoid.applets.length) {
             currentApplet++;
             positionViewAt(currentApplet);
         }
@@ -95,8 +95,8 @@ function addApplet(applet, x, y) {
         var before = null;
         container.animationsEnabled = false;
 
-        if (lastSpacer.parent === currentLayout) {
-            before = lastSpacer;
+        if (toolBox.parent === currentLayout) {
+            before = toolBox;
         }
 
         if (before) {
@@ -110,13 +110,13 @@ function addApplet(applet, x, y) {
     }
 
     if (applet.Layout.fillWidth) {
-        lastSpacer.parent = root;
+        toolBox.parent = root;
     }
 }
 
 
 function checkLastSpacer() {
-    lastSpacer.parent = root
+    toolBox.parent = root
 
     var expands = false;
 
@@ -136,7 +136,7 @@ function checkLastSpacer() {
         }
     }
     if (!expands) {
-        lastSpacer.parent = currentLayout
+        toolBox.parent = currentLayout
     }
 
 }
@@ -155,7 +155,7 @@ function positionViewAt(id)
         LayoutManager.plasmoid = plasmoid;
         LayoutManager.root = root;
         LayoutManager.layout = currentLayout;
-        LayoutManager.lastSpacer = lastSpacer;
+        LayoutManager.toolBox = toolBox;
         LayoutManager.restore();
         containmentSizeSyncTimer.restart();
         plasmoid.action("configure").visible = !plasmoid.immutable;
@@ -179,7 +179,7 @@ function positionViewAt(id)
             }
         }
         if (!flexibleFound) {
-            lastSpacer.parent = currentLayout;
+            toolBox.parent = currentLayout;
         }
 
         LayoutManager.save();
@@ -306,9 +306,19 @@ function positionViewAt(id)
 
 //BEGIN UI elements
     Item {
-        id: lastSpacer
+        id: toolBox
         parent: currentLayout
-
+        PlasmaCore.IconItem {
+            id: toolBoxIcon
+            anchors.centerIn: parent
+            height: units.iconSizes.enormous
+            width: height
+            source: "plasma"
+        }
+        MouseArea {
+            anchors.fill: parent
+            onClicked: plasmoid.action("configure").trigger();
+        }
         Layout.fillWidth: true
         Layout.fillHeight: true
     }

@@ -20,7 +20,7 @@
 var layout;
 var root;
 var plasmoid;
-var lastSpacer;
+var toolBox;
 
 
 function restore() {
@@ -118,8 +118,8 @@ function insertAfter(item1, item2) {
     var i;
     for (i = layout.children.length - 1; i >= 0; --i) {
         child = layout.children[i];
-        //never ever insert after lastSpacer
-        if (child === lastSpacer && item1 === lastSpacer) {
+        //never ever insert after toolBox
+        if (child === toolBox && item1 === toolBox) {
             removed.push(child);
             child.parent = root;
             break;
@@ -148,8 +148,8 @@ function insertAtIndex(item, position) {
         return;
     }
 
-    //never ever insert after lastSpacer
-    if (layout.children[position] === lastSpacer) {
+    //never ever insert after toolBox
+    if (layout.children[position] === toolBox) {
         --position;
     }
 
