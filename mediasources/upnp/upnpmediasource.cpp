@@ -119,8 +119,7 @@ void UPnPMediaSource::removeMediaServer(GUPnPDeviceProxy *proxy)
     for(int i = 0; i < mediaList.size(); i++) {
         auto p = mediaList[i];
         if (p.first == udn) {
-//             ToDo: Needs merging ashish/medialibrary
-//             mediaLibrary->removeMedia(p.second);
+            mediaLibrary->removeMedia(p.second);
             mediaList.removeAt(i);
             i--;
         }
