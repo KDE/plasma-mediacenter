@@ -70,6 +70,7 @@ private Q_SLOTS:
     void fetchMetadata();
     void signalUpdate(const QVariant& resourceId, const QString& displayString = QString());
     void mediaUpdated();
+    void removeMediaRef(QSharedPointer<PmcMedia> media);
 
 private:
     enum Mode { Music, Picture, Video, Album, Artist };
@@ -83,9 +84,11 @@ private:
     QVariant dataForAlbum(int row, int role) const;
 
     template <class T> void handleNewAlbumsOrArtists(const QList< QSharedPointer< T > > &mediaData);
+    template <class T> void removeAlbumOrArtist(const T* albumOrArtist);
     QVariant getAlbumArt(const QString& albumName, const QString& albumArtist, const QString& resourceId) const;
     QVariant getArtistImage(const QString& artistName, const QString& resourceId) const;
     template <class T> void albumOrArtistUpdated(const T* albumOrArtist);
+
 };
 
 #endif // PMCMETADATAMODEL_H

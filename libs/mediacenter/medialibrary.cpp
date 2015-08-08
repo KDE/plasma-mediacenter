@@ -131,6 +131,42 @@ void MediaLibrary::processRemainingRequests()
     }
 }
 
+void MediaLibrary::removeMedia(const QString &url)
+{
+    QString mediaSha = Media::calculateSha(url);
+    if (!mediaExists(mediaSha)) {
+        qDebug() << "Media SHA not found in list.";
+        return;
+    }
+
+    QSharedPointer<Media> media = mediaForSha(mediaSha);
+    QSharedPointer<PmcMedia> pmcMedia = mediaForUrl(url);
+    QString albumName = pmcMedia->album();
+    QString artistName = pmcMedia->artist();
+
+    QMutexLocker l(&d->mediaMutex);
+    QMutexLocker l1(&d->albumListMutex);
+    QMutexLocker l2(&d->artistListMutex);
+    QMutexLocker l3(&d->pmcMediaByUrlMutex);
+
+    Q_FOREACH(QSharedPointer<Album> album, d->albumList) {
+        if (album->name() == albumName) {
+            album->removeMedia(media);
+            break;
+        }
+    }
+    Q_FOREACH(QSharedPointer<Artist> artist, d->artistList) {
+        if (artist->name() == artistName) {
+            artist->removeMedia(media);
+            break;
+        }
+    }
+
+    d->pmcMediaByUrl.remove(url);
+    d->mediaBySha.remove(mediaSha);
+    emit mediaRemoved(pmcMedia);
+}
+
 void MediaLibrary::processNextRequest()
 {
     QPair<QString, QHash<int, QVariant> > request = takeRequest();
