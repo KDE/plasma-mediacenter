@@ -36,9 +36,11 @@ public:
 
     const QString& name() const;
     int mediaCount() const;
+    void removeMedia(const QSharedPointer<Media> &media);
 
 signals:
     void updated();
+    void removeRefs();
 
 private:
     class Private;

@@ -20,6 +20,7 @@
 #define PMCALBUM_H
 
 #include "mediacenter_export.h"
+#include "media.h"
 
 #include <QObject>
 #include <QSharedPointer>
@@ -36,9 +37,11 @@ public:
     const QString& name() const;
     QString albumArtist() const;
     int mediaCount() const;
+    void removeMedia(const QSharedPointer<Media> &media);
 
 signals:
     void updated();
+    void removeRefs();
 
 private:
     class Private;

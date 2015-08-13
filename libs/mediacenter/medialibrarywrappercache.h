@@ -41,6 +41,9 @@ public:
 private slots:
     void saveNewAlbums(const QList< QSharedPointer< PmcAlbum > >& albums);
     void saveNewArtists(const QList< QSharedPointer< PmcArtist > >& artists);
+    void removeMediaRef(QSharedPointer<PmcMedia> media);
+    void removeAlbumRef();
+    void removeArtistRef();
 
 private:
     class Private;
