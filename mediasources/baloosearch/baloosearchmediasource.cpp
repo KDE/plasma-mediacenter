@@ -72,6 +72,14 @@ void BalooSearchMediaSource::startQuerying()
     Q_FOREACH(const QString &type, m_searchResultHandlers.keys()) {
         queryForMediaType(type);
     }
+
+    Q_FOREACH(const QString &type, m_searchResultHandlers.keys()) {
+        SearchResultHandler *handler = m_searchResultHandlers[type];
+        Q_FOREACH(QString url, medialist[type]) {
+            handler->handleResult(url);
+        }
+        medialist.remove(type);
+    }
 }
 
 void BalooSearchMediaSource::handleNewFile(const QStringList &files)
@@ -95,10 +103,9 @@ void BalooSearchMediaSource::queryForMediaType(const QString& type)
     query.addType(type);
 
     Baloo::ResultIterator it = query.exec();
-    SearchResultHandler *handler = m_searchResultHandlers.value(type);
     while (it.next()) {
         QString localUrl = it.filePath();
-        handler->handleResult(localUrl);
+        medialist[type].append(localUrl);
     }
 
 }

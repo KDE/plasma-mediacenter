@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Service
+Name=Fake Mediasource
+
+X-KDE-ServiceTypes=Plasma/MediaCenter/MediaSource
+
+X-KDE-PluginInfo-Name=fakemediasource
+X-KDE-PluginInfo-Author=Ashish Bansal
+X-KDE-PluginInfo-Email=bansal.ashish096@gmail.com
+X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=false
+X-KDE-Library=pmc_fakemediasource

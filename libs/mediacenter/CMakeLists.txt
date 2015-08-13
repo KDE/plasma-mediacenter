@@ -59,8 +59,6 @@ set(plasmamediacenter_link_libs
     KF5::Service
     KF5::Activities
     KF5::KIOWidgets
-    KF5::WindowSystem #needed for mpris2, not used now
-    KF5::Plasma
     ${TAGLIB_LIBRARIES}
 )
 

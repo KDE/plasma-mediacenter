@@ -27,6 +27,7 @@ class BalooSearchMediaSource : public MediaCenter::AbstractMediaSource
     Q_OBJECT
 public:
     explicit BalooSearchMediaSource(QObject* parent = 0, const QVariantList& args = QVariantList());
+    QHash< QString, QStringList > medialist;
 
 protected:
     virtual void run();
