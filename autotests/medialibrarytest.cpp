@@ -149,9 +149,17 @@ void MediaLibraryTest::shouldEmitMediaRemovedWhenMediaIsPresentAndRemoved()
     QString url = data.value(MediaCenter::MediaUrlRole).toString();
     mediaLibrary.updateMedia(data);
 
+    QSignalSpy newMediaSpy(&mediaLibrary, SIGNAL(newMedia(QList< QSharedPointer<PmcMedia> >)));
+    QVERIFY2(newMediaSpy.isValid(), "Could not listen to signal newMedia");
+
+    waitForSignal(&newMediaSpy);
+    QCOMPARE(newMediaSpy.size(), 1);
+
     QSignalSpy mediaRemovedSpy(&mediaLibrary, SIGNAL(mediaRemoved(QSharedPointer<PmcMedia>)));
     QVERIFY2(mediaRemovedSpy.isValid(), "Invalid signal mediaRemoved");
     mediaLibrary.removeMedia(url);
+
+    waitForSignal(&mediaRemovedSpy);
 
     QCOMPARE(mediaRemovedSpy.count(), 1);
 }
