@@ -83,6 +83,7 @@ MediaLibrary::MediaLibrary(MediaValidator* mediaValidator, QObject* parent)
     qRegisterMetaType< QList< QSharedPointer<PmcMedia> > >("QList< QSharedPointer<PmcMedia> >");
     qRegisterMetaType< QList< QSharedPointer<PmcMedia> > >("QList< QSharedPointer<PmcAlbum> >");
     qRegisterMetaType< QList< QSharedPointer<PmcMedia> > >("QList< QSharedPointer<PmcArtist> >");
+    qRegisterMetaType< QSharedPointer<PmcMedia> >("QSharedPointer<PmcMedia>");
 
     d->mediaValidator = mediaValidator;
 
@@ -135,7 +136,7 @@ void MediaLibrary::removeMedia(const QString &url)
 {
     QString mediaSha = Media::calculateSha(url);
     if (!mediaExists(mediaSha)) {
-        qDebug() << "Media SHA not found in list.";
+        qDebug() << "Media SHA not found in list." << mediaSha << url;
         return;
     }
 
