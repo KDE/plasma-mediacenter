@@ -1,6 +1,13 @@
 [Desktop Entry]
 Type=Service
 Name=Fake Mediasource
+Name[ca]=Font de medis fictícia
+Name[gl]=Orixe multimedia falsa
+Name[pt]=Fonte Multimédia de Testes
+Name[pt_BR]=Fonte multimídia falsa
+Name[sv]=Påhittad mediakälla
+Name[uk]=Несправжнє медіаджерело
+Name[x-test]=xxFake Mediasourcexx
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/MediaSource
 
