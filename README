@@ -6,7 +6,6 @@ Required:
 3) Qt QtMultimedia
 4) Baloo (KF5)
 5) Taglib
-6) Mockcpp (required for building tests)
 
 To know Plasma Media Center architecture and other related information browse through http://community.kde.org/Plasma/Plasma_Media_Center
 
@@ -23,15 +22,6 @@ Uninstallation:
 =============
 Run this from build dir:
 for i in $(cat install_manifest.txt); do sudo rm $i; done;
-
-
-Troubleshooting
-===============
-
-1. If you find any error related to mockcpp and don't want to build test, pass -DBUILD_TESTING=OFF to cmake as below,
-cmake -DKDE_INSTALL_USE_QT_SYS_PATHS=ON -DCMAKE_INSTALL_PREFIX=`kf5-config --prefix` -DBUILD_TESTING=OFF ..
-
-and then run make and make install.
 
 (some of the old code can be found in the "old" branch, just in case somebody wants to browse)
 
