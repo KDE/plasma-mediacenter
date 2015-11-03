@@ -35,10 +35,10 @@
 #include <QDBusConnection>
 #include <QMimeDatabase>
 
-MEDIACENTER_EXPORT_MEDIASOURCE(BalooSearchMediaSource, "baloosearch.json")
+MEDIACENTER_EXPORT_DATASOURCE(BalooSearchMediaSource, "baloosearch.json")
 
 BalooSearchMediaSource::BalooSearchMediaSource(QObject* parent, const QVariantList& args)
-    : AbstractMediaSource(parent, args)
+    : AbstractDataSource(parent, args)
 {
 
     m_allowedMimes << "audio" << "image" << "video";

@@ -1,5 +1,7 @@
 /***********************************************************************************
  *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
+ *   Copyright 2014 Sinny Kumari <ksinny@gmail.com>                                *
+ *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
  *   modify it under the terms of the GNU Lesser General Public                    *
@@ -15,43 +17,35 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef FILESYSTEMSEARCHMEDIASOURCE_H
-#define FILESYSTEMSEARCHMEDIASOURCE_H
+#include "abstractdatasource.h"
+#include <QDebug>
 
-#include <mediacenter/abstractmediasource.h>
+using namespace MediaCenter;
 
-#include <QMutex>
-
-class QFileInfo;
-class QDir;
-
-/**
- * \brief Goes through the user's home dir and searches for media
- *
- * This MediaSource is supposed to be used for a better-than-nothing scenario
- * when none of Baloo or Nepomuk are installed. As such this MediaSource does
- * not attempt 100% correctness and is not configurable at all.
- */
-class FilesystemSearchMediaSource : public MediaCenter::AbstractMediaSource
+class AbstractDataSource::Private
 {
 public:
-    explicit FilesystemSearchMediaSource(QObject* parent = 0, const QVariantList&  = QVariantList());
-    virtual ~FilesystemSearchMediaSource();
-
-protected:
-    virtual void run();
-
-private:
-    mutable QMutex m_quitMutex;
-    bool m_quit;
-
-    QStringList m_allowedMimes;
-
-    bool shouldQuit() const;
-    bool recursiveSearch(const QDir& dir);
-    void stop();
-    bool checkAndAddFile(const QFileInfo &fileInfo);
-    void addFile(const QFileInfo &fileInfo, const QString &type);
+    Private() : mediaLibrary(0) {}
+    MediaLibrary* mediaLibrary;
 };
 
-#endif // FILESYSTEMSEARCHMEDIASOURCE_H
+AbstractDataSource::AbstractDataSource(QObject* parent, const QVariantList&)
+    : QThread(parent), d(new Private)
+{
+    moveToThread(this);
+}
+
+AbstractDataSource::~AbstractDataSource()
+{
+
+}
+
+void AbstractDataSource::setMediaLibrary(MediaLibrary* mediaLibrary)
+{
+    d->mediaLibrary = mediaLibrary;
+}
+
+MediaLibrary* AbstractDataSource::mediaLibrary() const
+{
+    return d->mediaLibrary;
+}

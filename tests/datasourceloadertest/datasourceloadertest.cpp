@@ -19,12 +19,12 @@
  */
 
 #include <QCoreApplication>
-#include "mediacenter/mediasourcesloader.h"
+#include "mediacenter/datasourcesloader.h"
 
 int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
-    MediaSourcesLoader mediasourcesloader;
-    mediasourcesloader.load();
+    DataSourcesLoader datasourcesloader;
+    datasourcesloader.load();
     return app.exec();
 }

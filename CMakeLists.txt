@@ -74,7 +74,7 @@ set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE_ENABLE_EXCEPTIONS}")
 set(CMAKE_AUTOMOC ON)
 
 add_subdirectory(browsingbackends)
-add_subdirectory(mediasources)
+add_subdirectory(datasources)
 #add_subdirectory(onlineservices)
 add_subdirectory(mediaelements)
 add_subdirectory(components)

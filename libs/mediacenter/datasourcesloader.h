@@ -17,36 +17,25 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef ABSTRACTMEDIASOURCE_H
-#define ABSTRACTMEDIASOURCE_H
+#ifndef DATASOURCESLOADER_H
+#define DATASOURCESLOADER_H
 
-#include <QtCore/QThread>
-#include <KPluginInfo>
+#include <QtCore/QObject>
 
 #include "mediacenter_export.h"
 
-class MediaLibrary;
-
 namespace MediaCenter {
-class MEDIACENTER_EXPORT AbstractMediaSource : public QThread
+class AbstractDataSource;
+}
+
+class MEDIACENTER_EXPORT DataSourcesLoader : public QObject
 {
     Q_OBJECT
 public:
-    explicit AbstractMediaSource(QObject* parent = 0, const QVariantList& = QVariantList());
-    ~AbstractMediaSource();
+    explicit DataSourcesLoader(QObject* parent = 0);
 
-    void setMediaLibrary(MediaLibrary *mediaLibrary);
-
-protected:
-    MediaLibrary *mediaLibrary() const;
-
-private:
-    class Private;
-    Private * const d;
+public Q_SLOTS:
+    void load();
 };
-}
 
-#define MEDIACENTER_EXPORT_MEDIASOURCE(classname, jsonfile) \
-    K_PLUGIN_FACTORY_WITH_JSON( MediaSourceFactory, jsonfile, registerPlugin< classname >(); )
-
-#endif // ABSTRACTMEDIASOURCE_H
+#endif // DATASOURCESLOADER_H

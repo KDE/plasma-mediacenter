@@ -74,7 +74,7 @@ Comment[uk]=Отримати дані із засобу стільничного
 Comment[x-test]=xxGet media from Baloo Searchxx
 Comment[zh_TW]=從 Baloo 搜尋取得媒體
 
-X-KDE-ServiceTypes=Plasma/MediaCenter/MediaSource
+X-KDE-ServiceTypes=Plasma/MediaCenter/DataSource
 
 X-KDE-PluginInfo-Name=baloosearch
 X-KDE-PluginInfo-Author=Sinny Kumari
