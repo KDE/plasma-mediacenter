@@ -3,6 +3,7 @@ Type=Service
 Name=Fake Mediasource
 Name[ca]=Font de medis fictícia
 Name[ca@valencia]=Font de medis fictícia
+Name[da]=Falsk mediekilde
 Name[de]=Fingierte Medienquelle
 Name[en_GB]=Fake Mediasource
 Name[es]=Fuente multimedia simulada
@@ -27,6 +28,7 @@ Name[sv]=Påhittad mediakälla
 Name[tr]=Sahte Medya Kaynağı
 Name[uk]=Несправжнє медіаджерело
 Name[x-test]=xxFake Mediasourcexx
+Name[zh_TW]=假的媒體來源
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/MediaSource
 
