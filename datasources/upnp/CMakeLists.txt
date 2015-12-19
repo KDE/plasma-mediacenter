@@ -3,7 +3,7 @@ if(NOT UPNP_DEBUG)
 endif()
 
 set(upnp_SRCS
-    upnpmediasource.cpp
+    upnpdatasource.cpp
     mediahandler.cpp
     upnpinstance.cpp
 )
@@ -23,6 +23,6 @@ target_link_libraries(pmc_upnp
 
 kcoreaddons_desktop_to_json(pmc_upnp upnp.desktop)
 
-install(TARGETS pmc_upnp DESTINATION ${PLUGIN_INSTALL_DIR}/plasma/mediacenter/mediasources)
+install(TARGETS pmc_upnp DESTINATION ${PLUGIN_INSTALL_DIR}/plasma/mediacenter/datasources)
 install(FILES upnp.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 

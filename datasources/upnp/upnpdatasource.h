@@ -21,7 +21,7 @@
 #define UPNPMEDIASOURCE_H
 
 #include "mediahandler.h"
-#include <mediacenter/abstractmediasource.h>
+#include <mediacenter/abstractdatasource.h>
 
 #include <QStringList>
 
@@ -32,11 +32,11 @@ typedef struct _GUPnPContextManager GUPnPContextManager;
 typedef void* gpointer;
 class UPnPInstance;
 
-class UPnPMediaSource : public MediaCenter::AbstractMediaSource
+class UPnPDataSource : public MediaCenter::AbstractDataSource
 {
     Q_OBJECT
 public:
-    explicit UPnPMediaSource(QObject* parent = 0, const QVariantList& args = QVariantList());
+    explicit UPnPDataSource(QObject* parent = 0, const QVariantList& args = QVariantList());
     static void addMedia(QHash<int, QString> properties);
     static QList< QPair< QString, QString > > mediaList;
 

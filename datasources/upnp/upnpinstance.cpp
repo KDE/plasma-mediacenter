@@ -22,9 +22,9 @@
 #define CONTENT_DIR "urn:schemas-upnp-org:service:ContentDirectory"
 
 #include "upnpinstance.h"
-#include "upnpmediasource.h"
+#include "upnpdatasource.h"
 #include "mediacenter/mediacenter.h"
-#include "mediacenter/abstractmediasource.h"
+#include "mediacenter/abstractdatasource.h"
 
 #include <QHash>
 #include <QDebug>
@@ -33,7 +33,7 @@
 #include <QDomDocument>
 #include <QDomNodeList>
 
-QList< QPair< QString, QString > > UPnPMediaSource::mediaList;
+QList< QPair< QString, QString > > UPnPDataSource::mediaList;
 
 struct BrowseData
 {
@@ -169,7 +169,7 @@ void UPnPInstance::browseDirectChildrenCallback(GUPnPServiceProxy *contentDir, G
                                  data->startingIndex,
                                  batchSize);
         }
-    } 
+    }
 }
 
 void UPnPInstance::onDidlObjectAvailable(GUPnPDIDLLiteParser *parser, GUPnPDIDLLiteObject *object, gpointer userdata)
@@ -287,8 +287,8 @@ void UPnPInstance::browseMetadataCallback(GUPnPServiceProxy *contentDir, GUPnPSe
             properties.insert(MediaCenter::MimeTypeRole, mimeType);
             properties.insert(MediaCenter::DurationRole, duration);
             properties.insert(MediaCenter::AlbumArtistRole, albumArtist);
-            UPnPMediaSource::mediaList.append(qMakePair(QString::fromLocal8Bit(data->udn), url));
-            UPnPMediaSource::addMedia(properties);
+            UPnPDataSource::mediaList.append(qMakePair(QString::fromLocal8Bit(data->udn), url));
+            UPnPDataSource::addMedia(properties);
         }
         g_free(metadata);
     } else if (error) {

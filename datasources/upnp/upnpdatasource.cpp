@@ -18,7 +18,7 @@
  ***********************************************************************************/
 
 #include "upnpinstance.h"
-#include "upnpmediasource.h"
+#include "upnpdatasource.h"
 #include "mediacenter/mediacenter.h"
 #include "mediacenter/medialibrary.h"
 #include "mediacenter/singletonfactory.h"
@@ -29,34 +29,34 @@
 
 #define MEDIA_SERVER "urn:schemas-upnp-org:device:MediaServer:1"
 
-GUPnPContextManager *UPnPMediaSource::contextManager;
-QList< QPair< QString, UPnPInstance* > > UPnPMediaSource::mediaservers; 
-int UPnPMediaSource::port = 0;
+GUPnPContextManager *UPnPDataSource::contextManager;
+QList< QPair< QString, UPnPInstance* > > UPnPDataSource::mediaservers;
+int UPnPDataSource::port = 0;
 
-MEDIACENTER_EXPORT_MEDIASOURCE(UPnPMediaSource, "upnp.json")
+MEDIACENTER_EXPORT_DATASOURCE(UPnPDataSource, "upnp.json")
 
-UPnPMediaSource::UPnPMediaSource(QObject* parent, const QVariantList& args)
-    : AbstractMediaSource(parent, args)
+UPnPDataSource::UPnPDataSource(QObject* parent, const QVariantList& args)
+    : AbstractDataSource(parent, args)
 {
 }
 
-void UPnPMediaSource::run()
+void UPnPDataSource::run()
 {
     QTimer::singleShot(0, this, SLOT(setupContextManager()));
     exec();
 }
 
-void UPnPMediaSource::setupContextManager()
+void UPnPDataSource::setupContextManager()
 {
     contextManager = gupnp_context_manager_create(port);
 
     g_signal_connect(contextManager,
                      "context-available",
-                     G_CALLBACK(UPnPMediaSource::onContextAvailable),
+                     G_CALLBACK(UPnPDataSource::onContextAvailable),
                      NULL);
 }
 
-void UPnPMediaSource::onContextAvailable(GUPnPContextManager *contextManager, GUPnPContext *context, gpointer userData)
+void UPnPDataSource::onContextAvailable(GUPnPContextManager *contextManager, GUPnPContext *context, gpointer userData)
 {
     Q_UNUSED(userData);
     GUPnPControlPoint *mediaServerControlPoint;
@@ -64,19 +64,19 @@ void UPnPMediaSource::onContextAvailable(GUPnPContextManager *contextManager, GU
 
     g_signal_connect(mediaServerControlPoint,
                      "device-proxy-available",
-                     G_CALLBACK(UPnPMediaSource::mediaServerProxyAvailable),
+                     G_CALLBACK(UPnPDataSource::mediaServerProxyAvailable),
                      NULL);
 
     g_signal_connect(mediaServerControlPoint,
                      "device-proxy-unavailable",
-                     G_CALLBACK(UPnPMediaSource::mediaServerProxyUnavailable),
+                     G_CALLBACK(UPnPDataSource::mediaServerProxyUnavailable),
                      NULL);
 
     gssdp_resource_browser_set_active(GSSDP_RESOURCE_BROWSER(mediaServerControlPoint), TRUE);
     gupnp_context_manager_manage_control_point(contextManager, mediaServerControlPoint);
 }
 
-void UPnPMediaSource::mediaServerProxyAvailable(GUPnPControlPoint *cp, GUPnPDeviceProxy  *proxy)
+void UPnPDataSource::mediaServerProxyAvailable(GUPnPControlPoint *cp, GUPnPDeviceProxy  *proxy)
 {
     Q_UNUSED(cp);
 
@@ -89,13 +89,13 @@ void UPnPMediaSource::mediaServerProxyAvailable(GUPnPControlPoint *cp, GUPnPDevi
     addMediaServer(proxy);
 }
 
-void UPnPMediaSource::mediaServerProxyUnavailable(GUPnPControlPoint *cp, GUPnPDeviceProxy  *proxy)
+void UPnPDataSource::mediaServerProxyUnavailable(GUPnPControlPoint *cp, GUPnPDeviceProxy  *proxy)
 {
     Q_UNUSED(cp);
     removeMediaServer(proxy);
 }
 
-void UPnPMediaSource::addMediaServer(GUPnPDeviceProxy *proxy)
+void UPnPDataSource::addMediaServer(GUPnPDeviceProxy *proxy)
 {
     QString udn;
     udn = gupnp_device_info_get_udn(GUPNP_DEVICE_INFO (proxy));
@@ -111,7 +111,7 @@ void UPnPMediaSource::addMediaServer(GUPnPDeviceProxy *proxy)
     mediaservers.append(qMakePair(udn, n));
 }
 
-void UPnPMediaSource::removeMediaServer(GUPnPDeviceProxy *proxy)
+void UPnPDataSource::removeMediaServer(GUPnPDeviceProxy *proxy)
 {
     QString udn = QString::fromLocal8Bit(gupnp_device_info_get_udn(GUPNP_DEVICE_INFO (proxy)));
     qDebug() << "Removing media server proxy" << udn;
@@ -134,17 +134,17 @@ void UPnPMediaSource::removeMediaServer(GUPnPDeviceProxy *proxy)
     }
 }
 
-void UPnPMediaSource::rescanMediaServer(GUPnPDeviceProxy *proxy)
+void UPnPDataSource::rescanMediaServer(GUPnPDeviceProxy *proxy)
 {
     removeMediaServer(proxy);
     addMediaServer(proxy);
 }
 
-void UPnPMediaSource::addMedia(QHash<int, QString> properties)
+void UPnPDataSource::addMedia(QHash<int, QString> properties)
 {
     MediaLibrary *mediaLibrary = SingletonFactory::instanceFor<MediaLibrary>();
     MediaHandler *mediaHandler = new MediaHandler(mediaLibrary, 0);
     mediaHandler->handleResult(properties);
 }
 
-#include "upnpmediasource.moc"
+#include "upnpdatasource.moc"

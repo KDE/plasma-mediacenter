@@ -2,7 +2,7 @@
 Type=Service
 Icon=upnp
 Name=UPnP PMC
-X-KDE-ServiceTypes=Plasma/MediaCenter/MediaSource
+X-KDE-ServiceTypes=Plasma/MediaCenter/DataSource
 
 X-KDE-PluginInfo-Name=pmcupnp
 X-KDE-PluginInfo-Author=Ashish Bansal
