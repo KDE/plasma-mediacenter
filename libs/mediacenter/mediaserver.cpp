@@ -20,7 +20,6 @@
 extern "C" {
     #include <libgupnp-av/gupnp-av.h>
     #include <libgssdp/gssdp.h>
-    #include <gtk/gtk.h>
     GUPnPContext *context;
     GUPnPRootDevice *device;
     int upnpServerPort = 34552;
