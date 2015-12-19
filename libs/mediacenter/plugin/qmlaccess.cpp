@@ -29,8 +29,8 @@ QMLAccess::QMLAccess(QObject *parent) : QObject(parent)
 {
     SingletonFactory::instanceFor<MediaLibrary>()->start();
 
-    MediaSourcesLoader mediasourceLoader;
-    mediasourceLoader.load();
+    DataSourcesLoader datasourceLoader;
+    datasourceLoader.load();
 
 //     MediaServer *mediaServer = new MediaServer();
     MediaLibrary *mediaLibrary = SingletonFactory::instanceFor<MediaLibrary>();

@@ -39,8 +39,8 @@ set (plasmamediacenter_SRCS
     pmcalbum.cpp
     pmcartist.cpp
     filtermediamodel.cpp
-    abstractmediasource.cpp
-    mediasourcesloader.cpp
+    abstractdatasource.cpp
+    datasourcesloader.cpp
     singletonfactory.cpp
     mediavalidator.cpp
     settings.cpp
@@ -67,7 +67,6 @@ set(plasmamediacenter_link_libs
     KF5::Service
     KF5::Activities
     KF5::KIOWidgets
-    KF5::WindowSystem #needed for mpris2, not used now
     ${TAGLIB_LIBRARIES}
     -lsoup-2.4
     ${LIBS_LIBRARIES}
@@ -102,7 +101,7 @@ set_target_properties(plasmamediacenter PROPERTIES VERSION ${PROJECT_VERSION} SO
 install(TARGETS plasmamediacenter ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
 
 install(FILES data/servicetypes/pmc_browsingbackend.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
-install(FILES data/servicetypes/pmc_mediasource.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
+install(FILES data/servicetypes/pmc_datasource.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
 
 install(FILES data/xml/AVTransport1.xml DESTINATION ${DATA_INSTALL_DIR}/plasma/mediacenter)
 install(FILES data/xml/ConnectionManager1.xml DESTINATION ${DATA_INSTALL_DIR}/plasma/mediacenter)

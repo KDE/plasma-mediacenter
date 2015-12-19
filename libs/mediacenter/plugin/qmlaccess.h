@@ -25,7 +25,7 @@
 #include "mediacenter/backendsmodel.h"
 #include "mediacenter/abstractbrowsingbackend.h"
 #include "mediacenter/singletonfactory.h"
-#include "mediacenter/mediasourcesloader.h"
+#include "mediacenter/datasourcesloader.h"
 #include "mediacenter/mpris2/mediaplayer2player.h"
 
 class QMLAccess : public QObject

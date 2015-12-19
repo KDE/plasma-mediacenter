@@ -25,7 +25,7 @@
 #include "mediacenter/multipleplaylistmodel.h"
 #include "mediacenter/objectpair.h"
 #include "mediacenter/settings.h"
-#include "mediacenter/mediasourcesloader.h"
+#include "mediacenter/datasourcesloader.h"
 #include "mediacenter/abstractbrowsingbackend.h"
 #include "mediacenter/medialibrary.h"
 #include "mediacenter/runtimedata.h"

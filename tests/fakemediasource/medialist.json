@@ -1,0 +1,26 @@
+[
+    {
+        "title" : "Comfortably Numb",
+        "url" : "http://songlist/song1",
+        "mimeType" : "audio",
+        "album" : "The Wall",
+        "artist" : "Pink Floyd",
+        "albumArtist" : "Pink Floyd"
+    },
+    {
+        "title" : "Wish You Were Here",
+        "url" : "http://songlist/song2",
+        "mimeType" : "audio",
+        "album" : "Wish You Were Here",
+        "artist" : "Pink Floyd",
+        "albumArtist" : "Pink Floyd"
+    },
+    {
+        "title" : "Another Brick in the Wall",
+        "url" : "http://songlist/song3",
+        "mimeType" : "audio",
+        "album" : "The Wall",
+        "artist" : "Pink Floyd",
+        "albumArtist" : "Pink Floyd"
+    }
+]

@@ -1,5 +1,7 @@
 /***********************************************************************************
- *   Copyright 2014 Sinny Kumari <ksinny@gmail.com>          `                     *
+ *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
+ *   Copyright 2014 Sinny Kumari <ksinny@gmail.com>                                *
+ *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
  *   modify it under the terms of the GNU Lesser General Public                    *
@@ -15,32 +17,36 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef BALOOSEARCHMEDIASOURCE_H
-#define BALOOSEARCHMEDIASOURCE_H
+#ifndef ABSTRACTDATASOURCE_H
+#define ABSTRACTDATASOURCE_H
 
-#include <mediacenter/abstractmediasource.h>
+#include <QtCore/QThread>
+#include <KPluginInfo>
 
-class SearchResultHandler;
+#include "mediacenter_export.h"
 
-class BalooSearchMediaSource : public MediaCenter::AbstractMediaSource
+class MediaLibrary;
+
+namespace MediaCenter {
+class MEDIACENTER_EXPORT AbstractDataSource : public QThread
 {
     Q_OBJECT
 public:
-    explicit BalooSearchMediaSource(QObject* parent = 0, const QVariantList& args = QVariantList());
+    explicit AbstractDataSource(QObject* parent = 0, const QVariantList& = QVariantList());
+    ~AbstractDataSource();
+
+    void setMediaLibrary(MediaLibrary *mediaLibrary);
 
 protected:
-    virtual void run();
-
-private Q_SLOTS:
-    void startQuerying();
-    void handleNewFile(const QStringList &files);
+    MediaLibrary *mediaLibrary() const;
 
 private:
-    QHash<QString, SearchResultHandler*> m_searchResultHandlers;
-    QHash<QString, SearchResultHandler*> m_searchResultHandlersByMimeType;
-
-    void queryForMediaType(const QString &type);
-    QStringList m_allowedMimes;
+    class Private;
+    Private * const d;
 };
+}
 
-#endif // BALOOSEARCHMEDIASOURCE_H
+#define MEDIACENTER_EXPORT_DATASOURCE(classname, jsonfile) \
+    K_PLUGIN_FACTORY_WITH_JSON( DataSourceFactory, jsonfile, registerPlugin< classname >(); )
+
+#endif // ABSTRACTDATASOURCE_H

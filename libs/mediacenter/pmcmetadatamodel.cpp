@@ -78,17 +78,16 @@ PmcMetadataModel::PmcMetadataModel(QObject* parent, MediaLibrary* mediaLibrary):
     setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
 
     d->previewTimer.setSingleShot(true);
-    connect(&d->previewTimer, SIGNAL(timeout()), SLOT(delayedPreview()));
+    connect(&d->previewTimer, &QTimer::timeout, this, &PmcMetadataModel::delayedPreview);
     d->updateTimer.setSingleShot(true);
-    connect(&d->updateTimer, SIGNAL(timeout()), SLOT(updateModel()));
+    connect(&d->updateTimer, &QTimer::timeout, this, &PmcMetadataModel::updateModel);
     d->metadataFetchTimer.setSingleShot(true);
-    connect(&d->metadataFetchTimer, SIGNAL(timeout()), SLOT(fetchMetadata()));
+    connect(&d->metadataFetchTimer, &QTimer::timeout, this, &PmcMetadataModel::fetchMetadata);
 
     d->thumbnailSize = QSize(512, 512);
 
-    connect(SingletonFactory::instanceFor<LastFmImageFetcher>(),
-            SIGNAL(imageFetched(QVariant,QString)),
-            SLOT(signalUpdate(QVariant,QString)));
+    connect(SingletonFactory::instanceFor<LastFmImageFetcher>(), &LastFmImageFetcher::imageFetched,
+            this, &PmcMetadataModel::signalUpdate);
 }
 
 PmcMetadataModel::~PmcMetadataModel()
@@ -116,9 +115,7 @@ void PmcMetadataModel::showMediaType(MediaCenter::MediaType mediaType)
     const QString mediaTypeString = d->modeForMediaType.key(d->currentMode);
     QList <QSharedPointer<PmcMedia> > mediaData = d->mediaLibrary->getMedia(mediaTypeString);
 
-    connect(d->mediaLibrary,
-            SIGNAL(newMedia(QList<QSharedPointer<PmcMedia> >)),
-            SLOT(handleNewMedia(QList<QSharedPointer<PmcMedia> >)));
+    connect(d->mediaLibrary, &MediaLibrary::newMedia, this, &PmcMetadataModel::handleNewMedia);
     connect(d->mediaLibrary, &MediaLibrary::mediaRemoved, this, &PmcMetadataModel::removeMediaRef);
 
     handleNewMedia(mediaData);
@@ -129,9 +126,7 @@ void PmcMetadataModel::showAlbums()
     QList <QSharedPointer<PmcAlbum> > mediaData = d->mediaLibrary->getAlbums();
     d->currentMode = Album;
 
-    connect(d->mediaLibrary,
-            SIGNAL(newAlbums(QList<QSharedPointer<PmcAlbum> >)),
-            SLOT(handleNewAlbums(QList<QSharedPointer<PmcAlbum> >)));
+    connect(d->mediaLibrary, &MediaLibrary::newAlbums, this, &PmcMetadataModel::handleNewAlbums);
     handleNewAlbums(mediaData);
 }
 
@@ -140,9 +135,7 @@ void PmcMetadataModel::showArtist()
     QList <QSharedPointer<PmcArtist> > mediaData = d->mediaLibrary->getArtists();
     d->currentMode = Artist;
 
-    connect(d->mediaLibrary,
-            SIGNAL(newArtists(QList<QSharedPointer<PmcArtist> >)),
-            SLOT(handleNewArtists(QList<QSharedPointer<PmcArtist> >)));
+    connect(d->mediaLibrary, &MediaLibrary::newArtists, this, &PmcMetadataModel::handleNewArtists);
     handleNewArtists(mediaData);
 }
 
@@ -155,7 +148,7 @@ void PmcMetadataModel::handleNewMedia(const QList< QSharedPointer< PmcMedia > >&
         if (d->modeForMediaType.value(m->type()) == d->currentMode) {
             d->mediaByResourceId.insert(m->sha(), QSharedPointer<QObject>(m));
             resourceIdsToBeInserted.append(m->sha());
-            connect(m.data(), SIGNAL(updated()), SLOT(mediaUpdated()));
+            connect(m.data(), &PmcMedia::updated, this, &PmcMetadataModel::mediaUpdated);
         }
     }
 
@@ -417,8 +410,8 @@ void PmcMetadataModel::delayedPreview()
 
     if (list.size() > 0) {
         KIO::PreviewJob* job = KIO::filePreview(list, d->thumbnailSize, d->thumbnailerPlugins);
-        connect(job, SIGNAL(gotPreview(KFileItem,QPixmap)), SLOT(showPreview(KFileItem,QPixmap)));
-        connect(job, SIGNAL(failed(KFileItem)), SLOT(previewFailed(KFileItem)));
+        connect(job, &KIO::PreviewJob::gotPreview, this, &PmcMetadataModel::showPreview);
+        connect(job, &KIO::PreviewJob::failed, this, &PmcMetadataModel::previewFailed);
     }
 
     d->filesToPreview.clear();

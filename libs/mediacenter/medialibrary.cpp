@@ -74,6 +74,7 @@ public:
     QHash< QString, QSharedPointer<PmcMedia> > pmcMediaByUrl;
 
     ItemCache itemCache;
+    bool testMode = false;
 };
 
 MediaLibrary::MediaLibrary(MediaValidator* mediaValidator, QObject* parent)
@@ -83,6 +84,7 @@ MediaLibrary::MediaLibrary(MediaValidator* mediaValidator, QObject* parent)
     qRegisterMetaType< QList< QSharedPointer<PmcMedia> > >("QList< QSharedPointer<PmcMedia> >");
     qRegisterMetaType< QList< QSharedPointer<PmcMedia> > >("QList< QSharedPointer<PmcAlbum> >");
     qRegisterMetaType< QList< QSharedPointer<PmcMedia> > >("QList< QSharedPointer<PmcArtist> >");
+    qRegisterMetaType< QSharedPointer<PmcMedia> >("QSharedPointer<PmcMedia>");
 
     d->mediaValidator = mediaValidator;
 
@@ -135,7 +137,7 @@ void MediaLibrary::removeMedia(const QString &url)
 {
     QString mediaSha = Media::calculateSha(url);
     if (!mediaExists(mediaSha)) {
-        qDebug() << "Media SHA not found in list.";
+        qDebug() << "Media SHA not found in list." << mediaSha << url;
         return;
     }
 
@@ -192,7 +194,7 @@ void MediaLibrary::processNextRequest()
 //             qDebug() << "Updated " << media->url();
         }
     } else {
-        if (d->mediaValidator->fileWithUrlExists(request.first)) {
+        if (d->mediaValidator->fileWithUrlExists(request.first) || d->testMode) {
             QSharedPointer<Media> media(new Media(request.first));
             Q_FOREACH(int role, request.second.keys()) {
                 if (role == MediaCenter::AlbumRole) {
@@ -400,4 +402,9 @@ QSharedPointer< PmcMedia > MediaLibrary::mediaForUrl(const QString& url) const
     pmcMedia->setMedia(media);
 
     return pmcMedia;
+}
+
+void MediaLibrary::setTestMode(bool mode)
+{
+    d->testMode = mode;
 }
