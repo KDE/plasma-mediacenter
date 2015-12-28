@@ -10,7 +10,6 @@ set (plasmamediacenter_SRCS
     artist.cpp
     album.cpp
     media.cpp
-    lastfmimagefetcher.cpp
     pmcmodel.cpp
     objectpair.cpp
     mediacenter.cpp

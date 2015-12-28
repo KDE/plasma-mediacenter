@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Service
+Name=LastFmImageFetcher
+
+X-KDE-ServiceTypes=Plasma/MediaCenter/DataSource
+
+X-KDE-PluginInfo-Name=lastfm
+X-KDE-PluginInfo-Author=Shantanu Tushar
+X-KDE-PluginInfo-Email=shantanu@kde.org
+X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
+X-KDE-Library=pmc_lastfm

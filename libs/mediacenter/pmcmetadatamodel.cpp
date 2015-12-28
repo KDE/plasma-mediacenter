@@ -19,7 +19,6 @@
 
 #include "pmcmetadatamodel.h"
 #include "pmcimagecache.h"
-#include "lastfmimagefetcher.h"
 #include "media.h"
 #include "medialibrary.h"
 #include "pmcmedia.h"
@@ -83,11 +82,8 @@ PmcMetadataModel::PmcMetadataModel(QObject* parent, MediaLibrary* mediaLibrary):
     connect(&d->updateTimer, &QTimer::timeout, this, &PmcMetadataModel::updateModel);
     d->metadataFetchTimer.setSingleShot(true);
     connect(&d->metadataFetchTimer, &QTimer::timeout, this, &PmcMetadataModel::fetchMetadata);
-
+    connect(SingletonFactory::instanceFor<MediaLibrary>(), &MediaLibrary::imageFetched, this, &PmcMetadataModel::signalUpdate);
     d->thumbnailSize = QSize(512, 512);
-
-    connect(SingletonFactory::instanceFor<LastFmImageFetcher>(), &LastFmImageFetcher::imageFetched,
-            this, &PmcMetadataModel::signalUpdate);
 }
 
 PmcMetadataModel::~PmcMetadataModel()
@@ -345,8 +341,6 @@ QVariant PmcMetadataModel::getAlbumArt(const QString& albumName, const QString& 
 
     if (imageCache->containsAlbumCover(albumName)) {
         return PmcCoverArtProvider::qmlImageUriForAlbumCover(albumName);
-    } else {
-        SingletonFactory::instanceFor<LastFmImageFetcher>()->fetchImage("album", resourceId, albumArtist, albumName);
     }
 
     return d->defaultDecoration;
@@ -358,8 +352,6 @@ QVariant PmcMetadataModel::getArtistImage(const QString& artistName, const QStri
 
     if (imageCache->containsArtistCover(artistName)) {
         return PmcCoverArtProvider::qmlImageUriForArtistCover(artistName);
-    } else {
-        SingletonFactory::instanceFor<LastFmImageFetcher>()->fetchImage("artist", resourceId, artistName);
     }
 
     return d->defaultDecoration;
