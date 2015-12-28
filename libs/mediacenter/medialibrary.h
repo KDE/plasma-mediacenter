@@ -51,6 +51,7 @@ public:
     QList< QSharedPointer< PmcArtist > > getArtists() const;
 
     QSharedPointer<PmcMedia> mediaForUrl(const QString &url) const;
+    void setTestMode(bool mode);
 
 Q_SIGNALS:
     void initialized();

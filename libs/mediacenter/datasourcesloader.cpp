@@ -17,25 +17,46 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef MEDIASOURCESLOADER_H
-#define MEDIASOURCESLOADER_H
+#include "datasourcesloader.h"
+#include "medialibrary.h"
+#include "abstractdatasource.h"
 
-#include <QtCore/QObject>
+#include "singletonfactory.h"
 
-#include "mediacenter_export.h"
+#include <KPluginTrader>
+#include <KPluginInfo>
+#include <QDebug>
+#include <QApplication>
 
-namespace MediaCenter {
-class AbstractMediaSource;
+DataSourcesLoader::DataSourcesLoader(QObject* parent): QObject(parent)
+{
+
 }
 
-class MEDIACENTER_EXPORT MediaSourcesLoader : public QObject
+void DataSourcesLoader::load()
 {
-    Q_OBJECT
-public:
-    explicit MediaSourcesLoader(QObject* parent = 0);
+    KPluginInfo::List pluginInfo = KPluginTrader::self()->query("plasma/mediacenter/datasources");
+    if (pluginInfo.isEmpty()) {
+        qWarning() << "no available data sources";
+    }
 
-public Q_SLOTS:
-    void load();
-};
+    Q_FOREACH (const KPluginInfo &info, pluginInfo) {
+        KPluginLoader loader(info.libraryPath());
+        KPluginFactory* factory = loader.factory();
 
-#endif // MEDIASOURCESLOADER_H
+        const QVariantList args = QVariantList() << loader.metaData().toVariantMap();
+        if(factory)
+        {
+            MediaCenter::AbstractDataSource *dataSource = factory->create<MediaCenter::AbstractDataSource>(0, args);
+            if (dataSource) {
+                dataSource->setMediaLibrary(SingletonFactory::instanceFor<MediaLibrary>());
+                dataSource->start();
+                connect(QApplication::instance(), SIGNAL(destroyed(QObject*)), dataSource, SLOT(quit()));
+                qDebug() << "created instance for data source" << info.name();
+            } else {
+                qDebug() << "Could not create a instance for the data source " << info.name();
+            }
+        }
+
+    }
+}

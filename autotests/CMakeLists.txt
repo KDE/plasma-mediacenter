@@ -11,17 +11,6 @@ set(CMAKE_MODULE_PATH
     ${CMAKE_MODULE_PATH}
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
-find_package(mockcpp)
-add_feature_info("mockcpp" mockcpp_FOUND "Required for running tests, https://bitbucket.org/godsme/mockcpp")
-
-if(NOT mockcpp_FOUND)
-    return()
-endif()
-
-include_directories(
-    ${mockcpp_INCLUDE_DIRS}
-)
-
 set(pmc_test_SRCS
     medialibrarytest.cpp
     singletonfactorytest.cpp
@@ -37,6 +26,6 @@ set(pmc_test_SRCS
 
 ecm_add_tests(
     ${pmc_test_SRCS}
-    LINK_LIBRARIES plasmamediacentertest Qt5::Test ${mockcpp_LIBRARIES}
+    LINK_LIBRARIES plasmamediacentertest Qt5::Test
     NAME_PREFIX "pmctest-"
     )

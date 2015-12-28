@@ -74,6 +74,7 @@ public:
     QHash< QString, QSharedPointer<PmcMedia> > pmcMediaByUrl;
 
     ItemCache itemCache;
+    bool testMode = false;
 };
 
 MediaLibrary::MediaLibrary(MediaValidator* mediaValidator, QObject* parent)
@@ -193,7 +194,7 @@ void MediaLibrary::processNextRequest()
 //             qDebug() << "Updated " << media->url();
         }
     } else {
-        if (d->mediaValidator->fileWithUrlExists(request.first)) {
+        if (d->mediaValidator->fileWithUrlExists(request.first) || d->testMode) {
             QSharedPointer<Media> media(new Media(request.first));
             Q_FOREACH(int role, request.second.keys()) {
                 if (role == MediaCenter::AlbumRole) {
@@ -401,4 +402,9 @@ QSharedPointer< PmcMedia > MediaLibrary::mediaForUrl(const QString& url) const
     pmcMedia->setMedia(media);
 
     return pmcMedia;
+}
+
+void MediaLibrary::setTestMode(bool mode)
+{
+    d->testMode = mode;
 }

@@ -27,10 +27,10 @@
 #include <QMimeType>
 #include <QMimeDatabase>
 
-MEDIACENTER_EXPORT_MEDIASOURCE(FilesystemSearchMediaSource, "filesystemsearch.json")
+MEDIACENTER_EXPORT_DATASOURCE(FilesystemSearchMediaSource, "filesystemsearch.json")
 
 FilesystemSearchMediaSource::FilesystemSearchMediaSource(QObject* parent, const QVariantList& args)
-    : AbstractMediaSource(parent, args),
+    : AbstractDataSource(parent, args),
       m_quit(false)
 {
     m_allowedMimes << "audio" << "image" << "video";

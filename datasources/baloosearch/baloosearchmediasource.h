@@ -18,11 +18,11 @@
 #ifndef BALOOSEARCHMEDIASOURCE_H
 #define BALOOSEARCHMEDIASOURCE_H
 
-#include <mediacenter/abstractmediasource.h>
+#include <mediacenter/abstractdatasource.h>
 
 class SearchResultHandler;
 
-class BalooSearchMediaSource : public MediaCenter::AbstractMediaSource
+class BalooSearchMediaSource : public MediaCenter::AbstractDataSource
 {
     Q_OBJECT
 public:
