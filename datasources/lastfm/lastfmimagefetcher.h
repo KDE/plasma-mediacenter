@@ -24,26 +24,31 @@
 #include <QHash>
 #include <QNetworkAccessManager>
 #include <QVariant>
+#include <QSharedPointer>
 
+#include "mediacenter/abstractdatasource.h"
+#include "mediacenter/pmcmedia.h"
 #include "mediacenter_export.h"
 
-class LastFmImageFetcher : public QObject
+class LastFmImageFetcher : public MediaCenter::AbstractDataSource
 {
     Q_OBJECT
 public:
-    explicit LastFmImageFetcher(QObject* parent = 0);
+    explicit LastFmImageFetcher(QObject* parent = 0, const QVariantList& args  = QVariantList());
     ~LastFmImageFetcher();
-
     void fetchImage(const QString& type, const QVariant& identifier, const QString& artistName, const QString& albumName = QString());
-
-Q_SIGNALS:
-    void imageFetched(const QVariant &identifier, const QString &artistName);
+ Q_SIGNALS:
     void serviceUnavailable();
+
+protected:
+    virtual void run();
 
 private Q_SLOTS:
     void processQueue();
     void gotResponse(QNetworkReply* reply);
     void gotImage(QNetworkReply* reply);
+    void handleLastFmNewMedia(QList< QSharedPointer<PmcMedia> > newMediaList );
+    void setupImageFetcher();
 
 private:
     void downloadImage(const QString& type, const QString& name, const QString& url);
@@ -52,8 +57,8 @@ private:
     QString m_artistInfoUrl;
     QString m_albumInfoUrl;
     QQueue< QList<QString> > m_pendingQueue;
-    QNetworkAccessManager m_netAccessManager;
-    QNetworkAccessManager m_imageDownloadManager;
+    QNetworkAccessManager *m_netAccessManager;
+    QNetworkAccessManager *m_imageDownloadManager;
     QHash<QNetworkReply*, QString> m_currentInfoDownloads;
     QHash<QNetworkReply*, QPair<QString,QString> > m_currentImageDownloads;
     QHash<QString, QVariant> m_identifiers;

@@ -1,2 +1,3 @@
 add_subdirectory(baloosearch)
 add_subdirectory(filesystemsearch)
+add_subdirectory(lastfm)

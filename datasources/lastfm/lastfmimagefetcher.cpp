@@ -17,27 +17,31 @@
  ***********************************************************************************/
 
 #include "lastfmimagefetcher.h"
-#include "pmcimagecache.h"
-#include "singletonfactory.h"
+#include "mediacenter/pmcimagecache.h"
+#include "mediacenter/singletonfactory.h"
+#include "mediacenter/medialibrary.h"
+#include "mediacenter/pmcmetadatamodel.h"
 
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QUrl>
 #include <QDomDocument>
+#include <QSharedPointer>
 
 #include <QTimer>
 #include <QImage>
 #include <QDebug>
 
-LastFmImageFetcher::LastFmImageFetcher(QObject* parent)
-    : QObject(parent)
+MEDIACENTER_EXPORT_DATASOURCE(LastFmImageFetcher, "lastfmimagefetcher.json")
+
+LastFmImageFetcher::LastFmImageFetcher(QObject* parent, const QVariantList& args)
+    : AbstractDataSource(parent, args)
     , m_busy(false)
     , m_artistInfoUrl("http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=%1&api_key=22a6906e49bffd8cc11be1385aea73de")
     , m_albumInfoUrl("http://ws.audioscrobbler.com/2.0/?method=album.getinfo&artist=%1&album=%2&api_key=22a6906e49bffd8cc11be1385aea73de")
 
 {
-    connect(&m_netAccessManager, SIGNAL(finished(QNetworkReply*)), SLOT(gotResponse(QNetworkReply*)));
-    connect(&m_imageDownloadManager, SIGNAL(finished(QNetworkReply*)), SLOT(gotImage(QNetworkReply*)));
+    connect(SingletonFactory::instanceFor<MediaLibrary>(), &MediaLibrary::newMedia, this, &LastFmImageFetcher::handleLastFmNewMedia);
 }
 
 LastFmImageFetcher::~LastFmImageFetcher()
@@ -81,7 +85,7 @@ void LastFmImageFetcher::processQueue()
     }
 
     // qDebug() << "Fetching " << apiUrl;
-    QNetworkReply *reply = m_netAccessManager.get(QNetworkRequest(apiUrl));
+    QNetworkReply *reply = m_netAccessManager->get(QNetworkRequest(apiUrl));
     m_currentInfoDownloads.insert(reply,
                                   nameList.count() > 2 ? nameList.at(2) : nameList.at(1));
 
@@ -116,7 +120,7 @@ void LastFmImageFetcher::gotResponse(QNetworkReply* reply)
         }
     }
 
-//     qDebug() << "Webservice has no image for " << name;
+//    qDebug() << "Webservice has no image for " << name;
     QTimer::singleShot(0, this, SLOT(processQueue()));
 
     reply->deleteLater();
@@ -129,7 +133,7 @@ void LastFmImageFetcher::downloadImage(const QString& type, const QString& name,
         return;
     }
     // qDebug() << "Downloading image for " << name << " from " << url;
-    QNetworkReply *reply = m_imageDownloadManager.get(QNetworkRequest(url));
+    QNetworkReply *reply = m_imageDownloadManager->get(QNetworkRequest(url));
     m_currentImageDownloads.insert(reply, QPair<QString,QString>(type, name));
 }
 
@@ -147,6 +151,33 @@ void LastFmImageFetcher::gotImage(QNetworkReply* reply)
 
     m_busy = false;
     QTimer::singleShot(0, this, SLOT(processQueue()));
-
-    emit imageFetched(m_identifiers.take(name), name);
+    emit SingletonFactory::instanceFor<MediaLibrary>()->imageFetched(m_identifiers.take(name), name);
 }
+
+void LastFmImageFetcher::handleLastFmNewMedia(const QList< QSharedPointer<PmcMedia> > newMediaList)
+{
+    foreach(QSharedPointer<PmcMedia> media, newMediaList) {
+        QString album = media->album();
+        QString artist = media->artist();
+        if (!album.isEmpty() && !artist.isEmpty()) {
+            fetchImage("album", album, artist, album);
+            fetchImage("artist", artist, artist);
+        }
+    }
+}
+
+void LastFmImageFetcher::run()
+{
+    QTimer::singleShot(0, this, &LastFmImageFetcher::setupImageFetcher);
+    exec();
+}
+
+void LastFmImageFetcher::setupImageFetcher()
+{
+    m_netAccessManager = new QNetworkAccessManager;
+    m_imageDownloadManager = new QNetworkAccessManager;
+    connect(m_netAccessManager, SIGNAL(finished(QNetworkReply*)), SLOT(gotResponse(QNetworkReply*)));
+    connect(m_imageDownloadManager, SIGNAL(finished(QNetworkReply*)), SLOT(gotImage(QNetworkReply*)));
+}
+
+#include "lastfmimagefetcher.moc"

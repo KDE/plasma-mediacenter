@@ -25,6 +25,7 @@
 #include <QThread>
 #include <QSharedPointer>
 #include <QMutex>
+#include <QVariant>
 
 class Artist;
 class Album;
@@ -55,7 +56,7 @@ public:
 
 Q_SIGNALS:
     void initialized();
-
+    void imageFetched(const QVariant &identifier, const QString &artistName);
     void newMedia(const QList< QSharedPointer<PmcMedia> > &media);
     void newAlbums(const QList< QSharedPointer<PmcAlbum> > &album);
     void newArtists(const QList< QSharedPointer<PmcArtist> > &artist);
