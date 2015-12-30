@@ -77,7 +77,7 @@ PlasmaComponents.ListItem {
                         !root.view.moving &&
                         !root.view.flicking)
                         root.view.currentIndex = index
-            onClicked: print("Foobar " + mediaUrl);
+            onClicked: print ("Foo " + mediaUrl)
         }
     }
 

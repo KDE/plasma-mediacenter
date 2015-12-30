@@ -28,7 +28,7 @@ FocusScope {
     property QtObject currentBrowsingBackend
     property QtObject previousBrowsingBackend
     property QtObject backendOverlay
-
+    
     signal backRequested
     signal playRequested(int index, string url, string currentMediaType, variant model)
     signal playAllRequested()

@@ -40,9 +40,12 @@ Item {
     property QtObject pmcInterfaceInstance
     property QtObject pmcMediaBrowserInstance
     property QtObject pmcWidgetExploreInstance
+    property QtObject mediaPlayerInstance
+    property QtObject playlistInstance
 
     function toggleWidgetExplorer(containment) {
         pmcPageStack.visible = true;
+        console.log("Inside toggleWidgetExplorer")
         pmcPageStack.push(getWidgetExplorer());
         getWidgetExplorer().containment = containment
     }
@@ -60,12 +63,35 @@ Item {
         }
         return pmcMediaBrowserInstance;
     }
+    
+    function getPlaylist() {
+        if (!playlistInstance) {
+            playlistInstance = pmcPlaylistComponent.createObject(pmcPageStack);
+        }
+        return playlistInstance;
+    }
+    
+    function getMediaPlayer() {
+        if (!mediaPlayerInstance) {
+            mediaPlayerInstance = pmcMediaPlayerComponent.createObject(pmcPageStack);
+        }
+        return mediaPlayerInstance;
+    }
 
     function getWidgetExplorer() {
         if(!pmcWidgetExploreInstance) {
+            console.log("Getting Widget Explorer")
             pmcWidgetExploreInstance = widgetExplorerComponent.createObject(root);
         }
+        console.log("Getting Widget Explorer")
         return pmcWidgetExploreInstance;
+    }
+    
+    function goBack() {
+        if (pmcPageStack.currentPage.goBack && pmcPageStack.currentPage.goBack()) {
+            return;
+        }
+        pmcPageStack.popAndFocus();
     }
 
     onContainmentChanged: {
@@ -197,14 +223,42 @@ Item {
             highlightRangeMode: ListView.StrictlyEnforceRange
             delegate: backendListDelegate
             //focus: true
+            onCurrentItemChanged: {
+                if(currentIndex != -1) {
+                    console.log("Bwhahaha")
+                }
+            }
         }
     }
 
     PlasmaComponents.PageStack {
         id: pmcPageStack
         anchors.fill: parent
-        z: 99
         visible: false
+        z: 99
+        
+        function pushAndFocus(page) {
+            console.log("Inside pushAndFocus")
+            if (currentPage != page)
+            push(page);
+            focusCurrentPage();
+        }
+
+        function popAndFocus(immediate) {
+            //console.log("Inside popAndFocus")
+            var page = pop(undefined, immediate);
+            //If this is not done, QML's garbage collector will remove the page object
+            //console.log("Popped pages is = ", page)
+            page.visible = false;
+            page.parent = pmcPageStack;
+            focusCurrentPage();
+        }
+
+        function focusCurrentPage() {
+            //console.log("Inside focusCurrentPage")
+            //console.log("Current page is = ", currentPage)
+            currentPage.focus = true;
+        }
     }
 
     Component {
@@ -235,6 +289,7 @@ Item {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
+                    //console.log(getMediaBrowser())
                     if (!modelObject.init())
                         return;
                     getPmcInterface().currentBrowsingBackend = modelObject;
@@ -249,7 +304,13 @@ Item {
         id: pmcMediaBrowserComponent
         MediaCenterElements.MediaBrowser {
             currentBrowsingBackend: getPmcInterface().currentBrowsingBackend
-            onBackRequested: pmcPageStack.pop()
+            onBackRequested: pmcPageStack.popAndFocus()
+            onBackendOverlayChanged: {
+                if (backendOverlay) {
+                    console.log("There is backend overlay")
+                    pmcPageStack.pushAndFocus(backendOverlay);
+                }
+            }
         }
     }
 
@@ -262,6 +323,48 @@ Item {
                 pmcPageStack.visible = false;
             }
         }
+    }
+    
+    Component {
+        id: pmcMediaPlayerComponent
+        MediaCenterElements.MediaPlayer {
+            runtimeDataObject: runtimeData
+            volume: runtimeData.volume
+            /*onClicked: toggleController(mediaPlayerInstance)
+            onMediaStarted: _pmc_mainwindow.mousePointerAutoHide = hasVideo
+            onVolumeUp: runtimeData.volume += 0.1
+            onVolumeDown: runtimeData.volume -= 0.1
+            onMuteToggle: runtimeData.muteToggle()
+            onPreviousMedia: playlistInstance.playPrevious()
+            onNextMedia: playlistInstance.playNext()*/
+            onMediaFinished: {
+                if (playlistInstance && playlistInstance.active && totalTime != -1 && !runtimeData.userTrigerredStop) {
+                    playlistInstance.playNext();
+                } else {
+                    if (!runtimeData.userTrigerredStop && pmcPageStack.currentPage == mediaPlayerInstance) {
+                        root.goBack()
+                        //FIXME:This breaks playback from runtimeData.playUrl
+                        //pmcPageStack.pushAndFocus(getMediaBrowser())
+                    }
+                }
+            }
+        }
+    }
+    
+    Component {
+        id: pmcPlaylistComponent
+        MediaCenterElements.Playlist {
+            onPlayRequested: {
+                if (!mediaPlayerInstance) {
+                    pmcPageStack.pushAndFocus(getMediaPlayer());
+                }
+                runtimeData.playUrl(url);
+            }
+        }
+    }
+    
+    PMC.RuntimeData {
+        id: runtimeData
     }
 
     Binding {
@@ -280,5 +383,56 @@ Item {
         //configure the view behavior
         desktop.windowType = Shell.Desktop.Desktop;
         getPmcInterface();
+        getPlaylist().visible = false;
+        setupMprisPlayer();
     }
+    
+    Keys.onPressed: {
+        switch (event.key) {
+            case Qt.Key_Backspace: 
+                goBack(); 
+                break
+            case Qt.Key_Space: runtimeData.playPause(); break
+            case Qt.Key_MediaPlay: runtimeData.playPause(); break
+            case Qt.Key_MediaNext: playlistInstance.playNext(); break
+            case Qt.Key_MediaPrevious: playlistInstance.playPrevious(); break
+            case Qt.Key_MediaStop: playlistInstance.playNext(); break
+//            case Qt.Key_F12: toggleDashboard(); break
+            case Qt.Key_F: {
+                if (desktop.windowType == Shell.Desktop.Desktop)
+                    return;
+                if (desktop.windowType == Shell.Desktop.FullScreen)
+                    desktop.windowType = Shell.Desktop.Window;
+                else
+                    desktop.windowType = Shell.Desktop.FullScreen;
+                }
+            default: return
+        }
+        event.accepted = true;
+    }
+
+    //Bindings for MediaPlayer2Player adaptor
+    Binding { target: pmcInterfaceInstance.mpris2PlayerAdaptor; property: "Volume"; value: runtimeData.volume }
+    Binding { target: pmcInterfaceInstance.mpris2PlayerAdaptor; property: "Rate"; value: getMediaPlayer().getRate() }
+    Binding { target: pmcInterfaceInstance.mpris2PlayerAdaptor; property: "Position"; value: getMediaPlayer().currentTime }
+    Binding { target: pmcInterfaceInstance.mpris2PlayerAdaptor; property: "mediaPlayerPresent"; value: mediaPlayerInstance ? true : false }
+    Binding { target: pmcInterfaceInstance.mpris2PlayerAdaptor; property: "currentTrack"; value: runtimeData.url }
+    Binding { target: pmcInterfaceInstance.mpris2PlayerAdaptor; property: "pmcStatus"; value: runtimeData.status }
+
+    function setupMprisPlayer() {
+        pmcInterfaceInstance.mpris2PlayerAdaptor.next.connect(playlistInstance.playNext);
+        pmcInterfaceInstance.mpris2PlayerAdaptor.previous.connect(playlistInstance.playPrevious);
+        pmcInterfaceInstance.mpris2PlayerAdaptor.playPause.connect(runtimeData.playPause);
+        pmcInterfaceInstance.mpris2PlayerAdaptor.stop.connect(runtimeData.stop);
+        pmcInterfaceInstance.mpris2PlayerAdaptor.volumeChanged.connect(function(newVol) {
+            if (runtimeData.volume != newVol) {
+                runtimeData.volume = newVol;
+            }});
+        pmcInterfaceInstance.mpris2PlayerAdaptor.rateChanged.connect(function(newRate) { getMediaPlayer().setRate(newRate) });
+        pmcInterfaceInstance.mpris2PlayerAdaptor.seek.connect(function(offset) {
+            getMediaPlayer().seekTo(getMediaPlayer().currentTime + offset)
+            pmcInterfaceInstance.mpris2PlayerAdaptor.emitSeeked(getMediaPlayer().currentTime);
+        });
+        pmcInterfaceInstance.mpris2PlayerAdaptor.playUrl.connect(runtimeData.playUrl);
+        }
 }
