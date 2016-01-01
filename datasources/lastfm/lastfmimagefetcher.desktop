@@ -2,6 +2,7 @@
 Type=Service
 Name=LastFmImageFetcher
 Name[ca]=LastFmImageFetcher
+Name[ca@valencia]=LastFmImageFetcher
 Name[gl]=LastFmImageFetcher
 Name[nl]=LastFmImageFetcher
 Name[pt]=LastFmImageFetcher
