@@ -223,12 +223,13 @@ Item {
             highlightRangeMode: ListView.StrictlyEnforceRange
             delegate: backendListDelegate
             //focus: true
-            onCurrentItemChanged: {
-                if(currentIndex != -1) {
-                    console.log("Bwhahaha")
-                }
-            }
         }
+    }
+    
+    Item {
+        id: firstPage
+        width: root.width
+        height: root.height
     }
 
     PlasmaComponents.PageStack {
@@ -236,27 +237,31 @@ Item {
         anchors.fill: parent
         visible: false
         z: 99
+        initialPage: firstPage
         
         function pushAndFocus(page) {
             console.log("Inside pushAndFocus")
+            console.log("Depth before push = ", depth)
             if (currentPage != page)
             push(page);
+            console.log("Depth after push = ", depth)
             focusCurrentPage();
         }
 
         function popAndFocus(immediate) {
-            //console.log("Inside popAndFocus")
+            console.log("Depth before popping = ", depth)
             var page = pop(undefined, immediate);
             //If this is not done, QML's garbage collector will remove the page object
-            //console.log("Popped pages is = ", page)
-            page.visible = false;
-            page.parent = pmcPageStack;
-            focusCurrentPage();
+            console.log("Popped page is = ", page)
+            console.log("Depth after popping = ", depth)
+            page.visible =  false;
+            page.parent = root;
+            focusCurrentPage();    
         }
 
         function focusCurrentPage() {
-            //console.log("Inside focusCurrentPage")
-            //console.log("Current page is = ", currentPage)
+            console.log("Inside focusCurrentPage")
+            console.log("Current page is = ", currentPage)
             currentPage.focus = true;
         }
     }
@@ -289,14 +294,15 @@ Item {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    //console.log(getMediaBrowser())
                     if (!modelObject.init())
                         return;
                     getPmcInterface().currentBrowsingBackend = modelObject;
+                    if (pmcPageStack.currentPage !== getMediaBrowser()) 
+                    pmcPageStack.pushAndFocus(getMediaBrowser());
                     pmcPageStack.visible = true;
-                    pmcPageStack.push(getMediaBrowser());
                 }
             }
+            
         }
     }
 
@@ -377,6 +383,11 @@ Item {
         target: backendStrip
         property: "visible"
         value: !pmcPageStack.visible
+    }
+    
+    Binding {
+        target: pmcPageStack; property: "visible"
+        value: false; when: pmcPageStack.depth === 1
     }
 
     Component.onCompleted: {
