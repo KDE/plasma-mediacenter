@@ -72,6 +72,7 @@ Comment[sv]=Hämta media från Baloo-sökning
 Comment[tr]=Baloo Aramasından ortam al
 Comment[uk]=Отримати дані із засобу стільничного пошуку Baloo
 Comment[x-test]=xxGet media from Baloo Searchxx
+Comment[zh_CN]=从 Baloo 搜索获取媒体
 Comment[zh_TW]=從 Baloo 搜尋取得媒體
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/DataSource

@@ -36,6 +36,7 @@ Name[sv]=Händelser och resor
 Name[tr]=Etkinlikler ve Yolculuklar
 Name[uk]=Події і подорожі
 Name[x-test]=xxEvents and Tripsxx
+Name[zh_CN]=活动和旅程
 Name[zh_TW]=事件與旅程
 Comment=Organize your photos for events and trips you have taken
 Comment[ar]=نظّم صور أحداثك ورحلاتك التي التقطتها
@@ -71,6 +72,7 @@ Comment[sv]=Organisera dina bilder av händelser och resor som du har gjort
 Comment[tr]=Etkinlik ve gezilerinizde çektiğiniz fotoğraflarınızı düzenleyin
 Comment[uk]=Упорядкування фотографій, які було зроблено під час певних подій або подорожей
 Comment[x-test]=xxOrganize your photos for events and trips you have takenxx
+Comment[zh_CN]=根据活动和旅程组织照片
 Comment[zh_TW]=整理您在旅程與事件中的相片
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend

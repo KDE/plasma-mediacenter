@@ -71,6 +71,7 @@ Comment[sv]=Hämta media från lokala filer
 Comment[tr]=Yerel dosyalarınızdan ortam alın
 Comment[uk]=Отримати мультимедійні дані з локальних файлів
 Comment[x-test]=xxGet media from your local filesxx
+Comment[zh_CN]=从本地文件获取媒体
 Comment[zh_TW]=從您的本地端檔案取得媒體
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/DataSource

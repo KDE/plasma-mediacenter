@@ -83,6 +83,7 @@ Comment[sv]=Upptäck bilder på Flickr för vald etikett
 Comment[tr]=Seçtiğiniz etiketteki flickr fotoğraflarını keşfedin
 Comment[uk]=Ознайомитися з зображеннями flickr за вказаною вами міткою
 Comment[x-test]=xxDiscover pictures from flickr for your chosen tagxx
+Comment[zh_CN]=根据选择的标签从 flickr 查找图片
 Comment[zh_TW]=從 flickr 中發現您指定標籤的圖片
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
