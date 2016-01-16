@@ -67,7 +67,9 @@ FocusScope {
             horizontal: false
 
             backend: gridBrowserRoot.currentBrowsingBackend
-            onPlayRequested: gridBrowserRoot.mediaSelected(index, url, currentMediaType)
+            onPlayRequested: {
+                gridBrowserRoot.mediaSelected(index, url, currentMediaType)
+            }
         }
         highlight: Item {}
         highlightFollowsCurrentItem: true

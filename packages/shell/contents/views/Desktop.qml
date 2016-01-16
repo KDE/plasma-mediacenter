@@ -45,7 +45,6 @@ Item {
 
     function toggleWidgetExplorer(containment) {
         pmcPageStack.visible = true;
-        console.log("Inside toggleWidgetExplorer")
         pmcPageStack.push(getWidgetExplorer());
         getWidgetExplorer().containment = containment
     }
@@ -63,14 +62,14 @@ Item {
         }
         return pmcMediaBrowserInstance;
     }
-    
+
     function getPlaylist() {
         if (!playlistInstance) {
             playlistInstance = pmcPlaylistComponent.createObject(pmcPageStack);
         }
         return playlistInstance;
     }
-    
+
     function getMediaPlayer() {
         if (!mediaPlayerInstance) {
             mediaPlayerInstance = pmcMediaPlayerComponent.createObject(pmcPageStack);
@@ -86,7 +85,7 @@ Item {
         console.log("Getting Widget Explorer")
         return pmcWidgetExploreInstance;
     }
-    
+
     function goBack() {
         if (pmcPageStack.currentPage.goBack && pmcPageStack.currentPage.goBack()) {
             return;
@@ -225,7 +224,7 @@ Item {
             //focus: true
         }
     }
-    
+
     Item {
         id: firstPage
         width: root.width
@@ -238,30 +237,22 @@ Item {
         visible: false
         z: 99
         initialPage: firstPage
-        
+
         function pushAndFocus(page) {
-            console.log("Inside pushAndFocus")
-            console.log("Depth before push = ", depth)
             if (currentPage != page)
             push(page);
-            console.log("Depth after push = ", depth)
             focusCurrentPage();
         }
 
         function popAndFocus(immediate) {
-            console.log("Depth before popping = ", depth)
             var page = pop(undefined, immediate);
             //If this is not done, QML's garbage collector will remove the page object
-            console.log("Popped page is = ", page)
-            console.log("Depth after popping = ", depth)
             page.visible =  false;
             page.parent = root;
-            focusCurrentPage();    
+            focusCurrentPage();
         }
 
         function focusCurrentPage() {
-            console.log("Inside focusCurrentPage")
-            console.log("Current page is = ", currentPage)
             currentPage.focus = true;
         }
     }
@@ -302,7 +293,6 @@ Item {
                     pmcPageStack.visible = true;
                 }
             }
-            
         }
     }
 
@@ -313,8 +303,22 @@ Item {
             onBackRequested: pmcPageStack.popAndFocus()
             onBackendOverlayChanged: {
                 if (backendOverlay) {
-                    console.log("There is backend overlay")
                     pmcPageStack.pushAndFocus(backendOverlay);
+                }
+            }
+            onPlayRequested: {
+                if (currentMediaType == "image") {
+                    var mediaImageViewer = getMediaImageViewer();
+                    mediaImageViewer.stripModel = model;
+                    mediaImageViewer.stripCurrentIndex = index;
+                    mediaImageViewer.source = url;
+                    pmcPageStack.pushAndFocus(mediaImageViewer);
+                } else {
+                    console.log("Play is requested")
+                    if (playlistInstance) playlistInstance.active = false;
+                    runtimeData.playUrl(url);
+                    pmcPageStack.pushAndFocus(getMediaPlayer());
+                    mediaPlayerInstance.runtimeDataObject = runtimeData;
                 }
             }
         }
@@ -330,7 +334,46 @@ Item {
             }
         }
     }
-    
+
+    MediaCenterElements.MediaController {
+        id: mediaController
+        anchors {
+            bottom: parent.bottom; horizontalCenter: parent.horizontalCenter
+            bottomMargin: units.smallSpacing * 20
+        }
+        width: parent.width * 0.8
+        height: units.iconSizes.large
+        visible: pmcPageStack.currentPage === mediaPlayerInstance
+            || pmcPageStack.currentPage === imageViewerInstance
+        z: 99
+
+        runtimeDataObject: runtimeData
+        currentMediaTime: mediaPlayerInstance.currentTime
+        totalMediaTime: mediaPlayerInstance.totalTime
+
+        onPlaylistButtonClicked: pmcPageStack.pushAndFocus(getPlaylist())
+        onBackButtonClicked: root.goBack()
+        onPlayerButtonClicked: pmcPageStack.pushAndFocus(getMediaPlayer())
+        onPlayNext: playlistInstance.playNext()
+        onPlayPrevious: playlistInstance.playPrevious()
+        onSeekRequested: {
+            if (mediaPlayerInstance) {
+                mediaPlayerInstance.seekTo(newPosition);
+                pmcInterfaceInstance.mpris2PlayerAdaptor.emitSeeked(newPosition);
+            }
+        }
+        onPlayPause: runtimeData.playPause()
+        onStop: runtimeData.stop()
+        onWantToLoseFocus: pmcPageStack.currentPage.focus = true
+
+        playlistButtonVisible : pmcPageStack.currentPage != playlistInstance
+        playerButtonVisible: mediaPlayerInstance != null && (pmcPageStack.currentPage != mediaPlayerInstance)
+
+        Behavior on opacity {
+            NumberAnimation { duration: 200 }
+        }
+    }
+
     Component {
         id: pmcMediaPlayerComponent
         MediaCenterElements.MediaPlayer {
@@ -356,7 +399,7 @@ Item {
             }
         }
     }
-    
+
     Component {
         id: pmcPlaylistComponent
         MediaCenterElements.Playlist {
@@ -368,7 +411,7 @@ Item {
             }
         }
     }
-    
+
     PMC.RuntimeData {
         id: runtimeData
     }
@@ -384,7 +427,7 @@ Item {
         property: "visible"
         value: !pmcPageStack.visible
     }
-    
+
     Binding {
         target: pmcPageStack; property: "visible"
         value: false; when: pmcPageStack.depth === 1
@@ -397,7 +440,7 @@ Item {
         getPlaylist().visible = false;
         setupMprisPlayer();
     }
-    
+
     Keys.onPressed: {
         switch (event.key) {
             case Qt.Key_Backspace: 

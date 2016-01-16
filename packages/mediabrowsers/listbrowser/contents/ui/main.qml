@@ -65,6 +65,7 @@ FocusScope {
                 height: units.iconSizes.huge
                 clip: !ListView.isCurrentItem
                 checked: ListView.isCurrentItem
+                onClicked: listBrowserRoot.mediaSelected(index, mediaUrl, mediaType)
             }
 
             PlasmaComponents.ScrollBar {

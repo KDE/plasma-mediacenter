@@ -28,20 +28,19 @@ FocusScope {
     property QtObject currentBrowsingBackend
     property QtObject previousBrowsingBackend
     property QtObject backendOverlay
-    
+
     signal backRequested
     signal playRequested(int index, string url, string currentMediaType, variant model)
     signal playAllRequested()
     signal popupMenuRequested(int index, string mediaUrl, string mediaType, string display)
 
-    PMC.MediaBrowserLoader {
+   PMC.MediaBrowserLoader {
         id: loader
     }
 
     Item {
         id: mediaBrowserViewItem
         property QtObject mediaBrowserGridView
-
         anchors {
             fill: parent
         }
@@ -55,6 +54,11 @@ FocusScope {
         print(model);
         var component = Qt.createComponent(loader.getMediaBrowser(currentBrowsingBackend.viewType()));
         var object = component.createObject(mediaBrowserViewItem);
+
+        object.mediaSelected.connect(function(index, mediaUrl, mediaType, model) {
+            mediaBrowser.playRequested(index, mediaUrl, mediaType, model)
+        })
+
         if (object != null) {
             mediaBrowserViewItem.mediaBrowserGridView = object;
             object.focus = true;
@@ -64,12 +68,10 @@ FocusScope {
             print("Failed to create browser");
             print(component.errorString());
         }
-
     }
 
     function goBack()
     {
         return mediaBrowser.currentBrowsingBackend.goOneLevelUp();
     }
-
 }

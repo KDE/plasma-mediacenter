@@ -30,7 +30,6 @@ PlasmaComponents.ListItem {
     id: root
     property QtObject view
 
-    signal playRequested
     enabled: true
 
     RowLayout {
@@ -77,8 +76,8 @@ PlasmaComponents.ListItem {
                         !root.view.moving &&
                         !root.view.flicking)
                         root.view.currentIndex = index
-            onClicked: print ("Foo " + mediaUrl)
-        }
+            onClicked:  root.clicked()
+            }
     }
 
 }
