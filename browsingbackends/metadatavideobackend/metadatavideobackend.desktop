@@ -76,6 +76,7 @@ Comment[sv]=Titta på videorna på en enhet
 Comment[tr]=Cihazınızdaki videoları izleyin
 Comment[uk]=Переглянути відео з вашого пристрою
 Comment[x-test]=xxWatch the videos on your devicexx
+Comment[zh_CN]=观看在您的设备上的视频
 Comment[zh_TW]=看您的裝置上的所有影片
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend

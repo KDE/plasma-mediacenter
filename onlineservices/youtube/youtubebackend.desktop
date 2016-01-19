@@ -78,6 +78,7 @@ Comment[sv]=Titta på videor från YouTube
 Comment[tr]=YouTube'dan video izleyin
 Comment[uk]=Перегляд відео з Youtube
 Comment[x-test]=xxWatch videos from Youtubexx
+Comment[zh_CN]=在 YouTube 上观看视频
 Comment[zh_TW]=觀看 Youtube 的影片
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend

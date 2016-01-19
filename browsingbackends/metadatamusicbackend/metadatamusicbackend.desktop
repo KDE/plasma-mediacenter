@@ -75,6 +75,7 @@ Comment[sv]=Lyssna på musiken på en enhet
 Comment[tr]=Cihazınızdaki müziği dinleyin
 Comment[uk]=Відтворити музичні твори з вашого пристрою
 Comment[x-test]=xxListen to the music on your devicexx
+Comment[zh_CN]=聆听在您的设备上的音乐
 Comment[zh_TW]=聽您的裝置上的所有音樂
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend

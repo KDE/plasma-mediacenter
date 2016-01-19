@@ -82,6 +82,7 @@ Comment[sv]=Titta på bilder från ditt Picasa-konto
 Comment[tr]=Picasa hesabınızdaki resimlerinize bakın
 Comment[uk]=Переглянути зображення з вашого облікового запису Picasa
 Comment[x-test]=xxSee pictures from your Picasa accountxx
+Comment[zh_CN]=查看您的 Picasa 账户上的图片
 Comment[zh_TW]=從您的 Picasa 帳號中觀看圖片
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend
