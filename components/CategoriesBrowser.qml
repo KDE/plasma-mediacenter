@@ -86,7 +86,7 @@ FocusScope {
                         Keys.onPressed: {
                             switch (event.key) {
                                 case Qt.Key_Left: categoriesBar.focus = true; break
-                                casemodel Qt.Key_Escape: backend.back(modelRole); break
+                                case Qt.Key_Escape: backend.back(modelRole); break
                                 default: return
                             }
                             event.accepted = true;
