@@ -42,6 +42,7 @@ Item {
     property QtObject pmcWidgetExploreInstance
     property QtObject mediaPlayerInstance
     property QtObject playlistInstance
+    property QtObject imageViewerInstance
 
     function toggleWidgetExplorer(containment) {
         pmcPageStack.visible = true;
@@ -91,6 +92,13 @@ Item {
             return;
         }
         pmcPageStack.popAndFocus();
+    }
+
+    function getMediaImageViewer() {
+        if (!imageViewerInstance) {
+            imageViewerInstance = pmcImageViewerComponent.createObject(pmcPageStack);
+        }
+        return imageViewerInstance;
     }
 
     onContainmentChanged: {
@@ -264,6 +272,15 @@ Item {
     }
 
     Component {
+        id: pmcImageViewerComponent
+        MediaCenterElements.ImageViewer {
+            id: imageViewer
+            onClicked: toggleController(imageViewerInstance)
+            onSlideshowStarted: hideController(imageViewerInstance)
+        }
+    }
+
+    Component {
         id: backendListDelegate
         Item {
             height: parent.height
@@ -314,7 +331,6 @@ Item {
                     mediaImageViewer.source = url;
                     pmcPageStack.pushAndFocus(mediaImageViewer);
                 } else {
-                    console.log("Play is requested")
                     if (playlistInstance) playlistInstance.active = false;
                     runtimeData.playUrl(url);
                     pmcPageStack.pushAndFocus(getMediaPlayer());

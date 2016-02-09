@@ -55,15 +55,19 @@ FocusScope {
         var component = Qt.createComponent(loader.getMediaBrowser(currentBrowsingBackend.viewType()));
         var object = component.createObject(mediaBrowserViewItem);
 
-        object.mediaSelected.connect(function(index, mediaUrl, mediaType, model) {
-            mediaBrowser.playRequested(index, mediaUrl, mediaType, model)
-        })
+        console.log("ViewItem is = ", mediaBrowserViewItem)
+        console.log("The object is = ", object)
+        console.log("The component is = ", component)
+        console.log("The view type is = ", currentBrowsingBackend.viewType())
 
         if (object != null) {
             mediaBrowserViewItem.mediaBrowserGridView = object;
             object.focus = true;
             object.model = model;
             object.anchors.fill = mediaBrowserViewItem;
+            object.mediaSelected.connect(function(index, mediaUrl, mediaType, model) {
+            mediaBrowser.playRequested(index, mediaUrl, mediaType, model)
+        })
         } else {
             print("Failed to create browser");
             print(component.errorString());
