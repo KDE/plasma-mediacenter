@@ -50,23 +50,26 @@ FocusScope {
         if (!currentBrowsingBackend)
             return;
 
-        var model = currentBrowsingBackend.model();
-        print(model);
+        if (mediaBrowserViewItem.mediaBrowserGridView) {
+            mediaBrowserViewItem.mediaBrowserGridView.destroy();
+        }
+        var thisModel = currentBrowsingBackend.model();
+        print(thisModel)
         var component = Qt.createComponent(loader.getMediaBrowser(currentBrowsingBackend.viewType()));
         var object = component.createObject(mediaBrowserViewItem);
-
-        console.log("ViewItem is = ", mediaBrowserViewItem)
-        console.log("The object is = ", object)
-        console.log("The component is = ", component)
-        console.log("The view type is = ", currentBrowsingBackend.viewType())
+        mediaBrowserViewItem.mediaBrowserGridView = object;
+        object.focus = true;
+        if (mediaBrowser.backendOverlay) {
+                    mediaBrowser.backendOverlay.destroy();
+        }
 
         if (object != null) {
             mediaBrowserViewItem.mediaBrowserGridView = object;
             object.focus = true;
-            object.model = model;
+            object.model = thisModel;
             object.anchors.fill = mediaBrowserViewItem;
             object.mediaSelected.connect(function(index, mediaUrl, mediaType, model) {
-            mediaBrowser.playRequested(index, mediaUrl, mediaType, model)
+            mediaBrowser.playRequested(index, mediaUrl, mediaType, thisModel)
         })
         } else {
             print("Failed to create browser");

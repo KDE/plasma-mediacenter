@@ -44,6 +44,8 @@ Item {
     property QtObject playlistInstance
     property QtObject imageViewerInstance
 
+    //property url _pmc_shadow_image_path: Qt.resolvedUrl("../images/shadow.png")
+
     function toggleWidgetExplorer(containment) {
         pmcPageStack.visible = true;
         pmcPageStack.push(getWidgetExplorer());
@@ -459,9 +461,7 @@ Item {
 
     Keys.onPressed: {
         switch (event.key) {
-            case Qt.Key_Backspace: 
-                goBack(); 
-                break
+            case Qt.Key_Backspace:goBack(); break
             case Qt.Key_Space: runtimeData.playPause(); break
             case Qt.Key_MediaPlay: runtimeData.playPause(); break
             case Qt.Key_MediaNext: playlistInstance.playNext(); break
