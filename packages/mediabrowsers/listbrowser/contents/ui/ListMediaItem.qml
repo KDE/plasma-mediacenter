@@ -49,6 +49,7 @@ PlasmaComponents.ListItem {
         ColumnLayout {
             id: details
             Layout.fillHeight: true; Layout.fillWidth: true
+            Layout.minimumWidth: root.width - coverart.width - durationlabel.Layout.preferredWidth
             PlasmaComponents.Label {
                 Layout.fillHeight: true; Layout.fillWidth: true
                 verticalAlignment: Text.AlignVCenter
@@ -65,8 +66,10 @@ PlasmaComponents.ListItem {
 
         PlasmaComponents.Label {
             id: durationlabel
+            Layout.preferredWidth: units.gridUnit * 5
             Layout.fillWidth: false; Layout.fillHeight: true
             verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
             text: KCoreAddons.Format.formatDuration(mediaDuration * 1000, KCoreAddons.FormatTypes.FoldHours)
         }
 
