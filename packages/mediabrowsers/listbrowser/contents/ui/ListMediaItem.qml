@@ -37,6 +37,7 @@ PlasmaComponents.ListItem {
         anchors.margins: units.smallSpacing
 
         Image {
+            id: coverart
             Layout.fillHeight: true
             Layout.preferredWidth: height
             asynchronous: true
@@ -46,6 +47,7 @@ PlasmaComponents.ListItem {
         }
 
         ColumnLayout {
+            id: details
             Layout.fillHeight: true; Layout.fillWidth: true
             PlasmaComponents.Label {
                 Layout.fillHeight: true; Layout.fillWidth: true
@@ -62,6 +64,7 @@ PlasmaComponents.ListItem {
         }
 
         PlasmaComponents.Label {
+            id: durationlabel
             Layout.fillWidth: false; Layout.fillHeight: true
             verticalAlignment: Text.AlignVCenter
             text: KCoreAddons.Format.formatDuration(mediaDuration * 1000, KCoreAddons.FormatTypes.FoldHours)
