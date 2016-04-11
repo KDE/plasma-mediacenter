@@ -30,6 +30,7 @@ Name[tr]=Sahte Medya Kaynağı
 Name[uk]=Несправжнє медіаджерело
 Name[x-test]=xxFake Mediasourcexx
 Name[zh_CN]=虚拟媒体源
+Name[zh_TW]=假的媒體來源
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/MediaSource
 
