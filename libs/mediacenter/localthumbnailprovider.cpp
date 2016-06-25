@@ -46,7 +46,7 @@ void ThumbnailProvider::loadThumbnails(const QList<QUrl>& fileList, const QSize&
 {
     //FIXME: Why is size unused?
     KFileItemList fileItems;
-    for(auto file : fileItems) {
+    for(const QUrl &file : fileList) {
         //TODO: REMIND: if necessary setDelayedMimeTypes(true)
         //      REMIND: removed isValid() add if required
         fileItems.append(KFileItem(file));
