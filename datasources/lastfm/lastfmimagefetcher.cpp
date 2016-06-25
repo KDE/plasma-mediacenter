@@ -133,7 +133,7 @@ void LastFmImageFetcher::downloadImage(const QString& type, const QString& name,
         return;
     }
     // qDebug() << "Downloading image for " << name << " from " << url;
-    QNetworkReply *reply = m_imageDownloadManager->get(QNetworkRequest(url));
+    QNetworkReply *reply = m_imageDownloadManager->get(QNetworkRequest(QUrl(url)));
     m_currentImageDownloads.insert(reply, QPair<QString,QString>(type, name));
 }
 

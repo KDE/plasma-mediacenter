@@ -83,7 +83,7 @@ QPixmap ThumbnailProvider::requestPixmap(const QString& id, QSize* size, const Q
             return pixmap.scaled(requestedSize, Qt::KeepAspectRatio);
         }
     } else {
-        loadThumbnail(id, QSize(256, 256));
+        loadThumbnail(QUrl(id), QSize(256, 256));
     }
 
     return QPixmap();

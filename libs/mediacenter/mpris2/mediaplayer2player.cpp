@@ -196,7 +196,7 @@ void MediaPlayer2Player::OpenUri(QString uri) const
 {
     QUrl url(uri);
     if (url.isLocalFile()) {
-        emit playUrl(uri);
+        emit playUrl(url);
     }
 }
 

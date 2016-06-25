@@ -42,6 +42,7 @@ set_package_properties(Qt5Multimedia PROPERTIES
         TYPE RUNTIME)
 
 add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
+add_definitions(-DQT_NO_URL_CAST_FROM_STRING)
 
 # Load the frameworks we need
 find_package(KF5 ${KF5_MIN_VERSION} COMPONENTS REQUIRED
