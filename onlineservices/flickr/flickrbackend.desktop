@@ -3,6 +3,7 @@ Type=Service
 Icon=image-x-generic
 Name=Flickr
 Name[ar]=فلِكر
+Name[ast]=Flickr
 Name[bs]=Flikr
 Name[ca]=Flickr
 Name[ca@valencia]=Flickr
@@ -83,6 +84,7 @@ Comment[sv]=Upptäck bilder på Flickr för vald etikett
 Comment[tr]=Seçtiğiniz etiketteki flickr fotoğraflarını keşfedin
 Comment[uk]=Ознайомитися з зображеннями flickr за вказаною вами міткою
 Comment[x-test]=xxDiscover pictures from flickr for your chosen tagxx
+Comment[zh_CN]=根据您选定的标签在 flickr 上浏览图片
 Comment[zh_TW]=從 flickr 中發現您指定標籤的圖片
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/BrowsingBackend

@@ -7,6 +7,7 @@ Name[da]=Falsk mediekilde
 Name[de]=Fingierte Medienquelle
 Name[en_GB]=Fake Mediasource
 Name[es]=Fuente multimedia simulada
+Name[et]=Liba-meediaallikas
 Name[fi]=Testimedialähde
 Name[fr]=Source de média fictive
 Name[gl]=Orixe multimedia falsa
@@ -28,6 +29,7 @@ Name[sv]=Påhittad mediakälla
 Name[tr]=Sahte Medya Kaynağı
 Name[uk]=Несправжнє медіаджерело
 Name[x-test]=xxFake Mediasourcexx
+Name[zh_CN]=虚拟媒体源
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/MediaSource
 

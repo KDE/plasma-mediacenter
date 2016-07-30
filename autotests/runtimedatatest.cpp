@@ -26,8 +26,8 @@
 
 #include <QtTest>
 
-const QString TEST_URL = "uri://test.123";
-const QString TEST_URL2 = "uri://test.234";
+static const QUrl TEST_URL("uri://test.123");
+static const QUrl TEST_URL2("uri://test.234");
 
 QTEST_GUILESS_MAIN(TestRuntimeData);
 
@@ -57,10 +57,10 @@ void TestRuntimeData::testPlayUrl()
     runtimeData.setTestMode(true);
     //First try setting url
     runtimeData.playUrl(TEST_URL);
-    QCOMPARE(runtimeData.property("url").toString(), TEST_URL);
+    QCOMPARE(runtimeData.property("url").toString(), TEST_URL.toString());
     //Now again play different url
     runtimeData.playUrl(TEST_URL2);
-    QCOMPARE(runtimeData.property("url").toString(), TEST_URL2);
+    QCOMPARE(runtimeData.property("url").toString(), TEST_URL2.toString());
 }
 
 void TestRuntimeData::testVolumeAndMuteFunction()
