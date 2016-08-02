@@ -8,6 +8,7 @@ Name[de]=LastFmImageFetcher
 Name[el]=LastFmImageFetcher
 Name[en_GB]=LastFmImageFetcher
 Name[es]=Extractor de imágenes de LastFM
+Name[et]=LastFmImageFetcher
 Name[fi]=LastFmImageFetcher
 Name[gl]=LastFmImageFetcher
 Name[it]=RecuperoImmaginiLastFm
@@ -27,7 +28,6 @@ Name[sv]=Senaste FM-bildhämtare
 Name[uk]=Засіб отримання зображень з LastFm
 Name[x-test]=xxLastFmImageFetcherxx
 Name[zh_CN]=获取 LastFm 图片
-Name[zh_TW]=LastFmImageFetcher
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/DataSource
 
