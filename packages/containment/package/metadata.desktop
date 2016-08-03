@@ -2,6 +2,12 @@
 Encoding=UTF-8
 Keywords=
 Name=Mediacenter Containment
+Name[ca]=Contenidor del centre multimèdia
+Name[ca@valencia]=Contenidor del centre multimèdia
+Name[pt]=Contentor de Centro Multimédia
+Name[sv]=Mediacenter-omgivning
+Name[uk]=Контейнер мультимедійного центру
+Name[x-test]=xxMediacenter Containmentxx
 Type=Service
 
 NoDisplay=true

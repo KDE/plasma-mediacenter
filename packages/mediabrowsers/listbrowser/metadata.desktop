@@ -1,7 +1,25 @@
 [Desktop Entry]
 Name=List Browser
+Name[ca]=Navegador en llista
+Name[ca@valencia]=Navegador en llista
+Name[pt]=Navegador em Lista
+Name[sv]=Listbläddrare
+Name[uk]=Перегляд списком
+Name[x-test]=xxList Browserxx
 Comment=Shows media files in List
+Comment[ca]=Mostra els fitxers multimèdia en una llista
+Comment[ca@valencia]=Mostra els fitxers multimèdia en una llista
+Comment[pt]=Mostra os ficheiros multimédia numa lista
+Comment[sv]=Visar mediafiler i en lista
+Comment[uk]=Показує список з мультимедійних файлів
+Comment[x-test]=xxShows media files in Listxx
 GenericName=List Browser
+GenericName[ca]=Navegador en llista
+GenericName[ca@valencia]=Navegador en llista
+GenericName[pt]=Navegador em Lista
+GenericName[sv]=Listbläddrare
+GenericName[uk]=Перегляд списком
+GenericName[x-test]=xxList Browserxx
 Type=Service
 
 X-KDE-PluginInfo-Author=Bhushan Shah

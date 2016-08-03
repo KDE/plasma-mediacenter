@@ -1,7 +1,25 @@
 [Desktop Entry]
 Name=Grid Browser
+Name[ca]=Navegador en graella
+Name[ca@valencia]=Navegador en graella
+Name[pt]=Navegador em Grelha
+Name[sv]=Rutbläddrare
+Name[uk]=Перегляд таблицею
+Name[x-test]=xxGrid Browserxx
 Comment=Shows media files in grid
+Comment[ca]=Mostra els fitxers multimèdia en una graella
+Comment[ca@valencia]=Mostra els fitxers multimèdia en una graella
+Comment[pt]=Mostra os ficheiros multimédia numa grelha
+Comment[sv]=Visar mediafiler i ett rutmönster
+Comment[uk]=Показує таблицю з мультимедійних файлів
+Comment[x-test]=xxShows media files in gridxx
 GenericName=Grid Browser
+GenericName[ca]=Navegador en graella
+GenericName[ca@valencia]=Navegador en graella
+GenericName[pt]=Navegador em Grelha
+GenericName[sv]=Rutbläddrare
+GenericName[uk]=Перегляд таблицею
+GenericName[x-test]=xxGrid Browserxx
 Type=Service
 
 X-KDE-PluginInfo-Author=Bhushan Shah
