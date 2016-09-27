@@ -23,7 +23,7 @@
 #include <QObject>
 #include <abstractmediasource.h>
 
-class FakeMediaSource : public MediaCenter::AbstractMediaSource
+class FakeMediaSource : public KMediaCollection::AbstractMediaSource
 
 {
     Q_OBJECT

@@ -23,11 +23,11 @@
 #include <QtCore/QList>
 #include <QtCore/QFile>
 
-#include "mediacenter_export.h"
-#include "mediacenter.h"
+#include "kmediacollection_export.h"
+#include "kmediacollection.h"
 
 class KCmdLineArgs;
-class MEDIACENTER_EXPORT PlaylistModel : public QAbstractListModel
+class KMEDIACOLLECTION_EXPORT PlaylistModel : public QAbstractListModel
 {
     Q_OBJECT
     Q_PROPERTY(int currentIndex READ currentIndex NOTIFY currentIndexChanged)
@@ -35,7 +35,7 @@ class MEDIACENTER_EXPORT PlaylistModel : public QAbstractListModel
 
 public:
     enum Roles {
-        MediaArtistRole = MediaCenter::AdditionalRoles + 1,
+        MediaArtistRole = KMediaCollection::AdditionalRoles + 1,
         MediaLengthRole,
         OriginalIndexRole
     };

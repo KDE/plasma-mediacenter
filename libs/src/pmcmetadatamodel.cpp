@@ -74,7 +74,7 @@ PmcMetadataModel::PmcMetadataModel(QObject* parent, MediaLibrary* mediaLibrary):
 {
     d->mediaLibrary = mediaLibrary ? mediaLibrary : SingletonFactory::instanceFor<MediaLibrary>();
 
-    setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
+    setRoleNames(KMediaCollection::appendAdditionalMediaRoles(roleNames()));
 
     d->previewTimer.setSingleShot(true);
     connect(&d->previewTimer, &QTimer::timeout, this, &PmcMetadataModel::delayedPreview);
@@ -96,16 +96,16 @@ void PmcMetadataModel::updateModel()
     emit queryStarted();
 }
 
-void PmcMetadataModel::showMediaType(MediaCenter::MediaType mediaType)
+void PmcMetadataModel::showMediaType(KMediaCollection::MediaType mediaType)
 {
     switch (mediaType) {
-        case MediaCenter::Music:
+        case KMediaCollection::Music:
             d->currentMode = Music;
             break;
-        case MediaCenter::Picture:
+        case KMediaCollection::Picture:
             d->currentMode = Picture;
             break;
-        case MediaCenter::Video:
+        case KMediaCollection::Video:
             d->currentMode = Video;
     }
     const QString mediaTypeString = d->modeForMediaType.key(d->currentMode);
@@ -252,23 +252,23 @@ QVariant PmcMetadataModel::dataForMedia(const QModelIndex &index, int role) cons
     const QSharedPointer<PmcMedia> media = qSharedPointerObjectCast<PmcMedia>(mediaObject);
 
     switch (role) {
-    case MediaCenter::ResourceIdRole:
+    case KMediaCollection::ResourceIdRole:
         return media->sha();
-    case MediaCenter::MediaUrlRole:
+    case KMediaCollection::MediaUrlRole:
         return media->url();
-    case MediaCenter::MediaTypeRole:
+    case KMediaCollection::MediaTypeRole:
         return media->type();
     case Qt::DisplayRole:
         return media->title();
-    case MediaCenter::AlbumRole:
+    case KMediaCollection::AlbumRole:
         return media->album();
-    case MediaCenter::ArtistRole:
+    case KMediaCollection::ArtistRole:
         return media->artist();
-    case MediaCenter::RatingRole:
+    case KMediaCollection::RatingRole:
         return media->rating();
-    case MediaCenter::DurationRole:
+    case KMediaCollection::DurationRole:
         return media->duration();
-    case MediaCenter::GenreRole:
+    case KMediaCollection::GenreRole:
         return media->genre();
     case Qt::DecorationRole:
         if (media->type() == "video") {
@@ -281,9 +281,9 @@ QVariant PmcMetadataModel::dataForMedia(const QModelIndex &index, int role) cons
         } else {
             return media->thumbnail();
         }
-    case MediaCenter::CreatedAtRole:
+    case KMediaCollection::CreatedAtRole:
         return media->createdAt();
-    case MediaCenter::HideLabelRole:
+    case KMediaCollection::HideLabelRole:
         return false;
     }
 
@@ -301,11 +301,11 @@ QVariant PmcMetadataModel::dataForAlbum(int row, int role) const
         return album->name();
     case Qt::DecorationRole:
         return getAlbumArt(album->name(), album->albumArtist(), resourceId);
-    case MediaCenter::IsExpandableRole:
+    case KMediaCollection::IsExpandableRole:
         return true;
-    case MediaCenter::HideLabelRole:
+    case KMediaCollection::HideLabelRole:
         return false;
-    case MediaCenter::MediaCountRole:
+    case KMediaCollection::MediaCountRole:
         return album->mediaCount();
 
     }
@@ -324,11 +324,11 @@ QVariant PmcMetadataModel::dataForArtist(int row, int role) const
         return artist->name();
     case Qt::DecorationRole:
         return getArtistImage(artist->name(), resourceId);
-    case MediaCenter::IsExpandableRole:
+    case KMediaCollection::IsExpandableRole:
         return true;
-    case MediaCenter::HideLabelRole:
+    case KMediaCollection::HideLabelRole:
         return false;
-    case MediaCenter::MediaCountRole:
+    case KMediaCollection::MediaCountRole:
         return artist->mediaCount();
    }
 

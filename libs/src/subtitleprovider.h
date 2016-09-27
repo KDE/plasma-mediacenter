@@ -28,7 +28,7 @@
 #include <QtCore/QStringList>
 #include <QtCore/QUrl>
 
-#include "mediacenter_export.h"
+#include "kmediacollection_export.h"
 
 struct Subtitle {
     int id;
@@ -52,7 +52,7 @@ struct Subtitle {
   * @description  This class is a basis to provide the srt subtitles to a video file.
   *
   */
-class MEDIACENTER_EXPORT SubtitleProvider : public QObject
+class KMEDIACOLLECTION_EXPORT SubtitleProvider : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString subtitle READ subtitle NOTIFY subtitleChanged);

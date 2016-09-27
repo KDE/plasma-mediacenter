@@ -18,13 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef MEDIACENTERPLUGIN_H
-#define MEDIACENTERPLUGIN_H
+#ifndef KMMEDIACOLLECTIONPLUGIN_H
+#define KMMEDIACOLLECTIONPLUGIN_H
 
 #include <QtQml>
 #include <QQmlExtensionPlugin>
 
-class MediaCenterPlugin : public QQmlExtensionPlugin
+class KMediaCollectionPlugin : public QQmlExtensionPlugin
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QQmlExtensionInterface")

@@ -28,7 +28,7 @@
 #include "mediavalidator.h"
 
 #include "medialibrary.h"
-#include "mediacenter.h"
+#include "kmediacollection.h"
 
 #include "pmcmedia.h"
 #include "pmcalbum.h"

@@ -26,7 +26,7 @@
 VideoDetailsModel::VideoDetailsModel(QObject* parent): QAbstractListModel(parent),
                                      m_videoTitle ("Play")
 {
-    setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
+    setRoleNames(KMediaCollection::appendAdditionalMediaRoles(roleNames()));
 }
 
 VideoDetailsModel::~VideoDetailsModel()
@@ -44,17 +44,17 @@ QVariant VideoDetailsModel::data(const QModelIndex& index, int role) const
 {
     Q_UNUSED(index);
     switch (role) {
-        case MediaCenter::HideLabelRole:
+        case KMediaCollection::HideLabelRole:
             return false;
         case Qt::DecorationRole:
             return m_videoThumbnail;
-        case MediaCenter::MediaUrlRole:
+        case KMediaCollection::MediaUrlRole:
             return m_videoUrl;
         case Qt::DisplayRole:
             return m_videoTitle;
-        case MediaCenter::MediaTypeRole:
+        case KMediaCollection::MediaTypeRole:
             return "video";
-        case MediaCenter::IsExpandableRole:
+        case KMediaCollection::IsExpandableRole:
             return false;
     }
     return QVariant();

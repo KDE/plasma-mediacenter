@@ -15,19 +15,19 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef MEDIACENTER_PMCMODEL_H
-#define MEDIACENTER_PMCMODEL_H
+#ifndef KMMEDIACOLLECTION_PMCMODEL_H
+#define KMMEDIACOLLECTION_PMCMODEL_H
 
 #include <QObject>
 #include <QMap>
 #include <QVariant>
 #include <QMetaType>
 
-#include "mediacenter_export.h"
+#include "kmediacollection_export.h"
 
 typedef QMap<QString, QVariant> ParentData;
 
-class MEDIACENTER_EXPORT PmcModel : public QObject
+class KMEDIACOLLECTION_EXPORT PmcModel : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString name READ name NOTIFY nameChanged)
@@ -81,4 +81,4 @@ private:
     Private * const d;
 };
 
-#endif // MEDIACENTER_PMCMODEL_H
+#endif // KMMEDIACOLLECTION_PMCMODEL_H

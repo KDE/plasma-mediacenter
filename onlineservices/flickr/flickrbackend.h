@@ -23,7 +23,7 @@
 
 #include <mediacenter/abstractbrowsingbackend.h>
 
-class FlickrBackend : public MediaCenter::AbstractBrowsingBackend
+class FlickrBackend : public KMediaCollection::AbstractBrowsingBackend
 {
     Q_OBJECT
 public:

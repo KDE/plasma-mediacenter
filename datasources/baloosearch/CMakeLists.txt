@@ -15,7 +15,7 @@ add_library(pmc_baloosearch MODULE ${baloosearch_SRCS})
 set_target_properties(pmc_baloosearch PROPERTIES PREFIX "")
 
 target_link_libraries(pmc_baloosearch
-    libmedia
+    KMediaCollection
     Qt5::DBus
     KF5::Baloo
     KF5::FileMetaData

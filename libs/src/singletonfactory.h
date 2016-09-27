@@ -24,9 +24,9 @@
 
 #include <typeinfo>
 
-#include "mediacenter_export.h"
+#include "kmediacollection_export.h"
 
-class MEDIACENTER_EXPORT SingletonFactory
+class KMEDIACOLLECTION_EXPORT SingletonFactory
 {
 public:
     template <class T> static T* instanceFor()

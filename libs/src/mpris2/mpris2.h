@@ -18,10 +18,10 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#ifndef MEDIACENTER_MPRIS2_H
-#define MEDIACENTER_MPRIS2_H
+#ifndef KMMEDIACOLLECTION_MPRIS2_H
+#define KMMEDIACOLLECTION_MPRIS2_H
 
-#include "mediacenter_export.h"
+#include "kmediacollection_export.h"
 #include "playlistmodel.h"
 
 #include <QObject>
@@ -32,7 +32,7 @@ class MediaPlayer2;
 class MediaPlayer2Player;
 class MediaPlayer2Tracklist;
 
-class MEDIACENTER_EXPORT Mpris2 : public QObject
+class KMEDIACOLLECTION_EXPORT Mpris2 : public QObject
 {
     Q_OBJECT
 
@@ -54,4 +54,4 @@ private:
     MediaPlayer2Tracklist *m_mp2tl;
 };
 
-#endif //MEDIACENTER_MPRIS2_H
+#endif //MEDIACOLLECTION_MPRIS2_H

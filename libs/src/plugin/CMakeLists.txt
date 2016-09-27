@@ -1,14 +1,14 @@
-set (mediacenterplugin_SRCS
+set (lmediacollectionplugin_SRCS
     qmlaccess.cpp
-    mediacenterplugin.cpp
+    kmediacollectionplugin.cpp
 )
 
-add_library(mediacenterplugin SHARED ${mediacenterplugin_SRCS} )
+add_library(KMediaCollectionPlugin SHARED ${kmediacollectionplugin_SRCS} )
 
-target_link_libraries(mediacenterplugin
-    libmedia
+target_link_libraries(KMediaCollectionPlugin
+    KMediaCollection
     Qt5::Qml
 )
 
-install(TARGETS mediacenterplugin DESTINATION ${QML_INSTALL_DIR}/org/kde/plasma/mediacenter)
-install(FILES qmldir DESTINATION ${QML_INSTALL_DIR}/org/kde/plasma/mediacenter)
+install(TARGETS KMediaCollectionPlugin DESTINATION ${QML_INSTALL_DIR}/org/kde/plasma/mediacollection)
+install(FILES qmldir DESTINATION ${QML_INSTALL_DIR}/org/kde/plasma/mediacollection)

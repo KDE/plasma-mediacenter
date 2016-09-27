@@ -21,7 +21,7 @@
 
 #include <singletonfactory.h>
 #include <medialibrary.h>
-#include <mediacenter.h>
+#include <kmediacollection.h>
 
 #include <QFile>
 #include <QTimer>
@@ -65,12 +65,12 @@ void FakeMediaSource::parseJsonFile()
         QJsonObject mediaprop = (*media).toObject();
         QHash<int, QString> properties;
         properties.insert(Qt::DisplayRole, mediaprop.value("title").toString());
-        properties.insert(MediaCenter::AlbumRole, mediaprop.value("album").toString());
-        properties.insert(MediaCenter::MediaUrlRole, mediaprop.value("url").toString());
-        properties.insert(MediaCenter::ArtistRole, mediaprop.value("artist").toString());
+        properties.insert(KMediaCollection::AlbumRole, mediaprop.value("album").toString());
+        properties.insert(KMediaCollection::MediaUrlRole, mediaprop.value("url").toString());
+        properties.insert(KMediaCollection::ArtistRole, mediaprop.value("artist").toString());
         properties.insert(4444, mediaprop.value("mimeType").toString());
-        properties.insert(MediaCenter::DurationRole, mediaprop.value("duration").toString());
-        properties.insert(MediaCenter::AlbumArtistRole, mediaprop.value("albumArtist").toString());
+        properties.insert(KMediaCollection::DurationRole, mediaprop.value("duration").toString());
+        properties.insert(KMediaCollection::AlbumArtistRole, mediaprop.value("albumArtist").toString());
         addMedia(properties);
     }
 }
@@ -82,20 +82,20 @@ inline QString FakeMediaSource::getMediaFileName()
 
 void FakeMediaSource::addMedia(QHash< int, QString > properties)
 {
-    QString rawUrl = properties.value(MediaCenter::MediaUrlRole);
+    QString rawUrl = properties.value(KMediaCollection::MediaUrlRole);
     QString mediaType = properties.value(4444);
     QHash <int, QVariant> values;
     values.insert(Qt::DisplayRole, QVariant(properties.value(Qt::DisplayRole)));
-    values.insert(MediaCenter::MediaUrlRole, QVariant(rawUrl));
-    values.insert(MediaCenter::MediaTypeRole, QVariant(mediaType));
+    values.insert(KMediaCollection::MediaUrlRole, QVariant(rawUrl));
+    values.insert(KMediaCollection::MediaTypeRole, QVariant(mediaType));
 
     if (mediaType == "audio") {
-        values.insert(MediaCenter::DurationRole, properties.value(MediaCenter::DurationRole));
-        values.insert(MediaCenter::ArtistRole, properties.value(MediaCenter::ArtistRole));
-        values.insert(MediaCenter::AlbumRole, properties.value(MediaCenter::AlbumRole));
-        values.insert(MediaCenter::AlbumArtistRole, properties.value(MediaCenter::AlbumArtistRole));
+        values.insert(KMediaCollection::DurationRole, properties.value(KMediaCollection::DurationRole));
+        values.insert(KMediaCollection::ArtistRole, properties.value(KMediaCollection::ArtistRole));
+        values.insert(KMediaCollection::AlbumRole, properties.value(KMediaCollection::AlbumRole));
+        values.insert(KMediaCollection::AlbumArtistRole, properties.value(KMediaCollection::AlbumArtistRole));
     } else if (mediaType == "video") {
-        values.insert(MediaCenter::DurationRole, properties.value(MediaCenter::DurationRole));
+        values.insert(KMediaCollection::DurationRole, properties.value(KMediaCollection::DurationRole));
     }
     SingletonFactory::instanceFor<MediaLibrary>()->updateMedia(rawUrl, values);
 }

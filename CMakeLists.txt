@@ -51,7 +51,7 @@ find_package(KF5 ${KF5_MIN_VERSION} COMPONENTS REQUIRED
 find_package(KF5Baloo)
 add_feature_info("KF5Baloo" KF5Baloo_FOUND "Required for Baloo integration")
 find_package(Taglib REQUIRED)
-find_package(LibMedia REQUIRED)
+find_package(KMediaCollection REQUIRED)
 
 include_directories(
     ${TAGLIB_INCLUDES}
@@ -79,11 +79,8 @@ add_subdirectory(datasources)
 #add_subdirectory(onlineservices)
 add_subdirectory(mediaelements)
 add_subdirectory(components)
-#add_subdirectory(libs)
 add_subdirectory(packages)
 add_subdirectory(images)
-#add_subdirectory(tests)
-#add_subdirectory(autotests)
 #
 # include(MacroOptionalAddSubdirectory)
 # macro_optional_add_subdirectory( po )

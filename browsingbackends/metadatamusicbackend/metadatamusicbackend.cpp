@@ -33,7 +33,7 @@
 #include <QQmlEngine>
 #include <QTimer>
 
-MEDIACENTER_EXPORT_BROWSINGBACKEND(MetadataMusicBackend, "metadatamusicbackend.json")
+KMEDIACOLLECTION_EXPORT_BROWSINGBACKEND(MetadataMusicBackend, "metadatamusicbackend.json")
 
 namespace {
     static const QString s_showAllButton = i18nd("plasma-mediacenter", "Show All");
@@ -110,7 +110,7 @@ void MetadataMusicBackend::initializeModels()
 {
     m_albumsModel->showAlbums();
     m_artistsModel->showArtist();
-    m_musicModel->showMediaType(MediaCenter::Music);
+    m_musicModel->showMediaType(KMediaCollection::Music);
     updateModelAccordingToFilters();
 }
 
@@ -128,13 +128,13 @@ void MetadataMusicBackend::updateModelAccordingToFilters()
 {
     if (!m_albumFilter.isEmpty()) {
         m_musicFilteredByAlbumModel->clearFilters();
-        m_musicFilteredByAlbumModel->setFilter(MediaCenter::AlbumRole, m_albumFilter);
+        m_musicFilteredByAlbumModel->setFilter(KMediaCollection::AlbumRole, m_albumFilter);
         m_musicFilteredByAlbumPmcModel->setName(m_albumFilter);
         replaceModel(m_albumsPmcModel, m_musicFilteredByAlbumPmcModel);
     }
     if (!m_artistFilter.isEmpty()) {
         m_musicFilteredByArtistModel->clearFilters();
-        m_musicFilteredByArtistModel->setFilter(MediaCenter::ArtistRole, m_artistFilter);
+        m_musicFilteredByArtistModel->setFilter(KMediaCollection::ArtistRole, m_artistFilter);
         m_musicFilteredByArtistPmcModel->setName(m_artistFilter);
         replaceModel(m_artistsPmcModel, m_musicFilteredByArtistPmcModel);
     }
@@ -211,7 +211,7 @@ QStringList MetadataMusicBackend::allMedia()
     QStringList mediaList;
     for (int i=0; i<m_musicFilteredModel->rowCount(); ++i) {
         const auto index = m_musicFilteredModel->index(i, 0);
-        const auto url = m_musicFilteredModel->data(index, MediaCenter::MediaUrlRole).toString();
+        const auto url = m_musicFilteredModel->data(index, KMediaCollection::MediaUrlRole).toString();
         const auto songAndItsInfo = m_musicFilteredModel->data(index, Qt::DisplayRole).toList();
         const auto name = songAndItsInfo.length() ? songAndItsInfo.at(0).toString() : QString();
         if (!url.isEmpty() && !name.isEmpty()) {

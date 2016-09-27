@@ -18,16 +18,16 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#ifndef MEDIACENTER_MEDIAPLAYER2_H
-#define MEDIACENTER_MEDIAPLAYER2_H
+#ifndef KMMEDIACOLLECTION_MEDIAPLAYER2_H
+#define KMMEDIACOLLECTION_MEDIAPLAYER2_H
 
-#include "mediacenter_export.h"
+#include "kmediacollection_export.h"
 
 #include <QDBusAbstractAdaptor>
 #include <QStringList>
 
 
-class MEDIACENTER_EXPORT MediaPlayer2 : public QDBusAbstractAdaptor
+class KMEDIACOLLECTION_EXPORT MediaPlayer2 : public QDBusAbstractAdaptor
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.mpris.MediaPlayer2") // Docs: http://specifications.freedesktop.org/mpris-spec/latest/Media_Player.html
@@ -65,4 +65,4 @@ signals:
 
 };
 
-#endif //MEDIACENTER_MEDIAPLAYER2_H
+#endif //MEDIACOLLECTION_MEDIAPLAYER2_H

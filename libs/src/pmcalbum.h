@@ -19,7 +19,7 @@
 #ifndef PMCALBUM_H
 #define PMCALBUM_H
 
-#include "mediacenter_export.h"
+#include "kmediacollection_export.h"
 #include "media.h"
 
 #include <QObject>
@@ -27,7 +27,7 @@
 
 class Album;
 
-class MEDIACENTER_EXPORT PmcAlbum : public QObject
+class KMEDIACOLLECTION_EXPORT PmcAlbum : public QObject
 {
     Q_OBJECT
 public:

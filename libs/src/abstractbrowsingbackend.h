@@ -25,12 +25,12 @@
 #include <KConfigGroup>
 #include <KPluginInfo>
 
-#include "mediacenter_export.h"
-#include "mediacenter.h"
+#include "kmediacollection_export.h"
+#include "kmediacollection.h"
 
 class PmcModel;
 
-namespace MediaCenter {
+namespace KMediaCollection {
 
 /**
  * @class AbstractBrowsingBackend @author Alessandro Diaferia
@@ -44,7 +44,7 @@ namespace MediaCenter {
  * extension purposes. It just represents an interface between the applet and the
  * provided model.
  */
-class MEDIACENTER_EXPORT AbstractBrowsingBackend : public QObject
+class KMEDIACOLLECTION_EXPORT AbstractBrowsingBackend : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
@@ -153,7 +153,7 @@ public:
     Q_INVOKABLE virtual bool expand(int row);
 
     /**
-     * Override this method and emit the busyChanged() signal to tell the mediacenter
+     * Override this method and emit the busyChanged() signal to tell the mediacollection
      * that the backend is busy doing something
      *
      * @return whether the backend is busy
@@ -161,7 +161,7 @@ public:
     virtual bool busy() const;
 
     /**
-     * This method will be called by mediacenter when one of the buttons is clicked.
+     * This method will be called by mediacollection when one of the buttons is clicked.
      * The default implementation does nothing
      *
      * @param buttonName the name of the button that was clicked
@@ -221,7 +221,7 @@ protected:
      * This is a convenience function which constructs a string representing QML source for
      * loading an item of name itemName which exists in componentDirName
      *
-     * @param componentDirName name of the dir (relative to org.kde.plasma.mediacenter.elements
+     * @param componentDirName name of the dir (relative to org.kde.plasma.mediacollection.elements
      * @param versionString version of the item as specified in qmldir in componentDirName
      * @param itemName name of the item as specified in qmldir in componentDirName
      */
@@ -258,11 +258,11 @@ private:
     AbstractBrowsingBackendPrivate * const d;
 };
 
-} // MediaCenter namespace
+} // KMediaCollection namespace
 
 Q_DECLARE_METATYPE(QAbstractItemModel*)
 
-#define MEDIACENTER_EXPORT_BROWSINGBACKEND(classname, jsonfile) \
+#define KMEDIACOLLECTION_EXPORT_BROWSINGBACKEND(classname, jsonfile) \
         K_PLUGIN_FACTORY_WITH_JSON(MediaBrowserFactory, jsonfile, registerPlugin<classname>();)
 
 #endif // ABSTRACTBROWSINGBACKEND_H

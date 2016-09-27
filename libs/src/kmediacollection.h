@@ -16,17 +16,17 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#ifndef MEDIACENTER_H
-#define MEDIACENTER_H
+#ifndef KMEDIACOLLECTION_H
+#define KMEDIACOLLECTION_H
 
-#include "mediacenter_export.h"
+#include "kmediacollection_export.h"
 
 #include <Qt>
 #include <QPair>
 #include <QHash>
 #include <QString>
 
-namespace MediaCenter {
+namespace KMediaCollection {
 
 enum AdditionalMediaRoles {
     MediaUrlRole = Qt::UserRole + 1,
@@ -52,8 +52,8 @@ enum MediaType {
     Video
 };
 
-MEDIACENTER_EXPORT QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> &roles);
-MEDIACENTER_EXPORT QString dataDirForComponent (const QString &component = QString());
-} // namespace MediaCenter
+KMEDIACOLLECTION_EXPORT QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> &roles);
+KMEDIACOLLECTION_EXPORT QString dataDirForComponent (const QString &component = QString());
+} // namespace KMediaCollection
 
-#endif // MEDIACENTER_H
+#endif // KMEDIACOLLECTION_H

@@ -21,7 +21,7 @@
 #ifndef MEDIAPLAYER2PLAYER_H
 #define MEDIAPLAYER2PLAYER_H
 
-#include "mediacenter_export.h"
+#include "kmediacollection_export.h"
 
 #include <QDBusAbstractAdaptor>
 #include <QDBusObjectPath>
@@ -31,7 +31,7 @@
 #include "runtimedata.h"
 
 
-class MEDIACENTER_EXPORT MediaPlayer2Player : public QDBusAbstractAdaptor
+class KMEDIACOLLECTION_EXPORT MediaPlayer2Player : public QDBusAbstractAdaptor
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.mpris.MediaPlayer2.Player") // Docs: http://specifications.freedesktop.org/mpris-spec/latest/Player_Interface.html

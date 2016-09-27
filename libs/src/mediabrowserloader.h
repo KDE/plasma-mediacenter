@@ -24,9 +24,9 @@
 #include <QObject>
 #include <QString>
 
-#include "mediacenter_export.h"
+#include "kmediacollection_export.h"
 
-class MEDIACENTER_EXPORT MediaBrowserLoader : public QObject
+class KMEDIACOLLECTION_EXPORT MediaBrowserLoader : public QObject
 {
     Q_OBJECT
 public:

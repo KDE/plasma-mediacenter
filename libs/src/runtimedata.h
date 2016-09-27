@@ -25,9 +25,9 @@
 #include <QObject>
 #include <QUrl>
 
-#include "mediacenter_export.h"
+#include "kmediacollection_export.h"
 
-class MEDIACENTER_EXPORT RuntimeData : public QObject
+class KMEDIACOLLECTION_EXPORT RuntimeData : public QObject
 {
     Q_OBJECT
     Q_ENUMS(PmcStatus)

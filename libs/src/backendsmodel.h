@@ -19,17 +19,17 @@
 #ifndef BACKENDSMODEL_H
 #define BACKENDSMODEL_H
 
-#include "mediacenter_export.h"
+#include "kmediacollection_export.h"
 
 #include <QAbstractItemModel>
 
 #include <KPluginInfo>
 
-namespace MediaCenter {
+namespace KMediaCollection {
     class AbstractBrowsingBackend;
 }
 
-class MEDIACENTER_EXPORT BackendsModel : public QAbstractListModel
+class KMEDIACOLLECTION_EXPORT BackendsModel : public QAbstractListModel
 {
     Q_OBJECT
 public:

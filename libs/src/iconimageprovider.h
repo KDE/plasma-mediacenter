@@ -23,9 +23,9 @@
 
 #include <QQuickImageProvider>
 
-#include "mediacenter_export.h"
+#include "kmediacollection_export.h"
 
-class MEDIACENTER_EXPORT IconImageProvider : public QQuickImageProvider
+class KMEDIACOLLECTION_EXPORT IconImageProvider : public QQuickImageProvider
 {
 public:
     static const char *identificationString;

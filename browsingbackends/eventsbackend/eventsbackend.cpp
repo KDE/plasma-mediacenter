@@ -53,7 +53,7 @@ bool EventsBackend::initImpl()
 
     m_eventsFilterModel = new EventsFilterModel(this);
     m_eventsFilterModel->setSourceModel(m_eventsPicturesModel);
-    m_eventsFilterModel->setSortRole(MediaCenter::CreatedAtRole);
+    m_eventsFilterModel->setSortRole(KMediaCollection::CreatedAtRole);
     m_eventsFilterModel->sort(0, Qt::DescendingOrder);
     m_eventsFilterPmcModel = new PmcModel(m_eventsFilterModel, this);
 

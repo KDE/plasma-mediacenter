@@ -31,7 +31,7 @@ namespace {
 }
 
 PicasaBackend::PicasaBackend(QObject* parent, const QVariantList& args):
-                             MediaCenter::AbstractBrowsingBackend(parent, args)
+                             KMediaCollection::AbstractBrowsingBackend(parent, args)
 {
     setButtons(QStringList() << loginButtonText);
     QTimer::singleShot(2000, this, SLOT(showLoginScreen()));
@@ -48,7 +48,7 @@ bool PicasaBackend::goOneLevelUp()
     if(picasaModel != NULL) {
         return picasaModel->goBack();
     }
-    return MediaCenter::AbstractBrowsingBackend::goOneLevelUp();
+    return KMediaCollection::AbstractBrowsingBackend::goOneLevelUp();
 }
 
 void PicasaBackend::login(const QString& username, const QString& password)

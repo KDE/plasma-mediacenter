@@ -28,7 +28,7 @@
 #include <QDebug>
 #include <pmcmodel.h>
 
-MEDIACENTER_EXPORT_BROWSINGBACKEND(MetadataVideoBackend, "metadatavideobackend.json")
+KMEDIACOLLECTION_EXPORT_BROWSINGBACKEND(MetadataVideoBackend, "metadatavideobackend.json")
 
 MetadataVideoBackend::MetadataVideoBackend(QObject* parent, const QVariantList& args)
     : AbstractBrowsingBackend(parent, args)
@@ -45,7 +45,7 @@ bool MetadataVideoBackend::initImpl()
 
     FilterMediaModel *filteredModel = new FilterMediaModel(this);
     filteredModel->setSourceModel(model);
-    filteredModel->setSortRole(MediaCenter::CreatedAtRole);
+    filteredModel->setSortRole(KMediaCollection::CreatedAtRole);
     filteredModel->sort(0, Qt::DescendingOrder);
     PmcModel *metadata = new PmcModel(filteredModel, this);
     metadata->setName("All videos");

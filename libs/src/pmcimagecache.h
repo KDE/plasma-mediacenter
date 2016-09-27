@@ -23,9 +23,9 @@
 
 #include <KImageCache>
 
-#include "mediacenter_export.h"
+#include "kmediacollection_export.h"
 
-class MEDIACENTER_EXPORT PmcImageCache : public QObject
+class KMEDIACOLLECTION_EXPORT PmcImageCache : public QObject
 {
     Q_OBJECT
 public:

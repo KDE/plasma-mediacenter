@@ -28,9 +28,9 @@
 
 #include "abstractdatasource.h"
 #include <pmcmedia.h>
-#include <mediacenter_export.h>
+#include <kmediacollection_export.h>
 
-class LastFmImageFetcher : public MediaCenter::AbstractDataSource
+class LastFmImageFetcher : public KMediaCollection::AbstractDataSource
 {
     Q_OBJECT
 public:

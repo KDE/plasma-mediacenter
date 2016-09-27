@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2009-2010 by Alessandro Diaferia <alediaferia@gmail.com>            *
+ *   Copyright 2014 by Sinny Kumari <ksinny@gmail.com>                             *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,40 +16,23 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#include "mediacenter.h"
+#ifndef KMEDIACOLLECTIONTEST_H
+#define KMEDIACOLLECTIONTEST_H
 
-#include <QDir>
-#include <QFileInfo>
-#include <QStandardPaths>
+#include <QObject>
 
-namespace MediaCenter {
-
-QHash<int, QByteArray> appendAdditionalMediaRoles (const QHash<int, QByteArray> &roles)
+class KMediaCollectionTest : public QObject
 {
-    QHash<int, QByteArray> newRoles(roles);
-    newRoles[MediaUrlRole] = "mediaUrl";
-    newRoles[IsExpandableRole] = "isExpandable";
-    newRoles[MediaTypeRole] = "mediaType";
-    newRoles[DecorationTypeRole] = "decorationType";
-    newRoles[HideLabelRole] = "hideLabel";
-    newRoles[ResourceIdRole] = "resourceId";
-    newRoles[DurationRole] = "mediaDuration";
-    newRoles[ArtistRole] = "mediaArtist";
-    newRoles[AlbumRole] = "mediaAlbum";
-    newRoles[AlbumArtistRole] = "mediaAlbumArtist";
-    newRoles[GenreRole] = "mediaGenre";
-    newRoles[MediaCountRole] = "mediaCountRole";
-    newRoles[RatingRole] = "mediaRating";
-    return newRoles;
-}
+    Q_OBJECT
+private slots:
+    void initTestCase();
+    void cleanupTestCase();
 
-QString dataDirForComponent(const QString& component)
-{
-  static const QString pmcPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation);
-  if(!QDir(pmcPath).exists()) {
-    QDir().mkpath(pmcPath);
-  }
-  return pmcPath + (component.isEmpty() ? QString() : QString("/%1").arg(component));
-}
+    void init();
+    void cleanup();
 
-} // MediaCenter namespace
+    void shouldReturnPathForComponent();
+    void shouldReturnPathWithoutComponent();
+};
+
+#endif // KMEDIACOLLECTIONTEST_H

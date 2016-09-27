@@ -22,11 +22,11 @@
 #include <QString>
 #include <QSharedPointer>
 
-#include "mediacenter_export.h"
+#include "kmediacollection_export.h"
 
 #include "media.h"
 
-class MEDIACENTER_EXPORT PmcMedia : public QObject
+class KMEDIACOLLECTION_EXPORT PmcMedia : public QObject
 {
     Q_OBJECT
 public:

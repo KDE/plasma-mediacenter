@@ -31,7 +31,7 @@
 
 namespace
 {
-static const QString DEFAULT_PLAYLIST_NAME = i18nd("plasma-mediacenter", "Default");
+static const QString DEFAULT_PLAYLIST_NAME = i18nd("plasma-mediacollection", "Default");
 static int INVALID_INDEX = -1;
 }
 
@@ -53,7 +53,7 @@ PlaylistModel::PlaylistModel(QObject* parent):
     loadFromFile(playlistFilePath());
 
     resetCurrentIndex();
-    setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
+    setRoleNames(KMediaCollection::appendAdditionalMediaRoles(roleNames()));
 
     QHash<int, QByteArray> newRoles(roleNames());
     newRoles[MediaLengthRole] = "mediaLength";
@@ -85,7 +85,7 @@ QVariant PlaylistModel::data(const QModelIndex& index, int role) const
     switch (role) {
     case Qt::DisplayRole:
         return d->musicList.at(index.row())->mediaName();
-    case MediaCenter::MediaUrlRole:
+    case KMediaCollection::MediaUrlRole:
         return d->musicList.at(index.row())->mediaUrl();
     case PlaylistModel::MediaArtistRole:
         return d->musicList.at(index.row())->mediaArtist();
@@ -356,7 +356,7 @@ void PlaylistModel::setPlaylistName(const QString& name)
 QString PlaylistModel::getPlaylistPath() const
 {
     if (d->playlistsDirectoryPath.isEmpty()) {
-        d->playlistsDirectoryPath = MediaCenter::dataDirForComponent("playlists");
+        d->playlistsDirectoryPath = KMediaCollection::dataDirForComponent("playlists");
         QDir().mkpath(d->playlistsDirectoryPath);
     }
     return d->playlistsDirectoryPath;
@@ -382,7 +382,7 @@ void PlaylistModel::play(int index)
 
 QString PlaylistModel::currentUrl() const
 {
-    return data(index(currentIndex()), MediaCenter::MediaUrlRole).toString();
+    return data(index(currentIndex()), KMediaCollection::MediaUrlRole).toString();
 }
 
 void PlaylistModel::switchToDefaultPlaylist()

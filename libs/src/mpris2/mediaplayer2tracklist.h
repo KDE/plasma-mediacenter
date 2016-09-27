@@ -20,7 +20,7 @@
 #ifndef MEDIAPLAYER2TRACKLIST_H
 #define MEDIAPLAYER2TRACKLIST_H
 
-#include "mediacenter_export.h"
+#include "kmediacollection_export.h"
 #include "singletonfactory.h"
 #include "playlistmodel.h"
 
@@ -33,7 +33,7 @@
 
 Q_DECLARE_METATYPE(QList<QVariantMap>)
 
-class MEDIACENTER_EXPORT MediaPlayer2Tracklist : public QDBusAbstractAdaptor
+class KMEDIACOLLECTION_EXPORT MediaPlayer2Tracklist : public QDBusAbstractAdaptor
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.mpris.MediaPlayer2.TrackList") // Docs: http://specifications.freedesktop.org/mpris-spec/latest/Track_List_Interface.html

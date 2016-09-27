@@ -16,7 +16,7 @@ set(pmc_test_SRCS
     singletonfactorytest.cpp
     pmcmediatest.cpp
     mediatest.cpp
-    mediacentertest.cpp
+    kmediacollectiontest.cpp
     itemcachetest.cpp
     pmcalbumtest.cpp
     pmcartisttest.cpp
@@ -25,6 +25,6 @@ set(pmc_test_SRCS
 
 ecm_add_tests(
     ${pmc_test_SRCS}
-    LINK_LIBRARIES libmediatest Qt5::Test
+    LINK_LIBRARIES KMediaCollectionTest Qt5::Test
     NAME_PREFIX "pmctest-"
     )

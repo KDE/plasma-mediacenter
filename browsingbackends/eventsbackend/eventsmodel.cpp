@@ -17,7 +17,7 @@
  ***********************************************************************************/
 
 #include "eventsmodel.h"
-#include <mediacenter.h>
+#include <kmediacollection.h>
 
 #include <KGlobal>
 #include <KSharedConfig>
@@ -29,7 +29,7 @@ namespace {
 
 EventsModel::EventsModel(QObject* parent): QAbstractListModel(parent)
 {
-    setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
+    setRoleNames(KMediaCollection::appendAdditionalMediaRoles(roleNames()));
 
     auto configGroup = KGlobal::config()->group(CONFIG_GROUP);
     QByteArray data = configGroup.readEntry("events", QByteArray());
@@ -44,7 +44,7 @@ QVariant EventsModel::data(const QModelIndex& index, int role) const
     switch (role) {
     case Qt::DisplayRole:
         return m_eventNames.at(index.row());
-    case MediaCenter::IsExpandableRole:
+    case KMediaCollection::IsExpandableRole:
         return true;
     case Qt::DecorationRole:
         return "folder-image";

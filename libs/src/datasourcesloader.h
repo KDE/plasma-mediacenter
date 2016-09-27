@@ -22,13 +22,13 @@
 
 #include <QtCore/QObject>
 
-#include "mediacenter_export.h"
+#include "kmediacollection_export.h"
 
-namespace MediaCenter {
+namespace KMediaCollection {
 class AbstractDataSource;
 }
 
-class MEDIACENTER_EXPORT DataSourcesLoader : public QObject
+class KMEDIACOLLECTION_EXPORT DataSourcesLoader : public QObject
 {
     Q_OBJECT
 public:

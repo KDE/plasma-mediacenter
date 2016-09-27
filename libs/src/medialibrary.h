@@ -19,7 +19,7 @@
 #ifndef MEDIALIBRARY_H
 #define MEDIALIBRARY_H
 
-#include "mediacenter_export.h"
+#include "kmediacollection_export.h"
 
 #include <QHash>
 #include <QThread>
@@ -35,7 +35,7 @@ class PmcAlbum;
 class PmcMedia;
 class MediaValidator;
 
-class MEDIACENTER_EXPORT MediaLibrary : public QThread
+class KMEDIACOLLECTION_EXPORT MediaLibrary : public QThread
 {
     Q_OBJECT
 public:

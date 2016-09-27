@@ -35,7 +35,7 @@ DataSourcesLoader::DataSourcesLoader(QObject* parent): QObject(parent)
 
 void DataSourcesLoader::load()
 {
-    KPluginInfo::List pluginInfo = KPluginTrader::self()->query("plasma/mediacenter/datasources");
+    KPluginInfo::List pluginInfo = KPluginTrader::self()->query("plasma/mediacollection/datasources");
     if (pluginInfo.isEmpty()) {
         qWarning() << "no available data sources";
     }
@@ -47,7 +47,7 @@ void DataSourcesLoader::load()
         const QVariantList args = QVariantList() << loader.metaData().toVariantMap();
         if(factory)
         {
-            MediaCenter::AbstractDataSource *dataSource = factory->create<MediaCenter::AbstractDataSource>(0, args);
+            KMediaCollection::AbstractDataSource *dataSource = factory->create<KMediaCollection::AbstractDataSource>(0, args);
             if (dataSource) {
                 dataSource->setMediaLibrary(SingletonFactory::instanceFor<MediaLibrary>());
                 dataSource->start();

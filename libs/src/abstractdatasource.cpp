@@ -20,7 +20,7 @@
 #include "abstractdatasource.h"
 #include <QDebug>
 
-using namespace MediaCenter;
+using namespace KMediaCollection;
 
 class AbstractDataSource::Private
 {

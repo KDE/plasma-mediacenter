@@ -21,9 +21,9 @@
 
 #include <QtCore/QSortFilterProxyModel>
 #include <QAbstractItemModel>
-#include "mediacenter_export.h"
+#include "kmediacollection_export.h"
 
-class MEDIACENTER_EXPORT FilterPlaylistModel: public QSortFilterProxyModel
+class KMEDIACOLLECTION_EXPORT FilterPlaylistModel: public QSortFilterProxyModel
 {
     Q_OBJECT
     Q_PROPERTY(QString filterString READ filterString WRITE setFilterString NOTIFY filterStringChanged)

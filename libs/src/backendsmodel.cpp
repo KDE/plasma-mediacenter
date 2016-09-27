@@ -30,7 +30,7 @@ bool pluginLessThan(const KPluginInfo &lh, const KPluginInfo &rh)
 class BackendsModel::Private
 {
 public:
-    QHash<QString, MediaCenter::AbstractBrowsingBackend*> backends;
+    QHash<QString, KMediaCollection::AbstractBrowsingBackend*> backends;
     KPluginInfo::List backendInfo;
     KPluginInfo::List loadedBackendsInfo;
 };
@@ -39,7 +39,7 @@ BackendsModel::BackendsModel(QObject* parent)
     : QAbstractListModel(parent)
     , d(new Private)
 {
-    d->backendInfo = KPluginTrader::self()->query("plasma/mediacenter/browsingbackends");
+    d->backendInfo = KPluginTrader::self()->query("plasma/mediacollection/browsingbackends");
     if (d->backendInfo.isEmpty()) {
         qWarning() << "no available browsing backend";
     }
@@ -68,7 +68,7 @@ void BackendsModel::loadBrowsingBackends()
 
         if(factory)
         {
-            MediaCenter::AbstractBrowsingBackend *backend = factory->create<MediaCenter::AbstractBrowsingBackend>(0, args);
+            KMediaCollection::AbstractBrowsingBackend *backend = factory->create<KMediaCollection::AbstractBrowsingBackend>(0, args);
             if (backend) {
                 backend->setPluginInfo(info);
                 backend->setParent(const_cast<BackendsModel *>(this));
@@ -90,7 +90,7 @@ QVariant BackendsModel::data (const QModelIndex& index, int role) const
     }
 
     const KPluginInfo &info = d->loadedBackendsInfo.at(index.row());
-    MediaCenter::AbstractBrowsingBackend *backend = d->backends.value(info.libraryPath());
+    KMediaCollection::AbstractBrowsingBackend *backend = d->backends.value(info.libraryPath());
 
     switch (role) {
         case Qt::DisplayRole:

@@ -31,7 +31,7 @@
  * This class direclty inherit from AbstractBrowsingBackend which is an interface between an applet
  * and a custom provided model
  */
-class PicasaBackend : public MediaCenter::AbstractBrowsingBackend
+class PicasaBackend : public KMediaCollection::AbstractBrowsingBackend
 {
     Q_OBJECT
 public:

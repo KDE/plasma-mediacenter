@@ -7,7 +7,7 @@ add_library(pmc_metadatapicturebackend MODULE ${metadatapicturebackend_SRCS})
 set_target_properties(pmc_metadatapicturebackend PROPERTIES PREFIX "")
 
 target_link_libraries(pmc_metadatapicturebackend
-    libmedia
+    KMediaCollection
 )
 
 kcoreaddons_desktop_to_json(pmc_metadatapicturebackend metadatapicturebackend.desktop)

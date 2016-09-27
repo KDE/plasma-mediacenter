@@ -18,7 +18,7 @@
 #include "searchresulthandler.h"
 
 #include <medialibrary.h>
-#include <mediacenter.h>
+#include <kmediacollection.h>
 
 #include <baloo/resultiterator.h>
 
@@ -43,13 +43,13 @@ void SearchResultHandler::handleResult(QString &filePath)
 
     values.insert(Qt::DisplayRole, QVariant(url.fileName()));
     values.insert(Qt::DecorationRole, QVariant(QMimeDatabase().mimeTypeForFile(filePath).iconName()));
-    values.insert(MediaCenter::MediaTypeRole, QVariant(supportedMediaType().toLower()));
-    values.insert(MediaCenter::MediaUrlRole, QVariant(url.toString()));
-    values.insert(MediaCenter::RatingRole, QVariant(md.rating()));
+    values.insert(KMediaCollection::MediaTypeRole, QVariant(supportedMediaType().toLower()));
+    values.insert(KMediaCollection::MediaUrlRole, QVariant(url.toString()));
+    values.insert(KMediaCollection::RatingRole, QVariant(md.rating()));
 
     //HACK: This is a workaround as Baloo does not provide creation or
     // modification date/time through KFileMetaData::Property
-    values.insert(MediaCenter::CreatedAtRole,
+    values.insert(KMediaCollection::CreatedAtRole,
             QVariant(QFileInfo(filePath).created()));
 
     //Now collect information specific to this media type

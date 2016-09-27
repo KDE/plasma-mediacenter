@@ -19,7 +19,7 @@
 
 
 #include "metadatapicturemodel.h"
-#include <mediacenter.h>
+#include <kmediacollection.h>
 #include <abstractbrowsingbackend.h>
 
 #include <QtGui/QIcon>
@@ -28,7 +28,7 @@
 MetadataPictureModel::MetadataPictureModel (QObject* parent)
     : PmcMetadataModel (parent)
 {
-    showMediaType(MediaCenter::Picture);
+    showMediaType(KMediaCollection::Picture);
 }
 
 MetadataPictureModel::~MetadataPictureModel()
@@ -40,14 +40,14 @@ QVariant MetadataPictureModel::data (const QModelIndex& index, int role) const
 {
     switch (role) {
     case Qt::DecorationRole:
-        return PmcMetadataModel::data (index, MediaCenter::MediaUrlRole);
-    case MediaCenter::MediaTypeRole:
+        return PmcMetadataModel::data (index, KMediaCollection::MediaUrlRole);
+    case KMediaCollection::MediaTypeRole:
         return "image";
-    case MediaCenter::HideLabelRole:
+    case KMediaCollection::HideLabelRole:
         return true;
-    case MediaCenter::DecorationTypeRole:
+    case KMediaCollection::DecorationTypeRole:
         return "image";
-    case MediaCenter::IsExpandableRole:
+    case KMediaCollection::IsExpandableRole:
         return false;
     }
 

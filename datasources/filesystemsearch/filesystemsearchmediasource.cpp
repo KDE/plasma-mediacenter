@@ -19,7 +19,7 @@
 
 #include <singletonfactory.h>
 #include <medialibrary.h>
-#include <mediacenter.h>
+#include <kmediacollection.h>
 
 #include <QUrl>
 #include <QDir>
@@ -27,7 +27,7 @@
 #include <QMimeType>
 #include <QMimeDatabase>
 
-MEDIACENTER_EXPORT_DATASOURCE(FilesystemSearchMediaSource, "filesystemsearch.json")
+KMEDIACOLLECTION_EXPORT_DATASOURCE(FilesystemSearchMediaSource, "filesystemsearch.json")
 
 FilesystemSearchMediaSource::FilesystemSearchMediaSource(QObject* parent, const QVariantList& args)
     : AbstractDataSource(parent, args),
@@ -101,8 +101,8 @@ void FilesystemSearchMediaSource::addFile(const QFileInfo& fileInfo,
     QHash<int, QVariant> values;
 
     values.insert(Qt::DisplayRole, fileInfo.fileName());
-    values.insert(MediaCenter::MediaUrlRole, QUrl::fromLocalFile(fileInfo.absoluteFilePath()).toString());
-    values.insert(MediaCenter::MediaTypeRole, type);
+    values.insert(KMediaCollection::MediaUrlRole, QUrl::fromLocalFile(fileInfo.absoluteFilePath()).toString());
+    values.insert(KMediaCollection::MediaTypeRole, type);
 
     SingletonFactory::instanceFor<MediaLibrary>()->updateMedia(values);
 }

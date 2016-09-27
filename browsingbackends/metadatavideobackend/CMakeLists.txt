@@ -7,7 +7,7 @@ add_library(pmc_metadatavideobackend MODULE ${metadatavideobackend_SRCS})
 set_target_properties(pmc_metadatavideobackend PROPERTIES PREFIX "")
 
 target_link_libraries(pmc_metadatavideobackend
-    libmedia
+    KMediaCollection
 )
 
 kcoreaddons_desktop_to_json(pmc_metadatavideobackend metadatavideobackend.desktop)

@@ -20,8 +20,8 @@
 #ifndef PMCMETADATAMODEL_H
 #define PMCMETADATAMODEL_H
 
-#include "mediacenter_export.h"
-#include "mediacenter.h"
+#include "kmediacollection_export.h"
+#include "kmediacollection.h"
 
 #include <QtCore/QAbstractItemModel>
 #include <QSharedPointer>
@@ -34,7 +34,7 @@ class MediaLibrary;
 class QPixmap;
 class KFileItem;
 
-class MEDIACENTER_EXPORT PmcMetadataModel : public QAbstractListModel
+class KMEDIACOLLECTION_EXPORT PmcMetadataModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
@@ -43,7 +43,7 @@ public:
     virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
     virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
 
-    void showMediaType(MediaCenter::MediaType mediaType);
+    void showMediaType(KMediaCollection::MediaType mediaType);
     void setDefaultDecoration(const QString &decoration);
 
 public Q_SLOTS:

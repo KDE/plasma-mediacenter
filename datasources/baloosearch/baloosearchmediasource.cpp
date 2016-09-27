@@ -23,7 +23,7 @@
 
 #include <medialibrary.h>
 #include <singletonfactory.h>
-#include <mediacenter.h>
+#include <kmediacollection.h>
 
 #include <baloo/query.h>
 #include <baloo/resultiterator.h>
@@ -35,7 +35,7 @@
 #include <QDBusConnection>
 #include <QMimeDatabase>
 
-MEDIACENTER_EXPORT_DATASOURCE(BalooSearchMediaSource, "baloosearch.json")
+KMEDIACOLLECTION_EXPORT_DATASOURCE(BalooSearchMediaSource, "baloosearch.json")
 
 BalooSearchMediaSource::BalooSearchMediaSource(QObject* parent, const QVariantList& args)
     : AbstractDataSource(parent, args)

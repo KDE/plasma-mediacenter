@@ -1,12 +1,12 @@
-project(LibMedia)
+project(KMediaCollection)
 
 cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 
 set(QT_MIN_VERSION "5.5.0")
 set (KF5_MIN_VERSION "5.20.0")
 
-set(PROJECT_VERSION "5.7.90")
-set(PROJECT_VERSION_MAJOR "5")
+set(PROJECT_VERSION "0.90")
+set(PROJECT_VERSION_MAJOR "0")
 
 include(FeatureSummary)
 find_package(ECM 5.26.0  NO_MODULE)
@@ -60,18 +60,13 @@ include_directories(
 include(ECMSetupVersion)
 include(ECMGenerateHeaders)
 ecm_setup_version(${PROJECT_VERSION}
-    VARIABLE_PREFIX LIBMEDIA
-    VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/libmedia_version.h"
-    PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/LibMediaConfigVersion.cmake"
+    VARIABLE_PREFIX KMEDIACOLLECTION
+    VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/kmediacollection_version.h"
+    PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KMediaCollectionConfigVersion.cmake"
     SOVERSION 5)
 
 
-#configure_file(plasma-mediacenter.desktop.cmake ${CMAKE_CURRENT_BINARY_DIR}/plasma-mediacenter.desktop)
-#install(FILES
-#        ${CMAKE_CURRENT_BINARY_DIR}/plasma-mediacenter.desktop
-#        DESTINATION ${DATA_INSTALL_DIR}/xsessions
-#)
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE_ENABLE_EXCEPTIONS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE_ENABLE_EXCEPTIONS}")
 set(CMAKE_AUTOMOC ON)
 
 add_subdirectory(src)
@@ -82,29 +77,29 @@ add_subdirectory(autotests)
 # macro_optional_add_subdirectory( po )
 
 # create a Config.cmake and a ConfigVersion.cmake file and install them
-set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/LibMedia")
+set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KMediaCollection")
 
 include(ECMPackageConfigHelpers)
 
 ecm_configure_package_config_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/LibMediaConfig.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/LibMediaConfig.cmake"
+    "${CMAKE_CURRENT_SOURCE_DIR}/KMediaCollectionConfig.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/KMediaCollectionConfig.cmake"
     INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR}
 )
 
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libmedia_version.h
-        DESTINATION ${KDE_INSTALL_INCLUDEDIR}
-        COMPONENT Devel)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/kmediacollection_version.h  
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR}
+    COMPONENT Devel)
 
 install(FILES
-            "${CMAKE_CURRENT_BINARY_DIR}/LibMediaConfig.cmake"
-            "${CMAKE_CURRENT_BINARY_DIR}/LibMediaConfigVersion.cmake"
-        DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
-        COMPONENT Devel)
+    "${CMAKE_CURRENT_BINARY_DIR}/KMediaCollectionConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/KMediaCollectionConfigVersion.cmake"
+    DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+    COMPONENT Devel)
 
-install(EXPORT LibMediaTargets
-        DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
-        FILE LibMediaTargets.cmake)
+install(EXPORT KMediaCollectionTargets
+    DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+    FILE KMediaCollectionTargets.cmake)
 #        NAMESPACE KF5::)
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)

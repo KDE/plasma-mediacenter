@@ -18,7 +18,7 @@
 #include "videosearchresulthandler.h"
 
 #include <medialibrary.h>
-#include <mediacenter.h>
+#include <kmediacollection.h>
 
 #include <baloo/file.h>
 #include <baloo/resultiterator.h>
@@ -56,7 +56,7 @@ void VideoSearchResultHandler::handleResultImpl(
 
     const int duration = file.property(KFileMetaData::Property::Duration).toInt();
     if (duration) {
-        vals.insert(MediaCenter::DurationRole, duration);
+        vals.insert(KMediaCollection::DurationRole, duration);
     }
 
     m_mediaLibrary->updateMedia(QUrl::fromLocalFile(file.path()).toString(), vals);

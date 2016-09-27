@@ -32,7 +32,7 @@ class QDir;
  * when none of Baloo or Nepomuk are installed. As such this MediaSource does
  * not attempt 100% correctness and is not configurable at all.
  */
-class FilesystemSearchMediaSource : public MediaCenter::AbstractDataSource
+class FilesystemSearchMediaSource : public KMediaCollection::AbstractDataSource
 {
 public:
     explicit FilesystemSearchMediaSource(QObject* parent = 0, const QVariantList&  = QVariantList());

@@ -23,12 +23,12 @@
 #include <QtCore/QThread>
 #include <KPluginInfo>
 
-#include "mediacenter_export.h"
+#include "kmediacollection_export.h"
 
 class MediaLibrary;
 
-namespace MediaCenter {
-class MEDIACENTER_EXPORT AbstractDataSource : public QThread
+namespace KMediaCollection {
+class KMEDIACOLLECTION_EXPORT AbstractDataSource : public QThread
 {
     Q_OBJECT
 public:
@@ -46,7 +46,7 @@ private:
 };
 }
 
-#define MEDIACENTER_EXPORT_DATASOURCE(classname, jsonfile) \
+#define KMEDIACOLLECTION_EXPORT_DATASOURCE(classname, jsonfile) \
     K_PLUGIN_FACTORY_WITH_JSON( DataSourceFactory, jsonfile, registerPlugin< classname >(); )
 
 #endif // ABSTRACTDATASOURCE_H

@@ -28,7 +28,7 @@
 
 #include "media.h"
 
-#include "mediacenter.h"
+#include "kmediacollection.h"
 #include "medialibrarywrappercache.h"
 #include "mediavalidator.h"
 
@@ -180,9 +180,9 @@ void MediaLibrary::processNextRequest()
 
         bool wasUpdated = false;
         Q_FOREACH(int role, request.second.keys()) {
-            if (role == MediaCenter::AlbumRole) {
+            if (role == KMediaCollection::AlbumRole) {
                 wasUpdated = extractAndSaveAlbumInfo(request, media) || wasUpdated;
-            } else if (role == MediaCenter::ArtistRole) {
+            } else if (role == KMediaCollection::ArtistRole) {
                 wasUpdated = extractAndSaveArtistInfo(request, media) || wasUpdated;
             } else {
                 wasUpdated = media->setValueForRole(role, request.second.value(role)) || wasUpdated;
@@ -197,9 +197,9 @@ void MediaLibrary::processNextRequest()
         if (d->mediaValidator->fileWithUrlExists(request.first) || d->testMode) {
             QSharedPointer<Media> media(new Media(request.first));
             Q_FOREACH(int role, request.second.keys()) {
-                if (role == MediaCenter::AlbumRole) {
+                if (role == KMediaCollection::AlbumRole) {
                     extractAndSaveAlbumInfo(request, media);
-                } else if(role == MediaCenter::ArtistRole) {
+                } else if(role == KMediaCollection::ArtistRole) {
                     extractAndSaveArtistInfo(request, media);
                 } else {
                     media->setValueForRole(role, request.second.value(role));
@@ -221,7 +221,7 @@ bool MediaLibrary::extractAndSaveArtistInfo(
     const QPair< QString, QHash< int, QVariant > >& request,
     QSharedPointer< Media >& media)
 {
-    QString artistName = request.second.value(MediaCenter::ArtistRole).toString();
+    QString artistName = request.second.value(KMediaCollection::ArtistRole).toString();
 
     if (artistName.isEmpty()) {
         artistName = "Unknown Artist";
@@ -240,8 +240,8 @@ bool MediaLibrary::extractAndSaveAlbumInfo(
     const QPair<QString, QHash<int, QVariant> > &request,
     QSharedPointer<Media> &media)
 {
-    QString albumName = request.second.value(MediaCenter::AlbumRole).toString();
-    QString albumArtistName = request.second.value(MediaCenter::AlbumArtistRole).toString();
+    QString albumName = request.second.value(KMediaCollection::AlbumRole).toString();
+    QString albumArtistName = request.second.value(KMediaCollection::AlbumArtistRole).toString();
 
     if (albumName.isEmpty()){
         albumName = "Unknown Album";
@@ -290,7 +290,7 @@ bool MediaLibrary::areThereUpdateRequests()
 
 void MediaLibrary::updateMedia(const QHash< int, QVariant >& data)
 {
-    updateMedia(data.value(MediaCenter::MediaUrlRole).toString(), data);
+    updateMedia(data.value(KMediaCollection::MediaUrlRole).toString(), data);
 }
 
 void MediaLibrary::updateMedia(const QString& url, const QHash< int, QVariant >& data)

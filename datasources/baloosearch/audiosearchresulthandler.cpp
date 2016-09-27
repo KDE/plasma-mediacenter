@@ -17,7 +17,7 @@
 
 #include "audiosearchresulthandler.h"
 
-#include <mediacenter.h>
+#include <kmediacollection.h>
 #include <medialibrary.h>
 
 #include <baloo/file.h>
@@ -54,7 +54,7 @@ void AudioSearchResultHandler::handleResultImpl(
 
     const int duration = file.property(KFileMetaData::Property::Duration).toInt();
     if (duration) {
-        vals.insert(MediaCenter::DurationRole, duration);
+        vals.insert(KMediaCollection::DurationRole, duration);
     }
 
     const QString title = file.property(KFileMetaData::Property::Title).toString();
@@ -62,9 +62,9 @@ void AudioSearchResultHandler::handleResultImpl(
         vals.insert(Qt::DisplayRole, title);
     }
 
-    vals.insert(MediaCenter::ArtistRole, file.property(KFileMetaData::Property::Artist));
-    vals.insert(MediaCenter::AlbumRole, file.property(KFileMetaData::Property::Album));
-    vals.insert(MediaCenter::AlbumArtistRole, file.property(KFileMetaData::Property::AlbumArtist));
+    vals.insert(KMediaCollection::ArtistRole, file.property(KFileMetaData::Property::Artist));
+    vals.insert(KMediaCollection::AlbumRole, file.property(KFileMetaData::Property::Album));
+    vals.insert(KMediaCollection::AlbumArtistRole, file.property(KFileMetaData::Property::AlbumArtist));
 
     m_mediaLibrary->updateMedia(QUrl::fromLocalFile(file.path()).toString(), vals);
 }

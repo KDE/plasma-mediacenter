@@ -30,12 +30,12 @@
 #include <QDir>
 #include <unistd.h>
 
-static const QString tmpPmcDirPath(QDir::tempPath() + QLatin1String("/plasma-mediacenter/covers/"));
+static const QString tmpPmcDirPath(QDir::tempPath() + QLatin1String("/plasma-mediacollection/covers/"));
 
 Mpris2::Mpris2(PlaylistModel *playlistModel, QObject* parent)
     : QObject(parent)
 {
-    QString mspris2Name("org.mpris.MediaPlayer2." + QLatin1String("plasma-mediacenter"));
+    QString mspris2Name("org.mpris.MediaPlayer2." + QLatin1String("plasma-mediacollection"));
 
     bool success = QDBusConnection::sessionBus().registerService(mspris2Name);
 
@@ -77,7 +77,7 @@ QString Mpris2::getCurrentTrackId()
 
     QSharedPointer<PmcMedia> media = SingletonFactory::instanceFor<MediaLibrary>()->mediaForUrl(m_mp2p->currentTrack());
     if (media) {
-        return QString("/org/kde/plasmamediacenter/tid_") + media->sha();
+        return QString("/org/kde/plasmamediacollection/tid_") + media->sha();
     }
 
     return QString("/org/mpris/MediaPlayer2/TrackList/NoTrack");

@@ -6,7 +6,7 @@ add_library(pmc_fakemediasource MODULE ${fakemediasource_SRCS})
 set_target_properties(pmc_fakemediasource PROPERTIES PREFIX "")
 
 target_link_libraries(pmc_fakemediasource
-    libmedia
+    KMediaCollection
 )
 
 kcoreaddons_desktop_to_json(pmc_fakemediasource fakemediasource.desktop)

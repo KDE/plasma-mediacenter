@@ -32,7 +32,7 @@
 #include <QImage>
 #include <QDebug>
 
-MEDIACENTER_EXPORT_DATASOURCE(LastFmImageFetcher, "lastfmimagefetcher.json")
+KMEDIACOLLECTION_EXPORT_DATASOURCE(LastFmImageFetcher, "lastfmimagefetcher.json")
 
 LastFmImageFetcher::LastFmImageFetcher(QObject* parent, const QVariantList& args)
     : AbstractDataSource(parent, args)

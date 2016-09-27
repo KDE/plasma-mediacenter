@@ -23,9 +23,9 @@
 
 class QString;
 
-#include "mediacenter_export.h"
+#include "kmediacollection_export.h"
 
-class MEDIACENTER_EXPORT MediaValidator : public QObject
+class KMEDIACOLLECTION_EXPORT MediaValidator : public QObject
 {
     Q_OBJECT
 public:

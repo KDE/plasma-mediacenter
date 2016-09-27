@@ -27,7 +27,7 @@ class FilterMediaModel;
 class PmcMetadataModel;
 class PmcModel;
 
-class MetadataMusicBackend : public MediaCenter::AbstractBrowsingBackend
+class MetadataMusicBackend : public KMediaCollection::AbstractBrowsingBackend
 {
     Q_OBJECT
     Q_PROPERTY(QString artistFilter READ artistFilter NOTIFY artistFilterChanged)

@@ -27,10 +27,10 @@
 #include <pmcmodel.h>
 #include <filtermediamodel.h>
 
-MEDIACENTER_EXPORT_BROWSINGBACKEND(MetadataPictureBackend, "metadatapicturebackend.json")
+KMEDIACOLLECTION_EXPORT_BROWSINGBACKEND(MetadataPictureBackend, "metadatapicturebackend.json")
 
 MetadataPictureBackend::MetadataPictureBackend(QObject* parent, const QVariantList& args)
-    : MediaCenter::AbstractBrowsingBackend(parent, args)
+    : KMediaCollection::AbstractBrowsingBackend(parent, args)
 {
 }
 
@@ -44,7 +44,7 @@ bool MetadataPictureBackend::initImpl()
 
     FilterMediaModel *filteredModel = new FilterMediaModel(this);
     filteredModel->setSourceModel(pmcMetadataModel);
-    filteredModel->setSortRole(MediaCenter::CreatedAtRole);
+    filteredModel->setSortRole(KMediaCollection::CreatedAtRole);
     filteredModel->sort(0, Qt::DescendingOrder);
 
     PmcModel *metadata = new PmcModel(filteredModel, this);

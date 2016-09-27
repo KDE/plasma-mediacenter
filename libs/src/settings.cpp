@@ -23,7 +23,7 @@
 
 Settings::Settings(QObject *parent) : QObject(parent)
 {
-    configGroup = KSharedConfig::openConfig("plasma-mediacenterrc")->group("General");
+    configGroup = KSharedConfig::openConfig("plasma-mediacollectionrc")->group("General");
 }
 
 Settings::~Settings()

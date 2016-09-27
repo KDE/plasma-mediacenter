@@ -24,7 +24,7 @@
 #include <abstractbrowsingbackend.h>
 
 
-class MetadataPictureBackend : public MediaCenter::AbstractBrowsingBackend
+class MetadataPictureBackend : public KMediaCollection::AbstractBrowsingBackend
 {
     Q_OBJECT
 public:

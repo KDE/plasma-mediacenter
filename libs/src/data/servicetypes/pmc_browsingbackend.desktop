@@ -1,3 +1,3 @@
 [Desktop Entry]
 Type=ServiceType
-X-KDE-ServiceType=Plasma/MediaCenter/BrowsingBackend
+X-KDE-ServiceType=Plasma/MediaCollection/BrowsingBackend

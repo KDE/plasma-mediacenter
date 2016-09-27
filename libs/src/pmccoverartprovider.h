@@ -21,7 +21,7 @@
 
 #include <QtQuick/QQuickImageProvider>
 
-#include "mediacenter_export.h"
+#include "kmediacollection_export.h"
 
 namespace TagLib {
     namespace MPEG {
@@ -29,7 +29,7 @@ namespace TagLib {
     }
 }
 
-class MEDIACENTER_EXPORT PmcCoverArtProvider : public QQuickImageProvider
+class KMEDIACOLLECTION_EXPORT PmcCoverArtProvider : public QQuickImageProvider
 {
 public:
     static const char *identificationString;

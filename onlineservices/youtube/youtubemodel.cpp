@@ -31,25 +31,25 @@
 YoutubeModel::YoutubeModel(QObject* parent): QAbstractListModel(parent)
 {
     query("kde");
-    setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
+    setRoleNames(KMediaCollection::appendAdditionalMediaRoles(roleNames()));
 }
 
 QVariant YoutubeModel::data(const QModelIndex& index, int role) const
 {
     switch (role) {
-        case MediaCenter::HideLabelRole:
+        case KMediaCollection::HideLabelRole:
             return false;
         case Qt::DecorationRole:
             return m_videos.at(index.row()).thumbnail;
-        case MediaCenter::MediaUrlRole:
+        case KMediaCollection::MediaUrlRole:
             return m_videos.at(index.row()).url;
         case Qt::DisplayRole:
             return m_videos.at(index.row()).title;
-        case MediaCenter::MediaTypeRole:
+        case KMediaCollection::MediaTypeRole:
             return "video";
-        case MediaCenter::IsExpandableRole:
+        case KMediaCollection::IsExpandableRole:
             return true;
-	case MediaCenter::DurationRole:
+	case KMediaCollection::DurationRole:
 	    return m_videos.at(index.row()).duration;
     }
     return QVariant();

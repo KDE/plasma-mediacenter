@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#include "mediacenterplugin.h"
+#include "kmediacollectionplugin.h"
 
 #include "subtitleprovider.h"
 #include "filterplaylistmodel.h"
@@ -37,9 +37,9 @@
 #include "qmlaccess.h"
 #include <iconimageprovider.h>
 
-void MediaCenterPlugin::registerTypes(const char *uri)
+void KMediaCollectionPlugin::registerTypes(const char *uri)
 {
-    Q_ASSERT(uri == QLatin1String("org.kde.plasma.mediacenter"));
+    Q_ASSERT(uri == QLatin1String("org.kde.plasma.mediacollection"));
 
     qmlRegisterType<BackendsModel>(uri, 2, 0, "BackendsModel");
     qmlRegisterType<SubtitleProvider>(uri, 2, 0, "SubtitleProvider");
@@ -52,16 +52,16 @@ void MediaCenterPlugin::registerTypes(const char *uri)
     qmlRegisterType<MediaBrowserLoader>(uri, 2, 0, "MediaBrowserLoader");
 
     qRegisterMetaType<PlaylistModel*>("PlaylistModel*");
-    qRegisterMetaType<MediaCenter::AbstractBrowsingBackend*>("MediaCenter::AbstractBrowsingBackend*");
+    qRegisterMetaType<KMediaCollection::AbstractBrowsingBackend*>("KMediaCollection::AbstractBrowsingBackend*");
     qRegisterMetaType<MediaPlayer2Player*>("MediaPlayer2Player*");
 
 }
 
-void MediaCenterPlugin::initializeEngine(QQmlEngine *engine, const char *uri)
+void KMediaCollectionPlugin::initializeEngine(QQmlEngine *engine, const char *uri)
 {
-    Q_ASSERT(uri == QLatin1String("org.kde.plasma.mediacenter"));
+    Q_ASSERT(uri == QLatin1String("org.kde.plasma.mediacollection"));
     engine->addImageProvider(PmcCoverArtProvider::identificationString, new PmcCoverArtProvider());
     engine->addImageProvider(IconImageProvider::identificationString, new IconImageProvider());
 }
 
-#include "moc_mediacenterplugin.cpp"
+#include "moc_mediacollectionplugin.cpp"

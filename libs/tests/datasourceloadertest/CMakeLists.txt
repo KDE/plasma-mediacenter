@@ -8,5 +8,5 @@ set(datasourcesloadertest_SRCS
 
 add_executable(datasourcesloadertest ${datasourcesloadertest_SRCS})
 target_link_libraries(datasourcesloadertest
-    libmedia
+    KMediaCollection
 )

@@ -2,7 +2,7 @@ include(ECMMarkAsTest)
 include_directories(
     ${TAGLIB_INCLUDES}
 )
-set (libmedia_SRCS
+set (kmediacollection_SRCS
     iconimageprovider.cpp
     runtimedata.cpp
     itemcache.cpp
@@ -12,7 +12,7 @@ set (libmedia_SRCS
     media.cpp
     pmcmodel.cpp
     objectpair.cpp
-    mediacenter.cpp
+    kmediacollection.cpp
     abstractbrowsingbackend.cpp
     backendsmodel.cpp
     playlistitem.cpp
@@ -41,12 +41,12 @@ set (libmedia_SRCS
     mpris2/mediaplayer2tracklist.cpp
 )
 
-add_library(libmedia SHARED
-    ${libmedia_SRCS}
+add_library(KMediaCollection SHARED
+    ${kmediacollection_SRCS}
 )
 
 
-set(libmedia_link_libs
+set(kmediacollection_link_libs
     Qt5::Core
     Qt5::Quick
     Qt5::Xml
@@ -62,17 +62,16 @@ set(libmedia_link_libs
     ${TAGLIB_LIBRARIES}
 )
 
-target_link_libraries(libmedia
-    ${libmedia_link_libs}
+target_link_libraries(KMediaCollection
+    ${kmediacollection_link_libs}
 )
 
 
-generate_export_header(libmedia
-    BASE_NAME mediacenter
-    EXPORT_MACRO_NAME MEDIACENTER_EXPORT
+generate_export_header(KMediaCollection
+    EXPORT_MACRO_NAME KMEDIACOLLECTION_EXPORT
 )
 
-ecm_generate_headers(libmedia_HEADERS
+ecm_generate_headers(kmediacollection_HEADERS
     HEADER_NAMES
     AbstractBrowsingBackend
     BackendsModel
@@ -85,7 +84,7 @@ ecm_generate_headers(libmedia_HEADERS
     AbstractDataSource
     DataSourcesLoader
     ItemCache
-    MediaCenter
+    KMediaCollection
     MultiplePlaylistModel
     PMCAlbum
     PMCMedia
@@ -107,49 +106,49 @@ ecm_generate_headers(libmedia_HEADERS
     PMCModel
     SubtitleProvider
 
-    REQUIRED_HEADERS libmedia_HEADERS
+    REQUIRED_HEADERS kmediacollection_HEADERS
 )
 
-target_include_directories(libmedia
-    INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/LibMedia>"
+target_include_directories(KMediaCollection
+    INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/KMediaCollection>"
 )
-install(TARGETS libmedia
-        EXPORT LibMedia
-        ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS KMediaCollection
+    EXPORT KMediaCollection
+    ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(FILES
-            ${CMAKE_CURRENT_BINARY_DIR}/mediacenter_export.h
-            ${libmedia_HEADERS}
-        DESTINATION ${KDE_INSTALL_INCLUDEDIR}/LibMedia
-        COMPONENT Devel)
+    ${CMAKE_CURRENT_BINARY_DIR}/kmediacollection_export.h
+    ${kmediacollection_HEADERS}
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/KMediaCollection
+    COMPONENT Devel)
 
-add_library(libmediatest SHARED
-    ${libmedia_SRCS}
+add_library(KMediaCollectionTest SHARED
+    ${kmediacollection_SRCS}
 )
 
-ecm_mark_as_test(libmediatest)
+ecm_mark_as_test(KMediaCollectionTest)
 
-set_target_properties(libmediatest
+set_target_properties(KMediaCollectionTest
 PROPERTIES COMPILE_FLAGS  -fvisibility=default
 )
 
-target_link_libraries(libmediatest
-    ${libmedia_link_libs}
+target_link_libraries(KMediaCollectionTest
+    ${kmediacollection_link_libs}
 )
 
-install(TARGETS libmedia
-        EXPORT LibMediaTargets
-        ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS KMediaCollection
+    EXPORT KMediaCollectionTargets
+    ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-set_target_properties(libmedia PROPERTIES VERSION ${PROJECT_VERSION} SOVERSION ${PROJECT_VERSION_MAJOR})
+set_target_properties(KMediaCollection PROPERTIES VERSION ${PROJECT_VERSION} SOVERSION ${PROJECT_VERSION_MAJOR})
 
-install(TARGETS libmedia ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
+install(TARGETS KMediaCollection ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
 
 install(FILES data/servicetypes/pmc_browsingbackend.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
 install(FILES data/servicetypes/pmc_datasource.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
 
 include(ECMGeneratePriFile)
-ecm_generate_pri_file(BASE_NAME mediacenter LIB_NAME libmedia DEPS "core" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KDE_INSTALL_INCLUDEDIR}/libmedia)
+ecm_generate_pri_file(BASE_NAME KMediaCollection LIB_NAME KMediaCollection DEPS "core" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KDE_INSTALL_INCLUDEDIR}/KMediaCollection)
 install(FILES ${PRI_FILENAME}
         DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
 

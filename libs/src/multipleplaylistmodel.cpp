@@ -23,7 +23,7 @@
 
 MultiplePlaylistModel::MultiplePlaylistModel(QObject* parent): QAbstractListModel(parent)
 {
-    QString dirPath = MediaCenter::dataDirForComponent("playlists");
+    QString dirPath = KMediaCollection::dataDirForComponent("playlists");
     QDir dir(dirPath);
     QStringList playlistList = dir.entryList (QDir::NoDotAndDotDot | QDir::Files);
     Q_FOREACH (const QString &str, playlistList) {

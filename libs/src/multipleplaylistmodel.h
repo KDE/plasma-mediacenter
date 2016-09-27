@@ -22,11 +22,11 @@
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 
-#include "mediacenter_export.h"
-#include "mediacenter.h"
+#include "kmediacollection_export.h"
+#include "kmediacollection.h"
 #include "playlistmodel.h"
 
-class MEDIACENTER_EXPORT MultiplePlaylistModel : public QAbstractListModel
+class KMEDIACOLLECTION_EXPORT MultiplePlaylistModel : public QAbstractListModel
 {
     Q_OBJECT
     Q_PROPERTY(QObject* playlistModelAddress READ playlistModelAddress WRITE setPlaylistModelAddress NOTIFY playlistModelAddressChanged)

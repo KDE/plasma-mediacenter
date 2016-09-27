@@ -18,12 +18,12 @@
 #ifndef OBJECTPAIR_H
 #define OBJECTPAIR_H
 
-#include "mediacenter_export.h"
+#include "kmediacollection_export.h"
 
 #include <QObject>
 #include <QPair>
 
-class MEDIACENTER_EXPORT ObjectPair : public QObject
+class KMEDIACOLLECTION_EXPORT ObjectPair : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QObject* first READ first WRITE setFirst NOTIFY firstChanged)

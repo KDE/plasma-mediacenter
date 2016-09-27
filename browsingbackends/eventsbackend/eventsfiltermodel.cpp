@@ -17,7 +17,7 @@
  ***********************************************************************************/
 
 #include "eventsfiltermodel.h"
-#include <mediacenter.h>
+#include <kmediacollection.h>
 
 #include <QDateTime>
 #include <QDebug>
@@ -57,7 +57,7 @@ bool EventsFilterModel::filterAcceptsRow(int source_row, const QModelIndex& sour
     }
 
     const QModelIndex index = sourceModel()->index(source_row, 0);
-    const QDate date = sourceModel()->data(index, MediaCenter::CreatedAtRole).toDateTime().date();
+    const QDate date = sourceModel()->data(index, KMediaCollection::CreatedAtRole).toDateTime().date();
 
     return (date > m_startDate && date < m_endDate);
 }

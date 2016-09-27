@@ -20,7 +20,7 @@
 #include "mediaplayer2tracklist.h"
 #include "mpris2.h"
 
-static const QString playlistTidPrefix("/org/kde/plasmamediacenter/playlist/");
+static const QString playlistTidPrefix("/org/kde/plasmamediacollection/playlist/");
 static const QDBusObjectPath mprisNoTrack("/org/mpris/MediaPlayer2/TrackList/NoTrack");
 
 MediaPlayer2Tracklist::MediaPlayer2Tracklist(PlaylistModel *playlistModel, QObject *parent)
@@ -152,5 +152,5 @@ void MediaPlayer2Tracklist::GoTo(const QDBusObjectPath &trackId)
 QString MediaPlayer2Tracklist::urlOfIndex(int index) const
 {
     return m_playlistModel->data(m_playlistModel->index(index, 0),
-                                 MediaCenter::MediaUrlRole).toString();
+                                 KMediaCollection::MediaUrlRole).toString();
 }

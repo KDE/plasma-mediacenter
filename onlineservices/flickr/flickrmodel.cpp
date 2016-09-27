@@ -41,7 +41,7 @@ namespace {
 
 FlickrModel::FlickrModel(QObject* parent): QAbstractListModel(parent)
 {
-    setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
+    setRoleNames(KMediaCollection::appendAdditionalMediaRoles(roleNames()));
     query("kde");
 }
 
@@ -138,13 +138,13 @@ void FlickrModel::parseResults (KJob* job)
 QVariant FlickrModel::data (const QModelIndex& index, int role) const
 {
     switch (role) {
-    case MediaCenter::HideLabelRole:
+    case KMediaCollection::HideLabelRole:
         return true;
     case Qt::DecorationRole:
         return m_photos.at(index.row()).previewImgLink;
-    case MediaCenter::MediaUrlRole:
+    case KMediaCollection::MediaUrlRole:
         return m_photos.at(index.row()).originalImgLink;
-    case MediaCenter::MediaTypeRole:
+    case KMediaCollection::MediaTypeRole:
         return "image";
     }
 

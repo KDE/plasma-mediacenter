@@ -33,7 +33,7 @@ PicasaModel::PicasaModel(QObject* parent, const QString& username, const QString
 {
     m_flag = false;
     m_expandable = false;
-    setRoleNames(MediaCenter::appendAdditionalMediaRoles(roleNames()));
+    setRoleNames(KMediaCollection::appendAdditionalMediaRoles(roleNames()));
     getTokenAndQuery(username, password,"album");
 }
 
@@ -53,17 +53,17 @@ int PicasaModel::rowCount(const QModelIndex& parent) const
 QVariant PicasaModel::data(const QModelIndex& index, int role) const
 {
     switch (role) {
-        case MediaCenter::HideLabelRole:
+        case KMediaCollection::HideLabelRole:
             return false;
         case Qt::DecorationRole:
             return (m_expandable ? m_albums.at(index.row()).thumbnail : m_photos.at(index.row()).thumbnail144);
-        case MediaCenter::MediaUrlRole:
+        case KMediaCollection::MediaUrlRole:
             return (m_expandable ? m_albums.at(index.row()).link : m_photos.at(index.row()).link);
         case Qt::DisplayRole:
             return (m_expandable ? (m_albums.at(index.row()).title + " (" + m_albums.at(index.row()).noOfPhotos + "Photos)") : "");
-        case MediaCenter::MediaTypeRole:
+        case KMediaCollection::MediaTypeRole:
             return "image";
-        case MediaCenter::IsExpandableRole:
+        case KMediaCollection::IsExpandableRole:
             return m_expandable;
     }
     return QVariant();

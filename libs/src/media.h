@@ -26,7 +26,7 @@
 #include <QVariant>
 #include <QDateTime>
 
-#include "mediacenter_export.h"
+#include "kmediacollection_export.h"
 
 class Album;
 class Artist;

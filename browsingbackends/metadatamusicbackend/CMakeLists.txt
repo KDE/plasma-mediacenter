@@ -6,7 +6,7 @@ add_library(pmc_metadatamusicbackend MODULE ${metadatamusicbackend_SRCS})
 set_target_properties(pmc_metadatamusicbackend PROPERTIES PREFIX "")
 
 target_link_libraries(pmc_metadatamusicbackend
-    libmedia
+    KMediaCollection
 )
 
 kcoreaddons_desktop_to_json(pmc_metadatamusicbackend metadatamusicbackend.desktop)

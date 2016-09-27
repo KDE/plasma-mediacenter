@@ -22,7 +22,7 @@
 
 class SearchResultHandler;
 
-class BalooSearchMediaSource : public MediaCenter::AbstractDataSource
+class BalooSearchMediaSource : public KMediaCollection::AbstractDataSource
 {
     Q_OBJECT
 public:

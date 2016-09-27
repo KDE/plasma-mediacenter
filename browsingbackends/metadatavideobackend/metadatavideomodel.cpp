@@ -30,7 +30,7 @@ MetadataVideoModel::MetadataVideoModel(QObject* parent)
     : PmcMetadataModel(parent)
     , d(new Private())
 {
-    showMediaType(MediaCenter::Video);
+    showMediaType(KMediaCollection::Video);
 }
 
 MetadataVideoModel::~MetadataVideoModel()
@@ -41,9 +41,9 @@ MetadataVideoModel::~MetadataVideoModel()
 QVariant MetadataVideoModel::data(const QModelIndex& index, int role) const
 {
     switch (role) {
-    case MediaCenter::MediaTypeRole:
+    case KMediaCollection::MediaTypeRole:
         return "video";
-    case MediaCenter::HideLabelRole:
+    case KMediaCollection::HideLabelRole:
         return false;
     }
 

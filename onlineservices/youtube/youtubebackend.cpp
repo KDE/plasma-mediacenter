@@ -26,7 +26,7 @@
 MEDIACENTER_EXPORT_BROWSINGBACKEND(YoutubeBackend, "youtubebackend.json")
 
 YoutubeBackend::YoutubeBackend(QObject* parent, const QVariantList& args):
-                               MediaCenter::AbstractBrowsingBackend(parent, args)
+                               KMediaCollection::AbstractBrowsingBackend(parent, args)
 {
 
 }

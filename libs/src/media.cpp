@@ -22,7 +22,7 @@
 #include "album.h"
 #include "artist.h"
 
-#include "mediacenter.h"
+#include "kmediacollection.h"
 
 #include <QCryptographicHash>
 #include <QTimer>
@@ -137,11 +137,11 @@ const QString& Media::type() const
 bool Media::setValueForRole(int role, const QVariant& value)
 {
     switch (role) {
-        case MediaCenter::MediaTypeRole:
+        case KMediaCollection::MediaTypeRole:
             return setType(value.toString());
         case Qt::DisplayRole:
             return setTitle(value.toString());
-        case MediaCenter::MediaUrlRole:
+        case KMediaCollection::MediaUrlRole:
             if (d->url != value.toString()) {
                 qDebug() << d->url << value.toString();
                 qFatal("Media URLs CANNOT be changed");
@@ -149,13 +149,13 @@ bool Media::setValueForRole(int role, const QVariant& value)
             return false;
         case Qt::DecorationRole:
             return thumbnail().isEmpty() ? setThumbnail(value.toString()) : false;
-        case MediaCenter::CreatedAtRole:
+        case KMediaCollection::CreatedAtRole:
             return setCreatedAt(value.toDateTime());
-        case MediaCenter::GenreRole:
+        case KMediaCollection::GenreRole:
             return setGenre(value.toString());
-        case MediaCenter::DurationRole :
+        case KMediaCollection::DurationRole :
             return setDuration(value.toInt());
-        case MediaCenter::RatingRole :
+        case KMediaCollection::RatingRole :
             return setRating(value.toInt());
         default:
             //qWarning() << "Unknown role " << role << " for value " << value;

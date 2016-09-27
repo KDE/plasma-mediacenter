@@ -24,7 +24,7 @@
 MEDIACENTER_EXPORT_BROWSINGBACKEND(FlickrBackend, "flickrbackend.json")
 
 FlickrBackend::FlickrBackend(QObject* parent, const QVariantList& args)
-    : MediaCenter::AbstractBrowsingBackend(parent, args)
+    : KMediaCollection::AbstractBrowsingBackend(parent, args)
 {
 
 }
@@ -47,7 +47,7 @@ bool FlickrBackend::initImpl()
 
 bool FlickrBackend::goOneLevelUp()
 {
-    return MediaCenter::AbstractBrowsingBackend::goOneLevelUp();
+    return KMediaCollection::AbstractBrowsingBackend::goOneLevelUp();
 }
 
 void FlickrBackend::search(const QString& searchTerm)

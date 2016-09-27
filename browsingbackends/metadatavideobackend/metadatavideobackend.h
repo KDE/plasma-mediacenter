@@ -23,7 +23,7 @@
 
 #include <abstractbrowsingbackend.h>
 
-class MetadataVideoBackend : public MediaCenter::AbstractBrowsingBackend
+class MetadataVideoBackend : public KMediaCollection::AbstractBrowsingBackend
 {
     Q_OBJECT
 public:

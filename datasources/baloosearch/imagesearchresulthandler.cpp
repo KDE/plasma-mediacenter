@@ -19,7 +19,7 @@
 #include <settings.h>
 
 #include <medialibrary.h>
-#include <mediacenter.h>
+#include <kmediacollection.h>
 
 #include <baloo/resultiterator.h>
 #include <baloo/file.h>
@@ -48,13 +48,13 @@ void ImageSearchResultHandler::handleResultImpl(
     const QString& filePath,
     const QHash< int, QVariant >& values)
 {
-    const QString fileUrl = values.value(MediaCenter::MediaUrlRole).toUrl().toLocalFile();
+    const QString fileUrl = values.value(KMediaCollection::MediaUrlRole).toUrl().toLocalFile();
     m_initialValuesByUrl.insert(fileUrl, values);
 
     //We remove the create date as we want to fill it only for images taken with
     //a camera or similar in slotFileReceived(). This is to make sure such
     //photos appear before junk images in the browser.
-    m_initialValuesByUrl[fileUrl].remove(MediaCenter::CreatedAtRole);
+    m_initialValuesByUrl[fileUrl].remove(KMediaCollection::CreatedAtRole);
 
     Baloo::File file(filePath);
     file.load();
@@ -82,7 +82,7 @@ void ImageSearchResultHandler::handleResultImpl(
 
     QHash<int, QVariant> vals;
     if (created.isValid()) {
-        vals.insert(MediaCenter::CreatedAtRole, created);
+        vals.insert(KMediaCollection::CreatedAtRole, created);
     }
 
     vals.unite(m_initialValuesByUrl.take(fileUrl));

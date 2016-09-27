@@ -20,21 +20,21 @@
 
 EventsPicturesModel::EventsPicturesModel(QObject* parent, MediaLibrary* mediaLibrary): PmcMetadataModel(parent, mediaLibrary)
 {
-    showMediaType(MediaCenter::Picture);
+    showMediaType(KMediaCollection::Picture);
 }
 
 QVariant EventsPicturesModel::data(const QModelIndex& index, int role) const
 {
     switch (role) {
     case Qt::DecorationRole:
-        return PmcMetadataModel::data (index, MediaCenter::MediaUrlRole);
-    case MediaCenter::MediaTypeRole:
+        return PmcMetadataModel::data (index, KMediaCollection::MediaUrlRole);
+    case KMediaCollection::MediaTypeRole:
         return "image";
-    case MediaCenter::HideLabelRole:
+    case KMediaCollection::HideLabelRole:
         return true;
-    case MediaCenter::DecorationTypeRole:
+    case KMediaCollection::DecorationTypeRole:
         return "image";
-    case MediaCenter::IsExpandableRole:
+    case KMediaCollection::IsExpandableRole:
         return false;
     }
 

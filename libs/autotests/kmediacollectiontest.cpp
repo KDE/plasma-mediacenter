@@ -16,38 +16,38 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#include "mediacentertest.h"
-#include <mediacenter.h>
+#include "kmediacollectiontest.h"
+#include <kmediacollection.h>
 
 #include <qtest.h>
 #include <QStandardPaths>
 
-QTEST_GUILESS_MAIN(MediaCenterTest);
+QTEST_GUILESS_MAIN(KMediaCollectionTest);
 
-void MediaCenterTest::initTestCase()
+void KMediaCollectionTest::initTestCase()
 {
     // Called before the first testfunction is executed
 }
 
-void MediaCenterTest::cleanupTestCase()
+void KMediaCollectionTest::cleanupTestCase()
 {
     // Called after the last testfunction was executed
 }
 
-void MediaCenterTest::init()
+void KMediaCollectionTest::init()
 {
     // Called before each testfunction is executed
 }
 
-void MediaCenterTest::cleanup()
+void KMediaCollectionTest::cleanup()
 {
     // Called after every testfunction
 }
 
 //TODO: remove or enable again
-void MediaCenterTest::shouldReturnPathForComponent()
+void KMediaCollectionTest::shouldReturnPathForComponent()
 {
-//    const QString path = MediaCenter::dataDirForComponent("test");
+//    const QString path = KMediaCollection::dataDirForComponent("test");
 
 //    const QString expectedPath = QString("%1%2/%3")
 //        .arg(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation))
@@ -59,9 +59,9 @@ void MediaCenterTest::shouldReturnPathForComponent()
 }
 
 //TODO: remove or enable again
-void MediaCenterTest::shouldReturnPathWithoutComponent()
+void KMediaCollectionTest::shouldReturnPathWithoutComponent()
 {
-//    const QString path = MediaCenter::dataDirForComponent();
+//    const QString path = KMediaCollection::dataDirForComponent();
 
 //    const QString expectedPath = QString("%1%2")
 //    .arg(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation))

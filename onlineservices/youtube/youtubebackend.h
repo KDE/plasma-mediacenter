@@ -29,7 +29,7 @@
  * @class YoutubeBackend
  * @brief A backend that manages queries to Youtube.
 */
-class YoutubeBackend : public MediaCenter::AbstractBrowsingBackend
+class YoutubeBackend : public KMediaCollection::AbstractBrowsingBackend
 {
     Q_OBJECT
 public:
