@@ -17,10 +17,10 @@
  ***********************************************************************************/
 
 #include "lastfmimagefetcher.h"
-#include "mediacenter/pmcimagecache.h"
-#include "mediacenter/singletonfactory.h"
-#include "mediacenter/medialibrary.h"
-#include "mediacenter/pmcmetadatamodel.h"
+#include <pmcimagecache.h>
+#include <singletonfactory.h>
+#include <medialibrary.h>
+#include <pmcmetadatamodel.h>
 
 #include <QNetworkRequest>
 #include <QNetworkReply>

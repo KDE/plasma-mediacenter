@@ -1,5 +1,5 @@
 /***********************************************************************************
- *   Copyright 2014 by Sinny Kumari <ksinny@gmail.com>                             *
+ *   Copyright 2014 Shantanu Tushar <shantanu@kde.org>                             *
  *                                                                                 *
  *                                                                                 *
  *   This library is free software; you can redistribute it and/or                 *
@@ -16,56 +16,69 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#include "mediacentertest.h"
-#include <mediacenter/mediacenter.h>
+#include "mediatest.h"
+
+#include <album.h>
+#include <artist.h>
+#include <media.h>
 
 #include <qtest.h>
-#include <QStandardPaths>
 
-QTEST_GUILESS_MAIN(MediaCenterTest);
+QTEST_GUILESS_MAIN(MediaTest);
 
-void MediaCenterTest::initTestCase()
+const QString TEST_URL = "uri://test.123";
+
+void MediaTest::initTestCase()
 {
     // Called before the first testfunction is executed
 }
 
-void MediaCenterTest::cleanupTestCase()
+void MediaTest::cleanupTestCase()
 {
     // Called after the last testfunction was executed
 }
 
-void MediaCenterTest::init()
+void MediaTest::init()
 {
     // Called before each testfunction is executed
 }
 
-void MediaCenterTest::cleanup()
+void MediaTest::cleanup()
 {
     // Called after every testfunction
 }
 
-//TODO: remove or enable again
-void MediaCenterTest::shouldReturnPathForComponent()
+void MediaTest::shouldSetAlbumAndUpdateRelationsCorrectly()
 {
-//    const QString path = MediaCenter::dataDirForComponent("test");
+    QSharedPointer<Artist> artist(new Artist("Artist"));
+    QSharedPointer<Album> oldAlbum(new Album("GNOME", artist));
+    QSharedPointer<Album> newAlbum(new Album("KDE", artist));
 
-//    const QString expectedPath = QString("%1%2/%3")
-//        .arg(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation))
-//        .arg(KCmdLineArgs::appName())
-//        .arg("test");
+    QSharedPointer<Media> media = QSharedPointer<Media>(new Media(TEST_URL));
+    media->setAlbumAndUpdateRelations(media, oldAlbum);
 
-//    QCOMPARE(path, expectedPath);
+    QCOMPARE(media->album(), oldAlbum);
+    QCOMPARE(oldAlbum->media().at(0), media);
 
+    media->setAlbumAndUpdateRelations(media, newAlbum);
+    QCOMPARE(media->album(), newAlbum);
+    QCOMPARE(newAlbum->media().at(0), media);
+    QCOMPARE(oldAlbum->media().size(), 0);
 }
 
-//TODO: remove or enable again
-void MediaCenterTest::shouldReturnPathWithoutComponent()
+void MediaTest::shouldSetArtistAndUpdateRelationsCorrectly()
 {
-//    const QString path = MediaCenter::dataDirForComponent();
+    QSharedPointer<Artist> oldArtist(new Artist("Foo"));
+    QSharedPointer<Artist> newArtist(new Artist("Bar"));
 
-//    const QString expectedPath = QString("%1%2")
-//    .arg(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation))
-//    .arg(KCmdLineArgs::appName());
+    QSharedPointer<Media> media = QSharedPointer<Media>(new Media(TEST_URL));
+    media->setArtistAndUpdateRelations(media, oldArtist);
 
-//    QCOMPARE(path, expectedPath);
+    QCOMPARE(media->artist(), oldArtist);
+    QCOMPARE(oldArtist->media().at(0), media);
+
+    media->setArtistAndUpdateRelations(media, newArtist);
+    QCOMPARE(media->artist(), newArtist);
+    QCOMPARE(newArtist->media().at(0), media);
+    QCOMPARE(oldArtist->media().size(), 0);
 }

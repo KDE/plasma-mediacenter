@@ -18,13 +18,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#include <QCoreApplication>
-#include "mediacenter/datasourcesloader.h"
+#include "qmlaccess.h"
+#include "medialibrary.h"
+#include "mpris2/mpris2.h"
 
-int main(int argc, char *argv[])
+#include <QSharedPointer>
+
+QMLAccess::QMLAccess(QObject *parent) : QObject(parent)
 {
-    QCoreApplication app(argc, argv);
-    DataSourcesLoader datasourcesloader;
-    datasourcesloader.load();
-    return app.exec();
+    SingletonFactory::instanceFor<MediaLibrary>()->start();
+
+    DataSourcesLoader datasourceLoader;
+    datasourceLoader.load();
+
+    m_playlistModel = new PlaylistModel(this);
+
+    m_backendsModel = new BackendsModel(this);
+
+    Mpris2 *mprisObject = new Mpris2(m_playlistModel, this);
+    m_mpris2PlayerAdaptor = mprisObject->getMediaPlayer2Player();
+
+    emit backendsModelChanged();
+    emit playlistModelChanged();
+    emit mpris2PlayerAdaptorChanged();
 }
+

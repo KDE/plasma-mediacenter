@@ -21,7 +21,7 @@
 #ifndef METADATAMUSICBACKEND_H
 #define METADATAMUSICBACKEND_H
 
-#include "mediacenter/abstractbrowsingbackend.h"
+#include <abstractbrowsingbackend.h>
 
 class FilterMediaModel;
 class PmcMetadataModel;

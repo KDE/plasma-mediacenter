@@ -10,7 +10,7 @@ add_library(pmc_eventsbackend MODULE ${eventsbackend_SRCS})
 set_target_properties(pmc_eventsbackend PROPERTIES PREFIX "")
 
 target_link_libraries(pmc_eventsbackend
-    plasmamediacenter
+    libmedia
 )
 
 kservice_desktop_to_json(pmc_eventsbackend eventsbackend.desktop)

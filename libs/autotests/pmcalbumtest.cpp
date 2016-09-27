@@ -16,39 +16,56 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>. *
  ***********************************************************************************/
 
-#include "pmcartisttest.h"
-#include <mediacenter/artist.h>
-#include <mediacenter/pmcartist.h>
+#include "pmcalbumtest.h"
+#include <album.h>
+#include <pmcalbum.h>
+#include <media.h>
+#include <artist.h>
 
 #include <qtest.h>
 
-QTEST_GUILESS_MAIN(PmcArtistTest);
+QTEST_GUILESS_MAIN(PmcAlbumTest);
 
-void PmcArtistTest::initTestCase()
+void PmcAlbumTest::initTestCase()
 {
     // Called before the first testfunction is executed
 }
 
-void PmcArtistTest::cleanupTestCase()
+void PmcAlbumTest::cleanupTestCase()
 {
     // Called after the last testfunction was executed
 }
 
-void PmcArtistTest::init()
+void PmcAlbumTest::init()
 {
     // Called before each testfunction is executed
 }
 
-void PmcArtistTest::cleanup()
+void PmcAlbumTest::cleanup()
 {
     // Called after every testfunction
 }
 
-void PmcArtistTest::shouldReturnNameOfArtist()
+void PmcAlbumTest::shouldReturnAlbumArtist()
 {
     auto artist = QSharedPointer<Artist>(new Artist("Artist"));
-    PmcArtist pmcArtist(artist);
+    auto album = QSharedPointer<Album>(new Album("Album", artist));
+    auto media = QSharedPointer<Media>(new Media("Media"));
+    media->setArtistAndUpdateRelations(media, artist);
 
-    QCOMPARE(pmcArtist.name(), QString("Artist"));
+    album->addMedia(media);
+
+    PmcAlbum pmcAlbum(album);
+
+    QCOMPARE(pmcAlbum.albumArtist(), QString("Artist"));
+}
+
+void PmcAlbumTest::shouldReturnNameOfAlbum()
+{
+    auto artist = QSharedPointer<Artist>(new Artist("Artist"));
+    auto album = QSharedPointer<Album>(new Album("Album", artist));
+    PmcAlbum pmcAlbum(album);
+
+    QCOMPARE(pmcAlbum.name(), QString("Album"));
 }
 

@@ -22,9 +22,9 @@
 #include "mediaplayer2.h"
 #include "mediaplayer2player.h"
 #include "mediaplayer2tracklist.h"
-#include "mediacenter/medialibrary.h"
-#include "mediacenter/pmcmedia.h"
-#include "mediacenter/pmcimagecache.h"
+#include "medialibrary.h"
+#include "pmcmedia.h"
+#include "pmcimagecache.h"
 
 #include <QDBusConnection>
 #include <QDir>

@@ -51,6 +51,7 @@ find_package(KF5 ${KF5_MIN_VERSION} COMPONENTS REQUIRED
 find_package(KF5Baloo)
 add_feature_info("KF5Baloo" KF5Baloo_FOUND "Required for Baloo integration")
 find_package(Taglib REQUIRED)
+find_package(LibMedia REQUIRED)
 
 include_directories(
     ${TAGLIB_INCLUDES}
@@ -59,7 +60,6 @@ include_directories(
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_BINARY_DIR}
-    libs/
 )
 
 # if plasma-workspace is installed in different prefix then pmc then it will not work
@@ -79,11 +79,11 @@ add_subdirectory(datasources)
 #add_subdirectory(onlineservices)
 add_subdirectory(mediaelements)
 add_subdirectory(components)
-add_subdirectory(libs)
+#add_subdirectory(libs)
 add_subdirectory(packages)
 add_subdirectory(images)
-add_subdirectory(tests)
-add_subdirectory(autotests)
+#add_subdirectory(tests)
+#add_subdirectory(autotests)
 #
 # include(MacroOptionalAddSubdirectory)
 # macro_optional_add_subdirectory( po )

@@ -23,10 +23,10 @@
 #include "metadatavideobackend.h"
 #include "metadatavideomodel.h"
 
-#include "mediacenter/filtermediamodel.h"
+#include <filtermediamodel.h>
 
 #include <QDebug>
-#include "mediacenter/pmcmodel.h"
+#include <pmcmodel.h>
 
 MEDIACENTER_EXPORT_BROWSINGBACKEND(MetadataVideoBackend, "metadatavideobackend.json")
 

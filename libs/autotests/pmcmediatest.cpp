@@ -19,7 +19,7 @@
 #include "pmcmediatest.h"
 #include "testhelpers.h"
 
-#include <mediacenter/pmcmedia.h>
+#include <pmcmedia.h>
 
 #include <qtest.h>
 

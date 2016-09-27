@@ -6,7 +6,7 @@ set (mediacenterplugin_SRCS
 add_library(mediacenterplugin SHARED ${mediacenterplugin_SRCS} )
 
 target_link_libraries(mediacenterplugin
-    plasmamediacenter
+    libmedia
     Qt5::Qml
 )
 

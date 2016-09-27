@@ -6,7 +6,7 @@ add_library(pmc_filesystemsearch MODULE ${filesystemsearch_SRCS})
 set_target_properties(pmc_filesystemsearch PROPERTIES PREFIX "")
 
 target_link_libraries(pmc_filesystemsearch
-    plasmamediacenter
+    libmedia
 )
 
 kcoreaddons_desktop_to_json(pmc_filesystemsearch filesystemsearch.desktop)

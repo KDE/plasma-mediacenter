@@ -22,7 +22,7 @@
 
 #include <QAbstractItemModel>
 
-#include "mediacenter/pmcmetadatamodel.h"
+#include <pmcmetadatamodel.h>
 
 class MetadataVideoModel : public PmcMetadataModel
 {

@@ -26,9 +26,9 @@
 #include <QVariant>
 #include <QSharedPointer>
 
-#include "mediacenter/abstractdatasource.h"
-#include "mediacenter/pmcmedia.h"
-#include "mediacenter_export.h"
+#include "abstractdatasource.h"
+#include <pmcmedia.h>
+#include <mediacenter_export.h>
 
 class LastFmImageFetcher : public MediaCenter::AbstractDataSource
 {

@@ -28,7 +28,7 @@
 #include <QPointer>
 #include <QUrl>
 
-#include "mediacenter/runtimedata.h"
+#include "runtimedata.h"
 
 
 class MEDIACENTER_EXPORT MediaPlayer2Player : public QDBusAbstractAdaptor

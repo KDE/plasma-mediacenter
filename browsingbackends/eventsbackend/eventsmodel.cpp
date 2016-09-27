@@ -17,7 +17,7 @@
  ***********************************************************************************/
 
 #include "eventsmodel.h"
-#include <mediacenter/mediacenter.h>
+#include <mediacenter.h>
 
 #include <KGlobal>
 #include <KSharedConfig>

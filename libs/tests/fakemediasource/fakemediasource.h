@@ -21,7 +21,7 @@
 #define FAKEMEDIASOURCE_H
 
 #include <QObject>
-#include <mediacenter/abstractmediasource.h>
+#include <abstractmediasource.h>
 
 class FakeMediaSource : public MediaCenter::AbstractMediaSource
 

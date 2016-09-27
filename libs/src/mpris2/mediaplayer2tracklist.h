@@ -21,7 +21,7 @@
 #define MEDIAPLAYER2TRACKLIST_H
 
 #include "mediacenter_export.h"
-#include "mediacenter/singletonfactory.h"
+#include "singletonfactory.h"
 #include "playlistmodel.h"
 
 #include <QDBusAbstractAdaptor>

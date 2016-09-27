@@ -21,9 +21,9 @@
 #include "eventsfiltermodel.h"
 #include "eventsmodel.h"
 
-#include <mediacenter/filtermediamodel.h>
+#include <filtermediamodel.h>
 
-#include <mediacenter/pmcmodel.h>
+#include <pmcmodel.h>
 #include <KLocalizedString>
 
 #include <QTimer>

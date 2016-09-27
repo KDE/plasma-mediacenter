@@ -22,10 +22,10 @@
 
 #include "metadatamusicbackend.h"
 
-#include "mediacenter/pmcmetadatamodel.h"
-#include "mediacenter/playlistmodel.h"
-#include "mediacenter/filtermediamodel.h"
-#include "mediacenter/pmcmodel.h"
+#include <pmcmetadatamodel.h>
+#include <playlistmodel.h>
+#include <filtermediamodel.h>
+#include <pmcmodel.h>
 
 #include <QDebug>
 #include <klocalizedstring.h>

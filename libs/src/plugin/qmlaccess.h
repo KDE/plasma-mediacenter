@@ -21,12 +21,12 @@
 #ifndef QMLACCESS_H
 #define QMLACCESS_H
 
-#include "mediacenter/playlistmodel.h"
-#include "mediacenter/backendsmodel.h"
-#include "mediacenter/abstractbrowsingbackend.h"
-#include "mediacenter/singletonfactory.h"
-#include "mediacenter/datasourcesloader.h"
-#include "mediacenter/mpris2/mediaplayer2player.h"
+#include "playlistmodel.h"
+#include "backendsmodel.h"
+#include "abstractbrowsingbackend.h"
+#include "singletonfactory.h"
+#include "datasourcesloader.h"
+#include "mpris2/mediaplayer2player.h"
 
 class QMLAccess : public QObject
 {

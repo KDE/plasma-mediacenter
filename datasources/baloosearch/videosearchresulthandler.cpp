@@ -17,8 +17,8 @@
 
 #include "videosearchresulthandler.h"
 
-#include <mediacenter/medialibrary.h>
-#include <mediacenter/mediacenter.h>
+#include <medialibrary.h>
+#include <mediacenter.h>
 
 #include <baloo/file.h>
 #include <baloo/resultiterator.h>

@@ -24,8 +24,8 @@
 
 #include "metadatapicturemodel.h"
 
-#include "mediacenter/pmcmodel.h"
-#include "mediacenter/filtermediamodel.h"
+#include <pmcmodel.h>
+#include <filtermediamodel.h>
 
 MEDIACENTER_EXPORT_BROWSINGBACKEND(MetadataPictureBackend, "metadatapicturebackend.json")
 

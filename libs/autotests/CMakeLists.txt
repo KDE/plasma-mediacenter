@@ -25,6 +25,6 @@ set(pmc_test_SRCS
 
 ecm_add_tests(
     ${pmc_test_SRCS}
-    LINK_LIBRARIES plasmamediacentertest Qt5::Test
+    LINK_LIBRARIES libmediatest Qt5::Test
     NAME_PREFIX "pmctest-"
     )
