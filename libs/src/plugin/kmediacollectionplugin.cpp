@@ -64,4 +64,4 @@ void KMediaCollectionPlugin::initializeEngine(QQmlEngine *engine, const char *ur
     engine->addImageProvider(IconImageProvider::identificationString, new IconImageProvider());
 }
 
-#include "moc_mediacollectionplugin.cpp"
+#include "moc_kmediacollectionplugin.cpp"

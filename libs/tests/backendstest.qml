@@ -20,7 +20,7 @@
 
 
 import QtQuick 2.0
-import org.kde.plasma.mediacenter 2.0 as PMC
+import org.kde.plasma.mediacollection 2.0 as PMC
 Item {
     width: 200
     height: 200

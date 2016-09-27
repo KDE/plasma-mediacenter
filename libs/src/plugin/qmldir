@@ -1,2 +1,2 @@
 module org.kde.plasma.mediacollection
-plugin mediacollectionplugin
+plugin KMediaCollectionPlugin

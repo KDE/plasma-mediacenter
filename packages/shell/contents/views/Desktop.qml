@@ -25,7 +25,7 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.shell 2.0 as Shell
 
-import org.kde.plasma.mediacenter 2.0 as PMC
+import org.kde.plasma.mediacollection 2.0 as PMC
 import org.kde.plasma.mediacenter.components 2.0 as PmcComponents
 import org.kde.plasma.mediacenter.elements 2.0 as MediaCenterElements
 

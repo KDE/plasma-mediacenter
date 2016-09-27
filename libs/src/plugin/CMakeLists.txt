@@ -1,4 +1,4 @@
-set (lmediacollectionplugin_SRCS
+set (kmediacollectionplugin_SRCS
     qmlaccess.cpp
     kmediacollectionplugin.cpp
 )
