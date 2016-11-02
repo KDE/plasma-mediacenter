@@ -17,6 +17,7 @@ Name[sl]=Vsebnik predstavnostnega središča
 Name[sv]=Mediacenter-omgivning
 Name[uk]=Контейнер мультимедійного центру
 Name[x-test]=xxMediacenter Containmentxx
+Name[zh_TW]=媒體中心包含
 Type=Service
 
 NoDisplay=true

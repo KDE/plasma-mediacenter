@@ -30,6 +30,7 @@ Name[sv]=Senaste FM-bildhämtare
 Name[uk]=Засіб отримання зображень з LastFm
 Name[x-test]=xxLastFmImageFetcherxx
 Name[zh_CN]=获取 LastFm 图片
+Name[zh_TW]=LastFmImageFetcher
 
 X-KDE-ServiceTypes=Plasma/MediaCenter/DataSource
 
