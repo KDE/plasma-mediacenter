@@ -69,6 +69,7 @@ ecm_setup_version(${PROJECT_VERSION}
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE_ENABLE_EXCEPTIONS}")
 set(CMAKE_AUTOMOC ON)
 
+add_subdirectory(plugins)
 add_subdirectory(src)
 add_subdirectory(tests)
 add_subdirectory(autotests)
