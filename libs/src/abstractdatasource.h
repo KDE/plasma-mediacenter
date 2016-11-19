@@ -28,13 +28,45 @@
 class MediaLibrary;
 
 namespace KMediaCollection {
+
+/**
+ * @brief Abstract class for DataSources
+ *
+ * Example of use:
+ * ```
+ * KPluginLoader loader(QStringLiteral("plasma/mediacollection/datasources/MySource"));
+ * KPluginFactory* factory = loader.factory();
+ * const QVariantList args = QVariantList() << loader.metaData().toVariantMap();
+ * if(factory)
+ * {
+ *     KMediaCollection::AbstractDataSource *dataSource = factory->create<KMediaCollection::AbstractDataSource>(0, args);
+ *     if (dataSource) {
+ *         dataSource->setMediaLibrary(SingletonFactory::instanceFor<MediaLibrary>());
+ *         dataSource->start();
+ *         connect(QApplication::instance(), SIGNAL(destroyed(QObject*)), dataSource, SLOT(quit()));
+ *         qDebug() << "Success";
+ *     } else {
+ *         qDebug() << "Failure";
+ *     }
+ * }
+ * ```
+ */
 class KMEDIACOLLECTION_EXPORT AbstractDataSource : public QThread
 {
     Q_OBJECT
 public:
+    /**
+     * @brief Constructor
+     * @param parent
+     * @param QVariantList arguments
+     */
     explicit AbstractDataSource(QObject* parent = 0, const QVariantList& = QVariantList());
     ~AbstractDataSource();
 
+    /**
+     * @brief Set the MediaLibrary
+     * @param mediaLibrary
+     */
     void setMediaLibrary(MediaLibrary *mediaLibrary);
 
 protected:
