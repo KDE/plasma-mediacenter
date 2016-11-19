@@ -23,4 +23,4 @@ target_link_libraries(pmc_baloosearch
 
 kcoreaddons_desktop_to_json(pmc_baloosearch baloosearch.desktop)
 
-install(TARGETS pmc_baloosearch DESTINATION ${PLUGIN_INSTALL_DIR}/plasma/mediacenter/datasources)
+install(TARGETS pmc_baloosearch DESTINATION ${PLUGIN_INSTALL_DIR}/plasma/mediacollection/datasources)

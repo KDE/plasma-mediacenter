@@ -11,4 +11,4 @@ target_link_libraries(pmc_lastfm
 
 kcoreaddons_desktop_to_json(pmc_lastfm lastfmimagefetcher.desktop)
 
-install(TARGETS pmc_lastfm DESTINATION ${PLUGIN_INSTALL_DIR}/plasma/mediacenter/datasources)
+install(TARGETS pmc_lastfm DESTINATION ${PLUGIN_INSTALL_DIR}/plasma/mediacollection/datasources)
