@@ -28,13 +28,26 @@ namespace KMediaCollection {
 class AbstractDataSource;
 }
 
+/**
+ * @brief Used to load all installed datasources.
+ *
+ * A datasource is loaded if it is found in `$QT_PLUGIN_PATH/plasma/mediacollection/datasources`
+ */
 class KMEDIACOLLECTION_EXPORT DataSourcesLoader : public QObject
 {
     Q_OBJECT
 public:
+
+    /**
+     * @brief Constructor
+     * @param parent
+     */
     explicit DataSourcesLoader(QObject* parent = 0);
 
 public Q_SLOTS:
+    /**
+     * Load all datasources.
+     */
     void load();
 };
 

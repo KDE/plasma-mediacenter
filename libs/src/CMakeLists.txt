@@ -57,7 +57,10 @@ set(kmediacollection_link_libs
     KF5::CoreAddons
     KF5::Service
     KF5::Activities
+    KF5::KIOCore
+    KF5::KIOFileWidgets
     KF5::KIOWidgets
+    KF5::KIONTLM
     KF5::Plasma
     ${TAGLIB_LIBRARIES}
 )
@@ -74,15 +77,15 @@ generate_export_header(KMediaCollection
 ecm_generate_headers(kmediacollection_HEADERS
     HEADER_NAMES
     AbstractBrowsingBackend
+    AbstractDataSource
+    DataSourcesLoader
     BackendsModel
     IconImageProvider
     MediaBrowserLoader
     MediaValidator
     PlaylistModel
-    PMCImageCache
     RuntimeData
-    AbstractDataSource
-    DataSourcesLoader
+
     ItemCache
     KMediaCollection
     MultiplePlaylistModel
@@ -103,6 +106,7 @@ ecm_generate_headers(kmediacollection_HEADERS
     MediaLibraryWrapperCache
     PlaylistItem
     PMCCoverArtProvider
+    PMCImageCache
     PMCModel
     SubtitleProvider
 
