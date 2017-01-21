@@ -143,8 +143,8 @@ void UPnPDataSource::rescanMediaServer(GUPnPDeviceProxy *proxy)
 void UPnPDataSource::addMedia(QHash<int, QString> properties)
 {
     MediaLibrary *mediaLibrary = SingletonFactory::instanceFor<MediaLibrary>();
-    MediaHandler *mediaHandler = new MediaHandler(mediaLibrary, 0);
-    mediaHandler->handleResult(properties);
+    MediaHandler mediaHandler(mediaLibrary, 0);
+    mediaHandler.handleResult(properties);
 }
 
 #include "upnpdatasource.moc"
