@@ -42,7 +42,7 @@ public:
     explicit MediaLibrary(MediaValidator *mediaValidator = 0, QObject* parent = 0);
     virtual ~MediaLibrary();
 
-    virtual void run();
+    void run() Q_DECL_OVERRIDE;
 
     void updateMedia(const QHash<int, QVariant> &data);
     void updateMedia(const QString &url, const QHash<int, QVariant> &data);

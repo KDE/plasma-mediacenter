@@ -61,7 +61,7 @@ public:
     */ 
     virtual ~ThumbnailProvider();
 
-    virtual QPixmap requestPixmap(const QString& id, QSize* size, const QSize& requestedSize);
+    QPixmap requestPixmap(const QString& id, QSize* size, const QSize& requestedSize) Q_DECL_OVERRIDE;
 
     /**
      * Catches a preview (thumbnail) for files using KIO:: PreviewJob

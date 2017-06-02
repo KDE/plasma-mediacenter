@@ -36,7 +36,7 @@ public:
     void clearFilters(bool invalidate = true);
 
 protected:
-    virtual bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const;
+    bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const Q_DECL_OVERRIDE;
 
 private:
     QHash<int, QVariant> m_filters;

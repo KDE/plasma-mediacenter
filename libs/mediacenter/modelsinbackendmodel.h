@@ -30,9 +30,9 @@ public:
     enum Roles {
         ModelRole = Qt::UserRole + 1
     };
-    virtual QVariant data(const QModelIndex& index, int role) const;
-    virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
-    virtual QHash<int, QByteArray> roleNames() const;
+    QVariant data(const QModelIndex& index, int role) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex& parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;
 
     void addModel(PmcModel* model);
     bool replaceModel(PmcModel* original, PmcModel* replacement);

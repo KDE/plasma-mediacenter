@@ -39,7 +39,7 @@ public:
     virtual ~FilesystemSearchMediaSource();
 
 protected:
-    virtual void run();
+    void run() Q_DECL_OVERRIDE;
 
 private:
     mutable QMutex m_quitMutex;

@@ -30,10 +30,10 @@ public:
     MetadataVideoBackend (QObject* parent, const QVariantList& args);
     virtual ~MetadataVideoBackend();
 
-    virtual void search(const QString& searchTerm);
+    void search(const QString& searchTerm) Q_DECL_OVERRIDE;
 
 protected:
-    virtual bool initImpl();
+    bool initImpl() Q_DECL_OVERRIDE;
 };
 
 #endif // METADATAVIDEOBACKEND_H

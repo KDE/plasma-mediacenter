@@ -41,7 +41,7 @@ public:
     void serviceUnavailable();
 
 protected:
-    virtual void run();
+    void run() Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void processQueue();

@@ -47,7 +47,7 @@ signals:
     void currentIndexChanged();
 
 protected:
-    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
+    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const Q_DECL_OVERRIDE;
 
 private:
     QString m_searchString;

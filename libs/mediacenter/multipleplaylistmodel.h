@@ -36,8 +36,8 @@ public:
     explicit MultiplePlaylistModel(QObject* parent = 0);
     ~MultiplePlaylistModel();
 
-    virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-    virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
+    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex& parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
     QObject *playlistModelAddress() const;
     Q_INVOKABLE void createNewPlaylist(const QString &name);

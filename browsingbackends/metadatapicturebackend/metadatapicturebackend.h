@@ -32,7 +32,7 @@ public:
     virtual ~MetadataPictureBackend();
 
 protected:
-    virtual bool initImpl();
+    bool initImpl() Q_DECL_OVERRIDE;
 };
 
 #endif // METADATAPICTUREBACKEND_H

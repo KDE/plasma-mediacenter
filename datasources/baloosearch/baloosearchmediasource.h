@@ -30,7 +30,7 @@ public:
     QHash< QString, QStringList > medialist;
 
 protected:
-    virtual void run();
+    void run() Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void startQuerying();

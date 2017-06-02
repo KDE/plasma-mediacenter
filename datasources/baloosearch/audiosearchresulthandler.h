@@ -29,12 +29,12 @@ class AudioSearchResultHandler : public SearchResultHandler
     Q_OBJECT
 public:
     AudioSearchResultHandler(MediaLibrary* mediaLibrary, QObject* parent);
-    virtual QString supportedMediaType() const;
-    virtual QString supportedMimeType() const;
+    QString supportedMediaType() const Q_DECL_OVERRIDE;
+    QString supportedMimeType() const Q_DECL_OVERRIDE;
 
 protected:
-    virtual void handleResultImpl(const QString& filePath,
-                                  const QHash< int, QVariant >& values);
+    void handleResultImpl(const QString& filePath,
+                                  const QHash< int, QVariant >& values) Q_DECL_OVERRIDE;
 };
 
 #endif // AUDIOSEARCHRESULTHANDLER_H

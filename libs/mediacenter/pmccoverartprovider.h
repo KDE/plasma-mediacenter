@@ -35,8 +35,8 @@ public:
     static const char *identificationString;
 
     PmcCoverArtProvider ();
-    virtual QImage requestImage ( const QString& id, QSize* size,
-                                  const QSize& requestedSize );
+    QImage requestImage ( const QString& id, QSize* size,
+                                  const QSize& requestedSize ) Q_DECL_OVERRIDE;
 
     static QString qmlImageUriForAlbumCover(const QString &albumName);
     static QString qmlImageUriForArtistCover(const QString &artistName);

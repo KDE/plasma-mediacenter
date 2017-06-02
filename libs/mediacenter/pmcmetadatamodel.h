@@ -40,8 +40,8 @@ class MEDIACENTER_EXPORT PmcMetadataModel : public QAbstractListModel
 public:
     explicit PmcMetadataModel(QObject* parent = 0, MediaLibrary* mediaLibrary = 0);
     virtual ~PmcMetadataModel();
-    virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-    virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
+    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex& parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
     void showMediaType(MediaCenter::MediaType mediaType);
     void setDefaultDecoration(const QString &decoration);

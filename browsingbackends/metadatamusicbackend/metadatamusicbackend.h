@@ -43,13 +43,13 @@ public:
     void setArtistData(const QMap<int, QVariant>& data);
     void setAlbumData(const QMap<int, QVariant>& data);
 
-    virtual bool expand(int row, QAbstractItemModel* model);
+    bool expand(int row, QAbstractItemModel* model) Q_DECL_OVERRIDE;
 
-    virtual void handleButtonClick(const QString& buttonName);
+    void handleButtonClick(const QString& buttonName) Q_DECL_OVERRIDE;
 
     //virtual void searchModel(const QString& searchTerm, QAbstractItemModel* model);
 
-    virtual QStringList allMedia();
+    QStringList allMedia() Q_DECL_OVERRIDE;
 
 public Q_SLOTS:
     bool back(QObject* model);
@@ -60,7 +60,7 @@ Q_SIGNALS:
 
 protected:
     void updateModelAccordingToFilters();
-    virtual bool initImpl();
+    bool initImpl() Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void initializeModels();

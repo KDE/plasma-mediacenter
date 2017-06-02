@@ -29,7 +29,7 @@ public:
     explicit MetadataPictureModel (QObject* parent = 0);
     virtual ~MetadataPictureModel();
 
-    virtual QVariant data (const QModelIndex& index, int role = Qt::DisplayRole) const;
+    QVariant data (const QModelIndex& index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 };
 
 #endif // METADATAPICTUREMODEL_H

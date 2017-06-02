@@ -31,7 +31,7 @@ public:
     static const char *identificationString;
 
     IconImageProvider();
-    virtual QPixmap requestPixmap(const QString& id, QSize* size, const QSize& requestedSize);
+    QPixmap requestPixmap(const QString& id, QSize* size, const QSize& requestedSize) Q_DECL_OVERRIDE;
 };
 
 #endif // ICONIMAGEPROVIDER_H
