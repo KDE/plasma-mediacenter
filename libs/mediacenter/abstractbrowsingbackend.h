@@ -48,7 +48,7 @@ class MEDIACENTER_EXPORT AbstractBrowsingBackend : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
-    Q_PROPERTY(QObject* models READ models NOTIFY modelsChanged)
+    //Q_PROPERTY(QObject* models READ models NOTIFY modelsChanged)
     Q_PROPERTY(QStringList buttons READ buttons NOTIFY buttonsChanged)
 
 public:
@@ -82,12 +82,12 @@ public:
      * The default implementation returns the first (or the only) model.
      * @returns the model of the browsing backend
      */
-    QAbstractItemModel *model();
+    Q_INVOKABLE QAbstractItemModel *model();
 
     /**
      * @returns the models available in the browsing backend
      */
-    QObject* models();
+//    QObject* models();
 
     /**
      * Call this method to get a list of strings that should be used to create
@@ -99,6 +99,11 @@ public:
      * @returns a list of buttons the backend wants to show on the UI
      */
     QStringList buttons() const;
+
+    /**
+     * TODO: Remove when multiple models are there
+     */
+    Q_INVOKABLE QString viewType() const;
 
     /**
      * This method will be called when the media center wants to load this backend.
@@ -173,7 +178,7 @@ public:
 
 Q_SIGNALS:
     void busyChanged();
-    void modelsChanged();
+    //void modelsChanged();
     void buttonsChanged();
 
     void error(const QString &message);

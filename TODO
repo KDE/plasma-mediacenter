@@ -2,19 +2,12 @@ Preview
 =======
 
 - Port away eventsbackend from kdelibs4support
-- Port away mpris2 interface from kdelibs4support (DONE)
-- Polish mpris2 interface (DONE)
-- once merged to master, get feedback from VDG (Volunteers? :P)
 - Fix font sizes so that both HiDPI and Low DPI people are happy
-- Fix music images, it used to show album coverart if available (DONE)
 - Export additional roles in itemData so they can be used in MediaInfoPanel
-- Put rating widget in plasma-framework/kdeclarative/foobar
-- Allow user to favorite media
 
 Past Preview
 ============
 
-- Get it in sync with Plasma release schedule and merge with Plasma 5
 - Merge events backend
     - Adapt to new API
     - Merge it with metadatapictures

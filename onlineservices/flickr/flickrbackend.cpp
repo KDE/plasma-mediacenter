@@ -39,6 +39,7 @@ bool FlickrBackend::initImpl()
 {
     FlickrModel *model = new FlickrModel(this);
     PmcModel *metadata = new PmcModel(model, this);
+    metadata->setViewType("gridbrowser");
     metadata->setSupportsSearch(true);
     setModel(metadata);
     return true;

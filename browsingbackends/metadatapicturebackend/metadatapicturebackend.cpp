@@ -49,6 +49,7 @@ bool MetadataPictureBackend::initImpl()
 
     PmcModel *metadata = new PmcModel(filteredModel, this);
     metadata->setName("All Pictures");
+    metadata->setViewType("gridbrowser");
     setModel(metadata);
     return true;
 }

@@ -20,6 +20,7 @@
 
 import QtQuick 2.1
 import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.plasma.mediacenter 2.0 as PMC
 import org.kde.plasma.mediacenter.components 2.0 as MediaCenterComponents
 
 FocusScope {
@@ -33,28 +34,15 @@ FocusScope {
     signal playAllRequested()
     signal popupMenuRequested(int index, string mediaUrl, string mediaType, string display)
 
+   PMC.MediaBrowserLoader {
+        id: loader
+    }
+
     Item {
         id: mediaBrowserViewItem
         property QtObject mediaBrowserGridView
-
         anchors {
             fill: parent
-        }
-    }
-
-    Component {
-        id: mediaBrowserSmartBrowserComponent
-        MediaCenterComponents.CategoriesBrowser {
-            anchors {
-                bottom: parent.bottom; right: parent.right; left: parent.left;
-                top: parent.top
-	        }
-            focus: true
-            backend: mediaBrowser.currentBrowsingBackend
-            models: mediaBrowser.currentBrowsingBackend.models
-
-            onMediaSelected: mediaBrowser.playRequested(index, url, mediaType, model)
-            onPopupRequested: mediaBrowser.popupMenuRequested(index, url, mediaType, title)
         }
     }
 
@@ -62,74 +50,35 @@ FocusScope {
         if (!currentBrowsingBackend)
             return;
 
-        errorLabel.text = "";
-
         if (mediaBrowserViewItem.mediaBrowserGridView) {
             mediaBrowserViewItem.mediaBrowserGridView.destroy();
         }
-
-        var object = mediaBrowserSmartBrowserComponent.createObject(mediaBrowserViewItem);
-
+        var thisModel = currentBrowsingBackend.model();
+        print(thisModel)
+        var component = Qt.createComponent(loader.getMediaBrowser(currentBrowsingBackend.viewType()));
+        var object = component.createObject(mediaBrowserViewItem);
         mediaBrowserViewItem.mediaBrowserGridView = object;
         object.focus = true;
-
-        if (currentBrowsingBackend) {
-            currentBrowsingBackend.error.connect(errorLabel.setError);
-            currentBrowsingBackend.showCustomUi.connect(showCustomUi);
+        if (mediaBrowser.backendOverlay) {
+                    mediaBrowser.backendOverlay.destroy();
         }
-    }
 
-    function destroyGridView()
-    {
-        mediaBrowserViewItem.mediaBrowserGridView.destroy()
-    }
-
-    function loadModel()
-    {
-        if (mediaBrowserViewItem && mediaBrowserViewItem.mediaBrowserGridView)
-            mediaBrowserViewItem.mediaBrowserGridView.model = (function() { return currentBrowsingBackend.models[0]; });
-    }
-
-    PlasmaComponents.Label {
-        id: errorLabel
-        anchors.centerIn: parent
-        font.pointSize: fontSizes.large
-        z: 2
-
-        function setError(message)
-        {
-            errorLabel.text = message;
+        if (object != null) {
+            mediaBrowserViewItem.mediaBrowserGridView = object;
+            object.focus = true;
+            object.model = thisModel;
+            object.anchors.fill = mediaBrowserViewItem;
+            object.mediaSelected.connect(function(index, mediaUrl, mediaType, model) {
+            mediaBrowser.playRequested(index, mediaUrl, mediaType, thisModel)
+        })
+        } else {
+            print("Failed to create browser");
+            print(component.errorString());
         }
     }
 
     function goBack()
     {
         return mediaBrowser.currentBrowsingBackend.goOneLevelUp();
-    }
-
-    function showCustomUi(qmlSource) {
-        if (qmlSource) {
-            var object = Qt.createQmlObject(qmlSource, mediaBrowser);
-
-            if (object.goBack) {
-                object.backend = currentBrowsingBackend;
-                if (object.close) object.close.connect(closeCustomUi);
-
-                if (mediaBrowser.backendOverlay) {
-                    mediaBrowser.backendOverlay.destroy();
-                }
-                mediaBrowser.backendOverlay = object;
-            } else {
-                console.log("******************** ERROR ********************");
-                console.log("ERROR: missing goBack function in " + object);
-                object.destroy();
-            }
-        } else {
-            console.log("WARNING: qmlSource is empty, doing nothing");
-        }
-    }
-
-    function closeCustomUi() {
-        mediaBrowser.backendOverlay = null;
     }
 }

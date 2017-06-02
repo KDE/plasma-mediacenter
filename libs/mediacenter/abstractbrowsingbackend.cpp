@@ -19,9 +19,7 @@
 #include "abstractbrowsingbackend.h"
 #include "objectpair.h"
 #include "pmcmodel.h"
-#include "modelsinbackendmodel.h"
 
-#include <KService>
 #include <KPluginInfo>
 #include <QDebug>
 
@@ -31,22 +29,20 @@ using namespace MediaCenter;
 class AbstractBrowsingBackend::AbstractBrowsingBackendPrivate
 {
 public:
-    AbstractBrowsingBackendPrivate(AbstractBrowsingBackend *q) :
-    q(q),
+    AbstractBrowsingBackendPrivate() :
     hasInitialized(false)
     {}
 
     KPluginInfo pluginInfo;
-    AbstractBrowsingBackend *q;
     bool hasInitialized;
-    ModelsInBackendModel modelsInBackend;
+    QList<QObject*> models;
     QString searchTerm;
     QStringList buttons;
 };
 
 AbstractBrowsingBackend::AbstractBrowsingBackend(QObject *parent, const QVariantList &args)
     : QObject(parent),
-      d(new AbstractBrowsingBackendPrivate(this))
+      d(new AbstractBrowsingBackendPrivate)
 {
     Q_UNUSED(args);
     qRegisterMetaType<QAbstractItemModel*>("QAbstractItemModel*");
@@ -91,7 +87,7 @@ QString AbstractBrowsingBackend::category() const
 
 void AbstractBrowsingBackend::setModel(PmcModel* model)
 {
-    d->modelsInBackend.clear();
+    d->models.clear();
     addModel(model);
 }
 
@@ -108,23 +104,28 @@ void AbstractBrowsingBackend::setModel(QAbstractItemModel* model)
 
 void AbstractBrowsingBackend::addModel(PmcModel* model)
 {
-    d->modelsInBackend.addModel(model);
+    //TODO: Implement multiple models
+    //d->modelsInBackend.addModel(model);
+    d->models.append(model);
 }
 
 bool AbstractBrowsingBackend::replaceModel(PmcModel* original,
                                            PmcModel* replacement)
 {
-    return d->modelsInBackend.replaceModel(original, replacement);
+    Q_UNUSED(original)
+    Q_UNUSED(replacement)
+    //TODO: Implement replaceModel
+    //return d->modelsInBackend.replaceModel(original, replacement);
+    return true;
 }
 
 QAbstractItemModel* AbstractBrowsingBackend::model()
 {
-    return nullptr;
-//     QObject *model = d->models.length() ? (QObject*)(d->models.first()) : 0;
-//     if (model) {
-//         return qobject_cast<QAbstractItemModel*>(qobject_cast<PmcModel*>(model)->model());
-//     }
-//     return 0;
+     QObject *model = d->models.length() ? (QObject*)(d->models.first()) : 0;
+     if (model) {
+         return qobject_cast<QAbstractItemModel*>(qobject_cast<PmcModel*>(model)->model());
+     }
+     return 0;
 }
 
 bool AbstractBrowsingBackend::goOneLevelUp()
@@ -134,16 +135,19 @@ bool AbstractBrowsingBackend::goOneLevelUp()
 
 bool AbstractBrowsingBackend::back(QObject* model)
 {
+    Q_UNUSED(model)
     return false;
 }
 
 bool AbstractBrowsingBackend::expand(int row, QAbstractItemModel* model)
 {
+    Q_UNUSED(model)
     return expand(row);
 }
 
 bool AbstractBrowsingBackend::expand(int row)
 {
+    Q_UNUSED(row)
     return false;
 }
 
@@ -173,14 +177,24 @@ bool AbstractBrowsingBackend::busy() const
     return false;
 }
 
-QObject* AbstractBrowsingBackend::models()
-{
-    return &d->modelsInBackend;
-}
+//TODO: implement multiple models
+//QObject* AbstractBrowsingBackend::models()
+//{
+//    //return &d->modelsInBackend;
+//}
 
 QStringList AbstractBrowsingBackend::buttons() const
 {
     return d->buttons;
+}
+
+QString AbstractBrowsingBackend::viewType() const
+{
+     QObject *model = d->models.length() ? (QObject*)(d->models.first()) : 0;
+     if (model) {
+         return qobject_cast<PmcModel*>(model)->viewType();
+     }
+     return QString();
 }
 
 void AbstractBrowsingBackend::setButtons(const QStringList& buttons)

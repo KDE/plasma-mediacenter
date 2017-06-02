@@ -35,6 +35,7 @@ public:
     bool isList;
     QObject *model;
     QString headerText;
+    QString viewType;
     bool expanded;
     QVariantMap parentData;
 };
@@ -101,6 +102,19 @@ void PmcModel::setHeaderText(const QString& text)
     if (d->headerText != text) {
         d->headerText = text;
         emit headerTextChanged();
+    }
+}
+
+QString PmcModel::viewType() const
+{
+    return d->viewType;
+}
+
+void PmcModel::setViewType(const QString &view)
+{
+    if (d->viewType != view) {
+        d->viewType = view;
+        emit viewTypeChanged();
     }
 }
 

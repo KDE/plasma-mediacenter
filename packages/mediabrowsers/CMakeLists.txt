@@ -1,0 +1,2 @@
+plasma_install_package(gridbrowser gridbrowser packages package)
+plasma_install_package(listbrowser listbrowser packages package)

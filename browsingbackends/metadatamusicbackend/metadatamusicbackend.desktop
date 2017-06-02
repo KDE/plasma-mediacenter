@@ -1,9 +1,8 @@
 [Desktop Entry]
 Type=Service
-Icon=tools-rip-audio-cd
+Icon=juk
 Name=Music
 Name[ar]=الموسيقى
-Name[ast]=Música
 Name[ca]=Música
 Name[ca@valencia]=Música
 Name[cs]=Hudba
@@ -41,7 +40,6 @@ Name[zh_CN]=音乐
 Name[zh_TW]=音樂
 Comment=Listen to the music on your device
 Comment[ar]=استمع إلى الموسيقى في جهازك
-Comment[ast]=Escucha música nel to preséu
 Comment[bs]=Slušaj muziku na svom uređaju
 Comment[ca]=Escolta la música en el dispositiu
 Comment[ca@valencia]=Escolta la música en el dispositiu

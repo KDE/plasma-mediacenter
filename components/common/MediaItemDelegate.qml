@@ -61,7 +61,7 @@ Item {
     Component {
         id: listMediaItem
 
-        ListMediaItem {
+        MediaItem {
             id: mediaItem
             view: mediaItemDelegateItem.view
 

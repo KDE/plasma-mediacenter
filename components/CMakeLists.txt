@@ -2,6 +2,5 @@ install(FILES qmldir DESTINATION ${QML_INSTALL_DIR}/org/kde/plasma/mediacenter/c
 install(FILES CategoriesBrowser.qml DESTINATION ${QML_INSTALL_DIR}/org/kde/plasma/mediacenter/components)
 install(FILES MediaInfoPanel.qml DESTINATION ${QML_INSTALL_DIR}/org/kde/plasma/mediacenter/components)
 install(FILES AutoHide.qml DESTINATION ${QML_INSTALL_DIR}/org/kde/plasma/mediacenter/components)
+install(FILES BreezeBlock.qml DESTINATION ${QML_INSTALL_DIR}/org/kde/plasma/mediacenter/components)
 install(DIRECTORY common DESTINATION ${QML_INSTALL_DIR}/org/kde/plasma/mediacenter/components)
-install(DIRECTORY gridbrowser DESTINATION ${QML_INSTALL_DIR}/org/kde/plasma/mediacenter/components)
-install(DIRECTORY listbrowser DESTINATION ${QML_INSTALL_DIR}/org/kde/plasma/mediacenter/components)

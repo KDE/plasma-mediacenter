@@ -3,7 +3,6 @@ include_directories(
     ${TAGLIB_INCLUDES}
 )
 set (plasmamediacenter_SRCS
-    modelsinbackendmodel.cpp
     iconimageprovider.cpp
     runtimedata.cpp
     itemcache.cpp
@@ -35,6 +34,7 @@ set (plasmamediacenter_SRCS
     mediavalidator.cpp
     settings.cpp
     localthumbnailprovider.cpp
+    mediabrowserloader.cpp
     mpris2/mpris2.cpp
     mpris2/mediaplayer2.cpp
     mpris2/mediaplayer2player.cpp
@@ -58,6 +58,7 @@ set(plasmamediacenter_link_libs
     KF5::Service
     KF5::Activities
     KF5::KIOWidgets
+    KF5::Plasma
     ${TAGLIB_LIBRARIES}
 )
 

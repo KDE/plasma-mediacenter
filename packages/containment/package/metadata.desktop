@@ -1,0 +1,39 @@
+[Desktop Entry]
+Encoding=UTF-8
+Keywords=
+Name=Mediacenter Containment
+Name[ca]=Contenidor del centre multimèdia
+Name[ca@valencia]=Contenidor del centre multimèdia
+Name[cs]=Kontejner Mediacenter
+Name[da]=Mediacenter-beholder
+Name[de]=Mediencenter-Containment
+Name[el]=Mediacenter Containment
+Name[en_GB]=Mediacentre Containment
+Name[es]=Contenedor del centro multimedia
+Name[it]=Contenitore di MediaCenter
+Name[nl]=Container met mediacentrum
+Name[pl]=Centrum multimedialne
+Name[pt]=Contentor de Centro Multimédia
+Name[sk]=Obsah mediálneho centra
+Name[sl]=Vsebnik predstavnostnega središča
+Name[sv]=Mediacenter-omgivning
+Name[tr]=Ortammerkezi Kapsayıcı
+Name[uk]=Контейнер мультимедійного центру
+Name[x-test]=xxMediacenter Containmentxx
+Name[zh_TW]=媒體中心包含
+Type=Service
+
+NoDisplay=true
+
+X-KDE-ServiceTypes=Plasma/Applet,Plasma/Containment
+X-Plasma-API=declarativeappletscript
+X-KDE-Library=plasma_containment_mediacenter
+X-KDE-ParentApp=
+X-KDE-PluginInfo-Author=Marco Martin
+X-KDE-PluginInfo-Category=
+X-KDE-PluginInfo-Email=mart@kde.org
+X-KDE-PluginInfo-License=GPLv2+
+X-KDE-PluginInfo-Name=org.kde.mediacentercontainment
+X-KDE-PluginInfo-Version=
+X-KDE-PluginInfo-Website=
+X-Plasma-MainScript=ui/main.qml

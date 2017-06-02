@@ -96,7 +96,7 @@ void LastFmImageFetcher::gotResponse(QNetworkReply* reply)
 {
 
     if (reply->error() != QNetworkReply::NoError) {
-        qDebug() << reply->errorString();
+        //qDebug() << reply->errorString();
         emit serviceUnavailable();
         return;
     }
