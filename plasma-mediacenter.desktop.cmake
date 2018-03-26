@@ -62,6 +62,7 @@ Comment[fi]=Plasma-mediakeskus KDE:ltä
 Comment[fr]=Centre multimédia de Plasma par KDE
 Comment[gl]=Centro Multimedia Plasma fornecido por KDE
 Comment[hu]=Plasma médiaközpont a KDE-től
+Comment[id]=Pusat Media Plasma oleh KDE
 Comment[it]=Plasma Media Center di KDE
 Comment[ko]=KDE의 Plasma Media Center
 Comment[lt]=Plasma Media centras sukurtas KDE
