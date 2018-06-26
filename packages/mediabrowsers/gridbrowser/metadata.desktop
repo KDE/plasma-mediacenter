@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Grid Browser
 Name[ca]=Navegador en quadrícula
-Name[ca@valencia]=Navegador en graella
+Name[ca@valencia]=Navegador en quadrícula
 Name[cs]=Prohlížeč mříže
 Name[da]=Gitterbrowser
 Name[de]=Übersichtsraster
@@ -24,7 +24,7 @@ Name[zh_CN]=网格浏览器
 Name[zh_TW]=網格瀏覽器
 Comment=Shows media files in grid
 Comment[ca]=Mostra els fitxers multimèdia en una quadrícula
-Comment[ca@valencia]=Mostra els fitxers multimèdia en una graella
+Comment[ca@valencia]=Mostra els fitxers multimèdia en una quadrícula
 Comment[cs]=Zobrazí soubory médií v mřížce
 Comment[da]=Viser mediefiler i et gitter
 Comment[de]=Zeigt Mediendateien als Raster
@@ -47,7 +47,7 @@ Comment[zh_CN]=在网格中显示媒体文件
 Comment[zh_TW]=以網格方式顯示媒體檔案
 GenericName=Grid Browser
 GenericName[ca]=Navegador en quadrícula
-GenericName[ca@valencia]=Navegador en graella
+GenericName[ca@valencia]=Navegador en quadrícula
 GenericName[cs]=Prohlížeč mříže
 GenericName[da]=Gitterbrowser
 GenericName[de]=Übersichtsraster
