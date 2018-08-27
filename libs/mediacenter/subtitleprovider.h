@@ -20,13 +20,13 @@
 #ifndef SUBTITLEPROVIDER_H
 #define SUBTITLEPROVIDER_H
 
-#include <QtCore/QFile>
-#include <QtCore/QTextStream>
-#include <QtCore/QRegExp>
-#include <QtCore/QDebug>
-#include <QtCore/QList>
-#include <QtCore/QStringList>
-#include <QtCore/QUrl>
+#include <QFile>
+#include <QTextStream>
+#include <QRegExp>
+#include <QDebug>
+#include <QList>
+#include <QStringList>
+#include <QUrl>
 
 #include "mediacenter_export.h"
 

@@ -20,7 +20,7 @@
 #ifndef DATASOURCESLOADER_H
 #define DATASOURCESLOADER_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 #include "mediacenter_export.h"
 

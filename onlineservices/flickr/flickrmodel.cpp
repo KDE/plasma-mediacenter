@@ -27,8 +27,8 @@
 #include <KIO/Job>
 #include <KJob>
 
-#include <QtXml/QDomDocument>
-#include <QtXml/QDomNodeList>
+#include <QDomDocument>
+#include <QDomNodeList>
 
 #include <QDebug>
 

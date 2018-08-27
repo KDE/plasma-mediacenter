@@ -19,7 +19,7 @@
 #ifndef FILTERPLAYLISTMODEL_H
 #define FILTERPLAYLISTMODEL_H
 
-#include <QtCore/QSortFilterProxyModel>
+#include <QSortFilterProxyModel>
 #include <QAbstractItemModel>
 #include "mediacenter_export.h"
 

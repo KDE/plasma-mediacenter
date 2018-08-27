@@ -22,7 +22,7 @@
 #include "mediacenter/mediacenter.h"
 #include "mediacenter/abstractbrowsingbackend.h"
 
-#include <QtGui/QIcon>
+#include <QIcon>
 #include <QEvent>
 
 MetadataPictureModel::MetadataPictureModel (QObject* parent)

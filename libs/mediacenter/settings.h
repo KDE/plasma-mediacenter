@@ -23,8 +23,8 @@
 #include "mediacenter_export.h"
 #include <KConfigGroup>
 
-#include <QtCore/QObject>
-#include <QtCore/QVariant>
+#include <QObject>
+#include <QVariant>
 
 class MEDIACENTER_EXPORT Settings : public QObject
 {

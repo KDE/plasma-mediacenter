@@ -18,7 +18,7 @@
 
 #include "pmcimagecache.h"
 
-#include <QtCore/QCoreApplication>
+#include <QCoreApplication>
 
 const char *PmcImageCache::fileIdentification = "mediafile:";
 const char *PmcImageCache::albumIdentification = "album:";

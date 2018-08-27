@@ -18,10 +18,10 @@
 #ifndef PLAYLISTMODEL_H
 #define PLAYLISTMODEL_H
 
-#include <QtCore/QAbstractItemModel>
-#include <QtCore/QString>
-#include <QtCore/QList>
-#include <QtCore/QFile>
+#include <QAbstractItemModel>
+#include <QString>
+#include <QList>
+#include <QFile>
 
 #include "mediacenter_export.h"
 #include "mediacenter.h"

@@ -19,7 +19,7 @@
 #ifndef PMCIMAGECACHE_H
 #define PMCIMAGECACHE_H
 
-#include <QtCore/QHash>
+#include <QHash>
 
 #include <KImageCache>
 

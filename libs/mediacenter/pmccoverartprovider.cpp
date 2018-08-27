@@ -29,7 +29,7 @@
 #include <mpegfile.h>
 #include <attachedpictureframe.h>
 
-#include <QtCore/QUrl>
+#include <QUrl>
 
 const char *PmcCoverArtProvider::identificationString = "coverart";
 

@@ -23,7 +23,7 @@
 #include "mediacenter_export.h"
 #include "mediacenter.h"
 
-#include <QtCore/QAbstractItemModel>
+#include <QAbstractItemModel>
 #include <QSharedPointer>
 #include <QList>
 

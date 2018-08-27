@@ -18,9 +18,9 @@
 #ifndef MULTIPLEPLAYLISTMODEL_H
 #define MULTIPLEPLAYLISTMODEL_H
 
-#include <QtCore/QAbstractListModel>
-#include <QtCore/QString>
-#include <QtCore/QStringList>
+#include <QAbstractListModel>
+#include <QString>
+#include <QStringList>
 
 #include "mediacenter_export.h"
 #include "mediacenter.h"

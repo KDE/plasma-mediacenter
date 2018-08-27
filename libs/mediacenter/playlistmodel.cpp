@@ -23,11 +23,11 @@
 
 #include <QDebug>
 
-#include <QtCore/QDir>
-#include <QtCore/QStringList>
-#include <QtCore/QDateTime>
-#include <QtCore/QCoreApplication>
-#include <QtXml/QDomDocument>
+#include <QDir>
+#include <QStringList>
+#include <QDateTime>
+#include <QCoreApplication>
+#include <QDomDocument>
 
 namespace
 {

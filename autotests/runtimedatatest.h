@@ -20,8 +20,8 @@
  *
  */
 
-#ifndef TESTRUNTIMEDATA_H
-#define TESTRUNTIMEDATA_H
+#ifndef RUNTIMEDATATEST_H
+#define RUNTIMEDATATEST_H
 
 #include <QObject>
 
@@ -39,4 +39,4 @@ private slots:
     void testVolumeAndMuteFunction();
 };
 
-#endif // TESTRUNTIMEDATA_H
+#endif // RUNTIMEDATATEST_H

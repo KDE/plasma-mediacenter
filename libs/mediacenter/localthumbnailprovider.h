@@ -21,7 +21,7 @@
 #define THUMBNAILPROVIDER_H
 
 #include "mediacenter_export.h"
-#include <QtQuick/QQuickImageProvider>
+#include <QQuickImageProvider>
 
 #include <QUrl>
 

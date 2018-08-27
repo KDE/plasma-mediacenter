@@ -19,7 +19,7 @@
 #ifndef PMCCOVERARTPROVIDER_H
 #define PMCCOVERARTPROVIDER_H
 
-#include <QtQuick/QQuickImageProvider>
+#include <QQuickImageProvider>
 
 #include "mediacenter_export.h"
 

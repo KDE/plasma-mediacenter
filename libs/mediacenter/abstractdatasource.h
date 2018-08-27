@@ -20,7 +20,7 @@
 #ifndef ABSTRACTDATASOURCE_H
 #define ABSTRACTDATASOURCE_H
 
-#include <QtCore/QThread>
+#include <QThread>
 #include <KPluginInfo>
 
 #include "mediacenter_export.h"

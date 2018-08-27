@@ -30,7 +30,7 @@
 #include <KIO/PreviewJob>
 #include <QDebug>
 
-#include <QtCore/QTimer>
+#include <QTimer>
 #include <QSharedPointer>
 
 class PmcMetadataModel::Private

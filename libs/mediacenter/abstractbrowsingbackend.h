@@ -249,7 +249,7 @@ protected:
      * Subclasses can call this method to set the button strings that are used
      * for the buttons property
      *
-     * @param buttons list of strings for the buton labels
+     * @param buttons list of strings for the button labels
      */
     void setButtons(const QStringList &buttons);
 
