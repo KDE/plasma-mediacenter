@@ -131,7 +131,7 @@ qlonglong MediaPlayer2Player::Position() const
 void MediaPlayer2Player::setPropertyPosition(int newPositionInMs)
 {
     m_position = qlonglong(newPositionInMs)*1000;
-    //PMC stores postion in milli-seconds, Mpris likes it in micro-seconds
+    //PMC stores position in milli-seconds, Mpris likes it in micro-seconds
 }
 
 double MediaPlayer2Player::Rate() const

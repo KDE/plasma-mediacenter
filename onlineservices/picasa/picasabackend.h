@@ -28,7 +28,7 @@
  * @class PicasaBackend
  * @brief A backend that manages queries to Picasa.
  *
- * This class direclty inherit from AbstractBrowsingBackend which is an interface between an applet
+ * This class directly inherit from AbstractBrowsingBackend which is an interface between an applet
  * and a custom provided model
  */
 class PicasaBackend : public MediaCenter::AbstractBrowsingBackend

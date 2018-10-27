@@ -36,12 +36,9 @@ MediaLibraryWrapperCache::MediaLibraryWrapperCache(MediaLibrary* parent)
     : QObject(parent)
     , d(new Private())
 {
-    connect(parent, SIGNAL(newMedia(QList<QSharedPointer<PmcMedia> >)),
-            SLOT(saveNewMedia(QList<QSharedPointer<PmcMedia> >)));
-    connect(parent, SIGNAL(newAlbums(QList<QSharedPointer<PmcAlbum> >)),
-            SLOT(saveNewAlbums(QList<QSharedPointer<PmcAlbum> >)));
-    connect(parent, SIGNAL(newArtists(QList<QSharedPointer<PmcArtist> >)),
-            SLOT(saveNewArtists(QList<QSharedPointer<PmcArtist> >)));
+    connect(parent, &MediaLibrary::newMedia, this, &MediaLibraryWrapperCache::saveNewMedia);
+    connect(parent, &MediaLibrary::newAlbums, this, &MediaLibraryWrapperCache::saveNewAlbums);
+    connect(parent, &MediaLibrary::newArtists, this, &MediaLibraryWrapperCache::saveNewArtists);
     connect(parent, &MediaLibrary::mediaRemoved, this, &MediaLibraryWrapperCache::removeMediaRef);
 }
 

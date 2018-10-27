@@ -87,11 +87,11 @@ void MediaLibraryTest::addsNewMediaAndItsMetadata()
     mediaLibrary.setTestMode(true);
     mediaLibrary.start();
 
-    QSignalSpy newMediaSpy(&mediaLibrary, SIGNAL(newMedia(QList< QSharedPointer<PmcMedia> >)));
+    QSignalSpy newMediaSpy(&mediaLibrary, SIGNAL(newMedia(QList<QSharedPointer<PmcMedia> >)));
     QVERIFY2(newMediaSpy.isValid(), "Could not listen to signal newMedia");
-    QSignalSpy newAlbumSpy(&mediaLibrary, SIGNAL(newAlbums(QList< QSharedPointer<PmcAlbum> >)));
+    QSignalSpy newAlbumSpy(&mediaLibrary, SIGNAL(newAlbums(QList<QSharedPointer<PmcAlbum> >)));
     QVERIFY2(newAlbumSpy.isValid(), "Could not listen to signal newAlbums");
-    QSignalSpy newArtistSpy(&mediaLibrary, SIGNAL(newArtists(QList< QSharedPointer<PmcArtist> >)));
+    QSignalSpy newArtistSpy(&mediaLibrary, SIGNAL(newArtists(QList<QSharedPointer<PmcArtist> >)));
     QVERIFY2(newArtistSpy.isValid(), "Could not listen to signal newArtists");
 
     QHash<int,QVariant> data = createTestMediaDataWithAlbumArtist();
@@ -143,7 +143,7 @@ void MediaLibraryTest::shouldEmitMediaRemovedWhenMediaIsPresentAndRemoved()
     QString url = data.value(MediaCenter::MediaUrlRole).toString();
     mediaLibrary.updateMedia(data);
 
-    QSignalSpy newMediaSpy(&mediaLibrary, SIGNAL(newMedia(QList< QSharedPointer<PmcMedia> >)));
+    QSignalSpy newMediaSpy(&mediaLibrary, SIGNAL(newMedia(QList<QSharedPointer<PmcMedia> >)));
     QVERIFY2(newMediaSpy.isValid(), "Could not listen to signal newMedia");
 
     waitForSignal(&newMediaSpy);
@@ -179,7 +179,7 @@ void MediaLibraryTest::shouldEmitUpdatedForMediaInsteadOfNewMediaWhenDataUpdated
 
     QHash<int,QVariant> data = createTestMediaDataWithAlbumArtist();
 
-    QSignalSpy newMediaSpy(&mediaLibrary, SIGNAL(newMedia(QList< QSharedPointer<PmcMedia> >)));
+    QSignalSpy newMediaSpy(&mediaLibrary, SIGNAL(newMedia(QList<QSharedPointer<PmcMedia> >)));
     QVERIFY2(newMediaSpy.isValid(), "Could not listen to signal newMedia");
 
     mediaLibrary.updateMedia(data);
@@ -211,7 +211,7 @@ void MediaLibraryTest::shouldNotEmitUpdatedWhenNothingUpdated()
 
     QHash<int,QVariant> data = createTestMediaDataWithAlbumArtist();
 
-    QSignalSpy newMediaSpy(&mediaLibrary, SIGNAL(newMedia(QList< QSharedPointer<PmcMedia> >)));
+    QSignalSpy newMediaSpy(&mediaLibrary, SIGNAL(newMedia(QList<QSharedPointer<PmcMedia> >)));
     QVERIFY2(newMediaSpy.isValid(), "Could not listen to signal newMedia");
 
     mediaLibrary.updateMedia(data);
@@ -242,7 +242,7 @@ void MediaLibraryTest::shouldEmitUpdatedWhenAlbumOrArtistChanged()
 
     QHash<int,QVariant> data = createTestMediaDataWithAlbumArtist();
 
-    QSignalSpy newMediaSpy(&mediaLibrary, SIGNAL(newMedia(QList< QSharedPointer<PmcMedia> >)));
+    QSignalSpy newMediaSpy(&mediaLibrary, SIGNAL(newMedia(QList<QSharedPointer<PmcMedia> >)));
     QVERIFY2(newMediaSpy.isValid(), "Could not listen to signal newMedia");
 
     mediaLibrary.updateMedia(data);
@@ -282,7 +282,7 @@ void MediaLibraryTest::shouldNotAddMediaForNonExistentFile()
     MediaLibrary mediaLibrary;
     mediaLibrary.start();
 
-    QSignalSpy newMediaSpy(&mediaLibrary, SIGNAL(newMedia(QList< QSharedPointer<PmcMedia> >)));
+    QSignalSpy newMediaSpy(&mediaLibrary, SIGNAL(newMedia(QList<QSharedPointer<PmcMedia> >)));
     QVERIFY2(newMediaSpy.isValid(), "Could not listen to signal newMedia");
 
     QHash<int,QVariant> data = createTestMediaDataWithAlbumArtist();
@@ -300,7 +300,7 @@ void MediaLibraryTest::shouldCleanupEntriesForNonExistentMedia()
     mediaLibrary->start();
     mediaLibrary->setTestMode(true);
 
-    QSignalSpy newMediaSpy(mediaLibrary, SIGNAL(newMedia(QList< QSharedPointer<PmcMedia> >)));
+    QSignalSpy newMediaSpy(mediaLibrary, SIGNAL(newMedia(QList<QSharedPointer<PmcMedia> >)));
     QVERIFY2(newMediaSpy.isValid(), "Could not listen to signal newMedia");
 
     QHash<int,QVariant> data = createTestMediaDataWithAlbumArtist();
@@ -317,7 +317,7 @@ void MediaLibraryTest::shouldCleanupEntriesForNonExistentMedia()
 
     mediaLibrary = new MediaLibrary();
 
-    QSignalSpy anotherNewMediaSpy(mediaLibrary, SIGNAL(newMedia(QList< QSharedPointer<PmcMedia> >)));
+    QSignalSpy anotherNewMediaSpy(mediaLibrary, SIGNAL(newMedia(QList<QSharedPointer<PmcMedia> >)));
     QVERIFY2(anotherNewMediaSpy.isValid(), "Could not listen to signal newMedia");
 
     mediaLibrary->start();
@@ -334,9 +334,9 @@ void MediaLibraryTest::shouldAddDifferentAlbumsWhenArtistsAreDifferent()
     mediaLibrary.setTestMode(true);
     mediaLibrary.start();
 
-    QSignalSpy newAlbumSpy(&mediaLibrary, SIGNAL(newAlbums(QList< QSharedPointer<PmcAlbum> >)));
+    QSignalSpy newAlbumSpy(&mediaLibrary, SIGNAL(newAlbums(QList<QSharedPointer<PmcAlbum> >)));
     QVERIFY2(newAlbumSpy.isValid(), "Could not listen to signal newAlbums");
-    QSignalSpy newArtistSpy(&mediaLibrary, SIGNAL(newArtists(QList< QSharedPointer<PmcArtist> >)));
+    QSignalSpy newArtistSpy(&mediaLibrary, SIGNAL(newArtists(QList<QSharedPointer<PmcArtist> >)));
     QVERIFY2(newArtistSpy.isValid(), "Could not listen to signal newArtists");
 
     QHash<int,QVariant> data1 = createTestMediaDataWithAlbumArtist();
@@ -393,9 +393,9 @@ void MediaLibraryTest::shouldReturnCorrectAlbumsAndArtists()
 
     // After inserting 1 media with album and artist info.
 
-    QSignalSpy newAlbumSpy(&mediaLibrary, SIGNAL(newAlbums(QList< QSharedPointer<PmcAlbum> >)));
+    QSignalSpy newAlbumSpy(&mediaLibrary, SIGNAL(newAlbums(QList<QSharedPointer<PmcAlbum> >)));
     QVERIFY2(newAlbumSpy.isValid(), "Could not listen to signal newAlbums");
-    QSignalSpy newArtistSpy(&mediaLibrary, SIGNAL(newArtists(QList< QSharedPointer<PmcArtist> >)));
+    QSignalSpy newArtistSpy(&mediaLibrary, SIGNAL(newArtists(QList<QSharedPointer<PmcArtist> >)));
     QVERIFY2(newArtistSpy.isValid(), "Could not listen to signal newArtists");
 
     QHash<int,QVariant> data = createTestMediaDataWithAlbumArtist("Album for test", "Artist for test");
@@ -414,9 +414,9 @@ void MediaLibraryTest::shouldReturnCorrectAlbumsAndArtists()
 
     // After inserting another media with different artist and without album info.
 
-    QSignalSpy newAlbumSpy2(&mediaLibrary, SIGNAL(newAlbums(QList< QSharedPointer<PmcAlbum> >)));
+    QSignalSpy newAlbumSpy2(&mediaLibrary, SIGNAL(newAlbums(QList<QSharedPointer<PmcAlbum> >)));
     QVERIFY2(newAlbumSpy2.isValid(), "Could not listen to signal newAlbums");
-    QSignalSpy newArtistSpy2(&mediaLibrary, SIGNAL(newArtists(QList< QSharedPointer<PmcArtist> >)));
+    QSignalSpy newArtistSpy2(&mediaLibrary, SIGNAL(newArtists(QList<QSharedPointer<PmcArtist> >)));
     QVERIFY2(newArtistSpy2.isValid(), "Could not listen to signal newArtists");
 
     QHash<int,QVariant> data2 = createTestMediaDataWithUrl("/bar/foo");
@@ -434,9 +434,9 @@ void MediaLibraryTest::shouldReturnCorrectAlbumsAndArtists()
 
     // After inserting another media with different album and without artist info.
 
-    QSignalSpy newAlbumSpy3(&mediaLibrary, SIGNAL(newAlbums(QList< QSharedPointer<PmcAlbum> >)));
+    QSignalSpy newAlbumSpy3(&mediaLibrary, SIGNAL(newAlbums(QList<QSharedPointer<PmcAlbum> >)));
     QVERIFY2(newAlbumSpy3.isValid(), "Could not listen to signal newAlbums");
-    QSignalSpy newArtistSpy3(&mediaLibrary, SIGNAL(newArtists(QList< QSharedPointer<PmcArtist> >)));
+    QSignalSpy newArtistSpy3(&mediaLibrary, SIGNAL(newArtists(QList<QSharedPointer<PmcArtist> >)));
     QVERIFY2(newArtistSpy3.isValid(), "Could not listen to signal newArtists");
 
     QHash<int,QVariant> data3 = createTestMediaDataWithUrl("/bar/foo123");
