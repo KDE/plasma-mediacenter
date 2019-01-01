@@ -117,7 +117,7 @@ FocusScope {
                 property string error
 
                 visible: error
-                text: "error: " + error
+                text: i18n("Error: %1", error)
             }
         }
     }
