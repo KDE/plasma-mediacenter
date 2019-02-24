@@ -57,7 +57,7 @@ FocusScope {
                     height: 30
                     anchors.verticalCenter: parent.verticalCenter
                     clearButtonShown: true
-                    placeholderText: i18n("Search Playlist")
+                    placeholderText: i18nc("search for songs inside current playlist", "Search Playlist")
                     focus: true
                     Keys.onDownPressed: playlistList.focus = true;
                     Keys.onUpPressed: multiplePlaylists.focus = true
