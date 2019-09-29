@@ -65,7 +65,7 @@ Item {
         }
         PlasmaComponents.Button {
             Layout.fillWidth: true
-            text: "Back"
+            text: i18n("Back")
             onClicked: { backend.back(modelRole) }
         }
     }
